@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en-BD" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Product Details | JAYENWARE</title>
+    <meta name="description" content="Discover detailed product specifications, fabric, fit, and more at JAYENWARE.">
+    <meta name="theme-color" content="#1d1d1f">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+    <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/product/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/components.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    },
+                    colors: {
+                        primary: '#1d1d1f',
+                        accent: '#86868b',
+                        soft: '#f5f5f7',
+                        blue: '#007aff'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --primary: #1d1d1f;
+            --accent: #86868b;
+            --soft: #f5f5f7;
+            --blue: #007aff;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        img { max-width: 100%; height: auto; display: block; }
+        body { font-family: 'Inter', sans-serif; background: #fff; color: #1d1d1f; }
+        
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .product-hero { position: relative; width: 100%; background: #fafafa; min-height: 50vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .product-hero img { width: 100%; height: 100%; max-height: 80vh; object-fit: contain; transition: transform 0.5s; }
+        
+        .color-swatch-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); cursor: pointer; transition: all 0.3s; flex-shrink: 0; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .color-swatch-btn.selected { border-color: #1d1d1f !important; box-shadow: 0 0 0 3px rgba(0,0,0,0.1); transform: scale(1.15); }
+        .color-swatch-btn.disabled { opacity: 0.3; pointer-events: none; }
+        
+        .size-btn { transition: all 0.3s; cursor: pointer; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 10px 16px; font-weight: 600; font-size: 12px; background: rgba(255,255,255,0.7); color: #1d1d1f; min-width: 44px; text-align: center; }
+        .size-btn.selected { border-color: #1d1d1f !important; background: #1d1d1f !important; color: white !important; }
+        .size-btn.disabled { opacity: 0.3; pointer-events: none; text-decoration: line-through; }
+        
+        .thumbnail-grid { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding: 4px 0 8px; -webkit-overflow-scrolling: touch; }
+        .thumbnail-item { width: 64px; height: 64px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid rgba(255,255,255,0.8); flex-shrink: 0; opacity: 0.7; }
+        .thumbnail-item.active { opacity: 1; border-color: #1d1d1f !important; }
+        
+        .toggle-btn { background: rgba(255,255,255,0.7); backdrop-filter: blur(15px); border: 1px solid rgba(0,0,0,0.06); border-radius: 14px; padding: 16px 20px; width: 100%; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 11px; text-transform: uppercase; cursor: pointer; margin-bottom: 10px; }
+        .collapse-section { max-height: 0; overflow: hidden; transition: max-height 0.45s; }
+        .collapse-section.open { max-height: 2000px; }
+        
+        .detail-badge { background: rgba(255,255,255,0.7); backdrop-filter: blur(15px); border-radius: 14px; padding: 14px 16px; font-size: 12px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(0,0,0,0.06); }
+        
+        .variant-info-badge { background: rgba(240,249,255,0.8); backdrop-filter: blur(15px); border: 1px solid rgba(186,230,253,0.3); border-radius: 12px; padding: 14px 18px; margin-top: 12px; font-size: 12px; color: #0369a1; }
+        
+        .description-content { background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; margin: 4px 0 16px; font-size: 14px; color: #4b5563; line-height: 1.8; border: 1px solid rgba(0,0,0,0.04); }
+        
+        .barcode-wrapper { background: rgba(255,255,255,0.8); backdrop-filter: blur(15px); padding: 28px 20px 20px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.06); margin: 4px 0 16px; display: flex; flex-direction: column; align-items: center; }
+        
+        .sticky-add-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(40px); border-top: 0.5px solid rgba(0,0,0,0.06); padding: 12px 16px calc(12px + var(--safe-bottom)); z-index: 49; display: none; align-items: center; gap: 12px; }
+        .sticky-add-bar.active { display: flex; }
+        
+        .star-rating { direction: rtl; display: inline-flex; }
+        .star-rating input[type="radio"] { display: none; }
+        .star-rating label { color: #d2d2d7; font-size: 20px; cursor: pointer; }
+        .star-rating input[type="radio"]:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: #ff9500; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .video-section { position: relative; width: 100%; margin: 16px 0; border-radius: 16px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
+        .video-section video { width: 100%; height: 100%; object-fit: cover; }
+        
+        .product-banner-card { position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 20px; background: #000; aspect-ratio: 16/6; cursor: pointer; }
+        .product-banner-card img { width: 100%; height: 100%; object-fit: cover; }
+        .product-banner-card .banner-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.02) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px 28px; }
+        .product-banner-card .banner-title { color: white; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .product-banner-card .banner-subtitle { color: rgba(255,255,255,0.85); font-size: 14px; }
+        .product-banner-card .banner-link { color: white; font-size: 12px; font-weight: 600; text-decoration: none; margin-top: 10px; border-bottom: 2px solid rgba(255,255,255,0.5); padding-bottom: 3px; display: inline-block; width: fit-content; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="header-container"></div>
+
+    <div id="global-loader" style="position:fixed;inset:0;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;">
+            <div style="width:40px;height:40px;border:3px solid #e5e5e5;border-top-color:#1d1d1f;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;"></div>
+            <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.3em;color:rgba(29,29,31,0.5);">JAYENWARE</p>
+        </div>
+    </div>
+
+    <main id="product-page-content" style="flex-grow:1;">
+        <div id="product-not-found" style="display:none;text-align:center;padding:100px 20px;">
+            <i class="fa-solid fa-box-open" style="font-size:64px;color:#e5e5e5;margin-bottom:20px;"></i>
+            <h2 style="font-size:24px;font-weight:700;margin-bottom:8px;">Product Not Found</h2>
+            <p style="color:#6b7280;margin-bottom:28px;">The product you're looking for doesn't exist.</p>
+            <a href="/products" style="display:inline-block;padding:14px 36px;background:#1d1d1f;color:white;border-radius:9999px;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:12px;text-decoration:none;">Browse Products</a>
+        </div>
+
+        <div id="product-loading" style="display:grid;grid-template-columns:1fr;gap:0;">
+            <div class="skeleton" style="width:100%;aspect-ratio:4/5;"></div>
+            <div style="padding:20px;">
+                <div class="skeleton" style="height:14px;width:80px;margin-bottom:8px;"></div>
+                <div class="skeleton" style="height:28px;width:100%;margin-bottom:12px;"></div>
+                <div class="skeleton" style="height:36px;width:120px;margin-bottom:16px;"></div>
+                <div class="skeleton" style="height:120px;border-radius:16px;"></div>
+            </div>
+        </div>
+
+        <div id="product-detail-content"></div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <div id="sticky-add-bar" class="sticky-add-bar">
+        <div style="flex-grow:1;"><span id="sticky-price" style="font-size:18px;font-weight:900;">৳ 0</span></div>
+        <button id="sticky-add-btn" style="padding:12px 28px;background:#1d1d1f;color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;" onclick="addToCartHandler()">Add to Bag</button>
+    </div>
+
+    <script>
+        // ========== FETCH FROM OUR API (NOT SUPABASE DIRECTLY!) ==========
+        async function fetchAPI(endpoint) {
+            try { const res = await fetch(endpoint); return await res.json(); } 
+            catch(e) { console.error('Fetch error:', e); return null; }
+        }
+
+        let currentProduct = null;
+        let allProducts = [];
+        let productColors = [];
+        let colorSizes = [];
+        let productVariants = [];
+        let allReviews = [];
+        let productVideos = [];
+        let productBanners = [];
+        let selectedColorId = null;
+        let selectedSizeId = null;
+        let selectedVariant = null;
+        let allImages = [];
+        
+        function getSlugFromURL() {
+            const path = window.location.pathname;
+            let slug = path.replace(/^\/product\//, '').replace(/\/$/, '');
+            return slug.split('?')[0].split('#')[0] || null;
+        }
+
+        function getAvailableSizesForColor(colorId) {
+            const variants = productVariants.filter(v => v.color_id == colorId && v.is_active && v.stock > 0);
+            const sizeIds = variants.map(v => v.size_id);
+            return colorSizes.filter(s => sizeIds.includes(s.id) && s.color_id == colorId);
+        }
+
+        function getVariant(colorId, sizeId) {
+            return productVariants.find(v => v.color_id == colorId && v.size_id == sizeId) || null;
+        }
+
+        window.selectColor = function(colorId) {
+            selectedColorId = colorId;
+            selectedSizeId = null;
+            selectedVariant = null;
+            document.querySelectorAll('.color-swatch-btn').forEach(btn => btn.classList.remove('selected'));
+            const btn = document.querySelector(`.color-swatch-btn[data-color-id="${colorId}"]`);
+            if (btn) btn.classList.add('selected');
+            const color = productColors.find(c => c.id == colorId);
+            if (color && color.color_image) {
+                const mainImg = document.getElementById('product-hero-image');
+                if (mainImg) mainImg.src = color.color_image;
+            }
+            document.getElementById('selected-color-name').textContent = color?.color_name || '';
+            updateSizeButtons();
+            updatePriceDisplay();
+            updateVariantInfo();
+        };
+
+        window.selectSize = function(sizeId) {
+            selectedSizeId = sizeId;
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+            const btn = document.querySelector(`.size-btn[data-size-id="${sizeId}"]`);
+            if (btn) btn.classList.add('selected');
+            const size = colorSizes.find(s => s.id == sizeId);
+            document.getElementById('selected-size-name').textContent = size?.size_name || '';
+            if (selectedColorId && selectedSizeId) selectedVariant = getVariant(selectedColorId, selectedSizeId);
+            updatePriceDisplay();
+            updateVariantInfo();
+        };
+
+        function updateSizeButtons() {
+            const container = document.getElementById('size-buttons-container');
+            if (!container || !selectedColorId) return;
+            const sizes = getAvailableSizesForColor(selectedColorId);
+            if (!sizes.length) {
+                container.innerHTML = '<p style="font-size:12px;color:#9ca3af;">No sizes available</p>';
+                return;
+            }
+            container.innerHTML = sizes.map(s => {
+                const variant = getVariant(selectedColorId, s.id);
+                const available = variant && variant.stock > 0;
+                return `<button data-size-id="${s.id}" class="size-btn ${!available?'disabled':''}" onclick="${available?`selectSize(${s.id})`:''}" ${!available?'disabled':''}>${s.size_name}</button>`;
+            }).join('');
+        }
+
+        function updatePriceDisplay() {
+            const el = document.getElementById('variant-price-display');
+            if (!el) return;
+            let price = currentProduct?.price || 0;
+            if (selectedVariant) price = selectedVariant.price;
+            else if (selectedColorId) {
+                const variants = productVariants.filter(v => v.color_id == selectedColorId && v.is_active);
+                if (variants.length) price = Math.min(...variants.map(v => v.price));
+            }
+            el.innerHTML = `<span style="font-size:28px;font-weight:900;">৳ ${price}</span>`;
+            document.getElementById('sticky-price').innerHTML = `৳ ${price}`;
+        }
+
+        function updateVariantInfo() {
+            const infoEl = document.getElementById('variant-info');
+            const stockEl = document.getElementById('stock-status');
+            if (!infoEl) return;
+            if (selectedVariant) {
+                infoEl.style.display = 'block';
+                infoEl.innerHTML = `<span style="font-weight:700;">SKU:</span> ${selectedVariant.sku||'N/A'} | <span style="font-weight:700;">Barcode:</span> ${selectedVariant.barcode||'N/A'}`;
+                if (stockEl) stockEl.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:${selectedVariant.stock<=0?'#ef4444':'#22c55e'};display:inline-block;"></span> ${selectedVariant.stock<=0?'Out of Stock':'In Stock'}`;
+            } else {
+                infoEl.style.display = 'none';
+                if (stockEl) stockEl.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span> Select variant`;
+            }
+        }
+
+        window.addToCartHandler = function() {
+            if (!currentProduct) return;
+            if (productColors.length > 0 && !selectedVariant) {
+                if (!selectedColorId) return showToast('Select a color', 'error');
+                if (!selectedSizeId) return showToast('Select a size', 'error');
+            }
+            let price = currentProduct.price;
+            let variantName = null;
+            if (selectedVariant) {
+                if (selectedVariant.stock <= 0) return showToast('Out of stock', 'error');
+                price = selectedVariant.price;
+                variantName = selectedVariant.name;
+            }
+            window.cart.push({ id: Date.now(), product_id: currentProduct.id, title: currentProduct.title, price, img: currentProduct.img, variant: variantName, quantity: 1 });
+            window.saveCart();
+            showToast('Added to Bag! 🎉');
+        };
+
+        window.toggleCollapse = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('open');
+        };
+
+        async function loadProduct(slug) {
+            // Fetch from OUR API (not Supabase directly!)
+            const [products, colors, variants, reviews, videos, banners] = await Promise.all([
+                fetchAPI('/api/products'),
+                fetchAPI('/api/product-colors?slug=' + slug),
+                fetchAPI('/api/product-variants?slug=' + slug),
+                fetchAPI('/api/product-reviews?slug=' + slug),
+                fetchAPI('/api/product-videos?slug=' + slug),
+                fetchAPI('/api/product-banners?slug=' + slug)
+            ]);
+
+            allProducts = products || [];
+            const product = allProducts.find(p => (p.slug || p.title.toLowerCase().replace(/[^\w]+/g, '-')) === slug);
+            if (!product) return false;
+
+            currentProduct = product;
+            productColors = colors || [];
+            productVariants = variants || [];
+            allReviews = reviews || [];
+            productVideos = videos || [];
+            productBanners = banners || [];
+
+            // Load sizes for colors
+            if (productColors.length) {
+                const colorIds = productColors.map(c => c.id);
+                const sizes = await fetchAPI('/api/color-sizes?ids=' + colorIds.join(','));
+                colorSizes = sizes || [];
+            }
+
+            renderProduct(product);
+            return true;
+        }
+
+        function renderProduct(product) {
+            document.getElementById('product-loading').style.display = 'none';
+            document.getElementById('product-detail-content').style.display = 'block';
+            document.title = `${product.title || 'Product'} | JAYENWARE`;
+
+            allImages = product.images ? product.images.split(',').filter(Boolean) : [product.img].filter(Boolean);
+            const mainImage = allImages[0] || '/logo.png';
+
+            document.getElementById('product-detail-content').innerHTML = `
+                <div class="product-hero"><img id="product-hero-image" src="${mainImage}" alt="${product.title}"></div>
+                <div style="padding:0 20px;max-width:720px;margin:0 auto;">
+                    ${allImages.length > 1 ? `<div class="thumbnail-grid no-scrollbar">${allImages.map((img,i) => `<img src="${img}" class="thumbnail-item ${i===0?'active':''}" onclick="document.getElementById('product-hero-image').src='${img}'">`).join('')}</div>` : ''}
+                    <div style="margin-top:20px;">
+                        <span style="font-size:9px;font-weight:700;text-transform:uppercase;color:#007aff;background:rgba(0,122,255,0.1);padding:4px 10px;border-radius:20px;">${product.category||''}</span>
+                        <h1 style="font-size:24px;font-weight:700;margin:8px 0;">${product.title||''}</h1>
+                    </div>
+                    <div id="variant-price-display" style="margin-bottom:16px;"><span style="font-size:28px;font-weight:900;">৳ ${product.price||0}</span></div>
+                    <div id="stock-status" style="display:flex;align-items:center;gap:6px;margin-bottom:20px;padding:12px;background:rgba(255,255,255,0.5);border-radius:12px;"></div>
+                    
+                    ${productColors.length ? `
+                    <div style="margin-bottom:24px;">
+                        <p style="font-size:10px;font-weight:700;text-transform:uppercase;color:#86868b;margin-bottom:12px;">Color: <span id="selected-color-name">Select</span></p>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                            ${productColors.map(c => `<button class="color-swatch-btn" data-color-id="${c.id}" onclick="selectColor(${c.id})" title="${c.color_name}"><span class="swatch-color" style="background:${c.color_code||'#ccc'};display:block;width:100%;height:100%;border-radius:50%;"></span></button>`).join('')}
+                        </div>
+                    </div>` : ''}
+                    
+                    ${productColors.length ? `
+                    <div style="margin-bottom:24px;">
+                        <p style="font-size:10px;font-weight:700;text-transform:uppercase;color:#86868b;margin-bottom:12px;">Size: <span id="selected-size-name">Select</span></p>
+                        <div id="size-buttons-container" style="display:flex;flex-wrap:wrap;gap:8px;"><p style="font-size:11px;color:#9ca3af;">Select a color first</p></div>
+                    </div>` : ''}
+                    
+                    <div id="variant-info" class="variant-info-badge" style="display:none;"></div>
+                    
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0;">
+                        <button onclick="addToCartHandler()" style="padding:16px;background:#1d1d1f;color:white;border:none;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;">Add to Bag</button>
+                        <button onclick="addToCartHandler();window.location='/checkout'" style="padding:16px;background:rgba(255,255,255,0.7);border:2px solid rgba(0,0,0,0.1);border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;">Buy Now</button>
+                    </div>
+
+                    ${product.description ? `
+                    <button class="toggle-btn" onclick="toggleCollapse('desc-collapse')">Description <i class="fa-solid fa-chevron-down"></i></button>
+                    <div id="desc-collapse" class="collapse-section"><div class="description-content">${product.description}</div></div>` : ''}
+                    
+                    <div style="height:80px;"></div>
+                </div>`;
+
+            // Sticky bar
+            window.addEventListener('scroll', () => {
+                const bar = document.getElementById('sticky-add-bar');
+                const buySection = document.querySelector('#product-detail-content button');
+                if (buySection && bar) {
+                    const rect = buySection.getBoundingClientRect();
+                    bar.classList.toggle('active', rect.bottom < 0);
+                }
+            }, { passive: true });
+        }
+
+        async function init() {
+            await initSharedComponents();
+            const slug = getSlugFromURL();
+            if (!slug) { document.getElementById('product-not-found').style.display = 'block'; return; }
+            const found = await loadProduct(slug);
+            if (!found) {
+                document.getElementById('product-loading').style.display = 'none';
+                document.getElementById('product-not-found').style.display = 'block';
+            }
+            document.getElementById('global-loader').style.display = 'none';
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    </script>
+</body>
+</html>
