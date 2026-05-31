@@ -57,6 +57,7 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/components.js"></script>
     
     <script type="application/ld+json">
     {
@@ -204,369 +205,71 @@
         .products-fade-in { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s; }
         .product-card-enter { animation: cardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; }
         @keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .product-card-enter:nth-child(1) { animation-delay: 0.05s; }
-        .product-card-enter:nth-child(2) { animation-delay: 0.1s; }
-        .product-card-enter:nth-child(3) { animation-delay: 0.15s; }
-        .product-card-enter:nth-child(4) { animation-delay: 0.2s; }
-        .product-card-enter:nth-child(5) { animation-delay: 0.25s; }
-        .product-card-enter:nth-child(6) { animation-delay: 0.3s; }
-        .product-card-enter:nth-child(7) { animation-delay: 0.35s; }
-        .product-card-enter:nth-child(8) { animation-delay: 0.4s; }
-        .product-card-enter:nth-child(9) { animation-delay: 0.45s; }
-        .product-card-enter:nth-child(10) { animation-delay: 0.5s; }
-        .product-card-enter:nth-child(11) { animation-delay: 0.55s; }
-        .product-card-enter:nth-child(12) { animation-delay: 0.6s; }
-        #products-grid { transition: opacity 0.3s ease; min-height: 400px; }
 
-        .carousel-section {
-            padding: 60px 0;
-            position: relative;
-        }
-        
-        .carousel-container {
-            position: relative;
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-        }
-        
-        .carousel-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 0 20px;
-        }
-        
-        .carousel-header .section-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-        
-        .carousel-header .section-title {
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            margin-bottom: 16px;
-        }
-        
-        .carousel-header .section-link {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--blue);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: gap 0.3s ease;
-        }
-        
+        .carousel-section { padding: 60px 0; position: relative; }
+        .carousel-container { position: relative; max-width: 100%; margin: 0 auto; padding: 0; }
+        .carousel-header { text-align: center; margin-bottom: 40px; padding: 0 20px; }
+        .carousel-header .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 12px; }
+        .carousel-header .section-title { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; }
+        .carousel-header .section-link { font-size: 12px; font-weight: 600; color: var(--blue); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.3s ease; }
         .carousel-header .section-link:hover { gap: 10px; }
-        
-        .carousel-wrapper {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .carousel-track {
-            display: flex;
-            gap: var(--card-gap);
-            overflow-x: auto;
-            scroll-behavior: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            cursor: grab;
-            user-select: none;
-            padding: 20px 0;
-            scroll-snap-type: x mandatory;
-            touch-action: pan-y;
-            -webkit-user-drag: none;
-            padding-left: calc(50% - var(--card-width) / 2);
-            padding-right: calc(50% - var(--card-width) / 2);
-        }
-        
+        .carousel-wrapper { position: relative; overflow: hidden; }
+        .carousel-track { display: flex; gap: var(--card-gap); overflow-x: auto; scroll-behavior: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; user-select: none; padding: 20px 0; scroll-snap-type: x mandatory; touch-action: pan-y; -webkit-user-drag: none; padding-left: calc(50% - var(--card-width) / 2); padding-right: calc(50% - var(--card-width) / 2); }
         .carousel-track::-webkit-scrollbar { display: none; }
         .carousel-track:active { cursor: grabbing; }
         .carousel-track.smooth-scroll { scroll-behavior: smooth; }
-
-        .carousel-card {
-            flex: 0 0 auto;
-            width: var(--card-width);
-            scroll-snap-align: center;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            will-change: transform;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            position: relative;
-        }
-        
-        .carousel-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
-            border-color: rgba(0,0,0,0.15);
-        }
-        
+        .carousel-card { flex: 0 0 auto; width: var(--card-width); scroll-snap-align: center; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; will-change: transform; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: relative; }
+        .carousel-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.15); border-color: rgba(0,0,0,0.15); }
         .carousel-card:active { transform: scale(0.97); }
-        
-        .carousel-card.snap-active {
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            border-color: rgba(0,0,0,0.15);
-            transform: scale(1.02);
-        }
-
-        .carousel-card .card-img {
-            position: relative;
-            aspect-ratio: 3/4;
-            background: #fafafa;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        
-        .carousel-card .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
-            will-change: transform;
-            pointer-events: none;
-        }
-        
+        .carousel-card.snap-active { box-shadow: 0 8px 32px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.15); transform: scale(1.02); }
+        .carousel-card .card-img { position: relative; aspect-ratio: 3/4; background: #fafafa; overflow: hidden; pointer-events: none; }
+        .carousel-card .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); will-change: transform; pointer-events: none; }
         .carousel-card:hover .card-img img { transform: scale(1.08); }
-
-        .carousel-card .card-body {
-            padding: 16px 18px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            background: rgba(255,255,255,0.5);
-            pointer-events: none;
-        }
-        
-        .carousel-card .card-category {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent);
-        }
-        
-        .carousel-card .card-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            letter-spacing: -0.2px;
-        }
-        
-        .carousel-card .card-price-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 8px;
-        }
-        
-        .carousel-card .card-price {
-            font-size: 16px;
-            font-weight: 900;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-        }
-        
-        .carousel-card .card-old-price {
-            font-size: 12px;
-            color: #b0b0b5;
-            text-decoration: line-through;
-            margin-left: 6px;
-            font-weight: 500;
-        }
-        
-        .carousel-card .card-add-btn {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1.5px solid var(--glass-border);
-            display: flex;
-            align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--primary);
-            font-size: 14px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            pointer-events: auto;
-        }
-        
-        .carousel-card .card-add-btn:hover {
-            background: var(--primary); color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-            transform: scale(1.05);
-        }
+        .carousel-card .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 4px; background: rgba(255,255,255,0.5); pointer-events: none; }
+        .carousel-card .card-category { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
+        .carousel-card .card-title { font-size: 14px; font-weight: 700; color: var(--primary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; letter-spacing: -0.2px; }
+        .carousel-card .card-price-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+        .carousel-card .card-price { font-size: 16px; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; }
+        .carousel-card .card-old-price { font-size: 12px; color: #b0b0b5; text-decoration: line-through; margin-left: 6px; font-weight: 500; }
+        .carousel-card .card-add-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1.5px solid var(--glass-border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--primary); font-size: 14px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); pointer-events: auto; }
+        .carousel-card .card-add-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 16px rgba(0,0,0,0.2); transform: scale(1.05); }
         .carousel-card .card-add-btn:active { transform: scale(0.9); }
         .carousel-card .card-add-btn.disabled { opacity: 0.3; pointer-events: none; background: rgba(245,245,247,0.5); }
-
-        .carousel-card .card-badge {
-            position: absolute; top: 12px; left: 12px; z-index: 2;
-            padding: 4px 12px; border-radius: 100px;
-            font-size: 9px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0,0,0,0.08);
-            pointer-events: none;
-        }
+        .carousel-card .card-badge { position: absolute; top: 12px; left: 12px; z-index: 2; padding: 4px 12px; border-radius: 100px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.08); pointer-events: none; }
         .badge-new { background: rgba(255,255,255,0.8); color: var(--primary); border: 1px solid rgba(0,0,0,0.1); }
         .badge-hot { background: rgba(255,59,48,0.1); color: #d70015; border: 1px solid rgba(255,59,48,0.2); }
         .badge-sale { background: rgba(255,149,0,0.1); color: #c93400; border: 1px solid rgba(255,149,0,0.2); }
         .badge-limited { background: rgba(175,82,222,0.1); color: #8944ab; border: 1px solid rgba(175,82,222,0.2); }
         .badge-featured { background: rgba(0,122,255,0.1); color: #0066d6; border: 1px solid rgba(0,122,255,0.2); }
-
-        .carousel-card .card-wishlist-btn {
-            position: absolute; top: 12px; right: 12px; z-index: 2;
-            width: 32px; height: 32px; border-radius: 50%;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0,0,0,0.08);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s ease;
-            color: #8e8e93; font-size: 12px;
-            opacity: 0; transform: translateY(-4px);
-            pointer-events: auto;
-        }
-        .carousel-card.snap-active .card-wishlist-btn,
-        .carousel-card:hover .card-wishlist-btn { opacity: 1; transform: translateY(0); }
+        .carousel-card .card-wishlist-btn { position: absolute; top: 12px; right: 12px; z-index: 2; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; color: #8e8e93; font-size: 12px; opacity: 0; transform: translateY(-4px); pointer-events: auto; }
+        .carousel-card.snap-active .card-wishlist-btn, .carousel-card:hover .card-wishlist-btn { opacity: 1; transform: translateY(0); }
         .carousel-card .card-wishlist-btn:hover { color: #ff3b30; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .carousel-card .card-wishlist-btn.wished { opacity: 1; color: #ff3b30; transform: translateY(0); }
-
-        .carousel-card .card-soldout-overlay {
-            position: absolute; inset: 0;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 5; pointer-events: none;
-        }
-        .carousel-card .card-soldout-overlay span {
-            background: var(--primary); color: #fff;
-            font-size: 10px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 2px;
-            padding: 8px 20px; border-radius: 100px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-
-        .carousel-nav {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            z-index: 20;
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(0, 0, 0, 0.1);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--primary); font-size: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            outline: none;
-        }
-        .carousel-nav:hover {
-            background: #fff;
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            border-color: rgba(0,0,0,0.2);
-        }
+        .carousel-card .card-soldout-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; pointer-events: none; }
+        .carousel-card .card-soldout-overlay span { background: var(--primary); color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 8px 20px; border-radius: 100px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+        .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.5px solid rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--primary); font-size: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); outline: none; }
+        .carousel-nav:hover { background: #fff; transform: translateY(-50%) scale(1.1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); border-color: rgba(0,0,0,0.2); }
         .carousel-nav:active { transform: translateY(-50%) scale(0.95); }
         .carousel-nav.prev { left: 20px; }
         .carousel-nav.next { right: 20px; }
+        .carousel-dots-container { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 28px; padding: 8px 20px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 100px; width: fit-content; margin-left: auto; margin-right: auto; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .carousel-dots-container .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; flex-shrink: 0; }
+        .carousel-dots-container .carousel-dot:hover { background: rgba(0,0,0,0.3); transform: scale(1.2); }
+        .carousel-dots-container .carousel-dot.active { background: var(--primary); width: 28px; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .carousel-section { opacity: 0; transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .carousel-section.visible { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 640px) {
+            :root { --card-width: 240px; --card-gap: 14px; }
             .carousel-nav { width: 38px; height: 38px; font-size: 14px; }
             .carousel-nav.prev { left: 8px; }
             .carousel-nav.next { right: 8px; }
         }
-
-        .carousel-dots-container {
-            display: flex; justify-content: center; align-items: center;
-            gap: 10px; margin-top: 28px;
-            padding: 8px 20px;
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-radius: 100px;
-            width: fit-content;
-            margin-left: auto; margin-right: auto;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        }
-        .carousel-dots-container .carousel-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-            background: rgba(0,0,0,0.15);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; flex-shrink: 0;
-        }
-        .carousel-dots-container .carousel-dot:hover { background: rgba(0,0,0,0.3); transform: scale(1.2); }
-        .carousel-dots-container .carousel-dot.active {
-            background: var(--primary);
-            width: 28px; border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .carousel-section {
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .carousel-section.visible { opacity: 1; transform: translateY(0); }
-
         @media (min-width: 1024px) {
             :root { --card-width: 300px; --card-gap: 24px; }
-            .carousel-track {
-                padding-left: calc(50% - var(--card-width) / 2);
-                padding-right: calc(50% - var(--card-width) / 2);
-            }
-            .carousel-card { width: var(--card-width); }
-        }
-        
-        @media (min-width: 1440px) {
-            :root { --card-width: 320px; --card-gap: 28px; }
-        }
-
-        @media (max-width: 640px) {
-            :root { --card-width: 240px; --card-gap: 14px; }
-            .carousel-track {
-                padding-left: calc(50% - var(--card-width) / 2);
-                padding-right: calc(50% - var(--card-width) / 2);
-            }
-            .carousel-card .card-body { padding: 12px 14px 14px; }
-            .carousel-header .section-title { font-size: 24px; }
-            .carousel-dots-container { gap: 8px; padding: 6px 16px; }
-            .carousel-dots-container .carousel-dot { width: 8px; height: 8px; }
-            .carousel-dots-container .carousel-dot.active { width: 24px; }
-        }
-        @media (min-width: 641px) and (max-width: 1023px) {
-            :root { --card-width: 260px; --card-gap: 18px; }
-            .carousel-track {
-                padding-left: calc(50% - var(--card-width) / 2);
-                padding-right: calc(50% - var(--card-width) / 2);
-            }
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-        
         footer { margin-top: auto; }
     </style>
 </head>
@@ -575,9 +278,7 @@
     <div id="header-container"></div>
 
     <main class="pt-14 sm:pt-16 lg:pt-20">
-        
         <section id="home" class="page-section active-page fade-in">
-            
             <div class="relative overflow-hidden hero-img bg-gray-100" style="height:50vh;min-height:280px;" id="hero-container">
                 <div id="hero-banner-slides" class="absolute inset-0"></div>
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 z-10"></div>
@@ -590,7 +291,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4 -mt-6 sm:-mt-8 relative z-30">
                 <div class="bg-white/80 backdrop-blur-2xl shadow-2xl rounded-2xl p-1.5 sm:p-2 flex gap-1.5 sm:gap-2 border border-white/50">
                     <div class="relative flex-grow">
@@ -601,218 +301,42 @@
                     <button onclick="handleMainSearch()" class="px-4 sm:px-6 bg-primary text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-blue transition shrink-0" aria-label="Search">Search</button>
                 </div>
             </div>
-
-            <section id="new-arrivals-section" class="carousel-section hidden">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <p class="section-label">Just Dropped</p>
-                        <h2 class="section-title">New Arrivals</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                    </div>
-                    <div class="carousel-wrapper" id="new-arrivals-wrapper">
-                        <button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="new-arrivals-carousel" class="carousel-track smooth-scroll" data-speed="0.4"></div>
-                        <button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="carousel-dots-container" id="new-arrivals-dots"></div>
-                </div>
-            </section>
-
-            <section id="hot-products-section" class="carousel-section hidden">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <p class="section-label">Popular Right Now</p>
-                        <h2 class="section-title">Trending Now</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                    </div>
-                    <div class="carousel-wrapper" id="hot-products-wrapper">
-                        <button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="hot-products-carousel" class="carousel-track smooth-scroll" data-speed="0.6"></div>
-                        <button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="carousel-dots-container" id="hot-products-dots"></div>
-                </div>
-            </section>
-
-            <section id="featured-products-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <p class="section-label">Editor's Pick</p>
-                        <h2 class="section-title">Featured Products</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                    </div>
-                    <div class="carousel-wrapper" id="featured-products-wrapper">
-                        <button onclick="slideCarousel('featured-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="featured-products-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div>
-                        <button onclick="slideCarousel('featured-products-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="carousel-dots-container" id="featured-products-dots"></div>
-                </div>
-            </section>
-
-            <section id="best-selling-section" class="carousel-section hidden">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <p class="section-label">Most Loved</p>
-                        <h2 class="section-title">Best Sellers</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                    </div>
-                    <div class="carousel-wrapper" id="best-selling-wrapper">
-                        <button onclick="slideCarousel('best-selling-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="best-selling-carousel" class="carousel-track smooth-scroll" data-speed="0.55"></div>
-                        <button onclick="slideCarousel('best-selling-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="carousel-dots-container" id="best-selling-dots"></div>
-                </div>
-            </section>
-
-            <section id="on-sale-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <p class="section-label" style="color: #ff9500;">Limited Time</p>
-                        <h2 class="section-title">On Sale</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                    </div>
-                    <div class="carousel-wrapper" id="on-sale-wrapper">
-                        <button onclick="slideCarousel('on-sale-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="on-sale-carousel" class="carousel-track smooth-scroll" data-speed="0.7"></div>
-                        <button onclick="slideCarousel('on-sale-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="carousel-dots-container" id="on-sale-dots"></div>
-                </div>
-            </section>
-
-            <section id="limited-edition-section" class="carousel-section hidden" style="background: var(--primary);">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <p class="section-label" style="color: rgba(255,255,255,0.6);">Exclusive Drop</p>
-                        <h2 class="section-title" style="color: #fff;">Limited Edition</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-                    </div>
-                    <div class="carousel-wrapper" id="limited-edition-wrapper">
-                        <button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="limited-edition-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div>
-                        <button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="carousel-dots-container" id="limited-edition-dots" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
-                        <style>#limited-edition-dots .carousel-dot{background:rgba(255,255,255,0.3)}#limited-edition-dots .carousel-dot.active{background:#fff}</style>
-                    </div>
-                </div>
-            </section>
-
-            <section id="recent-products-section" class="py-12 sm:py-16 lg:py-20 hidden">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6">
-                    <div class="text-center mb-8 sm:mb-10"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary">Recently Viewed</h2></div>
-                    <div id="recent-products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div>
-                </div>
-            </section>
+            <section id="new-arrivals-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Just Dropped</p><h2 class="section-title">New Arrivals</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="new-arrivals-wrapper"><button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><div id="new-arrivals-carousel" class="carousel-track smooth-scroll" data-speed="0.4"></div><button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="new-arrivals-dots"></div></div></section>
+            <section id="hot-products-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Popular Right Now</p><h2 class="section-title">Trending Now</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="hot-products-wrapper"><button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><div id="hot-products-carousel" class="carousel-track smooth-scroll" data-speed="0.6"></div><button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="hot-products-dots"></div></div></section>
+            <section id="featured-products-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Editor's Pick</p><h2 class="section-title">Featured Products</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="featured-products-wrapper"><button onclick="slideCarousel('featured-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><div id="featured-products-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('featured-products-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="featured-products-dots"></div></div></section>
+            <section id="best-selling-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Most Loved</p><h2 class="section-title">Best Sellers</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="best-selling-wrapper"><button onclick="slideCarousel('best-selling-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><div id="best-selling-carousel" class="carousel-track smooth-scroll" data-speed="0.55"></div><button onclick="slideCarousel('best-selling-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="best-selling-dots"></div></div></section>
+            <section id="on-sale-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: #ff9500;">Limited Time</p><h2 class="section-title">On Sale</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="on-sale-wrapper"><button onclick="slideCarousel('on-sale-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><div id="on-sale-carousel" class="carousel-track smooth-scroll" data-speed="0.7"></div><button onclick="slideCarousel('on-sale-carousel', 'next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="on-sale-dots"></div></div></section>
+            <section id="limited-edition-section" class="carousel-section hidden" style="background: var(--primary);"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: rgba(255,255,255,0.6);">Exclusive Drop</p><h2 class="section-title" style="color: #fff;">Limited Edition</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="limited-edition-wrapper"><button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><div id="limited-edition-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="limited-edition-dots" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);"><style>#limited-edition-dots .carousel-dot{background:rgba(255,255,255,0.3)}#limited-edition-dots .carousel-dot.active{background:#fff}</style></div></div></section>
+            <section id="recent-products-section" class="py-12 sm:py-16 lg:py-20 hidden"><div class="max-w-7xl mx-auto px-4 sm:px-6"><div class="text-center mb-8 sm:mb-10"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary">Recently Viewed</h2></div><div id="recent-products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div></div></section>
         </section>
-
-        <section id="products" class="page-section py-6 sm:py-8 lg:py-12">
-            <div class="max-w-7xl mx-auto px-3 sm:px-4">
-                <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                    <aside class="hidden lg:block w-56 xl:w-64 shrink-0">
-                        <div class="sticky top-24 space-y-6">
-                            <div><h3 class="font-bold text-xs sm:text-sm uppercase tracking-wider mb-3">Categories</h3><div id="sidebar-categories" class="space-y-1 max-h-[60vh] overflow-y-auto custom-scroll pr-2"></div></div>
-                            <div><h3 class="font-bold text-xs sm:text-sm uppercase tracking-wider mb-3">Price Range</h3><div class="flex gap-2"><input type="number" id="filter-min-price" placeholder="Min" class="w-full p-2 border rounded-lg text-[10px] sm:text-xs"><input type="number" id="filter-max-price" placeholder="Max" class="w-full p-2 border rounded-lg text-[10px] sm:text-xs"></div><button onclick="applyPriceFilter()" class="mt-2 w-full py-2 bg-primary text-white rounded-lg text-[10px] font-bold uppercase hover:bg-blue transition">Apply</button></div>
-                        </div>
-                    </aside>
-                    <div class="flex-grow min-w-0">
-                        <div class="flex justify-between items-center mb-4 sm:mb-6">
-                            <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-primary truncate">All Products</h2>
-                            <div class="flex gap-1.5 sm:gap-2 shrink-0">
-                                <button onclick="toggleMobileFilters()" class="lg:hidden px-3 sm:px-4 py-2 border rounded-full text-[9px] sm:text-[10px] font-bold"><i class="fa-solid fa-sliders mr-1"></i>Filter</button>
-                                <div class="relative" id="sort-container">
-                                    <button onclick="toggleSortMenu()" class="px-3 sm:px-4 py-2 border rounded-full text-[9px] sm:text-[10px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-wide-short"></i><span id="current-sort-label" class="hidden sm:inline">Latest</span><i class="fa-solid fa-chevron-down text-[8px]"></i></button>
-                                    <div id="sort-dropdown" class="hidden absolute right-0 mt-2 w-40 sm:w-48 bg-white/90 backdrop-blur-2xl rounded-2xl shadow-2xl border z-50 p-1">
-                                        <button onclick="handleSorting('new','Latest')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">Latest</button>
-                                        <button onclick="handleSorting('price-low','Price: Low-High')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">Low-High</button>
-                                        <button onclick="handleSorting('price-high','Price: High-Low')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">High-Low</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5"></div>
-                    </div>
-                </div>
-                <div id="mobile-filter-modal" class="hidden fixed inset-0 z-[100] bg-white overflow-y-auto">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex justify-between items-center mb-6"><h3 class="font-black text-lg uppercase">Filters</h3><button onclick="toggleMobileFilters()" class="text-2xl p-1">&times;</button></div>
-                        <div class="space-y-6">
-                            <div><h4 class="font-bold text-xs uppercase mb-3">Categories</h4><div id="mobile-filter-categories" class="space-y-1 max-h-[40vh] overflow-y-auto"></div></div>
-                            <div><h4 class="font-bold text-xs uppercase mb-3">Price Range</h4><div class="flex gap-2"><input type="number" id="m-filter-min-price" placeholder="Min" class="w-full p-3 border rounded-xl text-sm"><input type="number" id="m-filter-max-price" placeholder="Max" class="w-full p-3 border rounded-xl text-sm"></div></div>
-                        </div>
-                        <button onclick="applyMobileFilters();toggleMobileFilters()" class="w-full py-4 bg-primary text-white rounded-2xl font-bold mt-8 uppercase text-sm hover:bg-blue transition">Apply Filters</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        <section id="products" class="page-section py-6 sm:py-8 lg:py-12"><div class="max-w-7xl mx-auto px-3 sm:px-4"><div class="flex flex-col lg:flex-row gap-6 lg:gap-8"><aside class="hidden lg:block w-56 xl:w-64 shrink-0"><div class="sticky top-24 space-y-6"><div><h3 class="font-bold text-xs sm:text-sm uppercase tracking-wider mb-3">Categories</h3><div id="sidebar-categories" class="space-y-1 max-h-[60vh] overflow-y-auto custom-scroll pr-2"></div></div><div><h3 class="font-bold text-xs sm:text-sm uppercase tracking-wider mb-3">Price Range</h3><div class="flex gap-2"><input type="number" id="filter-min-price" placeholder="Min" class="w-full p-2 border rounded-lg text-[10px] sm:text-xs"><input type="number" id="filter-max-price" placeholder="Max" class="w-full p-2 border rounded-lg text-[10px] sm:text-xs"></div><button onclick="applyPriceFilter()" class="mt-2 w-full py-2 bg-primary text-white rounded-lg text-[10px] font-bold uppercase hover:bg-blue transition">Apply</button></div></div></aside><div class="flex-grow min-w-0"><div class="flex justify-between items-center mb-4 sm:mb-6"><h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-primary truncate">All Products</h2><div class="flex gap-1.5 sm:gap-2 shrink-0"><button onclick="toggleMobileFilters()" class="lg:hidden px-3 sm:px-4 py-2 border rounded-full text-[9px] sm:text-[10px] font-bold"><i class="fa-solid fa-sliders mr-1"></i>Filter</button><div class="relative" id="sort-container"><button onclick="toggleSortMenu()" class="px-3 sm:px-4 py-2 border rounded-full text-[9px] sm:text-[10px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-wide-short"></i><span id="current-sort-label" class="hidden sm:inline">Latest</span><i class="fa-solid fa-chevron-down text-[8px]"></i></button><div id="sort-dropdown" class="hidden absolute right-0 mt-2 w-40 sm:w-48 bg-white/90 backdrop-blur-2xl rounded-2xl shadow-2xl border z-50 p-1"><button onclick="handleSorting('new','Latest')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">Latest</button><button onclick="handleSorting('price-low','Price: Low-High')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">Low-High</button><button onclick="handleSorting('price-high','Price: High-Low')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">High-Low</button></div></div></div></div><div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5"></div></div></div><div id="mobile-filter-modal" class="hidden fixed inset-0 z-[100] bg-white overflow-y-auto"><div class="p-4 sm:p-6"><div class="flex justify-between items-center mb-6"><h3 class="font-black text-lg uppercase">Filters</h3><button onclick="toggleMobileFilters()" class="text-2xl p-1">&times;</button></div><div class="space-y-6"><div><h4 class="font-bold text-xs uppercase mb-3">Categories</h4><div id="mobile-filter-categories" class="space-y-1 max-h-[40vh] overflow-y-auto"></div></div><div><h4 class="font-bold text-xs uppercase mb-3">Price Range</h4><div class="flex gap-2"><input type="number" id="m-filter-min-price" placeholder="Min" class="w-full p-3 border rounded-xl text-sm"><input type="number" id="m-filter-max-price" placeholder="Max" class="w-full p-3 border rounded-xl text-sm"></div></div></div><button onclick="applyMobileFilters();toggleMobileFilters()" class="w-full py-4 bg-primary text-white rounded-2xl font-bold mt-8 uppercase text-sm hover:bg-blue transition">Apply Filters</button></div></div></div></section>
         <section id="product-details" class="page-section"></section>
-        <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12">
-            <div class="max-w-7xl mx-auto px-3 sm:px-4">
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary text-center mb-8 sm:mb-12">My Wishlist</h2>
-                <div id="wishlist-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div>
-                <div id="wishlist-empty" class="text-center py-16 sm:py-20 hidden"><i class="fa-regular fa-heart text-5xl sm:text-6xl text-gray-200 mb-4 sm:mb-6"></i><p class="text-gray-400 text-base sm:text-lg mb-3 sm:mb-4">Your wishlist is empty</p><a href="/products" onclick="event.preventDefault();navigate('products')" class="px-8 sm:px-10 py-3 sm:py-4 bg-primary text-white rounded-full font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue transition no-underline inline-block">Start Shopping</a></div>
-            </div>
-        </section>
-        <section id="news" class="page-section py-6 sm:py-8 lg:py-12">
-            <div class="max-w-7xl mx-auto px-3 sm:px-4">
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary text-center mb-2 sm:mb-4">The Journal</h2>
-                <p class="text-center text-gray-500 text-xs sm:text-sm mb-8 sm:mb-12">Style stories, guides & inspiration</p>
-                <div id="news-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8"></div>
-            </div>
-        </section>
+        <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12"><div class="max-w-7xl mx-auto px-3 sm:px-4"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary text-center mb-8 sm:mb-12">My Wishlist</h2><div id="wishlist-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div><div id="wishlist-empty" class="text-center py-16 sm:py-20 hidden"><i class="fa-regular fa-heart text-5xl sm:text-6xl text-gray-200 mb-4 sm:mb-6"></i><p class="text-gray-400 text-base sm:text-lg mb-3 sm:mb-4">Your wishlist is empty</p><a href="/products" onclick="event.preventDefault();navigate('products')" class="px-8 sm:px-10 py-3 sm:py-4 bg-primary text-white rounded-full font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue transition no-underline inline-block">Start Shopping</a></div></div></section>
+        <section id="news" class="page-section py-6 sm:py-8 lg:py-12"><div class="max-w-7xl mx-auto px-3 sm:px-4"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary text-center mb-2 sm:mb-4">The Journal</h2><p class="text-center text-gray-500 text-xs sm:text-sm mb-8 sm:mb-12">Style stories, guides & inspiration</p><div id="news-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8"></div></div></section>
     </main>
 
     <div id="footer-container"></div>
 
-    <div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
-        <a href="https://m.me/861762253694814" target="_blank" rel="noopener noreferrer" class="w-12 h-12 sm:w-14 sm:h-14 bg-primary/90 backdrop-blur-xl text-white rounded-full flex items-center justify-center text-lg sm:text-xl shadow-2xl hover:bg-blue transition-all no-underline border border-white/10"><i class="fa-brands fa-facebook-messenger"></i></a>
-        <span class="absolute top-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full border-2 border-white"></span>
-    </div>
-
-    <div id="cookieConsent" class="cookie-consent-overlay">
-        <div class="cookie-banner">
-            <div class="cookie-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
-            <div class="cookie-text"><h4>We Value Your Privacy</h4><p>We use cookies to enhance your browsing experience. <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a></p></div>
-            <div class="cookie-buttons"><button class="cookie-btn decline" onclick="handleCookieDecline()">Decline All</button><button class="cookie-btn accept" onclick="handleCookieAccept()">Accept All Cookies</button></div>
-        </div>
-    </div>
+    <div id="cookieConsent" class="cookie-consent-overlay"><div class="cookie-banner"><div class="cookie-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="cookie-text"><h4>We Value Your Privacy</h4><p>We use cookies. <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a></p></div><div class="cookie-buttons"><button class="cookie-btn decline" onclick="handleCookieDecline()">Decline</button><button class="cookie-btn accept" onclick="handleCookieAccept()">Accept</button></div></div></div>
 
     <style>
-        .cookie-consent-overlay {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(29,29,31,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 9999; transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .cookie-consent-overlay.show { transform: translateY(0); }
-        .cookie-banner { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-        .cookie-icon { width: 40px; height: 40px; background: #007aff; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .cookie-text { flex: 1; min-width: 200px; color: white; }
-        .cookie-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: #fff; }
-        .cookie-text p { font-size: 11px; color: #a1a1a6; line-height: 1.4; margin: 0; }
-        .cookie-text a { color: #007aff; text-decoration: underline; }
-        .cookie-buttons { display: flex; gap: 10px; flex-shrink: 0; }
-        .cookie-btn { padding: 10px 24px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.3s; border: none; outline: none; font-family: 'Inter', sans-serif; }
-        .cookie-btn.accept { background: #007aff; color: white; }
-        .cookie-btn.accept:hover { background: #0056cc; }
-        .cookie-btn.decline { background: transparent; color: #a1a1a6; border: 1px solid #48484a; }
-        .cookie-btn.decline:hover { color: white; border-color: #a1a1a6; }
-        @media (max-width: 768px) {
-            .cookie-banner { flex-direction: column; padding: 16px; text-align: center; }
-            .cookie-buttons { width: 100%; flex-direction: column; }
-            .cookie-btn { width: 100%; text-align: center; }
-        }
-        .auth-input-wrapper { position: relative; }
-        .auth-input-wrapper .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #86868b; font-size: 14px; transition: color 0.2s ease; pointer-events: none; }
+        .cookie-consent-overlay{position:fixed;bottom:0;left:0;right:0;background:rgba(29,29,31,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:9999;transform:translateY(100%);transition:transform 0.5s;border-top:1px solid rgba(255,255,255,0.1)}
+        .cookie-consent-overlay.show{transform:translateY(0)}
+        .cookie-banner{max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+        .cookie-icon{width:40px;height:40px;background:#007aff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .cookie-text{flex:1;min-width:200px;color:white}
+        .cookie-text h4{font-size:14px;font-weight:700;margin-bottom:4px;color:#fff}
+        .cookie-text p{font-size:11px;color:#a1a1a6;line-height:1.4;margin:0}
+        .cookie-text a{color:#007aff;text-decoration:underline}
+        .cookie-buttons{display:flex;gap:10px;flex-shrink:0}
+        .cookie-btn{padding:10px 24px;border-radius:50px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;transition:all 0.3s;border:none;outline:none;font-family:'Inter',sans-serif}
+        .cookie-btn.accept{background:#007aff;color:white}
+        .cookie-btn.decline{background:transparent;color:#a1a1a6;border:1px solid #48484a}
+        @media(max-width:768px){.cookie-banner{flex-direction:column;padding:16px;text-align:center}.cookie-buttons{width:100%;flex-direction:column}.cookie-btn{width:100%;text-align:center}}
     </style>
 
     <script>
         const _supabaseLocal = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
         let currentData = { products: [], categories: [], news: [], hero: [], deliveryCharges: [], variants: [], reviews: [], orders: [] };
         let currentSlide = 0, slideInterval;
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
@@ -820,9 +344,6 @@
         const productsLoadMoreIncrement = 12;
         const BASE_URL = 'https://www.jayenware.shop';
         const carouselStates = {};
-        let wishlist = JSON.parse(localStorage.getItem('jayen_wishlist') || '[]');
-        let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
-        let userSession = null;
 
         function getCategorySlug(c) { if(!c) return ''; return c.toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
         function getProductSlug(p) { return p.id + '-' + (p.title||'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
@@ -831,400 +352,69 @@
             const url = BASE_URL + path; 
             window.history.pushState({ path }, title || 'JAYENWARE', path); 
             document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE'; 
-            const canonical = document.querySelector('link[rel="canonical"]'); 
-            if(canonical) canonical.href = url; 
-        }
-
-        function showToast(msg, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] px-6 py-3 rounded-full text-xs font-bold text-white shadow-2xl backdrop-blur-xl ${type === 'success' ? 'bg-green-500/90' : type === 'error' ? 'bg-red-500/90' : 'bg-primary/90'}`;
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
         }
 
         function navigate(pageId, params = null) {
             if(pageId !== 'home') cleanupAllCarousels();
-            const mainContent = document.querySelector('main');
-            mainContent.style.transition = 'opacity 0.2s ease'; 
-            mainContent.style.opacity = '0.8';
-            requestAnimationFrame(() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                document.querySelectorAll('.page-section').forEach(s => { s.classList.remove('active-page','fade-in'); s.style.display = 'none'; });
-                const target = document.getElementById(pageId);
-                if(!target) return;
-                target.style.display = 'block'; 
-                target.offsetHeight;
-                let urlPath = '/' + pageId;
-                if(params && params.category) { 
-                    urlPath = '/category/' + getCategorySlug(params.category); 
-                    updateURL(urlPath, params.category); 
-                } else if(params && params.search) { 
-                    urlPath = '/search?q=' + encodeURIComponent(params.search); 
-                    updateURL(urlPath, 'Search: ' + params.search); 
-                } else updateURL(urlPath);
-                
-                if(pageId === 'home') { 
-                    renderHomepageSections(); 
-                    renderRecentlyViewed(); 
-                }
-                if(pageId === 'wishlist') renderWishlist();
-                if(pageId === 'products') renderProducts(getFilteredProducts());
-                
-                requestAnimationFrame(() => { 
-                    target.classList.add('active-page','fade-in'); 
-                    setTimeout(() => { mainContent.style.opacity = '1'; }, 100); 
-                });
-            });
+            document.querySelectorAll('.page-section').forEach(s => { s.classList.remove('active-page','fade-in'); s.style.display = 'none'; });
+            const target = document.getElementById(pageId);
+            if(!target) return;
+            target.style.display = 'block'; target.offsetHeight;
+            let urlPath = '/' + pageId;
+            if(params && params.category) { urlPath = '/category/' + getCategorySlug(params.category); updateURL(urlPath, params.category); }
+            else if(params && params.search) { urlPath = '/search?q=' + encodeURIComponent(params.search); updateURL(urlPath, 'Search: ' + params.search); }
+            else updateURL(urlPath);
+            if(pageId === 'home') { renderHomepageSections(); renderRecentlyViewed(); }
+            if(pageId === 'wishlist') renderWishlist();
+            if(pageId === 'products') renderProducts(getFilteredProducts());
+            requestAnimationFrame(() => { target.classList.add('active-page','fade-in'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
         }
 
         function renderHero() {
             const container = document.getElementById('hero-banner-slides'), list = currentData.hero;
             if(!list.length) { container.innerHTML = '<div class="w-full h-full bg-primary"></div>'; return; }
             container.innerHTML = list.map((h,i) => `<div class="hero-slide absolute inset-0 transition-opacity duration-1000 ${i===0?'':'opacity-0'}"><img src="${h.img}" alt="${h.title||'JAYENWARE Hero'}" class="w-full h-full object-cover" loading="${i===0?'eager':'lazy'}"></div>`).join('');
-            updateHeroText(0); 
-            clearInterval(slideInterval);
+            updateHeroText(0); clearInterval(slideInterval);
             if(list.length > 1) slideInterval = setInterval(() => { currentSlide = (currentSlide+1)%list.length; updateHeroSlide(); }, 5000);
         }
-        
-        function updateHeroSlide() { 
-            document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('opacity-0', i!==currentSlide)); 
-            updateHeroText(currentSlide); 
-        }
-        
-        function updateHeroText(i) { 
-            const d = currentData.hero[i]; 
-            if(d) { 
-                document.getElementById('hero-title').innerText = d.title||'JAYENWARE'; 
-                document.getElementById('hero-subtitle').innerText = d.subtitle||''; 
-            } 
-        }
+        function updateHeroSlide() { document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('opacity-0', i!==currentSlide)); updateHeroText(currentSlide); }
+        function updateHeroText(i) { const d = currentData.hero[i]; if(d) { document.getElementById('hero-title').innerText = d.title||'JAYENWARE'; document.getElementById('hero-subtitle').innerText = d.subtitle||''; } }
 
         function renderCategories() {
             document.getElementById('sidebar-categories').innerHTML = `<a href="/products" onclick="event.preventDefault();filterByCategory('all')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-bold hover:bg-gray-100 transition no-underline text-primary ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</a>` + currentData.categories.map(c => `<a href="/category/${getCategorySlug(c.name)}" onclick="event.preventDefault();filterByCategory('${c.name}')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-bold hover:bg-gray-100 transition no-underline text-primary ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</a>`).join('');
         }
 
-        function getFilteredProducts() { 
-            let list = currentData.products; 
-            if(currentFilters.cat!=='all') list = list.filter(p => p.category===currentFilters.cat); 
-            if(currentFilters.minPrice) list = list.filter(p => p.price>=currentFilters.minPrice); 
-            if(currentFilters.maxPrice) list = list.filter(p => p.price<=currentFilters.maxPrice); 
-            return list; 
-        }
-        
-        function filterByCategory(cat) { 
-            const grid = document.getElementById('products-grid'); 
-            grid.style.transition='opacity 0.2s ease'; 
-            grid.style.opacity='0.5'; 
-            setTimeout(() => { 
-                currentFilters.cat=cat; 
-                productsDisplayLimit=12; 
-                renderProducts(getFilteredProducts()); 
-                grid.style.opacity='1'; 
-                if(cat==='all') updateURL('/products','All Products'); 
-                else updateURL('/category/'+getCategorySlug(cat),cat); 
-            },200); 
-        }
-        
-        function applyPriceFilter() { 
-            currentFilters.minPrice=parseFloat(document.getElementById('filter-min-price').value)||null; 
-            currentFilters.maxPrice=parseFloat(document.getElementById('filter-max-price').value)||null; 
-            productsDisplayLimit=12; 
-            renderProducts(getFilteredProducts()); 
-        }
-        
-        function loadMoreProducts() { 
-            productsDisplayLimit+=productsLoadMoreIncrement; 
-            renderProducts(getFilteredProducts()); 
-            showToast('More products loaded!','info'); 
-        }
-        
-        function toggleMobileFilters() { 
-            const modal=document.getElementById('mobile-filter-modal'); 
-            if(modal.classList.contains('hidden')){ 
-                const catDiv=document.getElementById('mobile-filter-categories'); 
-                catDiv.innerHTML=`<button onclick="filterByCategory('all');highlightMobileCat(this)" class="block w-full text-left py-2 px-3 rounded-lg text-sm font-bold ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</button>`+currentData.categories.map(c=>`<button onclick="filterByCategory('${c.name}');highlightMobileCat(this)" class="block w-full text-left py-2 px-3 rounded-lg text-sm font-bold ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</button>`).join(''); 
-                document.getElementById('m-filter-min-price').value=currentFilters.minPrice||''; 
-                document.getElementById('m-filter-max-price').value=currentFilters.maxPrice||''; 
-            } 
-            modal.classList.toggle('hidden'); 
-        }
-        
-        function highlightMobileCat(btn) { 
-            document.querySelectorAll('#mobile-filter-categories button').forEach(b=>b.classList.remove('bg-primary','text-white')); 
-            btn.classList.add('bg-primary','text-white'); 
-        }
-        
-        function applyMobileFilters() { 
-            currentFilters.minPrice=parseFloat(document.getElementById('m-filter-min-price').value)||null; 
-            currentFilters.maxPrice=parseFloat(document.getElementById('m-filter-max-price').value)||null; 
-            productsDisplayLimit=12; 
-            renderProducts(getFilteredProducts()); 
-        }
-        
-        function toggleSortMenu() { 
-            document.getElementById('sort-dropdown').classList.toggle('hidden'); 
-        }
-        
-        function handleSorting(type,label) { 
-            document.getElementById('current-sort-label').innerText=label; 
-            document.getElementById('sort-dropdown').classList.add('hidden'); 
-            let sorted=[...getFilteredProducts()]; 
-            if(type==='price-low') sorted.sort((a,b)=>a.price-b.price); 
-            else if(type==='price-high') sorted.sort((a,b)=>b.price-a.price); 
-            else sorted.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)); 
-            productsDisplayLimit=12; 
-            renderProducts(sorted); 
-        }
+        function getFilteredProducts() { let list = currentData.products; if(currentFilters.cat!=='all') list = list.filter(p => p.category===currentFilters.cat); if(currentFilters.minPrice) list = list.filter(p => p.price>=currentFilters.minPrice); if(currentFilters.maxPrice) list = list.filter(p => p.price<=currentFilters.maxPrice); return list; }
+        function filterByCategory(cat) { currentFilters.cat=cat; productsDisplayLimit=12; renderProducts(getFilteredProducts()); if(cat==='all') updateURL('/products','All Products'); else updateURL('/category/'+getCategorySlug(cat),cat); }
+        function applyPriceFilter() { currentFilters.minPrice=parseFloat(document.getElementById('filter-min-price').value)||null; currentFilters.maxPrice=parseFloat(document.getElementById('filter-max-price').value)||null; productsDisplayLimit=12; renderProducts(getFilteredProducts()); }
+        function loadMoreProducts() { productsDisplayLimit+=productsLoadMoreIncrement; renderProducts(getFilteredProducts()); if(typeof showToast === 'function') showToast('More products loaded!','info'); }
+        function toggleMobileFilters() { document.getElementById('mobile-filter-modal').classList.toggle('hidden'); }
+        function applyMobileFilters() { currentFilters.minPrice=parseFloat(document.getElementById('m-filter-min-price').value)||null; currentFilters.maxPrice=parseFloat(document.getElementById('m-filter-max-price').value)||null; productsDisplayLimit=12; renderProducts(getFilteredProducts()); }
+        function toggleSortMenu() { document.getElementById('sort-dropdown').classList.toggle('hidden'); }
+        function handleSorting(type,label) { document.getElementById('current-sort-label').innerText=label; document.getElementById('sort-dropdown').classList.add('hidden'); let sorted=[...getFilteredProducts()]; if(type==='price-low') sorted.sort((a,b)=>a.price-b.price); else if(type==='price-high') sorted.sort((a,b)=>b.price-a.price); else sorted.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)); productsDisplayLimit=12; renderProducts(sorted); }
 
         function productCard(p) { 
-            const isOut=p.stock<=0, wished=wishlist.includes(p.id); 
-            return `<a href="/product/${getProductSlug(p)}" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-100 cursor-pointer group no-underline block"><div class="product-img-container" style="aspect-ratio:3/4;"><img src="${p.img}" alt="${p.title}" class="product-image w-full h-full object-cover" loading="lazy"><button onclick="event.preventDefault();event.stopPropagation();toggleWishlist(${p.id})" class="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-white/90 backdrop-blur-xl rounded-full flex items-center justify-center ${wished?'text-red-500':'text-gray-400'} active:scale-95 transition border border-gray-100"><i class="fa-${wished?'solid':'regular'} fa-heart text-[10px] sm:text-xs"></i></button>${isOut?'<div class="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center"><span class="bg-primary text-white text-[8px] sm:text-[10px] font-black px-2 sm:px-3 py-1 rounded-full uppercase">Sold Out</span></div>':''}${p.is_new_arrival&&!isOut?'<div class="absolute top-2 left-2 sm:top-3 sm:left-3"><span class="badge-new px-2 py-0.5 rounded-full text-[7px] sm:text-[8px] font-black uppercase backdrop-blur-xl bg-white/80 border border-black/5">New</span></div>':''}</div><div class="p-2.5 sm:p-4"><p class="text-[9px] sm:text-[10px] font-bold text-accent uppercase mb-0.5 sm:mb-1">${p.category}</p><h3 class="font-bold text-xs sm:text-sm text-primary truncate mb-1.5 sm:mb-2">${p.title}</h3><div class="flex justify-between items-end"><div><span class="font-black text-xs sm:text-sm text-primary">৳ ${p.price}</span>${p.old_price?`<span class="text-[9px] sm:text-[10px] text-accent line-through ml-1">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();addToCart(${p.id})" ${isOut?'disabled':''} class="w-7 h-7 sm:w-8 sm:h-8 ${isOut?'bg-gray-100':'bg-primary hover:bg-blue'} text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs transition active:scale-90"><i class="fa-solid fa-plus"></i></button></div></div></a>`; 
+            const isOut=p.stock<=0, wished=(window.wishlist||[]).includes(p.id); 
+            return `<a href="/product/${getProductSlug(p)}" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-100 cursor-pointer group no-underline block"><div class="product-img-container" style="aspect-ratio:3/4;"><img src="${p.img}" alt="${p.title}" class="product-image w-full h-full object-cover" loading="lazy"><button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-white/90 backdrop-blur-xl rounded-full flex items-center justify-center ${wished?'text-red-500':'text-gray-400'} active:scale-95 transition border border-gray-100"><i class="fa-${wished?'solid':'regular'} fa-heart text-[10px] sm:text-xs"></i></button>${isOut?'<div class="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center"><span class="bg-primary text-white text-[8px] sm:text-[10px] font-black px-2 sm:px-3 py-1 rounded-full uppercase">Sold Out</span></div>':''}${p.is_new_arrival&&!isOut?'<div class="absolute top-2 left-2 sm:top-3 sm:left-3"><span class="badge-new px-2 py-0.5 rounded-full text-[7px] sm:text-[8px] font-black uppercase backdrop-blur-xl bg-white/80 border border-black/5">New</span></div>':''}</div><div class="p-2.5 sm:p-4"><p class="text-[9px] sm:text-[10px] font-bold text-accent uppercase mb-0.5 sm:mb-1">${p.category}</p><h3 class="font-bold text-xs sm:text-sm text-primary truncate mb-1.5 sm:mb-2">${p.title}</h3><div class="flex justify-between items-end"><div><span class="font-black text-xs sm:text-sm text-primary">৳ ${p.price}</span>${p.old_price?`<span class="text-[9px] sm:text-[10px] text-accent line-through ml-1">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" ${isOut?'disabled':''} class="w-7 h-7 sm:w-8 sm:h-8 ${isOut?'bg-gray-100':'bg-primary hover:bg-blue'} text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs transition active:scale-90"><i class="fa-solid fa-plus"></i></button></div></div></a>`; 
         }
         
         function renderProducts(list) { 
             const grid=document.getElementById('products-grid'); 
-            grid.classList.add('products-fade-out'); 
-            setTimeout(()=>{ 
-                const total=list.length; 
-                const display=list.slice(0,productsDisplayLimit); 
-                let html=display.length?display.map(p=>productCard(p).replace('class="product-card','class="product-card product-card-enter')).join(''):'<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No products found</p></div>'; 
-                if(total>productsDisplayLimit) html+=`<div class="col-span-full mt-8 text-center"><button onclick="loadMoreProducts()" class="px-8 py-3 bg-primary text-white rounded-full font-bold uppercase text-xs tracking-wider hover:bg-blue transition"><i class="fa-solid fa-arrow-down mr-2"></i>Load More (${total-productsDisplayLimit} remaining)</button></div>`; 
-                grid.innerHTML=html; 
-                grid.classList.remove('products-fade-out'); 
-                grid.classList.add('products-fade-in'); 
-                setTimeout(()=>{grid.classList.remove('products-fade-in');},800); 
-            },300); 
+            const total=list.length; 
+            const display=list.slice(0,productsDisplayLimit); 
+            let html=display.length?display.map(p=>productCard(p).replace('class="product-card','class="product-card product-card-enter')).join(''):'<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No products found</p></div>'; 
+            if(total>productsDisplayLimit) html+=`<div class="col-span-full mt-8 text-center"><button onclick="loadMoreProducts()" class="px-8 py-3 bg-primary text-white rounded-full font-bold uppercase text-xs tracking-wider hover:bg-blue transition"><i class="fa-solid fa-arrow-down mr-2"></i>Load More (${total-productsDisplayLimit} remaining)</button></div>`; 
+            grid.innerHTML=html; 
         }
 
         function renderRecentlyViewed() { 
             const ids=JSON.parse(localStorage.getItem('jayen_recent')||'[]'); 
             const list=currentData.products.filter(p=>ids.includes(p.id.toString())); 
             const sec=document.getElementById('recent-products-section'); 
-            if(list.length){
-                sec.classList.remove('hidden');
-                document.getElementById('recent-products-grid').innerHTML=list.map(p=>productCard(p)).join('');
-            } else {
-                sec.classList.add('hidden');
-            } 
+            if(list.length){sec.classList.remove('hidden');document.getElementById('recent-products-grid').innerHTML=list.map(p=>productCard(p)).join('');}else{sec.classList.add('hidden');} 
         }
-        
-        function renderNews(list) { 
-            document.getElementById('news-grid').innerHTML=list.map(n=>`<div class="bg-white/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-100 group cursor-pointer"><div class="product-img-container" style="aspect-ratio:16/10;"><img src="${n.img}" alt="${n.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy"></div><div class="p-4 sm:p-6"><p class="text-[9px] sm:text-[10px] font-bold text-blue uppercase mb-1 sm:mb-2">Style</p><h3 class="font-bold text-base sm:text-lg mb-1.5 sm:mb-2">${n.title}</h3><p class="text-[10px] sm:text-xs text-gray-500 line-clamp-3">${n.description}</p></div></div>`).join(''); 
-        }
-        
-        function renderWishlist() { 
-            const list=currentData.products.filter(p=>wishlist.includes(p.id)); 
-            document.getElementById('wishlist-grid').innerHTML=list.length?list.map(p=>productCard(p)).join(''):''; 
-            document.getElementById('wishlist-empty').classList.toggle('hidden',list.length>0); 
-        }
-
-        function toggleWishlist(id) {
-            const idx = wishlist.indexOf(id);
-            if(idx > -1) { wishlist.splice(idx,1); showToast('Removed from wishlist','info'); }
-            else { wishlist.push(id); showToast('Added to wishlist!','success'); }
-            localStorage.setItem('jayen_wishlist', JSON.stringify(wishlist));
-            const activeSection = document.querySelector('.page-section.active-page');
-            if(activeSection && activeSection.id === 'wishlist') renderWishlist();
-            else if(activeSection && activeSection.id === 'products') renderProducts(getFilteredProducts());
-            else if(activeSection && activeSection.id === 'home') { renderHomepageSections(); renderRecentlyViewed(); }
-        }
-
-        function addToCart(id) {
-            const product = currentData.products.find(p => p.id === id);
-            if(!product || product.stock <= 0) { showToast('Product out of stock!','error'); return; }
-            const existing = cart.find(i => i.id === id);
-            if(existing) { 
-                if(existing.qty >= product.stock) { showToast('Max stock reached!','error'); return; }
-                existing.qty++; 
-            } else { 
-                cart.push({ id, qty: 1, title: product.title, price: product.price, img: product.img }); 
-            }
-            localStorage.setItem('jayen_cart', JSON.stringify(cart));
-            updateCartCount();
-            showToast('Added to cart!','success');
-        }
-
-        function updateCartCount() {
-            const countEl = document.getElementById('cart-count');
-            if(countEl) {
-                const total = cart.reduce((sum, i) => sum + i.qty, 0);
-                countEl.textContent = total;
-                countEl.classList.toggle('hidden', total === 0);
-            }
-        }
-
-        function toggleCart() {
-            showToast('Cart feature coming soon!','info');
-        }
-
-        // CAROUSEL FUNCTIONS
-        function initCarousel(carouselId) { 
-            if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
-                isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
-                touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
-                swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
-                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false 
-            }; 
-            return carouselStates[carouselId]; 
-        }
-        
-        function getCardDimensions(carousel) { 
-            const card=carousel.querySelector('.carousel-card'); 
-            if(!card) return {width:280,gap:20}; 
-            const gap=parseInt(getComputedStyle(carousel).gap)||20; 
-            return {width:card.offsetWidth,gap:gap}; 
-        }
-
-        function snapToCard(carouselId, targetIndex) {
-            const carousel=document.getElementById(carouselId); 
-            if(!carousel) return;
-            const state=initCarousel(carouselId); 
-            const {width,gap}=getCardDimensions(carousel);
-            const cardTotal = width + gap;
-            const scrollTarget = targetIndex * cardTotal;
-            state._isAnimating = true;
-            carousel.classList.add('smooth-scroll');
-            carousel.scrollTo({ left: scrollTarget, behavior: 'smooth' });
-            state.currentIndex = targetIndex;
-            updateActiveCard(carouselId); 
-            updateDots(carouselId);
-            setTimeout(() => { state._isAnimating = false; }, 500);
-        }
-
-        function autoScrollCarousel(carouselId, timestamp) {
-            const carousel=document.getElementById(carouselId); 
-            if(!carousel) return;
-            const state=initCarousel(carouselId);
-            if(state.isPaused||state.isDragging||state._isAnimating){
-                state.animationFrame=requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts));
-                return;
-            }
-            if(!state.lastTimestamp) state.lastTimestamp=timestamp;
-            const delta=Math.min(timestamp-state.lastTimestamp,32);
-            carousel.scrollLeft += delta * state.baseSpeed * 0.03;
-            const {width,gap}=getCardDimensions(carousel); 
-            const cardTotal=width+gap;
-            const currentCardIndex = Math.round(carousel.scrollLeft / cardTotal);
-            if(currentCardIndex !== state.currentIndex && currentCardIndex >= 0 && currentCardIndex < state.totalCards) {
-                state.currentIndex = currentCardIndex; 
-                updateActiveCard(carouselId); 
-                updateDots(carouselId);
-            }
-            const maxScroll = (state.totalCards - 1) * cardTotal + 10;
-            if(carousel.scrollLeft >= maxScroll) { 
-                carousel.scrollLeft = 0; 
-                state.currentIndex = 0; 
-                updateActiveCard(carouselId); 
-                updateDots(carouselId); 
-            }
-            state.lastTimestamp = timestamp;
-            state.animationFrame = requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts));
-        }
-
-        function updateActiveCard(carouselId) {
-            const carousel=document.getElementById(carouselId); 
-            if(!carousel) return;
-            const {width,gap}=getCardDimensions(carousel); 
-            const cardTotal=width+gap;
-            const currentIndex = Math.round(carousel.scrollLeft / cardTotal);
-            carousel.querySelectorAll('.carousel-card').forEach((card,i) => { 
-                card.classList.toggle('snap-active', i === currentIndex); 
-            });
-        }
-        
-        function updateDots(carouselId) {
-            const carousel=document.getElementById(carouselId);
-            const dotsContainer=document.getElementById(carouselId.replace('carousel','dots'));
-            if(!carousel||!dotsContainer) return;
-            const state=initCarousel(carouselId); 
-            const {width,gap}=getCardDimensions(carousel); 
-            const cardTotal=width+gap;
-            const currentIndex = Math.max(0, Math.min(Math.round(carousel.scrollLeft / cardTotal), state.totalCards - 1));
-            dotsContainer.querySelectorAll('.carousel-dot').forEach((dot,i) => { 
-                dot.classList.toggle('active', i === currentIndex); 
-            });
-        }
-
-        function startCarouselAutoScroll(carouselId) { 
-            const carousel=document.getElementById(carouselId); 
-            if(!carousel) return; 
-            const state=initCarousel(carouselId); 
-            state.isPaused=false; 
-            state.lastTimestamp=0; 
-            if(state.animationFrame) cancelAnimationFrame(state.animationFrame); 
-            state.animationFrame=requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts)); 
-        }
-        
-        function stopCarouselAutoScroll(carouselId) { 
-            const state=carouselStates[carouselId]; 
-            if(state&&state.animationFrame){
-                cancelAnimationFrame(state.animationFrame);
-                state.animationFrame=null;
-            } 
-        }
-
-        function slideCarousel(carouselId, direction) {
-            const carousel=document.getElementById(carouselId); 
-            if(!carousel) return;
-            const state=initCarousel(carouselId); 
-            state.isPaused = true;
-            const {width,gap}=getCardDimensions(carousel); 
-            const cardTotal=width+gap;
-            const currentCardIndex = Math.round(carousel.scrollLeft / cardTotal);
-            let targetIndex = direction === 'next' ? Math.min(currentCardIndex + 1, state.totalCards - 1) : Math.max(currentCardIndex - 1, 0);
-            snapToCard(carouselId, targetIndex);
-            clearTimeout(state._resumeTimeout);
-            state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 3000);
-        }
-        
-        function goToCarouselDot(carouselId, index) { 
-            const carousel=document.getElementById(carouselId); 
-            if(!carousel) return; 
-            const state=initCarousel(carouselId); 
-            state.isPaused = true; 
-            snapToCard(carouselId, index); 
-            clearTimeout(state._resumeTimeout); 
-            state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 3000); 
-        }
-
-        function renderCarouselProducts(carouselId, products) {
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return;
-            if(!products||!products.length) { 
-                carousel.innerHTML='<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>'; 
-                return; 
-            }
-            const state = initCarousel(carouselId);
-            let displayProducts = [...products];
-            const len = displayProducts.length;
-            if (len > 1) {
-                const half = Math.floor(len / 2);
-                const leftCount = len % 2 === 0 ? half - 1 : half;
-                const leftItems = displayProducts.slice(-leftCount);
-                const rightItems = displayProducts.slice(0, len - leftCount);
-                displayProducts = [...leftItems, ...rightItems];
-            }
-            state.totalCards = displayProducts.length;
-            carousel.innerHTML = displayProducts.map(p => {
-                const isOut=p.stock<=0, wished=wishlist.includes(p.id); 
-                let badge='';
-                if(!isOut){
-                    if(p.is_new_arrival)badge='<span class="card-badge badge-new">New</span>';
-                    else if(p.is_hot)badge='<span class="card-badge badge-hot">Hot</span>';
-                    else if(p.is_on_sale)badge='<span class="card-badge badge-sale">Sale</span>';
-                    else if(p.is_limited_edition)badge='<span class="card-badge badge-limited">Limited</span>';
-                    else if(p.is_featured)badge='<span class="card-badge badge-featured">Featured</span>';
-                }
-                return `<a href="/product/${getProductSlug(p)}" class="carousel-card" draggable="false"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}<button onclick="event.preventDefault();event.stopPropagation();toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span>${p.old_price?`<span class="card-old-price">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();addToCart(${p.id})" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}><i class="fa-solid fa-plus"></i></button></div></div></a>`;
-            }).join('');
-            const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
-            if(dotsContainer) dotsContainer.innerHTML = displayProducts.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
-            const middleIndex = Math.floor(displayProducts.length / 2);
-            carousel.scrollLeft = 0;
-            state.currentIndex = middleIndex;
-            setTimeout(() => { snapToCard(carouselId, middleIndex); }, 100);
-        }
+        function renderNews(list) { document.getElementById('news-grid').innerHTML=list.map(n=>`<div class="bg-white/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-100 group cursor-pointer"><div class="product-img-container" style="aspect-ratio:16/10;"><img src="${n.img}" alt="${n.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy"></div><div class="p-4 sm:p-6"><p class="text-[9px] sm:text-[10px] font-bold text-blue uppercase mb-1 sm:mb-2">Style</p><h3 class="font-bold text-base sm:text-lg mb-1.5 sm:mb-2">${n.title}</h3><p class="text-[10px] sm:text-xs text-gray-500 line-clamp-3">${n.description}</p></div></div>`).join(''); }
+        function renderWishlist() { const list=currentData.products.filter(p=>(window.wishlist||[]).includes(p.id)); document.getElementById('wishlist-grid').innerHTML=list.length?list.map(p=>productCard(p)).join(''):''; document.getElementById('wishlist-empty').classList.toggle('hidden',list.length>0); }
 
         function renderHomepageSections() {
             const sections = [
@@ -1235,292 +425,56 @@
                 {id:'on-sale-section',carousel:'on-sale-carousel',products:currentData.products.filter(p=>p.is_on_sale)},
                 {id:'limited-edition-section',carousel:'limited-edition-carousel',products:currentData.products.filter(p=>p.is_limited_edition)}
             ];
-            sections.forEach((sec,i) => { 
-                const el=document.getElementById(sec.id); 
-                if(!el) return; 
-                if(sec.products.length){
-                    el.classList.remove('hidden');
-                    renderCarouselProducts(sec.carousel,sec.products);
-                    startCarouselAutoScroll(sec.carousel);
-                    setTimeout(()=>{el.classList.add('visible');},i*150);
-                } else el.classList.add('hidden'); 
-            });
+            sections.forEach((sec,i) => { const el=document.getElementById(sec.id); if(!el) return; if(sec.products.length){el.classList.remove('hidden');renderCarouselProducts(sec.carousel,sec.products);startCarouselAutoScroll(sec.carousel);setTimeout(()=>{el.classList.add('visible');},i*150);} else el.classList.add('hidden'); });
         }
 
-        function cleanupAllCarousels() { 
-            ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
-        }
-
-        function handleMainSearch() { 
-            const q=document.getElementById('main-search-input').value.toLowerCase().trim(); 
-            document.getElementById('search-suggestions').classList.add('hidden'); 
-            if(!q) return; 
-            navigate('products',{search:q}); 
-            renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(q))); 
-        }
-        
-        function handleCookieAccept() { 
-            localStorage.setItem('jayenware_consent','accepted'); 
-            document.getElementById('cookieConsent').classList.remove('show'); 
-            showToast('Cookies accepted!','success'); 
-        }
-        
-        function handleCookieDecline() { 
-            localStorage.setItem('jayenware_consent','declined'); 
-            document.getElementById('cookieConsent').classList.remove('show'); 
-            showToast('Only essential cookies used','info'); 
-        }
-        
-        function openPolicy(type) { 
-            const policies={
-                privacy:{t:'Privacy Policy',c:'<p>At <strong>JAYENWARE</strong>, we are committed to protecting your privacy. We collect only necessary information to process your orders and improve your shopping experience. Your data is never shared with third parties without your consent.</p><p class="mt-4">For any privacy concerns, contact us through our Facebook page.</p>'},
-                terms:{t:'Terms of Service',c:'<p>Welcome to <strong>JAYENWARE</strong>. By using our website, you agree to these terms. All products are subject to availability. Prices are in Bangladeshi Taka (BDT). We reserve the right to modify these terms at any time.</p>'},
-                cookies:{t:'Return & Refund Policy',c:'<p>Returns accepted within 3 days of delivery. Items must be unused with original tags. Refunds processed within 7-10 business days. Contact our support team to initiate a return.</p>'},
-                shipping:{t:'Shipping & Delivery',c:'<p>Dhaka Metro: 1-2 business days. Other districts: 3-7 business days. Free shipping on orders over ৳2000. Delivery charges vary by location.</p>'}
-            }; 
-            const p=policies[type]; 
-            if(p){
-                document.getElementById('policy-title').innerText=p.t;
-                document.getElementById('policy-content').innerHTML=p.c;
-                const modal = document.getElementById('policy-modal');
-                if(!modal) {
-                    const newModal = document.createElement('div');
-                    newModal.id = 'policy-modal';
-                    newModal.className = 'premium-modal fixed inset-0 z-[130] flex items-center justify-center p-4';
-                    newModal.style.background = 'rgba(0,0,0,0.5)';
-                    newModal.style.backdropFilter = 'blur(6px)';
-                    newModal.innerHTML = `
-                        <div class="bg-white w-full max-w-sm sm:max-w-2xl rounded-3xl p-6 sm:p-10 relative max-h-[80dvh] overflow-y-auto custom-scroll">
-                            <button onclick="this.closest('.premium-modal').classList.add('hidden')" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-400 hover:text-primary text-lg sm:text-xl"><i class="fa-solid fa-xmark"></i></button>
-                            <h2 id="policy-title" class="text-xl sm:text-2xl font-black uppercase mb-4 sm:mb-6"></h2>
-                            <div id="policy-content" class="text-xs sm:text-sm text-gray-600 leading-relaxed space-y-3 sm:space-y-4"></div>
-                        </div>`;
-                    document.body.appendChild(newModal);
-                    document.getElementById('policy-title').innerText=p.t;
-                    document.getElementById('policy-content').innerHTML=p.c;
-                    newModal.classList.remove('hidden');
-                } else {
-                    modal.classList.remove('hidden');
-                }
-            } 
-        }
+        function cleanupAllCarousels() { ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); }
+        function handleMainSearch() { const q=document.getElementById('main-search-input').value.toLowerCase().trim(); document.getElementById('search-suggestions').classList.add('hidden'); if(!q) return; navigate('products',{search:q}); renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(q))); }
+        function handleCookieAccept() { localStorage.setItem('jayenware_consent','accepted'); document.getElementById('cookieConsent').classList.remove('show'); if(typeof showToast === 'function') showToast('Cookies accepted!','success'); }
+        function handleCookieDecline() { localStorage.setItem('jayenware_consent','declined'); document.getElementById('cookieConsent').classList.remove('show'); }
+        function openPolicy(type) { if(typeof showToast === 'function') showToast('Policy: ' + type,'info'); }
 
         async function loadData() {
             try {
-                const [{data:hero},{data:cats},{data:vars},{data:prods},{data:newsData},{data:delivery},{data:reviews}] = await Promise.all([
+                const [{data:hero},{data:cats},{data:prods},{data:newsData}] = await Promise.all([
                     _supabaseLocal.from('hero').select('*').order('created_at',{ascending:true}),
                     _supabaseLocal.from('categories').select('*'),
-                    _supabaseLocal.from('product_variants').select('*'),
                     _supabaseLocal.from('products').select('*').order('created_at',{ascending:false}),
-                    _supabaseLocal.from('news').select('*').order('created_at',{ascending:false}),
-                    _supabaseLocal.from('delivery_settings').select('*'),
-                    _supabaseLocal.from('product_reviews').select('*')
+                    _supabaseLocal.from('news').select('*').order('created_at',{ascending:false})
                 ]);
                 if(hero) currentData.hero=hero; 
                 if(cats) currentData.categories=cats; 
-                if(vars) currentData.variants=vars; 
                 if(prods) currentData.products=prods; 
-                if(newsData) currentData.news=newsData; 
-                if(delivery) currentData.deliveryCharges=delivery; 
-                if(reviews) currentData.reviews=reviews;
-                
-                renderHero(); 
-                renderCategories(); 
-                renderProducts(currentData.products); 
-                renderHomepageSections(); 
-                renderRecentlyViewed(); 
-                renderNews(currentData.news); 
-                handleInitialRoute();
-                updateCartCount();
-            } catch(err) {
-                console.error('Data load error:', err);
-                showToast('Failed to load data. Please refresh.','error');
-            }
+                if(newsData) currentData.news=newsData;
+                renderHero(); renderCategories(); renderProducts(currentData.products); renderHomepageSections(); renderRecentlyViewed(); renderNews(currentData.news); handleInitialRoute();
+            } catch(err) { console.error('Data load error:', err); }
         }
 
         function handleInitialRoute() {
             const path=window.location.pathname, sp=new URLSearchParams(window.location.search);
             if(path.startsWith('/product/')) return;
-            if(path.startsWith('/category/')){
-                const slug=path.replace('/category/','');
-                const cat=currentData.categories.find(c=>getCategorySlug(c.name)===slug);
-                if(cat){ navigate('products'); filterByCategory(cat.name); }
-                return;
-            }
-            if(path==='/search'&&sp.get('q')){
-                navigate('products');
-                renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(sp.get('q').toLowerCase())));
-                return;
-            }
-            const routes={'/':'home','/products':'products','/wishlist':'wishlist','/journal':'news'}; 
-            navigate(routes[path]||'home');
+            if(path.startsWith('/category/')){const slug=path.replace('/category/','');const cat=currentData.categories.find(c=>getCategorySlug(c.name)===slug);if(cat){navigate('products');filterByCategory(cat.name);}return;}
+            if(path==='/search'&&sp.get('q')){navigate('products');renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(sp.get('q').toLowerCase())));return;}
+            const routes={'/':'home','/products':'products','/wishlist':'wishlist','/journal':'news'}; navigate(routes[path]||'home');
         }
 
-        // Event Listeners
-        document.addEventListener('click',e=>{
-            if(!e.target.closest('#main-search-input')&&!e.target.closest('#search-suggestions'))
-                document.getElementById('search-suggestions').classList.add('hidden');
-            if(!e.target.closest('#sort-container'))
-                document.getElementById('sort-dropdown').classList.add('hidden');
-        });
-
-        document.getElementById('main-search-input').addEventListener('input',function(e){
-            const q=e.target.value.toLowerCase().trim();
-            const box=document.getElementById('search-suggestions');
-            if(q.length<2){box.classList.add('hidden');return;}
-            const filtered=currentData.products.filter(p=>p.title.toLowerCase().includes(q)).slice(0,6);
-            box.innerHTML=filtered.length?filtered.map(p=>`<a href="/product/${getProductSlug(p)}" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer no-underline"><img src="${p.img}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg object-cover shrink-0" alt="${p.title}"><div class="min-w-0"><p class="text-[10px] sm:text-xs font-bold text-primary truncate">${p.title}</p><p class="text-[9px] sm:text-[10px] font-black text-primary">৳${p.price}</p></div></a>`).join(''):'<p class="p-3 sm:p-4 text-gray-400 text-[10px] sm:text-xs text-center">No results</p>';
-            box.classList.remove('hidden');
-        });
-
+        document.addEventListener('click',e=>{if(!e.target.closest('#main-search-input')&&!e.target.closest('#search-suggestions'))document.getElementById('search-suggestions').classList.add('hidden');if(!e.target.closest('#sort-container'))document.getElementById('sort-dropdown').classList.add('hidden');});
+        document.getElementById('main-search-input').addEventListener('input',function(e){const q=e.target.value.toLowerCase().trim();const box=document.getElementById('search-suggestions');if(q.length<2){box.classList.add('hidden');return;}const filtered=currentData.products.filter(p=>p.title.toLowerCase().includes(q)).slice(0,6);box.innerHTML=filtered.length?filtered.map(p=>`<a href="/product/${getProductSlug(p)}" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer no-underline"><img src="${p.img}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg object-cover shrink-0" alt="${p.title}"><div class="min-w-0"><p class="text-[10px] sm:text-xs font-bold text-primary truncate">${p.title}</p><p class="text-[9px] sm:text-[10px] font-black text-primary">৳${p.price}</p></div></a>`).join(''):'<p class="p-3 sm:p-4 text-gray-400 text-[10px] sm:text-xs text-center">No results</p>';box.classList.remove('hidden');});
         window.addEventListener('popstate',function(){handleInitialRoute();});
 
-        // Initialize carousel touch support
-        function initCarouselTouchSupport() {
-            document.querySelectorAll('.carousel-track').forEach(carousel => {
-                const state = initCarousel(carousel.id);
-                const THRESHOLD = 15;
-                carousel.addEventListener('touchstart', (e) => { 
-                    state.touchStartX = e.touches[0].pageX; 
-                    state.touchStartY = e.touches[0].pageY; 
-                    state.touchStartScrollLeft = carousel.scrollLeft; 
-                    state.hasMoved = false; 
-                    state.isDragging = false; 
-                    state.swipeDirection = null; 
-                    state.isPaused = true; 
-                    carousel.classList.remove('smooth-scroll'); 
-                }, { passive: true });
-                carousel.addEventListener('touchmove', (e) => { 
-                    if(state.swipeDirection === 'vertical') return; 
-                    const deltaX = e.touches[0].pageX - state.touchStartX; 
-                    const deltaY = e.touches[0].pageY - state.touchStartY; 
-                    const absX = Math.abs(deltaX); 
-                    const absY = Math.abs(deltaY); 
-                    if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) 
-                        state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; 
-                    if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { 
-                        if(!state.hasMoved) state.hasMoved = true; 
-                        state.isDragging = true; 
-                        carousel.scrollLeft = state.touchStartScrollLeft - deltaX; 
-                        updateActiveCard(carousel.id); 
-                        updateDots(carousel.id); 
-                    } 
-                }, { passive: true });
-                carousel.addEventListener('touchend', () => { 
-                    carousel.classList.add('smooth-scroll'); 
-                    if(state.hasMoved) { 
-                        const {width,gap}=getCardDimensions(carousel); 
-                        const cardTotal=width+gap; 
-                        const nearestIndex = Math.round(carousel.scrollLeft / cardTotal); 
-                        snapToCard(carousel.id, Math.max(0, Math.min(nearestIndex, state.totalCards - 1))); 
-                    } 
-                    state.isDragging = false; 
-                    state.swipeDirection = null; 
-                    clearTimeout(state._resumeTimeout); 
-                    state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 2500); 
-                });
-            });
-        }
+        // Carousel functions (minified)
+        function initCarousel(carouselId) { if(!carouselStates[carouselId]) carouselStates[carouselId] = { isPaused:false, animationFrame:null, lastTimestamp:0, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false }; return carouselStates[carouselId]; }
+        function getCardDimensions(carousel) { const card=carousel.querySelector('.carousel-card'); if(!card) return {width:280,gap:20}; return {width:card.offsetWidth,gap:parseInt(getComputedStyle(carousel).gap)||20}; }
+        function snapToCard(carouselId, targetIndex) { const carousel=document.getElementById(carouselId); if(!carousel) return; const state=initCarousel(carouselId); const {width,gap}=getCardDimensions(carousel); const cardTotal=width+gap; state._isAnimating=true; carousel.classList.add('smooth-scroll'); carousel.scrollTo({ left: targetIndex*cardTotal, behavior:'smooth' }); state.currentIndex=targetIndex; setTimeout(()=>{state._isAnimating=false;},500); }
+        function autoScrollCarousel(carouselId, timestamp) { const carousel=document.getElementById(carouselId); if(!carousel) return; const state=initCarousel(carouselId); if(state.isPaused||state._isAnimating){state.animationFrame=requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts));return;} if(!state.lastTimestamp) state.lastTimestamp=timestamp; carousel.scrollLeft += Math.min(timestamp-state.lastTimestamp,32)*state.baseSpeed*0.03; state.lastTimestamp=timestamp; state.animationFrame=requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts)); }
+        function startCarouselAutoScroll(carouselId) { const carousel=document.getElementById(carouselId); if(!carousel) return; const state=initCarousel(carouselId); state.isPaused=false; state.lastTimestamp=0; if(state.animationFrame) cancelAnimationFrame(state.animationFrame); state.animationFrame=requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts)); }
+        function stopCarouselAutoScroll(carouselId) { const state=carouselStates[carouselId]; if(state&&state.animationFrame){cancelAnimationFrame(state.animationFrame);state.animationFrame=null;} }
+        function slideCarousel(carouselId, direction) { const carousel=document.getElementById(carouselId); if(!carousel) return; const state=initCarousel(carouselId); state.isPaused=true; const {width,gap}=getCardDimensions(carousel); const cardTotal=width+gap; const idx=Math.round(carousel.scrollLeft/cardTotal); let target=direction==='next'?Math.min(idx+1,state.totalCards-1):Math.max(idx-1,0); snapToCard(carouselId,target); clearTimeout(state._resumeTimeout); state._resumeTimeout=setTimeout(()=>{state.isPaused=false;state.lastTimestamp=0;},3000); }
+        function renderCarouselProducts(carouselId, products) { const carousel=document.getElementById(carouselId); if(!carousel||!products||!products.length) return; const state=initCarousel(carouselId); state.totalCards=products.length; carousel.innerHTML=products.map(p=>`<a href="/product/${getProductSlug(p)}" class="carousel-card" draggable="false"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${p.is_new_arrival?'<span class="card-badge badge-new">New</span>':p.is_hot?'<span class="card-badge badge-hot">Hot</span>':p.is_on_sale?'<span class="card-badge badge-sale">Sale</span>':p.is_limited_edition?'<span class="card-badge badge-limited">Limited</span>':p.is_featured?'<span class="card-badge badge-featured">Featured</span>':''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span></div></div></div></a>`).join(''); }
 
         window.onload = async () => {
-            // Render Header
-            const headerContainer = document.getElementById('header-container');
-            if (headerContainer) {
-                headerContainer.innerHTML = `
-                <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-                    <nav class="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
-                        <a href="/" onclick="event.preventDefault();navigate('home')" class="text-xl sm:text-2xl font-black font-serif text-primary no-underline">JAYENWARE</a>
-                        <div class="flex items-center gap-2 sm:gap-4" id="auth-nav-area">
-                            <a href="/products" onclick="event.preventDefault();navigate('products')" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition no-underline hidden sm:inline">Shop</a>
-                            <a href="/wishlist" onclick="event.preventDefault();navigate('wishlist')" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition no-underline"><i class="fa-regular fa-heart"></i></a>
-                            <button onclick="toggleCart()" class="relative text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition bg-transparent border-none cursor-pointer">
-                                <i class="fa-solid fa-bag-shopping"></i> <span id="cart-count" class="absolute -top-1 -right-2 bg-blue text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
-                            </button>
-                        </div>
-                    </nav>
-                </header>`;
-            }
-
-            // Render Footer
-            const footerContainer = document.getElementById('footer-container');
-            if (footerContainer) {
-                footerContainer.innerHTML = `
-                <footer class="bg-primary text-white py-8 sm:py-12 mt-12 sm:mt-16">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
-                            <div>
-                                <h4 class="font-black text-sm mb-3 sm:mb-4">Shop</h4>
-                                <div class="space-y-2 text-[10px] sm:text-xs text-gray-400">
-                                    <a href="/products" onclick="event.preventDefault();navigate('products')" class="block hover:text-white transition no-underline">All Products</a>
-                                    <a href="/wishlist" onclick="event.preventDefault();navigate('wishlist')" class="block hover:text-white transition no-underline">Wishlist</a>
-                                    <a href="/journal" onclick="event.preventDefault();navigate('news')" class="block hover:text-white transition no-underline">Journal</a>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-sm mb-3 sm:mb-4">Support</h4>
-                                <div class="space-y-2 text-[10px] sm:text-xs text-gray-400">
-                                    <a href="#" onclick="event.preventDefault();openPolicy('shipping')" class="block hover:text-white transition no-underline">Shipping Info</a>
-                                    <a href="#" onclick="event.preventDefault();openPolicy('cookies')" class="block hover:text-white transition no-underline">Returns & Refund</a>
-                                    <a href="#" onclick="event.preventDefault();openPolicy('privacy')" class="block hover:text-white transition no-underline">Privacy Policy</a>
-                                    <a href="#" onclick="event.preventDefault();openPolicy('terms')" class="block hover:text-white transition no-underline">Terms of Service</a>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-sm mb-3 sm:mb-4">Connect</h4>
-                                <div class="space-y-2 text-[10px] sm:text-xs text-gray-400">
-                                    <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener" class="block hover:text-white transition no-underline">Facebook</a>
-                                    <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener" class="block hover:text-white transition no-underline">Instagram</a>
-                                    <a href="https://www.twitter.com/jayenware" target="_blank" rel="noopener" class="block hover:text-white transition no-underline">Twitter</a>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-sm mb-3 sm:mb-4">JAYENWARE</h4>
-                                <p class="text-[10px] sm:text-xs text-gray-400 leading-relaxed">Premium lifestyle products by BINZEO. Quality craftsmanship since 2024. Fast delivery across Bangladesh.</p>
-                            </div>
-                        </div>
-                        <div class="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-800 text-center">
-                            <p class="text-[9px] sm:text-[10px] text-gray-500">&copy; 2024 JAYENWARE. All rights reserved. Powered by <a href="https://binzeo.vercel.app" target="_blank" class="text-blue hover:text-white transition no-underline">BINZEO</a></p>
-                        </div>
-                    </div>
-                </footer>`;
-            }
-
-            // Remove any duplicate footers
-            const footers = document.querySelectorAll('footer');
-            if(footers.length > 1) {
-                for(let i = 1; i < footers.length; i++) footers[i].remove();
-            }
-
-            // Check auth session
-            const {data:{session}} = await _supabaseLocal.auth.getSession();
-            if(session){
-                userSession = session.user;
-                const authArea = document.getElementById('auth-nav-area');
-                if(authArea) {
-                    authArea.innerHTML = `
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition no-underline hidden sm:inline">Shop</a>
-                        <a href="/wishlist" onclick="event.preventDefault();navigate('wishlist')" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition no-underline"><i class="fa-regular fa-heart"></i></a>
-                        <a href="/account" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition no-underline">Account</a>
-                        <button onclick="toggleCart()" class="relative text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary hover:text-blue transition bg-transparent border-none cursor-pointer">
-                            <i class="fa-solid fa-bag-shopping"></i> <span id="cart-count" class="absolute -top-1 -right-2 bg-blue text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
-                        </button>
-                    `;
-                }
-            }
-
-            // Cookie consent
-            const consent = localStorage.getItem('jayenware_consent');
-            if(!consent) {
-                setTimeout(() => {
-                    document.getElementById('cookieConsent').classList.add('show');
-                }, 2000);
-            }
-
-            // Load all data
+            const consent=localStorage.getItem('jayenware_consent'); if(!consent) setTimeout(()=>{document.getElementById('cookieConsent').classList.add('show');},2000);
             await loadData();
-            
-            // Initialize touch support for carousels
-            setTimeout(initCarouselTouchSupport, 500);
         };
     </script>
 </body>
