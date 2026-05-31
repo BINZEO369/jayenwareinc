@@ -1,13 +1,20 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 2.0 (All Bugs Fixed)
+// Version: 2.1 (Fixed)
 // ============================================
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
 let userSession = null;
 let allCategories = [];
+
+// Wait for SUPABASE to be ready
+function getSupabase() {
+    if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_KEY !== 'undefined') {
+        return supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+    return null;
+}
 
 // ============================================
 // SHARED CSS STYLES
@@ -21,7 +28,6 @@ function injectSharedStyles() {
             --soft: #f5f5f7;
             --blue: #007aff;
         }
-        
         .glass-nav {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(50px) saturate(180%);
@@ -29,7 +35,6 @@ function injectSharedStyles() {
             border-bottom: 1px solid rgba(0,0,0,0.06);
             transition: all 0.3s ease;
         }
-        
         .nav-link {
             position: relative;
             font-size: 11px;
@@ -50,7 +55,6 @@ function injectSharedStyles() {
             transition: width 0.3s ease;
         }
         .nav-link:hover::after { width: 100%; }
-        
         .mobile-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.5);
@@ -58,7 +62,6 @@ function injectSharedStyles() {
             transition: all 0.3s ease;
         }
         .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
-        
         .mobile-menu-drawer {
             position: fixed; top: 0; left: 0;
             width: 85%; max-width: 380px;
@@ -69,19 +72,16 @@ function injectSharedStyles() {
             display: flex; flex-direction: column;
         }
         .mobile-menu-drawer.open { transform: translateX(0); }
-        
         .mobile-menu-drawer .mobile-menu-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 18px 20px; border-bottom: 1px solid #f0f0f0;
             background: white; flex-shrink: 0;
         }
-        
         .mobile-menu-drawer .mobile-menu-scroll {
             flex: 1; overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 12px 20px;
         }
-        
         .mobile-cat-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 0; border-bottom: 1px solid #f5f5f5;
@@ -89,7 +89,6 @@ function injectSharedStyles() {
             cursor: pointer; color: #1d1d1f; text-decoration: none;
             transition: color 0.2s ease;
         }
-        
         .mobile-sub-cat {
             padding: 12px 0 12px 20px;
             border-bottom: 1px solid #fafafa;
@@ -101,38 +100,27 @@ function injectSharedStyles() {
             content: ''; width: 5px; height: 5px;
             background: #007aff; border-radius: 50%; flex-shrink: 0;
         }
-        
         .mobile-footer {
             padding: 20px; border-top: 1px solid #f0f0f0;
             background: #f5f5f7; flex-shrink: 0;
         }
-        
         #cart-drawer {
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
         }
         #cart-drawer.open { transform: translateX(0) !important; }
-        
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
-        
         #toast {
             position: fixed; top: 16px; right: 16px; z-index: 9999;
             transform: translateX(120%);
             transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
             max-width: calc(100vw - 32px);
         }
-        
-        body {
-            padding-top: 56px;
-        }
-        @media (min-width: 640px) {
-            body { padding-top: 64px; }
-        }
-        @media (min-width: 1024px) {
-            body { padding-top: 80px; }
-        }
+        body { padding-top: 56px; }
+        @media (min-width: 640px) { body { padding-top: 64px; } }
+        @media (min-width: 1024px) { body { padding-top: 80px; } }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
@@ -144,7 +132,6 @@ function injectSharedStyles() {
 function renderHeader() {
     const headerHTML = `
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
-    
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
         <div class="mobile-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
@@ -176,7 +163,6 @@ function renderHeader() {
         </div>
         <div class="mobile-footer" id="mobileMenuFooter"></div>
     </div>
-
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline" aria-label="JAYENWARE Home">
@@ -206,7 +192,6 @@ function renderHeader() {
             </div>
         </div>
     </nav>
-
     <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
         <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter">Shopping Bag</h2>
@@ -227,7 +212,6 @@ function renderHeader() {
         </div>
     </div>
     `;
-    
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 }
 
@@ -243,8 +227,7 @@ function renderFooter() {
                     <h4 class="text-white font-black font-serif text-base sm:text-lg mb-3 sm:mb-4">JAYENWARE</h4>
                     <p class="text-[10px] sm:text-xs leading-relaxed mb-4">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition">BINZEO</a>.</p>
                     <div class="flex gap-3 text-base sm:text-lg">
-                        <a href="https://www.facebook.com/share/1GAZnrgvH8/" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook-messenger"></i></a>
+                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook"></i></a>
                         <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-instagram"></i></a>
                         <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-youtube"></i></a>
                     </div>
@@ -263,18 +246,11 @@ function renderFooter() {
                     <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
                         <li><a href="/privacy-policy" class="hover:text-white transition no-underline">Privacy Policy</a></li>
                         <li><a href="/terms-and-conditions" class="hover:text-white transition no-underline">Terms & Conditions</a></li>
-                        <li><a href="https://support.jayenware.shop" target="_blank" rel="noopener noreferrer" class="hover:text-white transition no-underline">Help Center</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">We Accept</h5>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <img src="https://vdqbjwzixppbtkbgvhlq.supabase.co/storage/v1/object/public/images/binzeo_1778506245655_download_(2).jpeg" alt="Google Pay" class="h-5 w-auto bg-gray-200 rounded p-0.5" loading="lazy">
-                        <img src="https://vdqbjwzixppbtkbgvhlq.supabase.co/storage/v1/object/public/images/binzeo_1778506292766_download_(1).png" alt="Visa" class="h-5 w-auto bg-gray-200 rounded p-0.5" loading="lazy">
-                        <img src="https://vdqbjwzixppbtkbgvhlq.supabase.co/storage/v1/object/public/images/binzeo_1778506270475_download_(1).jpeg" alt="Mastercard" class="h-5 w-auto bg-gray-200 rounded p-0.5" loading="lazy">
-                    </div>
-                    <p class="text-[9px] text-gray-500">Secured by BINZEO</p>
-                    <p class="text-[9px] text-gray-500 mt-1"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
+                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Contact</h5>
+                    <p class="text-[9px] text-gray-500"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -284,9 +260,7 @@ function renderFooter() {
         </div>
     </footer>
     `;
-    
     document.body.insertAdjacentHTML('beforeend', footerHTML);
-    
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
@@ -303,19 +277,14 @@ function showToast(text, type = 'success') {
             <div class="bg-white shadow-2xl rounded-2xl p-3 flex items-center gap-3 min-w-[260px] border border-gray-100">
                 <span id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"></span>
                 <p id="toast-text" class="text-xs font-bold flex-grow"></p>
-                <button onclick="hideToast()" class="text-gray-300 hover:text-gray-600 shrink-0">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="hideToast()" class="text-gray-300 hover:text-gray-600 shrink-0"><i class="fa-solid fa-xmark"></i></button>
             </div>
         `;
         document.body.appendChild(toast);
     }
-    
     const toastText = document.getElementById('toast-text');
     const toastIcon = document.getElementById('toast-icon');
-    
     if (toastText) toastText.innerText = text;
-    
     if (toastIcon) {
         if (type === 'success') {
             toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-green-100 text-green-600 shrink-0';
@@ -328,7 +297,6 @@ function showToast(text, type = 'success') {
             toastIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
         }
     }
-    
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
@@ -346,25 +314,19 @@ function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
     if (drawer) {
         drawer.classList.toggle('open');
-        if (drawer.classList.contains('open')) {
-            renderCartItems();
-        }
+        if (drawer.classList.contains('open')) renderCartItems();
     }
 }
 
 function addToCart(productId, productData) {
-    const product = productData || window.currentProducts?.find(p => p.id === productId);
-    if (!product) return showToast('Product not found', 'error');
-    if (product.stock <= 0) return showToast('Out of stock', 'error');
-    
+    if (!productData) { showToast('Product data missing', 'error'); return; }
+    if (productData.stock <= 0) return showToast('Out of stock', 'error');
     cart.push({
         id: Date.now(),
-        product_id: product.id,
-        variant_id: null,
-        title: product.title,
-        price: product.price,
-        img: product.img,
-        variant: null,
+        product_id: productData.id,
+        title: productData.title,
+        price: productData.price,
+        img: productData.img,
         quantity: 1
     });
     saveCart();
@@ -386,25 +348,20 @@ function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
-    
     if (!container) return;
-    
     if (!cart.length) {
         container.innerHTML = '<p class="text-center text-gray-400 py-10 text-sm">Your bag is empty</p>';
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         return;
     }
-    
     let sub = 0;
     container.innerHTML = cart.map((item, idx) => {
         sub += item.price;
-        return `
-        <div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
-            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}" onerror="this.src='/logo.png'">
+        return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
+            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
             <div class="flex-grow min-w-0">
                 <h4 class="text-xs sm:text-sm font-bold truncate">${item.title}</h4>
-                <p class="text-[9px] sm:text-[10px] text-gray-400">${item.variant || ''}</p>
                 <p class="text-xs sm:text-sm font-black">৳${item.price}</p>
             </div>
             <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
@@ -412,7 +369,6 @@ function renderCartItems() {
             </button>
         </div>`;
     }).join('');
-    
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
     if (totalEl) totalEl.innerText = `৳${sub.toFixed(2)}`;
 }
@@ -435,11 +391,10 @@ function toggleWishlist(id) {
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
-    showToast(wishlist.includes(id) ? 'Added to Wishlist ❤️' : 'Removed from Wishlist', 'info');
 }
 
 // ============================================
-// MOBILE MENU FUNCTIONS (FIXED!)
+// MOBILE MENU FUNCTIONS
 // ============================================
 function openMobileMenu() {
     const drawer = document.getElementById('mobileMenuDrawer');
@@ -447,7 +402,6 @@ function openMobileMenu() {
     if (drawer) drawer.classList.add('open');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-    updateMobileSubCategories();
 }
 
 function closeMobileMenu() {
@@ -456,40 +410,21 @@ function closeMobileMenu() {
     if (drawer) drawer.classList.remove('open');
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
-    
     const subCats = document.getElementById('mobileSubCategories');
     if (subCats) subCats.style.display = 'none';
-    const arrow = document.getElementById('mobileCatArrow');
-    if (arrow) arrow.style.transform = '';
 }
 
 function toggleMobileSubCategories() {
     const subCats = document.getElementById('mobileSubCategories');
     const arrow = document.getElementById('mobileCatArrow');
     if (!subCats) return;
-    
     if (subCats.style.display === 'none' || !subCats.style.display) {
         subCats.style.display = 'block';
         if (arrow) arrow.style.transform = 'rotate(180deg)';
-        updateMobileSubCategories();
     } else {
         subCats.style.display = 'none';
         if (arrow) arrow.style.transform = '';
     }
-}
-
-function updateMobileSubCategories() {
-    const container = document.getElementById('mobileSubCategories');
-    if (!container) return;
-    
-    if (!allCategories.length) {
-        container.innerHTML = '<p class="text-xs text-gray-400 py-2 px-5">Loading categories...</p>';
-        return;
-    }
-    
-    container.innerHTML = allCategories.map(c => 
-        `<a href="/products?category=${encodeURIComponent(c.name)}" onclick="closeMobileMenu()" class="mobile-sub-cat">${c.name}</a>`
-    ).join('');
 }
 
 // ============================================
@@ -497,24 +432,11 @@ function updateMobileSubCategories() {
 // ============================================
 function getProductSlug(product) {
     if (!product || !product.title) return '';
-    return product.title.toLowerCase()
-        .replace(/[^\w\s\u0980-\u09FF-]/g, '')
-        .replace(/[\s_]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 80);
-}
-
-function generateSlug(title) {
-    if (!title) return '';
-    return title.toLowerCase()
-        .replace(/[^\w\s\u0980-\u09FF-]/g, '')
-        .replace(/[\s_]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 80);
+    return product.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 80);
 }
 
 // ============================================
-// GLOBAL EXPOSURE (IMPORTANT!)
+// GLOBAL EXPOSURE
 // ============================================
 window.showToast = showToast;
 window.hideToast = hideToast;
@@ -526,59 +448,27 @@ window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.toggleMobileSubCategories = toggleMobileSubCategories;
 window.getProductSlug = getProductSlug;
-window.generateSlug = generateSlug;
 window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
+window.cart = cart;
+window.wishlist = wishlist;
 
 // ============================================
 // INITIALIZATION
 // ============================================
 async function initSharedComponents() {
-    // Inject styles
     injectSharedStyles();
-    
-    // Render header and footer
     renderHeader();
     renderFooter();
-    
-    // Update counts
     updateCounts();
-    
-    // Load categories for mobile menu
-    try {
-        const { data } = await _supabase.from('categories').select('*');
-        if (data) {
-            allCategories = data;
-            updateMobileSubCategories();
-        }
-    } catch (e) {
-        console.warn('Categories not loaded:', e.message);
-    }
-    
-    // Load user session
-    try {
-        const { data: { session } } = await _supabase.auth.getSession();
-        if (session) {
-            userSession = session.user;
-            const authArea = document.getElementById('auth-nav-area');
-            if (authArea) {
-                authArea.innerHTML = '<a href="/account" class="px-5 py-2.5 border-2 border-primary text-primary rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition no-underline inline-block">Account</a>';
-            }
-        }
-    } catch (e) {
-        console.warn('Auth not loaded:', e.message);
-    }
-    
-    // Set year
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
 
-// Auto-initialize when DOM is ready
+// Auto-initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSharedComponents);
 } else {
-    // DOM already loaded
-    setTimeout(initSharedComponents, 0);
+    setTimeout(initSharedComponents, 100);
 }
