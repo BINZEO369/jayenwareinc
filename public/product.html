@@ -276,6 +276,12 @@
                 grid-column: 1 / -1;
                 width: 100%;
             }
+            
+            /* ⚡ DESKTOP: Specs, Description, Barcode buttons full-width */
+            .desktop-full-width-buttons {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
         }
         
         @media (min-width: 768px) {
@@ -435,7 +441,7 @@
             border: 1px solid rgba(0,0,0,0.04);
         }
         
-        /* ⚡ SMALLER Barcode Wrapper */
+        /* Barcode Wrapper */
         .barcode-wrapper {
             background: rgba(255,255,255,0.8);
             backdrop-filter: blur(15px);
@@ -733,7 +739,7 @@
             opacity: 1;
         }
 
-        /* Banner Section */
+        /* ⚡ Banner Section - MUCH TALLER */
         .product-banner-card {
             position: relative;
             border-radius: 24px;
@@ -819,7 +825,19 @@
         
         @media (min-width: 1024px) {
             .product-banner-card {
-                height: 380px;
+                height: 550px;
+            }
+            .product-banner-card .banner-title {
+                font-size: 32px;
+            }
+            .product-banner-card .banner-subtitle {
+                font-size: 18px;
+            }
+            .product-banner-card .banner-overlay {
+                padding: 60px 56px;
+            }
+            .product-banner-card .banner-link {
+                font-size: 15px;
             }
         }
     </style>
@@ -1448,7 +1466,7 @@
                 const videosHTML = renderVideoSection(productVideos);
                 const bannersHTML = renderBannerSection(productBanners);
                 
-                // ⚡ NEW LAYOUT - Video section AFTER buy buttons on mobile, full-width
+                // ⚡ LAYOUT - Desktop: Specs/Desc/Barcode full-width buttons
                 contentDiv.innerHTML = `
                 <div class="desktop-layout" style="display:block;">
                     <!-- Left Column - Images -->
@@ -1505,11 +1523,11 @@
                         </div>
                     </div>
                     
-                    <!-- ⚡ VIDEO SECTION - After Buy Buttons (Mobile: below buy, Desktop: full-width) -->
+                    <!-- ⚡ VIDEO SECTION - Full Width -->
                     ${videosHTML ? `<div class="mobile-video-section full-width-section">${videosHTML}</div>` : ''}
                     
-                    <!-- Specifications, Description, Barcode - Back in right column -->
-                    <div class="desktop-info-col" style="margin-top:0;">
+                    <!-- ⚡ DESKTOP: Specs, Description, Barcode - FULL WIDTH buttons -->
+                    <div class="desktop-full-width-buttons">
                         <!-- Specifications -->
                         <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
                             <span><i class="fa-solid fa-sliders"></i> &nbsp;Specifications</span>
@@ -1535,7 +1553,7 @@
                             <div class="description-content">${product.description}</div>
                         </div>` : ''}
                         
-                        <!-- Barcode - Only left icon, no right icon -->
+                        <!-- Barcode -->
                         ${(product.barcode) ? `
                         <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')" style="justify-content: flex-start; gap: 12px;">
                             <span><i class="fa-solid fa-barcode"></i> &nbsp;Barcode</span>
@@ -1550,11 +1568,11 @@
                         <div style="height:16px;"></div>
                     </div>
                     
-                    <!-- ⚡ BANNER SECTION - Full Width -->
+                    <!-- ⚡ BANNER SECTION - Full Width (Tall on Desktop) -->
                     ${bannersHTML ? `<div class="mobile-banner-section full-width-section" style="margin-top:0;">${bannersHTML}</div>` : ''}
                     
                     <!-- Reviews Section -->
-                    <div class="desktop-info-col" style="margin-top:0;padding-top:0;">
+                    <div class="desktop-full-width-buttons" style="margin-top:0;padding-top:0;">
                         <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:36px;margin-top:8px;">
                             <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
                                 <h3 style="font-size:24px;font-weight:700;">Reviews</h3>
