@@ -678,53 +678,120 @@
             ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
         }
 
-        // ========== TOUCH SUPPORT FOR CAROUSELS ==========
-        function initCarouselTouchSupport() {
-            document.querySelectorAll('.carousel-track').forEach(carousel => {
-                const state = initCarousel(carousel.id);
-                const THRESHOLD = 15;
-                carousel.addEventListener('touchstart', (e) => { 
-                    state.touchStartX = e.touches[0].pageX; 
-                    state.touchStartY = e.touches[0].pageY; 
-                    state.touchStartScrollLeft = carousel.scrollLeft; 
-                    state.hasMoved = false; 
-                    state.isDragging = false; 
-                    state.swipeDirection = null; 
-                    state.isPaused = true; 
-                    carousel.classList.remove('smooth-scroll'); 
-                }, { passive: true });
-                carousel.addEventListener('touchmove', (e) => { 
-                    if(state.swipeDirection === 'vertical') return; 
-                    const deltaX = e.touches[0].pageX - state.touchStartX; 
-                    const deltaY = e.touches[0].pageY - state.touchStartY; 
-                    const absX = Math.abs(deltaX); 
-                    const absY = Math.abs(deltaY); 
-                    if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) 
-                        state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; 
-                    if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { 
-                        if(!state.hasMoved) state.hasMoved = true; 
-                        state.isDragging = true; 
-                        carousel.scrollLeft = state.touchStartScrollLeft - deltaX; 
-                        updateActiveCard(carousel.id); 
-                        updateDots(carousel.id); 
-                    } 
-                }, { passive: true });
-                carousel.addEventListener('touchend', () => { 
-                    carousel.classList.add('smooth-scroll'); 
-                    if(state.hasMoved) { 
-                        const {width,gap}=getCardDimensions(carousel); 
-                        const cardTotal=width+gap; 
-                        const nearestIndex = Math.round(carousel.scrollLeft / cardTotal); 
-                        snapToCard(carousel.id, Math.max(0, Math.min(nearestIndex, state.totalCards - 1))); 
-                    } 
-                    state.isDragging = false; 
-                    state.swipeDirection = null; 
-                    clearTimeout(state._resumeTimeout); 
-                    state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 2500); 
-                });
+        // ========== TOUCH & MOUSE DRAG SUPPORT FOR CAROUSELS ==========
+function initCarouselTouchSupport() {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    document.querySelectorAll('.carousel-track').forEach(carousel => {
+        const state = initCarousel(carousel.id);
+        const THRESHOLD = 15;
+        
+        // ==================== TOUCH EVENTS ====================
+        carousel.addEventListener('touchstart', (e) => { 
+            state.touchStartX = e.touches[0].pageX; 
+            state.touchStartY = e.touches[0].pageY; 
+            state.touchStartScrollLeft = carousel.scrollLeft; 
+            state.hasMoved = false; 
+            state.isDragging = true; 
+            state.swipeDirection = null; 
+            state.isPaused = true; 
+            carousel.classList.remove('smooth-scroll'); 
+        }, { passive: true });
+        
+        carousel.addEventListener('touchmove', (e) => { 
+            if(state.swipeDirection === 'vertical') return; 
+            const deltaX = e.touches[0].pageX - state.touchStartX; 
+            const deltaY = e.touches[0].pageY - state.touchStartY; 
+            const absX = Math.abs(deltaX); 
+            const absY = Math.abs(deltaY); 
+            if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) 
+                state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; 
+            if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { 
+                if(!state.hasMoved) state.hasMoved = true; 
+                carousel.scrollLeft = state.touchStartScrollLeft - deltaX; 
+                updateActiveCard(carousel.id); 
+                updateDots(carousel.id); 
+            } 
+        }, { passive: true });
+        
+        carousel.addEventListener('touchend', () => { 
+            handleDragEnd(carousel, state);
+        });
+        
+        // ==================== MOUSE EVENTS (Desktop Only) ====================
+        if (!isTouchDevice) {
+            carousel.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                state.touchStartX = e.pageX;
+                state.touchStartY = e.pageY;
+                state.touchStartScrollLeft = carousel.scrollLeft;
+                state.hasMoved = false;
+                state.isDragging = true;
+                state.swipeDirection = null;
+                state.isPaused = true;
+                carousel.classList.remove('smooth-scroll');
+                carousel.style.cursor = 'grabbing';
+            });
+            
+            window.addEventListener('mousemove', (e) => {
+                if (!state.isDragging || state.swipeDirection === 'vertical') return;
+                const deltaX = e.pageX - state.touchStartX;
+                const deltaY = e.pageY - state.touchStartY;
+                const absX = Math.abs(deltaX);
+                const absY = Math.abs(deltaY);
+                if (!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) {
+                    state.swipeDirection = absX > absY ? 'horizontal' : 'vertical';
+                    if (state.swipeDirection === 'vertical') {
+                        state.isDragging = false;
+                        carousel.style.cursor = 'grab';
+                        carousel.classList.add('smooth-scroll');
+                        return;
+                    }
+                }
+                if (state.swipeDirection === 'horizontal' && absX > THRESHOLD) {
+                    state.hasMoved = true;
+                    carousel.scrollLeft = state.touchStartScrollLeft - deltaX;
+                    updateActiveCard(carousel.id);
+                    updateDots(carousel.id);
+                }
+            });
+            
+            window.addEventListener('mouseup', () => {
+                if (!state.isDragging) return;
+                handleDragEnd(carousel, state);
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                if (state.isDragging) {
+                    handleDragEnd(carousel, state);
+                }
             });
         }
-
+    });
+    
+    function handleDragEnd(carousel, state) {
+        carousel.classList.add('smooth-scroll');
+        carousel.style.cursor = isTouchDevice ? '' : 'grab';
+        
+        if (state.hasMoved) {
+            const {width, gap} = getCardDimensions(carousel);
+            const cardTotal = width + gap;
+            const nearestIndex = Math.round(carousel.scrollLeft / cardTotal);
+            const targetIndex = Math.max(0, Math.min(nearestIndex, state.totalCards - 1));
+            snapToCard(carousel.id, targetIndex);
+        }
+        
+        state.isDragging = false;
+        state.hasMoved = false;
+        state.swipeDirection = null;
+        
+        clearTimeout(state._resumeTimeout);
+        state._resumeTimeout = setTimeout(() => { 
+            state.isPaused = false; 
+            state.lastTimestamp = 0; 
+        }, 2500);
+    }
+}
         // ========== OTHER FUNCTIONS ==========
         function handleMainSearch() { const q=document.getElementById('main-search-input').value.toLowerCase().trim(); document.getElementById('search-suggestions').classList.add('hidden'); if(!q) return; navigate('products',{search:q}); renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(q))); }
         function handleCookieAccept() { localStorage.setItem('jayenware_consent','accepted'); document.getElementById('cookieConsent').classList.remove('show'); }
