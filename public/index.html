@@ -353,13 +353,14 @@
         function renderNews(list) { /* Your original function */ }
         function renderWishlist() { /* Your original function */ }
 
-        // ========== UPDATED CAROUSEL FUNCTIONS WITH ENHANCED ANIMATIONS & BALANCED SPACING ==========
+        // ========== RELIABLE CAROUSEL FUNCTIONS WITH requestAnimationFrame TIMING ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
                 touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
                 swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
-                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false 
+                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false,
+                _initRetries:0, _maxRetries:5
             }; 
             return carouselStates[carouselId]; 
         }
@@ -376,6 +377,15 @@
             if(!carousel) return;
             const state=initCarousel(carouselId); 
             const {width,gap}=getCardDimensions(carousel);
+            if(width === 0) {
+                // Card not yet rendered, retry after a frame
+                if(state._initRetries < state._maxRetries) {
+                    state._initRetries++;
+                    requestAnimationFrame(() => snapToCard(carouselId, targetIndex));
+                }
+                return;
+            }
+            state._initRetries = 0;
             const cardTotal = width + gap;
             const scrollTarget = targetIndex * cardTotal;
             state._isAnimating = true;
@@ -421,6 +431,7 @@
             const carousel=document.getElementById(carouselId); 
             if(!carousel) return;
             const {width,gap}=getCardDimensions(carousel); 
+            if(width === 0) return;
             const cardTotal=width+gap;
             const currentIndex = Math.round(carousel.scrollLeft / cardTotal);
             carousel.querySelectorAll('.carousel-card').forEach((card,i) => { 
@@ -434,6 +445,7 @@
             if(!carousel||!dotsContainer) return;
             const state=initCarousel(carouselId); 
             const {width,gap}=getCardDimensions(carousel); 
+            if(width === 0) return;
             const cardTotal=width+gap;
             const currentIndex = Math.max(0, Math.min(Math.round(carousel.scrollLeft / cardTotal), state.totalCards - 1));
             dotsContainer.querySelectorAll('.carousel-dot').forEach((dot,i) => { 
@@ -492,6 +504,7 @@
             }
             const state = initCarousel(carouselId);
             state.totalCards = products.length;
+            state._initRetries = 0;
             carousel.innerHTML = products.map(p => {
                 const isOut=p.stock<=0, wished=(window.wishlist||[]).includes(p.id); 
                 let badge='';
@@ -507,22 +520,25 @@
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
             if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
             
-            // Improved middle alignment logic: balanced sides for even/odd counts
+            // Center the middle card with multiple frame retries for reliability
             const total = products.length;
             let middleIndex;
             if (total % 2 === 0) {
-                // Even: e.g., 4 -> index 1 (0,1,2,3) so left has 1, right has 2? Let's use floor((total-1)/2)
                 middleIndex = Math.floor((total - 1) / 2);
             } else {
-                // Odd: e.g., 5 -> index 2 (0,1,2,3,4) perfect middle
                 middleIndex = Math.floor(total / 2);
             }
             carousel.scrollLeft = 0;
             state.currentIndex = middleIndex;
-            setTimeout(() => { 
-                snapToCard(carouselId, middleIndex); 
-                updateActiveCard(carouselId);
-            }, 100);
+            
+            // Use triple requestAnimationFrame to ensure DOM is fully rendered
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        snapToCard(carouselId, middleIndex);
+                    });
+                });
+            });
         }
 
         function renderHomepageSections() {
