@@ -321,8 +321,8 @@
         }
 
         function getCategorySlug(c) { if(!c) return ''; return c.toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
+        function getProductSlug(p) { return p.id + '-' + (p.title||'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
         
-        function getProductSlug(p) { return (p.title||'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
         function updateURL(path, title = '') { 
             window.history.pushState({ path }, title || 'JAYENWARE', path); 
             document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE'; 
@@ -416,31 +416,49 @@
         }
 
         // ========== UPDATED CAROUSEL FUNCTIONS WITH INDEX-1 SYSTEM ==========
-        
         function calculateCarouselLayout(products) {
-    const count = products.length;
-    if (count === 0) return { leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0 };
-    if (count === 1) return { leftCount: 0, centerIndex: 0, rightCount: 0, totalCount: 1 };
-    if (count === 2) return { leftCount: 0, centerIndex: 0, rightCount: 1, totalCount: 2 };
-    
-    // Index starts from 1 (not 0)
-    // Center index calculation (0-based)
-    const centerIndex = Math.floor(count / 2);
-    const leftCount = centerIndex;
-    const rightCount = count - centerIndex - 1;
-    
-    return {
-        leftCount,                    // বাম পাশে কতগুলো প্রোডাক্ট
-        centerIndex,                  // মাঝের প্রোডাক্টের ইনডেক্স (0-based)
-        rightCount,                   // ডান পাশে কতগুলো প্রোডাক্ট
-        totalCount: count,           // মোট প্রোডাক্ট সংখ্যা
-        displayIndex1: centerIndex + 1, // মাঝের প্রোডাক্টের ডিসপ্লে ইনডেক্স (1-based)
-        isEven: count % 2 === 0     // জোড় না বিজোড়
-    };
-}
-    }
-    
+            const count = products.length;
+            if (count === 0) return { leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0 };
+            
+            // Index starts from 1 (not 0)
+            // For even counts: e.g., 10 items -> left: 5, center: 1 (index 6), right: 4
+            // For odd counts: e.g., 5 items -> left: 2, center: 1 (index 3), right: 2
+            // e.g., 11 items -> left: 5, center: 1 (index 6), right: 5
+            
+            let leftCount, centerIndex, rightCount;
+            
+            if (count % 2 === 0) {
+                // Even count
+                leftCount = count / 2;
+                centerIndex = leftCount; // 0-based index for the center card
+                rightCount = count - leftCount - 1;
+            } else {
+                // Odd count
+                leftCount = Math.floor(count / 2);
+                centerIndex = leftCount; // 0-based index for the center card
+                rightCount = leftCount;
+            }
+            
+            return {
+                leftCount,
+                centerIndex,
+                rightCount,
+                totalCount: count,
+                displayIndex1: centerIndex + 1 // 1-based index for the center card
+            };
+        }
 
+        function initCarousel(carouselId) { 
+            if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
+                isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
+                touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
+                swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
+                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false,
+                layout: null // Store the layout configuration
+            }; 
+            return carouselStates[carouselId]; 
+        }
+        
         function getCardDimensions(carousel) { 
             const card=carousel.querySelector('.carousel-card'); 
             if(!card) return {width:280,gap:20}; 
