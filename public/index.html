@@ -142,16 +142,20 @@
         .product-card-enter { animation: cardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; }
         @keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Carousel Styles */
-        .carousel-section { padding: 60px 0; position: relative; }
+        /* Carousel Styles - Updated spacing */
+        .carousel-section { 
+            padding: 32px 0; 
+            position: relative; 
+        }
+        .carousel-section:first-of-type { padding-top: 40px; }
         .carousel-container { position: relative; max-width: 100%; margin: 0 auto; padding: 0; }
-        .carousel-header { text-align: center; margin-bottom: 40px; padding: 0 20px; }
-        .carousel-header .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 12px; }
-        .carousel-header .section-title { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; }
+        .carousel-header { text-align: center; margin-bottom: 24px; padding: 0 20px; }
+        .carousel-header .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 8px; }
+        .carousel-header .section-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 12px; }
         .carousel-header .section-link { font-size: 12px; font-weight: 600; color: var(--blue); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.3s ease; }
         .carousel-header .section-link:hover { gap: 10px; }
         .carousel-wrapper { position: relative; overflow: hidden; }
-        .carousel-track { display: flex; gap: var(--card-gap); overflow-x: auto; scroll-behavior: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; user-select: none; padding: 20px 0; scroll-snap-type: x mandatory; touch-action: pan-y; -webkit-user-drag: none; padding-left: calc(50% - var(--card-width) / 2); padding-right: calc(50% - var(--card-width) / 2); }
+        .carousel-track { display: flex; gap: var(--card-gap); overflow-x: auto; scroll-behavior: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; user-select: none; padding: 16px 0; scroll-snap-type: x mandatory; touch-action: pan-y; -webkit-user-drag: none; padding-left: calc(50% - var(--card-width) / 2); padding-right: calc(50% - var(--card-width) / 2); }
         .carousel-track::-webkit-scrollbar { display: none; }
         .carousel-track:active { cursor: grabbing; }
         .carousel-track.smooth-scroll { scroll-behavior: smooth; }
@@ -188,14 +192,68 @@
         .carousel-nav:hover { background: #fff; transform: translateY(-50%) scale(1.1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); border-color: rgba(0,0,0,0.2); }
         .carousel-nav:active { transform: translateY(-50%) scale(0.95); }
         .carousel-nav.prev { left: 20px; } .carousel-nav.next { right: 20px; }
-        .carousel-dots-container { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 28px; padding: 8px 20px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 100px; width: fit-content; margin-left: auto; margin-right: auto; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-        .carousel-dots-container .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; flex-shrink: 0; }
-        .carousel-dots-container .carousel-dot:hover { background: rgba(0,0,0,0.3); transform: scale(1.2); }
-        .carousel-dots-container .carousel-dot.active { background: var(--primary); width: 28px; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        
+        /* Updated Dots Container - কম দূরত্ব */
+        .carousel-dots-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            margin-top: 16px; 
+            padding: 6px 16px; 
+            background: rgba(255,255,255,0.5); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px); 
+            border-radius: 100px; 
+            width: fit-content; 
+            margin-left: auto; 
+            margin-right: auto; 
+            border: 1px solid rgba(0,0,0,0.06); 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .carousel-dots-container .carousel-dot { 
+            width: 8px; 
+            height: 8px; 
+            border-radius: 50%; 
+            background: rgba(0,0,0,0.15); 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: relative; 
+            flex-shrink: 0; 
+        }
+        .carousel-dots-container .carousel-dot:hover { 
+            background: rgba(0,0,0,0.35); 
+            transform: scale(1.3); 
+        }
+        .carousel-dots-container .carousel-dot.active { 
+            background: var(--primary); 
+            width: 24px; 
+            border-radius: 4px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+        }
+        
         .carousel-section { opacity: 0; transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         .carousel-section.visible { opacity: 1; transform: translateY(0); }
-        @media (max-width: 640px) { :root { --card-width: 240px; --card-gap: 14px; } .carousel-nav { width: 38px; height: 38px; font-size: 14px; } .carousel-nav.prev { left: 8px; } .carousel-nav.next { right: 8px; } }
-        @media (min-width: 1024px) { :root { --card-width: 300px; --card-gap: 24px; } }
+        
+        @media (max-width: 640px) { 
+            :root { --card-width: 240px; --card-gap: 14px; } 
+            .carousel-nav { width: 38px; height: 38px; font-size: 14px; } 
+            .carousel-nav.prev { left: 8px; } 
+            .carousel-nav.next { right: 8px; } 
+            .carousel-section { padding: 20px 0; }
+            .carousel-section:first-of-type { padding-top: 28px; }
+            .carousel-header { margin-bottom: 16px; }
+            .carousel-header .section-title { font-size: 22px; }
+            .carousel-dots-container { margin-top: 10px; gap: 6px; padding: 5px 12px; }
+            .carousel-dots-container .carousel-dot { width: 6px; height: 6px; }
+            .carousel-dots-container .carousel-dot.active { width: 20px; }
+        }
+        
+        @media (min-width: 1024px) { 
+            :root { --card-width: 300px; --card-gap: 24px; } 
+        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
         footer { margin-top: auto; }
         .cookie-consent-overlay{position:fixed;bottom:0;left:0;right:0;background:rgba(29,29,31,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:9999;transform:translateY(100%);transition:transform 0.5s;border-top:1px solid rgba(255,255,255,0.1)}
@@ -241,7 +299,6 @@
                     <button onclick="handleMainSearch()" class="px-4 sm:px-6 bg-primary text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-blue transition shrink-0">Search</button>
                 </div>
             </div>
-            <!-- Carousel Sections -->
             <section id="new-arrivals-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Just Dropped</p><h2 class="section-title">New Arrivals</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="new-arrivals-wrapper"><button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="new-arrivals-carousel" class="carousel-track smooth-scroll" data-speed="0.4"></div><button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="new-arrivals-dots"></div></div></section>
             <section id="hot-products-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Popular Right Now</p><h2 class="section-title">Trending Now</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="hot-products-wrapper"><button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="hot-products-carousel" class="carousel-track smooth-scroll" data-speed="0.6"></div><button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="hot-products-dots"></div></div></section>
             <section id="featured-products-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Editor's Pick</p><h2 class="section-title">Featured Products</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="featured-products-wrapper"><button onclick="slideCarousel('featured-products-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="featured-products-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('featured-products-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="featured-products-dots"></div></div></section>
@@ -250,10 +307,10 @@
             <section id="limited-edition-section" class="carousel-section hidden" style="background: var(--primary);"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: rgba(255,255,255,0.6);">Exclusive Drop</p><h2 class="section-title" style="color: #fff;">Limited Edition</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="limited-edition-wrapper"><button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-left"></i></button><div id="limited-edition-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="limited-edition-dots" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);"><style>#limited-edition-dots .carousel-dot{background:rgba(255,255,255,0.3)}#limited-edition-dots .carousel-dot.active{background:#fff}</style></div></div></section>
             <section id="recent-products-section" class="py-12 sm:py-16 lg:py-20 hidden"><div class="max-w-7xl mx-auto px-4 sm:px-6"><div class="text-center mb-8 sm:mb-10"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary">Recently Viewed</h2></div><div id="recent-products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div></div></section>
         </section>
-        <section id="products" class="page-section py-6 sm:py-8 lg:py-12"><!-- Products content same as before --></section>
+        <section id="products" class="page-section py-6 sm:py-8 lg:py-12"><div class="max-w-7xl mx-auto px-3 sm:px-4"><div class="flex flex-col lg:flex-row gap-6 lg:gap-8"><aside class="hidden lg:block w-56 xl:w-64 shrink-0"><div class="sticky top-24 space-y-6"><div><h3 class="font-bold text-xs sm:text-sm uppercase tracking-wider mb-3">Categories</h3><div id="sidebar-categories" class="space-y-1 max-h-[60vh] overflow-y-auto custom-scroll pr-2"></div></div><div><h3 class="font-bold text-xs sm:text-sm uppercase tracking-wider mb-3">Price Range</h3><div class="flex gap-2"><input type="number" id="filter-min-price" placeholder="Min" class="w-full p-2 border rounded-lg text-[10px] sm:text-xs"><input type="number" id="filter-max-price" placeholder="Max" class="w-full p-2 border rounded-lg text-[10px] sm:text-xs"></div><button onclick="applyPriceFilter()" class="mt-2 w-full py-2 bg-primary text-white rounded-lg text-[10px] font-bold uppercase hover:bg-blue transition">Apply</button></div></div></aside><div class="flex-grow min-w-0"><div class="flex justify-between items-center mb-4 sm:mb-6"><h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-primary truncate">All Products</h2><div class="flex gap-1.5 sm:gap-2 shrink-0"><button onclick="toggleMobileFilters()" class="lg:hidden px-3 sm:px-4 py-2 border rounded-full text-[9px] sm:text-[10px] font-bold"><i class="fa-solid fa-sliders mr-1"></i>Filter</button><div class="relative" id="sort-container"><button onclick="toggleSortMenu()" class="px-3 sm:px-4 py-2 border rounded-full text-[9px] sm:text-[10px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-wide-short"></i><span id="current-sort-label" class="hidden sm:inline">Latest</span><i class="fa-solid fa-chevron-down text-[8px]"></i></button><div id="sort-dropdown" class="hidden absolute right-0 mt-2 w-40 sm:w-48 bg-white/90 backdrop-blur-2xl rounded-2xl shadow-2xl border z-50 p-1"><button onclick="handleSorting('new','Latest')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">Latest</button><button onclick="handleSorting('price-low','Price: Low-High')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">Low-High</button><button onclick="handleSorting('price-high','Price: High-Low')" class="w-full text-left px-4 py-2.5 text-[10px] font-bold hover:bg-gray-50 rounded-xl transition">High-Low</button></div></div></div></div><div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5"></div></div></div><div id="mobile-filter-modal" class="hidden fixed inset-0 z-[100] bg-white overflow-y-auto"><div class="p-4 sm:p-6"><div class="flex justify-between items-center mb-6"><h3 class="font-black text-lg uppercase">Filters</h3><button onclick="toggleMobileFilters()" class="text-2xl p-1">&times;</button></div><div class="space-y-6"><div><h4 class="font-bold text-xs uppercase mb-3">Categories</h4><div id="mobile-filter-categories" class="space-y-1 max-h-[40vh] overflow-y-auto"></div></div><div><h4 class="font-bold text-xs uppercase mb-3">Price Range</h4><div class="flex gap-2"><input type="number" id="m-filter-min-price" placeholder="Min" class="w-full p-3 border rounded-xl text-sm"><input type="number" id="m-filter-max-price" placeholder="Max" class="w-full p-3 border rounded-xl text-sm"></div></div></div><button onclick="applyMobileFilters();toggleMobileFilters()" class="w-full py-4 bg-primary text-white rounded-2xl font-bold mt-8 uppercase text-sm hover:bg-blue transition">Apply Filters</button></div></div></div></section>
         <section id="product-details" class="page-section"></section>
-        <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12"><!-- Wishlist content same as before --></section>
-        <section id="news" class="page-section py-6 sm:py-8 lg:py-12"><!-- News content same as before --></section>
+        <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12"><div class="max-w-7xl mx-auto px-3 sm:px-4"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary text-center mb-8 sm:mb-12">My Wishlist</h2><div id="wishlist-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div><div id="wishlist-empty" class="text-center py-16 sm:py-20 hidden"><i class="fa-regular fa-heart text-5xl sm:text-6xl text-gray-200 mb-4 sm:mb-6"></i><p class="text-gray-400 text-base sm:text-lg mb-3 sm:mb-4">Your wishlist is empty</p><a href="/products" onclick="event.preventDefault();navigate('products')" class="px-8 sm:px-10 py-3 sm:py-4 bg-primary text-white rounded-full font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue transition no-underline inline-block">Start Shopping</a></div></div></section>
+        <section id="news" class="page-section py-6 sm:py-8 lg:py-12"><div class="max-w-7xl mx-auto px-3 sm:px-4"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary text-center mb-2 sm:mb-4">The Journal</h2><p class="text-center text-gray-500 text-xs sm:text-sm mb-8 sm:mb-12">Style stories, guides & inspiration</p><div id="news-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8"></div></div></section>
     </main>
 
     <div id="footer-container"></div>
@@ -261,7 +318,7 @@
     <div id="cookieConsent" class="cookie-consent-overlay"><div class="cookie-banner"><div class="cookie-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="cookie-text"><h4>We Value Your Privacy</h4><p>We use cookies. <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a></p></div><div class="cookie-buttons"><button class="cookie-btn decline" onclick="handleCookieDecline()">Decline</button><button class="cookie-btn accept" onclick="handleCookieAccept()">Accept</button></div></div></div>
 
     <script>
-        // ========== FETCH DATA FROM OUR API (YOUR ORIGINAL API SYSTEM) ==========
+        // ========== FETCH DATA FROM OUR API ==========
         let currentData = { products: [], categories: [], news: [], hero: [] };
         let currentSlide = 0, slideInterval;
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
@@ -301,7 +358,6 @@
             requestAnimationFrame(() => { target.classList.add('active-page','fade-in'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
         }
 
-        // ========== HERO FUNCTIONS (YOUR ORIGINAL) ==========
         function renderHero() {
             const container = document.getElementById('hero-banner-slides'), list = currentData.hero;
             if(!list.length) { container.innerHTML = '<div class="w-full h-full bg-primary"></div>'; return; }
@@ -312,7 +368,6 @@
         function updateHeroSlide() { document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('opacity-0', i!==currentSlide)); updateHeroText(currentSlide); }
         function updateHeroText(i) { const d = currentData.hero[i]; if(d) { document.getElementById('hero-title').innerText = d.title||'JAYENWARE'; document.getElementById('hero-subtitle').innerText = d.subtitle||''; } }
 
-        // ========== CATEGORY & FILTER FUNCTIONS (YOUR ORIGINAL) ==========
         function renderCategories() {
             const container = document.getElementById('sidebar-categories');
             if(!container) return;
@@ -329,12 +384,11 @@
         function filterByCategory(cat) { currentFilters.cat=cat; productsDisplayLimit=12; renderProducts(getFilteredProducts()); if(cat==='all') updateURL('/products','All Products'); else updateURL('/category/'+getCategorySlug(cat),cat); }
         function applyPriceFilter() { currentFilters.minPrice=parseFloat(document.getElementById('filter-min-price').value)||null; currentFilters.maxPrice=parseFloat(document.getElementById('filter-max-price').value)||null; productsDisplayLimit=12; renderProducts(getFilteredProducts()); }
         function loadMoreProducts() { productsDisplayLimit+=productsLoadMoreIncrement; renderProducts(getFilteredProducts()); }
-        function toggleMobileFilters() { /* Your original function */ }
-        function applyMobileFilters() { /* Your original function */ }
+        function toggleMobileFilters() { const modal=document.getElementById('mobile-filter-modal'); if(modal.classList.contains('hidden')){ const catDiv=document.getElementById('mobile-filter-categories'); if(catDiv) catDiv.innerHTML=`<button onclick="filterByCategory('all')" class="block w-full text-left py-2 px-3 rounded-lg text-sm font-bold ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</button>`+currentData.categories.map(c=>`<button onclick="filterByCategory('${c.name}')" class="block w-full text-left py-2 px-3 rounded-lg text-sm font-bold ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</button>`).join(''); document.getElementById('m-filter-min-price').value=currentFilters.minPrice||''; document.getElementById('m-filter-max-price').value=currentFilters.maxPrice||''; } modal.classList.toggle('hidden'); }
+        function applyMobileFilters() { currentFilters.minPrice=parseFloat(document.getElementById('m-filter-min-price').value)||null; currentFilters.maxPrice=parseFloat(document.getElementById('m-filter-max-price').value)||null; productsDisplayLimit=12; renderProducts(getFilteredProducts()); }
         function toggleSortMenu() { document.getElementById('sort-dropdown').classList.toggle('hidden'); }
         function handleSorting(type,label) { document.getElementById('current-sort-label').innerText=label; document.getElementById('sort-dropdown').classList.add('hidden'); let sorted=[...getFilteredProducts()]; if(type==='price-low') sorted.sort((a,b)=>a.price-b.price); else if(type==='price-high') sorted.sort((a,b)=>b.price-a.price); else sorted.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)); productsDisplayLimit=12; renderProducts(sorted); }
 
-        // ========== PRODUCT CARD (YOUR ORIGINAL) ==========
         function productCard(p) { 
             const isOut=p.stock<=0, wished=(window.wishlist||[]).includes(p.id); 
             return `<a href="/product/${getProductSlug(p)}" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-100 cursor-pointer group no-underline block"><div class="product-img-container" style="aspect-ratio:3/4;"><img src="${p.img}" alt="${p.title}" class="product-image w-full h-full object-cover" loading="lazy"><button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-white/90 backdrop-blur-xl rounded-full flex items-center justify-center ${wished?'text-red-500':'text-gray-400'} active:scale-95 transition border border-gray-100"><i class="fa-${wished?'solid':'regular'} fa-heart text-[10px] sm:text-xs"></i></button>${isOut?'<div class="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center"><span class="bg-primary text-white text-[8px] sm:text-[10px] font-black px-2 sm:px-3 py-1 rounded-full uppercase">Sold Out</span></div>':''}${p.is_new_arrival&&!isOut?'<div class="absolute top-2 left-2 sm:top-3 sm:left-3"><span class="badge-new px-2 py-0.5 rounded-full text-[7px] sm:text-[8px] font-black uppercase backdrop-blur-xl bg-white/80 border border-black/5">New</span></div>':''}</div><div class="p-2.5 sm:p-4"><p class="text-[9px] sm:text-[10px] font-bold text-accent uppercase mb-0.5 sm:mb-1">${p.category}</p><h3 class="font-bold text-xs sm:text-sm text-primary truncate mb-1.5 sm:mb-2">${p.title}</h3><div class="flex justify-between items-end"><div><span class="font-black text-xs sm:text-sm text-primary">৳ ${p.price}</span>${p.old_price?`<span class="text-[9px] sm:text-[10px] text-accent line-through ml-1">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" ${isOut?'disabled':''} class="w-7 h-7 sm:w-8 sm:h-8 ${isOut?'bg-gray-100':'bg-primary hover:bg-blue'} text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs transition active:scale-90"><i class="fa-solid fa-plus"></i></button></div></div></a>`; 
@@ -349,11 +403,49 @@
             grid.innerHTML=html; 
         }
 
-        function renderRecentlyViewed() { /* Your original function */ }
-        function renderNews(list) { /* Your original function */ }
-        function renderWishlist() { /* Your original function */ }
+        function renderRecentlyViewed() { 
+            const ids=JSON.parse(localStorage.getItem('jayen_recent')||'[]'); 
+            const list=currentData.products.filter(p=>ids.includes(p.id.toString())); 
+            const sec=document.getElementById('recent-products-section'); 
+            if(list.length){sec.classList.remove('hidden');document.getElementById('recent-products-grid').innerHTML=list.map(p=>productCard(p)).join('');}else{sec.classList.add('hidden');} 
+        }
+        function renderNews(list) { 
+            const grid=document.getElementById('news-grid'); if(!grid) return;
+            grid.innerHTML=list.map(n=>`<div class="bg-white/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-100 group cursor-pointer"><div class="product-img-container" style="aspect-ratio:16/10;"><img src="${n.img}" alt="${n.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy"></div><div class="p-4 sm:p-6"><p class="text-[9px] sm:text-[10px] font-bold text-blue uppercase mb-1 sm:mb-2">Style</p><h3 class="font-bold text-base sm:text-lg mb-1.5 sm:mb-2">${n.title}</h3><p class="text-[10px] sm:text-xs text-gray-500 line-clamp-3">${n.description}</p></div></div>`).join(''); 
+        }
+        function renderWishlist() { 
+            const list=currentData.products.filter(p=>(window.wishlist||[]).includes(p.id)); 
+            const grid=document.getElementById('wishlist-grid'); if(!grid) return;
+            grid.innerHTML=list.length?list.map(p=>productCard(p)).join(''):''; 
+            document.getElementById('wishlist-empty').classList.toggle('hidden',list.length>0); 
+        }
 
-        // ========== UPDATED CAROUSEL FUNCTIONS (FROM SECOND PROGRAM) ==========
+        function renderHomepageSections() {
+            const sections = [
+                {id:'new-arrivals-section',carousel:'new-arrivals-carousel',products:currentData.products.filter(p=>p.is_new_arrival)},
+                {id:'hot-products-section',carousel:'hot-products-carousel',products:currentData.products.filter(p=>p.is_hot)},
+                {id:'featured-products-section',carousel:'featured-products-carousel',products:currentData.products.filter(p=>p.is_featured)},
+                {id:'best-selling-section',carousel:'best-selling-carousel',products:currentData.products.filter(p=>p.is_best)},
+                {id:'on-sale-section',carousel:'on-sale-carousel',products:currentData.products.filter(p=>p.is_on_sale)},
+                {id:'limited-edition-section',carousel:'limited-edition-carousel',products:currentData.products.filter(p=>p.is_limited_edition)}
+            ];
+            sections.forEach((sec,i) => { 
+                const el=document.getElementById(sec.id); 
+                if(!el) return; 
+                if(sec.products.length){
+                    el.classList.remove('hidden');
+                    renderCarouselProducts(sec.carousel,sec.products);
+                    startCarouselAutoScroll(sec.carousel);
+                    setTimeout(()=>{el.classList.add('visible');},i*150);
+                } else el.classList.add('hidden'); 
+            });
+        }
+
+        function cleanupAllCarousels() { 
+            ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
+        }
+
+        // ========== UPDATED CAROUSEL FUNCTIONS ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
@@ -439,6 +531,16 @@
             dotsContainer.querySelectorAll('.carousel-dot').forEach((dot,i) => { 
                 dot.classList.toggle('active', i === currentIndex); 
             });
+            
+            // Center the active dot
+            const activeDot = dotsContainer.querySelector('.carousel-dot.active');
+            if(activeDot) {
+                const containerWidth = dotsContainer.offsetWidth;
+                const dotLeft = activeDot.offsetLeft;
+                const dotWidth = activeDot.offsetWidth;
+                const scrollTarget = dotLeft - (containerWidth / 2) + (dotWidth / 2);
+                dotsContainer.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+            }
         }
 
         function startCarouselAutoScroll(carouselId) { 
@@ -488,6 +590,8 @@
             if(!carousel) return;
             if(!products||!products.length) { 
                 carousel.innerHTML='<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>'; 
+                const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
+                if(dotsContainer) dotsContainer.innerHTML = '';
                 return; 
             }
             const state = initCarousel(carouselId);
@@ -504,40 +608,23 @@
                 }
                 return `<a href="/product/${getProductSlug(p)}" class="carousel-card" draggable="false"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}<button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span>${p.old_price?`<span class="card-old-price">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}><i class="fa-solid fa-plus"></i></button></div></div></a>`;
             }).join('');
+            
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
-            if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
-            const middleIndex = Math.floor(products.length / 2);
+            if(dotsContainer) {
+                dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
+                // Set first dot as active initially
+                const firstDot = dotsContainer.querySelector('.carousel-dot');
+                if(firstDot) firstDot.classList.add('active');
+            }
+            
+            // Start from first card (left side)
             carousel.scrollLeft = 0;
-            state.currentIndex = middleIndex;
-            setTimeout(() => { snapToCard(carouselId, middleIndex); }, 100);
+            state.currentIndex = 0;
+            updateActiveCard(carouselId);
+            updateDots(carouselId);
         }
 
-        function renderHomepageSections() {
-            const sections = [
-                {id:'new-arrivals-section',carousel:'new-arrivals-carousel',products:currentData.products.filter(p=>p.is_new_arrival)},
-                {id:'hot-products-section',carousel:'hot-products-carousel',products:currentData.products.filter(p=>p.is_hot)},
-                {id:'featured-products-section',carousel:'featured-products-carousel',products:currentData.products.filter(p=>p.is_featured)},
-                {id:'best-selling-section',carousel:'best-selling-carousel',products:currentData.products.filter(p=>p.is_best)},
-                {id:'on-sale-section',carousel:'on-sale-carousel',products:currentData.products.filter(p=>p.is_on_sale)},
-                {id:'limited-edition-section',carousel:'limited-edition-carousel',products:currentData.products.filter(p=>p.is_limited_edition)}
-            ];
-            sections.forEach((sec,i) => { 
-                const el=document.getElementById(sec.id); 
-                if(!el) return; 
-                if(sec.products.length){
-                    el.classList.remove('hidden');
-                    renderCarouselProducts(sec.carousel,sec.products);
-                    startCarouselAutoScroll(sec.carousel);
-                    setTimeout(()=>{el.classList.add('visible');},i*150);
-                } else el.classList.add('hidden'); 
-            });
-        }
-
-        function cleanupAllCarousels() { 
-            ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
-        }
-
-        // ========== TOUCH SUPPORT FOR CAROUSELS (FROM SECOND PROGRAM) ==========
+        // ========== TOUCH SUPPORT ==========
         function initCarouselTouchSupport() {
             document.querySelectorAll('.carousel-track').forEach(carousel => {
                 const state = initCarousel(carousel.id);
@@ -584,7 +671,6 @@
             });
         }
 
-        // ========== OTHER FUNCTIONS (YOUR ORIGINAL) ==========
         function handleMainSearch() { const q=document.getElementById('main-search-input').value.toLowerCase().trim(); document.getElementById('search-suggestions').classList.add('hidden'); if(!q) return; navigate('products',{search:q}); renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(q))); }
         function handleCookieAccept() { localStorage.setItem('jayenware_consent','accepted'); document.getElementById('cookieConsent').classList.remove('show'); }
         function handleCookieDecline() { localStorage.setItem('jayenware_consent','declined'); document.getElementById('cookieConsent').classList.remove('show'); }
@@ -593,7 +679,6 @@
         document.getElementById('main-search-input').addEventListener('input',function(e){const q=e.target.value.toLowerCase().trim();const box=document.getElementById('search-suggestions');if(q.length<2){box.classList.add('hidden');return;}const filtered=currentData.products.filter(p=>p.title.toLowerCase().includes(q)).slice(0,6);box.innerHTML=filtered.length?filtered.map(p=>`<a href="/product/${getProductSlug(p)}" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer no-underline"><img src="${p.img}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg object-cover shrink-0" alt="${p.title}"><div class="min-w-0"><p class="text-[10px] sm:text-xs font-bold text-primary truncate">${p.title}</p><p class="text-[9px] sm:text-[10px] font-black text-primary">৳${p.price}</p></div></a>`).join(''):'<p class="p-3 sm:p-4 text-gray-400 text-[10px] sm:text-xs text-center">No results</p>';box.classList.remove('hidden');});
         window.addEventListener('popstate',function(){handleInitialRoute();});
 
-        // ========== LOAD DATA (YOUR ORIGINAL API) ==========
         async function loadData() {
             try {
                 const [hero, cats, prods, newsData] = await Promise.all([
