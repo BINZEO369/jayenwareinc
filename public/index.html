@@ -353,14 +353,14 @@
         function renderNews(list) { /* Your original function */ }
         function renderWishlist() { /* Your original function */ }
 
-        // ========== RELIABLE CAROUSEL FUNCTIONS - INDEX 1+ CENTER LOGIC ==========
+        // ========== CAROUSEL FUNCTIONS WITH DIRECT SCROLL POSITION ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
                 touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
                 swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
                 currentIndex:1, totalCards:0, _resumeTimeout:null, _isAnimating:false,
-                _initRetries:0, _maxRetries:5, _minCenterIndex:1
+                _initRetries:0, _maxRetries:10, _minCenterIndex:1, _initialized:false
             }; 
             return carouselStates[carouselId]; 
         }
@@ -373,12 +373,10 @@
         }
 
         function calculateMiddleIndex(total) {
-            // Always start from index 1 or higher, never index 0
             if (total <= 1) return 0;
             if (total === 2) return 1;
             if (total === 3) return 1;
-            // For even: 4->1, 6->2, 8->3 (left has 1, center at 1 or higher)
-            // For odd: 5->2, 7->3, 9->4 (perfect middle)
+            if (total === 4) return 1;
             if (total % 2 === 0) {
                 return Math.floor((total - 2) / 2) + 1;
             } else {
@@ -386,13 +384,52 @@
             }
         }
 
+        function snapToCardDirect(carouselId, targetIndex) {
+            const carousel=document.getElementById(carouselId); 
+            if(!carousel) return;
+            const state=initCarousel(carouselId); 
+            const safeIndex = Math.max(state._minCenterIndex, Math.min(targetIndex, state.totalCards - 1));
+            const {width,gap}=getCardDimensions(carousel);
+            
+            if(width === 0 || !carousel.querySelector('.carousel-card')) {
+                if(state._initRetries < state._maxRetries) {
+                    state._initRetries++;
+                    requestAnimationFrame(() => snapToCardDirect(carouselId, safeIndex));
+                }
+                return;
+            }
+            
+            state._initRetries = 0;
+            const cardTotal = width + gap;
+            const scrollTarget = safeIndex * cardTotal;
+            
+            // Direct scroll without smooth behavior for instant positioning
+            carousel.classList.remove('smooth-scroll');
+            carousel.scrollLeft = scrollTarget;
+            
+            // Force reflow
+            carousel.offsetHeight;
+            
+            // Now add smooth class back
+            carousel.classList.add('smooth-scroll');
+            
+            state.currentIndex = safeIndex;
+            state._initialized = true;
+            
+            // Update visual states
+            requestAnimationFrame(() => {
+                updateActiveCard(carouselId); 
+                updateDots(carouselId);
+            });
+        }
+
         function snapToCard(carouselId, targetIndex) {
             const carousel=document.getElementById(carouselId); 
             if(!carousel) return;
             const state=initCarousel(carouselId); 
-            // Ensure targetIndex is never below _minCenterIndex (1)
             const safeIndex = Math.max(state._minCenterIndex, Math.min(targetIndex, state.totalCards - 1));
             const {width,gap}=getCardDimensions(carousel);
+            
             if(width === 0) {
                 if(state._initRetries < state._maxRetries) {
                     state._initRetries++;
@@ -416,7 +453,7 @@
             const carousel=document.getElementById(carouselId); 
             if(!carousel) return;
             const state=initCarousel(carouselId);
-            if(state.isPaused||state.isDragging||state._isAnimating){
+            if(!state._initialized || state.isPaused || state.isDragging || state._isAnimating){
                 state.animationFrame=requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts));
                 return;
             }
@@ -431,7 +468,6 @@
                 updateActiveCard(carouselId); 
                 updateDots(carouselId);
             }
-            // Reset to min index instead of 0
             const maxScroll = (state.totalCards - 1) * cardTotal + 10;
             if(carousel.scrollLeft >= maxScroll) { 
                 carousel.scrollLeft = state._minCenterIndex * cardTotal; 
@@ -439,7 +475,6 @@
                 updateActiveCard(carouselId); 
                 updateDots(carouselId); 
             }
-            // Prevent scrolling below min index
             if(carousel.scrollLeft < state._minCenterIndex * cardTotal - 10) {
                 carousel.scrollLeft = state._minCenterIndex * cardTotal;
                 state.currentIndex = state._minCenterIndex;
@@ -513,7 +548,6 @@
             if(!carousel) return; 
             const state=initCarousel(carouselId); 
             state.isPaused = true; 
-            // Ensure dot click also respects min index
             const safeIndex = Math.max(state._minCenterIndex, index);
             snapToCard(carouselId, safeIndex); 
             clearTimeout(state._resumeTimeout); 
@@ -530,7 +564,9 @@
             const state = initCarousel(carouselId);
             state.totalCards = products.length;
             state._initRetries = 0;
-            carousel.innerHTML = products.map(p => {
+            state._initialized = false;
+            
+            carousel.innerHTML = products.map((p, idx) => {
                 const isOut=p.stock<=0, wished=(window.wishlist||[]).includes(p.id); 
                 let badge='';
                 if(!isOut){
@@ -540,19 +576,30 @@
                     else if(p.is_limited_edition)badge='<span class="card-badge badge-limited">Limited</span>';
                     else if(p.is_featured)badge='<span class="card-badge badge-featured">Featured</span>';
                 }
-                return `<a href="/product/${getProductSlug(p)}" class="carousel-card" draggable="false"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}<button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span>${p.old_price?`<span class="card-old-price">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}><i class="fa-solid fa-plus"></i></button></div></div></a>`;
+                // Add data-index attribute for debugging
+                return `<a href="/product/${getProductSlug(p)}" class="carousel-card" draggable="false" data-index="${idx}"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}<button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span>${p.old_price?`<span class="card-old-price">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}><i class="fa-solid fa-plus"></i></button></div></div></a>`;
             }).join('');
+            
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
-            if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===1?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
+            if(dotsContainer) {
+                dotsContainer.innerHTML = products.map((_,i) => {
+                    const isActive = i === calculateMiddleIndex(products.length);
+                    return `<div class="carousel-dot ${isActive?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`;
+                }).join('');
+            }
             
             const middleIndex = calculateMiddleIndex(products.length);
-            carousel.scrollLeft = 0;
             state.currentIndex = middleIndex;
             
+            // Use multiple requestAnimationFrames for reliable positioning
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
+                    snapToCardDirect(carouselId, middleIndex);
+                    // Additional frame to ensure active state
                     requestAnimationFrame(() => {
-                        snapToCard(carouselId, middleIndex);
+                        updateActiveCard(carouselId);
+                        updateDots(carouselId);
+                        state._initialized = true;
                     });
                 });
             });
@@ -573,7 +620,10 @@
                 if(sec.products.length){
                     el.classList.remove('hidden');
                     renderCarouselProducts(sec.carousel,sec.products);
-                    startCarouselAutoScroll(sec.carousel);
+                    // Delay auto-scroll start to ensure initial position is set
+                    setTimeout(() => {
+                        startCarouselAutoScroll(sec.carousel);
+                    }, 300);
                     setTimeout(()=>{el.classList.add('visible');},i*100);
                 } else el.classList.add('hidden'); 
             });
@@ -583,7 +633,7 @@
             ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
         }
 
-        // ========== TOUCH SUPPORT FOR CAROUSELS WITH INERTIA ANIMATION ==========
+        // ========== TOUCH SUPPORT FOR CAROUSELS ==========
         function initCarouselTouchSupport() {
             document.querySelectorAll('.carousel-track').forEach(carousel => {
                 const state = initCarousel(carousel.id);
@@ -668,7 +718,7 @@
         window.onload = async () => {
             const consent=localStorage.getItem('jayenware_consent'); if(!consent) setTimeout(()=>{document.getElementById('cookieConsent').classList.add('show');},2000);
             await loadData();
-            setTimeout(initCarouselTouchSupport, 500);
+            setTimeout(initCarouselTouchSupport, 800);
         };
     </script>
 </body>
