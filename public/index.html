@@ -416,49 +416,88 @@
         }
 
         // ========== UPDATED CAROUSEL FUNCTIONS WITH INDEX-1 SYSTEM ==========
-        function calculateCarouselLayout(products) {
-            const count = products.length;
-            if (count === 0) return { leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0 };
-            
-            // Index starts from 1 (not 0)
-            // For even counts: e.g., 10 items -> left: 5, center: 1 (index 6), right: 4
-            // For odd counts: e.g., 5 items -> left: 2, center: 1 (index 3), right: 2
-            // e.g., 11 items -> left: 5, center: 1 (index 6), right: 5
-            
-            let leftCount, centerIndex, rightCount;
-            
-            if (count % 2 === 0) {
-                // Even count
-                leftCount = count / 2;
-                centerIndex = leftCount; // 0-based index for the center card
-                rightCount = count - leftCount - 1;
-            } else {
-                // Odd count
-                leftCount = Math.floor(count / 2);
-                centerIndex = leftCount; // 0-based index for the center card
-                rightCount = leftCount;
-            }
-            
-            return {
-                leftCount,
-                centerIndex,
-                rightCount,
-                totalCount: count,
-                displayIndex1: centerIndex + 1 // 1-based index for the center card
-            };
-        }
-
-        function initCarousel(carouselId) { 
-            if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
-                isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
-                touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
-                swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
-                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false,
-                layout: null // Store the layout configuration
-            }; 
-            return carouselStates[carouselId]; 
-        }
         
+        function calculateCarouselLayout(products) {
+    const count = products.length;
+    
+    // খালি অ্যারের জন্য
+    if (count === 0) {
+        return { 
+            leftCount: 0, 
+            centerIndex: null, 
+            rightCount: 0, 
+            totalCount: 0,
+            displayIndex1: null 
+        };
+    }
+    
+    // মাত্র ১টি প্রোডাক্ট থাকলে
+    if (count === 1) {
+        return { 
+            leftCount: 0, 
+            centerIndex: 0, 
+            rightCount: 0, 
+            totalCount: 1,
+            displayIndex1: 1 
+        };
+    }
+    
+    // মাত্র ২টি প্রোডাক্ট থাকলে (বিশেষ কেস)
+    if (count === 2) {
+        return { 
+            leftCount: 1, 
+            centerIndex: 1, 
+            rightCount: 0, 
+            totalCount: 2,
+            displayIndex1: 2 
+        };
+    }
+    
+    // মূল হিসাব
+    let leftCount, centerIndex, rightCount;
+    
+    if (count % 2 === 0) {
+        // জোড় সংখ্যা: বামে সমান, ডানে ১ কম
+        leftCount = count / 2;
+        centerIndex = leftCount;
+        rightCount = count - leftCount - 1;
+    } else {
+        // বিজোড় সংখ্যা: বামে ও ডানে সমান
+        leftCount = Math.floor(count / 2);
+        centerIndex = leftCount;
+        rightCount = leftCount;
+    }
+    
+    // ভ্যালিডেশন চেক
+    const isValid = (leftCount + 1 + rightCount) === count;
+    
+    if (!isValid) {
+        console.error('Layout calculation error:', {
+            count, leftCount, centerIndex, rightCount,
+            calculatedTotal: leftCount + 1 + rightCount
+        });
+        
+        // ফ্যালব্যাক: সবার শেষে সেন্টার
+        centerIndex = Math.floor(count / 2);
+        leftCount = centerIndex;
+        rightCount = count - centerIndex - 1;
+    }
+    
+    return {
+        leftCount,           // বাম পাশের প্রোডাক্ট সংখ্যা
+        centerIndex,         // সেন্টার প্রোডাক্টের ইনডেক্স (0-based)
+        rightCount,          // ডান পাশের প্রোডাক্ট সংখ্যা
+        totalCount: count,   // মোট প্রোডাক্ট সংখ্যা
+        displayIndex1: centerIndex + 1,  // সেন্টারের 1-based ইনডেক্স
+        isValid,             // ভ্যালিডেশন স্ট্যাটাস
+        isEven: count % 2 === 0,  // জোড় নাকি বিজোড়
+        distribution: {      // ভিজুয়াল ডিস্ট্রিবিউশন
+            left: Array.from({length: leftCount}, (_, i) => i),
+            center: [centerIndex],
+            right: Array.from({length: rightCount}, (_, i) => i + centerIndex + 1)
+        }
+    };
+}
         function getCardDimensions(carousel) { 
             const card=carousel.querySelector('.carousel-card'); 
             if(!card) return {width:280,gap:20}; 
