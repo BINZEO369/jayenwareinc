@@ -54,32 +54,35 @@
         
         img { max-width: 100%; height: auto; display: block; }
         
-        /* Liquid Glass Color Swatch */
+        /* Liquid Glass Color Swatch - Smaller & Refined */
         .color-swatch-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.8);
+            border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             flex-shrink: 0;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 0;
+            padding: 2px;
             outline: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .color-swatch-btn:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: scale(1.12);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .color-swatch-btn.selected {
             border-color: #1d1d1f !important;
-            box-shadow: 0 0 0 3px rgba(29,29,31,0.1), 0 4px 16px rgba(0,0,0,0.15);
-            transform: scale(1.15);
-            background: rgba(255,255,255,0.95);
+            box-shadow: 0 0 0 3px rgba(29,29,31,0.08), 0 4px 12px rgba(0,0,0,0.1);
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.9);
             backdrop-filter: blur(20px);
         }
         .color-swatch-btn .swatch-color {
@@ -105,36 +108,36 @@
             transform: rotate(-45deg);
         }
         
-        /* Liquid Glass Size Button */
+        /* Liquid Glass Size Button - Compact */
         .size-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            border: 1.5px solid rgba(0,0,0,0.08);
-            border-radius: 12px;
-            padding: 10px 16px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 10px;
+            padding: 8px 14px;
             font-weight: 600;
-            font-size: 12px;
-            background: rgba(255,255,255,0.7);
+            font-size: 11px;
+            background: rgba(255,255,255,0.6);
             backdrop-filter: blur(10px);
             color: #1d1d1f;
-            min-width: 44px;
+            min-width: 40px;
             text-align: center;
             flex-shrink: 0;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            letter-spacing: 0.3px;
         }
         .size-btn:hover { 
-            border-color: rgba(0,0,0,0.15);
-            background: rgba(255,255,255,0.9);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-color: rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.85);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transform: translateY(-1px);
         }
         .size-btn.selected {
             border-color: #1d1d1f !important;
-            background: rgba(29,29,31,0.95) !important;
-            backdrop-filter: blur(20px) !important;
+            background: #1d1d1f !important;
             color: white !important;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-1px);
         }
         .size-btn.disabled {
             opacity: 0.3;
@@ -175,6 +178,55 @@
         }
         @media (min-width: 1024px) {
             .product-hero { min-height: 80vh; }
+        }
+        
+        /* Apple-style Product Info Card */
+        .product-info-card {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04);
+        }
+        
+        .product-info-card .variant-pill {
+            background: rgba(0,122,255,0.08);
+            color: #007aff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .product-info-card .title-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+        
+        .product-info-card .section-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #86868b;
+            margin-bottom: 8px;
+        }
+        
+        .product-info-card .divider {
+            height: 1px;
+            background: rgba(0,0,0,0.06);
+            margin: 14px 0;
         }
         
         /* Star Rating */
@@ -358,15 +410,23 @@
         }
         .sticky-add-bar.active { display: flex; }
         
-        .variant-info-badge {
-            background: rgba(240,249,255,0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(186,230,253,0.3);
+        .variant-info-pill {
+            background: rgba(0,0,0,0.03);
             border-radius: 12px;
-            padding: 14px 18px;
+            padding: 12px 16px;
             margin-top: 12px;
-            font-size: 12px;
-            color: #0369a1;
+            font-size: 11px;
+            color: #1d1d1f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+        .variant-info-pill span.separator {
+            color: #d1d5db;
+            font-size: 16px;
+            font-weight: 300;
         }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -824,7 +884,7 @@
                 
                 const allSizesForColor = colorSizes.filter(s => s.color_id == selectedColorId);
                 if (allSizesForColor.length === 0) {
-                    sizeContainer.innerHTML = '<p style="font-size:12px;color:#9ca3af;padding:8px 0;">No sizes available</p>';
+                    sizeContainer.innerHTML = '<p style="font-size:11px;color:#9ca3af;padding:6px 0;">No sizes available</p>';
                     return;
                 }
                 
@@ -844,48 +904,73 @@
                 selectedSizeId = null;
                 selectedVariant = null;
                 const selectedSizeNameEl = document.getElementById('selected-size-name');
-                if (selectedSizeNameEl) selectedSizeNameEl.textContent = 'Select a size';
+                if (selectedSizeNameEl) selectedSizeNameEl.textContent = 'Select Size';
             }
             
             function updatePriceDisplay() {
                 const priceEl = document.getElementById('variant-price-display');
+                const oldPriceEl = document.getElementById('variant-old-price-display');
                 if (!priceEl) return;
                 if (selectedVariant) {
-                    priceEl.innerHTML = `<span style="font-size:28px;font-weight:900;">৳ ${selectedVariant.price}</span>${selectedVariant.old_price ? `<span style="font-size:15px;color:#86868b;text-decoration:line-through;margin-left:8px;">৳ ${selectedVariant.old_price}</span>` : ''}`;
+                    priceEl.innerHTML = `৳ ${selectedVariant.price}`;
+                    if (oldPriceEl && selectedVariant.old_price) {
+                        oldPriceEl.innerHTML = `৳ ${selectedVariant.old_price}`;
+                        oldPriceEl.style.display = 'inline';
+                    } else if (oldPriceEl) {
+                        oldPriceEl.style.display = 'none';
+                    }
                 } else if (selectedColorId) {
                     const variantsForColor = productVariants.filter(v => v.color_id == selectedColorId && v.is_active);
                     if (variantsForColor.length > 0) {
                         const minPrice = Math.min(...variantsForColor.map(v => v.price));
                         const maxPrice = Math.max(...variantsForColor.map(v => v.price));
-                        priceEl.innerHTML = `<span style="font-size:28px;font-weight:900;">৳ ${minPrice === maxPrice ? minPrice : `${minPrice} - ${maxPrice}`}</span>`;
+                        priceEl.innerHTML = `৳ ${minPrice === maxPrice ? minPrice : `${minPrice} - ${maxPrice}`}`;
+                        if (oldPriceEl) oldPriceEl.style.display = 'none';
                     } else {
-                        priceEl.innerHTML = `<span style="font-size:28px;font-weight:900;">৳ ${currentProduct?.price || 0}</span>`;
+                        priceEl.innerHTML = `৳ ${currentProduct?.price || 0}`;
+                        if (oldPriceEl) oldPriceEl.style.display = 'none';
                     }
                 } else {
-                    priceEl.innerHTML = `<span style="font-size:28px;font-weight:900;">৳ ${currentProduct?.price || 0}</span>`;
+                    priceEl.innerHTML = `৳ ${currentProduct?.price || 0}`;
+                    if (oldPriceEl && currentProduct?.old_price) {
+                        oldPriceEl.innerHTML = `৳ ${currentProduct.old_price}`;
+                        oldPriceEl.style.display = 'inline';
+                    } else if (oldPriceEl) {
+                        oldPriceEl.style.display = 'none';
+                    }
                 }
             }
             
             function updateVariantInfo() {
-                const infoEl = document.getElementById('variant-info');
-                const stockEl = document.getElementById('stock-status');
+                const infoEl = document.getElementById('variant-info-pill');
+                const stockEl = document.getElementById('stock-status-dot');
+                const stockTextEl = document.getElementById('stock-status-text');
                 const buyBtn = document.getElementById('buy-now-btn');
                 const addBtn = document.getElementById('add-to-bag-btn');
                 if (!infoEl) return;
                 
                 if (selectedVariant) {
-                    infoEl.style.display = 'block';
-                    infoEl.innerHTML = `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-weight:700;">SKU:</span> <span style="font-family:monospace;">${selectedVariant.sku || 'N/A'}</span>${selectedVariant.barcode ? `<span style="color:#9ca3af;">|</span> <span style="font-weight:700;">Barcode:</span> <span style="font-family:monospace;">${selectedVariant.barcode}</span>` : ''}${selectedVariant.weight ? `<span style="color:#9ca3af;">|</span> <span style="font-weight:700;">Weight:</span> ${selectedVariant.weight}g</span>` : ''}</div>`;
-                    if (stockEl) {
-                        const isOut = selectedVariant.stock <= 0;
-                        stockEl.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:${isOut ? '#ef4444' : '#22c55e'};display:inline-block;flex-shrink:0;"></span><span style="font-size:11px;font-weight:600;color:${isOut ? '#ef4444' : '#16a34a'};">${isOut ? 'Out of Stock' : 'In Stock'}</span>`;
+                    let infoHTML = '';
+                    if (selectedVariant.sku) infoHTML += `<span style="font-weight:700;">SKU</span> <span style="font-family:monospace;font-size:11px;">${selectedVariant.sku}</span>`;
+                    if (selectedVariant.barcode) infoHTML += `<span class="separator">|</span> <span style="font-weight:700;">Barcode</span> <span style="font-family:monospace;font-size:11px;">${selectedVariant.barcode}</span>`;
+                    if (selectedVariant.weight) infoHTML += `<span class="separator">|</span> <span style="font-weight:700;">Weight</span> ${selectedVariant.weight}g`;
+                    infoEl.innerHTML = infoHTML || 'Variant selected';
+                    infoEl.style.display = 'flex';
+                    
+                    const isOut = selectedVariant.stock <= 0;
+                    if (stockEl) stockEl.style.background = isOut ? '#ef4444' : '#22c55e';
+                    if (stockTextEl) {
+                        stockTextEl.textContent = isOut ? 'Out of Stock' : 'In Stock';
+                        stockTextEl.style.color = isOut ? '#ef4444' : '#16a34a';
                     }
-                    if (buyBtn) buyBtn.disabled = selectedVariant.stock <= 0;
-                    if (addBtn) addBtn.disabled = selectedVariant.stock <= 0;
+                    if (buyBtn) buyBtn.disabled = isOut;
+                    if (addBtn) addBtn.disabled = isOut;
                 } else {
                     infoEl.style.display = 'none';
-                    if (stockEl) {
-                        stockEl.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span><span style="font-size:11px;font-weight:600;color:#d97706;">Select variant for availability</span>`;
+                    if (stockEl) stockEl.style.background = '#f59e0b';
+                    if (stockTextEl) {
+                        stockTextEl.textContent = 'Select options';
+                        stockTextEl.style.color = '#d97706';
                     }
                 }
             }
@@ -1237,19 +1322,44 @@
                 const mainImage = allImages[0] || '/logo.png';
                 const reviewsHTML = prodReviews.length ? prodReviews.map(r=>`<div style="background:rgba(255,255,255,0.6);backdrop-filter:blur(15px);padding:18px;border-radius:14px;border:1px solid rgba(0,0,0,0.05);margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="color:#ff9500;">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</span><span style="font-weight:700;font-size:12px;">${r.user_name||'Anonymous'}</span><span style="margin-left:auto;font-size:9px;color:#9ca3af;">${r.created_at?new Date(r.created_at).toLocaleDateString():''}</span></div><p style="font-size:13px;color:#4b5563;">${r.review_text||''}</p></div>`).join('') : '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:20px;">No reviews yet. Be the first to review!</p>';
                 
+                // Colors HTML for new card
                 let colorsHTML = '';
                 if (productColors.length > 0) {
-                    colorsHTML = `<div style="margin-bottom:24px;"><div style="display:flex;justify-content:space-between;margin-bottom:12px;"><p style="font-size:10px;font-weight:700;text-transform:uppercase;color:#86868b;">Color</p><span id="selected-color-name" style="font-size:12px;font-weight:600;">Select a color</span></div><div class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:10px;">${productColors.map(color => { const hasStock = productVariants.filter(v => v.color_id == color.id && v.is_active && v.stock > 0).length > 0; return `<button class="color-swatch-btn ${!hasStock ? 'disabled' : ''}" data-color-id="${color.id}" onclick="selectColor(${color.id})" title="${color.color_name}${!hasStock ? ' (Out of Stock)' : ''}" ${!hasStock ? 'disabled' : ''}><span class="swatch-color" style="background:${color.color_code || '#ccc'};"></span></button>`; }).join('')}</div></div>`;
+                    colorsHTML = `
+                    <div style="margin-bottom:6px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                            <span class="section-label">Color</span>
+                            <span id="selected-color-name" style="font-size:11px;font-weight:600;color:#1d1d1f;">Select</span>
+                        </div>
+                        <div class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:8px;">
+                            ${productColors.map(color => { 
+                                const hasStock = productVariants.filter(v => v.color_id == color.id && v.is_active && v.stock > 0).length > 0; 
+                                return `<button class="color-swatch-btn ${!hasStock ? 'disabled' : ''}" data-color-id="${color.id}" onclick="selectColor(${color.id})" title="${color.color_name}${!hasStock ? ' (Out of Stock)' : ''}" ${!hasStock ? 'disabled' : ''}><span class="swatch-color" style="background:${color.color_code || '#ccc'};"></span></button>`; 
+                            }).join('')}
+                        </div>
+                    </div>`;
                 }
+                
+                // Sizes HTML for new card
                 let sizesHTML = '';
                 if (productColors.length > 0) {
-                    sizesHTML = `<div style="margin-bottom:24px;"><div style="display:flex;justify-content:space-between;margin-bottom:12px;"><p style="font-size:10px;font-weight:700;text-transform:uppercase;color:#86868b;">Size</p><span id="selected-size-name" style="font-size:12px;font-weight:600;">Select a size</span></div><div id="size-buttons-container" class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:8px;"><p style="font-size:11px;color:#9ca3af;padding:6px 0;">Please select a color first</p></div></div>`;
+                    sizesHTML = `
+                    <div style="margin-bottom:6px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                            <span class="section-label">Size</span>
+                            <span id="selected-size-name" style="font-size:11px;font-weight:600;color:#1d1d1f;">Select</span>
+                        </div>
+                        <div id="size-buttons-container" class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:6px;">
+                            <p style="font-size:11px;color:#9ca3af;padding:4px 0;">Choose a color first</p>
+                        </div>
+                    </div>`;
                 }
+                
                 const thumbnailsHTML = renderThumbnails(allImages, colorImagesData);
                 const videosHTML = renderVideoSection(productVideos);
                 const bannersHTML = renderBannerSection(productBanners);
                 
-                // ⚡ Video section moved BELOW buy buttons section
+                // ⚡ NEW APPLE-STYLE PRODUCT INFO CARD DESIGN
                 contentDiv.innerHTML = `
                 <div class="main-image-wrapper">
                     <div id="product-hero" class="product-hero">
@@ -1259,42 +1369,53 @@
                 <div style="padding:0 20px;max-width:720px;margin:0 auto;">
                     ${thumbnailsHTML}
                     
-                    <div style="margin-top:20px;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                            <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#007aff;background:rgba(0,122,255,0.1);padding:4px 10px;border-radius:20px;">${product.category || ''}</span>
-                            ${product.subcategory ? `<span style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#86868b;background:rgba(134,135,139,0.1);padding:4px 10px;border-radius:20px;">${product.subcategory}</span>` : ''}
+                    <!-- ⚡ Apple Liquid Glass Product Card -->
+                    <div class="product-info-card" style="margin-top:16px;">
+                        <!-- Category Pill -->
+                        <span class="variant-pill">${product.category || 'Product'}</span>
+                        ${product.subcategory ? `<span class="variant-pill" style="background:rgba(134,135,139,0.08);color:#86868b;margin-left:6px;">${product.subcategory}</span>` : ''}
+                        
+                        <!-- Title -->
+                        <h1 class="title-text">${product.title || ''}</h1>
+                        
+                        ${product.short_description ? `<p style="font-size:12px;color:#6b7280;margin:6px 0 0;line-height:1.5;">${product.short_description}</p>` : ''}
+                        
+                        <!-- Price & Wishlist Row -->
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:14px;">
+                            <div style="display:flex;align-items:baseline;gap:8px;">
+                                <span id="variant-price-display" style="font-size:26px;font-weight:900;color:#1d1d1f;">৳ ${product.price||0}</span>
+                                <span id="variant-old-price-display" style="font-size:14px;color:#86868b;text-decoration:line-through;display:${product.old_price?'inline':'none'};">${product.old_price?`৳ ${product.old_price}`:''}</span>
+                            </div>
+                            <button onclick="toggleWishlist(${product.id})" data-wishlist-btn style="display:flex;align-items:center;gap:5px;padding:8px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:9999px;font-size:9px;font-weight:700;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);cursor:pointer;color:#1d1d1f;transition:all 0.3s;">
+                                <i class="fa-${wishlist.includes(product.id)?'solid':'regular'} fa-heart" style="color:${wishlist.includes(product.id)?'#ef4444':'#86868b'};font-size:12px;"></i> ${wishlist.includes(product.id)?'Saved':'Save'}
+                            </button>
                         </div>
-                        <h1 style="font-size:24px;font-weight:700;margin:8px 0 16px;">${product.title || ''}</h1>
-                    </div>
-                    
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-                        <div id="variant-price-display">
-                            <span style="font-size:28px;font-weight:900;">৳ ${product.price||0}</span>
-                            ${product.old_price?`<span style="font-size:14px;color:#86868b;text-decoration:line-through;margin-left:8px;">৳ ${product.old_price}</span>`:''}
+                        
+                        <!-- Stock Status -->
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+                            <span id="stock-status-dot" style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>
+                            <span id="stock-status-text" style="font-size:10px;font-weight:600;color:#d97706;">Select options</span>
+                            ${avgRating?`<span style="font-size:10px;color:#86868b;margin-left:4px;"><i class="fa-solid fa-star" style="color:#ff9500;font-size:9px;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
                         </div>
-                        <button onclick="toggleWishlist(${product.id})" data-wishlist-btn style="display:flex;align-items:center;gap:5px;padding:10px 16px;border:1.5px solid rgba(0,0,0,0.08);border-radius:9999px;font-size:9px;font-weight:700;background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);cursor:pointer;">
-                            <i class="fa-${wishlist.includes(product.id)?'solid':'regular'} fa-heart" style="color:${wishlist.includes(product.id)?'#ef4444':'#9ca3af'};"></i> ${wishlist.includes(product.id)?'Wishlisted':'Wishlist'}
-                        </button>
-                    </div>
-                    
-                    <div id="stock-status" style="display:flex;align-items:center;gap:6px;margin-bottom:20px;padding:12px 16px;background:rgba(255,255,255,0.5);border-radius:12px;">
-                        <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></span>
-                        <span style="font-size:11px;font-weight:600;color:#d97706;">Select variant for availability</span>
-                        ${avgRating?`<span style="font-size:10px;color:#9ca3af;margin-left:6px;"><i class="fa-solid fa-star" style="color:#ff9500;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
-                    </div>
-                    
-                    ${product.short_description ? `<p style="font-size:13px;color:#6b7280;margin-bottom:24px;">${product.short_description}</p>` : ''}
-                    
-                    <div style="background:rgba(255,255,255,0.5);backdrop-filter:blur(20px);border-radius:20px;padding:20px;margin-bottom:20px;">
+                        
+                        <div class="divider"></div>
+                        
+                        <!-- Color Selection -->
                         ${colorsHTML}
+                        
+                        ${productColors.length > 0 ? '<div style="height:8px;"></div>' : ''}
+                        
+                        <!-- Size Selection -->
                         ${sizesHTML}
+                        
+                        <!-- Variant Info Pill (SKU, Barcode, Weight) -->
+                        <div id="variant-info-pill" class="variant-info-pill" style="display:none;"></div>
                     </div>
                     
-                    <div id="variant-info" class="variant-info-badge" style="display:none;"></div>
-                    
-                    <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 20px;">
-                        <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:16px;background:rgba(29,29,31,0.9);backdrop-filter:blur(20px);color:white;border:none;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;">Add to Bag</button>
-                        <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:16px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:2px solid rgba(0,0,0,0.1);border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;">Buy Now</button>
+                    <!-- Buy Buttons -->
+                    <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 20px;">
+                        <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:15px;background:#1d1d1f;color:white;border:none;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
+                        <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:15px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;color:#1d1d1f;">Buy Now</button>
                     </div>
                     
                     ${videosHTML ? `<div style="margin:20px 0;">${videosHTML}</div>` : ''}
