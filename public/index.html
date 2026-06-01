@@ -155,10 +155,10 @@
         .carousel-track::-webkit-scrollbar { display: none; }
         .carousel-track:active { cursor: grabbing; }
         .carousel-track.smooth-scroll { scroll-behavior: smooth; }
-        .carousel-card { flex: 0 0 auto; width: var(--card-width); scroll-snap-align: center; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; will-change: transform; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: relative; }
-        .carousel-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.15); border-color: rgba(0,0,0,0.15); }
+        .carousel-card { flex: 0 0 auto; width: var(--card-width); scroll-snap-align: center; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1); cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; will-change: transform, box-shadow; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: relative; transform: scale(0.92); opacity: 0.7; filter: blur(0.5px); }
+        .carousel-card.snap-active { box-shadow: 0 12px 40px rgba(0,0,0,0.15); border-color: rgba(0,0,0,0.15); transform: scale(1.02); opacity: 1; filter: blur(0); z-index: 5; }
+        .carousel-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 16px 48px rgba(0,0,0,0.2); border-color: rgba(0,0,0,0.2); opacity: 1; filter: blur(0); }
         .carousel-card:active { transform: scale(0.97); }
-        .carousel-card.snap-active { box-shadow: 0 8px 32px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.15); transform: scale(1.02); }
         .carousel-card .card-img { position: relative; aspect-ratio: 3/4; background: #fafafa; overflow: hidden; pointer-events: none; }
         .carousel-card .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); will-change: transform; pointer-events: none; }
         .carousel-card:hover .card-img img { transform: scale(1.08); }
@@ -250,10 +250,10 @@
             <section id="limited-edition-section" class="carousel-section hidden" style="background: var(--primary);"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: rgba(255,255,255,0.6);">Exclusive Drop</p><h2 class="section-title" style="color: #fff;">Limited Edition</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="limited-edition-wrapper"><button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-left"></i></button><div id="limited-edition-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="limited-edition-dots" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);"><style>#limited-edition-dots .carousel-dot{background:rgba(255,255,255,0.3)}#limited-edition-dots .carousel-dot.active{background:#fff}</style></div></div></section>
             <section id="recent-products-section" class="py-12 sm:py-16 lg:py-20 hidden"><div class="max-w-7xl mx-auto px-4 sm:px-6"><div class="text-center mb-8 sm:mb-10"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary">Recently Viewed</h2></div><div id="recent-products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div></div></section>
         </section>
-        <section id="products" class="page-section py-6 sm:py-8 lg:py-12"><!-- Products content same as before --></section>
+        <section id="products" class="page-section py-6 sm:py-8 lg:py-12"></section>
         <section id="product-details" class="page-section"></section>
-        <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12"><!-- Wishlist content same as before --></section>
-        <section id="news" class="page-section py-6 sm:py-8 lg:py-12"><!-- News content same as before --></section>
+        <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12"></section>
+        <section id="news" class="page-section py-6 sm:py-8 lg:py-12"></section>
     </main>
 
     <div id="footer-container"></div>
@@ -353,7 +353,7 @@
         function renderNews(list) { /* Your original function */ }
         function renderWishlist() { /* Your original function */ }
 
-        // ========== UPDATED CAROUSEL FUNCTIONS (FROM SECOND PROGRAM) ==========
+        // ========== UPDATED CAROUSEL FUNCTIONS WITH ENHANCED ANIMATIONS ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
@@ -506,10 +506,15 @@
             }).join('');
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
             if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
+            // Improved middle alignment: center active card with balanced sides
             const middleIndex = Math.floor(products.length / 2);
             carousel.scrollLeft = 0;
             state.currentIndex = middleIndex;
-            setTimeout(() => { snapToCard(carouselId, middleIndex); }, 100);
+            setTimeout(() => { 
+                snapToCard(carouselId, middleIndex); 
+                // Apply initial active state immediately for visual balance
+                updateActiveCard(carouselId);
+            }, 100);
         }
 
         function renderHomepageSections() {
@@ -537,7 +542,7 @@
             ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
         }
 
-        // ========== TOUCH SUPPORT FOR CAROUSELS (FROM SECOND PROGRAM) ==========
+        // ========== TOUCH SUPPORT FOR CAROUSELS WITH INERTIA ANIMATION ==========
         function initCarouselTouchSupport() {
             document.querySelectorAll('.carousel-track').forEach(carousel => {
                 const state = initCarousel(carousel.id);
