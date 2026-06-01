@@ -35,7 +35,6 @@
         }
     </script>
     
-    <!-- ⚡ Enhanced product page styles with liquid glass -->
     <style>
         :root {
             --primary: #1d1d1f;
@@ -54,7 +53,7 @@
         
         img { max-width: 100%; height: auto; display: block; }
         
-        /* Liquid Glass Color Swatch - Smaller & Refined */
+        /* Liquid Glass Color Swatch */
         .color-swatch-btn {
             width: 32px;
             height: 32px;
@@ -95,7 +94,6 @@
             opacity: 0.3;
             cursor: not-allowed;
             pointer-events: none;
-            backdrop-filter: blur(5px);
         }
         .color-swatch-btn.disabled .swatch-color::after {
             content: '';
@@ -108,7 +106,7 @@
             transform: rotate(-45deg);
         }
         
-        /* Liquid Glass Size Button - Compact */
+        /* Liquid Glass Size Button */
         .size-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
@@ -148,7 +146,7 @@
             pointer-events: none;
         }
         
-        /* ⚡ Product Hero - Fixed Heights */
+        /* Product Hero */
         .product-hero {
             position: relative;
             width: 100%;
@@ -173,35 +171,51 @@
         }
         .product-hero.zoomed img { transform: scale(2.5); }
         
-        /* ⚡ Desktop Layout Styles */
+        @media (min-width: 768px) {
+            .product-hero { 
+                height: 70vh;
+                min-height: 500px;
+                max-height: 800px;
+            }
+        }
+        
+        /* ⚡ DESKTOP LAYOUT - Like Apple, Nike, Zara */
         @media (min-width: 1024px) {
             .product-hero { 
                 height: auto;
                 min-height: 500px;
-                max-height: none;
+                max-height: 80vh;
                 border-radius: 24px;
             }
-            .product-hero img {
-                max-height: 80vh;
-            }
             
-            .desktop-layout {
+            /* Main two-column grid */
+            .desktop-product-grid {
                 display: grid !important;
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
+                grid-template-columns: 1.1fr 0.9fr;
+                gap: 60px;
                 align-items: start;
                 max-width: 1400px;
                 margin: 0 auto;
-                padding: 40px;
+                padding: 40px 40px 0;
             }
             
+            /* Image column - scrollable gallery */
             .desktop-image-col {
                 position: sticky;
                 top: 20px;
             }
             
+            /* Info column */
             .desktop-info-col {
-                max-width: 600px;
+                padding-top: 20px;
+            }
+            
+            /* Full-width bottom section */
+            .desktop-full-width {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 40px 40px;
+                grid-column: 1 / -1;
             }
             
             .main-image-wrapper {
@@ -211,62 +225,69 @@
             }
             
             .product-info-card {
-                padding: 28px;
+                padding: 32px;
+                border-radius: 28px;
             }
             
             .product-info-card .title-text {
-                font-size: 28px;
+                font-size: 32px;
+                letter-spacing: -0.5px;
+            }
+            
+            .product-info-card .section-label {
+                font-size: 10px;
+                letter-spacing: 2px;
             }
             
             #variant-price-display {
-                font-size: 32px !important;
+                font-size: 36px !important;
             }
             
             #variant-old-price-display {
-                font-size: 16px !important;
+                font-size: 17px !important;
             }
             
             .color-swatch-btn {
-                width: 36px;
-                height: 36px;
+                width: 38px;
+                height: 38px;
             }
             
             .size-btn {
-                padding: 10px 18px;
-                font-size: 12px;
-                min-width: 48px;
+                padding: 10px 20px;
+                font-size: 13px;
+                min-width: 50px;
+                border-radius: 12px;
             }
             
             #buy-section button {
-                padding: 18px !important;
-                font-size: 13px !important;
+                padding: 20px !important;
+                font-size: 14px !important;
+                border-radius: 16px !important;
             }
             
             .thumbnail-item {
                 width: 80px;
                 height: 80px;
+                border-radius: 14px;
             }
             
             .detail-badge {
-                padding: 16px 20px;
-                font-size: 13px;
+                padding: 18px 22px;
+                font-size: 14px;
             }
             
             .detail-badge i {
-                font-size: 20px;
+                font-size: 22px;
             }
             
             .toggle-btn {
-                padding: 18px 24px;
-                font-size: 12px;
+                padding: 20px 28px;
+                font-size: 13px;
             }
-        }
-        
-        @media (min-width: 768px) {
-            .product-hero { 
-                height: 70vh;
-                min-height: 500px;
-                max-height: 800px;
+            
+            .description-content {
+                font-size: 15px;
+                padding: 28px;
             }
         }
         
@@ -332,7 +353,6 @@
         .star-rating label:hover,
         .star-rating label:hover ~ label { color: #ff9500; }
         
-        /* Skeleton Loading */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -344,7 +364,6 @@
             100% { background-position: -200% 0; }
         }
         
-        /* Liquid Glass Specs Badge */
         .detail-badge {
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(15px);
@@ -370,7 +389,6 @@
             text-align: center;
         }
         
-        /* Toggle Button */
         .toggle-btn {
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(15px);
@@ -475,13 +493,6 @@
             margin-right: calc(-50vw + 50%);
             position: relative;
         }
-        @media (min-width: 768px) {
-            .main-image-wrapper {
-                width: 100%;
-                margin-left: 0;
-                margin-right: 0;
-            }
-        }
         
         .sticky-add-bar {
             position: fixed;
@@ -535,18 +546,13 @@
         .product-card:hover .product-image { transform: scale(1.04); }
         
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
-
-        /* ⚡ Video Section - Enhanced Styles */
+        
+        /* Video Section */
         .video-section {
             position: relative;
             width: 100%;
             margin: 0;
-            border-radius: 0;
+            border-radius: 12px;
             overflow: hidden;
             background: #000;
             aspect-ratio: 16/9;
@@ -559,7 +565,6 @@
             display: block;
         }
         
-        /* CDN Link always visible on video */
         .video-cdn-badge {
             position: absolute;
             top: 16px;
@@ -588,10 +593,6 @@
             border-bottom-color: rgba(255,255,255,0.7);
             border-color: rgba(255,255,255,0.25);
         }
-        .video-cdn-badge i {
-            font-size: 10px;
-            opacity: 0.8;
-        }
         
         .video-title-overlay {
             position: absolute;
@@ -611,7 +612,6 @@
             transition: opacity 0.4s;
         }
         
-        /* Sound Control - Beautiful Design */
         .video-sound-control {
             position: absolute;
             bottom: 16px;
@@ -648,26 +648,6 @@
             background: rgba(239,68,68,0.3);
             border-color: rgba(239,68,68,0.4);
         }
-        .sound-btn.muted i {
-            animation: pulse-muted 1.5s infinite;
-        }
-        @keyframes pulse-muted {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .sound-ripple {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.5);
-            animation: ripple-out 2s infinite;
-            pointer-events: none;
-        }
-        @keyframes ripple-out {
-            0% { transform: scale(0.9); opacity: 1; }
-            100% { transform: scale(1.4); opacity: 0; }
-        }
         
         .video-play-indicator {
             position: absolute;
@@ -697,7 +677,7 @@
             opacity: 1;
         }
 
-        /* ⚡ Banner Section - Fixed Height */
+        /* Banner Section */
         .product-banner-card {
             position: relative;
             border-radius: 24px;
@@ -766,6 +746,11 @@
         }
         
         @media (min-width: 768px) {
+            .main-image-wrapper {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
             .product-banner-card {
                 height: 280px;
                 border-radius: 28px;
@@ -839,7 +824,6 @@
 
     <script>
         (function() {
-            // ⚡ API Helper - সব কল আমাদের নিজস্ব সার্ভারে
             const API_BASE = '/api';
             
             async function apiFetch(endpoint) {
@@ -900,12 +884,6 @@
                 let slug = path.replace(/^\/product\//, '').replace(/\/$/, '');
                 slug = slug.split('?')[0].split('#')[0];
                 return slug || null;
-            }
-            
-            function getAvailableSizesForColor(colorId) {
-                const variants = productVariants.filter(v => v.color_id == colorId && v.is_active && v.stock > 0);
-                const sizeIds = variants.map(v => v.size_id);
-                return colorSizes.filter(s => sizeIds.includes(s.id) && s.color_id == colorId);
             }
             
             function getVariant(colorId, sizeId) {
@@ -1137,58 +1115,39 @@
                 container.addEventListener('touchend', () => container.classList.remove('zoomed'));
             };
 
-            // ⚡ Auto-play video on load with sound off
             window.initVideoAutoPlay = function(videoId) {
                 const video = document.getElementById(videoId);
                 if (!video) return;
-                
-                // Auto play muted
                 video.muted = true;
                 video.play().then(() => {
                     const section = video.closest('.video-section');
-                    if (section) {
-                        section.classList.remove('paused');
-                    }
+                    if (section) section.classList.remove('paused');
                 }).catch(() => {
-                    // Autoplay blocked, show play indicator
                     const section = video.closest('.video-section');
                     if (section) section.classList.add('paused');
                 });
-                
                 currentVideoElement = video;
             };
 
-            // ⚡ Toggle sound with beautiful animation
             window.toggleVideoSound = function(videoId, btnElement) {
                 const video = document.getElementById(videoId);
                 const icon = btnElement?.querySelector('i');
                 if (!video) return;
-                
                 video.muted = !video.muted;
-                
                 if (video.muted) {
                     btnElement?.classList.add('muted');
                     if (icon) icon.className = 'fa-solid fa-volume-xmark';
                 } else {
                     btnElement?.classList.remove('muted');
                     if (icon) icon.className = 'fa-solid fa-volume-high';
-                    // Add ripple effect
-                    btnElement?.querySelector('.sound-ripple')?.remove();
-                    const ripple = document.createElement('span');
-                    ripple.className = 'sound-ripple';
-                    btnElement?.appendChild(ripple);
-                    setTimeout(() => ripple?.remove(), 2000);
                 }
             };
 
-            // ⚡ Toggle video play/pause
             window.toggleVideoPlay = function(videoId, btnElement) {
                 const video = document.getElementById(videoId);
                 const section = video?.closest('.video-section');
                 const icon = btnElement?.querySelector('i');
-                
                 if (!video || !section) return;
-                
                 if (video.paused) {
                     if (currentVideoElement && currentVideoElement !== video) {
                         currentVideoElement.pause();
@@ -1222,19 +1181,13 @@
                 try { JsBarcode("#barcode-svg", barcodeText, { format: "CODE128", width: 2, height: 80, displayValue: true, fontSize: 14, margin: 10, background: "#ffffff", lineColor: "#1d1d1f" }); barcodeGenerated = true; } catch(e) { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#ef4444;font-size:12px;text-align:center;padding:20px;">Failed to generate barcode</p>'; }
             }
             
-            // ⚡ Review submit - এখন API দিয়ে
             window.submitReview = async function(productId) {
                 const text = document.getElementById('review-text')?.value?.trim();
                 const starsInput = document.querySelector('input[name="product-rating"]:checked');
                 if (!text || !starsInput) return showToast('Please complete all fields', 'error');
                 const rating = parseInt(starsInput.value);
                 try {
-                    await apiPost('/submit-review', {
-                        product_id: productId,
-                        user_name: 'Guest User',
-                        rating: rating,
-                        review_text: text
-                    });
+                    await apiPost('/submit-review', { product_id: productId, user_name: 'Guest User', rating: rating, review_text: text });
                     showToast('Review submitted! Thank you 🎉', 'success');
                     setTimeout(() => location.reload(), 1500);
                 } catch(e) { showToast(e.message || 'Failed', 'error'); }
@@ -1256,84 +1209,34 @@
                 return `<div class="thumbnail-grid no-scrollbar">${combinedImages.map((imgData, index) => `<img src="${imgData.src}" onclick="selectThumbnail('${imgData.src}')" class="thumbnail-item${index === 0 ? ' active' : ''}" alt="thumb" loading="lazy" onerror="this.style.display='none'">`).join('')}</div>`;
             }
 
-            // ⚡ Video Section Renderer - CDN link always visible, auto-play muted
             function renderVideoSection(videos) {
                 if (!videos || videos.length === 0) return '';
-                
                 return videos.map((video, index) => {
                     const videoId = `product-video-${index}`;
                     const hasThumbnail = video.thumbnail_url && video.thumbnail_url.trim() !== '';
                     const hasLink = video.click_link && video.click_link.trim() !== '';
-                    const linkText = hasLink ? (() => {
-                        try {
-                            const url = new URL(video.click_link);
-                            return url.hostname.replace('www.', '');
-                        } catch {
-                            return video.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-                        }
-                    })() : '';
+                    const linkText = hasLink ? (() => { try { return new URL(video.click_link).hostname.replace('www.', ''); } catch { return video.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]; } })() : '';
                     
                     return `
                     <div class="video-section paused" id="video-section-${index}">
-                        <video 
-                            id="${videoId}" 
-                            src="${video.video_url}" 
-                            playsinline 
-                            muted 
-                            loop 
-                            preload="auto"
-                            style="display:block;"
-                            onloadeddata="initVideoAutoPlay('${videoId}')"
-                        ></video>
+                        <video id="${videoId}" src="${video.video_url}" playsinline muted loop preload="auto" style="display:block;" onloadeddata="initVideoAutoPlay('${videoId}')"></video>
                         ${hasThumbnail ? `<div class="video-thumb-preview" style="position:absolute;inset:0;z-index:1;pointer-events:none;"><img src="${video.thumbnail_url}" alt="${video.title || 'Video thumbnail'}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none'"></div>` : ''}
-                        
-                        <!-- CDN Link - Always Visible -->
-                        ${hasLink ? `
-                        <a href="${video.click_link}" target="_blank" rel="noopener" class="video-cdn-badge" onclick="event.stopPropagation()" title="${video.click_link}">
-                            <i class="fa-solid fa-link"></i> ${linkText}
-                            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i>
-                        </a>` : ''}
-                        
-                        <!-- Video Title -->
-                        ${video.title ? `
-                        <div class="video-title-overlay">
-                            ${video.title}${video.subtitle ? ' · ' + video.subtitle : ''}
-                        </div>` : ''}
-                        
-                        <!-- Play Indicator (shows when paused) -->
-                        <div class="video-play-indicator">
-                            <i class="fa-solid fa-play"></i>
-                        </div>
-                        
-                        <!-- Sound Control - Beautiful Design -->
+                        ${hasLink ? `<a href="${video.click_link}" target="_blank" rel="noopener" class="video-cdn-badge" onclick="event.stopPropagation()" title="${video.click_link}"><i class="fa-solid fa-link"></i> ${linkText} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i></a>` : ''}
+                        ${video.title ? `<div class="video-title-overlay">${video.title}${video.subtitle ? ' · ' + video.subtitle : ''}</div>` : ''}
+                        <div class="video-play-indicator"><i class="fa-solid fa-play"></i></div>
                         <div class="video-sound-control">
-                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoSound('${videoId}', this)" title="Toggle Sound" id="sound-btn-${index}">
-                                <i class="fa-solid fa-volume-xmark"></i>
-                                <span class="sound-ripple"></span>
-                            </button>
-                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoPlay('${videoId}', this)" title="Play/Pause" style="width:36px;height:36px;font-size:14px;">
-                                <i class="fa-solid fa-pause"></i>
-                            </button>
+                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoSound('${videoId}', this)" title="Toggle Sound" id="sound-btn-${index}"><i class="fa-solid fa-volume-xmark"></i></button>
+                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoPlay('${videoId}', this)" title="Play/Pause" style="width:36px;height:36px;font-size:14px;"><i class="fa-solid fa-pause"></i></button>
                         </div>
                     </div>`;
                 }).join('');
             }
 
-            // ⚡ Banner Section Renderer - Wider aspect ratio
             function renderBannerSection(banners) {
                 if (!banners || banners.length === 0) return '';
-                
                 return banners.map(banner => {
                     const hasLink = banner.click_link && banner.click_link.trim() !== '';
-                    const linkText = hasLink ? (() => {
-                        try {
-                            const url = new URL(banner.click_link);
-                            return url.hostname.replace('www.', '');
-                        } catch {
-                            return banner.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-                        }
-                    })() : '';
-                    
+                    const linkText = hasLink ? (() => { try { return new URL(banner.click_link).hostname.replace('www.', ''); } catch { return banner.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]; } })() : '';
                     return `
                     <div class="product-banner-card" ${hasLink ? `onclick="window.open('${banner.click_link}', '_blank')"` : ''}>
                         <img src="${banner.banner_url}" alt="${banner.title || 'Product banner'}" loading="lazy" onerror="this.style.display='none'">
@@ -1346,19 +1249,14 @@
                 }).join('');
             }
             
-            // ⚡ Main function - এখন API দিয়ে ডাটা লোড
             async function loadProductBySlug(slug) {
                 try {
-                    // সব প্রোডাক্ট লোড (Complete the Look সেকশনের জন্য)
                     const products = await apiFetch('/products');
                     if (!products) throw new Error('Failed to load products');
                     allProducts = products || [];
-                    
-                    // Slug দিয়ে প্রোডাক্ট খুঁজুন
                     const product = allProducts.find(p => (p.slug || generateSlug(p.title)) === slug);
                     if (!product) return false;
                     
-                    // সমস্ত সম্পর্কিত ডাটা API দিয়ে লোড
                     const [colors, variants, reviews, videos, banners] = await Promise.all([
                         apiFetch(`/product-colors?slug=${encodeURIComponent(slug)}`),
                         apiFetch(`/product-variants?slug=${encodeURIComponent(slug)}`),
@@ -1373,28 +1271,17 @@
                     productVideos = videos || [];
                     productBanners = banners || [];
                     
-                    // কালার সাইজ লোড
                     if (productColors.length > 0) {
                         const colorIds = productColors.map(c => c.id);
                         const sizes = await apiFetch(`/color-sizes?ids=${colorIds.join(',')}`);
                         colorSizes = sizes || [];
-                    } else {
-                        colorSizes = [];
-                    }
+                    } else { colorSizes = []; }
                     
-                    // রিসেন্ট প্রোডাক্ট সেভ
-                    try { 
-                        let recent = JSON.parse(localStorage.getItem('jayen_recent') || '[]'); 
-                        recent = [product.id.toString(), ...recent.filter(id => id != product.id)].slice(0,8); 
-                        localStorage.setItem('jayen_recent', JSON.stringify(recent)); 
-                    } catch(e) {}
+                    try { let recent = JSON.parse(localStorage.getItem('jayen_recent') || '[]'); recent = [product.id.toString(), ...recent.filter(id => id != product.id)].slice(0,8); localStorage.setItem('jayen_recent', JSON.stringify(recent)); } catch(e) {}
                     
                     renderProductDetails(product);
                     return true;
-                } catch(e) { 
-                    console.error('Error loading product:', e); 
-                    return false; 
-                }
+                } catch(e) { console.error('Error loading product:', e); return false; }
             }
             
             function renderProductDetails(product) {
@@ -1418,7 +1305,6 @@
                 const mainImage = allImages[0] || '/logo.png';
                 const reviewsHTML = prodReviews.length ? prodReviews.map(r=>`<div style="background:rgba(255,255,255,0.6);backdrop-filter:blur(15px);padding:18px;border-radius:14px;border:1px solid rgba(0,0,0,0.05);margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="color:#ff9500;">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</span><span style="font-weight:700;font-size:12px;">${r.user_name||'Anonymous'}</span><span style="margin-left:auto;font-size:9px;color:#9ca3af;">${r.created_at?new Date(r.created_at).toLocaleDateString():''}</span></div><p style="font-size:13px;color:#4b5563;">${r.review_text||''}</p></div>`).join('') : '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:20px;">No reviews yet. Be the first to review!</p>';
                 
-                // Colors HTML for new card
                 let colorsHTML = '';
                 if (productColors.length > 0) {
                     colorsHTML = `
@@ -1428,15 +1314,11 @@
                             <span id="selected-color-name" style="font-size:11px;font-weight:600;color:#1d1d1f;">Select</span>
                         </div>
                         <div class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:8px;">
-                            ${productColors.map(color => { 
-                                const hasStock = productVariants.filter(v => v.color_id == color.id && v.is_active && v.stock > 0).length > 0; 
-                                return `<button class="color-swatch-btn ${!hasStock ? 'disabled' : ''}" data-color-id="${color.id}" onclick="selectColor(${color.id})" title="${color.color_name}${!hasStock ? ' (Out of Stock)' : ''}" ${!hasStock ? 'disabled' : ''}><span class="swatch-color" style="background:${color.color_code || '#ccc'};"></span></button>`; 
-                            }).join('')}
+                            ${productColors.map(color => { const hasStock = productVariants.filter(v => v.color_id == color.id && v.is_active && v.stock > 0).length > 0; return `<button class="color-swatch-btn ${!hasStock ? 'disabled' : ''}" data-color-id="${color.id}" onclick="selectColor(${color.id})" title="${color.color_name}${!hasStock ? ' (Out of Stock)' : ''}" ${!hasStock ? 'disabled' : ''}><span class="swatch-color" style="background:${color.color_code || '#ccc'};"></span></button>`; }).join('')}
                         </div>
                     </div>`;
                 }
                 
-                // Sizes HTML for new card
                 let sizesHTML = '';
                 if (productColors.length > 0) {
                     sizesHTML = `
@@ -1455,10 +1337,10 @@
                 const videosHTML = renderVideoSection(productVideos);
                 const bannersHTML = renderBannerSection(productBanners);
                 
-                // ⚡ DESKTOP TWO-COLUMN LAYOUT with mobile fallback
+                // ⚡ WORLD-CLASS LAYOUT: Left images, Right info, Bottom full-width content
                 contentDiv.innerHTML = `
-                <div class="desktop-layout" style="display:block;">
-                    <!-- Left Column - Images -->
+                <div class="desktop-product-grid" style="display:block;">
+                    <!-- LEFT COLUMN - Images & Thumbnails -->
                     <div class="desktop-image-col">
                         <div class="main-image-wrapper">
                             <div id="product-hero" class="product-hero">
@@ -1466,23 +1348,18 @@
                             </div>
                         </div>
                         ${thumbnailsHTML}
-                        ${videosHTML ? `<div style="margin:20px 0;">${videosHTML}</div>` : ''}
                     </div>
                     
-                    <!-- Right Column - Product Info -->
+                    <!-- RIGHT COLUMN - Product Info (Sticky) -->
                     <div class="desktop-info-col">
-                        <!-- ⚡ Apple Liquid Glass Product Card -->
                         <div class="product-info-card">
-                            <!-- Category Pill -->
                             <span class="variant-pill">${product.category || 'Product'}</span>
                             ${product.subcategory ? `<span class="variant-pill" style="background:rgba(134,135,139,0.08);color:#86868b;margin-left:6px;">${product.subcategory}</span>` : ''}
                             
-                            <!-- Title -->
                             <h1 class="title-text">${product.title || ''}</h1>
                             
                             ${product.short_description ? `<p style="font-size:12px;color:#6b7280;margin:6px 0 0;line-height:1.5;">${product.short_description}</p>` : ''}
                             
-                            <!-- Price & Wishlist Row -->
                             <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:14px;">
                                 <div style="display:flex;align-items:baseline;gap:8px;">
                                     <span id="variant-price-display" style="font-size:26px;font-weight:900;color:#1d1d1f;">৳ ${product.price||0}</span>
@@ -1493,7 +1370,6 @@
                                 </button>
                             </div>
                             
-                            <!-- Stock Status -->
                             <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
                                 <span id="stock-status-dot" style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>
                                 <span id="stock-status-text" style="font-size:10px;font-weight:600;color:#d97706;">Select options</span>
@@ -1502,30 +1378,40 @@
                             
                             <div class="divider"></div>
                             
-                            <!-- Color Selection -->
                             ${colorsHTML}
-                            
                             ${productColors.length > 0 ? '<div style="height:8px;"></div>' : ''}
-                            
-                            <!-- Size Selection -->
                             ${sizesHTML}
                             
-                            <!-- Variant Info Pill (SKU, Barcode, Weight) -->
                             <div id="variant-info-pill" class="variant-info-pill" style="display:none;"></div>
                         </div>
                         
-                        <!-- Buy Buttons -->
                         <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 20px;">
                             <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:15px;background:#1d1d1f;color:white;border:none;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
                             <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:15px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;color:#1d1d1f;">Buy Now</button>
                         </div>
+                    </div>
+                    
+                    <!-- ⚡ FULL-WIDTH BOTTOM CONTENT -->
+                    <div class="desktop-full-width">
+                        <!-- Description -->
+                        ${product.description ? `
+                        <div style="margin-bottom:20px;">
+                            <button class="toggle-btn" onclick="toggleCollapse('desc-collapse','desc-icon')">
+                                <span><i class="fa-solid fa-align-left"></i> Description</span>
+                                <i id="desc-icon" class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div id="desc-collapse" class="collapse-section open">
+                                <div class="description-content">${product.description}</div>
+                            </div>
+                        </div>` : ''}
                         
+                        <!-- Specifications -->
                         <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
                             <span><i class="fa-solid fa-sliders"></i> Specifications</span>
                             <i id="specs-icon" class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div id="specs-collapse" class="collapse-section">
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 16px;">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:10px;margin:4px 0 16px;">
                                 ${product.fabric_type ? `<div class="detail-badge"><i class="fa-solid fa-shirt"></i><div><span style="color:#9ca3af;font-size:9px;">Fabric</span><br><span style="font-weight:700;">${product.fabric_type}</span></div></div>` : ''}
                                 ${product.gsm_type ? `<div class="detail-badge"><i class="fa-solid fa-weight-scale"></i><div><span style="color:#9ca3af;font-size:9px;">GSM</span><br><span style="font-weight:700;">${product.gsm_type}</span></div></div>` : ''}
                                 ${product.fit_type ? `<div class="detail-badge"><i class="fa-solid fa-ruler"></i><div><span style="color:#9ca3af;font-size:9px;">Fit</span><br><span style="font-weight:700;">${product.fit_type}</span></div></div>` : ''}
@@ -1533,15 +1419,6 @@
                                 ${product.print_type ? `<div class="detail-badge"><i class="fa-solid fa-palette"></i><div><span style="color:#9ca3af;font-size:9px;">Print</span><br><span style="font-weight:700;">${product.print_type}</span></div></div>` : ''}
                             </div>
                         </div>
-                        
-                        ${product.description ? `
-                        <button class="toggle-btn" onclick="toggleCollapse('desc-collapse','desc-icon')">
-                            <span><i class="fa-solid fa-align-left"></i> Description</span>
-                            <i id="desc-icon" class="fa-solid fa-chevron-down"></i>
-                        </button>
-                        <div id="desc-collapse" class="collapse-section">
-                            <div class="description-content">${product.description}</div>
-                        </div>` : ''}
                         
                         ${(product.barcode) ? `
                         <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')">
@@ -1554,8 +1431,13 @@
                             </div>
                         </div>` : ''}
                         
+                        <!-- Videos (in full-width bottom) -->
+                        ${videosHTML ? `<div style="margin:28px 0;">${videosHTML}</div>` : ''}
+                        
+                        <!-- Banners (in full-width bottom) -->
                         ${bannersHTML ? `<div style="margin-top:28px;">${bannersHTML}</div>` : ''}
                         
+                        <!-- Reviews -->
                         <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:32px;margin-top:32px;">
                             <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
                                 <h3 style="font-size:22px;font-weight:700;">Reviews</h3>
@@ -1575,8 +1457,6 @@
                                 <button onclick="submitReview(${product.id})" style="padding:12px 28px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:11px;cursor:pointer;">Submit Review</button>
                             </div>
                         </div>
-                        
-                        <div style="height:40px;"></div>
                     </div>
                 </div>`;
                 
@@ -1585,7 +1465,6 @@
                 initStickyBar(); updateStickyBar();
                 setTimeout(() => { const hero = document.getElementById('product-hero'); if (hero) initZoom(hero); }, 100);
 
-                // Add video ended event listeners and hide thumbnails when playing
                 setTimeout(() => {
                     document.querySelectorAll('.video-section video').forEach(video => {
                         video.addEventListener('ended', () => {
@@ -1595,21 +1474,11 @@
                         });
                         video.addEventListener('play', () => {
                             const section = video.closest('.video-section');
-                            if (section) {
-                                section.classList.remove('paused');
-                                // Hide thumbnail preview when playing
-                                const thumbPreview = section.querySelector('.video-thumb-preview');
-                                if (thumbPreview) thumbPreview.style.display = 'none';
-                            }
+                            if (section) { section.classList.remove('paused'); const thumbPreview = section.querySelector('.video-thumb-preview'); if (thumbPreview) thumbPreview.style.display = 'none'; }
                         });
                         video.addEventListener('pause', () => {
                             const section = video.closest('.video-section');
-                            if (section) {
-                                section.classList.add('paused');
-                                // Show thumbnail preview when paused
-                                const thumbPreview = section.querySelector('.video-thumb-preview');
-                                if (thumbPreview) thumbPreview.style.display = 'block';
-                            }
+                            if (section) { section.classList.add('paused'); const thumbPreview = section.querySelector('.video-thumb-preview'); if (thumbPreview) thumbPreview.style.display = 'block'; }
                         });
                     });
                 }, 200);
