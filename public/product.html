@@ -1249,7 +1249,7 @@
                 const videosHTML = renderVideoSection(productVideos);
                 const bannersHTML = renderBannerSection(productBanners);
                 
-                // Video section placed between main image and product info
+                // ⚡ Video section moved BELOW buy buttons section
                 contentDiv.innerHTML = `
                 <div class="main-image-wrapper">
                     <div id="product-hero" class="product-hero">
@@ -1258,8 +1258,6 @@
                 </div>
                 <div style="padding:0 20px;max-width:720px;margin:0 auto;">
                     ${thumbnailsHTML}
-                    
-                    ${videosHTML ? `<div style="margin-top:16px;">${videosHTML}</div>` : ''}
                     
                     <div style="margin-top:20px;">
                         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
@@ -1298,6 +1296,8 @@
                         <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:16px;background:rgba(29,29,31,0.9);backdrop-filter:blur(20px);color:white;border:none;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;">Add to Bag</button>
                         <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:16px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:2px solid rgba(0,0,0,0.1);border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;">Buy Now</button>
                     </div>
+                    
+                    ${videosHTML ? `<div style="margin:20px 0;">${videosHTML}</div>` : ''}
                     
                     <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
                         <span><i class="fa-solid fa-sliders"></i> Specifications</span>
