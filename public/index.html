@@ -217,7 +217,7 @@
 
     <div id="header-container"></div>
 
-<main class="pt-0">
+    <main class="pt-0">
         <section id="home" class="page-section active-page fade-in">
             <div class="relative overflow-hidden hero-img bg-gray-100" style="height:50vh;min-height:280px;" id="hero-container">
                 <div id="hero-banner-slides" class="absolute inset-0"></div>
@@ -231,23 +231,13 @@
                     </div>
                 </div>
             </div>
-            <div class="max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4 -mt-6 sm:-mt-8 relative z-30">
-                <div class="bg-white/80 backdrop-blur-2xl shadow-2xl rounded-2xl p-1.5 sm:p-2 flex gap-1.5 sm:gap-2 border border-white/50">
-                    <div class="relative flex-grow">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs sm:text-sm"></i>
-                        <input type="text" id="main-search-input" placeholder="Search products..." autocomplete="off" class="w-full pl-8 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 lg:py-4 rounded-xl bg-gray-50/50 border-none outline-none text-xs sm:text-sm">
-                        <div id="search-suggestions" class="hidden absolute top-full left-0 right-0 mt-2 bg-white/90 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/50 z-50 max-h-60 sm:max-h-80 overflow-y-auto custom-scroll"></div>
-                    </div>
-                    <button onclick="handleMainSearch()" class="px-4 sm:px-6 bg-primary text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-blue transition shrink-0">Search</button>
-                </div>
-            </div>
             <!-- Carousel Sections -->
             <section id="new-arrivals-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Just Dropped</p><h2 class="section-title">New Arrivals</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="new-arrivals-wrapper"><button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="new-arrivals-carousel" class="carousel-track smooth-scroll" data-speed="0.4"></div><button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="new-arrivals-dots"></div></div></section>
             <section id="hot-products-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Popular Right Now</p><h2 class="section-title">Trending Now</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="hot-products-wrapper"><button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="hot-products-carousel" class="carousel-track smooth-scroll" data-speed="0.6"></div><button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="hot-products-dots"></div></div></section>
             <section id="featured-products-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Editor's Pick</p><h2 class="section-title">Featured Products</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="featured-products-wrapper"><button onclick="slideCarousel('featured-products-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="featured-products-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('featured-products-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="featured-products-dots"></div></div></section>
             <section id="best-selling-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><p class="section-label">Most Loved</p><h2 class="section-title">Best Sellers</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="best-selling-wrapper"><button onclick="slideCarousel('best-selling-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="best-selling-carousel" class="carousel-track smooth-scroll" data-speed="0.55"></div><button onclick="slideCarousel('best-selling-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="best-selling-dots"></div></div></section>
             <section id="on-sale-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: #ff9500;">Limited Time</p><h2 class="section-title">On Sale</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="on-sale-wrapper"><button onclick="slideCarousel('on-sale-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="on-sale-carousel" class="carousel-track smooth-scroll" data-speed="0.7"></div><button onclick="slideCarousel('on-sale-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="on-sale-dots"></div></div></section>
-             <section id="limited-edition-section" class="carousel-section hidden" style="background: var(--primary); padding-bottom: 0; margin-bottom: 0;"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: rgba(255,255,255,0.6);">Exclusive Drop</p><h2 class="section-title" style="color: #fff;">Limited Edition</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="limited-edition-wrapper"><button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-left"></i></button><div id="limited-edition-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="limited-edition-dots" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);"><style>#limited-edition-dots .carousel-dot{background:rgba(255,255,255,0.3)}#limited-edition-dots .carousel-dot.active{background:#fff}</style></div></div></section>
+            <section id="limited-edition-section" class="carousel-section hidden" style="background: var(--primary); padding-bottom: 0; margin-bottom: 0;"><div class="carousel-container"><div class="carousel-header"><p class="section-label" style="color: rgba(255,255,255,0.6);">Exclusive Drop</p><h2 class="section-title" style="color: #fff;">Limited Edition</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="limited-edition-wrapper"><button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-left"></i></button><div id="limited-edition-carousel" class="carousel-track smooth-scroll" data-speed="0.5"></div><button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="limited-edition-dots" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);"><style>#limited-edition-dots .carousel-dot{background:rgba(255,255,255,0.3)}#limited-edition-dots .carousel-dot.active{background:#fff}</style></div></div></section>
             <section id="recent-products-section" class="py-12 sm:py-16 lg:py-20 hidden"><div class="max-w-7xl mx-auto px-4 sm:px-6"><div class="text-center mb-8 sm:mb-10"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-primary">Recently Viewed</h2></div><div id="recent-products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div></div></section>
         </section>
         <section id="products" class="page-section py-6 sm:py-8 lg:py-12">
@@ -304,7 +294,7 @@
     <div id="cookieConsent" class="cookie-consent-overlay"><div class="cookie-banner"><div class="cookie-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="cookie-text"><h4>We Value Your Privacy</h4><p>We use cookies. <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a></p></div><div class="cookie-buttons"><button class="cookie-btn decline" onclick="handleCookieDecline()">Decline</button><button class="cookie-btn accept" onclick="handleCookieAccept()">Accept</button></div></div></div>
 
     <script>
-        // ========== FETCH DATA FROM OUR API (YOUR ORIGINAL API SYSTEM) ==========
+        // ========== FETCH DATA FROM OUR API ==========
         let currentData = { products: [], categories: [], news: [], hero: [] };
         let currentSlide = 0, slideInterval;
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
@@ -414,65 +404,42 @@
             grid.innerHTML=list.map(p=>productCard(p)).join('');
         }
 
-        // ========== UPDATED CAROUSEL FUNCTIONS WITH INDEX-1 SYSTEM ==========
-      function calculateCarouselLayout(products) {
-    const count = products.length;
-    
-    // Early return with complete structure
-    if (count === 0) {
-        return {
-            leftCount: 0,
-            centerIndex: null,
-            rightCount: 0,
-            totalCount: 0,
-            centerDisplayIndex: null,
-            leftProducts: [],
-            centerProduct: null,
-            rightProducts: [],
-            allPositioned: []
-        };
-    }
-    
-    // Optimized calculation - works for both even and odd
-    const leftCount = count >> 1;  // Bitwise shift - faster than Math.floor(count / 2)
-    const centerIndex = leftCount;
-    const rightCount = count - leftCount - 1;  // Single formula for both even & odd!
-    
-    // Extract products by position
-    const leftProducts = products.slice(0, leftCount);
-    const centerProduct = products[centerIndex];
-    const rightProducts = products.slice(centerIndex + 1);
-    
-    // Create positioned array with metadata
-    const allPositioned = products.map((product, index) => ({
-        product,
-        position: index < centerIndex ? 'left' : 
-                  index === centerIndex ? 'center' : 'right',
-        displayIndex: index + 1,  // 1-based index
-        distanceFromCenter: index - centerIndex  // negative=left, 0=center, positive=right
-    }));
-    
-    return {
-        leftCount,
-        centerIndex,
-        rightCount,
-        totalCount: count,
-        centerDisplayIndex: centerIndex + 1,  // 1-based index for center
-        leftProducts,
-        centerProduct,
-        rightProducts,
-        allPositioned,
-        isBalanced: count % 2 !== 0 ? (leftCount === rightCount) : (leftCount === rightCount + 1)
-    };
-}
+        // ========== UPDATED CAROUSEL FUNCTIONS ==========
+        function calculateCarouselLayout(products) {
+            const count = products.length;
+            if (count === 0) {
+                return {
+                    leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0,
+                    centerDisplayIndex: null, leftProducts: [], centerProduct: null,
+                    rightProducts: [], allPositioned: []
+                };
+            }
+            const leftCount = count >> 1;
+            const centerIndex = leftCount;
+            const rightCount = count - leftCount - 1;
+            const leftProducts = products.slice(0, leftCount);
+            const centerProduct = products[centerIndex];
+            const rightProducts = products.slice(centerIndex + 1);
+            const allPositioned = products.map((product, index) => ({
+                product,
+                position: index < centerIndex ? 'left' : index === centerIndex ? 'center' : 'right',
+                displayIndex: index + 1,
+                distanceFromCenter: index - centerIndex
+            }));
+            return {
+                leftCount, centerIndex, rightCount, totalCount: count,
+                centerDisplayIndex: centerIndex + 1, leftProducts, centerProduct,
+                rightProducts, allPositioned,
+                isBalanced: count % 2 !== 0 ? (leftCount === rightCount) : (leftCount === rightCount + 1)
+            };
+        }
 
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
                 touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
                 swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
-                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false,
-                layout: null // Store the layout configuration
+                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false, layout: null
             }; 
             return carouselStates[carouselId]; 
         }
@@ -538,7 +505,6 @@
             const currentIndex = Math.round(carousel.scrollLeft / cardTotal);
             carousel.querySelectorAll('.carousel-card').forEach((card,i) => { 
                 card.classList.toggle('snap-active', i === currentIndex); 
-                // Update data-index attribute (1-based)
                 card.setAttribute('data-display-index', i + 1);
             });
         }
@@ -553,7 +519,6 @@
             const currentIndex = Math.max(0, Math.min(Math.round(carousel.scrollLeft / cardTotal), state.totalCards - 1));
             dotsContainer.querySelectorAll('.carousel-dot').forEach((dot,i) => { 
                 dot.classList.toggle('active', i === currentIndex); 
-                // Update dot display index (1-based)
                 dot.setAttribute('data-display-index', i + 1);
             });
         }
@@ -611,13 +576,11 @@
             const layout = calculateCarouselLayout(products);
             state.layout = layout;
             state.totalCards = products.length;
-            
-            // Set initial center index based on layout
             state.currentIndex = layout.centerIndex;
             
             carousel.innerHTML = products.map((p, index) => {
                 const isOut=p.stock<=0, wished=(window.wishlist||[]).includes(p.id); 
-                const displayIndex = index + 1; // 1-based index
+                const displayIndex = index + 1;
                 let badge='';
                 if(!isOut){
                     if(p.is_new_arrival)badge='<span class="card-badge badge-new">New</span>';
@@ -632,25 +595,13 @@
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
             if(dotsContainer) {
                 dotsContainer.innerHTML = products.map((_,i) => {
-                    const displayIndex = i + 1; // 1-based index
+                    const displayIndex = i + 1;
                     const isCenter = i === layout.centerIndex;
                     return `<div class="carousel-dot ${i===layout.centerIndex?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})" data-display-index="${displayIndex}" data-layout-position="${isCenter ? 'center' : i < layout.centerIndex ? 'left' : 'right'}"></div>`;
                 }).join('');
             }
             
-            // Snap to center card initially
-            setTimeout(() => { 
-                snapToCard(carouselId, layout.centerIndex); 
-            }, 100);
-            
-            // Log layout information for debugging
-            console.log(`Carousel "${carouselId}" layout:`, {
-                totalProducts: layout.totalCount,
-                leftCount: layout.leftCount,
-                centerDisplayIndex: layout.centerDisplayIndex,
-                rightCount: layout.rightCount,
-                isEven: products.length % 2 === 0
-            });
+            setTimeout(() => { snapToCard(carouselId, layout.centerIndex); }, 100);
         }
 
         function renderHomepageSections() {
@@ -678,143 +629,96 @@
             ['new-arrivals-carousel','hot-products-carousel','featured-products-carousel','best-selling-carousel','on-sale-carousel','limited-edition-carousel'].forEach(id=>stopCarouselAutoScroll(id)); 
         }
 
-        // ========== TOUCH & MOUSE DRAG SUPPORT FOR CAROUSELS ==========
-function initCarouselTouchSupport() {
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    document.querySelectorAll('.carousel-track').forEach(carousel => {
-        const state = initCarousel(carousel.id);
-        const THRESHOLD = 15;
-        
-        // ==================== TOUCH EVENTS ====================
-        carousel.addEventListener('touchstart', (e) => { 
-            state.touchStartX = e.touches[0].pageX; 
-            state.touchStartY = e.touches[0].pageY; 
-            state.touchStartScrollLeft = carousel.scrollLeft; 
-            state.hasMoved = false; 
-            state.isDragging = true; 
-            state.swipeDirection = null; 
-            state.isPaused = true; 
-            carousel.classList.remove('smooth-scroll'); 
-        }, { passive: true });
-        
-        carousel.addEventListener('touchmove', (e) => { 
-            if(state.swipeDirection === 'vertical') return; 
-            const deltaX = e.touches[0].pageX - state.touchStartX; 
-            const deltaY = e.touches[0].pageY - state.touchStartY; 
-            const absX = Math.abs(deltaX); 
-            const absY = Math.abs(deltaY); 
-            if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) 
-                state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; 
-            if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { 
-                if(!state.hasMoved) state.hasMoved = true; 
-                carousel.scrollLeft = state.touchStartScrollLeft - deltaX; 
-                updateActiveCard(carousel.id); 
-                updateDots(carousel.id); 
-            } 
-        }, { passive: true });
-        
-        carousel.addEventListener('touchend', () => { 
-            handleDragEnd(carousel, state);
-        });
-        
-        // ==================== MOUSE EVENTS (Desktop Only) ====================
-        if (!isTouchDevice) {
-            carousel.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                state.touchStartX = e.pageX;
-                state.touchStartY = e.pageY;
-                state.touchStartScrollLeft = carousel.scrollLeft;
-                state.hasMoved = false;
-                state.isDragging = true;
-                state.swipeDirection = null;
-                state.isPaused = true;
-                carousel.classList.remove('smooth-scroll');
-                carousel.style.cursor = 'grabbing';
-            });
-            
-            window.addEventListener('mousemove', (e) => {
-                if (!state.isDragging || state.swipeDirection === 'vertical') return;
-                const deltaX = e.pageX - state.touchStartX;
-                const deltaY = e.pageY - state.touchStartY;
-                const absX = Math.abs(deltaX);
-                const absY = Math.abs(deltaY);
-                if (!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) {
-                    state.swipeDirection = absX > absY ? 'horizontal' : 'vertical';
-                    if (state.swipeDirection === 'vertical') {
-                        state.isDragging = false;
-                        carousel.style.cursor = 'grab';
-                        carousel.classList.add('smooth-scroll');
-                        return;
-                    }
-                }
-                if (state.swipeDirection === 'horizontal' && absX > THRESHOLD) {
-                    state.hasMoved = true;
-                    carousel.scrollLeft = state.touchStartScrollLeft - deltaX;
-                    updateActiveCard(carousel.id);
-                    updateDots(carousel.id);
+        // ========== TOUCH & MOUSE DRAG SUPPORT ==========
+        function initCarouselTouchSupport() {
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            document.querySelectorAll('.carousel-track').forEach(carousel => {
+                const state = initCarousel(carousel.id);
+                const THRESHOLD = 15;
+                carousel.addEventListener('touchstart', (e) => { 
+                    state.touchStartX = e.touches[0].pageX; state.touchStartY = e.touches[0].pageY; 
+                    state.touchStartScrollLeft = carousel.scrollLeft; state.hasMoved = false; 
+                    state.isDragging = true; state.swipeDirection = null; state.isPaused = true; 
+                    carousel.classList.remove('smooth-scroll'); 
+                }, { passive: true });
+                carousel.addEventListener('touchmove', (e) => { 
+                    if(state.swipeDirection === 'vertical') return; 
+                    const deltaX = e.touches[0].pageX - state.touchStartX; 
+                    const deltaY = e.touches[0].pageY - state.touchStartY; 
+                    const absX = Math.abs(deltaX); const absY = Math.abs(deltaY); 
+                    if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) 
+                        state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; 
+                    if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { 
+                        if(!state.hasMoved) state.hasMoved = true; 
+                        carousel.scrollLeft = state.touchStartScrollLeft - deltaX; 
+                        updateActiveCard(carousel.id); updateDots(carousel.id); 
+                    } 
+                }, { passive: true });
+                carousel.addEventListener('touchend', () => { handleDragEnd(carousel, state); });
+                if (!isTouchDevice) {
+                    carousel.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        state.touchStartX = e.pageX; state.touchStartY = e.pageY;
+                        state.touchStartScrollLeft = carousel.scrollLeft; state.hasMoved = false;
+                        state.isDragging = true; state.swipeDirection = null; state.isPaused = true;
+                        carousel.classList.remove('smooth-scroll'); carousel.style.cursor = 'grabbing';
+                    });
+                    window.addEventListener('mousemove', (e) => {
+                        if (!state.isDragging || state.swipeDirection === 'vertical') return;
+                        const deltaX = e.pageX - state.touchStartX; const deltaY = e.pageY - state.touchStartY;
+                        const absX = Math.abs(deltaX); const absY = Math.abs(deltaY);
+                        if (!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) {
+                            state.swipeDirection = absX > absY ? 'horizontal' : 'vertical';
+                            if (state.swipeDirection === 'vertical') {
+                                state.isDragging = false; carousel.style.cursor = 'grab';
+                                carousel.classList.add('smooth-scroll'); return;
+                            }
+                        }
+                        if (state.swipeDirection === 'horizontal' && absX > THRESHOLD) {
+                            state.hasMoved = true;
+                            carousel.scrollLeft = state.touchStartScrollLeft - deltaX;
+                            updateActiveCard(carousel.id); updateDots(carousel.id);
+                        }
+                    });
+                    window.addEventListener('mouseup', () => { if (!state.isDragging) return; handleDragEnd(carousel, state); });
+                    carousel.addEventListener('mouseleave', () => { if (state.isDragging) handleDragEnd(carousel, state); });
                 }
             });
-            
-            window.addEventListener('mouseup', () => {
-                if (!state.isDragging) return;
-                handleDragEnd(carousel, state);
-            });
-            
-            carousel.addEventListener('mouseleave', () => {
-                if (state.isDragging) {
-                    handleDragEnd(carousel, state);
+            function handleDragEnd(carousel, state) {
+                carousel.classList.add('smooth-scroll'); carousel.style.cursor = isTouchDevice ? '' : 'grab';
+                if (state.hasMoved) {
+                    const {width, gap} = getCardDimensions(carousel); const cardTotal = width + gap;
+                    const nearestIndex = Math.round(carousel.scrollLeft / cardTotal);
+                    const targetIndex = Math.max(0, Math.min(nearestIndex, state.totalCards - 1));
+                    snapToCard(carousel.id, targetIndex);
                 }
-            });
+                state.isDragging = false; state.hasMoved = false; state.swipeDirection = null;
+                clearTimeout(state._resumeTimeout);
+                state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 2500);
+            }
         }
-    });
-    
-    function handleDragEnd(carousel, state) {
-        carousel.classList.add('smooth-scroll');
-        carousel.style.cursor = isTouchDevice ? '' : 'grab';
-        
-        if (state.hasMoved) {
-            const {width, gap} = getCardDimensions(carousel);
-            const cardTotal = width + gap;
-            const nearestIndex = Math.round(carousel.scrollLeft / cardTotal);
-            const targetIndex = Math.max(0, Math.min(nearestIndex, state.totalCards - 1));
-            snapToCard(carousel.id, targetIndex);
-        }
-        
-        state.isDragging = false;
-        state.hasMoved = false;
-        state.swipeDirection = null;
-        
-        clearTimeout(state._resumeTimeout);
-        state._resumeTimeout = setTimeout(() => { 
-            state.isPaused = false; 
-            state.lastTimestamp = 0; 
-        }, 2500);
-    }
-}
-        // ========== OTHER FUNCTIONS ==========
-        function handleMainSearch() { const q=document.getElementById('main-search-input').value.toLowerCase().trim(); document.getElementById('search-suggestions').classList.add('hidden'); if(!q) return; navigate('products',{search:q}); renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(q))); }
+
+        // ========== COOKIE FUNCTIONS ==========
         function handleCookieAccept() { localStorage.setItem('jayenware_consent','accepted'); document.getElementById('cookieConsent').classList.remove('show'); }
         function handleCookieDecline() { localStorage.setItem('jayenware_consent','declined'); document.getElementById('cookieConsent').classList.remove('show'); }
 
-        document.addEventListener('click',e=>{if(!e.target.closest('#main-search-input')&&!e.target.closest('#search-suggestions'))document.getElementById('search-suggestions').classList.add('hidden');if(!e.target.closest('#sort-container'))document.getElementById('sort-dropdown').classList.add('hidden');});
-        document.getElementById('main-search-input').addEventListener('input',function(e){const q=e.target.value.toLowerCase().trim();const box=document.getElementById('search-suggestions');if(q.length<2){box.classList.add('hidden');return;}const filtered=currentData.products.filter(p=>p.title.toLowerCase().includes(q)).slice(0,6);box.innerHTML=filtered.length?filtered.map(p=>`<a href="/product/${getProductSlug(p)}" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer no-underline"><img src="${p.img}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg object-cover shrink-0" alt="${p.title}"><div class="min-w-0"><p class="text-[10px] sm:text-xs font-bold text-primary truncate">${p.title}</p><p class="text-[9px] sm:text-[10px] font-black text-primary">৳${p.price}</p></div></a>`).join(''):'<p class="p-3 sm:p-4 text-gray-400 text-[10px] sm:text-xs text-center">No results</p>';box.classList.remove('hidden');});
+        document.addEventListener('click',e=>{if(!e.target.closest('#sort-container'))document.getElementById('sort-dropdown').classList.add('hidden');});
         window.addEventListener('popstate',function(){handleInitialRoute();});
 
-        // ========== LOAD DATA (YOUR ORIGINAL API) ==========
+        // ========== LOAD DATA ==========
         async function loadData() {
             try {
                 const [hero, cats, prods, newsData] = await Promise.all([
-                    fetchAPI('/api/hero'),
-                    fetchAPI('/api/categories'),
-                    fetchAPI('/api/products'),
-                    fetchAPI('/api/news')
+                    fetchAPI('/api/hero'), fetchAPI('/api/categories'),
+                    fetchAPI('/api/products'), fetchAPI('/api/news')
                 ]);
                 if(hero) currentData.hero=hero; 
                 if(cats) currentData.categories=cats; 
                 if(prods) currentData.products=prods; 
                 if(newsData) currentData.news=newsData;
-                renderHero(); renderCategories(); renderProducts(currentData.products); renderHomepageSections(); renderRecentlyViewed(); renderNews(currentData.news); handleInitialRoute();
+                renderHero(); renderCategories(); renderProducts(currentData.products); 
+                renderHomepageSections(); renderRecentlyViewed(); renderNews(currentData.news); 
+                handleInitialRoute();
             } catch(err) { console.error('Data load error:', err); }
         }
 
@@ -827,7 +731,8 @@ function initCarouselTouchSupport() {
         }
 
         window.onload = async () => {
-            const consent=localStorage.getItem('jayenware_consent'); if(!consent) setTimeout(()=>{document.getElementById('cookieConsent').classList.add('show');},2000);
+            const consent=localStorage.getItem('jayenware_consent'); 
+            if(!consent) setTimeout(()=>{document.getElementById('cookieConsent').classList.add('show');},2000);
             await loadData();
             setTimeout(initCarouselTouchSupport, 500);
         };
