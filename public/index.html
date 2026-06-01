@@ -353,13 +353,14 @@
         function renderNews(list) { /* Your original function */ }
         function renderWishlist() { /* Your original function */ }
 
-        // ========== UPDATED CAROUSEL FUNCTIONS WITH ENHANCED ANIMATIONS ==========
+        // ========== RELIABLE CAROUSEL FUNCTIONS - INDEX 1+ CENTER LOGIC ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
                 touchStartX:0, touchStartY:0, touchStartScrollLeft:0, hasMoved:false, 
                 swipeDirection:null, baseSpeed:parseFloat(document.getElementById(carouselId)?.dataset.speed)||0.5, 
-                currentIndex:0, totalCards:0, _resumeTimeout:null, _isAnimating:false 
+                currentIndex:1, totalCards:0, _resumeTimeout:null, _isAnimating:false,
+                _initRetries:0, _maxRetries:5, _minCenterIndex:1
             }; 
             return carouselStates[carouselId]; 
         }
@@ -371,17 +372,41 @@
             return {width:card.offsetWidth,gap:gap}; 
         }
 
+        function calculateMiddleIndex(total) {
+            // Always start from index 1 or higher, never index 0
+            if (total <= 1) return 0;
+            if (total === 2) return 1;
+            if (total === 3) return 1;
+            // For even: 4->1, 6->2, 8->3 (left has 1, center at 1 or higher)
+            // For odd: 5->2, 7->3, 9->4 (perfect middle)
+            if (total % 2 === 0) {
+                return Math.floor((total - 2) / 2) + 1;
+            } else {
+                return Math.floor(total / 2);
+            }
+        }
+
         function snapToCard(carouselId, targetIndex) {
             const carousel=document.getElementById(carouselId); 
             if(!carousel) return;
             const state=initCarousel(carouselId); 
+            // Ensure targetIndex is never below _minCenterIndex (1)
+            const safeIndex = Math.max(state._minCenterIndex, Math.min(targetIndex, state.totalCards - 1));
             const {width,gap}=getCardDimensions(carousel);
+            if(width === 0) {
+                if(state._initRetries < state._maxRetries) {
+                    state._initRetries++;
+                    requestAnimationFrame(() => snapToCard(carouselId, safeIndex));
+                }
+                return;
+            }
+            state._initRetries = 0;
             const cardTotal = width + gap;
-            const scrollTarget = targetIndex * cardTotal;
+            const scrollTarget = safeIndex * cardTotal;
             state._isAnimating = true;
             carousel.classList.add('smooth-scroll');
             carousel.scrollTo({ left: scrollTarget, behavior: 'smooth' });
-            state.currentIndex = targetIndex;
+            state.currentIndex = safeIndex;
             updateActiveCard(carouselId); 
             updateDots(carouselId);
             setTimeout(() => { state._isAnimating = false; }, 500);
@@ -401,17 +426,25 @@
             const {width,gap}=getCardDimensions(carousel); 
             const cardTotal=width+gap;
             const currentCardIndex = Math.round(carousel.scrollLeft / cardTotal);
-            if(currentCardIndex !== state.currentIndex && currentCardIndex >= 0 && currentCardIndex < state.totalCards) {
+            if(currentCardIndex !== state.currentIndex && currentCardIndex >= state._minCenterIndex && currentCardIndex < state.totalCards) {
                 state.currentIndex = currentCardIndex; 
                 updateActiveCard(carouselId); 
                 updateDots(carouselId);
             }
+            // Reset to min index instead of 0
             const maxScroll = (state.totalCards - 1) * cardTotal + 10;
             if(carousel.scrollLeft >= maxScroll) { 
-                carousel.scrollLeft = 0; 
-                state.currentIndex = 0; 
+                carousel.scrollLeft = state._minCenterIndex * cardTotal; 
+                state.currentIndex = state._minCenterIndex; 
                 updateActiveCard(carouselId); 
                 updateDots(carouselId); 
+            }
+            // Prevent scrolling below min index
+            if(carousel.scrollLeft < state._minCenterIndex * cardTotal - 10) {
+                carousel.scrollLeft = state._minCenterIndex * cardTotal;
+                state.currentIndex = state._minCenterIndex;
+                updateActiveCard(carouselId);
+                updateDots(carouselId);
             }
             state.lastTimestamp = timestamp;
             state.animationFrame = requestAnimationFrame((ts)=>autoScrollCarousel(carouselId,ts));
@@ -421,6 +454,7 @@
             const carousel=document.getElementById(carouselId); 
             if(!carousel) return;
             const {width,gap}=getCardDimensions(carousel); 
+            if(width === 0) return;
             const cardTotal=width+gap;
             const currentIndex = Math.round(carousel.scrollLeft / cardTotal);
             carousel.querySelectorAll('.carousel-card').forEach((card,i) => { 
@@ -434,8 +468,9 @@
             if(!carousel||!dotsContainer) return;
             const state=initCarousel(carouselId); 
             const {width,gap}=getCardDimensions(carousel); 
+            if(width === 0) return;
             const cardTotal=width+gap;
-            const currentIndex = Math.max(0, Math.min(Math.round(carousel.scrollLeft / cardTotal), state.totalCards - 1));
+            const currentIndex = Math.max(state._minCenterIndex, Math.min(Math.round(carousel.scrollLeft / cardTotal), state.totalCards - 1));
             dotsContainer.querySelectorAll('.carousel-dot').forEach((dot,i) => { 
                 dot.classList.toggle('active', i === currentIndex); 
             });
@@ -467,7 +502,7 @@
             const {width,gap}=getCardDimensions(carousel); 
             const cardTotal=width+gap;
             const currentCardIndex = Math.round(carousel.scrollLeft / cardTotal);
-            let targetIndex = direction === 'next' ? Math.min(currentCardIndex + 1, state.totalCards - 1) : Math.max(currentCardIndex - 1, 0);
+            let targetIndex = direction === 'next' ? Math.min(currentCardIndex + 1, state.totalCards - 1) : Math.max(currentCardIndex - 1, state._minCenterIndex);
             snapToCard(carouselId, targetIndex);
             clearTimeout(state._resumeTimeout);
             state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 3000);
@@ -478,7 +513,9 @@
             if(!carousel) return; 
             const state=initCarousel(carouselId); 
             state.isPaused = true; 
-            snapToCard(carouselId, index); 
+            // Ensure dot click also respects min index
+            const safeIndex = Math.max(state._minCenterIndex, index);
+            snapToCard(carouselId, safeIndex); 
             clearTimeout(state._resumeTimeout); 
             state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 3000); 
         }
@@ -492,6 +529,7 @@
             }
             const state = initCarousel(carouselId);
             state.totalCards = products.length;
+            state._initRetries = 0;
             carousel.innerHTML = products.map(p => {
                 const isOut=p.stock<=0, wished=(window.wishlist||[]).includes(p.id); 
                 let badge='';
@@ -505,16 +543,19 @@
                 return `<a href="/product/${getProductSlug(p)}" class="carousel-card" draggable="false"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}<button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span>${p.old_price?`<span class="card-old-price">৳${p.old_price}</span>`:''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}><i class="fa-solid fa-plus"></i></button></div></div></a>`;
             }).join('');
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
-            if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
-            // Improved middle alignment: center active card with balanced sides
-            const middleIndex = Math.floor(products.length / 2);
+            if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===1?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
+            
+            const middleIndex = calculateMiddleIndex(products.length);
             carousel.scrollLeft = 0;
             state.currentIndex = middleIndex;
-            setTimeout(() => { 
-                snapToCard(carouselId, middleIndex); 
-                // Apply initial active state immediately for visual balance
-                updateActiveCard(carouselId);
-            }, 100);
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        snapToCard(carouselId, middleIndex);
+                    });
+                });
+            });
         }
 
         function renderHomepageSections() {
@@ -579,7 +620,8 @@
                         const {width,gap}=getCardDimensions(carousel); 
                         const cardTotal=width+gap; 
                         const nearestIndex = Math.round(carousel.scrollLeft / cardTotal); 
-                        snapToCard(carousel.id, Math.max(0, Math.min(nearestIndex, state.totalCards - 1))); 
+                        const safeIndex = Math.max(state._minCenterIndex, Math.min(nearestIndex, state.totalCards - 1));
+                        snapToCard(carousel.id, safeIndex); 
                     } 
                     state.isDragging = false; 
                     state.swipeDirection = null; 
