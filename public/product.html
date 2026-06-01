@@ -615,27 +615,27 @@
             opacity: 1;
         }
 
-        /* ⚡ Banner Section - Enhanced Styles */
+        /* ⚡ Banner Section - Fixed Height */
         .product-banner-card {
             position: relative;
             border-radius: 24px;
             overflow: hidden;
             margin-bottom: 20px;
             background: #000;
-            aspect-ratio: 16/6;
+            height: 220px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .product-banner-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
         }
         .product-banner-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .product-banner-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
         }
         .product-banner-card:hover img {
             transform: scale(1.05);
@@ -685,7 +685,7 @@
         
         @media (min-width: 768px) {
             .product-banner-card {
-                aspect-ratio: 16/5;
+                height: 280px;
                 border-radius: 28px;
             }
             .product-banner-card .banner-title {
@@ -696,6 +696,12 @@
             }
             .product-banner-card .banner-overlay {
                 padding: 40px 36px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .product-banner-card {
+                height: 340px;
             }
         }
     </style>
@@ -720,7 +726,7 @@
         </div>
 
         <div id="product-loading" style="display:grid;grid-template-columns:1fr;gap:0;">
-            <div class="skeleton" style="width:100%;aspect-ratio:4/5;border-radius:0;"></div>
+            <div class="skeleton" style="width:100%;height:60vh;min-height:400px;max-height:600px;border-radius:0;"></div>
             <div style="padding:20px;">
                 <div class="skeleton" style="height:14px;width:80px;margin-bottom:8px;"></div>
                 <div class="skeleton" style="height:28px;width:100%;margin-bottom:12px;"></div>
@@ -1453,7 +1459,7 @@
                     
                     ${(product.barcode) ? `
                     <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')">
-                        <span><i class="fa-solid fa-upc"></i> Barcode</span>
+                        <span><i class="fa-solid fa-barcode"></i> Barcode <i class="fa-solid fa-qrcode" style="font-size:13px;opacity:0.6;"></i></span>
                         <i id="barcode-icon" class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div id="barcode-collapse" class="collapse-section">
