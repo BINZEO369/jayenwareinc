@@ -53,7 +53,7 @@
         
         img { max-width: 100%; height: auto; display: block; }
         
-        /* ⚡ BIGGER Color Swatch */
+        /* Color Swatch */
         .color-swatch-btn {
             width: 40px;
             height: 40px;
@@ -107,7 +107,7 @@
             transform: rotate(-45deg);
         }
         
-        /* ⚡ BIGGER Size Button */
+        /* Size Button */
         .size-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
@@ -172,7 +172,7 @@
         }
         .product-hero.zoomed img { transform: scale(2.5); }
         
-        /* ⚡ Desktop Layout */
+        /* Desktop Layout */
         @media (min-width: 1024px) {
             .product-hero { 
                 height: auto;
@@ -261,11 +261,20 @@
                 font-size: 13px;
             }
             
-            /* ⚡ Full-width video & banner section */
             .full-width-section {
                 grid-column: 1 / -1;
                 width: 100%;
                 margin-top: 20px;
+            }
+            
+            /* Desktop: video & banner also full-width */
+            .mobile-video-section {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            .mobile-banner-section {
+                grid-column: 1 / -1;
+                width: 100%;
             }
         }
         
@@ -402,6 +411,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             transform: translateY(-1px);
         }
+        .toggle-btn .toggle-icon-right {
+            transition: transform 0.3s;
+        }
         
         .collapse-section {
             max-height: 0;
@@ -423,11 +435,12 @@
             border: 1px solid rgba(0,0,0,0.04);
         }
         
+        /* ⚡ SMALLER Barcode Wrapper */
         .barcode-wrapper {
             background: rgba(255,255,255,0.8);
             backdrop-filter: blur(15px);
-            padding: 32px 24px 24px;
-            border-radius: 20px;
+            padding: 20px 12px 16px;
+            border-radius: 18px;
             border: 1px solid rgba(0,0,0,0.06);
             margin-top: 4px;
             margin-bottom: 16px;
@@ -435,7 +448,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 140px;
+            min-height: 90px;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .barcode-wrapper svg {
+            max-width: 100%;
+            height: auto;
         }
         
         .thumbnail-grid {
@@ -548,7 +567,7 @@
         }
         .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
 
-        /* ⚡ Video Section - Full Width, Taller */
+        /* Video Section */
         .video-section {
             position: relative;
             width: 100%;
@@ -714,7 +733,7 @@
             opacity: 1;
         }
 
-        /* ⚡ Banner Section - Taller */
+        /* Banner Section */
         .product-banner-card {
             position: relative;
             border-radius: 24px;
@@ -1207,15 +1226,46 @@
                 const collapse = document.getElementById(sectionId);
                 const icon = document.getElementById(iconId);
                 if (!collapse) return;
-                if (collapse.classList.contains('open')) { collapse.classList.remove('open'); if (icon) icon.className = 'fa-solid fa-chevron-down'; }
-                else { collapse.classList.add('open'); if (icon) icon.className = 'fa-solid fa-chevron-up'; if (sectionId === 'barcode-collapse' && barcodeText && !barcodeGenerated) { setTimeout(() => generateBarcode(barcodeText), 200); } }
+                if (collapse.classList.contains('open')) { 
+                    collapse.classList.remove('open'); 
+                    if (icon) {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                } else { 
+                    collapse.classList.add('open'); 
+                    if (icon) {
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                    if (sectionId === 'barcode-collapse' && barcodeText && !barcodeGenerated) { 
+                        setTimeout(() => generateBarcode(barcodeText), 200); 
+                    }
+                }
             };
             
             function generateBarcode(barcodeText) {
-                if (!barcodeText || typeof JsBarcode === 'undefined') { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:24px;">Barcode library not available</p>'; return; }
+                if (!barcodeText || typeof JsBarcode === 'undefined') { 
+                    const container = document.getElementById('barcode-svg-container'); 
+                    if (container) container.innerHTML = '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:24px;">Barcode library not available</p>'; 
+                    return; 
+                }
                 const svgElement = document.getElementById('barcode-svg');
                 if (!svgElement) return;
-                try { JsBarcode("#barcode-svg", barcodeText, { format: "CODE128", width: 2, height: 100, displayValue: true, fontSize: 16, margin: 12, background: "#ffffff", lineColor: "#1d1d1f" }); barcodeGenerated = true; } catch(e) { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#ef4444;font-size:13px;text-align:center;padding:24px;">Failed to generate barcode</p>'; }
+                try { 
+                    JsBarcode("#barcode-svg", barcodeText, { 
+                        format: "CODE128", 
+                        width: 1.5, 
+                        height: 60, 
+                        displayValue: true, 
+                        fontSize: 12, 
+                        margin: 8, 
+                        background: "#ffffff", 
+                        lineColor: "#1d1d1f" 
+                    }); 
+                    barcodeGenerated = true; 
+                } catch(e) { 
+                    const container = document.getElementById('barcode-svg-container'); 
+                    if (container) container.innerHTML = '<p style="color:#ef4444;font-size:13px;text-align:center;padding:24px;">Failed to generate barcode</p>'; 
+                }
             }
             
             window.submitReview = async function(productId) {
@@ -1398,7 +1448,7 @@
                 const videosHTML = renderVideoSection(productVideos);
                 const bannersHTML = renderBannerSection(productBanners);
                 
-                // ⚡ NEW LAYOUT - Video & Banner AFTER Barcode section (before reviews)
+                // ⚡ NEW LAYOUT - Video section AFTER buy buttons on mobile, full-width
                 contentDiv.innerHTML = `
                 <div class="desktop-layout" style="display:block;">
                     <!-- Left Column - Images -->
@@ -1450,14 +1500,20 @@
                         
                         <!-- Buy Buttons -->
                         <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 24px;">
-                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
+                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
                             <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:18px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;color:#1d1d1f;">Buy Now</button>
                         </div>
-                        
+                    </div>
+                    
+                    <!-- ⚡ VIDEO SECTION - After Buy Buttons (Mobile: below buy, Desktop: full-width) -->
+                    ${videosHTML ? `<div class="mobile-video-section full-width-section">${videosHTML}</div>` : ''}
+                    
+                    <!-- Specifications, Description, Barcode - Back in right column -->
+                    <div class="desktop-info-col" style="margin-top:0;">
                         <!-- Specifications -->
                         <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
                             <span><i class="fa-solid fa-sliders"></i> &nbsp;Specifications</span>
-                            <i id="specs-icon" class="fa-solid fa-chevron-down"></i>
+                            <i id="specs-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="transition: transform 0.3s;"></i>
                         </button>
                         <div id="specs-collapse" class="collapse-section">
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0 16px;">
@@ -1473,17 +1529,17 @@
                         ${product.description ? `
                         <button class="toggle-btn" onclick="toggleCollapse('desc-collapse','desc-icon')">
                             <span><i class="fa-solid fa-align-left"></i> &nbsp;Description</span>
-                            <i id="desc-icon" class="fa-solid fa-chevron-down"></i>
+                            <i id="desc-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="transition: transform 0.3s;"></i>
                         </button>
                         <div id="desc-collapse" class="collapse-section">
                             <div class="description-content">${product.description}</div>
                         </div>` : ''}
                         
-                        <!-- Barcode -->
+                        <!-- Barcode - Only left icon, no right icon -->
                         ${(product.barcode) ? `
-                        <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')">
-                            <span><i class="fa-solid fa-barcode"></i> &nbsp;Barcode &nbsp;<i class="fa-solid fa-qrcode" style="font-size:14px;opacity:0.6;"></i></span>
-                            <i id="barcode-icon" class="fa-solid fa-chevron-down"></i>
+                        <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')" style="justify-content: flex-start; gap: 12px;">
+                            <span><i class="fa-solid fa-barcode"></i> &nbsp;Barcode</span>
+                            <i id="barcode-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="transition: transform 0.3s; margin-left: auto;"></i>
                         </button>
                         <div id="barcode-collapse" class="collapse-section">
                             <div class="barcode-wrapper" id="barcode-svg-container">
@@ -1491,14 +1547,11 @@
                             </div>
                         </div>` : ''}
                         
-                        <div style="height:20px;"></div>
+                        <div style="height:16px;"></div>
                     </div>
                     
-                    <!-- ⚡ FULL-WIDTH VIDEO SECTION (after barcode, before banners) -->
-                    ${videosHTML ? `<div class="full-width-section">${videosHTML}</div>` : ''}
-                    
-                    <!-- ⚡ FULL-WIDTH BANNER SECTION (after video) -->
-                    ${bannersHTML ? `<div class="full-width-section" style="margin-top:8px;">${bannersHTML}</div>` : ''}
+                    <!-- ⚡ BANNER SECTION - Full Width -->
+                    ${bannersHTML ? `<div class="mobile-banner-section full-width-section" style="margin-top:0;">${bannersHTML}</div>` : ''}
                     
                     <!-- Reviews Section -->
                     <div class="desktop-info-col" style="margin-top:0;padding-top:0;">
