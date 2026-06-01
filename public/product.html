@@ -35,7 +35,6 @@
         }
     </script>
     
-    <!-- ⚡ Enhanced product page styles with liquid glass -->
     <style>
         :root {
             --primary: #1d1d1f;
@@ -54,10 +53,10 @@
         
         img { max-width: 100%; height: auto; display: block; }
         
-        /* Liquid Glass Color Swatch - Smaller & Refined */
+        /* ⚡ BIGGER Color Swatch */
         .color-swatch-btn {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             border: 2px solid transparent;
             cursor: pointer;
@@ -67,7 +66,7 @@
             background: rgba(255,255,255,0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 2px;
+            padding: 3px;
             outline: none;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             display: flex;
@@ -80,7 +79,7 @@
         }
         .color-swatch-btn.selected {
             border-color: #1d1d1f !important;
-            box-shadow: 0 0 0 3px rgba(29,29,31,0.08), 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 4px rgba(29,29,31,0.08), 0 4px 12px rgba(0,0,0,0.1);
             transform: scale(1.1);
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(20px);
@@ -103,24 +102,24 @@
             top: 50%;
             left: -5%;
             width: 110%;
-            height: 1.5px;
+            height: 2px;
             background: #ef4444;
             transform: rotate(-45deg);
         }
         
-        /* Liquid Glass Size Button - Compact */
+        /* ⚡ BIGGER Size Button */
         .size-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 10px;
-            padding: 8px 14px;
+            border-radius: 12px;
+            padding: 10px 18px;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 13px;
             background: rgba(255,255,255,0.6);
             backdrop-filter: blur(10px);
             color: #1d1d1f;
-            min-width: 40px;
+            min-width: 48px;
             text-align: center;
             flex-shrink: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
@@ -148,7 +147,7 @@
             pointer-events: none;
         }
         
-        /* ⚡ Product Hero - Fixed Heights */
+        /* Product Hero */
         .product-hero {
             position: relative;
             width: 100%;
@@ -173,7 +172,7 @@
         }
         .product-hero.zoomed img { transform: scale(2.5); }
         
-        /* ⚡ Desktop Layout Styles - LEFT IMAGES SCROLL WITH RIGHT CONTENT */
+        /* ⚡ Desktop Layout */
         @media (min-width: 1024px) {
             .product-hero { 
                 height: auto;
@@ -195,9 +194,7 @@
                 padding: 40px;
             }
             
-            /* ⚡ Left column now scrolls with the page (NOT sticky) */
             .desktop-image-col {
-                /* Removed position: sticky */
                 position: relative;
             }
             
@@ -212,35 +209,37 @@
             }
             
             .product-info-card {
-                padding: 28px;
+                padding: 32px;
             }
             
             .product-info-card .title-text {
-                font-size: 28px;
+                font-size: 30px;
             }
             
             #variant-price-display {
-                font-size: 32px !important;
+                font-size: 36px !important;
             }
             
             #variant-old-price-display {
-                font-size: 16px !important;
+                font-size: 18px !important;
             }
             
             .color-swatch-btn {
-                width: 36px;
-                height: 36px;
+                width: 44px;
+                height: 44px;
             }
             
             .size-btn {
-                padding: 10px 18px;
-                font-size: 12px;
-                min-width: 48px;
+                padding: 12px 22px;
+                font-size: 14px;
+                min-width: 52px;
+                border-radius: 14px;
             }
             
             #buy-section button {
-                padding: 18px !important;
-                font-size: 13px !important;
+                padding: 20px !important;
+                font-size: 14px !important;
+                border-radius: 16px !important;
             }
             
             .thumbnail-item {
@@ -249,17 +248,24 @@
             }
             
             .detail-badge {
-                padding: 16px 20px;
-                font-size: 13px;
+                padding: 18px 22px;
+                font-size: 14px;
             }
             
             .detail-badge i {
-                font-size: 20px;
+                font-size: 22px;
             }
             
             .toggle-btn {
-                padding: 18px 24px;
-                font-size: 12px;
+                padding: 20px 28px;
+                font-size: 13px;
+            }
+            
+            /* ⚡ Full-width video & banner section */
+            .full-width-section {
+                grid-column: 1 / -1;
+                width: 100%;
+                margin-top: 20px;
             }
         }
         
@@ -288,7 +294,7 @@
             color: #007aff;
             padding: 6px 14px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
@@ -297,7 +303,7 @@
         }
         
         .product-info-card .title-text {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: #1d1d1f;
             margin-bottom: 4px;
@@ -306,18 +312,18 @@
         }
         
         .product-info-card .section-label {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: #86868b;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         
         .product-info-card .divider {
             height: 1px;
             background: rgba(0,0,0,0.06);
-            margin: 14px 0;
+            margin: 16px 0;
         }
         
         /* Star Rating */
@@ -325,7 +331,7 @@
         .star-rating input[type="radio"] { display: none; }
         .star-rating label {
             color: #d2d2d7;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             transition: color 0.2s;
         }
@@ -351,10 +357,10 @@
             backdrop-filter: blur(15px);
             border-radius: 14px;
             padding: 14px 16px;
-            font-size: 12px;
+            font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(0,0,0,0.06);
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
@@ -365,9 +371,9 @@
             transform: translateY(-2px);
         }
         .detail-badge i {
-            font-size: 18px;
+            font-size: 20px;
             color: #1d1d1f;
-            width: 24px;
+            width: 28px;
             text-align: center;
         }
         
@@ -377,13 +383,13 @@
             backdrop-filter: blur(15px);
             border: 1px solid rgba(0,0,0,0.06);
             border-radius: 14px;
-            padding: 16px 20px;
+            padding: 18px 22px;
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
@@ -420,7 +426,7 @@
         .barcode-wrapper {
             background: rgba(255,255,255,0.8);
             backdrop-filter: blur(15px);
-            padding: 28px 20px 20px;
+            padding: 32px 24px 24px;
             border-radius: 20px;
             border: 1px solid rgba(0,0,0,0.06);
             margin-top: 4px;
@@ -429,14 +435,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 120px;
+            min-height: 140px;
         }
         
         .thumbnail-grid {
             display: flex;
             flex-wrap: nowrap;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 10px;
+            margin-top: 12px;
             overflow-x: auto;
             padding: 4px 0 8px;
             -webkit-overflow-scrolling: touch;
@@ -448,10 +454,10 @@
         }
         
         .thumbnail-item {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             border: 2px solid rgba(255,255,255,0.8);
             flex-shrink: 0;
@@ -492,31 +498,31 @@
             background: rgba(255,255,255,0.85);
             backdrop-filter: blur(40px);
             border-top: 0.5px solid rgba(0,0,0,0.06);
-            padding: 12px 16px calc(12px + var(--safe-bottom));
+            padding: 14px 20px calc(14px + var(--safe-bottom));
             z-index: 49;
             display: none;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
         }
         .sticky-add-bar.active { display: flex; }
         
         .variant-info-pill {
             background: rgba(0,0,0,0.03);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-top: 12px;
-            font-size: 11px;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-top: 14px;
+            font-size: 12px;
             color: #1d1d1f;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
             font-weight: 500;
         }
         .variant-info-pill span.separator {
             color: #d1d5db;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 300;
         }
         
@@ -542,7 +548,7 @@
         }
         .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
 
-        /* ⚡ Video Section - Enhanced Styles */
+        /* ⚡ Video Section - Full Width, Taller */
         .video-section {
             position: relative;
             width: 100%;
@@ -552,6 +558,7 @@
             background: #000;
             aspect-ratio: 16/9;
             cursor: pointer;
+            min-height: 360px;
         }
         .video-section video {
             width: 100%;
@@ -560,7 +567,17 @@
             display: block;
         }
         
-        /* CDN Link always visible on video */
+        @media (min-width: 768px) {
+            .video-section {
+                min-height: 480px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .video-section {
+                min-height: 560px;
+            }
+        }
+        
         .video-cdn-badge {
             position: absolute;
             top: 16px;
@@ -569,9 +586,9 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             color: white;
-            padding: 8px 14px;
+            padding: 10px 16px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.4px;
             z-index: 5;
@@ -581,7 +598,7 @@
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             pointer-events: auto;
         }
         .video-cdn-badge:hover {
@@ -590,7 +607,7 @@
             border-color: rgba(255,255,255,0.25);
         }
         .video-cdn-badge i {
-            font-size: 10px;
+            font-size: 11px;
             opacity: 0.8;
         }
         
@@ -602,9 +619,9 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             color: white;
-            padding: 8px 14px;
+            padding: 10px 16px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.3px;
             z-index: 4;
@@ -612,7 +629,6 @@
             transition: opacity 0.4s;
         }
         
-        /* Sound Control - Beautiful Design */
         .video-sound-control {
             position: absolute;
             bottom: 16px;
@@ -620,11 +636,11 @@
             z-index: 6;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .sound-btn {
-            width: 42px;
-            height: 42px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: rgba(0,0,0,0.55);
             backdrop-filter: blur(15px);
@@ -635,7 +651,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 17px;
+            font-size: 18px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
@@ -675,8 +691,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 56px;
-            height: 56px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             background: rgba(255,255,255,0.15);
             backdrop-filter: blur(10px);
@@ -690,7 +706,7 @@
             transition: opacity 0.3s;
         }
         .video-play-indicator i {
-            font-size: 18px;
+            font-size: 22px;
             color: white;
             margin-left: 3px;
         }
@@ -698,14 +714,14 @@
             opacity: 1;
         }
 
-        /* ⚡ Banner Section - Fixed Height */
+        /* ⚡ Banner Section - Taller */
         .product-banner-card {
             position: relative;
             border-radius: 24px;
             overflow: hidden;
             margin-bottom: 20px;
             background: #000;
-            height: 220px;
+            height: 260px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -734,7 +750,7 @@
         }
         .product-banner-card .banner-title {
             color: white;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: -0.5px;
             margin-bottom: 6px;
@@ -742,14 +758,14 @@
         }
         .product-banner-card .banner-subtitle {
             color: rgba(255,255,255,0.85);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 400;
             letter-spacing: 0.2px;
             text-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
         .product-banner-card .banner-link {
             color: white;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             text-decoration: none;
             margin-top: 10px;
@@ -768,23 +784,23 @@
         
         @media (min-width: 768px) {
             .product-banner-card {
-                height: 280px;
+                height: 320px;
                 border-radius: 28px;
             }
             .product-banner-card .banner-title {
-                font-size: 26px;
+                font-size: 28px;
             }
             .product-banner-card .banner-subtitle {
-                font-size: 15px;
+                font-size: 16px;
             }
             .product-banner-card .banner-overlay {
-                padding: 40px 36px;
+                padding: 44px 40px;
             }
         }
         
         @media (min-width: 1024px) {
             .product-banner-card {
-                height: 340px;
+                height: 380px;
             }
         }
     </style>
@@ -833,14 +849,13 @@
 
     <div id="sticky-add-bar" class="sticky-add-bar">
         <div style="flex-grow:1;">
-            <span id="sticky-price" style="font-size:18px;font-weight:900;">৳ 0</span>
+            <span id="sticky-price" style="font-size:20px;font-weight:900;">৳ 0</span>
         </div>
-        <button id="sticky-add-btn" style="padding:12px 28px;background:rgba(29,29,31,0.9);backdrop-filter:blur(20px);color:white;border:1px solid rgba(0,0,0,0.1);border-radius:9999px;font-weight:700;text-transform:uppercase;font-size:12px;cursor:pointer;white-space:nowrap;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.1);">Add to Bag</button>
+        <button id="sticky-add-btn" style="padding:14px 32px;background:rgba(29,29,31,0.9);backdrop-filter:blur(20px);color:white;border:1px solid rgba(0,0,0,0.1);border-radius:9999px;font-weight:700;text-transform:uppercase;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.1);">Add to Bag</button>
     </div>
 
     <script>
         (function() {
-            // ⚡ API Helper
             const API_BASE = '/api';
             
             async function apiFetch(endpoint) {
@@ -901,12 +916,6 @@
                 let slug = path.replace(/^\/product\//, '').replace(/\/$/, '');
                 slug = slug.split('?')[0].split('#')[0];
                 return slug || null;
-            }
-            
-            function getAvailableSizesForColor(colorId) {
-                const variants = productVariants.filter(v => v.color_id == colorId && v.is_active && v.stock > 0);
-                const sizeIds = variants.map(v => v.size_id);
-                return colorSizes.filter(s => sizeIds.includes(s.id) && s.color_id == colorId);
             }
             
             function getVariant(colorId, sizeId) {
@@ -981,7 +990,7 @@
                 
                 const allSizesForColor = colorSizes.filter(s => s.color_id == selectedColorId);
                 if (allSizesForColor.length === 0) {
-                    sizeContainer.innerHTML = '<p style="font-size:11px;color:#9ca3af;padding:6px 0;">No sizes available</p>';
+                    sizeContainer.innerHTML = '<p style="font-size:12px;color:#9ca3af;padding:8px 0;">No sizes available</p>';
                     return;
                 }
                 
@@ -1048,8 +1057,8 @@
                 
                 if (selectedVariant) {
                     let infoHTML = '';
-                    if (selectedVariant.sku) infoHTML += `<span style="font-weight:700;">SKU</span> <span style="font-family:monospace;font-size:11px;">${selectedVariant.sku}</span>`;
-                    if (selectedVariant.barcode) infoHTML += `<span class="separator">|</span> <span style="font-weight:700;">Barcode</span> <span style="font-family:monospace;font-size:11px;">${selectedVariant.barcode}</span>`;
+                    if (selectedVariant.sku) infoHTML += `<span style="font-weight:700;">SKU</span> <span style="font-family:monospace;font-size:12px;">${selectedVariant.sku}</span>`;
+                    if (selectedVariant.barcode) infoHTML += `<span class="separator">|</span> <span style="font-weight:700;">Barcode</span> <span style="font-family:monospace;font-size:12px;">${selectedVariant.barcode}</span>`;
                     if (selectedVariant.weight) infoHTML += `<span class="separator">|</span> <span style="font-weight:700;">Weight</span> ${selectedVariant.weight}g`;
                     infoEl.innerHTML = infoHTML || 'Variant selected';
                     infoEl.style.display = 'flex';
@@ -1138,33 +1147,25 @@
                 container.addEventListener('touchend', () => container.classList.remove('zoomed'));
             };
 
-            // ⚡ Auto-play video on load with sound off
             window.initVideoAutoPlay = function(videoId) {
                 const video = document.getElementById(videoId);
                 if (!video) return;
-                
                 video.muted = true;
                 video.play().then(() => {
                     const section = video.closest('.video-section');
-                    if (section) {
-                        section.classList.remove('paused');
-                    }
+                    if (section) section.classList.remove('paused');
                 }).catch(() => {
                     const section = video.closest('.video-section');
                     if (section) section.classList.add('paused');
                 });
-                
                 currentVideoElement = video;
             };
 
-            // ⚡ Toggle sound with beautiful animation
             window.toggleVideoSound = function(videoId, btnElement) {
                 const video = document.getElementById(videoId);
                 const icon = btnElement?.querySelector('i');
                 if (!video) return;
-                
                 video.muted = !video.muted;
-                
                 if (video.muted) {
                     btnElement?.classList.add('muted');
                     if (icon) icon.className = 'fa-solid fa-volume-xmark';
@@ -1179,14 +1180,11 @@
                 }
             };
 
-            // ⚡ Toggle video play/pause
             window.toggleVideoPlay = function(videoId, btnElement) {
                 const video = document.getElementById(videoId);
                 const section = video?.closest('.video-section');
                 const icon = btnElement?.querySelector('i');
-                
                 if (!video || !section) return;
-                
                 if (video.paused) {
                     if (currentVideoElement && currentVideoElement !== video) {
                         currentVideoElement.pause();
@@ -1214,13 +1212,12 @@
             };
             
             function generateBarcode(barcodeText) {
-                if (!barcodeText || typeof JsBarcode === 'undefined') { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#9ca3af;font-size:12px;text-align:center;padding:20px;">Barcode library not available</p>'; return; }
+                if (!barcodeText || typeof JsBarcode === 'undefined') { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:24px;">Barcode library not available</p>'; return; }
                 const svgElement = document.getElementById('barcode-svg');
                 if (!svgElement) return;
-                try { JsBarcode("#barcode-svg", barcodeText, { format: "CODE128", width: 2, height: 80, displayValue: true, fontSize: 14, margin: 10, background: "#ffffff", lineColor: "#1d1d1f" }); barcodeGenerated = true; } catch(e) { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#ef4444;font-size:12px;text-align:center;padding:20px;">Failed to generate barcode</p>'; }
+                try { JsBarcode("#barcode-svg", barcodeText, { format: "CODE128", width: 2, height: 100, displayValue: true, fontSize: 16, margin: 12, background: "#ffffff", lineColor: "#1d1d1f" }); barcodeGenerated = true; } catch(e) { const container = document.getElementById('barcode-svg-container'); if (container) container.innerHTML = '<p style="color:#ef4444;font-size:13px;text-align:center;padding:24px;">Failed to generate barcode</p>'; }
             }
             
-            // ⚡ Review submit
             window.submitReview = async function(productId) {
                 const text = document.getElementById('review-text')?.value?.trim();
                 const starsInput = document.querySelector('input[name="product-rating"]:checked');
@@ -1241,7 +1238,7 @@
             function productCardHTML(product) {
                 if (!product) return '';
                 const slug = product.slug || product.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                return `<a href="/product/${slug}" class="product-card"><div style="background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);"><div style="aspect-ratio:3/4;overflow:hidden;"><img src="${product.img || '/logo.png'}" alt="${product.title || ''}" class="product-image" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.src='/logo.png'"></div><div style="padding:14px 16px;"><p style="font-size:10px;font-weight:700;color:#86868b;text-transform:uppercase;margin-bottom:4px;">${product.category || ''}</p><h3 style="font-size:14px;font-weight:700;color:#1d1d1f;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${product.title || ''}</h3><span style="font-size:15px;font-weight:900;">৳ ${product.price || 0}</span></div></div></a>`;
+                return `<a href="/product/${slug}" class="product-card"><div style="background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);"><div style="aspect-ratio:3/4;overflow:hidden;"><img src="${product.img || '/logo.png'}" alt="${product.title || ''}" class="product-image" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.src='/logo.png'"></div><div style="padding:14px 16px;"><p style="font-size:10px;font-weight:700;color:#86868b;text-transform:uppercase;margin-bottom:4px;">${product.category || ''}</p><h3 style="font-size:14px;font-weight:700;color:#1d1d1f;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${product.title || ''}</h3><span style="font-size:16px;font-weight:900;">৳ ${product.price || 0}</span></div></div></a>`;
             }
             
             function getRandomProducts(currentId, count = 4) { return [...allProducts.filter(p => p.id != currentId)].sort(() => 0.5 - Math.random()).slice(0, count); }
@@ -1254,80 +1251,40 @@
                 return `<div class="thumbnail-grid no-scrollbar">${combinedImages.map((imgData, index) => `<img src="${imgData.src}" onclick="selectThumbnail('${imgData.src}')" class="thumbnail-item${index === 0 ? ' active' : ''}" alt="thumb" loading="lazy" onerror="this.style.display='none'">`).join('')}</div>`;
             }
 
-            // ⚡ Video Section Renderer
             function renderVideoSection(videos) {
                 if (!videos || videos.length === 0) return '';
-                
                 return videos.map((video, index) => {
                     const videoId = `product-video-${index}`;
                     const hasThumbnail = video.thumbnail_url && video.thumbnail_url.trim() !== '';
                     const hasLink = video.click_link && video.click_link.trim() !== '';
                     const linkText = hasLink ? (() => {
-                        try {
-                            const url = new URL(video.click_link);
-                            return url.hostname.replace('www.', '');
-                        } catch {
-                            return video.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-                        }
+                        try { const url = new URL(video.click_link); return url.hostname.replace('www.', ''); } 
+                        catch { return video.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]; }
                     })() : '';
                     
                     return `
                     <div class="video-section paused" id="video-section-${index}">
-                        <video 
-                            id="${videoId}" 
-                            src="${video.video_url}" 
-                            playsinline 
-                            muted 
-                            loop 
-                            preload="auto"
-                            style="display:block;"
-                            onloadeddata="initVideoAutoPlay('${videoId}')"
-                        ></video>
+                        <video id="${videoId}" src="${video.video_url}" playsinline muted loop preload="auto" style="display:block;" onloadeddata="initVideoAutoPlay('${videoId}')"></video>
                         ${hasThumbnail ? `<div class="video-thumb-preview" style="position:absolute;inset:0;z-index:1;pointer-events:none;"><img src="${video.thumbnail_url}" alt="${video.title || 'Video thumbnail'}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none'"></div>` : ''}
-                        
-                        ${hasLink ? `
-                        <a href="${video.click_link}" target="_blank" rel="noopener" class="video-cdn-badge" onclick="event.stopPropagation()" title="${video.click_link}">
-                            <i class="fa-solid fa-link"></i> ${linkText}
-                            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i>
-                        </a>` : ''}
-                        
-                        ${video.title ? `
-                        <div class="video-title-overlay">
-                            ${video.title}${video.subtitle ? ' · ' + video.subtitle : ''}
-                        </div>` : ''}
-                        
-                        <div class="video-play-indicator">
-                            <i class="fa-solid fa-play"></i>
-                        </div>
-                        
+                        ${hasLink ? `<a href="${video.click_link}" target="_blank" rel="noopener" class="video-cdn-badge" onclick="event.stopPropagation()" title="${video.click_link}"><i class="fa-solid fa-link"></i> ${linkText} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i></a>` : ''}
+                        ${video.title ? `<div class="video-title-overlay">${video.title}${video.subtitle ? ' · ' + video.subtitle : ''}</div>` : ''}
+                        <div class="video-play-indicator"><i class="fa-solid fa-play"></i></div>
                         <div class="video-sound-control">
-                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoSound('${videoId}', this)" title="Toggle Sound" id="sound-btn-${index}">
-                                <i class="fa-solid fa-volume-xmark"></i>
-                                <span class="sound-ripple"></span>
-                            </button>
-                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoPlay('${videoId}', this)" title="Play/Pause" style="width:36px;height:36px;font-size:14px;">
-                                <i class="fa-solid fa-pause"></i>
-                            </button>
+                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoSound('${videoId}', this)" title="Toggle Sound" id="sound-btn-${index}"><i class="fa-solid fa-volume-xmark"></i><span class="sound-ripple"></span></button>
+                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoPlay('${videoId}', this)" title="Play/Pause" style="width:40px;height:40px;font-size:15px;"><i class="fa-solid fa-pause"></i></button>
                         </div>
                     </div>`;
                 }).join('');
             }
 
-            // ⚡ Banner Section Renderer
             function renderBannerSection(banners) {
                 if (!banners || banners.length === 0) return '';
-                
                 return banners.map(banner => {
                     const hasLink = banner.click_link && banner.click_link.trim() !== '';
                     const linkText = hasLink ? (() => {
-                        try {
-                            const url = new URL(banner.click_link);
-                            return url.hostname.replace('www.', '');
-                        } catch {
-                            return banner.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-                        }
+                        try { const url = new URL(banner.click_link); return url.hostname.replace('www.', ''); } 
+                        catch { return banner.click_link.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]; }
                     })() : '';
-                    
                     return `
                     <div class="product-banner-card" ${hasLink ? `onclick="window.open('${banner.click_link}', '_blank')"` : ''}>
                         <img src="${banner.banner_url}" alt="${banner.title || 'Product banner'}" loading="lazy" onerror="this.style.display='none'">
@@ -1340,7 +1297,6 @@
                 }).join('');
             }
             
-            // ⚡ Main function
             async function loadProductBySlug(slug) {
                 try {
                     const products = await apiFetch('/products');
@@ -1405,17 +1361,17 @@
                 const prodReviews = allReviews.filter(r => r.product_id == product.id);
                 const avgRating = prodReviews.length ? (prodReviews.reduce((s,r)=>s+r.rating,0)/prodReviews.length).toFixed(1) : null;
                 const mainImage = allImages[0] || '/logo.png';
-                const reviewsHTML = prodReviews.length ? prodReviews.map(r=>`<div style="background:rgba(255,255,255,0.6);backdrop-filter:blur(15px);padding:18px;border-radius:14px;border:1px solid rgba(0,0,0,0.05);margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="color:#ff9500;">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</span><span style="font-weight:700;font-size:12px;">${r.user_name||'Anonymous'}</span><span style="margin-left:auto;font-size:9px;color:#9ca3af;">${r.created_at?new Date(r.created_at).toLocaleDateString():''}</span></div><p style="font-size:13px;color:#4b5563;">${r.review_text||''}</p></div>`).join('') : '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:20px;">No reviews yet. Be the first to review!</p>';
+                const reviewsHTML = prodReviews.length ? prodReviews.map(r=>`<div style="background:rgba(255,255,255,0.6);backdrop-filter:blur(15px);padding:20px;border-radius:14px;border:1px solid rgba(0,0,0,0.05);margin-bottom:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="color:#ff9500;font-size:16px;">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</span><span style="font-weight:700;font-size:13px;">${r.user_name||'Anonymous'}</span><span style="margin-left:auto;font-size:10px;color:#9ca3af;">${r.created_at?new Date(r.created_at).toLocaleDateString():''}</span></div><p style="font-size:14px;color:#4b5563;line-height:1.6;">${r.review_text||''}</p></div>`).join('') : '<p style="color:#9ca3af;font-size:14px;text-align:center;padding:24px;">No reviews yet. Be the first to review!</p>';
                 
                 let colorsHTML = '';
                 if (productColors.length > 0) {
                     colorsHTML = `
-                    <div style="margin-bottom:6px;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div style="margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                             <span class="section-label">Color</span>
-                            <span id="selected-color-name" style="font-size:11px;font-weight:600;color:#1d1d1f;">Select</span>
+                            <span id="selected-color-name" style="font-size:13px;font-weight:600;color:#1d1d1f;">Select</span>
                         </div>
-                        <div class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:8px;">
+                        <div class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:10px;">
                             ${productColors.map(color => { 
                                 const hasStock = productVariants.filter(v => v.color_id == color.id && v.is_active && v.stock > 0).length > 0; 
                                 return `<button class="color-swatch-btn ${!hasStock ? 'disabled' : ''}" data-color-id="${color.id}" onclick="selectColor(${color.id})" title="${color.color_name}${!hasStock ? ' (Out of Stock)' : ''}" ${!hasStock ? 'disabled' : ''}><span class="swatch-color" style="background:${color.color_code || '#ccc'};"></span></button>`; 
@@ -1427,13 +1383,13 @@
                 let sizesHTML = '';
                 if (productColors.length > 0) {
                     sizesHTML = `
-                    <div style="margin-bottom:6px;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div style="margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                             <span class="section-label">Size</span>
-                            <span id="selected-size-name" style="font-size:11px;font-weight:600;color:#1d1d1f;">Select</span>
+                            <span id="selected-size-name" style="font-size:13px;font-weight:600;color:#1d1d1f;">Select</span>
                         </div>
-                        <div id="size-buttons-container" class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:6px;">
-                            <p style="font-size:11px;color:#9ca3af;padding:4px 0;">Choose a color first</p>
+                        <div id="size-buttons-container" class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:8px;">
+                            <p style="font-size:12px;color:#9ca3af;padding:6px 0;">Choose a color first</p>
                         </div>
                     </div>`;
                 }
@@ -1442,10 +1398,10 @@
                 const videosHTML = renderVideoSection(productVideos);
                 const bannersHTML = renderBannerSection(productBanners);
                 
-                // ⚡ DESKTOP TWO-COLUMN LAYOUT - Left images scroll with right content
+                // ⚡ NEW LAYOUT - Video & Banner AFTER Barcode section (before reviews)
                 contentDiv.innerHTML = `
                 <div class="desktop-layout" style="display:block;">
-                    <!-- Left Column - Images (scrolls with page, not sticky) -->
+                    <!-- Left Column - Images -->
                     <div class="desktop-image-col">
                         <div class="main-image-wrapper">
                             <div id="product-hero" class="product-hero">
@@ -1453,40 +1409,39 @@
                             </div>
                         </div>
                         ${thumbnailsHTML}
-                        ${videosHTML ? `<div>${videosHTML}</div>` : ''}
                     </div>
                     
-                    <!-- Right Column - Product Info (scrolls independently with all details) -->
+                    <!-- Right Column - Product Info -->
                     <div class="desktop-info-col">
                         <div class="product-info-card">
                             <span class="variant-pill">${product.category || 'Product'}</span>
-                            ${product.subcategory ? `<span class="variant-pill" style="background:rgba(134,135,139,0.08);color:#86868b;margin-left:6px;">${product.subcategory}</span>` : ''}
+                            ${product.subcategory ? `<span class="variant-pill" style="background:rgba(134,135,139,0.08);color:#86868b;margin-left:8px;">${product.subcategory}</span>` : ''}
                             
                             <h1 class="title-text">${product.title || ''}</h1>
                             
-                            ${product.short_description ? `<p style="font-size:12px;color:#6b7280;margin:6px 0 0;line-height:1.5;">${product.short_description}</p>` : ''}
+                            ${product.short_description ? `<p style="font-size:14px;color:#6b7280;margin:8px 0 0;line-height:1.6;">${product.short_description}</p>` : ''}
                             
-                            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:14px;">
-                                <div style="display:flex;align-items:baseline;gap:8px;">
-                                    <span id="variant-price-display" style="font-size:26px;font-weight:900;color:#1d1d1f;">৳ ${product.price||0}</span>
-                                    <span id="variant-old-price-display" style="font-size:14px;color:#86868b;text-decoration:line-through;display:${product.old_price?'inline':'none'};">${product.old_price?`৳ ${product.old_price}`:''}</span>
+                            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:18px;">
+                                <div style="display:flex;align-items:baseline;gap:10px;">
+                                    <span id="variant-price-display" style="font-size:30px;font-weight:900;color:#1d1d1f;">৳ ${product.price||0}</span>
+                                    <span id="variant-old-price-display" style="font-size:16px;color:#86868b;text-decoration:line-through;display:${product.old_price?'inline':'none'};">${product.old_price?`৳ ${product.old_price}`:''}</span>
                                 </div>
-                                <button onclick="toggleWishlist(${product.id})" data-wishlist-btn style="display:flex;align-items:center;gap:5px;padding:8px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:9999px;font-size:9px;font-weight:700;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);cursor:pointer;color:#1d1d1f;transition:all 0.3s;">
-                                    <i class="fa-${wishlist.includes(product.id)?'solid':'regular'} fa-heart" style="color:${wishlist.includes(product.id)?'#ef4444':'#86868b'};font-size:12px;"></i> ${wishlist.includes(product.id)?'Saved':'Save'}
+                                <button onclick="toggleWishlist(${product.id})" data-wishlist-btn style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid rgba(0,0,0,0.08);border-radius:9999px;font-size:10px;font-weight:700;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);cursor:pointer;color:#1d1d1f;transition:all 0.3s;">
+                                    <i class="fa-${wishlist.includes(product.id)?'solid':'regular'} fa-heart" style="color:${wishlist.includes(product.id)?'#ef4444':'#86868b'};font-size:14px;"></i> ${wishlist.includes(product.id)?'Saved':'Save'}
                                 </button>
                             </div>
                             
-                            <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
-                                <span id="stock-status-dot" style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>
-                                <span id="stock-status-text" style="font-size:10px;font-weight:600;color:#d97706;">Select options</span>
-                                ${avgRating?`<span style="font-size:10px;color:#86868b;margin-left:4px;"><i class="fa-solid fa-star" style="color:#ff9500;font-size:9px;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
+                            <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+                                <span id="stock-status-dot" style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>
+                                <span id="stock-status-text" style="font-size:12px;font-weight:600;color:#d97706;">Select options</span>
+                                ${avgRating?`<span style="font-size:12px;color:#86868b;margin-left:6px;"><i class="fa-solid fa-star" style="color:#ff9500;font-size:11px;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
                             </div>
                             
                             <div class="divider"></div>
                             
                             ${colorsHTML}
                             
-                            ${productColors.length > 0 ? '<div style="height:8px;"></div>' : ''}
+                            ${productColors.length > 0 ? '<div style="height:10px;"></div>' : ''}
                             
                             ${sizesHTML}
                             
@@ -1494,30 +1449,30 @@
                         </div>
                         
                         <!-- Buy Buttons -->
-                        <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 20px;">
-                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:15px;background:#1d1d1f;color:white;border:none;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
-                            <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:15px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;color:#1d1d1f;">Buy Now</button>
+                        <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 24px;">
+                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
+                            <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:18px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;color:#1d1d1f;">Buy Now</button>
                         </div>
                         
                         <!-- Specifications -->
                         <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
-                            <span><i class="fa-solid fa-sliders"></i> Specifications</span>
+                            <span><i class="fa-solid fa-sliders"></i> &nbsp;Specifications</span>
                             <i id="specs-icon" class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div id="specs-collapse" class="collapse-section">
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 16px;">
-                                ${product.fabric_type ? `<div class="detail-badge"><i class="fa-solid fa-shirt"></i><div><span style="color:#9ca3af;font-size:9px;">Fabric</span><br><span style="font-weight:700;">${product.fabric_type}</span></div></div>` : ''}
-                                ${product.gsm_type ? `<div class="detail-badge"><i class="fa-solid fa-weight-scale"></i><div><span style="color:#9ca3af;font-size:9px;">GSM</span><br><span style="font-weight:700;">${product.gsm_type}</span></div></div>` : ''}
-                                ${product.fit_type ? `<div class="detail-badge"><i class="fa-solid fa-ruler"></i><div><span style="color:#9ca3af;font-size:9px;">Fit</span><br><span style="font-weight:700;">${product.fit_type}</span></div></div>` : ''}
-                                ${product.gender ? `<div class="detail-badge"><i class="fa-solid fa-venus-mars"></i><div><span style="color:#9ca3af;font-size:9px;">Gender</span><br><span style="font-weight:700;">${product.gender}</span></div></div>` : ''}
-                                ${product.print_type ? `<div class="detail-badge"><i class="fa-solid fa-palette"></i><div><span style="color:#9ca3af;font-size:9px;">Print</span><br><span style="font-weight:700;">${product.print_type}</span></div></div>` : ''}
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0 16px;">
+                                ${product.fabric_type ? `<div class="detail-badge"><i class="fa-solid fa-shirt"></i><div><span style="color:#9ca3af;font-size:10px;">Fabric</span><br><span style="font-weight:700;">${product.fabric_type}</span></div></div>` : ''}
+                                ${product.gsm_type ? `<div class="detail-badge"><i class="fa-solid fa-weight-scale"></i><div><span style="color:#9ca3af;font-size:10px;">GSM</span><br><span style="font-weight:700;">${product.gsm_type}</span></div></div>` : ''}
+                                ${product.fit_type ? `<div class="detail-badge"><i class="fa-solid fa-ruler"></i><div><span style="color:#9ca3af;font-size:10px;">Fit</span><br><span style="font-weight:700;">${product.fit_type}</span></div></div>` : ''}
+                                ${product.gender ? `<div class="detail-badge"><i class="fa-solid fa-venus-mars"></i><div><span style="color:#9ca3af;font-size:10px;">Gender</span><br><span style="font-weight:700;">${product.gender}</span></div></div>` : ''}
+                                ${product.print_type ? `<div class="detail-badge"><i class="fa-solid fa-palette"></i><div><span style="color:#9ca3af;font-size:10px;">Print</span><br><span style="font-weight:700;">${product.print_type}</span></div></div>` : ''}
                             </div>
                         </div>
                         
                         <!-- Description -->
                         ${product.description ? `
                         <button class="toggle-btn" onclick="toggleCollapse('desc-collapse','desc-icon')">
-                            <span><i class="fa-solid fa-align-left"></i> Description</span>
+                            <span><i class="fa-solid fa-align-left"></i> &nbsp;Description</span>
                             <i id="desc-icon" class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div id="desc-collapse" class="collapse-section">
@@ -1527,7 +1482,7 @@
                         <!-- Barcode -->
                         ${(product.barcode) ? `
                         <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')">
-                            <span><i class="fa-solid fa-barcode"></i> Barcode <i class="fa-solid fa-qrcode" style="font-size:13px;opacity:0.6;"></i></span>
+                            <span><i class="fa-solid fa-barcode"></i> &nbsp;Barcode &nbsp;<i class="fa-solid fa-qrcode" style="font-size:14px;opacity:0.6;"></i></span>
                             <i id="barcode-icon" class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div id="barcode-collapse" class="collapse-section">
@@ -1536,27 +1491,34 @@
                             </div>
                         </div>` : ''}
                         
-                        <!-- Banners -->
-                        ${bannersHTML ? `<div style="margin-top:28px;">${bannersHTML}</div>` : ''}
-                        
-                        <!-- Reviews Section -->
-                        <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:32px;margin-top:32px;">
-                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-                                <h3 style="font-size:22px;font-weight:700;">Reviews</h3>
-                                <span style="color:#9ca3af;">(${prodReviews.length})</span>
+                        <div style="height:20px;"></div>
+                    </div>
+                    
+                    <!-- ⚡ FULL-WIDTH VIDEO SECTION (after barcode, before banners) -->
+                    ${videosHTML ? `<div class="full-width-section">${videosHTML}</div>` : ''}
+                    
+                    <!-- ⚡ FULL-WIDTH BANNER SECTION (after video) -->
+                    ${bannersHTML ? `<div class="full-width-section" style="margin-top:8px;">${bannersHTML}</div>` : ''}
+                    
+                    <!-- Reviews Section -->
+                    <div class="desktop-info-col" style="margin-top:0;padding-top:0;">
+                        <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:36px;margin-top:8px;">
+                            <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
+                                <h3 style="font-size:24px;font-weight:700;">Reviews</h3>
+                                <span style="color:#9ca3af;font-size:15px;">(${prodReviews.length})</span>
                             </div>
-                            <div style="margin-bottom:24px;">${reviewsHTML}</div>
-                            <div style="background:rgba(255,255,255,0.5);backdrop-filter:blur(20px);padding:24px;border-radius:18px;">
-                                <h4 style="font-size:10px;font-weight:700;text-transform:uppercase;margin-bottom:14px;">Write a Review</h4>
-                                <div class="star-rating" style="margin-bottom:14px;">
+                            <div style="margin-bottom:28px;">${reviewsHTML}</div>
+                            <div style="background:rgba(255,255,255,0.5);backdrop-filter:blur(20px);padding:28px;border-radius:18px;">
+                                <h4 style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:16px;letter-spacing:1px;">Write a Review</h4>
+                                <div class="star-rating" style="margin-bottom:16px;">
                                     <input type="radio" id="star5" name="product-rating" value="5"><label for="star5"><i class="fa-solid fa-star"></i></label>
                                     <input type="radio" id="star4" name="product-rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
                                     <input type="radio" id="star3" name="product-rating" value="3"><label for="star3"><i class="fa-solid fa-star"></i></label>
                                     <input type="radio" id="star2" name="product-rating" value="2"><label for="star2"><i class="fa-solid fa-star"></i></label>
                                     <input type="radio" id="star1" name="product-rating" value="1"><label for="star1"><i class="fa-solid fa-star"></i></label>
                                 </div>
-                                <textarea id="review-text" placeholder="Share your experience..." style="width:100%;padding:14px;border:1px solid rgba(0,0,0,0.08);border-radius:14px;font-size:13px;height:90px;margin-bottom:14px;background:rgba(255,255,255,0.6);"></textarea>
-                                <button onclick="submitReview(${product.id})" style="padding:12px 28px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:11px;cursor:pointer;">Submit Review</button>
+                                <textarea id="review-text" placeholder="Share your experience..." style="width:100%;padding:16px;border:1px solid rgba(0,0,0,0.08);border-radius:14px;font-size:14px;height:100px;margin-bottom:16px;background:rgba(255,255,255,0.6);resize:vertical;"></textarea>
+                                <button onclick="submitReview(${product.id})" style="padding:14px 32px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:0.5px;">Submit Review</button>
                             </div>
                         </div>
                         
