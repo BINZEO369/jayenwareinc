@@ -645,16 +645,13 @@
             
             // Log layout information for debugging
             console.log(`Carousel "${carouselId}" layout:`, {
-    totalProducts: layout.totalCount,
-    leftCount: layout.leftCount,
-    centerIndex: layout.centerIndex,
-    centerDisplayIndex: layout.centerDisplayIndex,
-    rightCount: layout.rightCount,
-    isEven: products.length % 2 === 0,
-    leftProducts: layout.leftProducts.length,
-    rightProducts: layout.rightProducts.length,
-    centerProductTitle: layout.centerProduct?.title || 'N/A'
-});
+                totalProducts: layout.totalCount,
+                leftCount: layout.leftCount,
+                centerDisplayIndex: layout.displayIndex1,
+                rightCount: layout.rightCount,
+                isEven: products.length % 2 === 0
+            });
+        }
 
         function renderHomepageSections() {
             const sections = [
