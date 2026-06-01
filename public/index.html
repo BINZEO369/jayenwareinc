@@ -353,7 +353,7 @@
         function renderNews(list) { /* Your original function */ }
         function renderWishlist() { /* Your original function */ }
 
-        // ========== UPDATED CAROUSEL FUNCTIONS WITH ENHANCED ANIMATIONS ==========
+        // ========== UPDATED CAROUSEL FUNCTIONS WITH ENHANCED ANIMATIONS & BALANCED SPACING ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
                 isPaused:false, animationFrame:null, lastTimestamp:0, isDragging:false, 
@@ -506,13 +506,21 @@
             }).join('');
             const dotsContainer = document.getElementById(carouselId.replace('carousel','dots'));
             if(dotsContainer) dotsContainer.innerHTML = products.map((_,i) => `<div class="carousel-dot ${i===0?'active':''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join('');
-            // Improved middle alignment: center active card with balanced sides
-            const middleIndex = Math.floor(products.length / 2);
+            
+            // Improved middle alignment logic: balanced sides for even/odd counts
+            const total = products.length;
+            let middleIndex;
+            if (total % 2 === 0) {
+                // Even: e.g., 4 -> index 1 (0,1,2,3) so left has 1, right has 2? Let's use floor((total-1)/2)
+                middleIndex = Math.floor((total - 1) / 2);
+            } else {
+                // Odd: e.g., 5 -> index 2 (0,1,2,3,4) perfect middle
+                middleIndex = Math.floor(total / 2);
+            }
             carousel.scrollLeft = 0;
             state.currentIndex = middleIndex;
             setTimeout(() => { 
                 snapToCard(carouselId, middleIndex); 
-                // Apply initial active state immediately for visual balance
                 updateActiveCard(carouselId);
             }, 100);
         }
