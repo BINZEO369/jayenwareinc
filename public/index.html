@@ -415,37 +415,56 @@
         }
 
         // ========== UPDATED CAROUSEL FUNCTIONS WITH INDEX-1 SYSTEM ==========
-        function calculateCarouselLayout(products) {
-            const count = products.length;
-            if (count === 0) return { leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0 };
-            
-            // Index starts from 1 (not 0)
-            // For even counts: e.g., 10 items -> left: 5, center: 1 (index 6), right: 4
-            // For odd counts: e.g., 5 items -> left: 2, center: 1 (index 3), right: 2
-            // e.g., 11 items -> left: 5, center: 1 (index 6), right: 5
-            
-            let leftCount, centerIndex, rightCount;
-            
-            if (count % 2 === 0) {
-                // Even count
-                leftCount = count / 2;
-                centerIndex = leftCount; // 0-based index for the center card
-                rightCount = count - leftCount - 1;
-            } else {
-                // Odd count
-                leftCount = Math.floor(count / 2);
-                centerIndex = leftCount; // 0-based index for the center card
-                rightCount = leftCount;
-            }
-            
-            return {
-                leftCount,
-                centerIndex,
-                rightCount,
-                totalCount: count,
-                displayIndex1: centerIndex + 1 // 1-based index for the center card
-            };
-        }
+      function calculateCarouselLayout(products) {
+    const count = products.length;
+    
+    // Early return with complete structure
+    if (count === 0) {
+        return {
+            leftCount: 0,
+            centerIndex: null,
+            rightCount: 0,
+            totalCount: 0,
+            centerDisplayIndex: null,
+            leftProducts: [],
+            centerProduct: null,
+            rightProducts: [],
+            allPositioned: []
+        };
+    }
+    
+    // Optimized calculation - works for both even and odd
+    const leftCount = count >> 1;  // Bitwise shift - faster than Math.floor(count / 2)
+    const centerIndex = leftCount;
+    const rightCount = count - leftCount - 1;  // Single formula for both even & odd!
+    
+    // Extract products by position
+    const leftProducts = products.slice(0, leftCount);
+    const centerProduct = products[centerIndex];
+    const rightProducts = products.slice(centerIndex + 1);
+    
+    // Create positioned array with metadata
+    const allPositioned = products.map((product, index) => ({
+        product,
+        position: index < centerIndex ? 'left' : 
+                  index === centerIndex ? 'center' : 'right',
+        displayIndex: index + 1,  // 1-based index
+        distanceFromCenter: index - centerIndex  // negative=left, 0=center, positive=right
+    }));
+    
+    return {
+        leftCount,
+        centerIndex,
+        rightCount,
+        totalCount: count,
+        centerDisplayIndex: centerIndex + 1,  // 1-based index for center
+        leftProducts,
+        centerProduct,
+        rightProducts,
+        allPositioned,
+        isBalanced: count % 2 !== 0 ? (leftCount === rightCount) : (leftCount === rightCount + 1)
+    };
+}
 
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) carouselStates[carouselId] = { 
