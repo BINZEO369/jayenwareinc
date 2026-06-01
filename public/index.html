@@ -321,8 +321,7 @@
         }
 
         function getCategorySlug(c) { if(!c) return ''; return c.toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
-        function getProductSlug(p) { return p.id + '-' + (p.title||'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
-        
+        function getProductSlug(p) { return (p.title||'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
         function updateURL(path, title = '') { 
             window.history.pushState({ path }, title || 'JAYENWARE', path); 
             document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE'; 
