@@ -834,5 +834,38 @@ function initCarouselTouchSupport() {
     </script>
 </body>
 </html>
-
+<script>
+// Force fix for homepage sections - Add this at the very end of your script
+setTimeout(function() {
+    console.log('🔧 Running force fix...');
+    if (currentData.products && currentData.products.length > 0) {
+        // Force show all carousel sections
+        const sections = ['new-arrivals-section', 'hot-products-section', 'featured-products-section', 
+                         'best-selling-section', 'on-sale-section', 'limited-edition-section'];
+        
+        sections.forEach(id => {
+            const section = document.getElementById(id);
+            if (section && section.classList.contains('hidden')) {
+                // Check if there are products for this section
+                let hasProducts = false;
+                if (id === 'new-arrivals-section') hasProducts = currentData.products.some(p => p.is_new_arrival);
+                if (id === 'hot-products-section') hasProducts = currentData.products.some(p => p.is_hot);
+                if (id === 'featured-products-section') hasProducts = currentData.products.some(p => p.is_featured);
+                if (id === 'best-selling-section') hasProducts = currentData.products.some(p => p.is_best);
+                if (id === 'on-sale-section') hasProducts = currentData.products.some(p => p.is_on_sale);
+                if (id === 'limited-edition-section') hasProducts = currentData.products.some(p => p.is_limited_edition);
+                
+                if (hasProducts) {
+                    console.log(`✅ Force showing ${id}`);
+                    section.classList.remove('hidden');
+                    section.style.display = 'block';
+                }
+            }
+        });
+        
+        // Re-render carousels
+        renderHomepageSections();
+    }
+}, 1000);
+</script>
   
