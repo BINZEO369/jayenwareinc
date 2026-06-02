@@ -36,6 +36,18 @@ app.get('/api/hero', async (req, res) => {
     res.json(data);
 });
 
+// হিরো ভিডিও - শুধু active ভিডিওগুলো
+app.get('/api/hero-videos', async (req, res) => {
+    const { data, error } = await supabase
+        .from('hero_videos')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+    
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data || []);
+});
+
 // নিউজ
 app.get('/api/news', async (req, res) => {
     const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
