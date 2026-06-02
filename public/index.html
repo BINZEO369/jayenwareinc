@@ -261,29 +261,32 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 14px;           /* পরিবর্তন: 28px → 14px */
-    height: 14px;          /* পরিবর্তন: 14px → 14px (একই) */
+    width: 16px;
+    height: 16px;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.7);  /* নতুন লাইন যোগ */
+    border: 1px solid rgba(255, 255, 255, 0.7);
     transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-        
-        .hero-cta .cta-arrow::after {
+.hero-cta .cta-arrow::after {
     content: '';
     position: absolute;
-    width: 5px;                              /* পরিবর্তন: 6px → 5px */
-    height: 5px;                             /* পরিবর্তন: 6px → 5px */
-    border-top: 1.5px solid #ffffff;         /* পরিবর্তন: 1px → 1.5px */
-    border-right: 1.5px solid #ffffff;       /* পরিবর্তন: 1px → 1.5px */
-    transform: rotate(45deg) translate(-1px, 0);  /* সম্পূর্ণ নতুন transform */
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    border-top: 1.5px solid #ffffff;
+    border-right: 1.5px solid #ffffff;
+    transform: rotate(45deg);
     transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-        .hero-cta:hover .cta-arrow {
+.hero-cta:hover .cta-arrow {
     border-color: #ffffff;
 }
-        .hero-cta:hover .cta-arrow::after {
-    transform: rotate(45deg) translate(1px, -1px);
+.hero-cta:hover .cta-arrow::after {
+    top: 0px;
+    right: 0px;
 }
+
         
         @keyframes fadeInUp {
             to {
