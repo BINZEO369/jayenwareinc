@@ -134,7 +134,7 @@
         .product-card .product-image { transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); will-change: transform; }
         .product-img-container { position: relative; overflow: hidden; background: #fafafa; }
         .product-img-container img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        @media (max-width: 640px) { .product-img-container { aspect-ratio: 3/4; } .hero-img { height: 70vh; min-height: 420px; } }
+        @media (max-width: 640px) { .product-img-container { aspect-ratio: 3/4; } }
         @media (min-width: 641px) and (max-width: 1023px) { .product-img-container { aspect-ratio: 3/4; } }
         @media (min-width: 1024px) { .product-img-container { aspect-ratio: 3/4; } }
         .products-fade-out { opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
@@ -142,13 +142,14 @@
         .product-card-enter { animation: cardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; }
         @keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* ==================== WORLD-CLASS HERO STYLES ==================== */
+        /* ==================== ROLEX-STYLE HERO ==================== */
         .hero-container {
             position: relative;
             width: 100%;
             height: 100vh;
             min-height: 500px;
             overflow: hidden;
+            background: #000;
         }
         @media (max-width: 640px) {
             .hero-container { height: 80vh; min-height: 450px; }
@@ -156,7 +157,7 @@
         .hero-slide-wrapper {
             position: absolute;
             inset: 0;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .hero-slide-wrapper.fade-out {
             opacity: 0;
@@ -169,126 +170,133 @@
         }
         @keyframes heroZoom {
             from { transform: scale(1); }
-            to { transform: scale(1.08); }
+            to { transform: scale(1.05); }
         }
         
-        /* Gradient Overlay - Premium feel */
+        /* Premium Gradient Overlay */
         .hero-overlay {
             position: absolute;
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(0,0,0,0.1) 0%,
-                rgba(0,0,0,0.05) 30%,
-                rgba(0,0,0,0.2) 60%,
-                rgba(0,0,0,0.6) 85%,
-                rgba(0,0,0,0.75) 100%
+                rgba(0,0,0,0.0) 0%,
+                rgba(0,0,0,0.02) 40%,
+                rgba(0,0,0,0.15) 65%,
+                rgba(0,0,0,0.5) 85%,
+                rgba(0,0,0,0.7) 100%
             );
             z-index: 1;
         }
         
-        /* Content positioned at bottom-center */
+        /* Content - Rolex style bottom-center */
         .hero-content {
             position: absolute;
-            bottom: clamp(40px, 10vh, 100px);
+            bottom: clamp(50px, 12vh, 110px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
             text-align: center;
-            width: 90%;
-            max-width: 700px;
-            padding: 0 20px;
+            width: 88%;
+            max-width: 680px;
+            padding: 0 16px;
         }
         
-        /* Subtitle - luxury micro-label */
+        /* Subtitle - Rolex micro-label */
         .hero-subtitle {
             display: inline-block;
             font-family: 'Inter', sans-serif;
-            font-size: clamp(8px, 1.2vw, 10px);
-            font-weight: 600;
-            letter-spacing: 0.35em;
+            font-size: clamp(7px, 1vw, 9px);
+            font-weight: 500;
+            letter-spacing: 0.45em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: clamp(8px, 1.5vh, 16px);
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: clamp(12px, 2vh, 20px);
             opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+            transform: translateY(8px);
+            animation: fadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
         }
         
-        /* Title - elegant serif headline */
+        /* Title - Rolex serif headline */
         .hero-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(20px, 4vw, 56px);
+            font-size: clamp(22px, 4.5vw, 60px);
             font-weight: 900;
-            line-height: 1.15;
+            line-height: 1.1;
             color: #ffffff;
-            margin: 0 0 clamp(12px, 2vh, 24px) 0;
-            letter-spacing: -0.02em;
+            margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
+            letter-spacing: -0.01em;
             opacity: 0;
-            transform: translateY(15px);
-            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+            transform: translateY(12px);
+            animation: fadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
         }
         
-        /* CTA Link - Minimal luxury style */
+        /* CTA - Rolex style: NO underline, NO line, just text + elegant arrow */
         .hero-cta-wrap {
             opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+            transform: translateY(8px);
+            animation: fadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
         }
         .hero-cta {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-family: 'Inter', sans-serif;
-            font-size: clamp(9px, 1.1vw, 11px);
-            font-weight: 600;
-            letter-spacing: 0.15em;
+            font-size: clamp(8px, 1vw, 10px);
+            font-weight: 500;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
             color: #ffffff;
             text-decoration: none;
-            padding-bottom: 3px;
-            border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            padding: 0;
+            border: none;
+            background: none;
         }
         .hero-cta:hover {
-            border-bottom-color: #ffffff;
-            gap: 14px;
-            padding-bottom: 5px;
-        }
-        .hero-cta .cta-icon {
-            display: inline-flex;
-            align-items: center;
-            font-size: clamp(10px, 1.2vw, 13px);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hero-cta:hover .cta-icon {
-            transform: translateX(6px);
+            gap: 16px;
+            color: rgba(255, 255, 255, 0.85);
         }
         
-        /* Scroll indicator - premium touch */
-        .hero-scroll-indicator {
-            position: absolute;
-            bottom: clamp(10px, 2vh, 20px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
+        /* Rolex-style Arrow (→ replaced with elegant minimal arrow) */
+        .hero-cta .cta-arrow {
+            display: inline-flex;
             align-items: center;
-            gap: 4px;
-            opacity: 0;
-            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+            justify-content: center;
+            width: 28px;
+            height: 14px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-        .hero-scroll-line {
-            width: 1px;
-            height: clamp(20px, 3vh, 32px);
-            background: rgba(255, 255, 255, 0.4);
-            animation: scrollPulse 2s ease-in-out infinite;
+        .hero-cta .cta-arrow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 20px;
+            height: 1px;
+            background: #ffffff;
+            transform: translateY(-50%);
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-        @keyframes scrollPulse {
-            0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
-            50% { opacity: 1; transform: scaleY(1.2); }
+        .hero-cta .cta-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid #ffffff;
+            border-right: 1px solid #ffffff;
+            transform: translateY(-50%) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .hero-cta:hover .cta-arrow::before {
+            width: 26px;
+            opacity: 0.8;
+        }
+        .hero-cta:hover .cta-arrow::after {
+            right: -2px;
+            opacity: 0.8;
         }
         
         @keyframes fadeInUp {
@@ -374,7 +382,7 @@
 
     <main class="pt-0">
         <section id="home" class="page-section active-page fade-in">
-            <!-- World-Class Hero Banner -->
+            <!-- Rolex-Style Hero Banner -->
             <div class="hero-container" id="hero-container">
                 <div id="hero-banner-slides" class="absolute inset-0"></div>
                 <div class="hero-overlay"></div>
@@ -382,9 +390,6 @@
                     <p id="hero-subtitle" class="hero-subtitle"></p>
                     <h1 id="hero-title" class="hero-title"></h1>
                     <div id="hero-cta-container" class="hero-cta-wrap"></div>
-                </div>
-                <div class="hero-scroll-indicator" id="hero-scroll-indicator">
-                    <div class="hero-scroll-line"></div>
                 </div>
             </div>
             
@@ -510,10 +515,10 @@
             });
         }
 
-        // ========== WORLD-CLASS HERO FUNCTIONS ==========
+        // ========== ROLEX-STYLE HERO FUNCTIONS ==========
         function renderHero() {
             const container = document.getElementById('hero-banner-slides'), list = currentData.hero;
-            if(!list.length) { container.innerHTML = '<div class="w-full h-full bg-primary"></div>'; return; }
+            if(!list.length) { container.innerHTML = '<div class="w-full h-full bg-gray-900"></div>'; return; }
             container.innerHTML = list.map((h,i) => `<div class="hero-slide-wrapper absolute inset-0 ${i!==0?'fade-out':''}"><img src="${h.img}" alt="${h.title||'JAYENWARE Hero'}" class="hero-slide-img w-full h-full object-cover" loading="${i===0?'eager':'lazy'}"></div>`).join('');
             updateHeroContent(0); 
             clearInterval(slideInterval);
@@ -521,7 +526,7 @@
                 slideInterval = setInterval(() => { 
                     currentSlide = (currentSlide+1)%list.length; 
                     updateHeroSlide(); 
-                }, 6000);
+                }, 7000);
             }
         }
         
@@ -536,7 +541,6 @@
             const titleEl = document.getElementById('hero-title');
             const subtitleEl = document.getElementById('hero-subtitle');
             const ctaContainer = document.getElementById('hero-cta-container');
-            const scrollIndicator = document.getElementById('hero-scroll-indicator');
             
             // Reset animations
             [titleEl, subtitleEl, ctaContainer].forEach(el => {
@@ -571,7 +575,7 @@
             if(!container) return;
             
             if(heroData && heroData.cta_text && heroData.cta_link) {
-                container.innerHTML = `<a href="${heroData.cta_link}" class="hero-cta">${heroData.cta_text} <span class="cta-icon">→</span></a>`;
+                container.innerHTML = `<a href="${heroData.cta_link}" class="hero-cta">${heroData.cta_text} <span class="cta-arrow"></span></a>`;
             } else {
                 container.innerHTML = '';
             }
@@ -837,12 +841,7 @@
         }
 
         function renderHomepageSections() {
-            console.log('🎨 Rendering homepage sections...');
-            
-            if (!currentData.products || currentData.products.length === 0) {
-                console.warn('⚠️ No products data available yet');
-                return;
-            }
+            if (!currentData.products || currentData.products.length === 0) return;
             
             const sections = [
                 {id:'new-arrivals-section', carousel:'new-arrivals-carousel', products: currentData.products.filter(p => p.is_new_arrival === true), name: 'New Arrivals'},
@@ -855,13 +854,7 @@
             
             sections.forEach((sec, i) => { 
                 const el = document.getElementById(sec.id); 
-                if (!el) {
-                    console.warn(`⚠️ Section element not found: ${sec.id}`);
-                    return; 
-                }
-                
-                console.log(`📦 ${sec.name}: ${sec.products.length} products`);
-                
+                if (!el) return;
                 if (sec.products && sec.products.length > 0) {
                     el.classList.remove('hidden');
                     renderCarouselProducts(sec.carousel, sec.products);
@@ -871,7 +864,6 @@
                     }, i * 100);
                 } else {
                     el.classList.add('hidden');
-                    console.log(`   → ${sec.name} section hidden (no products)`);
                 }
             });
         }
@@ -959,8 +951,6 @@
         // ========== LOAD DATA ==========
         async function loadData() {
             try {
-                console.log('🔄 Loading data from API...');
-                
                 const [hero, cats, prods, newsData] = await Promise.all([
                     fetchAPI('/api/hero'), 
                     fetchAPI('/api/categories'),
@@ -968,18 +958,9 @@
                     fetchAPI('/api/news')
                 ]);
                 
-                if(hero && hero.length) {
-                    currentData.hero = hero;
-                    console.log(`✅ Hero: ${hero.length} slides`);
-                }
-                if(cats && cats.length) {
-                    currentData.categories = cats;
-                    console.log(`✅ Categories: ${cats.length}`);
-                }
-                if(prods && prods.length) {
-                    currentData.products = prods;
-                    console.log(`✅ Products: ${prods.length} loaded`);
-                }
+                if(hero && hero.length) currentData.hero = hero;
+                if(cats && cats.length) currentData.categories = cats;
+                if(prods && prods.length) currentData.products = prods;
                 if(newsData) currentData.news = newsData;
                 
                 renderHero();
@@ -989,9 +970,6 @@
                 renderHomepageSections();
                 renderRecentlyViewed();
                 handleInitialRoute();
-                
-                console.log('✅ All data loaded and rendered!');
-                
             } catch(err) { 
                 console.error('❌ Data load error:', err);
             }
@@ -1006,8 +984,6 @@
         }
 
         window.onload = async () => {
-            console.log('🚀 Window loaded, initializing JAYENWARE...');
-            
             const consent = localStorage.getItem('jayenware_consent'); 
             if(!consent) {
                 setTimeout(() => {
@@ -1018,14 +994,6 @@
             
             await loadData();
             setTimeout(initCarouselTouchSupport, 500);
-            
-            setTimeout(() => {
-                const newArrivalsSection = document.getElementById('new-arrivals-section');
-                if (newArrivalsSection && newArrivalsSection.classList.contains('hidden') && currentData.products.length > 0) {
-                    console.warn('⚠️ Sections still hidden after timeout, forcing render...');
-                    renderHomepageSections();
-                }
-            }, 3000);
         };
     </script>
 </body>
