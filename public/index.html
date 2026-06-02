@@ -267,17 +267,7 @@
             position: relative;
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-        .hero-cta .cta-arrow::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 20px;
-            height: 1px;
-            background: #ffffff;
-            transform: translateY(-50%);
-            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-        }
+        
         .hero-cta .cta-arrow::after {
             content: '';
             position: absolute;
@@ -290,10 +280,7 @@
             transform: translateY(-50%) rotate(45deg);
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-        .hero-cta:hover .cta-arrow::before {
-            width: 26px;
-            opacity: 0.8;
-        }
+        
         .hero-cta:hover .cta-arrow::after {
             right: -2px;
             opacity: 0.8;
