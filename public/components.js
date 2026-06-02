@@ -1,14 +1,14 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.0 (Dynamic Menu Integration)
+// Version: 4.0 (Complete Dynamic Menu from Database)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
 let userSession = null;
 let allCategories = [];
-let allMenuItems = [];
 let allSubcategories = [];
+let allMenuItems = [];
 
 // ============================================
 // SUPABASE CLIENT INITIALIZATION
@@ -41,7 +41,8 @@ async function fetchSubcategories(categorySlug = null) {
         if (categorySlug) url += `?category_slug=${categorySlug}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch subcategories');
-        return await response.json();
+        allSubcategories = await response.json();
+        return allSubcategories;
     } catch (error) {
         console.error('Error fetching subcategories:', error);
         return [];
@@ -101,7 +102,7 @@ function injectSharedStyles() {
         }
         .nav-link:hover::after { width: 100%; }
         
-        /* Dropdown Menu Styles */
+        /* Desktop Dropdown */
         .nav-dropdown {
             position: relative;
         }
@@ -116,12 +117,14 @@ function injectSharedStyles() {
             border: 1px solid rgba(0,0,0,0.06);
             border-radius: 16px;
             padding: 8px 0;
-            min-width: 220px;
+            min-width: 240px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             z-index: 51;
+            max-height: 70vh;
+            overflow-y: auto;
         }
         .nav-dropdown:hover .nav-dropdown-content {
             opacity: 1;
@@ -129,7 +132,9 @@ function injectSharedStyles() {
             transform: translateX(-50%) translateY(5px);
         }
         .nav-dropdown-item {
-            display: block;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px 20px;
             font-size: 12px;
             font-weight: 500;
@@ -137,6 +142,7 @@ function injectSharedStyles() {
             text-decoration: none;
             transition: all 0.2s ease;
             letter-spacing: 0.05em;
+            white-space: nowrap;
         }
         .nav-dropdown-item:hover {
             background: #f5f5f7;
@@ -151,10 +157,40 @@ function injectSharedStyles() {
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 16px;
+            font-size: 18px;
             color: #86868b;
+            transition: transform 0.2s ease;
+        }
+        .nav-dropdown-item.has-children:hover::after {
+            transform: translateY(-50%) translateX(3px);
+            color: #007aff;
         }
         
+        /* Sub-dropdown */
+        .nav-sub-dropdown {
+            position: absolute;
+            left: 100%;
+            top: -8px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(50px) saturate(180%);
+            -webkit-backdrop-filter: blur(50px) saturate(180%);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 12px;
+            padding: 8px 0;
+            min-width: 220px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+        .nav-dropdown-item.has-children:hover .nav-sub-dropdown {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        
+        /* Mobile Menu */
         .mobile-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.5);
@@ -182,49 +218,68 @@ function injectSharedStyles() {
             -webkit-overflow-scrolling: touch;
             padding: 12px 20px;
         }
-        .mobile-cat-item {
+        .mobile-menu-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 0; border-bottom: 1px solid #f5f5f5;
             font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
             cursor: pointer; color: #1d1d1f; text-decoration: none;
             transition: color 0.2s ease;
+            width: 100%;
+            background: none;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            text-align: left;
         }
-        .mobile-sub-cat {
+        .mobile-menu-item:hover { color: #007aff; }
+        .mobile-sub-item {
             padding: 12px 0 12px 20px;
             border-bottom: 1px solid #fafafa;
             font-size: 13px; color: #86868b; cursor: pointer;
             display: flex; align-items: center; gap: 8px;
             text-decoration: none; transition: color 0.2s ease;
         }
-        .mobile-sub-cat::before {
+        .mobile-sub-item:hover { color: #007aff; }
+        .mobile-sub-item::before {
             content: ''; width: 5px; height: 5px;
             background: #007aff; border-radius: 50%; flex-shrink: 0;
         }
-        .mobile-sub-sub-cat {
+        .mobile-sub-sub-item {
             padding: 10px 0 10px 40px;
             border-bottom: 1px solid #fafafa;
             font-size: 12px; color: #a0a0a5; cursor: pointer;
             display: flex; align-items: center; gap: 8px;
             text-decoration: none; transition: color 0.2s ease;
         }
+        .mobile-sub-sub-item:hover { color: #007aff; }
+        .mobile-submenu-container {
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
         .mobile-footer {
             padding: 20px; border-top: 1px solid #f0f0f0;
             background: #f5f5f7; flex-shrink: 0;
         }
+        
+        /* Cart Drawer */
         #cart-drawer {
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
         }
         #cart-drawer.open { transform: translateX(0) !important; }
+        
+        /* Utility Classes */
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
+        
         #toast {
             position: fixed; top: 16px; right: 16px; z-index: 9999;
             transform: translateX(120%);
             transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
             max-width: calc(100vw - 32px);
         }
+        
         body { padding-top: 56px; }
         @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
@@ -234,69 +289,87 @@ function injectSharedStyles() {
 }
 
 // ============================================
-// DYNAMIC MENU RENDERER
+// DYNAMIC DESKTOP MENU RENDERER
 // ============================================
 function renderDynamicDesktopMenu() {
     const menuContainer = document.getElementById('dynamic-desktop-menu');
-    if (!menuContainer || !allMenuItems || !allMenuItems.length) return;
+    if (!menuContainer) return;
+    
+    // If no menu items from database, show default menu
+    if (!allMenuItems || !allMenuItems.length) {
+        menuContainer.innerHTML = getDefaultDesktopMenu();
+        return;
+    }
 
     let menuHTML = '';
     
+    // Render menu items based on hierarchy
     allMenuItems.forEach(item => {
-        // Skip items without parent (top-level items only)
         if (!item.parent_id) {
             if (item.children && item.children.length > 0) {
-                // Has children - render as dropdown
-                menuHTML += renderDropdownItem(item);
+                menuHTML += renderDesktopDropdown(item);
             } else {
-                // No children - render as simple link
-                menuHTML += renderSimpleLink(item);
+                menuHTML += renderDesktopSimpleLink(item);
             }
         }
     });
     
-    menuContainer.innerHTML = menuHTML;
+    menuContainer.innerHTML = menuHTML || getDefaultDesktopMenu();
 }
 
-function renderDropdownItem(item) {
-    let dropdownHTML = `<div class="nav-dropdown">`;
-    
-    // Main link
+function renderDesktopDropdown(item) {
     const link = getMenuLink(item);
-    dropdownHTML += `<a href="${link}" class="nav-link px-5">${item.title}</a>`;
-    
-    // Dropdown content
-    dropdownHTML += `<div class="nav-dropdown-content">`;
+    let html = `<div class="nav-dropdown">`;
+    html += `<a href="${link}" class="nav-link px-5">${item.title}</a>`;
+    html += `<div class="nav-dropdown-content custom-scroll">`;
     
     item.children.forEach(child => {
         const childLink = getMenuLink(child);
         if (child.children && child.children.length > 0) {
-            // Subcategory with further children
-            dropdownHTML += `<div class="nav-dropdown-item has-children">${child.title}`;
-            dropdownHTML += `<div style="position: absolute; left: 100%; top: 0; background: white; border-radius: 12px; padding: 8px 0; min-width: 200px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none;" class="sub-dropdown">`;
+            // Has sub-children
+            html += `<div class="nav-dropdown-item has-children">`;
+            html += `<span>${child.title}</span>`;
+            html += `<div class="nav-sub-dropdown custom-scroll">`;
             child.children.forEach(subChild => {
                 const subLink = getMenuLink(subChild);
-                dropdownHTML += `<a href="${subLink}" class="nav-dropdown-item">${subChild.title}</a>`;
+                html += `<a href="${subLink}" class="nav-dropdown-item">${subChild.title}</a>`;
             });
-            dropdownHTML += `</div></div>`;
+            html += `</div></div>`;
         } else {
-            dropdownHTML += `<a href="${childLink}" class="nav-dropdown-item">${child.title}</a>`;
+            html += `<a href="${childLink}" class="nav-dropdown-item">${child.title}</a>`;
         }
     });
     
-    dropdownHTML += `</div></div>`;
-    return dropdownHTML;
+    html += `</div></div>`;
+    return html;
 }
 
-function renderSimpleLink(item) {
+function renderDesktopSimpleLink(item) {
     const link = getMenuLink(item);
     return `<a href="${link}" class="nav-link px-5">${item.title}</a>`;
+}
+
+function getDefaultDesktopMenu() {
+    // Fallback if no menu items in database
+    let html = '';
+    if (allCategories && allCategories.length) {
+        html += `<div class="nav-dropdown">`;
+        html += `<span class="nav-link px-5">Categories</span>`;
+        html += `<div class="nav-dropdown-content custom-scroll">`;
+        allCategories.forEach(cat => {
+            html += `<a href="/categories/${cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')}" class="nav-dropdown-item">${cat.name}</a>`;
+        });
+        html += `</div></div>`;
+    }
+    html += `<a href="/products" class="nav-link px-5">All Products</a>`;
+    html += `<a href="/contact" class="nav-link px-5">Contact</a>`;
+    return html;
 }
 
 function getMenuLink(item) {
     if (item.menu_type === 'category' && item.category_slug) {
         return `/categories/${item.category_slug}`;
-    } else if (item.menu_type === 'subcategory' && item.subcategory_slug) {
+    } else if (item.menu_type === 'subcategory' && item.subcategory_slug && item.category_slug) {
         return `/categories/${item.category_slug}/${item.subcategory_slug}`;
     } else if (item.menu_type === 'external') {
         return item.link;
@@ -310,53 +383,82 @@ function getMenuLink(item) {
 // ============================================
 function renderDynamicMobileMenu() {
     const mobileSubCategories = document.getElementById('mobileSubCategories');
-    if (!mobileSubCategories || !allMenuItems || !allMenuItems.length) return;
+    if (!mobileSubCategories) return;
 
     let mobileHTML = '';
     
-    allMenuItems.forEach(item => {
-        if (!item.parent_id) {
-            if (item.children && item.children.length > 0) {
-                mobileHTML += `
-                <div class="mobile-cat-item" onclick="toggleMobileSubMenu(this)">
-                    <span>${item.title}</span>
-                    <i class="fa-solid fa-chevron-down text-xs text-gray-300 transition-transform duration-300"></i>
-                </div>
-                <div class="mobile-submenu" style="display: none;">`;
-                
-                item.children.forEach(child => {
-                    const childLink = getMenuLink(child);
-                    mobileHTML += `<a href="${childLink}" class="mobile-sub-cat">${child.title}</a>`;
-                    
-                    if (child.children && child.children.length > 0) {
-                        child.children.forEach(subChild => {
-                            const subLink = getMenuLink(subChild);
-                            mobileHTML += `<a href="${subLink}" class="mobile-sub-sub-cat">${subChild.title}</a>`;
-                        });
-                    }
-                });
-                
-                mobileHTML += `</div>`;
-            } else {
-                const link = getMenuLink(item);
-                mobileHTML += `<a href="${link}" class="mobile-cat-item">${item.title}<i class="fa-solid fa-chevron-right text-xs text-gray-300"></i></a>`;
+    // If we have menu items from database, use them
+    if (allMenuItems && allMenuItems.length) {
+        allMenuItems.forEach(item => {
+            if (!item.parent_id) {
+                if (item.children && item.children.length > 0) {
+                    mobileHTML += renderMobileDropdown(item);
+                } else {
+                    mobileHTML += renderMobileSimpleLink(item);
+                }
             }
+        });
+    }
+    
+    // If no menu items, use categories from database
+    if (!mobileHTML && allCategories && allCategories.length) {
+        mobileHTML += `<button class="mobile-menu-item" onclick="toggleMobileSubMenu(this)">
+            <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> Categories</span>
+            <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-300"></i>
+        </button>`;
+        mobileHTML += `<div class="mobile-submenu-container" style="max-height: 0;">`;
+        allCategories.forEach(cat => {
+            mobileHTML += `<a href="/categories/${cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')}" class="mobile-sub-item">${cat.name}</a>`;
+        });
+        mobileHTML += `</div>`;
+    }
+    
+    mobileSubCategories.innerHTML = mobileHTML || '<p class="text-gray-400 text-sm py-4">No categories available</p>';
+}
+
+function renderMobileDropdown(item) {
+    const link = getMenuLink(item);
+    let html = `<button class="mobile-menu-item" onclick="toggleMobileSubMenu(this)">
+        <span>${item.title}</span>
+        <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-300"></i>
+    </button>`;
+    html += `<div class="mobile-submenu-container" style="max-height: 0;">`;
+    
+    item.children.forEach(child => {
+        const childLink = getMenuLink(child);
+        if (child.children && child.children.length > 0) {
+            html += `<a href="${childLink}" class="mobile-sub-item" onclick="event.stopPropagation();">${child.title} ›</a>`;
+            child.children.forEach(subChild => {
+                const subLink = getMenuLink(subChild);
+                html += `<a href="${subLink}" class="mobile-sub-sub-item">${subChild.title}</a>`;
+            });
+        } else {
+            html += `<a href="${childLink}" class="mobile-sub-item">${child.title}</a>`;
         }
     });
     
-    mobileSubCategories.innerHTML = mobileHTML;
+    html += `</div>`;
+    return html;
+}
+
+function renderMobileSimpleLink(item) {
+    const link = getMenuLink(item);
+    return `<a href="${link}" class="mobile-menu-item">
+        <span>${item.title}</span>
+        <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+    </a>`;
 }
 
 function toggleMobileSubMenu(element) {
     const submenu = element.nextElementSibling;
     const arrow = element.querySelector('.fa-chevron-down');
     
-    if (submenu && submenu.classList.contains('mobile-submenu')) {
-        if (submenu.style.display === 'none' || !submenu.style.display) {
-            submenu.style.display = 'block';
+    if (submenu && submenu.classList.contains('mobile-submenu-container')) {
+        if (submenu.style.maxHeight === '0px' || !submenu.style.maxHeight) {
+            submenu.style.maxHeight = submenu.scrollHeight + 'px';
             if (arrow) arrow.style.transform = 'rotate(180deg)';
         } else {
-            submenu.style.display = 'none';
+            submenu.style.maxHeight = '0px';
             if (arrow) arrow.style.transform = '';
         }
     }
@@ -371,43 +473,53 @@ function renderHeader() {
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
         <div class="mobile-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
+                <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo" onerror="this.src='/placeholder-logo.png'">
                 <span class="font-black font-serif text-lg text-primary">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2">
+            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2" aria-label="Close menu">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div class="mobile-menu-scroll">
-            <a href="/" class="mobile-cat-item">
+            <a href="/" class="mobile-menu-item">
                 <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
             </a>
-            <a href="/products" class="mobile-cat-item">
+            <a href="/products" class="mobile-menu-item">
                 <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
             </a>
-            <div class="mobile-cat-item" onclick="toggleMobileSubCategories()">
-                <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> Categories</span>
-                <i class="fa-solid fa-chevron-down text-xs text-gray-300 transition-transform duration-300" id="mobileCatArrow"></i>
-            </div>
             <div id="mobileSubCategories" style="display: none;"></div>
-            <a href="/wishlist" class="mobile-cat-item">
+            <a href="/wishlist" class="mobile-menu-item">
                 <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
             </a>
+            <a href="/about" class="mobile-menu-item">
+                <span><i class="fa-solid fa-circle-info mr-3 text-gray-300"></i> About</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+            </a>
+            <a href="/contact" class="mobile-menu-item">
+                <span><i class="fa-solid fa-envelope mr-3 text-gray-300"></i> Contact</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+            </a>
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter"></div>
+        <div class="mobile-footer" id="mobileMenuFooter">
+            <a href="/login" class="w-full py-3 bg-primary text-white rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-blue transition no-underline text-center block">Sign In / Register</a>
+        </div>
     </div>
+    
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline" aria-label="JAYENWARE Home">
-                <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
+                <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40" onerror="this.src='/placeholder-logo.png'">
                 <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight font-serif text-primary">JAYENWARE</span>
             </a>
+            
+            <!-- Desktop Menu - Dynamic -->
             <div class="hidden lg:flex items-center gap-0" id="dynamic-desktop-menu">
-                <!-- Dynamic menu items will be injected here -->
+                <!-- Menu items will be injected here dynamically -->
             </div>
+            
             <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
                 <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
                     <i class="fa-regular fa-heart text-lg lg:text-xl"></i>
@@ -426,10 +538,12 @@ function renderHeader() {
             </div>
         </div>
     </nav>
+    
+    <!-- Cart Drawer -->
     <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
         <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter">Shopping Bag</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1">
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1" aria-label="Close cart">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -553,16 +667,24 @@ function toggleCart() {
 function addToCart(productId, productData) {
     if (!productData) { showToast('Product data missing', 'error'); return; }
     if (productData.stock <= 0) return showToast('Out of stock', 'error');
-    cart.push({
-        id: Date.now(),
-        product_id: productData.id,
-        title: productData.title,
-        price: productData.price,
-        img: productData.img,
-        quantity: 1
-    });
+    
+    // Check if product already in cart
+    const existingItem = cart.find(item => item.product_id === productData.id);
+    if (existingItem) {
+        existingItem.quantity += 1;
+        showToast('Quantity updated! 📦', 'success');
+    } else {
+        cart.push({
+            id: Date.now(),
+            product_id: productData.id,
+            title: productData.title,
+            price: productData.price,
+            img: productData.img || productData.image_url,
+            quantity: 1
+        });
+        showToast('Added to Bag! 🎉', 'success');
+    }
     saveCart();
-    showToast('Added to Bag! 🎉', 'success');
 }
 
 function removeFromCart(idx) {
@@ -589,14 +711,16 @@ function renderCartItems() {
     }
     let sub = 0;
     container.innerHTML = cart.map((item, idx) => {
-        sub += item.price;
+        const itemTotal = item.price * (item.quantity || 1);
+        sub += itemTotal;
         return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
-            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
+            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}" onerror="this.src='/placeholder-product.png'">
             <div class="flex-grow min-w-0">
                 <h4 class="text-xs sm:text-sm font-bold truncate">${item.title}</h4>
-                <p class="text-xs sm:text-sm font-black">৳${item.price}</p>
+                <p class="text-xs sm:text-sm font-black">৳${item.price.toFixed(2)}</p>
+                <p class="text-[10px] text-gray-400">Qty: ${item.quantity || 1}</p>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
+            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0" aria-label="Remove item">
                 <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
             </button>
         </div>`;
@@ -608,8 +732,15 @@ function renderCartItems() {
 function updateCounts() {
     const cartCount = document.getElementById('cart-count');
     const wishCount = document.getElementById('wish-count');
-    if (cartCount) cartCount.innerText = cart.length;
-    if (wishCount) wishCount.innerText = wishlist.length;
+    if (cartCount) {
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        cartCount.innerText = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+    if (wishCount) {
+        wishCount.innerText = wishlist.length;
+        wishCount.style.display = wishlist.length > 0 ? 'flex' : 'none';
+    }
 }
 
 // ============================================
@@ -618,8 +749,10 @@ function updateCounts() {
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
+        showToast('Removed from wishlist', 'info');
     } else {
         wishlist.push(id);
+        showToast('Added to wishlist! ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
@@ -634,6 +767,10 @@ function openMobileMenu() {
     if (drawer) drawer.classList.add('open');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Show mobile subcategories container when menu opens
+    const mobileSubCats = document.getElementById('mobileSubCategories');
+    if (mobileSubCats) mobileSubCats.style.display = 'block';
 }
 
 function closeMobileMenu() {
@@ -642,29 +779,18 @@ function closeMobileMenu() {
     if (drawer) drawer.classList.remove('open');
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
-    const subCats = document.getElementById('mobileSubCategories');
-    if (subCats) subCats.style.display = 'none';
     
-    // Reset all mobile submenus
-    document.querySelectorAll('.mobile-submenu').forEach(sub => {
-        sub.style.display = 'none';
+    // Reset all submenus
+    document.querySelectorAll('.mobile-submenu-container').forEach(sub => {
+        sub.style.maxHeight = '0px';
     });
-    document.querySelectorAll('.mobile-cat-item .fa-chevron-down').forEach(arrow => {
+    document.querySelectorAll('.mobile-menu-item .fa-chevron-down').forEach(arrow => {
         arrow.style.transform = '';
     });
-}
-
-function toggleMobileSubCategories() {
-    const subCats = document.getElementById('mobileSubCategories');
-    const arrow = document.getElementById('mobileCatArrow');
-    if (!subCats) return;
-    if (subCats.style.display === 'none' || !subCats.style.display) {
-        subCats.style.display = 'block';
-        if (arrow) arrow.style.transform = 'rotate(180deg)';
-    } else {
-        subCats.style.display = 'none';
-        if (arrow) arrow.style.transform = '';
-    }
+    
+    // Hide mobile subcategories
+    const mobileSubCats = document.getElementById('mobileSubCategories');
+    if (mobileSubCats) mobileSubCats.style.display = 'none';
 }
 
 // ============================================
@@ -686,7 +812,6 @@ window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
 window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
-window.toggleMobileSubCategories = toggleMobileSubCategories;
 window.toggleMobileSubMenu = toggleMobileSubMenu;
 window.getProductSlug = getProductSlug;
 window.saveCart = saveCart;
@@ -695,6 +820,7 @@ window.updateCounts = updateCounts;
 window.cart = cart;
 window.wishlist = wishlist;
 window.allCategories = allCategories;
+window.allSubcategories = allSubcategories;
 window.allMenuItems = allMenuItems;
 
 // ============================================
@@ -706,23 +832,35 @@ async function initSharedComponents() {
     renderFooter();
     updateCounts();
     
-    // Fetch dynamic menu data
+    // Fetch dynamic menu data from database
     try {
-        allMenuItems = await fetchMenuItems();
-        allCategories = await fetchCategories();
+        // Fetch all data in parallel
+        const [menuData, catData] = await Promise.all([
+            fetchMenuItems(),
+            fetchCategories()
+        ]);
+        
+        allMenuItems = menuData;
+        allCategories = catData;
         
         // Render dynamic menus after data is loaded
         renderDynamicDesktopMenu();
         renderDynamicMobileMenu();
+        
+        console.log('Dynamic menus loaded successfully');
     } catch (error) {
         console.error('Error initializing dynamic menus:', error);
+        // Show fallback menus
+        renderDynamicDesktopMenu();
+        renderDynamicMobileMenu();
     }
     
+    // Set copyright year
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
 
-// Auto-initialize
+// Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSharedComponents);
 } else {
