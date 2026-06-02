@@ -257,34 +257,33 @@
             color: rgba(255, 255, 255, 0.85);
         }
         
-        /* Rolex-style Arrow (→ replaced with elegant minimal arrow) */
         .hero-cta .cta-arrow {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 14px;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-        }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;           /* পরিবর্তন: 28px → 14px */
+    height: 14px;          /* পরিবর্তন: 14px → 14px (একই) */
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.7);  /* নতুন লাইন যোগ */
+    transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
         
         .hero-cta .cta-arrow::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: 0;
-            width: 6px;
-            height: 6px;
-            border-top: 1px solid #ffffff;
-            border-right: 1px solid #ffffff;
-            transform: translateY(-50%) rotate(45deg);
-            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-        }
-        
+    content: '';
+    position: absolute;
+    width: 5px;                              /* পরিবর্তন: 6px → 5px */
+    height: 5px;                             /* পরিবর্তন: 6px → 5px */
+    border-top: 1.5px solid #ffffff;         /* পরিবর্তন: 1px → 1.5px */
+    border-right: 1.5px solid #ffffff;       /* পরিবর্তন: 1px → 1.5px */
+    transform: rotate(45deg) translate(-1px, 0);  /* সম্পূর্ণ নতুন transform */
+    transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+        .hero-cta:hover .cta-arrow {
+    border-color: #ffffff;
+}
         .hero-cta:hover .cta-arrow::after {
-            right: -2px;
-            opacity: 0.8;
-        }
+    transform: rotate(45deg) translate(1px, -1px);
+}
         
         @keyframes fadeInUp {
             to {
