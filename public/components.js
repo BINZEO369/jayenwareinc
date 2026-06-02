@@ -1,6 +1,6 @@
 // ============================================
-// components.js - Shared Header, Footer & Common Functions
-// Version: 3.1 (Improved Desktop Navigation)
+// components.js - Dynamic Menu from Database
+// Version: 3.0 (Fully Dynamic)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -10,7 +10,7 @@ let allCategories = [];
 let allSubcategories = [];
 
 // API Base URL
-const API_BASE = '';
+const API_BASE = window.location.origin;
 
 // ============================================
 // SHARED CSS STYLES
@@ -24,8 +24,6 @@ function injectSharedStyles() {
             --soft: #f5f5f7;
             --blue: #007aff;
         }
-        
-        /* ============ NAVIGATION ============ */
         .glass-nav {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(50px) saturate(180%);
@@ -33,172 +31,90 @@ function injectSharedStyles() {
             border-bottom: 1px solid rgba(0,0,0,0.06);
             transition: all 0.3s ease;
         }
-        
-        /* Desktop Nav Links */
         .nav-link {
             position: relative;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            padding: 10px 18px;
+            padding: 8px 0;
             transition: color 0.3s ease;
             color: #1d1d1f;
             text-decoration: none;
             cursor: pointer;
-            white-space: nowrap;
         }
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: 4px; 
-            left: 18px;
-            right: 18px;
-            width: 0; 
-            height: 1.5px;
+            bottom: 0; left: 0;
+            width: 0; height: 1.5px;
             background: #1d1d1f;
             transition: width 0.3s ease;
         }
-        .nav-link:hover::after { width: calc(100% - 36px); }
-        .nav-link:hover { color: #007aff; }
+        .nav-link:hover::after { width: 100%; }
         
-        /* Desktop Dropdown Container */
-        .desktop-dropdown {
+        /* Dropdown Styles */
+        .nav-dropdown {
             position: relative;
         }
-        .desktop-dropdown-trigger {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .desktop-dropdown-trigger i {
-            font-size: 8px;
-            transition: transform 0.3s ease;
-            color: #86868b;
-        }
-        .desktop-dropdown:hover .desktop-dropdown-trigger i {
-            transform: rotate(180deg);
-        }
-        
-        /* Dropdown Card */
-        .desktop-dropdown-card {
+        .nav-dropdown-content {
             position: absolute;
-            top: calc(100% + 8px);
+            top: 100%;
             left: 50%;
-            transform: translateX(-50%) translateY(12px);
+            transform: translateX(-50%) translateY(10px);
             background: white;
-            border-radius: 20px;
-            box-shadow: 
-                0 4px 6px rgba(0,0,0,0.04),
-                0 12px 40px rgba(0,0,0,0.1),
-                0 0 0 1px rgba(0,0,0,0.04);
-            padding: 8px;
-            min-width: 260px;
-            max-width: 320px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            padding: 24px;
+            min-width: 600px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 55;
-            pointer-events: none;
+            z-index: 100;
         }
-        .desktop-dropdown:hover .desktop-dropdown-card {
+        .nav-dropdown:hover .nav-dropdown-content,
+        .nav-dropdown-content:hover {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
         }
-        
-        /* Category Item in Dropdown */
-        .dropdown-category-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1d1d1f;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            white-space: nowrap;
-            letter-spacing: 0.02em;
+        .dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
         }
-        .dropdown-category-item:hover {
-            background: #f5f5f7;
-            color: #007aff;
+        .dropdown-category {
+            break-inside: avoid;
         }
-        .dropdown-category-item .cat-name {
-            flex: 1;
-        }
-        .dropdown-category-item .cat-arrow {
-            font-size: 9px;
-            color: #86868b;
-            transition: all 0.2s ease;
-            margin-left: 12px;
-        }
-        .dropdown-category-item:hover .cat-arrow {
-            color: #007aff;
-            transform: translateX(2px);
-        }
-        
-        /* Subcategory List inside Dropdown */
-        .dropdown-sub-list {
-            padding: 4px 0 4px 20px;
-            border-left: 2px solid #f0f0f0;
-            margin: 2px 8px 6px 16px;
-        }
-        .dropdown-sub-item {
-            display: block;
-            padding: 8px 12px;
-            border-radius: 8px;
+        .dropdown-category-title {
             font-size: 12px;
-            color: #86868b;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            letter-spacing: 0.01em;
-        }
-        .dropdown-sub-item:hover {
-            background: #f5f5f7;
-            color: #007aff;
-        }
-        
-        /* View All Link */
-        .dropdown-view-all {
-            display: block;
-            padding: 10px 16px;
-            margin-top: 4px;
-            border-top: 1px solid #f0f0f0;
-            font-size: 11px;
             font-weight: 700;
-            color: #007aff;
-            text-decoration: none;
-            text-align: center;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            border-radius: 10px;
-            transition: all 0.2s ease;
+            letter-spacing: 0.1em;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
         }
-        .dropdown-view-all:hover {
-            background: #f0f7ff;
-            color: #0056cc;
+        .dropdown-subcategory {
+            display: block;
+            font-size: 11px;
+            color: #86868b;
+            padding: 4px 0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+        .dropdown-subcategory:hover {
+            color: #007aff;
+        }
+        .dropdown-subcategory::before {
+            content: '•';
+            margin-right: 6px;
+            color: #d2d2d7;
         }
         
-        /* Loading State */
-        .dropdown-loading {
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #86868b;
-        }
-        .dropdown-empty {
-            padding: 16px;
-            text-align: center;
-            font-size: 12px;
-            color: #86868b;
-        }
-        
-        /* ============ MOBILE MENU ============ */
+        /* Mobile Menu */
         .mobile-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.5);
@@ -228,50 +144,39 @@ function injectSharedStyles() {
         }
         .mobile-cat-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 0; border-bottom: 1px solid #f5f5f5;
+            padding: 14px 0; border-bottom: 1px solid #f5f5f5;
             font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
             cursor: pointer; color: #1d1d1f; text-decoration: none;
-            transition: color 0.2s ease; width: 100%; 
-            background: none; border-left: none; border-right: none; 
-            border-top: none; text-align: left;
+            transition: color 0.2s ease; width: 100%;
         }
-        .mobile-cat-item .cat-arrow {
-            font-size: 10px;
+        .mobile-cat-item:hover { color: #007aff; }
+        .mobile-subcategory-list {
+            padding-left: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .mobile-subcategory-item {
+            display: block;
+            padding: 10px 12px;
+            font-size: 13px;
             color: #86868b;
-            transition: transform 0.3s ease;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: color 0.2s ease;
         }
-        .mobile-cat-item .cat-arrow.open {
-            transform: rotate(180deg);
+        .mobile-subcategory-item:last-child {
+            border-bottom: none;
         }
-        .mobile-subcat-container {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.35s ease;
+        .mobile-subcategory-item:hover {
+            color: #007aff;
         }
-        .mobile-subcat-container.expanded {
-            max-height: 600px;
-        }
-        .mobile-sub-cat {
-            padding: 12px 0 12px 28px;
-            border-bottom: 1px solid #fafafa;
-            font-size: 13px; color: #86868b; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
-            text-decoration: none; transition: color 0.2s ease;
-        }
-        .mobile-sub-cat::before {
-            content: ''; 
-            width: 5px; height: 5px;
-            background: #007aff; 
-            border-radius: 50%; 
-            flex-shrink: 0;
-        }
-        .mobile-sub-cat:hover { color: #007aff; }
         .mobile-footer {
             padding: 20px; border-top: 1px solid #f0f0f0;
             background: #f5f5f7; flex-shrink: 0;
         }
         
-        /* ============ CART DRAWER ============ */
+        /* Cart Drawer */
         #cart-drawer {
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
@@ -280,38 +185,31 @@ function injectSharedStyles() {
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
-        
-        /* ============ TOAST ============ */
         #toast {
             position: fixed; top: 16px; right: 16px; z-index: 9999;
             transform: translateX(120%);
             transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
             max-width: calc(100vw - 32px);
         }
-        
-        /* ============ BODY OFFSET ============ */
         body { padding-top: 56px; }
         @media (min-width: 640px) { body { padding-top: 64px; } }
-        @media (min-width: 1024px) { body { padding-top: 84px; } }
+        @media (min-width: 1024px) { body { padding-top: 80px; } }
     </style>
     `;
-    const existing = document.getElementById('shared-components-style');
-    if (existing) existing.remove();
     document.head.insertAdjacentHTML('beforeend', styles);
 }
 
 // ============================================
-// DATA FETCHING
+// FETCH CATEGORIES & SUBCATEGORIES FROM API
 // ============================================
 async function fetchCategories() {
     try {
-        const res = await fetch(`${API_BASE}/api/categories`);
-        if (!res.ok) throw new Error('Failed to fetch categories');
-        allCategories = await res.json();
+        const response = await fetch(`${API_BASE}/api/categories`);
+        if (!response.ok) throw new Error('Failed to fetch categories');
+        allCategories = await response.json();
         return allCategories;
-    } catch (err) {
-        console.error('Error fetching categories:', err);
-        allCategories = [];
+    } catch (error) {
+        console.error('Error fetching categories:', error);
         return [];
     }
 }
@@ -319,17 +217,133 @@ async function fetchCategories() {
 async function fetchSubcategories(categorySlug = null) {
     try {
         let url = `${API_BASE}/api/subcategories`;
-        if (categorySlug) url += `?category_slug=${categorySlug}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Failed to fetch subcategories');
-        const data = await res.json();
-        if (categorySlug) return data;
-        allSubcategories = data;
-        return data;
-    } catch (err) {
-        console.error('Error fetching subcategories:', err);
+        if (categorySlug) {
+            url += `?category_slug=${categorySlug}`;
+        }
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch subcategories');
+        allSubcategories = await response.json();
+        return allSubcategories;
+    } catch (error) {
+        console.error('Error fetching subcategories:', error);
         return [];
     }
+}
+
+// ============================================
+// BUILD CATEGORY SLUG
+// ============================================
+function createSlug(text) {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+// ============================================
+// BUILD DROPDOWN MENU HTML
+// ============================================
+function buildDropdownHTML(categories, subcategories) {
+    if (!categories.length) {
+        return '<div class="nav-link px-5">No categories</div>';
+    }
+    
+    let dropdownHTML = '';
+    
+    categories.forEach(category => {
+        const categorySlug = category.slug || createSlug(category.name);
+        const categorySubs = subcategories.filter(sub => 
+            sub.category_slug === categorySlug || sub.category_id === category.id
+        );
+        
+        dropdownHTML += `
+            <div class="dropdown-category">
+                <a href="/category/${categorySlug}" class="dropdown-category-title" style="text-decoration: none; color: #1d1d1f;">
+                    ${category.name}
+                </a>
+        `;
+        
+        if (categorySubs.length > 0) {
+            categorySubs.forEach(sub => {
+                const subSlug = sub.slug || createSlug(sub.name);
+                dropdownHTML += `
+                    <a href="/category/${categorySlug}/${subSlug}" class="dropdown-subcategory">
+                        ${sub.name}
+                    </a>
+                `;
+            });
+        } else {
+            dropdownHTML += `
+                <a href="/category/${categorySlug}" class="dropdown-subcategory">
+                    View All
+                </a>
+            `;
+        }
+        
+        dropdownHTML += `</div>`;
+    });
+    
+    return `
+        <div class="nav-dropdown">
+            <span class="nav-link px-5">Categories <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></span>
+            <div class="nav-dropdown-content">
+                <div class="dropdown-grid">
+                    ${dropdownHTML}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================
+// BUILD MOBILE MENU HTML
+// ============================================
+function buildMobileMenuHTML(categories, subcategories) {
+    if (!categories.length) {
+        return '<div class="mobile-cat-item">No categories available</div>';
+    }
+    
+    let mobileHTML = '';
+    
+    categories.forEach(category => {
+        const categorySlug = category.slug || createSlug(category.name);
+        const categorySubs = subcategories.filter(sub => 
+            sub.category_slug === categorySlug || sub.category_id === category.id
+        );
+        
+        mobileHTML += `
+            <div class="mobile-cat-item" onclick="toggleMobileCategory('${categorySlug}')" style="border-bottom: none;">
+                <span>${category.name}</span>
+                <i class="fa-solid fa-chevron-down text-xs text-gray-300 transition-transform duration-300" id="mobile-arrow-${categorySlug}"></i>
+            </div>
+            <div id="mobile-subs-${categorySlug}" class="mobile-subcategory-list" style="display: none;">
+        `;
+        
+        if (categorySubs.length > 0) {
+            categorySubs.forEach(sub => {
+                const subSlug = sub.slug || createSlug(sub.name);
+                mobileHTML += `
+                    <a href="/category/${categorySlug}/${subSlug}" class="mobile-subcategory-item">
+                        ${sub.name}
+                    </a>
+                `;
+            });
+        }
+        
+        // Add "View All" link
+        mobileHTML += `
+            <a href="/category/${categorySlug}" class="mobile-subcategory-item" style="font-weight: 600; color: #007aff;">
+                View All ${category.name}
+            </a>
+        `;
+        
+        mobileHTML += `</div>`;
+    });
+    
+    return mobileHTML;
 }
 
 // ============================================
@@ -337,93 +351,58 @@ async function fetchSubcategories(categorySlug = null) {
 // ============================================
 function renderHeader() {
     const headerHTML = `
-    <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
-    
-    <!-- Mobile Menu Drawer -->
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
         <div class="mobile-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
                 <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
                 <span class="font-black font-serif text-lg text-primary">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2" aria-label="Close menu">
+            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div class="mobile-menu-scroll" id="mobileMenuContent">
-            <div class="flex items-center justify-center py-12">
-                <div class="animate-pulse text-gray-300 text-sm">Loading menu...</div>
+        <div class="mobile-menu-scroll" id="mobile-menu-content">
+            <div style="text-align: center; padding: 40px 20px; color: #86868b;">
+                <i class="fa-solid fa-spinner fa-spin text-2xl mb-3"></i>
+                <p class="text-sm">Loading categories...</p>
             </div>
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter">
-            <a href="/login" class="w-full py-3 bg-primary text-white rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-blue transition no-underline text-center block">Sign In</a>
-        </div>
+        <div class="mobile-footer" id="mobileMenuFooter"></div>
     </div>
-    
-    <!-- Main Navigation -->
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-[84px] flex justify-between items-center">
-            <!-- Logo -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline" aria-label="JAYENWARE Home">
                 <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
                 <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight font-serif text-primary">JAYENWARE</span>
             </a>
-            
-            <!-- Desktop Nav Links - Centered with proper spacing -->
-            <div class="hidden lg:flex items-center gap-2 xl:gap-4" id="desktop-nav-links">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/products" class="nav-link">Shop</a>
-                
-                <!-- Categories Dropdown -->
-                <div class="desktop-dropdown" id="desktop-categories-dropdown">
-                    <span class="nav-link desktop-dropdown-trigger">
-                        Categories
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </span>
-                    <div class="desktop-dropdown-card" id="desktop-categories-menu">
-                        <div class="dropdown-loading">
-                            <div class="animate-pulse">Loading categories...</div>
-                        </div>
-                    </div>
+            <div class="hidden lg:flex items-center gap-0" id="desktop-nav-links">
+                <div style="display: flex; align-items: center; gap: 20px; color: #86868b; font-size: 11px;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                 </div>
-                
-                <a href="/journal" class="nav-link">Journal</a>
-                <a href="/about" class="nav-link">About</a>
             </div>
-            
-            <!-- Right Side Icons -->
-            <div class="flex items-center gap-2 sm:gap-3 lg:gap-5 shrink-0">
-                <!-- Wishlist -->
+            <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
                 <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
                     <i class="fa-regular fa-heart text-lg lg:text-xl"></i>
                     <span id="wish-count" class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                
-                <!-- Cart -->
                 <a href="/cart" onclick="toggleCart();return false;" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Shopping Cart">
                     <i class="fa-solid fa-bag-shopping text-lg lg:text-xl"></i>
                     <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-primary text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                
-                <!-- Auth -->
                 <div id="auth-nav-area" class="hidden lg:block">
-                    <a href="/login" class="px-6 py-3 bg-primary text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-blue transition-all no-underline inline-block shadow-sm hover:shadow-md">Sign In</a>
+                    <a href="/login" class="px-5 py-2.5 bg-primary text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-blue transition-all no-underline inline-block">Sign In</a>
                 </div>
-                
-                <!-- Mobile Menu Toggle -->
                 <button onclick="openMobileMenu()" class="lg:hidden text-xl p-1.5 text-primary hover:text-blue transition" aria-label="Menu">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
     </nav>
-    
-    <!-- Cart Drawer -->
     <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
         <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter">Shopping Bag</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1" aria-label="Close cart">
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -444,176 +423,64 @@ function renderHeader() {
 }
 
 // ============================================
-// BUILD DYNAMIC NAVIGATION
+// UPDATE NAVIGATION WITH DYNAMIC DATA
 // ============================================
-
-// Build Desktop Categories Dropdown Card
-async function buildDesktopCategoriesMenu() {
-    const menuContainer = document.getElementById('desktop-categories-menu');
-    if (!menuContainer) return;
-    
-    if (!allCategories.length) {
-        await fetchCategories();
-        await fetchSubcategories();
-    }
-    
-    if (!allCategories.length) {
-        menuContainer.innerHTML = `
-            <div class="dropdown-empty">
-                <i class="fa-solid fa-folder-open text-2xl mb-2 block text-gray-300"></i>
-                No categories available
-            </div>
-        `;
-        return;
-    }
-    
-    // Build dropdown card with categories and their subcategories
-    let html = '';
-    allCategories.forEach((cat, index) => {
-        const catSubs = allSubcategories.filter(sub => 
-            sub.category_slug === cat.slug || sub.category_id === cat.id
-        );
+async function updateNavigation() {
+    try {
+        // Fetch categories and subcategories
+        const categories = await fetchCategories();
+        const subcategories = await fetchSubcategories();
         
-        if (catSubs.length > 0) {
-            // Category with subcategories
-            html += `
-                <a href="/category/${cat.slug}" class="dropdown-category-item">
-                    <span class="cat-name">${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right cat-arrow"></i>
-                </a>
-                <div class="dropdown-sub-list">
-                    ${catSubs.map(sub => `
-                        <a href="/category/${cat.slug}/${sub.slug}" class="dropdown-sub-item">${sub.name}</a>
-                    `).join('')}
-                </div>
-            `;
-        } else {
-            // Category without subcategories
-            html += `
-                <a href="/category/${cat.slug}" class="dropdown-category-item">
-                    <span class="cat-name">${cat.name}</span>
-                </a>
-            `;
+        // Update desktop navigation
+        const desktopNav = document.getElementById('desktop-nav-links');
+        if (desktopNav && categories.length > 0) {
+            desktopNav.innerHTML = buildDropdownHTML(categories, subcategories);
         }
-    });
-    
-    // View All Products link at bottom
-    html += `
-        <a href="/products" class="dropdown-view-all">
-            View All Products <i class="fa-solid fa-arrow-right ml-1" style="font-size: 9px;"></i>
-        </a>
-    `;
-    
-    menuContainer.innerHTML = html;
+        
+        // Update mobile menu
+        const mobileMenu = document.getElementById('mobile-menu-content');
+        if (mobileMenu && categories.length > 0) {
+            mobileMenu.innerHTML = buildMobileMenuHTML(categories, subcategories);
+        }
+        
+    } catch (error) {
+        console.error('Error updating navigation:', error);
+        const desktopNav = document.getElementById('desktop-nav-links');
+        const mobileMenu = document.getElementById('mobile-menu-content');
+        
+        if (desktopNav) {
+            desktopNav.innerHTML = '<span class="nav-link px-5">Categories</span>';
+        }
+        if (mobileMenu) {
+            mobileMenu.innerHTML = '<div class="mobile-cat-item">Categories unavailable</div>';
+        }
+    }
 }
 
-// Build Mobile Menu Content
-async function buildMobileMenuContent() {
-    const container = document.getElementById('mobileMenuContent');
-    if (!container) return;
+// ============================================
+// TOGGLE MOBILE CATEGORY
+// ============================================
+function toggleMobileCategory(categorySlug) {
+    const subList = document.getElementById(`mobile-subs-${categorySlug}`);
+    const arrow = document.getElementById(`mobile-arrow-${categorySlug}`);
     
-    if (!allCategories.length) {
-        await fetchCategories();
-        await fetchSubcategories();
-    }
+    if (!subList) return;
     
-    if (!allCategories.length) {
-        container.innerHTML = `
-            <a href="/" class="mobile-cat-item">
-                <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
-            </a>
-            <a href="/products" class="mobile-cat-item">
-                <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
-            </a>
-            <a href="/wishlist" class="mobile-cat-item">
-                <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
-            </a>
-            <p class="text-center text-gray-400 text-xs mt-6">No categories available</p>
-        `;
-        return;
-    }
-    
-    let html = '';
-    
-    // Home link
-    html += `
-        <a href="/" class="mobile-cat-item">
-            <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
-            <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-        </a>
-    `;
-    
-    // All Products
-    html += `
-        <a href="/products" class="mobile-cat-item">
-            <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
-            <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-        </a>
-    `;
-    
-    // Dynamic Categories with expandable subcategories
-    allCategories.forEach((cat, index) => {
-        const catSubs = allSubcategories.filter(sub => 
-            sub.category_slug === cat.slug || sub.category_id === cat.id
-        );
-        const catId = `mobile-cat-${index}`;
+    if (subList.style.display === 'none' || !subList.style.display) {
+        // Close all other open categories
+        document.querySelectorAll('[id^="mobile-subs-"]').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('[id^="mobile-arrow-"]').forEach(el => {
+            el.style.transform = '';
+        });
         
-        if (catSubs.length > 0) {
-            html += `
-                <button class="mobile-cat-item" onclick="toggleMobileCategory('${catId}')" aria-expanded="false">
-                    <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> ${cat.name}</span>
-                    <i class="fa-solid fa-chevron-down cat-arrow text-xs" id="${catId}-arrow"></i>
-                </button>
-                <div class="mobile-subcat-container" id="${catId}-container">
-                    ${catSubs.map(sub => `
-                        <a href="/category/${cat.slug}/${sub.slug}" class="mobile-sub-cat">${sub.name}</a>
-                    `).join('')}
-                    <a href="/category/${cat.slug}" class="mobile-sub-cat" style="color: #007aff; font-weight: 600;">
-                        View All ${cat.name}
-                    </a>
-                </div>
-            `;
-        } else {
-            html += `
-                <a href="/category/${cat.slug}" class="mobile-cat-item">
-                    <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> ${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-                </a>
-            `;
-        }
-    });
-    
-    // Wishlist
-    html += `
-        <a href="/wishlist" class="mobile-cat-item">
-            <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
-            <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-        </a>
-    `;
-    
-    container.innerHTML = html;
-}
-
-// Toggle mobile category expand/collapse
-function toggleMobileCategory(catId) {
-    const container = document.getElementById(`${catId}-container`);
-    const arrow = document.getElementById(`${catId}-arrow`);
-    
-    if (!container || !arrow) return;
-    
-    const isExpanded = container.classList.contains('expanded');
-    
-    // Close all other open categories first
-    document.querySelectorAll('.mobile-subcat-container.expanded').forEach(el => {
-        el.classList.remove('expanded');
-    });
-    document.querySelectorAll('.cat-arrow.open').forEach(el => {
-        el.classList.remove('open');
-    });
-    
-    if (!isExpanded) {
-        container.classList.add('expanded');
-        arrow.classList.add('open');
+        // Open this one
+        subList.style.display = 'block';
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+    } else {
+        subList.style.display = 'none';
+        if (arrow) arrow.style.transform = '';
     }
 }
 
@@ -724,25 +591,36 @@ function addToCart(productId, productData) {
     if (!productData) { showToast('Product data missing', 'error'); return; }
     if (productData.stock <= 0) return showToast('Out of stock', 'error');
     
-    const existing = cart.find(item => item.product_id === productData.id);
-    if (existing) {
-        existing.quantity += 1;
+    // Check if already in cart
+    const existingIndex = cart.findIndex(item => item.product_id === productData.id);
+    if (existingIndex >= 0) {
+        cart[existingIndex].quantity += 1;
     } else {
         cart.push({
             id: Date.now(),
             product_id: productData.id,
             title: productData.title,
             price: productData.price,
-            img: productData.img || productData.images?.[0] || '/placeholder.png',
+            img: productData.img,
             quantity: 1
         });
     }
+    
     saveCart();
     showToast('Added to Bag! 🎉', 'success');
+    if (document.getElementById('cart-drawer').classList.contains('open')) {
+        renderCartItems();
+    }
 }
 
 function removeFromCart(idx) {
     cart.splice(idx, 1);
+    saveCart();
+    renderCartItems();
+}
+
+function updateQuantity(idx, delta) {
+    cart[idx].quantity = Math.max(1, cart[idx].quantity + delta);
     saveCart();
     renderCartItems();
 }
@@ -767,16 +645,20 @@ function renderCartItems() {
     
     let sub = 0;
     container.innerHTML = cart.map((item, idx) => {
-        const itemTotal = item.price * (item.quantity || 1);
+        const itemTotal = item.price * item.quantity;
         sub += itemTotal;
-        return `
-        <div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
+        return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
             <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}" onerror="this.src='/placeholder.png'">
             <div class="flex-grow min-w-0">
                 <h4 class="text-xs sm:text-sm font-bold truncate">${item.title}</h4>
-                <p class="text-xs sm:text-sm font-black">৳${item.price.toFixed(2)} × ${item.quantity || 1}</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <button onclick="updateQuantity(${idx}, -1)" class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold hover:bg-gray-300 transition">-</button>
+                    <span class="text-xs font-bold">${item.quantity}</span>
+                    <button onclick="updateQuantity(${idx}, 1)" class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold hover:bg-gray-300 transition">+</button>
+                </div>
+                <p class="text-xs sm:text-sm font-black mt-1">৳${itemTotal.toFixed(2)}</p>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0" aria-label="Remove item">
+            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
                 <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
             </button>
         </div>`;
@@ -789,10 +671,7 @@ function renderCartItems() {
 function updateCounts() {
     const cartCount = document.getElementById('cart-count');
     const wishCount = document.getElementById('wish-count');
-    if (cartCount) {
-        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        cartCount.innerText = totalItems;
-    }
+    if (cartCount) cartCount.innerText = cart.length;
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
@@ -805,7 +684,7 @@ function toggleWishlist(id) {
         showToast('Removed from wishlist', 'info');
     } else {
         wishlist.push(id);
-        showToast('Added to wishlist! ♥', 'success');
+        showToast('Added to wishlist! ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
@@ -820,11 +699,6 @@ function openMobileMenu() {
     if (drawer) drawer.classList.add('open');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    const content = document.getElementById('mobileMenuContent');
-    if (content && (content.querySelector('.animate-pulse') || !content.innerHTML.trim())) {
-        buildMobileMenuContent();
-    }
 }
 
 function closeMobileMenu() {
@@ -834,35 +708,21 @@ function closeMobileMenu() {
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
     
-    document.querySelectorAll('.mobile-subcat-container.expanded').forEach(el => {
-        el.classList.remove('expanded');
+    // Close all open subcategories
+    document.querySelectorAll('[id^="mobile-subs-"]').forEach(el => {
+        el.style.display = 'none';
     });
-    document.querySelectorAll('.cat-arrow.open').forEach(el => {
-        el.classList.remove('open');
+    document.querySelectorAll('[id^="mobile-arrow-"]').forEach(el => {
+        el.style.transform = '';
     });
-}
-
-function toggleMobileSubCategories() {
-    const firstContainer = document.querySelector('.mobile-subcat-container');
-    if (firstContainer) {
-        const catId = firstContainer.id.replace('-container', '');
-        toggleMobileCategory(catId);
-    }
 }
 
 // ============================================
 // UTILITY FUNCTIONS
 // ============================================
 function getProductSlug(product) {
-    if (!product) return '';
-    if (product.slug) return product.slug;
-    if (!product.title) return '';
-    return product.title
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 80);
+    if (!product || !product.title) return '';
+    return createSlug(product.title);
 }
 
 // ============================================
@@ -874,20 +734,17 @@ window.toggleWishlist = toggleWishlist;
 window.addToCart = addToCart;
 window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
 window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
-window.toggleMobileSubCategories = toggleMobileSubCategories;
 window.toggleMobileCategory = toggleMobileCategory;
 window.getProductSlug = getProductSlug;
 window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
-window.buildDesktopCategoriesMenu = buildDesktopCategoriesMenu;
-window.buildMobileMenuContent = buildMobileMenuContent;
+window.createSlug = createSlug;
 window.cart = cart;
 window.wishlist = wishlist;
-window.allCategories = allCategories;
-window.allSubcategories = allSubcategories;
 
 // ============================================
 // INITIALIZATION
@@ -896,19 +753,13 @@ async function initSharedComponents() {
     injectSharedStyles();
     renderHeader();
     renderFooter();
-    
-    await fetchCategories();
-    await fetchSubcategories();
-    
-    await buildDesktopCategoriesMenu();
-    await buildMobileMenuContent();
-    
     updateCounts();
+    
+    // Update navigation with dynamic categories
+    await updateNavigation();
     
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
-    
-    console.log(`✅ Shared components initialized with ${allCategories.length} categories and ${allSubcategories.length} subcategories`);
 }
 
 // Auto-initialize
@@ -917,5 +768,3 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initSharedComponents, 100);
 }
-
-window.initSharedComponents = initSharedComponents;
