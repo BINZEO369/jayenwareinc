@@ -1,13 +1,13 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.0 (Dynamic Menu & Categories)
+// Version: 3.0 (Dynamic Menu with API Integration)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
 let userSession = null;
 let allCategories = [];
-let allMenuItems = [];
+let menuData = null;
 let siteStructure = null;
 
 // API Base URL
@@ -50,7 +50,6 @@ function injectSharedStyles() {
             transition: color 0.3s ease;
             color: #1d1d1f;
             text-decoration: none;
-            cursor: pointer;
         }
         .nav-link::after {
             content: '';
@@ -66,54 +65,74 @@ function injectSharedStyles() {
         .mega-menu-container {
             position: relative;
         }
+        .mega-menu-trigger {
+            cursor: pointer;
+        }
         .mega-menu-dropdown {
             position: absolute;
             top: 100%;
             left: 50%;
             transform: translateX(-50%) translateY(10px);
-            background: white;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(50px) saturate(180%);
+            -webkit-backdrop-filter: blur(50px) saturate(180%);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-            padding: 24px 32px;
+            padding: 24px;
             min-width: 600px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 55;
-            border: 1px solid rgba(0,0,0,0.06);
+            z-index: 100;
+            pointer-events: none;
         }
         .mega-menu-container:hover .mega-menu-dropdown {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
+            pointer-events: all;
         }
         .mega-menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
         }
         .mega-menu-column h4 {
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: #1d1d1f;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #007aff;
-        }
-        .mega-menu-column a {
-            display: block;
-            font-size: 12px;
             color: #86868b;
-            text-decoration: none;
-            padding: 6px 0;
-            transition: all 0.2s ease;
-            font-weight: 500;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .mega-menu-column a:hover {
+        .mega-menu-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .mega-menu-column ul li {
+            margin-bottom: 8px;
+        }
+        .mega-menu-column ul li a {
+            font-size: 13px;
+            color: #1d1d1f;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+        }
+        .mega-menu-column ul li a:hover {
             color: #007aff;
-            padding-left: 8px;
+            padding-left: 4px;
+        }
+        .mega-menu-column ul li a i {
+            font-size: 8px;
+            color: #007aff;
         }
         
         .mobile-menu-overlay {
@@ -143,25 +162,52 @@ function injectSharedStyles() {
             -webkit-overflow-scrolling: touch;
             padding: 12px 20px;
         }
-        .mobile-cat-item {
+        .mobile-menu-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 0; border-bottom: 1px solid #f5f5f5;
             font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
             cursor: pointer; color: #1d1d1f; text-decoration: none;
             transition: color 0.2s ease;
         }
-        .mobile-sub-cat {
-            padding: 12px 0 12px 20px;
-            border-bottom: 1px solid #fafafa;
+        .mobile-menu-item:hover { color: #007aff; }
+        .mobile-menu-item.has-children {
+            cursor: pointer;
+        }
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fafafa;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .mobile-submenu.expanded {
+            max-height: 1000px;
+        }
+        .mobile-sub-item {
+            padding: 12px 16px 12px 32px;
             font-size: 13px; color: #86868b; cursor: pointer;
             display: flex; align-items: center; gap: 8px;
-            text-decoration: none; transition: color 0.2s ease;
+            text-decoration: none; transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .mobile-sub-cat::before {
+        .mobile-sub-item:hover {
+            color: #007aff;
+            background: white;
+            padding-left: 36px;
+        }
+        .mobile-sub-item::before {
             content: ''; width: 5px; height: 5px;
             background: #007aff; border-radius: 50%; flex-shrink: 0;
         }
-        .mobile-sub-cat:hover { color: #007aff; }
+        .mobile-menu-arrow {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+            color: #86868b;
+        }
+        .mobile-menu-arrow.rotated {
+            transform: rotate(180deg);
+        }
         .mobile-footer {
             padding: 20px; border-top: 1px solid #f0f0f0;
             background: #f5f5f7; flex-shrink: 0;
@@ -180,6 +226,19 @@ function injectSharedStyles() {
             transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
             max-width: calc(100vw - 32px);
         }
+        
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: 4px;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
         body { padding-top: 56px; }
         @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
@@ -189,26 +248,30 @@ function injectSharedStyles() {
 }
 
 // ============================================
-// FETCH DATA FROM API
+// API FUNCTIONS
 // ============================================
 async function fetchSiteStructure() {
     try {
         const response = await fetch(`${API_BASE}/api/site-structure`);
         if (!response.ok) throw new Error('Failed to fetch site structure');
         siteStructure = await response.json();
-        allMenuItems = siteStructure.menu || [];
-        allCategories = siteStructure.categories || [];
         return siteStructure;
     } catch (error) {
         console.error('Error fetching site structure:', error);
-        // Fallback: fetch categories separately
-        try {
-            const catResponse = await fetch(`${API_BASE}/api/categories`);
-            allCategories = await catResponse.json();
-        } catch (e) {
-            console.error('Error fetching categories:', e);
-        }
         return null;
+    }
+}
+
+async function fetchCategories() {
+    try {
+        const response = await fetch(`${API_BASE}/api/categories`);
+        if (!response.ok) throw new Error('Failed to fetch categories');
+        const categories = await response.json();
+        allCategories = categories;
+        return categories;
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return [];
     }
 }
 
@@ -230,8 +293,14 @@ function renderHeader() {
         </div>
         <div class="mobile-menu-scroll" id="mobileMenuContent">
             <!-- Dynamic content will be loaded here -->
+            <div class="text-center py-8 text-gray-400">
+                <i class="fa-solid fa-spinner fa-spin text-2xl"></i>
+                <p class="text-xs mt-2">Loading menu...</p>
+            </div>
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter"></div>
+        <div class="mobile-footer" id="mobileMenuFooter">
+            <a href="/login" class="w-full py-3 bg-primary text-white rounded-2xl font-bold uppercase tracking-wider text-xs hover:bg-blue transition shadow-lg no-underline text-center block">Sign In</a>
+        </div>
     </div>
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
@@ -239,8 +308,13 @@ function renderHeader() {
                 <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
                 <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight font-serif text-primary">JAYENWARE</span>
             </a>
-            <div class="hidden lg:flex items-center gap-0" id="desktopNav">
-                <!-- Dynamic menu will be loaded here -->
+            <div class="hidden lg:flex items-center gap-0" id="desktop-menu">
+                <!-- Dynamic desktop menu will be loaded here -->
+                <div class="flex gap-1">
+                    <div class="h-4 w-16 skeleton"></div>
+                    <div class="h-4 w-16 skeleton"></div>
+                    <div class="h-4 w-16 skeleton"></div>
+                </div>
             </div>
             <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
                 <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
@@ -284,203 +358,180 @@ function renderHeader() {
 }
 
 // ============================================
-// RENDER DYNAMIC DESKTOP MENU
+// RENDER DYNAMIC MENUS
 // ============================================
-function renderDesktopMenu() {
-    const desktopNav = document.getElementById('desktopNav');
-    if (!desktopNav) return;
-
-    let menuHTML = '';
-
-    // Render menu items from API
-    if (allMenuItems && allMenuItems.length > 0) {
-        allMenuItems.forEach(item => {
-            if (item.children && item.children.length > 0) {
-                // Mega menu for items with children
-                menuHTML += `
-                <div class="mega-menu-container px-3">
-                    <a href="${item.link || '/category/' + item.slug}" class="nav-link">${item.title}</a>
-                    <div class="mega-menu-dropdown">
-                        <div class="mega-menu-grid">
-                            ${renderMegaMenuChildren(item.children)}
-                        </div>
-                    </div>
-                </div>`;
-            } else {
-                // Simple link
-                const link = item.menu_type === 'category' && item.category_id 
-                    ? `/category/${item.slug}` 
-                    : item.menu_type === 'external' 
-                        ? item.link 
-                        : item.link || '#';
-                
-                menuHTML += `<a href="${link}" class="nav-link px-5">${item.title}</a>`;
-            }
-        });
-    } else {
+function renderDesktopMenu(menuItems) {
+    const desktopMenu = document.getElementById('desktop-menu');
+    if (!desktopMenu) return;
+    
+    if (!menuItems || menuItems.length === 0) {
         // Fallback static menu
-        menuHTML = `
+        desktopMenu.innerHTML = `
             <a href="/" class="nav-link px-5">Home</a>
             <a href="/products" class="nav-link px-5">Shop</a>
             <a href="/journal" class="nav-link px-5">Journal</a>
         `;
+        return;
     }
-
-    // Always add category mega menu if categories exist
-    if (allCategories && allCategories.length > 0) {
-        menuHTML += `
-        <div class="mega-menu-container px-3">
-            <span class="nav-link">Categories</span>
-            <div class="mega-menu-dropdown">
-                <div class="mega-menu-grid">
-                    ${allCategories.map(cat => `
-                        <div class="mega-menu-column">
-                            <h4><a href="/category/${cat.slug}" class="text-primary no-underline hover:text-blue">${cat.name}</a></h4>
-                            ${cat.subcategories && cat.subcategories.length > 0 
-                                ? cat.subcategories.slice(0, 5).map(sub => 
-                                    `<a href="/category/${cat.slug}/${sub.slug}">${sub.name}</a>`
-                                ).join('')
-                                : '<a href="/category/' + cat.slug + '" class="text-gray-400 text-xs">View All</a>'
-                            }
-                            ${cat.subcategories && cat.subcategories.length > 5 
-                                ? `<a href="/category/${cat.slug}" class="text-blue font-bold">+ More</a>` 
-                                : ''
-                            }
-                        </div>
-                    `).join('')}
+    
+    let menuHTML = '';
+    
+    menuItems.forEach(item => {
+        if (item.children && item.children.length > 0) {
+            // Mega menu for items with children
+            menuHTML += `
+            <div class="mega-menu-container px-5">
+                <a href="${item.link || '/category/' + (item.slug || getProductSlug({title: item.title}))}" 
+                   class="nav-link mega-menu-trigger">
+                    ${item.title} <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i>
+                </a>
+                <div class="mega-menu-dropdown">
+                    <div class="mega-menu-grid">
+                        ${renderMegaMenuColumns(item.children)}
+                    </div>
                 </div>
-            </div>
-        </div>`;
-    }
-
-    desktopNav.innerHTML = menuHTML;
-}
-
-function renderMegaMenuChildren(children) {
-    let html = '';
-    
-    // Group children if they have subcategories
-    const groupedChildren = {};
-    
-    children.forEach(child => {
-        if (child.category_id && allCategories) {
-            const category = allCategories.find(c => c.id === child.category_id);
-            if (category) {
-                if (!groupedChildren[category.name]) {
-                    groupedChildren[category.name] = {
-                        title: category.name,
-                        slug: category.slug,
-                        items: []
-                    };
-                }
-                groupedChildren[category.name].items.push(child);
-            }
+            </div>`;
+        } else {
+            // Simple link
+            const link = item.link || 
+                        (item.menu_type === 'category' ? `/category/${item.slug || getProductSlug({title: item.title})}` : 
+                         item.menu_type === 'subcategory' ? `/subcategory/${item.slug || getProductSlug({title: item.title})}` : 
+                         `/${item.slug || getProductSlug({title: item.title})}`);
+            
+            menuHTML += `<a href="${link}" class="nav-link px-5">${item.title}</a>`;
         }
     });
-
-    if (Object.keys(groupedChildren).length > 0) {
-        Object.values(groupedChildren).forEach(group => {
-            html += `
-            <div class="mega-menu-column">
-                <h4><a href="/category/${group.slug}" class="text-primary no-underline hover:text-blue">${group.title}</a></h4>
-                ${group.items.map(item => 
-                    `<a href="${item.link || '/category/' + group.slug + '/' + item.slug}">${item.title}</a>`
-                ).join('')}
-            </div>`;
-        });
-    } else {
-        // Just render as list
-        html += `<div class="mega-menu-column">
-            <h4>Quick Links</h4>
-            ${children.map(child => 
-                `<a href="${child.link || '#'}">${child.title}</a>`
-            ).join('')}
-        </div>`;
-    }
-
-    return html;
+    
+    desktopMenu.innerHTML = menuHTML;
 }
 
-// ============================================
-// RENDER DYNAMIC MOBILE MENU
-// ============================================
-function renderMobileMenu() {
-    const mobileContent = document.getElementById('mobileMenuContent');
-    if (!mobileContent) return;
+function renderMegaMenuColumns(children) {
+    // Split children into columns (max 6 items per column)
+    const columns = [];
+    const itemsPerColumn = Math.ceil(children.length / 3);
+    
+    for (let i = 0; i < children.length; i += itemsPerColumn) {
+        columns.push(children.slice(i, i + itemsPerColumn));
+    }
+    
+    return columns.map(column => `
+        <div class="mega-menu-column">
+            <ul>
+                ${column.map(child => {
+                    const link = child.link || 
+                                (child.menu_type === 'category' ? `/category/${child.slug || getProductSlug({title: child.title})}` : 
+                                 child.menu_type === 'subcategory' ? `/subcategory/${child.slug || getProductSlug({title: child.title})}` : 
+                                 `/${child.slug || getProductSlug({title: child.title})}`);
+                    
+                    return `<li><a href="${link}"><i class="fa-solid fa-chevron-right"></i> ${child.title}</a></li>`;
+                }).join('')}
+            </ul>
+        </div>
+    `).join('');
+}
 
-    let mobileHTML = `
-        <a href="/" class="mobile-cat-item">
+function renderMobileMenu(menuItems) {
+    const mobileMenuContent = document.getElementById('mobileMenuContent');
+    if (!mobileMenuContent) return;
+    
+    if (!menuItems || menuItems.length === 0) {
+        // Fallback static mobile menu
+        mobileMenuContent.innerHTML = `
+            <a href="/" class="mobile-menu-item">
+                <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+            </a>
+            <a href="/products" class="mobile-menu-item">
+                <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+            </a>
+            <a href="/wishlist" class="mobile-menu-item">
+                <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+            </a>
+        `;
+        return;
+    }
+    
+    let menuHTML = `
+        <a href="/" class="mobile-menu-item">
             <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
             <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
         </a>
-        <a href="/products" class="mobile-cat-item">
+        <a href="/products" class="mobile-menu-item">
             <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
             <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
         </a>
     `;
-
-    // Dynamic menu items
-    if (allMenuItems && allMenuItems.length > 0) {
-        allMenuItems.forEach(item => {
-            if (item.children && item.children.length > 0) {
-                mobileHTML += `
-                <div class="mobile-cat-item" onclick="toggleMobileSubmenu('submenu-${item.id}')">
+    
+    menuItems.forEach((item, index) => {
+        if (item.children && item.children.length > 0) {
+            // Item with submenu
+            menuHTML += `
+            <div>
+                <div class="mobile-menu-item has-children" onclick="toggleMobileSubmenu('submenu-${index}', this)">
                     <span><i class="fa-solid fa-folder mr-3 text-gray-300"></i> ${item.title}</span>
-                    <i class="fa-solid fa-chevron-down text-xs text-gray-300 transition-transform duration-300" id="arrow-${item.id}"></i>
+                    <i class="fa-solid fa-chevron-down mobile-menu-arrow text-xs" id="arrow-${index}"></i>
                 </div>
-                <div id="submenu-${item.id}" style="display: none;">
-                    ${item.children.map(child => 
-                        `<a href="${child.link || '/category/' + child.slug}" class="mobile-sub-cat">${child.title}</a>`
-                    ).join('')}
-                </div>`;
-            } else {
-                const link = item.menu_type === 'external' ? item.link : item.link || '#';
-                mobileHTML += `
-                <a href="${link}" class="mobile-cat-item">
-                    <span><i class="fa-solid fa-link mr-3 text-gray-300"></i> ${item.title}</span>
-                    <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-                </a>`;
-            }
-        });
-    }
-
-    // Categories section
-    if (allCategories && allCategories.length > 0) {
-        mobileHTML += `
-        <div class="mobile-cat-item" onclick="toggleMobileSubmenu('mobile-categories')">
-            <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> Categories</span>
-            <i class="fa-solid fa-chevron-down text-xs text-gray-300 transition-transform duration-300" id="arrow-mobile-categories"></i>
-        </div>
-        <div id="mobile-categories" style="display: none;">
-            ${allCategories.map(cat => `
-                <a href="/category/${cat.slug}" class="mobile-sub-cat font-bold">${cat.name}</a>
-                ${cat.subcategories && cat.subcategories.length > 0 
-                    ? cat.subcategories.map(sub => 
-                        `<a href="/category/${cat.slug}/${sub.slug}" class="mobile-sub-cat" style="padding-left: 40px;">${sub.name}</a>`
-                    ).join('')
-                    : ''
-                }
-            `).join('')}
-        </div>`;
-    }
-
-    // Static links
-    mobileHTML += `
-        <a href="/wishlist" class="mobile-cat-item">
+                <div class="mobile-submenu" id="submenu-${index}">
+                    ${item.children.map(child => {
+                        const link = child.link || 
+                                    (child.menu_type === 'category' ? `/category/${child.slug || getProductSlug({title: child.title})}` : 
+                                     child.menu_type === 'subcategory' ? `/subcategory/${child.slug || getProductSlug({title: child.title})}` : 
+                                     `/${child.slug || getProductSlug({title: child.title})}`);
+                        
+                        return `<a href="${link}" class="mobile-sub-item">${child.title}</a>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        } else {
+            // Simple link
+            const link = item.link || 
+                        (item.menu_type === 'category' ? `/category/${item.slug || getProductSlug({title: item.title})}` : 
+                         item.menu_type === 'subcategory' ? `/subcategory/${item.slug || getProductSlug({title: item.title})}` : 
+                         `/${item.slug || getProductSlug({title: item.title})}`);
+            
+            menuHTML += `
+            <a href="${link}" class="mobile-menu-item">
+                <span><i class="fa-solid fa-link mr-3 text-gray-300"></i> ${item.title}</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+            </a>`;
+        }
+    });
+    
+    // Add Wishlist link at the bottom
+    menuHTML += `
+        <a href="/wishlist" class="mobile-menu-item">
             <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
             <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
         </a>
-        <a href="/about" class="mobile-cat-item">
-            <span><i class="fa-solid fa-info-circle mr-3 text-gray-300"></i> About</span>
-            <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-        </a>
-        <a href="/contact" class="mobile-cat-item">
-            <span><i class="fa-solid fa-envelope mr-3 text-gray-300"></i> Contact</span>
-            <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-        </a>
     `;
+    
+    mobileMenuContent.innerHTML = menuHTML;
+}
 
-    mobileContent.innerHTML = mobileHTML;
+function toggleMobileSubmenu(submenuId, triggerElement) {
+    const submenu = document.getElementById(submenuId);
+    const arrow = triggerElement.querySelector('.mobile-menu-arrow');
+    
+    if (!submenu) return;
+    
+    if (submenu.classList.contains('expanded')) {
+        submenu.classList.remove('expanded');
+        if (arrow) arrow.classList.remove('rotated');
+    } else {
+        // Close other open submenus
+        document.querySelectorAll('.mobile-submenu.expanded').forEach(openSub => {
+            if (openSub.id !== submenuId) {
+                openSub.classList.remove('expanded');
+                const otherArrow = document.getElementById('arrow-' + openSub.id.replace('submenu-', ''));
+                if (otherArrow) otherArrow.classList.remove('rotated');
+            }
+        });
+        
+        submenu.classList.add('expanded');
+        if (arrow) arrow.classList.add('rotated');
+    }
 }
 
 // ============================================
@@ -500,27 +551,25 @@ function renderFooter() {
                         <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-youtube"></i></a>
                     </div>
                 </div>
-                <div>
+                <div id="footer-dynamic-links-1">
                     <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Quick Links</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0" id="footer-quick-links">
+                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
                         <li><a href="/about" class="hover:text-white transition no-underline">About</a></li>
                         <li><a href="/shipping" class="hover:text-white transition no-underline">Shipping</a></li>
                         <li><a href="/returns" class="hover:text-white transition no-underline">Returns</a></li>
                         <li><a href="/contact" class="hover:text-white transition no-underline">Contact</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Categories</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0" id="footer-categories">
-                        <!-- Dynamic categories will be loaded -->
-                    </ul>
-                </div>
-                <div>
+                <div id="footer-dynamic-links-2">
                     <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Legal</h5>
                     <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
                         <li><a href="/privacy-policy" class="hover:text-white transition no-underline">Privacy Policy</a></li>
                         <li><a href="/terms-and-conditions" class="hover:text-white transition no-underline">Terms & Conditions</a></li>
                     </ul>
+                </div>
+                <div>
+                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Contact</h5>
+                    <p class="text-[9px] text-gray-500"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -533,18 +582,6 @@ function renderFooter() {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
-    
-    // Populate footer categories
-    updateFooterCategories();
-}
-
-function updateFooterCategories() {
-    const footerCats = document.getElementById('footer-categories');
-    if (!footerCats || !allCategories || allCategories.length === 0) return;
-    
-    footerCats.innerHTML = allCategories.slice(0, 6).map(cat => 
-        `<li><a href="/category/${cat.slug}" class="hover:text-white transition no-underline">${cat.name}</a></li>`
-    ).join('');
 }
 
 // ============================================
@@ -668,10 +705,8 @@ function updateCounts() {
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
-        showToast('Removed from wishlist', 'info');
     } else {
         wishlist.push(id);
-        showToast('Added to wishlist! ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
@@ -686,39 +721,27 @@ function openMobileMenu() {
     if (drawer) drawer.classList.add('open');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Load mobile menu content if not already loaded
+    if (siteStructure && siteStructure.menu) {
+        renderMobileMenu(siteStructure.menu);
+    }
 }
 
 function closeMobileMenu() {
     const drawer = document.getElementById('mobileMenuDrawer');
     const overlay = document.getElementById('mobileMenuOverlay');
     if (drawer) drawer.classList.remove('open');
-    if (overlay) overlay.classList.add('active');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
     
-    // Close all submenus
-    document.querySelectorAll('[id^="submenu-"]').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('[id^="arrow-"]').forEach(el => el.style.transform = '');
-}
-
-function toggleMobileSubmenu(submenuId) {
-    const submenu = document.getElementById(submenuId);
-    if (!submenu) return;
-    
-    const arrowId = submenuId.replace('submenu-', 'arrow-');
-    const arrow = document.getElementById(arrowId);
-    
-    if (submenu.style.display === 'none' || !submenu.style.display) {
-        submenu.style.display = 'block';
-        if (arrow) arrow.style.transform = 'rotate(180deg)';
-    } else {
-        submenu.style.display = 'none';
-        if (arrow) arrow.style.transform = '';
-    }
-}
-
-// Legacy support for old function name
-function toggleMobileSubCategories() {
-    toggleMobileSubmenu('mobile-categories');
+    // Close all open submenus
+    document.querySelectorAll('.mobile-submenu.expanded').forEach(sub => {
+        sub.classList.remove('expanded');
+    });
+    document.querySelectorAll('.mobile-menu-arrow.rotated').forEach(arrow => {
+        arrow.classList.remove('rotated');
+    });
 }
 
 // ============================================
@@ -727,6 +750,28 @@ function toggleMobileSubCategories() {
 function getProductSlug(product) {
     if (!product || !product.title) return '';
     return product.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 80);
+}
+
+// ============================================
+// DYNAMIC FOOTER MENU LOADING
+// ============================================
+function loadDynamicFooterMenus(categories) {
+    if (!categories || categories.length === 0) return;
+    
+    // Update Quick Links section with top categories
+    const footerLinks1 = document.getElementById('footer-dynamic-links-1');
+    if (footerLinks1) {
+        const topCategories = categories.slice(0, 5);
+        footerLinks1.innerHTML = `
+            <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Categories</h5>
+            <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
+                ${topCategories.map(cat => 
+                    `<li><a href="/category/${cat.slug || getProductSlug({title: cat.name})}" class="hover:text-white transition no-underline">${cat.name}</a></li>`
+                ).join('')}
+                <li><a href="/products" class="hover:text-white transition no-underline">All Products →</a></li>
+            </ul>
+        `;
+    }
 }
 
 // ============================================
@@ -740,7 +785,6 @@ window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
 window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
-window.toggleMobileSubCategories = toggleMobileSubCategories;
 window.toggleMobileSubmenu = toggleMobileSubmenu;
 window.getProductSlug = getProductSlug;
 window.saveCart = saveCart;
@@ -748,8 +792,6 @@ window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
 window.cart = cart;
 window.wishlist = wishlist;
-window.allCategories = allCategories;
-window.fetchSiteStructure = fetchSiteStructure;
 
 // ============================================
 // INITIALIZATION
@@ -758,18 +800,50 @@ async function initSharedComponents() {
     injectSharedStyles();
     renderHeader();
     renderFooter();
-    
-    // Fetch dynamic data
-    await fetchSiteStructure();
-    
-    // Render dynamic menus
-    renderDesktopMenu();
-    renderMobileMenu();
-    updateFooterCategories();
     updateCounts();
     
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
+    
+    // Fetch site structure and render dynamic menus
+    try {
+        const structure = await fetchSiteStructure();
+        if (structure) {
+            siteStructure = structure;
+            
+            // Render desktop menu
+            if (structure.menu) {
+                renderDesktopMenu(structure.menu);
+            }
+            
+            // Pre-render mobile menu content
+            if (structure.menu) {
+                renderMobileMenu(structure.menu);
+            }
+            
+            // Load dynamic footer categories
+            if (structure.categories) {
+                loadDynamicFooterMenus(structure.categories);
+                allCategories = structure.categories;
+            }
+        } else {
+            // Fallback - fetch categories only
+            const categories = await fetchCategories();
+            if (categories && categories.length > 0) {
+                allCategories = categories;
+                loadDynamicFooterMenus(categories);
+            }
+            
+            // Set default menus
+            renderDesktopMenu(null);
+            renderMobileMenu(null);
+        }
+    } catch (error) {
+        console.error('Error initializing menus:', error);
+        // Set default menus as fallback
+        renderDesktopMenu(null);
+        renderMobileMenu(null);
+    }
 }
 
 // Auto-initialize
