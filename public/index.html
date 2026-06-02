@@ -134,7 +134,7 @@
         .product-card .product-image { transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); will-change: transform; }
         .product-img-container { position: relative; overflow: hidden; background: #fafafa; }
         .product-img-container img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        @media (max-width: 640px) { .product-img-container { aspect-ratio: 3/4; } .hero-img { height: 60vh; min-height: 380px; } }
+        @media (max-width: 640px) { .product-img-container { aspect-ratio: 3/4; } .hero-img { height: 70vh; min-height: 420px; } }
         @media (min-width: 641px) and (max-width: 1023px) { .product-img-container { aspect-ratio: 3/4; } }
         @media (min-width: 1024px) { .product-img-container { aspect-ratio: 3/4; } }
         .products-fade-out { opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
@@ -142,54 +142,159 @@
         .product-card-enter { animation: cardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; }
         @keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Hero Content Centered */
-        .hero-content-wrapper {
+        /* ==================== WORLD-CLASS HERO STYLES ==================== */
+        .hero-container {
             position: relative;
-            z-index: 20;
+            width: 100%;
+            height: 100vh;
+            min-height: 500px;
+            overflow: hidden;
+        }
+        @media (max-width: 640px) {
+            .hero-container { height: 80vh; min-height: 450px; }
+        }
+        .hero-slide-wrapper {
+            position: absolute;
+            inset: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hero-slide-wrapper.fade-out {
+            opacity: 0;
+        }
+        .hero-slide-img {
+            width: 100%;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
+            object-fit: cover;
+            animation: heroZoom 20s ease-in-out infinite alternate;
+        }
+        @keyframes heroZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
         }
         
-        /* Hero CTA - Minimal Style */
-        .hero-cta-link {
+        /* Gradient Overlay - Premium feel */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.05) 30%,
+                rgba(0,0,0,0.2) 60%,
+                rgba(0,0,0,0.6) 85%,
+                rgba(0,0,0,0.75) 100%
+            );
+            z-index: 1;
+        }
+        
+        /* Content positioned at bottom-center */
+        .hero-content {
+            position: absolute;
+            bottom: clamp(40px, 10vh, 100px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            width: 90%;
+            max-width: 700px;
+            padding: 0 20px;
+        }
+        
+        /* Subtitle - luxury micro-label */
+        .hero-subtitle {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(8px, 1.2vw, 10px);
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: clamp(8px, 1.5vh, 16px);
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+        }
+        
+        /* Title - elegant serif headline */
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(20px, 4vw, 56px);
+            font-weight: 900;
+            line-height: 1.15;
+            color: #ffffff;
+            margin: 0 0 clamp(12px, 2vh, 24px) 0;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+        }
+        
+        /* CTA Link - Minimal luxury style */
+        .hero-cta-wrap {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+        }
+        .hero-cta {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #ffffff;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1px;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(9px, 1.1vw, 11px);
+            font-weight: 600;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
+            color: #ffffff;
             text-decoration: none;
-            padding-bottom: 2px;
-            border-bottom: 1.5px solid rgba(255, 255, 255, 0.6);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 1rem;
+            padding-bottom: 3px;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
-        .hero-cta-link:hover {
+        .hero-cta:hover {
             border-bottom-color: #ffffff;
-            gap: 12px;
+            gap: 14px;
+            padding-bottom: 5px;
         }
-        .hero-cta-link .cta-arrow {
-            font-size: 10px;
-            transition: transform 0.3s ease;
+        .hero-cta .cta-icon {
+            display: inline-flex;
+            align-items: center;
+            font-size: clamp(10px, 1.2vw, 13px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .hero-cta-link:hover .cta-arrow {
-            transform: translateX(4px);
+        .hero-cta:hover .cta-icon {
+            transform: translateX(6px);
         }
-        @media (max-width: 640px) {
-            .hero-cta-link {
-                font-size: 9px;
-                letter-spacing: 0.5px;
-                margin-top: 0.75rem;
-            }
-            .hero-cta-link .cta-arrow {
-                font-size: 8px;
+        
+        /* Scroll indicator - premium touch */
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: clamp(10px, 2vh, 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+        }
+        .hero-scroll-line {
+            width: 1px;
+            height: clamp(20px, 3vh, 32px);
+            background: rgba(255, 255, 255, 0.4);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
         
@@ -269,15 +374,20 @@
 
     <main class="pt-0">
         <section id="home" class="page-section active-page fade-in">
-            <div class="relative overflow-hidden hero-img bg-gray-100" style="height:60vh;min-height:380px;" id="hero-container">
+            <!-- World-Class Hero Banner -->
+            <div class="hero-container" id="hero-container">
                 <div id="hero-banner-slides" class="absolute inset-0"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50 z-10"></div>
-                <div class="hero-content-wrapper" id="hero-content-wrapper">
-                    <p id="hero-subtitle" class="text-white/70 text-[9px] sm:text-[10px] lg:text-xs font-medium uppercase tracking-[0.15em] mb-2 sm:mb-3"></p>
-                    <h1 id="hero-title" class="text-white text-lg sm:text-2xl lg:text-4xl xl:text-5xl font-black font-serif mb-0 leading-tight max-w-2xl"></h1>
-                    <div id="hero-cta-container"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <p id="hero-subtitle" class="hero-subtitle"></p>
+                    <h1 id="hero-title" class="hero-title"></h1>
+                    <div id="hero-cta-container" class="hero-cta-wrap"></div>
+                </div>
+                <div class="hero-scroll-indicator" id="hero-scroll-indicator">
+                    <div class="hero-scroll-line"></div>
                 </div>
             </div>
+            
             <!-- Carousel Sections -->
             <section id="new-arrivals-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><h2 class="section-title">New Arrivals</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="new-arrivals-wrapper"><button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="new-arrivals-carousel" class="carousel-track smooth-scroll" data-speed="0.4"></div><button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="new-arrivals-dots"></div></div></section>
             <section id="hot-products-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><h2 class="section-title">Trending Now</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="hot-products-wrapper"><button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="hot-products-carousel" class="carousel-track smooth-scroll" data-speed="0.6"></div><button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="hot-products-dots"></div></div></section>
@@ -400,20 +510,42 @@
             });
         }
 
-        // ========== HERO FUNCTIONS ==========
+        // ========== WORLD-CLASS HERO FUNCTIONS ==========
         function renderHero() {
             const container = document.getElementById('hero-banner-slides'), list = currentData.hero;
             if(!list.length) { container.innerHTML = '<div class="w-full h-full bg-primary"></div>'; return; }
-            container.innerHTML = list.map((h,i) => `<div class="hero-slide absolute inset-0 transition-opacity duration-1000 ${i===0?'':'opacity-0'}"><img src="${h.img}" alt="${h.title||'JAYENWARE Hero'}" class="w-full h-full object-cover" loading="${i===0?'eager':'lazy'}"></div>`).join('');
-            updateHeroText(0); clearInterval(slideInterval);
-            if(list.length > 1) slideInterval = setInterval(() => { currentSlide = (currentSlide+1)%list.length; updateHeroSlide(); }, 5000);
+            container.innerHTML = list.map((h,i) => `<div class="hero-slide-wrapper absolute inset-0 ${i!==0?'fade-out':''}"><img src="${h.img}" alt="${h.title||'JAYENWARE Hero'}" class="hero-slide-img w-full h-full object-cover" loading="${i===0?'eager':'lazy'}"></div>`).join('');
+            updateHeroContent(0); 
+            clearInterval(slideInterval);
+            if(list.length > 1) {
+                slideInterval = setInterval(() => { 
+                    currentSlide = (currentSlide+1)%list.length; 
+                    updateHeroSlide(); 
+                }, 6000);
+            }
         }
-        function updateHeroSlide() { document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('opacity-0', i!==currentSlide)); updateHeroText(currentSlide); }
-        function updateHeroText(i) { 
+        
+        function updateHeroSlide() { 
+            const slides = document.querySelectorAll('.hero-slide-wrapper');
+            slides.forEach((s,i) => s.classList.toggle('fade-out', i!==currentSlide)); 
+            updateHeroContent(currentSlide); 
+        }
+        
+        function updateHeroContent(i) { 
             const d = currentData.hero[i]; 
             const titleEl = document.getElementById('hero-title');
             const subtitleEl = document.getElementById('hero-subtitle');
             const ctaContainer = document.getElementById('hero-cta-container');
+            const scrollIndicator = document.getElementById('hero-scroll-indicator');
+            
+            // Reset animations
+            [titleEl, subtitleEl, ctaContainer].forEach(el => {
+                if(el) {
+                    el.style.animation = 'none';
+                    el.offsetHeight;
+                    el.style.animation = '';
+                }
+            });
             
             if (d && d.title) {
                 titleEl.textContent = d.title;
@@ -425,7 +557,7 @@
             
             if (d && d.subtitle) {
                 subtitleEl.textContent = d.subtitle;
-                subtitleEl.style.display = 'block';
+                subtitleEl.style.display = 'inline-block';
             } else {
                 subtitleEl.textContent = '';
                 subtitleEl.style.display = 'none';
@@ -439,7 +571,7 @@
             if(!container) return;
             
             if(heroData && heroData.cta_text && heroData.cta_link) {
-                container.innerHTML = `<a href="${heroData.cta_link}" class="hero-cta-link">${heroData.cta_text} <span class="cta-arrow">→</span></a>`;
+                container.innerHTML = `<a href="${heroData.cta_link}" class="hero-cta">${heroData.cta_text} <span class="cta-icon">→</span></a>`;
             } else {
                 container.innerHTML = '';
             }
@@ -847,12 +979,6 @@
                 if(prods && prods.length) {
                     currentData.products = prods;
                     console.log(`✅ Products: ${prods.length} loaded`);
-                    console.log(`   New arrivals: ${prods.filter(p => p.is_new_arrival).length}`);
-                    console.log(`   Featured: ${prods.filter(p => p.is_featured).length}`);
-                    console.log(`   Hot: ${prods.filter(p => p.is_hot).length}`);
-                    console.log(`   Best: ${prods.filter(p => p.is_best).length}`);
-                    console.log(`   On sale: ${prods.filter(p => p.is_on_sale).length}`);
-                    console.log(`   Limited: ${prods.filter(p => p.is_limited_edition).length}`);
                 }
                 if(newsData) currentData.news = newsData;
                 
@@ -878,26 +1004,6 @@
             if(path==='/search'&&sp.get('q')){navigate('products');renderProducts(currentData.products.filter(p=>p.title.toLowerCase().includes(sp.get('q').toLowerCase())));return;}
             const routes={'/':'home','/products':'products','/wishlist':'wishlist','/journal':'news'}; navigate(routes[path]||'home');
         }
-
-        // Debug function for console
-        window.debugHomepage = function() {
-            console.log('===== HOMEPAGE DEBUG INFO =====');
-            console.log('Products total:', currentData.products.length);
-            console.log('New arrivals:', currentData.products.filter(p => p.is_new_arrival).length);
-            console.log('Featured:', currentData.products.filter(p => p.is_featured).length);
-            console.log('Hot:', currentData.products.filter(p => p.is_hot).length);
-            
-            const sections = ['new-arrivals-section', 'featured-products-section', 'hot-products-section'];
-            sections.forEach(id => {
-                const el = document.getElementById(id);
-                console.log(`${id}: ${el ? (el.classList.contains('hidden') ? 'HIDDEN' : 'VISIBLE') : 'NOT FOUND'}`);
-                const carouselId = id.replace('-section', '-carousel');
-                const carousel = document.getElementById(carouselId);
-                console.log(`  ${carouselId}: ${carousel ? carousel.children.length + ' cards' : 'NOT FOUND'}`);
-            });
-            console.log('===============================');
-            return 'Debug complete - check console';
-        };
 
         window.onload = async () => {
             console.log('🚀 Window loaded, initializing JAYENWARE...');
