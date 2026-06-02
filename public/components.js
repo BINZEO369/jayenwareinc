@@ -1,6 +1,6 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.0 (Dynamic Categories from Database)
+// Version: 4.0 (Luxury Fashion Brand Navigation)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -9,215 +9,379 @@ let userSession = null;
 let allCategories = [];
 let allSubcategories = [];
 
-// API Base URL - adjust if needed
+// API Base URL
 const API_BASE = '';
 
 // ============================================
-// SHARED CSS STYLES
+// SHARED CSS STYLES - Luxury Brand Inspired
 // ============================================
 function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
         :root {
-            --primary: #1d1d1f;
-            --accent: #86868b;
-            --soft: #f5f5f7;
+            --primary: #1a1a1a;
+            --accent: #666;
+            --soft: #f8f8f8;
             --blue: #007aff;
+            --gold: #c9a96e;
         }
+        
+        /* Main Navigation - Minimalist Luxury */
         .glass-nav {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(50px) saturate(180%);
-            -webkit-backdrop-filter: blur(50px) saturate(180%);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
             transition: all 0.3s ease;
         }
+        
+        /* Desktop Navigation Links */
         .nav-link {
             position: relative;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.15em;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            padding: 8px 0;
-            transition: color 0.3s ease;
-            color: #1d1d1f;
+            padding: 28px 0;
+            margin: 0 18px;
+            transition: all 0.3s ease;
+            color: #1a1a1a;
             text-decoration: none;
             cursor: pointer;
+            white-space: nowrap;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 1.5px;
-            background: #1d1d1f;
-            transition: width 0.3s ease;
+            bottom: 22px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: #1a1a1a;
+            transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
         }
-        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover {
+            color: #000;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
         
-        /* Desktop Dropdown */
-        .desktop-dropdown {
-            position: relative;
-        }
-        .desktop-dropdown-menu {
+        /* Desktop Mega Menu Dropdown */
+        .desktop-mega-menu {
             position: absolute;
             top: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(8px);
+            left: 0;
+            right: 0;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-            padding: 8px;
-            min-width: 220px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 25px 60px -20px rgba(0,0,0,0.15);
+            padding: 40px 0;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 55;
-            border: 1px solid rgba(0,0,0,0.06);
+            transform: translateY(-10px);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 45;
         }
-        .desktop-dropdown:hover .desktop-dropdown-menu,
-        .desktop-dropdown-menu:hover {
+        .desktop-mega-menu.active {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(0);
         }
-        .desktop-dropdown-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #1d1d1f;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            white-space: nowrap;
+        .mega-menu-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.2);
+            z-index: 44;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
-        .desktop-dropdown-item:hover {
-            background: #f5f5f7;
-            color: #007aff;
+        .mega-menu-backdrop.active {
+            opacity: 1;
+            visibility: visible;
         }
-        .desktop-dropdown-item i {
-            font-size: 10px;
-            color: #86868b;
-            transition: transform 0.2s ease;
+        .mega-menu-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
         }
-        .desktop-dropdown-item:hover i {
-            color: #007aff;
-        }
-        
-        /* Nested Subcategory */
-        .desktop-sub-menu {
-            padding-left: 20px;
-        }
-        .desktop-sub-item {
-            display: block;
-            padding: 8px 14px;
-            border-radius: 8px;
+        .mega-menu-column h4 {
             font-size: 11px;
-            color: #86868b;
-            text-decoration: none;
-            transition: all 0.2s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .desktop-sub-item:hover {
-            background: #f5f5f7;
-            color: #007aff;
+        .mega-menu-column h4 a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .mega-menu-column h4 a:hover {
+            color: var(--gold);
+        }
+        .mega-menu-sub-item {
+            display: block;
+            padding: 6px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            font-weight: 400;
+        }
+        .mega-menu-sub-item:hover {
+            color: #1a1a1a;
+            padding-left: 8px;
+        }
+        .mega-menu-featured {
+            grid-column: span 2;
+            background: #fafafa;
+            padding: 30px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .mega-menu-featured img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .mega-menu-featured h5 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+        .mega-menu-featured p {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+        .mega-menu-featured .btn-link {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        .mega-menu-featured .btn-link:hover {
+            color: var(--gold);
+            border-color: var(--gold);
         }
         
         /* Mobile Menu */
         .mobile-menu-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 199; opacity: 0; visibility: hidden;
-            transition: all 0.3s ease;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
         }
-        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
         .mobile-menu-drawer {
-            position: fixed; top: 0; left: 0;
-            width: 85%; max-width: 380px;
-            height: 100vh; height: 100dvh;
-            background: white; z-index: 200;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 85%;
+            max-width: 400px;
+            height: 100vh;
+            height: 100dvh;
+            background: white;
+            z-index: 200;
             transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
         }
-        .mobile-menu-drawer.open { transform: translateX(0); }
+        .mobile-menu-drawer.open {
+            transform: translateX(0);
+        }
         .mobile-menu-drawer .mobile-menu-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 20px; border-bottom: 1px solid #f0f0f0;
-            background: white; flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+            flex-shrink: 0;
         }
         .mobile-menu-drawer .mobile-menu-scroll {
-            flex: 1; overflow-y: auto;
+            flex: 1;
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 12px 20px;
+            padding: 8px 24px;
         }
-        .mobile-cat-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 0; border-bottom: 1px solid #f5f5f5;
-            font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
-            cursor: pointer; color: #1d1d1f; text-decoration: none;
-            transition: color 0.2s ease; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left;
+        .mobile-menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            background: none;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            text-align: left;
         }
-        .mobile-cat-item .cat-arrow {
-            font-size: 10px;
-            color: #86868b;
-            transition: transform 0.3s ease;
+        .mobile-menu-item:hover {
+            color: #000;
+            padding-left: 4px;
         }
-        .mobile-cat-item .cat-arrow.open {
+        .mobile-menu-item .cat-arrow {
+            font-size: 11px;
+            color: #999;
+            transition: transform 0.35s ease;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+        .mobile-menu-item .cat-arrow.open {
             transform: rotate(180deg);
         }
         .mobile-subcat-container {
             overflow: hidden;
             max-height: 0;
-            transition: max-height 0.35s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fafafa;
+            margin: 0 -24px;
+            padding: 0 24px;
         }
         .mobile-subcat-container.expanded {
-            max-height: 500px;
+            max-height: 800px;
         }
-        .mobile-sub-cat {
-            padding: 12px 0 12px 28px;
-            border-bottom: 1px solid #fafafa;
-            font-size: 13px; color: #86868b; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
-            text-decoration: none; transition: color 0.2s ease;
+        .mobile-subcat-link {
+            display: block;
+            padding: 14px 0 14px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s ease;
         }
-        .mobile-sub-cat::before {
-            content: ''; 
-            width: 5px; height: 5px;
-            background: #007aff; 
-            border-radius: 50%; 
+        .mobile-subcat-link:last-child {
+            border-bottom: none;
+            padding-bottom: 20px;
+        }
+        .mobile-subcat-link:hover {
+            color: #1a1a1a;
+            padding-left: 28px;
+        }
+        .mobile-menu-footer {
+            padding: 20px 24px;
+            border-top: 1px solid #f0f0f0;
+            background: #f8f8f8;
             flex-shrink: 0;
         }
-        .mobile-sub-cat:hover {
-            color: #007aff;
+        .mobile-menu-footer a {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            border-radius: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
-        .mobile-footer {
-            padding: 20px; border-top: 1px solid #f0f0f0;
-            background: #f5f5f7; flex-shrink: 0;
+        .mobile-menu-footer a:hover {
+            background: #333;
         }
         
         /* Cart Drawer */
         #cart-drawer {
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
+            transform: translateX(100%);
         }
-        #cart-drawer.open { transform: translateX(0) !important; }
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
+        #cart-drawer.open {
+            transform: translateX(0) !important;
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d2d2d7;
+            border-radius: 10px;
+        }
         
         /* Toast */
         #toast {
-            position: fixed; top: 16px; right: 16px; z-index: 9999;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
             transform: translateX(120%);
-            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-            max-width: calc(100vw - 32px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: calc(100vw - 40px);
         }
         
-        body { padding-top: 56px; }
-        @media (min-width: 640px) { body { padding-top: 64px; } }
-        @media (min-width: 1024px) { body { padding-top: 80px; } }
+        /* Body padding for fixed nav */
+        body {
+            padding-top: 60px;
+        }
+        @media (min-width: 640px) {
+            body {
+                padding-top: 68px;
+            }
+        }
+        @media (min-width: 1024px) {
+            body {
+                padding-top: 72px;
+            }
+        }
+        
+        /* Active nav link indicator */
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Search icon */
+        .search-trigger {
+            cursor: pointer;
+            padding: 8px;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+        .search-trigger:hover {
+            color: var(--gold);
+        }
     </style>
     `;
     // Remove existing style if present
@@ -259,10 +423,13 @@ async function fetchSubcategories(categorySlug = null) {
 }
 
 // ============================================
-// HEADER COMPONENT
+// HEADER COMPONENT - Luxury Brand Style
 // ============================================
 function renderHeader() {
     const headerHTML = `
+    <!-- Mega Menu Backdrop -->
+    <div class="mega-menu-backdrop" id="megaMenuBackdrop" onclick="closeMegaMenu()"></div>
+    
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
     
@@ -270,7 +437,7 @@ function renderHeader() {
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
         <div class="mobile-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
+                <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="JAYENWARE Logo">
                 <span class="font-black font-serif text-lg text-primary">JAYENWARE</span>
             </a>
             <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2" aria-label="Close menu">
@@ -278,89 +445,94 @@ function renderHeader() {
             </button>
         </div>
         <div class="mobile-menu-scroll" id="mobileMenuContent">
-            <!-- Dynamically populated -->
-            <div class="flex items-center justify-center py-12">
-                <div class="animate-pulse text-gray-300 text-sm">Loading menu...</div>
+            <div class="flex items-center justify-center py-16">
+                <div class="text-gray-300 text-sm">Loading...</div>
             </div>
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter">
-            <a href="/login" class="w-full py-3 bg-primary text-white rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-blue transition no-underline text-center block">Sign In</a>
+        <div class="mobile-menu-footer">
+            <a href="/login">Sign In / Register</a>
         </div>
     </div>
     
     <!-- Main Navigation -->
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
-            <!-- Logo -->
-            <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline" aria-label="JAYENWARE Home">
+        <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 h-[60px] sm:h-[68px] lg:h-[72px] flex justify-between items-center">
+            
+            <!-- Left: Mobile Menu Toggle (visible only on mobile) -->
+            <button onclick="openMobileMenu()" class="lg:hidden text-xl p-2 text-primary hover:text-gray-600 transition -ml-2" aria-label="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <!-- Center-Left: Logo -->
+            <a href="/" class="flex items-center gap-2 sm:gap-3 no-underline lg:absolute lg:left-1/2 lg:-translate-x-1/2" aria-label="JAYENWARE Home">
                 <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
-                <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight font-serif text-primary">JAYENWARE</span>
+                <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tighter font-serif text-primary">JAYENWARE</span>
             </a>
             
-            <!-- Desktop Nav Links -->
-            <div class="hidden lg:flex items-center gap-0" id="desktop-nav-links">
-                <a href="/" class="nav-link px-5">Home</a>
-                <a href="/products" class="nav-link px-5">Shop</a>
-                <!-- Categories Dropdown - Dynamic -->
-                <div class="desktop-dropdown" id="desktop-categories-dropdown">
-                    <span class="nav-link px-5 flex items-center gap-1.5">
-                        Categories
-                        <i class="fa-solid fa-chevron-down text-[9px]"></i>
-                    </span>
-                    <div class="desktop-dropdown-menu" id="desktop-categories-menu">
-                        <div class="flex items-center justify-center py-6">
-                            <div class="animate-pulse text-gray-300 text-xs">Loading...</div>
-                        </div>
-                    </div>
-                </div>
-                <a href="/journal" class="nav-link px-5">Journal</a>
+            <!-- Desktop: Left Navigation Links -->
+            <div class="hidden lg:flex items-center gap-0" id="desktop-nav-left">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <span class="nav-link" onclick="toggleMegaMenu(event)" id="categoriesNavLink">
+                    Categories
+                    <i class="fa-solid fa-chevron-down text-[9px] ml-1.5"></i>
+                </span>
             </div>
             
-            <!-- Right Side Icons -->
-            <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
+            <!-- Desktop: Right Navigation Icons -->
+            <div class="flex items-center gap-1 sm:gap-2 lg:gap-3">
+                <!-- Search (Desktop only) -->
+                <button class="search-trigger hidden lg:block" aria-label="Search">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                </button>
+                
                 <!-- Wishlist -->
-                <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
+                <a href="/wishlist" class="relative p-2 no-underline text-primary hover:text-gray-600 transition" aria-label="Wishlist">
                     <i class="fa-regular fa-heart text-lg lg:text-xl"></i>
-                    <span id="wish-count" class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                    <span id="wish-count" class="absolute top-0 right-0 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
                 <!-- Cart -->
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Shopping Cart">
+                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-primary hover:text-gray-600 transition" aria-label="Shopping Cart">
                     <i class="fa-solid fa-bag-shopping text-lg lg:text-xl"></i>
-                    <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-primary text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-primary text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
-                <!-- Auth -->
-                <div id="auth-nav-area" class="hidden lg:block">
-                    <a href="/login" class="px-5 py-2.5 bg-primary text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-blue transition-all no-underline inline-block">Sign In</a>
+                <!-- Auth (Desktop only) -->
+                <div id="auth-nav-area" class="hidden lg:block ml-2">
+                    <a href="/login" class="px-5 py-2.5 bg-primary text-white text-[10px] font-semibold uppercase tracking-wider hover:bg-gray-800 transition-all no-underline inline-block">Sign In</a>
                 </div>
-                
-                <!-- Mobile Menu Toggle -->
-                <button onclick="openMobileMenu()" class="lg:hidden text-xl p-1.5 text-primary hover:text-blue transition" aria-label="Menu">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
+            </div>
+        </div>
+        
+        <!-- Desktop Mega Menu Dropdown -->
+        <div class="desktop-mega-menu" id="desktopMegaMenu">
+            <div class="mega-menu-content" id="megaMenuContent">
+                <div class="flex items-center justify-center py-12 col-span-full">
+                    <div class="text-gray-300 text-sm">Loading categories...</div>
+                </div>
             </div>
         </div>
     </nav>
     
     <!-- Cart Drawer -->
-    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
-        <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
-            <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter">Shopping Bag</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1" aria-label="Close cart">
+    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col">
+        <div class="p-5 sm:p-6 border-b flex justify-between items-center bg-soft">
+            <h2 class="text-base sm:text-lg font-bold uppercase tracking-tight">Shopping Bag</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-xl transition p-1" aria-label="Close cart">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4 custom-scroll"></div>
-        <div class="p-4 sm:p-6 border-t bg-soft">
-            <div class="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 text-[10px] sm:text-xs">
+        <div id="cart-items" class="flex-grow overflow-y-auto p-5 sm:p-6 space-y-4 custom-scroll"></div>
+        <div class="p-5 sm:p-6 border-t bg-soft">
+            <div class="space-y-2 mb-5 text-xs">
                 <div class="flex justify-between text-gray-500"><span>Subtotal</span><span id="cart-subtotal">৳ 0.00</span></div>
-                <div class="flex justify-between border-t pt-2 sm:pt-3">
-                    <span class="font-bold uppercase">Total</span>
+                <div class="flex justify-between border-t pt-3">
+                    <span class="font-bold uppercase text-sm">Total</span>
                     <span id="cart-total" class="text-lg sm:text-xl font-black">৳ 0.00</span>
                 </div>
             </div>
-            <a href="/checkout" class="w-full py-3 sm:py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue transition shadow-lg no-underline text-center block">Checkout</a>
+            <a href="/checkout" class="w-full py-3.5 bg-primary text-white font-semibold uppercase tracking-wider text-xs hover:bg-gray-800 transition no-underline text-center block">Checkout</a>
         </div>
     </div>
     `;
@@ -368,13 +540,52 @@ function renderHeader() {
 }
 
 // ============================================
-// BUILD DYNAMIC NAVIGATION
+// MEGA MENU FUNCTIONS
 // ============================================
+let isMegaMenuOpen = false;
+let megaMenuTimeout = null;
 
-// Build Desktop Categories Dropdown
-async function buildDesktopCategoriesMenu() {
-    const menuContainer = document.getElementById('desktop-categories-menu');
-    if (!menuContainer) return;
+function toggleMegaMenu(event) {
+    if (event) event.stopPropagation();
+    
+    const megaMenu = document.getElementById('desktopMegaMenu');
+    const backdrop = document.getElementById('megaMenuBackdrop');
+    const navLink = document.getElementById('categoriesNavLink');
+    
+    if (!megaMenu) return;
+    
+    if (isMegaMenuOpen) {
+        closeMegaMenu();
+    } else {
+        // Build menu if needed
+        buildMegaMenuContent();
+        
+        megaMenu.classList.add('active');
+        if (backdrop) backdrop.classList.add('active');
+        if (navLink) navLink.classList.add('active');
+        isMegaMenuOpen = true;
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeMegaMenu() {
+    const megaMenu = document.getElementById('desktopMegaMenu');
+    const backdrop = document.getElementById('megaMenuBackdrop');
+    const navLink = document.getElementById('categoriesNavLink');
+    
+    if (megaMenu) megaMenu.classList.remove('active');
+    if (backdrop) backdrop.classList.remove('active');
+    if (navLink) navLink.classList.remove('active');
+    
+    isMegaMenuOpen = false;
+    document.body.style.overflow = '';
+    
+    if (megaMenuTimeout) clearTimeout(megaMenuTimeout);
+}
+
+async function buildMegaMenuContent() {
+    const container = document.getElementById('megaMenuContent');
+    if (!container) return;
     
     if (!allCategories.length) {
         await fetchCategories();
@@ -382,14 +593,17 @@ async function buildDesktopCategoriesMenu() {
     }
     
     if (!allCategories.length) {
-        menuContainer.innerHTML = `
-            <div class="px-4 py-3 text-xs text-gray-400">No categories available</div>
+        container.innerHTML = `
+            <div class="text-center py-8 text-gray-400 text-sm col-span-full">
+                No categories available
+            </div>
         `;
         return;
     }
     
-    // Build dropdown with categories and their subcategories
+    // Group subcategories by category
     let html = '';
+    
     allCategories.forEach(cat => {
         const catSubs = allSubcategories.filter(sub => 
             sub.category_slug === cat.slug || sub.category_id === cat.id
@@ -398,40 +612,42 @@ async function buildDesktopCategoriesMenu() {
         if (catSubs.length > 0) {
             // Category with subcategories
             html += `
-                <div class="desktop-dropdown-item" style="justify-content: space-between;">
-                    <a href="/category/${cat.slug}" class="no-underline text-inherit flex-grow">${cat.name}</a>
-                    <i class="fa-solid fa-chevron-right" style="font-size: 9px;"></i>
-                </div>
-                <div class="desktop-sub-menu">
+                <div class="mega-menu-column">
+                    <h4><a href="/category/${cat.slug}">${cat.name}</a></h4>
                     ${catSubs.map(sub => `
-                        <a href="/category/${cat.slug}/${sub.slug}" class="desktop-sub-item">${sub.name}</a>
+                        <a href="/category/${cat.slug}/${sub.slug}" class="mega-menu-sub-item">${sub.name}</a>
                     `).join('')}
+                    <a href="/category/${cat.slug}" class="mega-menu-sub-item" style="color: #c9a96e; font-weight: 600; margin-top: 8px;">
+                        View All →
+                    </a>
                 </div>
             `;
         } else {
-            // Category without subcategories
+            // Category without subcategories - still show it
             html += `
-                <a href="/category/${cat.slug}" class="desktop-dropdown-item">
-                    ${cat.name}
-                </a>
+                <div class="mega-menu-column">
+                    <h4><a href="/category/${cat.slug}">${cat.name}</a></h4>
+                    <a href="/category/${cat.slug}" class="mega-menu-sub-item">Explore Collection</a>
+                </div>
             `;
         }
     });
     
-    // Add "All Categories" link at bottom
+    // Add featured section
     html += `
-        <div class="border-t border-gray-100 mt-1 pt-1">
-            <a href="/products" class="desktop-dropdown-item" style="color: #007aff; font-weight: 600;">
-                View All Products
-                <i class="fa-solid fa-arrow-right"></i>
-            </a>
+        <div class="mega-menu-featured">
+            <h5>New Arrivals</h5>
+            <p>Discover our latest collection of premium products</p>
+            <a href="/products" class="btn-link">Shop Now</a>
         </div>
     `;
     
-    menuContainer.innerHTML = html;
+    container.innerHTML = html;
 }
 
-// Build Mobile Menu Content
+// ============================================
+// MOBILE MENU - Build Dynamic Content
+// ============================================
 async function buildMobileMenuContent() {
     const container = document.getElementById('mobileMenuContent');
     if (!container) return;
@@ -443,14 +659,17 @@ async function buildMobileMenuContent() {
     
     if (!allCategories.length) {
         container.innerHTML = `
-            <a href="/" class="mobile-cat-item">
-                <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
+            <a href="/" class="mobile-menu-item">
+                <span>Home</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
             </a>
-            <a href="/products" class="mobile-cat-item">
-                <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
+            <a href="/products" class="mobile-menu-item">
+                <span>All Products</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
             </a>
-            <a href="/wishlist" class="mobile-cat-item">
-                <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
+            <a href="/wishlist" class="mobile-menu-item">
+                <span>Wishlist</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
             </a>
         `;
         return;
@@ -458,23 +677,23 @@ async function buildMobileMenuContent() {
     
     let html = '';
     
-    // Home link
+    // Home
     html += `
-        <a href="/" class="mobile-cat-item">
-            <span><i class="fa-solid fa-house mr-3 text-gray-300"></i> Home</span>
+        <a href="/" class="mobile-menu-item">
+            <span>Home</span>
             <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
         </a>
     `;
     
-    // All Products
+    // Shop All
     html += `
-        <a href="/products" class="mobile-cat-item">
-            <span><i class="fa-solid fa-bag-shopping mr-3 text-gray-300"></i> All Products</span>
+        <a href="/products" class="mobile-menu-item">
+            <span>Shop All</span>
             <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
         </a>
     `;
     
-    // Dynamic Categories with expandable subcategories
+    // Dynamic Categories
     allCategories.forEach((cat, index) => {
         const catSubs = allSubcategories.filter(sub => 
             sub.category_slug === cat.slug || sub.category_id === cat.id
@@ -482,26 +701,24 @@ async function buildMobileMenuContent() {
         const catId = `mobile-cat-${index}`;
         
         if (catSubs.length > 0) {
-            // Category with subcategories - expandable
             html += `
-                <button class="mobile-cat-item" onclick="toggleMobileCategory('${catId}')" aria-expanded="false">
-                    <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> ${cat.name}</span>
+                <button class="mobile-menu-item" onclick="toggleMobileCategory('${catId}')" aria-expanded="false">
+                    <span>${cat.name}</span>
                     <i class="fa-solid fa-chevron-down cat-arrow text-xs" id="${catId}-arrow"></i>
                 </button>
                 <div class="mobile-subcat-container" id="${catId}-container">
                     ${catSubs.map(sub => `
-                        <a href="/category/${cat.slug}/${sub.slug}" class="mobile-sub-cat">${sub.name}</a>
+                        <a href="/category/${cat.slug}/${sub.slug}" class="mobile-subcat-link">${sub.name}</a>
                     `).join('')}
-                    <a href="/category/${cat.slug}" class="mobile-sub-cat" style="color: #007aff; font-weight: 600;">
-                        View All ${cat.name}
+                    <a href="/category/${cat.slug}" class="mobile-subcat-link" style="color: #c9a96e; font-weight: 600;">
+                        All ${cat.name} →
                     </a>
                 </div>
             `;
         } else {
-            // Category without subcategories - direct link
             html += `
-                <a href="/category/${cat.slug}" class="mobile-cat-item">
-                    <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300"></i> ${cat.name}</span>
+                <a href="/category/${cat.slug}" class="mobile-menu-item">
+                    <span>${cat.name}</span>
                     <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
                 </a>
             `;
@@ -510,8 +727,8 @@ async function buildMobileMenuContent() {
     
     // Wishlist
     html += `
-        <a href="/wishlist" class="mobile-cat-item">
-            <span><i class="fa-regular fa-heart mr-3 text-gray-300"></i> Wishlist</span>
+        <a href="/wishlist" class="mobile-menu-item">
+            <span>Wishlist</span>
             <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
         </a>
     `;
@@ -519,26 +736,70 @@ async function buildMobileMenuContent() {
     container.innerHTML = html;
 }
 
-// Toggle mobile category expand/collapse
 function toggleMobileCategory(catId) {
     const container = document.getElementById(`${catId}-container`);
     const arrow = document.getElementById(`${catId}-arrow`);
+    const button = document.querySelector(`[onclick="toggleMobileCategory('${catId}')"]`);
     
     if (!container || !arrow) return;
     
     const isExpanded = container.classList.contains('expanded');
     
-    // Close all other open categories first
+    // Close all others
+    document.querySelectorAll('.mobile-subcat-container.expanded').forEach(el => {
+        if (el !== container) el.classList.remove('expanded');
+    });
+    document.querySelectorAll('.cat-arrow.open').forEach(el => {
+        if (el !== arrow) el.classList.remove('open');
+    });
+    
+    if (!isExpanded) {
+        container.classList.add('expanded');
+        arrow.classList.add('open');
+        if (button) button.setAttribute('aria-expanded', 'true');
+    } else {
+        container.classList.remove('expanded');
+        arrow.classList.remove('open');
+        if (button) button.setAttribute('aria-expanded', 'false');
+    }
+}
+
+// ============================================
+// MOBILE MENU OPEN/CLOSE
+// ============================================
+function openMobileMenu() {
+    const drawer = document.getElementById('mobileMenuDrawer');
+    const overlay = document.getElementById('mobileMenuOverlay');
+    if (drawer) drawer.classList.add('open');
+    if (overlay) overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Build mobile menu content
+    buildMobileMenuContent();
+}
+
+function closeMobileMenu() {
+    const drawer = document.getElementById('mobileMenuDrawer');
+    const overlay = document.getElementById('mobileMenuOverlay');
+    if (drawer) drawer.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    
+    // Collapse all
     document.querySelectorAll('.mobile-subcat-container.expanded').forEach(el => {
         el.classList.remove('expanded');
     });
     document.querySelectorAll('.cat-arrow.open').forEach(el => {
         el.classList.remove('open');
     });
-    
-    if (!isExpanded) {
-        container.classList.add('expanded');
-        arrow.classList.add('open');
+}
+
+// Legacy support
+function toggleMobileSubCategories() {
+    const firstContainer = document.querySelector('.mobile-subcat-container');
+    if (firstContainer) {
+        const catId = firstContainer.id.replace('-container', '');
+        toggleMobileCategory(catId);
     }
 }
 
@@ -547,21 +808,21 @@ function toggleMobileCategory(catId) {
 // ============================================
 function renderFooter() {
     const footerHTML = `
-    <footer class="bg-primary text-gray-400 pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 sm:mb-12">
+    <footer class="bg-[#1a1a1a] text-gray-400 pt-16 sm:pt-20 pb-8 sm:pb-10" id="main-footer">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
                 <div class="col-span-2 md:col-span-1">
-                    <h4 class="text-white font-black font-serif text-base sm:text-lg mb-3 sm:mb-4">JAYENWARE</h4>
-                    <p class="text-[10px] sm:text-xs leading-relaxed mb-4">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition">BINZEO</a>.</p>
-                    <div class="flex gap-3 text-base sm:text-lg">
-                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-youtube"></i></a>
+                    <h4 class="text-white font-black font-serif text-lg mb-4">JAYENWARE</h4>
+                    <p class="text-xs leading-relaxed mb-5">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-white transition underline underline-offset-4">BINZEO</a>.</p>
+                    <div class="flex gap-4 text-lg">
+                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-white transition"><i class="fa-brands fa-youtube"></i></a>
                     </div>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Quick Links</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
+                    <h5 class="text-white font-semibold text-xs uppercase tracking-wider mb-4">Quick Links</h5>
+                    <ul class="space-y-2.5 text-xs list-none p-0">
                         <li><a href="/about" class="hover:text-white transition no-underline">About</a></li>
                         <li><a href="/shipping" class="hover:text-white transition no-underline">Shipping</a></li>
                         <li><a href="/returns" class="hover:text-white transition no-underline">Returns</a></li>
@@ -569,20 +830,20 @@ function renderFooter() {
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Legal</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
+                    <h5 class="text-white font-semibold text-xs uppercase tracking-wider mb-4">Legal</h5>
+                    <ul class="space-y-2.5 text-xs list-none p-0">
                         <li><a href="/privacy-policy" class="hover:text-white transition no-underline">Privacy Policy</a></li>
                         <li><a href="/terms-and-conditions" class="hover:text-white transition no-underline">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4">Contact</h5>
-                    <p class="text-[9px] text-gray-500"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
+                    <h5 class="text-white font-semibold text-xs uppercase tracking-wider mb-4">Contact</h5>
+                    <p class="text-xs text-gray-500"><i class="fa-regular fa-envelope mr-2"></i>binzeo369@outlook.com</p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-[9px] sm:text-[10px] uppercase tracking-wider text-gray-500">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition no-underline">BINZEO</a></p>
-                <p class="text-[8px] sm:text-[9px]">&copy; <span id="display-year"></span> JAYENWARE. All rights reserved.</p>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[10px] uppercase tracking-wider text-gray-500">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-white transition no-underline font-semibold">BINZEO</a></p>
+                <p class="text-[9px]">&copy; <span id="display-year"></span> JAYENWARE. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -601,10 +862,10 @@ function showToast(text, type = 'success') {
         toast = document.createElement('div');
         toast.id = 'toast';
         toast.innerHTML = `
-            <div class="bg-white shadow-2xl rounded-2xl p-3 flex items-center gap-3 min-w-[260px] border border-gray-100">
+            <div class="bg-white shadow-2xl rounded-none p-4 flex items-center gap-3 min-w-[280px] border border-gray-100">
                 <span id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"></span>
-                <p id="toast-text" class="text-xs font-bold flex-grow"></p>
-                <button onclick="hideToast()" class="text-gray-300 hover:text-gray-600 shrink-0"><i class="fa-solid fa-xmark"></i></button>
+                <p id="toast-text" class="text-xs font-semibold flex-grow"></p>
+                <button onclick="hideToast()" class="text-gray-300 hover:text-gray-600 shrink-0 ml-2"><i class="fa-solid fa-xmark"></i></button>
             </div>
         `;
         document.body.appendChild(toast);
@@ -649,7 +910,6 @@ function addToCart(productId, productData) {
     if (!productData) { showToast('Product data missing', 'error'); return; }
     if (productData.stock <= 0) return showToast('Out of stock', 'error');
     
-    // Check if product already in cart
     const existing = cart.find(item => item.product_id === productData.id);
     if (existing) {
         existing.quantity += 1;
@@ -664,7 +924,7 @@ function addToCart(productId, productData) {
         });
     }
     saveCart();
-    showToast('Added to Bag! 🎉', 'success');
+    showToast('Added to Bag', 'success');
 }
 
 function removeFromCart(idx) {
@@ -685,7 +945,7 @@ function renderCartItems() {
     if (!container) return;
     
     if (!cart.length) {
-        container.innerHTML = '<p class="text-center text-gray-400 py-10 text-sm">Your bag is empty</p>';
+        container.innerHTML = '<p class="text-center text-gray-400 py-16 text-sm">Your bag is empty</p>';
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         return;
@@ -696,14 +956,15 @@ function renderCartItems() {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
         return `
-        <div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
-            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}" onerror="this.src='/placeholder.png'">
+        <div class="flex gap-4 p-4 bg-soft">
+            <img src="${item.img}" class="w-16 h-16 object-cover shrink-0" alt="${item.title}" onerror="this.src='/placeholder.png'">
             <div class="flex-grow min-w-0">
-                <h4 class="text-xs sm:text-sm font-bold truncate">${item.title}</h4>
-                <p class="text-xs sm:text-sm font-black">৳${item.price.toFixed(2)} × ${item.quantity || 1}</p>
+                <h4 class="text-sm font-semibold truncate">${item.title}</h4>
+                <p class="text-sm font-bold mt-1">৳${item.price.toFixed(2)}</p>
+                <p class="text-xs text-gray-500">Qty: ${item.quantity || 1}</p>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0" aria-label="Remove item">
-                <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
+            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-2 shrink-0 self-start" aria-label="Remove item">
+                <i class="fa-solid fa-trash text-sm"></i>
             </button>
         </div>`;
     }).join('');
@@ -731,54 +992,10 @@ function toggleWishlist(id) {
         showToast('Removed from wishlist', 'info');
     } else {
         wishlist.push(id);
-        showToast('Added to wishlist! ♥', 'success');
+        showToast('Added to wishlist', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
-}
-
-// ============================================
-// MOBILE MENU FUNCTIONS
-// ============================================
-function openMobileMenu() {
-    const drawer = document.getElementById('mobileMenuDrawer');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    if (drawer) drawer.classList.add('open');
-    if (overlay) overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Build mobile menu content if not already built
-    const content = document.getElementById('mobileMenuContent');
-    if (content && (content.querySelector('.animate-pulse') || !content.innerHTML.trim())) {
-        buildMobileMenuContent();
-    }
-}
-
-function closeMobileMenu() {
-    const drawer = document.getElementById('mobileMenuDrawer');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    if (drawer) drawer.classList.remove('open');
-    if (overlay) overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    // Collapse all expanded categories
-    document.querySelectorAll('.mobile-subcat-container.expanded').forEach(el => {
-        el.classList.remove('expanded');
-    });
-    document.querySelectorAll('.cat-arrow.open').forEach(el => {
-        el.classList.remove('open');
-    });
-}
-
-// Keep old function for backward compatibility
-function toggleMobileSubCategories() {
-    // This is now handled by toggleMobileCategory per category
-    // If called, try the first category
-    const firstContainer = document.querySelector('.mobile-subcat-container');
-    if (firstContainer) {
-        const catId = firstContainer.id.replace('-container', '');
-        toggleMobileCategory(catId);
-    }
 }
 
 // ============================================
@@ -797,6 +1014,23 @@ function getProductSlug(product) {
 }
 
 // ============================================
+// CLOSE MEGA MENU ON ESC KEY
+// ============================================
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMegaMenu();
+        closeMobileMenu();
+    }
+});
+
+// Close mega menu on window resize (if switching to mobile)
+window.addEventListener('resize', function() {
+    if (window.innerWidth < 1024 && isMegaMenuOpen) {
+        closeMegaMenu();
+    }
+});
+
+// ============================================
 // GLOBAL EXPOSURE
 // ============================================
 window.showToast = showToast;
@@ -809,11 +1043,13 @@ window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.toggleMobileSubCategories = toggleMobileSubCategories;
 window.toggleMobileCategory = toggleMobileCategory;
+window.toggleMegaMenu = toggleMegaMenu;
+window.closeMegaMenu = closeMegaMenu;
 window.getProductSlug = getProductSlug;
 window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
-window.buildDesktopCategoriesMenu = buildDesktopCategoriesMenu;
+window.buildMegaMenuContent = buildMegaMenuContent;
 window.buildMobileMenuContent = buildMobileMenuContent;
 window.cart = cart;
 window.wishlist = wishlist;
@@ -828,20 +1064,20 @@ async function initSharedComponents() {
     renderHeader();
     renderFooter();
     
-    // Fetch data first
+    // Fetch data
     await fetchCategories();
     await fetchSubcategories();
     
-    // Build dynamic navigation
-    await buildDesktopCategoriesMenu();
-    await buildMobileMenuContent();
+    // Build navigations
+    buildMegaMenuContent();
+    buildMobileMenuContent();
     
     updateCounts();
     
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
     
-    console.log(`✅ Shared components initialized with ${allCategories.length} categories and ${allSubcategories.length} subcategories`);
+    console.log(`✅ JAYENWARE initialized with ${allCategories.length} categories & ${allSubcategories.length} subcategories`);
 }
 
 // Auto-initialize
@@ -851,5 +1087,4 @@ if (document.readyState === 'loading') {
     setTimeout(initSharedComponents, 100);
 }
 
-// Also expose init function for manual calls
 window.initSharedComponents = initSharedComponents;
