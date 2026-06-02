@@ -142,6 +142,59 @@
         .product-card-enter { animation: cardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; }
         @keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
+        /* Hero CTA Button Style */
+        .hero-cta-btn {
+            display: inline-block;
+            padding: 12px 32px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--primary);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .hero-cta-btn::after {
+            content: '';
+            position: absolute;
+            left: 32px;
+            right: 32px;
+            bottom: 8px;
+            height: 1.5px;
+            background: var(--primary);
+            opacity: 0.4;
+            border-radius: 1px;
+        }
+        .hero-cta-btn:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .hero-cta-btn:hover::after {
+            opacity: 0.8;
+        }
+        .hero-cta-btn:active {
+            transform: scale(0.95);
+        }
+        @media (max-width: 640px) {
+            .hero-cta-btn {
+                padding: 10px 24px;
+                font-size: 10px;
+            }
+            .hero-cta-btn::after {
+                left: 24px;
+                right: 24px;
+                bottom: 6px;
+            }
+        }
+        
         /* Carousel Styles */
         .carousel-section { padding: 15px 0; position: relative; margin-top: 0; margin-bottom: 0; }
         .carousel-container { position: relative; max-width: 100%; margin: 0 auto; padding: 0; }
@@ -224,10 +277,7 @@
                 <div class="relative z-20 h-full flex flex-col justify-end pb-8 sm:pb-12 lg:pb-20 px-4 sm:px-6 lg:px-16 max-w-7xl mx-auto w-full">
                     <p id="hero-subtitle" class="text-white/80 text-[10px] sm:text-xs lg:text-sm font-medium uppercase tracking-[0.2em] mb-2 sm:mb-3"></p>
                     <h1 id="hero-title" class="text-white text-2xl sm:text-4xl lg:text-6xl xl:text-7xl font-black font-serif mb-4 sm:mb-6 leading-tight"></h1>
-                    <div class="flex gap-2 sm:gap-3">
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="px-5 sm:px-8 lg:px-10 py-2.5 sm:py-3 lg:py-4 bg-white/90 backdrop-blur-xl text-primary rounded-full text-[10px] sm:text-xs lg:text-sm font-bold uppercase tracking-wider hover:bg-white hover:shadow-xl transition-all no-underline inline-block border border-white/20">Shop Now</a>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="px-5 sm:px-8 lg:px-10 py-2.5 sm:py-3 lg:py-4 border-2 border-white/50 text-white rounded-full text-[10px] sm:text-xs lg:text-sm font-bold uppercase tracking-wider hover:bg-white/20 hover:border-white transition-all no-underline inline-block backdrop-blur-sm">Explore</a>
-                    </div>
+                    <div id="hero-cta-container"></div>
                 </div>
             </div>
             <!-- Carousel Sections -->
@@ -310,7 +360,7 @@
         }
 
         function getCategorySlug(c) { if(!c) return ''; return c.toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
-        function getProductSlug(p) { return (p.title||'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
+        function getProductSlug(p) { return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
         function updateURL(path, title = '') { 
             window.history.pushState({ path }, title || 'JAYENWARE', path); 
             document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE'; 
@@ -361,7 +411,24 @@
             if(list.length > 1) slideInterval = setInterval(() => { currentSlide = (currentSlide+1)%list.length; updateHeroSlide(); }, 5000);
         }
         function updateHeroSlide() { document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('opacity-0', i!==currentSlide)); updateHeroText(currentSlide); }
-        function updateHeroText(i) { const d = currentData.hero[i]; if(d) { document.getElementById('hero-title').innerText = d.title||'JAYENWARE'; document.getElementById('hero-subtitle').innerText = d.subtitle||''; } }
+        function updateHeroText(i) { 
+            const d = currentData.hero[i]; 
+            if(d) { 
+                document.getElementById('hero-title').innerText = d.title||'JAYENWARE'; 
+                document.getElementById('hero-subtitle').innerText = d.subtitle||''; 
+                updateHeroCTA(d);
+            } 
+        }
+        
+        function updateHeroCTA(heroData) {
+            const container = document.getElementById('hero-cta-container');
+            if(!container) return;
+            if(heroData.cta_text && heroData.cta_link) {
+                container.innerHTML = `<a href="${heroData.cta_link}" class="hero-cta-btn">${heroData.cta_text}</a>`;
+            } else {
+                container.innerHTML = '';
+            }
+        }
 
         // ========== CATEGORY & FILTER FUNCTIONS ==========
         function renderCategories() {
