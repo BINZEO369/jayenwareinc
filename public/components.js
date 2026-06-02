@@ -1,16 +1,12 @@
 // ============================================
-// components.js - Dynamic Menu from Database
-// Version: 3.0 (Fully Dynamic)
+// components.js - Shared Header, Footer & Common Functions
+// Version: 3.0 (Fully Dynamic from Database)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
 let userSession = null;
-let allCategories = [];
-let allSubcategories = [];
-
-// API Base URL
-const API_BASE = window.location.origin;
+let allMenuItems = [];
 
 // ============================================
 // SHARED CSS STYLES
@@ -41,7 +37,6 @@ function injectSharedStyles() {
             transition: color 0.3s ease;
             color: #1d1d1f;
             text-decoration: none;
-            cursor: pointer;
         }
         .nav-link::after {
             content: '';
@@ -53,65 +48,66 @@ function injectSharedStyles() {
         }
         .nav-link:hover::after { width: 100%; }
         
-        /* Dropdown Styles */
-        .nav-dropdown {
+        /* Desktop Dropdown */
+        .desktop-dropdown {
             position: relative;
         }
-        .nav-dropdown-content {
+        .desktop-dropdown-menu {
             position: absolute;
             top: 100%;
             left: 50%;
-            transform: translateX(-50%) translateY(10px);
+            transform: translateX(-50%) translateY(8px);
             background: white;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-            padding: 24px;
-            min-width: 600px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 220px;
+            padding: 8px 0;
             z-index: 100;
         }
-        .nav-dropdown:hover .nav-dropdown-content,
-        .nav-dropdown-content:hover {
+        .desktop-dropdown:hover .desktop-dropdown-menu {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
         }
-        .dropdown-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-        }
-        .dropdown-category {
-            break-inside: avoid;
-        }
-        .dropdown-category-title {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #1d1d1f;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        .dropdown-subcategory {
+        .desktop-dropdown-item {
             display: block;
-            font-size: 11px;
-            color: #86868b;
-            padding: 4px 0;
-            text-decoration: none;
-            transition: color 0.2s ease;
+            padding: 10px 20px;
+            font-size: 12px;
             font-weight: 500;
+            color: #1d1d1f;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
         }
-        .dropdown-subcategory:hover {
+        .desktop-dropdown-item:hover {
+            background: #f5f5f7;
             color: #007aff;
         }
-        .dropdown-subcategory::before {
-            content: '•';
-            margin-right: 6px;
-            color: #d2d2d7;
+        .desktop-dropdown-item.has-children {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .desktop-sub-dropdown {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            padding: 8px 0;
+        }
+        .desktop-dropdown-item.has-children:hover .desktop-sub-dropdown {
+            opacity: 1;
+            visibility: visible;
         }
         
         /* Mobile Menu */
@@ -142,33 +138,35 @@ function injectSharedStyles() {
             -webkit-overflow-scrolling: touch;
             padding: 12px 20px;
         }
-        .mobile-cat-item {
+        .mobile-menu-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 0; border-bottom: 1px solid #f5f5f5;
             font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
             cursor: pointer; color: #1d1d1f; text-decoration: none;
-            transition: color 0.2s ease; width: 100%;
+            transition: color 0.2s ease;
         }
-        .mobile-cat-item:hover { color: #007aff; }
-        .mobile-subcategory-list {
+        .mobile-menu-item i.fa-chevron-right { font-size: 11px; color: #c0c0c0; transition: transform 0.3s ease; }
+        .mobile-menu-item.expanded i.fa-chevron-right { transform: rotate(90deg); }
+        .mobile-submenu {
+            display: none;
             padding-left: 16px;
-            background: #fafafa;
-            border-radius: 8px;
-            margin: 4px 0;
+            border-left: 2px solid #f0f0f0;
+            margin: 4px 0 4px 8px;
         }
-        .mobile-subcategory-item {
+        .mobile-submenu.open { display: block; }
+        .mobile-sub-item {
             display: block;
-            padding: 10px 12px;
+            padding: 11px 12px;
             font-size: 13px;
             color: #86868b;
             text-decoration: none;
-            border-bottom: 1px solid #f0f0f0;
             transition: color 0.2s ease;
+            font-weight: 500;
         }
-        .mobile-subcategory-item:last-child {
-            border-bottom: none;
-        }
-        .mobile-subcategory-item:hover {
+        .mobile-sub-item:hover { color: #007aff; }
+        .mobile-sub-item::before {
+            content: '•';
+            margin-right: 8px;
             color: #007aff;
         }
         .mobile-footer {
@@ -180,17 +178,21 @@ function injectSharedStyles() {
         #cart-drawer {
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
+            transform: translateX(100%);
         }
         #cart-drawer.open { transform: translateX(0) !important; }
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
+        
+        /* Toast */
         #toast {
             position: fixed; top: 16px; right: 16px; z-index: 9999;
             transform: translateX(120%);
             transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
             max-width: calc(100vw - 32px);
         }
+        
         body { padding-top: 56px; }
         @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
@@ -200,156 +202,225 @@ function injectSharedStyles() {
 }
 
 // ============================================
-// FETCH CATEGORIES & SUBCATEGORIES FROM API
+// API HELPER: Fetch menu items from server
 // ============================================
-async function fetchCategories() {
+async function fetchMenuItems() {
     try {
-        const response = await fetch(`${API_BASE}/api/categories`);
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        allCategories = await response.json();
-        return allCategories;
+        // Fetch flat menu items with all relations
+        const response = await fetch('/api/menu-items');
+        if (!response.ok) throw new Error('Failed to fetch menu items');
+        const data = await response.json();
+        allMenuItems = data;
+        return data;
     } catch (error) {
-        console.error('Error fetching categories:', error);
-        return [];
-    }
-}
-
-async function fetchSubcategories(categorySlug = null) {
-    try {
-        let url = `${API_BASE}/api/subcategories`;
-        if (categorySlug) {
-            url += `?category_slug=${categorySlug}`;
-        }
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch subcategories');
-        allSubcategories = await response.json();
-        return allSubcategories;
-    } catch (error) {
-        console.error('Error fetching subcategories:', error);
+        console.error('Error fetching menu items:', error);
+        allMenuItems = [];
         return [];
     }
 }
 
 // ============================================
-// BUILD CATEGORY SLUG
+// BUILD MENU TREE FROM FLAT DATA
 // ============================================
-function createSlug(text) {
-    if (!text) return '';
-    return text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
+function buildMenuTree(items, parentId = null) {
+    return items
+        .filter(item => {
+            // parent_id can be null, undefined, or 0 for root items
+            const itemParentId = item.parent_id || null;
+            const targetParentId = parentId || null;
+            return itemParentId === targetParentId;
+        })
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        .map(item => ({
+            ...item,
+            children: buildMenuTree(items, item.id)
+        }));
 }
 
 // ============================================
-// BUILD DROPDOWN MENU HTML
+// GET LINK URL FOR MENU ITEM
 // ============================================
-function buildDropdownHTML(categories, subcategories) {
-    if (!categories.length) {
-        return '<div class="nav-link px-5">No categories</div>';
+function getMenuLinkUrl(item) {
+    // If item has a custom URL, use it
+    if (item.url && item.url.trim() !== '') {
+        return item.url;
     }
     
-    let dropdownHTML = '';
+    // Build URL based on type
+    const slug = item.slug || '';
     
-    categories.forEach(category => {
-        const categorySlug = category.slug || createSlug(category.name);
-        const categorySubs = subcategories.filter(sub => 
-            sub.category_slug === categorySlug || sub.category_id === category.id
-        );
-        
-        dropdownHTML += `
-            <div class="dropdown-category">
-                <a href="/category/${categorySlug}" class="dropdown-category-title" style="text-decoration: none; color: #1d1d1f;">
-                    ${category.name}
-                </a>
-        `;
-        
-        if (categorySubs.length > 0) {
-            categorySubs.forEach(sub => {
-                const subSlug = sub.slug || createSlug(sub.name);
-                dropdownHTML += `
-                    <a href="/category/${categorySlug}/${subSlug}" class="dropdown-subcategory">
-                        ${sub.name}
-                    </a>
-                `;
-            });
-        } else {
-            dropdownHTML += `
-                <a href="/category/${categorySlug}" class="dropdown-subcategory">
-                    View All
-                </a>
-            `;
-        }
-        
-        dropdownHTML += `</div>`;
-    });
+    switch (item.type) {
+        case 'home':
+            return '/';
+        case 'products':
+            return '/products';
+        case 'category':
+            return item.category_slug ? `/category/${item.category_slug}` : '#';
+        case 'subcategory':
+            if (item.category_slug && item.subcategory_slug) {
+                return `/category/${item.category_slug}/${item.subcategory_slug}`;
+            }
+            return item.subcategory_slug ? `/subcategory/${item.subcategory_slug}` : '#';
+        case 'page':
+            return slug ? `/${slug}` : '#';
+        case 'custom':
+            return item.url || '#';
+        case 'contact':
+            return '/contact';
+        case 'about':
+            return '/about';
+        case 'journal':
+            return '/journal';
+        default:
+            return slug ? `/${slug}` : '#';
+    }
+}
+
+// ============================================
+// RENDER DESKTOP NAVIGATION
+// ============================================
+function renderDesktopNav(rootItems) {
+    let html = '';
     
-    return `
-        <div class="nav-dropdown">
-            <span class="nav-link px-5">Categories <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></span>
-            <div class="nav-dropdown-content">
-                <div class="dropdown-grid">
-                    ${dropdownHTML}
+    rootItems.forEach(item => {
+        const hasChildren = item.children && item.children.length > 0;
+        const linkUrl = getMenuLinkUrl(item);
+        
+        if (hasChildren) {
+            // Dropdown menu
+            html += `
+            <div class="desktop-dropdown">
+                <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+                    ${item.title || item.name || ''}
+                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                </a>
+                <div class="desktop-dropdown-menu">
+                    ${renderDesktopDropdownChildren(item.children)}
                 </div>
-            </div>
-        </div>
-    `;
+            </div>`;
+        } else {
+            // Simple link
+            html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
+        }
+    });
+    
+    return html;
+}
+
+function renderDesktopDropdownChildren(children) {
+    let html = '';
+    
+    children.forEach(child => {
+        const hasGrandChildren = child.children && child.children.length > 0;
+        const linkUrl = getMenuLinkUrl(child);
+        
+        if (hasGrandChildren) {
+            html += `
+            <div style="position:relative;">
+                <a href="${linkUrl}" class="desktop-dropdown-item has-children">
+                    ${child.title || child.name || ''}
+                    <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+                </a>
+                <div class="desktop-sub-dropdown">
+                    ${child.children.map(gc => `
+                        <a href="${getMenuLinkUrl(gc)}" class="desktop-dropdown-item">${gc.title || gc.name || ''}</a>
+                    `).join('')}
+                </div>
+            </div>`;
+        } else {
+            html += `<a href="${linkUrl}" class="desktop-dropdown-item">${child.title || child.name || ''}</a>`;
+        }
+    });
+    
+    return html;
 }
 
 // ============================================
-// BUILD MOBILE MENU HTML
+// RENDER MOBILE NAVIGATION
 // ============================================
-function buildMobileMenuHTML(categories, subcategories) {
-    if (!categories.length) {
-        return '<div class="mobile-cat-item">No categories available</div>';
-    }
+function renderMobileNav(rootItems) {
+    let html = '';
     
-    let mobileHTML = '';
-    
-    categories.forEach(category => {
-        const categorySlug = category.slug || createSlug(category.name);
-        const categorySubs = subcategories.filter(sub => 
-            sub.category_slug === categorySlug || sub.category_id === category.id
-        );
+    rootItems.forEach((item, index) => {
+        const hasChildren = item.children && item.children.length > 0;
+        const linkUrl = getMenuLinkUrl(item);
+        const uniqueId = `mobile-sub-${index}-${Date.now()}`;
         
-        mobileHTML += `
-            <div class="mobile-cat-item" onclick="toggleMobileCategory('${categorySlug}')" style="border-bottom: none;">
-                <span>${category.name}</span>
-                <i class="fa-solid fa-chevron-down text-xs text-gray-300 transition-transform duration-300" id="mobile-arrow-${categorySlug}"></i>
-            </div>
-            <div id="mobile-subs-${categorySlug}" class="mobile-subcategory-list" style="display: none;">
-        `;
-        
-        if (categorySubs.length > 0) {
-            categorySubs.forEach(sub => {
-                const subSlug = sub.slug || createSlug(sub.name);
-                mobileHTML += `
-                    <a href="/category/${categorySlug}/${subSlug}" class="mobile-subcategory-item">
-                        ${sub.name}
-                    </a>
-                `;
-            });
+        if (hasChildren) {
+            html += `
+            <div>
+                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                <div class="mobile-submenu" id="${uniqueId}">
+                    ${renderMobileSubItems(item.children, uniqueId)}
+                </div>
+            </div>`;
+        } else {
+            // Determine icon based on type
+            let icon = 'fa-circle';
+            switch (item.type) {
+                case 'home': icon = 'fa-house'; break;
+                case 'products': icon = 'fa-bag-shopping'; break;
+                case 'contact': icon = 'fa-envelope'; break;
+                case 'about': icon = 'fa-circle-info'; break;
+                case 'journal': icon = 'fa-newspaper'; break;
+                case 'page': icon = 'fa-file'; break;
+                default: icon = 'fa-circle'; break;
+            }
+            html += `
+            <a href="${linkUrl}" class="mobile-menu-item no-underline">
+                <span><i class="fa-solid ${icon} mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+            </a>`;
         }
-        
-        // Add "View All" link
-        mobileHTML += `
-            <a href="/category/${categorySlug}" class="mobile-subcategory-item" style="font-weight: 600; color: #007aff;">
-                View All ${category.name}
-            </a>
-        `;
-        
-        mobileHTML += `</div>`;
     });
     
-    return mobileHTML;
+    return html;
+}
+
+function renderMobileSubItems(children, parentId) {
+    let html = '';
+    
+    children.forEach((child, idx) => {
+        const hasGrandChildren = child.children && child.children.length > 0;
+        const linkUrl = getMenuLinkUrl(child);
+        const uniqueId = `${parentId}-sub-${idx}`;
+        
+        if (hasGrandChildren) {
+            html += `
+            <div>
+                <div class="mobile-sub-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;font-weight:600;color:#1d1d1f;">
+                    ${child.title || child.name || ''}
+                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                </div>
+                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
+                    ${child.children.map(gc => `
+                        <a href="${getMenuLinkUrl(gc)}" class="mobile-sub-item">${gc.title || gc.name || ''}</a>
+                    `).join('')}
+                </div>
+            </div>`;
+        } else {
+            html += `<a href="${linkUrl}" class="mobile-sub-item">${child.title || child.name || ''}</a>`;
+        }
+    });
+    
+    return html;
 }
 
 // ============================================
 // HEADER COMPONENT
 // ============================================
-function renderHeader() {
+async function renderHeader() {
+    // Fetch menu items first
+    const menuItems = await fetchMenuItems();
+    const menuTree = buildMenuTree(menuItems);
+    
+    // Separate special items or filter for navigation
+    // Get root level items (parent_id is null/0)
+    const rootItems = menuTree;
+    
     const headerHTML = `
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
@@ -358,17 +429,16 @@ function renderHeader() {
                 <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
                 <span class="font-black font-serif text-lg text-primary">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2">
+            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2" aria-label="Close menu">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div class="mobile-menu-scroll" id="mobile-menu-content">
-            <div style="text-align: center; padding: 40px 20px; color: #86868b;">
-                <i class="fa-solid fa-spinner fa-spin text-2xl mb-3"></i>
-                <p class="text-sm">Loading categories...</p>
-            </div>
+        <div class="mobile-menu-scroll" id="mobileMenuContent">
+            ${renderMobileNav(rootItems)}
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter"></div>
+        <div class="mobile-footer" id="mobileMenuFooter">
+            <a href="/login" class="block w-full py-3 bg-primary text-white rounded-xl text-center font-bold uppercase tracking-wider text-xs no-underline">Sign In</a>
+        </div>
     </div>
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
@@ -376,10 +446,8 @@ function renderHeader() {
                 <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
                 <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight font-serif text-primary">JAYENWARE</span>
             </a>
-            <div class="hidden lg:flex items-center gap-0" id="desktop-nav-links">
-                <div style="display: flex; align-items: center; gap: 20px; color: #86868b; font-size: 11px;">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Loading...
-                </div>
+            <div class="hidden lg:flex items-center gap-0" id="desktopNavLinks">
+                ${renderDesktopNav(rootItems)}
             </div>
             <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
                 <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
@@ -420,68 +488,6 @@ function renderHeader() {
     </div>
     `;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
-}
-
-// ============================================
-// UPDATE NAVIGATION WITH DYNAMIC DATA
-// ============================================
-async function updateNavigation() {
-    try {
-        // Fetch categories and subcategories
-        const categories = await fetchCategories();
-        const subcategories = await fetchSubcategories();
-        
-        // Update desktop navigation
-        const desktopNav = document.getElementById('desktop-nav-links');
-        if (desktopNav && categories.length > 0) {
-            desktopNav.innerHTML = buildDropdownHTML(categories, subcategories);
-        }
-        
-        // Update mobile menu
-        const mobileMenu = document.getElementById('mobile-menu-content');
-        if (mobileMenu && categories.length > 0) {
-            mobileMenu.innerHTML = buildMobileMenuHTML(categories, subcategories);
-        }
-        
-    } catch (error) {
-        console.error('Error updating navigation:', error);
-        const desktopNav = document.getElementById('desktop-nav-links');
-        const mobileMenu = document.getElementById('mobile-menu-content');
-        
-        if (desktopNav) {
-            desktopNav.innerHTML = '<span class="nav-link px-5">Categories</span>';
-        }
-        if (mobileMenu) {
-            mobileMenu.innerHTML = '<div class="mobile-cat-item">Categories unavailable</div>';
-        }
-    }
-}
-
-// ============================================
-// TOGGLE MOBILE CATEGORY
-// ============================================
-function toggleMobileCategory(categorySlug) {
-    const subList = document.getElementById(`mobile-subs-${categorySlug}`);
-    const arrow = document.getElementById(`mobile-arrow-${categorySlug}`);
-    
-    if (!subList) return;
-    
-    if (subList.style.display === 'none' || !subList.style.display) {
-        // Close all other open categories
-        document.querySelectorAll('[id^="mobile-subs-"]').forEach(el => {
-            el.style.display = 'none';
-        });
-        document.querySelectorAll('[id^="mobile-arrow-"]').forEach(el => {
-            el.style.transform = '';
-        });
-        
-        // Open this one
-        subList.style.display = 'block';
-        if (arrow) arrow.style.transform = 'rotate(180deg)';
-    } else {
-        subList.style.display = 'none';
-        if (arrow) arrow.style.transform = '';
-    }
 }
 
 // ============================================
@@ -530,8 +536,6 @@ function renderFooter() {
     </footer>
     `;
     document.body.insertAdjacentHTML('beforeend', footerHTML);
-    const yearEl = document.getElementById('display-year');
-    if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
 
 // ============================================
@@ -591,9 +595,9 @@ function addToCart(productId, productData) {
     if (!productData) { showToast('Product data missing', 'error'); return; }
     if (productData.stock <= 0) return showToast('Out of stock', 'error');
     
-    // Check if already in cart
+    // Check if product already in cart
     const existingIndex = cart.findIndex(item => item.product_id === productData.id);
-    if (existingIndex >= 0) {
+    if (existingIndex > -1) {
         cart[existingIndex].quantity += 1;
     } else {
         cart.push({
@@ -605,22 +609,12 @@ function addToCart(productId, productData) {
             quantity: 1
         });
     }
-    
     saveCart();
     showToast('Added to Bag! 🎉', 'success');
-    if (document.getElementById('cart-drawer').classList.contains('open')) {
-        renderCartItems();
-    }
 }
 
 function removeFromCart(idx) {
     cart.splice(idx, 1);
-    saveCart();
-    renderCartItems();
-}
-
-function updateQuantity(idx, delta) {
-    cart[idx].quantity = Math.max(1, cart[idx].quantity + delta);
     saveCart();
     renderCartItems();
 }
@@ -635,35 +629,30 @@ function renderCartItems() {
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
     if (!container) return;
-    
     if (!cart.length) {
         container.innerHTML = '<p class="text-center text-gray-400 py-10 text-sm">Your bag is empty</p>';
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         return;
     }
-    
     let sub = 0;
     container.innerHTML = cart.map((item, idx) => {
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
         return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
-            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}" onerror="this.src='/placeholder.png'">
+            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
             <div class="flex-grow min-w-0">
                 <h4 class="text-xs sm:text-sm font-bold truncate">${item.title}</h4>
                 <div class="flex items-center gap-2 mt-1">
-                    <button onclick="updateQuantity(${idx}, -1)" class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold hover:bg-gray-300 transition">-</button>
-                    <span class="text-xs font-bold">${item.quantity}</span>
-                    <button onclick="updateQuantity(${idx}, 1)" class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold hover:bg-gray-300 transition">+</button>
+                    <p class="text-xs sm:text-sm font-black">৳${itemTotal.toFixed(2)}</p>
+                    <span class="text-[10px] text-gray-400">Qty: ${item.quantity || 1}</span>
                 </div>
-                <p class="text-xs sm:text-sm font-black mt-1">৳${itemTotal.toFixed(2)}</p>
             </div>
             <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
                 <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
             </button>
         </div>`;
     }).join('');
-    
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
     if (totalEl) totalEl.innerText = `৳${sub.toFixed(2)}`;
 }
@@ -681,10 +670,10 @@ function updateCounts() {
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
-        showToast('Removed from wishlist', 'info');
+        showToast('Removed from Wishlist', 'info');
     } else {
         wishlist.push(id);
-        showToast('Added to wishlist! ❤️', 'success');
+        showToast('Added to Wishlist ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
@@ -708,13 +697,35 @@ function closeMobileMenu() {
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
     
-    // Close all open subcategories
-    document.querySelectorAll('[id^="mobile-subs-"]').forEach(el => {
-        el.style.display = 'none';
-    });
-    document.querySelectorAll('[id^="mobile-arrow-"]').forEach(el => {
-        el.style.transform = '';
-    });
+    // Close all open submenus
+    document.querySelectorAll('.mobile-submenu.open').forEach(sub => sub.classList.remove('open'));
+    document.querySelectorAll('.mobile-menu-item.expanded').forEach(item => item.classList.remove('expanded'));
+}
+
+function toggleMobileSubmenu(submenuId, element) {
+    const submenu = document.getElementById(submenuId);
+    if (!submenu) return;
+    
+    const isOpen = submenu.classList.contains('open');
+    
+    // Close all submenus at the same level
+    const parentContainer = submenu.parentElement.parentElement;
+    if (parentContainer) {
+        parentContainer.querySelectorAll('.mobile-submenu.open').forEach(sub => {
+            if (sub.id !== submenuId) sub.classList.remove('open');
+        });
+        parentContainer.querySelectorAll('.mobile-menu-item.expanded').forEach(item => {
+            if (item !== element) item.classList.remove('expanded');
+        });
+    }
+    
+    if (isOpen) {
+        submenu.classList.remove('open');
+        element.classList.remove('expanded');
+    } else {
+        submenu.classList.add('open');
+        element.classList.add('expanded');
+    }
 }
 
 // ============================================
@@ -722,7 +733,11 @@ function closeMobileMenu() {
 // ============================================
 function getProductSlug(product) {
     if (!product || !product.title) return '';
-    return createSlug(product.title);
+    return product.title.toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 80);
 }
 
 // ============================================
@@ -734,30 +749,25 @@ window.toggleWishlist = toggleWishlist;
 window.addToCart = addToCart;
 window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
-window.updateQuantity = updateQuantity;
 window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
-window.toggleMobileCategory = toggleMobileCategory;
+window.toggleMobileSubmenu = toggleMobileSubmenu;
 window.getProductSlug = getProductSlug;
 window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
-window.createSlug = createSlug;
 window.cart = cart;
 window.wishlist = wishlist;
+window.allMenuItems = allMenuItems;
 
 // ============================================
 // INITIALIZATION
 // ============================================
 async function initSharedComponents() {
     injectSharedStyles();
-    renderHeader();
+    await renderHeader(); // Now async - fetches menu from API
     renderFooter();
     updateCounts();
-    
-    // Update navigation with dynamic categories
-    await updateNavigation();
-    
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
