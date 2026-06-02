@@ -292,7 +292,214 @@
                 transform: translateY(0);
             }
         }
-        
+
+        /* ==================== APPLE-STYLE HERO VIDEO SECTION ==================== */
+        .hero-video-section {
+            position: relative;
+            width: 100%;
+            background: #000;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hero-video-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 600px;
+            max-height: 900px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 640px) {
+            .hero-video-wrapper {
+                height: 70vh;
+                min-height: 450px;
+            }
+        }
+        .hero-video-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            user-select: none;
+            filter: brightness(0.85);
+        }
+        .hero-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.0) 30%,
+                rgba(0,0,0,0.0) 70%,
+                rgba(0,0,0,0.6) 100%
+            );
+            z-index: 1;
+        }
+        .hero-video-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 24px;
+            max-width: 800px;
+            width: 100%;
+        }
+        .hero-video-label {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(7px, 0.9vw, 9px);
+            font-weight: 600;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: clamp(14px, 2.5vh, 22px);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s;
+        }
+        .hero-video-section.visible .hero-video-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-video-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 5.5vw, 72px);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #ffffff;
+            margin: 0 0 clamp(14px, 2vh, 22px) 0;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s;
+        }
+        .hero-video-section.visible .hero-video-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-video-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(12px, 1.1vw, 16px);
+            font-weight: 400;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 560px;
+            margin: 0 auto clamp(22px, 3vh, 30px) auto;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s;
+        }
+        .hero-video-section.visible .hero-video-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-video-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(9px, 1vw, 11px);
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            padding: 0;
+            border: none;
+            background: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s, gap 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .hero-video-section.visible .hero-video-cta {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-video-cta:hover {
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .hero-video-cta .cta-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 14px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .hero-video-cta .cta-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 1.5px solid #ffffff;
+            border-right: 1.5px solid #ffffff;
+            transform: translateY(-50%) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .hero-video-cta:hover .cta-arrow::after {
+            right: -3px;
+            opacity: 0.75;
+        }
+
+        /* Video navigation dots */
+        .hero-video-nav {
+            position: absolute;
+            bottom: clamp(20px, 4vh, 40px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .hero-video-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            padding: 0;
+        }
+        .hero-video-dot:hover {
+            background: rgba(255,255,255,0.6);
+            transform: scale(1.2);
+        }
+        .hero-video-dot.active {
+            background: #ffffff;
+            width: 28px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Video Progress Bar (Apple-style) */
+        .hero-video-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: rgba(255,255,255,0.5);
+            z-index: 3;
+            transition: width 0.1s linear;
+            pointer-events: none;
+        }
+
         /* Carousel Styles */
         .carousel-section { padding: 15px 0; position: relative; margin-top: 0; margin-bottom: 0; }
         .carousel-container { position: relative; max-width: 100%; margin: 0 auto; padding: 0; }
@@ -380,6 +587,22 @@
                     <p id="hero-subtitle" class="hero-subtitle"></p>
                 </div>
             </div>
+
+            <!-- Apple-Style Hero Video Section (After Hero, Before New Arrivals) -->
+            <section id="hero-video-section" class="hero-video-section hidden">
+                <div class="hero-video-wrapper" id="hero-video-wrapper">
+                    <video id="hero-video-player" class="hero-video-bg" muted playsinline loop preload="metadata"></video>
+                    <div class="hero-video-overlay"></div>
+                    <div class="hero-video-content">
+                        <span id="hero-video-label" class="hero-video-label"></span>
+                        <h2 id="hero-video-title" class="hero-video-title"></h2>
+                        <p id="hero-video-desc" class="hero-video-desc"></p>
+                        <a id="hero-video-cta" class="hero-video-cta" href="#"><span id="hero-video-cta-text"></span> <span class="cta-arrow"></span></a>
+                    </div>
+                    <div class="hero-video-progress" id="hero-video-progress"></div>
+                    <div class="hero-video-nav" id="hero-video-nav"></div>
+                </div>
+            </section>
             
             <!-- Carousel Sections -->
             <section id="new-arrivals-section" class="carousel-section hidden"><div class="carousel-container"><div class="carousel-header"><h2 class="section-title">New Arrivals</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="carousel-wrapper" id="new-arrivals-wrapper"><button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev"><i class="fa-solid fa-chevron-left"></i></button><div id="new-arrivals-carousel" class="carousel-track smooth-scroll" data-speed="0.4"></div><button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next"><i class="fa-solid fa-chevron-right"></i></button></div><div class="carousel-dots-container" id="new-arrivals-dots"></div></div></section>
@@ -445,13 +668,24 @@
 
     <script>
         // ========== FETCH DATA FROM OUR API ==========
-        let currentData = { products: [], categories: [], news: [], hero: [] };
+        let currentData = { products: [], categories: [], news: [], hero: [], heroVideos: [] };
         let currentSlide = 0, slideInterval;
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
         let productsDisplayLimit = 12;
         const productsLoadMoreIncrement = 12;
         const BASE_URL = 'https://www.jayenware.shop';
         const carouselStates = {};
+
+        // Hero Video State
+        let heroVideoState = {
+            currentIndex: 0,
+            videos: [],
+            player: null,
+            progressInterval: null,
+            isTransitioning: false,
+            autoplayInterval: null,
+            videoDuration: 8000 // 8 seconds per video
+        };
 
         async function fetchAPI(endpoint) {
             try {
@@ -490,13 +724,14 @@
             if(pageId === 'home') { 
                 if (currentData.products && currentData.products.length > 0) {
                     renderHomepageSections(); 
-                    renderRecentlyViewed(); 
+                    renderRecentlyViewed();
+                    initHeroVideoSection();
                 } else {
                     console.warn('Products not loaded yet, skipping homepage render');
                 }
             }
-            if(pageId === 'wishlist') renderWishlist();
-            if(pageId === 'products') renderProducts(getFilteredProducts());
+            if(pageId === 'wishlist') { renderWishlist(); cleanupHeroVideo(); }
+            if(pageId === 'products') { renderProducts(getFilteredProducts()); cleanupHeroVideo(); }
             requestAnimationFrame(() => { 
                 target.classList.add('active-page','fade-in'); 
                 window.scrollTo({ top: 0, behavior: 'smooth' }); 
@@ -530,7 +765,6 @@
             const subtitleEl = document.getElementById('hero-subtitle');
             const ctaContainer = document.getElementById('hero-cta-container');
             
-            // Reset animations
             [titleEl, subtitleEl, ctaContainer].forEach(el => {
                 if(el) {
                     el.style.animation = 'none';
@@ -566,6 +800,188 @@
                 container.innerHTML = `<a href="${heroData.cta_link}" class="hero-cta">${heroData.cta_text} <span class="cta-arrow"></span></a>`;
             } else {
                 container.innerHTML = '';
+            }
+        }
+
+        // ========== APPLE-STYLE HERO VIDEO SECTION ==========
+        function initHeroVideoSection() {
+            const videos = currentData.heroVideos;
+            const section = document.getElementById('hero-video-section');
+            
+            if (!videos || videos.length === 0) {
+                if (section) section.classList.add('hidden');
+                return;
+            }
+
+            heroVideoState.videos = videos;
+            heroVideoState.currentIndex = 0;
+            
+            if (section) {
+                section.classList.remove('hidden');
+                // Delay visibility for smooth entrance
+                setTimeout(() => {
+                    section.classList.add('visible');
+                }, 300);
+            }
+
+            // Setup navigation dots
+            const navContainer = document.getElementById('hero-video-nav');
+            if (navContainer && videos.length > 1) {
+                navContainer.innerHTML = videos.map((_, i) => 
+                    `<button class="hero-video-dot ${i === 0 ? 'active' : ''}" onclick="switchHeroVideo(${i})" aria-label="Video ${i + 1}"></button>`
+                ).join('');
+                navContainer.style.display = 'flex';
+            } else if (navContainer) {
+                navContainer.style.display = 'none';
+            }
+
+            // Load first video
+            loadHeroVideo(0);
+            startHeroVideoAutoplay();
+        }
+
+        function loadHeroVideo(index) {
+            if (index >= heroVideoState.videos.length || index < 0) return;
+            
+            const video = heroVideoState.videos[index];
+            const player = document.getElementById('hero-video-player');
+            const progressBar = document.getElementById('hero-video-progress');
+            
+            if (!player) return;
+            
+            heroVideoState.currentIndex = index;
+            heroVideoState.isTransitioning = true;
+            
+            // Update content with smooth transition
+            updateHeroVideoContent(video);
+            
+            // Load and play video
+            player.src = video.video_url;
+            player.load();
+            
+            player.oncanplay = () => {
+                heroVideoState.isTransitioning = false;
+                player.play().catch(() => {});
+                startProgressTracking();
+            };
+
+            // Update dots
+            document.querySelectorAll('.hero-video-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+
+            // Reset progress
+            if (progressBar) {
+                progressBar.style.width = '0%';
+                progressBar.style.transition = 'none';
+            }
+        }
+
+        function updateHeroVideoContent(video) {
+            const labelEl = document.getElementById('hero-video-label');
+            const titleEl = document.getElementById('hero-video-title');
+            const descEl = document.getElementById('hero-video-desc');
+            const ctaEl = document.getElementById('hero-video-cta');
+            const ctaTextEl = document.getElementById('hero-video-cta-text');
+
+            // Reset animations by removing and re-adding visible class
+            const section = document.getElementById('hero-video-section');
+            if (section) {
+                section.classList.remove('visible');
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        if (labelEl) labelEl.textContent = video.title || '';
+                        if (titleEl) titleEl.textContent = video.description || '';
+                        if (descEl) descEl.textContent = video.meta_description || '';
+                        if (ctaTextEl) ctaTextEl.textContent = video.cta_title || 'Discover More';
+                        
+                        if (ctaEl) {
+                            ctaEl.href = video.cta_link || '#';
+                            ctaEl.style.display = (video.cta_title && video.cta_link) ? 'inline-flex' : 'none';
+                        }
+                        
+                        section.classList.add('visible');
+                    });
+                });
+            }
+        }
+
+        function startProgressTracking() {
+            const progressBar = document.getElementById('hero-video-progress');
+            const player = document.getElementById('hero-video-player');
+            
+            if (!progressBar || !player) return;
+            
+            clearInterval(heroVideoState.progressInterval);
+            
+            const duration = heroVideoState.videoDuration;
+            const interval = 50; // Update every 50ms
+            const totalSteps = duration / interval;
+            let currentStep = 0;
+
+            progressBar.style.transition = `width ${interval}ms linear`;
+            progressBar.style.width = '0%';
+
+            heroVideoState.progressInterval = setInterval(() => {
+                if (heroVideoState.isTransitioning) {
+                    currentStep = 0;
+                    progressBar.style.width = '0%';
+                    return;
+                }
+                
+                currentStep++;
+                const percentage = (currentStep / totalSteps) * 100;
+                progressBar.style.width = `${Math.min(percentage, 100)}%`;
+                
+                if (currentStep >= totalSteps) {
+                    clearInterval(heroVideoState.progressInterval);
+                }
+            }, interval);
+        }
+
+        function startHeroVideoAutoplay() {
+            clearInterval(heroVideoState.autoplayInterval);
+            
+            if (heroVideoState.videos.length <= 1) return;
+            
+            heroVideoState.autoplayInterval = setInterval(() => {
+                if (!heroVideoState.isTransitioning) {
+                    const nextIndex = (heroVideoState.currentIndex + 1) % heroVideoState.videos.length;
+                    switchHeroVideo(nextIndex);
+                }
+            }, heroVideoState.videoDuration);
+        }
+
+        function switchHeroVideo(index) {
+            if (heroVideoState.isTransitioning) return;
+            
+            clearInterval(heroVideoState.autoplayInterval);
+            clearInterval(heroVideoState.progressInterval);
+            
+            const progressBar = document.getElementById('hero-video-progress');
+            if (progressBar) {
+                progressBar.style.transition = 'width 0.3s ease';
+                progressBar.style.width = '100%';
+            }
+            
+            setTimeout(() => {
+                loadHeroVideo(index);
+                startHeroVideoAutoplay();
+            }, 300);
+        }
+
+        function cleanupHeroVideo() {
+            const player = document.getElementById('hero-video-player');
+            if (player) {
+                player.pause();
+                player.src = '';
+            }
+            clearInterval(heroVideoState.progressInterval);
+            clearInterval(heroVideoState.autoplayInterval);
+            
+            const progressBar = document.getElementById('hero-video-progress');
+            if (progressBar) {
+                progressBar.style.width = '0%';
             }
         }
 
@@ -939,17 +1355,19 @@
         // ========== LOAD DATA ==========
         async function loadData() {
             try {
-                const [hero, cats, prods, newsData] = await Promise.all([
+                const [hero, cats, prods, newsData, heroVideosData] = await Promise.all([
                     fetchAPI('/api/hero'), 
                     fetchAPI('/api/categories'),
                     fetchAPI('/api/products'), 
-                    fetchAPI('/api/news')
+                    fetchAPI('/api/news'),
+                    fetchAPI('/api/hero-videos')
                 ]);
                 
                 if(hero && hero.length) currentData.hero = hero;
                 if(cats && cats.length) currentData.categories = cats;
                 if(prods && prods.length) currentData.products = prods;
                 if(newsData) currentData.news = newsData;
+                if(heroVideosData && heroVideosData.length) currentData.heroVideos = heroVideosData;
                 
                 renderHero();
                 renderCategories();
@@ -957,6 +1375,7 @@
                 renderNews(currentData.news);
                 renderHomepageSections();
                 renderRecentlyViewed();
+                initHeroVideoSection();
                 handleInitialRoute();
             } catch(err) { 
                 console.error('❌ Data load error:', err);
