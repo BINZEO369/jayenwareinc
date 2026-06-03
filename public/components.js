@@ -233,6 +233,20 @@ function createSlug(text) {
 // ============================================
 // API HELPERS: Fetch data from server
 // ============================================
+async function fetchMenuItems() {
+    try {
+        const response = await fetch('/api/menu-items');
+        if (!response.ok) throw new Error('Failed to fetch menu items');
+        const data = await response.json();
+        allMenuItems = data;
+        return data;
+    } catch (error) {
+        console.error('Error fetching menu items:', error);
+        allMenuItems = [];
+        return [];
+    }
+}
+
 async function fetchCategories() {
     try {
         const response = await fetch('/api/categories');
@@ -262,14 +276,124 @@ async function fetchSubcategories() {
 }
 
 // ============================================
-// RENDER DESKTOP NAVIGATION - Categories Only
+// GET LINK URL FOR MENU ITEM
 // ============================================
-function renderDesktopNav() {
-    if (!allCategories || allCategories.length === 0) {
-        return '<span class="nav-link px-5" style="color:#86868b;">No categories</span>';
+function getMenuLinkUrl(item) {
+    // If item has a custom URL, use it
+    if (item.url && item.url.trim() !== '') {
+        return item.url;
     }
     
+    const slug = item.slug || '';
+    
+    switch (item.type) {
+        case 'home':
+            return '/';
+        case 'products':
+            return '/products';
+        case 'category':
+            if (item.category_slug && item.subcategory_slug) {
+                return `/category/${item.category_slug}/${item.subcategory_slug}`;
+            }
+            return item.category_slug ? `/category/${item.category_slug}` : '#';
+        case 'subcategory':
+            if (item.category_slug && item.subcategory_slug) {
+                return `/category/${item.category_slug}/${item.subcategory_slug}`;
+            }
+            return item.subcategory_slug ? `/subcategory/${item.subcategory_slug}` : '#';
+        case 'page':
+            return slug ? `/${slug}` : '#';
+        case 'custom':
+            return item.url || '#';
+        case 'contact':
+            return '/contact';
+        case 'about':
+            return '/about';
+        case 'journal':
+            return '/journal';
+        default:
+            return slug ? `/${slug}` : '#';
+    }
+}
+
+// ============================================
+// RENDER DESKTOP NAVIGATION - Mixed Menu Items + Categories
+// ============================================
+function renderDesktopNav() {
     let html = '';
+    
+    // Render menu items from database (Home, Products, Contact, About, Journal, etc.)
+    if (allMenuItems && allMenuItems.length > 0) {
+        allMenuItems.forEach(item => {
+            const hasChildren = item.children && item.children.length > 0;
+            const linkUrl = getMenuLinkUrl(item);
+            
+            if (item.type === 'category' && item.show_categories_from_db) {
+                // This is the categories button - show categories from DB with subcategories on hover
+                html += renderCategoriesDropdownButton(item);
+            } else if (hasChildren) {
+                html += `
+                <div class="desktop-dropdown">
+                    <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+                        ${item.title || item.name || ''}
+                        <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                    </a>
+                    <div class="desktop-dropdown-menu">
+                        ${item.children.map(child => {
+                            const childUrl = getMenuLinkUrl(child);
+                            return `<a href="${childUrl}" class="desktop-dropdown-item">${child.title || child.name || ''}</a>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            } else {
+                html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
+            }
+        });
+    }
+    
+    // Also render categories from database if no menu items or as additional items
+    if (allCategories && allCategories.length > 0 && (!allMenuItems || allMenuItems.length === 0)) {
+        allCategories.forEach(cat => {
+            const catSlug = cat.slug || createSlug(cat.name);
+            const catUrl = `/category/${catSlug}`;
+            const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
+            
+            if (subcategories.length > 0) {
+                html += `
+                <div class="desktop-dropdown">
+                    <a href="${catUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+                        ${cat.name}
+                        <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                    </a>
+                    <div class="desktop-dropdown-menu">
+                        ${subcategories.map(sub => {
+                            const subSlug = sub.slug || createSlug(sub.name);
+                            const subUrl = `/category/${catSlug}/${subSlug}`;
+                            return `<a href="${subUrl}" class="desktop-dropdown-item">${sub.name}</a>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            } else {
+                html += `<a href="${catUrl}" class="nav-link px-5">${cat.name}</a>`;
+            }
+        });
+    }
+    
+    return html || '<span class="nav-link px-5" style="color:#86868b;">No items</span>';
+}
+
+function renderCategoriesDropdownButton(menuItem) {
+    if (!allCategories || allCategories.length === 0) {
+        return `<a href="${getMenuLinkUrl(menuItem)}" class="nav-link px-5">${menuItem.title || menuItem.name || 'Categories'}</a>`;
+    }
+    
+    let html = `
+    <div class="desktop-dropdown">
+        <a href="${getMenuLinkUrl(menuItem)}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+            ${menuItem.title || menuItem.name || 'Categories'}
+            <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+        </a>
+        <div class="desktop-dropdown-menu">`;
     
     allCategories.forEach(cat => {
         const catSlug = cat.slug || createSlug(cat.name);
@@ -278,12 +402,12 @@ function renderDesktopNav() {
         
         if (subcategories.length > 0) {
             html += `
-            <div class="desktop-dropdown">
-                <a href="${catUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+            <div style="position:relative;">
+                <a href="${catUrl}" class="desktop-dropdown-item has-children">
                     ${cat.name}
-                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                    <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
                 </a>
-                <div class="desktop-dropdown-menu">
+                <div class="desktop-sub-dropdown">
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
                         const subUrl = `/category/${catSlug}/${subSlug}`;
@@ -292,37 +416,132 @@ function renderDesktopNav() {
                 </div>
             </div>`;
         } else {
-            html += `<a href="${catUrl}" class="nav-link px-5">${cat.name}</a>`;
+            html += `<a href="${catUrl}" class="desktop-dropdown-item">${cat.name}</a>`;
         }
     });
     
+    html += `</div></div>`;
     return html;
 }
 
 // ============================================
-// RENDER MOBILE NAVIGATION - Categories Only
+// RENDER MOBILE NAVIGATION - Mixed Menu Items + Categories
 // ============================================
 function renderMobileNav() {
-    if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-menu-item" style="color:#86868b;">No categories</div>';
-    }
-    
     let html = '';
     
-    allCategories.forEach((cat, index) => {
+    // Render menu items from database
+    if (allMenuItems && allMenuItems.length > 0) {
+        allMenuItems.forEach((item, index) => {
+            const hasChildren = item.children && item.children.length > 0;
+            const linkUrl = getMenuLinkUrl(item);
+            const uniqueId = `mobile-menu-${index}-${Date.now()}`;
+            
+            if (item.type === 'category' && item.show_categories_from_db) {
+                // Categories button with subcategories from DB
+                html += renderMobileCategoriesSection(item, uniqueId);
+            } else if (hasChildren) {
+                html += `
+                <div>
+                    <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                        <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                    <div class="mobile-submenu" id="${uniqueId}">
+                        ${item.children.map(child => {
+                            const childUrl = getMenuLinkUrl(child);
+                            return `<a href="${childUrl}" class="mobile-sub-item">${child.title || child.name || ''}</a>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            } else {
+                // Determine icon based on type
+                let icon = 'fa-circle';
+                switch (item.type) {
+                    case 'home': icon = 'fa-house'; break;
+                    case 'products': icon = 'fa-bag-shopping'; break;
+                    case 'contact': icon = 'fa-envelope'; break;
+                    case 'about': icon = 'fa-circle-info'; break;
+                    case 'journal': icon = 'fa-newspaper'; break;
+                    case 'page': icon = 'fa-file'; break;
+                    default: icon = 'fa-circle'; break;
+                }
+                html += `
+                <a href="${linkUrl}" class="mobile-menu-item no-underline">
+                    <span><i class="fa-solid ${icon} mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+                </a>`;
+            }
+        });
+    }
+    
+    // Render categories if no menu items exist
+    if (allCategories && allCategories.length > 0 && (!allMenuItems || allMenuItems.length === 0)) {
+        allCategories.forEach((cat, index) => {
+            const catSlug = cat.slug || createSlug(cat.name);
+            const catUrl = `/category/${catSlug}`;
+            const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
+            const uniqueId = `mobile-cat-${index}-${Date.now()}`;
+            
+            if (subcategories.length > 0) {
+                html += `
+                <div>
+                    <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                        <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                    <div class="mobile-submenu" id="${uniqueId}">
+                        <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600;">All ${cat.name}</a>
+                        ${subcategories.map(sub => {
+                            const subSlug = sub.slug || createSlug(sub.name);
+                            const subUrl = `/category/${catSlug}/${subSlug}`;
+                            return `<a href="${subUrl}" class="mobile-sub-item">${sub.name}</a>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            } else {
+                html += `
+                <a href="${catUrl}" class="mobile-menu-item no-underline">
+                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+                </a>`;
+            }
+        });
+    }
+    
+    return html || '<div class="mobile-menu-item" style="color:#86868b;">No items</div>';
+}
+
+function renderMobileCategoriesSection(menuItem, parentId) {
+    if (!allCategories || allCategories.length === 0) {
+        return `<a href="${getMenuLinkUrl(menuItem)}" class="mobile-menu-item no-underline">
+            <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${menuItem.title || menuItem.name || 'Categories'}</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+        </a>`;
+    }
+    
+    let html = `
+    <div>
+        <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${parentId}', this)" style="cursor:pointer;">
+            <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${menuItem.title || menuItem.name || 'Categories'}</span>
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+        <div class="mobile-submenu" id="${parentId}">`;
+    
+    allCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
-        const uniqueId = `mobile-cat-${index}-${Date.now()}`;
+        const uniqueId = `${parentId}-cat-${idx}`;
         
         if (subcategories.length > 0) {
             html += `
             <div>
-                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right"></i>
+                <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                    ${cat.name}
+                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}">
+                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
                     <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
@@ -332,14 +551,11 @@ function renderMobileNav() {
                 </div>
             </div>`;
         } else {
-            html += `
-            <a href="${catUrl}" class="mobile-menu-item no-underline">
-                <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
-            </a>`;
+            html += `<a href="${catUrl}" class="mobile-sub-item">${cat.name}</a>`;
         }
     });
     
+    html += `</div></div>`;
     return html;
 }
 
@@ -347,8 +563,9 @@ function renderMobileNav() {
 // HEADER COMPONENT
 // ============================================
 async function renderHeader() {
-    // Fetch categories and subcategories
-    const [categories, subcategories] = await Promise.all([
+    // Fetch all required data first
+    const [menuItems, categories, subcategories] = await Promise.all([
+        fetchMenuItems(),
         fetchCategories(),
         fetchSubcategories()
     ]);
@@ -689,8 +906,10 @@ window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
 window.createSlug = createSlug;
+window.getMenuLinkUrl = getMenuLinkUrl;
 window.cart = cart;
 window.wishlist = wishlist;
+window.allMenuItems = allMenuItems;
 window.allCategories = allCategories;
 window.allSubcategories = allSubcategories;
 
