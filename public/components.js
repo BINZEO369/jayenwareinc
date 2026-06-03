@@ -1,6 +1,6 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.2 (Dynamic from Database - Categories & Menu Items)
+// Version: 3.3 (Dynamic from Database - Categories as Direct Menu Items)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -357,10 +357,7 @@ function getCategoryUrl(category, subcategory = null) {
 function renderDesktopNav(rootItems) {
     let html = '';
     
-    // First, render the categories dropdown from database
-    html += renderCategoriesDropdownButton();
-    
-    // Then render menu items from menu_items table
+    // First, render menu items from menu_items table (sorted by sort_order)
     rootItems.forEach(item => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
@@ -381,24 +378,8 @@ function renderDesktopNav(rootItems) {
         }
     });
     
-    return html;
-}
-
-function renderCategoriesDropdownButton() {
-    if (!allCategories || allCategories.length === 0) {
-        return '';
-    }
-    
-    let html = `
-    <div class="desktop-dropdown">
-        <a href="/products" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
-            Categories
-            <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
-        </a>
-        <div class="desktop-dropdown-menu">
-            ${renderCategoriesDropdown()}
-        </div>
-    </div>`;
+    // Then, render categories from database as direct menu buttons
+    html += renderCategoriesAsNavItems();
     
     return html;
 }
@@ -434,13 +415,17 @@ function renderDesktopDropdownChildren(item) {
     return '';
 }
 
-function renderCategoriesDropdown() {
+function renderCategoriesAsNavItems() {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="desktop-dropdown-item" style="color:#86868b;">No categories found</div>';
+        return '';
     }
     
     let html = '';
-    allCategories.forEach(cat => {
+    
+    // Sort categories by sort_order if available
+    const sortedCategories = [...allCategories].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    
+    sortedCategories.forEach(cat => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
         
@@ -448,13 +433,14 @@ function renderCategoriesDropdown() {
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         
         if (subcategories.length > 0) {
+            // Category with subcategories - show as dropdown
             html += `
-            <div style="position:relative;">
-                <a href="${catUrl}" class="desktop-dropdown-item has-children">
+            <div class="desktop-dropdown">
+                <a href="${catUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
                     ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
                 </a>
-                <div class="desktop-sub-dropdown">
+                <div class="desktop-dropdown-menu">
                     <a href="${catUrl}" class="desktop-dropdown-item" style="font-weight:600;color:#007aff;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
@@ -464,7 +450,8 @@ function renderCategoriesDropdown() {
                 </div>
             </div>`;
         } else {
-            html += `<a href="${catUrl}" class="desktop-dropdown-item">${cat.name}</a>`;
+            // Category without subcategories - show as simple link
+            html += `<a href="${catUrl}" class="nav-link px-5">${cat.name}</a>`;
         }
     });
     
@@ -477,14 +464,11 @@ function renderCategoriesDropdown() {
 function renderMobileNav(rootItems) {
     let html = '';
     
-    // First, render categories from database in mobile
-    html += renderMobileCategoriesMenu();
-    
-    // Then render menu items from menu_items table
+    // First, render menu items from menu_items table
     rootItems.forEach((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
-        const uniqueId = `mobile-sub-${index}-${Date.now()}`;
+        const uniqueId = `mobile-menu-${index}-${Date.now()}`;
         
         if (hasChildren) {
             html += `
@@ -517,26 +501,8 @@ function renderMobileNav(rootItems) {
         }
     });
     
-    return html;
-}
-
-function renderMobileCategoriesMenu() {
-    if (!allCategories || allCategories.length === 0) {
-        return '';
-    }
-    
-    const uniqueId = `mobile-categories-${Date.now()}`;
-    
-    let html = `
-    <div>
-        <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-            <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300" style="font-size:12px;"></i> Categories</span>
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-        <div class="mobile-submenu" id="${uniqueId}">
-            ${renderMobileCategoriesSubmenu(uniqueId)}
-        </div>
-    </div>`;
+    // Then, render categories from database
+    html += renderMobileCategoriesAsItems();
     
     return html;
 }
@@ -573,16 +539,20 @@ function renderMobileSubItems(item, parentId) {
     return '';
 }
 
-function renderMobileCategoriesSubmenu(parentId) {
+function renderMobileCategoriesAsItems() {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-sub-item" style="color:#86868b;">No categories</div>';
+        return '';
     }
     
     let html = '';
-    allCategories.forEach((cat, idx) => {
+    
+    // Sort categories by sort_order if available
+    const sortedCategories = [...allCategories].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    
+    sortedCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
-        const uniqueId = `${parentId}-cat-${idx}`;
+        const uniqueId = `mobile-cat-${idx}-${Date.now()}`;
         
         // Get subcategories for this category
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
@@ -590,11 +560,11 @@ function renderMobileCategoriesSubmenu(parentId) {
         if (subcategories.length > 0) {
             html += `
             <div>
-                <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                    <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
+                    <i class="fa-solid fa-chevron-right"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
+                <div class="mobile-submenu" id="${uniqueId}">
                     <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
@@ -604,7 +574,11 @@ function renderMobileCategoriesSubmenu(parentId) {
                 </div>
             </div>`;
         } else {
-            html += `<a href="${catUrl}" class="mobile-sub-item">${cat.name}</a>`;
+            html += `
+            <a href="${catUrl}" class="mobile-menu-item no-underline">
+                <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+            </a>`;
         }
     });
     
