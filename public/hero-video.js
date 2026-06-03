@@ -1005,25 +1005,35 @@
     }
 
     // Inject HTML template if not present
-    function injectHTML() {
-        if (!document.getElementById('hero-video-section')) {
-            // Find where to insert (before hero-container or at the beginning of main)
-            const heroContainer = document.getElementById('hero-container');
-            const mainElement = document.querySelector('main');
-            
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = getHeroVideoHTML();
-            const videoSection = tempDiv.firstElementChild;
+    // ফিক্সড ভার্সন - ভিডিও সবসময় #home এর সবার উপরে
+function injectHTML() {
+    if (document.getElementById('hero-video-section')) {
+        return; // Already exists
+    }
 
-            if (heroContainer) {
-                heroContainer.parentNode.insertBefore(videoSection, heroContainer);
-            } else if (mainElement) {
-                mainElement.insertBefore(videoSection, mainElement.firstChild);
-            } else {
-                document.body.insertBefore(videoSection, document.body.firstChild);
-            }
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = getHeroVideoHTML();
+    const videoSection = tempDiv.firstElementChild;
+
+    // সবসময় #home সেকশনের প্রথম চাইল্ড হিসেবে ইনসার্ট করুন
+    const homeSection = document.getElementById('home');
+    
+    if (homeSection) {
+        // home section-এর একদম শুরুতে (প্রথম চাইল্ড) বসান
+        homeSection.insertBefore(videoSection, homeSection.firstChild);
+        console.log('[HeroVideo] ✅ Inserted as first child of #home');
+    } else {
+        // Fallback: main element-এর শুরুতে
+        const mainElement = document.querySelector('main');
+        if (mainElement) {
+            mainElement.insertBefore(videoSection, mainElement.firstChild);
+            console.log('[HeroVideo] ⚠️ Inserted in <main> (fallback)');
+        } else {
+            document.body.insertBefore(videoSection, document.body.firstChild);
+            console.log('[HeroVideo] ⚠️ Inserted in <body> (ultimate fallback)');
         }
     }
+}
 
     // Wait for DOM and try to auto-initialize
     function tryAutoInit() {
