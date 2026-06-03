@@ -599,17 +599,15 @@
         
         footer { margin-top: auto; }
 
-        /* CATEGORY SHOWCASE - ALWAYS VISIBLE */
+        /* CATEGORY SHOWCASE STYLES */
         #category-showcase-section {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
+            display: block;
             padding: 40px 0;
             background: linear-gradient(to bottom, #ffffff, #f8f8fa);
             min-height: 200px;
         }
         .category-grid {
-            display: grid !important;
+            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             max-width: 1200px;
@@ -928,22 +926,6 @@
                 </div>
             </section>
 
-            <!-- CATEGORY SHOWCASE SECTION -->
-            <section id="category-showcase-section">
-                <div class="category-showcase-container">
-                    <div class="carousel-header">
-                        <h2 class="section-title" style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 32px; color: #1d1d1f;">
-                            Shop by Category
-                        </h2>
-                    </div>
-                    <div id="category-showcase-grid" class="category-grid">
-                        <div class="category-skeleton"></div>
-                        <div class="category-skeleton"></div>
-                        <div class="category-skeleton"></div>
-                    </div>
-                </div>
-            </section>
-
             <section id="featured-products-section" class="carousel-section hidden" style="background: rgba(245,245,247,0.5);">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1045,6 +1027,22 @@
                 </div>
             </section>
             
+        </section>
+
+        <!-- CATEGORY SHOWCASE - HOME SECTION এর বাইরে -->
+        <section id="category-showcase-section">
+            <div class="category-showcase-container">
+                <div class="carousel-header">
+                    <h2 class="section-title" style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 32px; color: #1d1d1f;">
+                        Shop by Category
+                    </h2>
+                </div>
+                <div id="category-showcase-grid" class="category-grid">
+                    <div class="category-skeleton"></div>
+                    <div class="category-skeleton"></div>
+                    <div class="category-skeleton"></div>
+                </div>
+            </div>
         </section>
 
         <section id="products" class="page-section py-6 sm:py-8 lg:py-12">
@@ -1645,34 +1643,31 @@
         }
 
         function renderCategoryShowcase(categories) {
-            console.log('[Category] Starting render with', categories.length, 'categories');
+            console.log('=== CATEGORY RENDER START ===');
+            console.log('Categories count:', categories.length);
             
             const grid = document.getElementById('category-showcase-grid');
-            const section = document.getElementById('category-showcase-section');
+            console.log('Grid element found:', !!grid);
             
-            if (!grid) {
-                console.error('[Category] GRID NOT FOUND!');
-                return;
-            }
-            
-            console.log('[Category] Grid found, clearing skeletons...');
+            if (!grid) return;
             
             const displayCategories = categories.filter(cat => cat.is_active !== false && cat.image);
-            console.log('[Category] Displayable categories:', displayCategories.length);
+            console.log('Displayable categories:', displayCategories.length);
             
             if (displayCategories.length === 0) {
-                grid.innerHTML = '<div style="text-align:center;padding:40px;color:#86868b;">No categories available</div>';
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#86868b;">No categories available</div>';
                 return;
             }
             
-            grid.innerHTML = displayCategories.map((cat, index) => {
+            let html = '';
+            displayCategories.forEach((cat, index) => {
                 const ctaTitle = cat.cta_title || 'Explore Now';
                 const ctaLink = cat.cta_link || `/category/${cat.slug || getCategorySlug(cat.name)}`;
                 const imageUrl = cat.image;
                 
-                console.log(`[Category] Card ${index+1}: ${cat.name} | Image: ${imageUrl}`);
+                console.log(`Card ${index+1}: ${cat.name} -> ${imageUrl}`);
                 
-                return `
+                html += `
                 <a href="${ctaLink}" 
                    onclick="event.preventDefault(); navigateToCategory('${cat.name}')" 
                    class="category-card" 
@@ -1694,11 +1689,12 @@
                             <span class="category-card-arrow">→</span>
                         </span>
                     </div>
-                </a>
-                `;
-            }).join('');
+                </a>`;
+            });
             
-            console.log('[Category] ✅ Render complete!', displayCategories.length, 'cards created');
+            grid.innerHTML = html;
+            console.log('=== CATEGORY RENDER COMPLETE ===');
+            console.log('Grid now has', grid.children.length, 'children');
         }
 
         function navigateToCategory(categoryName) {
@@ -1734,12 +1730,6 @@
                     el.classList.add('hidden');
                 }
             });
-            
-            // IMMEDIATELY render categories
-            console.log('[Homepage] Rendering categories NOW...');
-            if (currentData.categories && currentData.categories.length > 0) {
-                renderCategoryShowcase(currentData.categories);
-            }
         }
 
         function cleanupAllCarousels() { 
@@ -1876,7 +1866,7 @@
 
         async function loadData() {
             try {
-                console.log('[App] ⏳ Loading data...');
+                console.log('⏳ Loading data...');
                 const [hero, cats, prods, newsData, heroVideosData] = await Promise.all([
                     fetchAPI('/api/hero'), 
                     fetchAPI('/api/categories'),
@@ -1885,10 +1875,7 @@
                     fetchAPI('/api/hero-videos')
                 ]);
                 
-                console.log('[App] ✅ Data loaded:');
-                console.log('  Hero:', hero?.length);
-                console.log('  Categories:', cats?.length, cats?.map(c => c.name));
-                console.log('  Products:', prods?.length);
+                console.log('✅ Data loaded: Hero=' + (hero?.length||0) + ', Categories=' + (cats?.length||0) + ', Products=' + (prods?.length||0));
                 
                 if(hero && hero.length) currentData.hero = hero;
                 if(cats && cats.length) currentData.categories = cats;
@@ -1903,19 +1890,16 @@
                 renderCategories();
                 renderProducts(currentData.products);
                 renderNews(currentData.news);
+                renderHomepageSections();
                 
-                // CRITICAL: Immediately render categories
-                console.log('[App] 🎯 Rendering categories immediately...');
+                // IMMEDIATE CATEGORY RENDER
                 if (currentData.categories && currentData.categories.length > 0) {
                     renderCategoryShowcase(currentData.categories);
                 }
                 
-                renderHomepageSections();
                 handleInitialRoute();
-                
-                console.log('[App] ✅ All data loaded and rendered');
             } catch(err) { 
-                console.error('[App] Data load error:', err);
+                console.error('Data load error:', err);
             }
         }
 
@@ -1948,7 +1932,7 @@
         }
 
         window.onload = async () => {
-            console.log('[App] 🚀 Window loaded');
+            console.log('🚀 App starting...');
             
             const consent = localStorage.getItem('jayenware_consent'); 
             if(!consent) {
@@ -1962,7 +1946,7 @@
             
             setTimeout(initCarouselTouchSupport, 500);
             
-            console.log('[App] ✅ Application fully initialized');
+            console.log('✅ App ready');
         };
     </script>
 </body>
