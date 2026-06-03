@@ -1,6 +1,6 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.2 (Dynamic Categories Menu from Database)
+// Version: 3.2 (Dynamic from Database - Categories & Menu Items)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -261,18 +261,41 @@ async function fetchCategories() {
     }
 }
 
-async function fetchSubcategories() {
+async function fetchSubcategories(categorySlug = null) {
     try {
-        const response = await fetch('/api/subcategories');
+        let url = '/api/subcategories';
+        if (categorySlug) {
+            url += `?category_slug=${categorySlug}`;
+        }
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch subcategories');
         const data = await response.json();
-        allSubcategories = data;
+        
+        if (!categorySlug) {
+            allSubcategories = data;
+        }
         return data;
     } catch (error) {
         console.error('Error fetching subcategories:', error);
-        allSubcategories = [];
         return [];
     }
+}
+
+// ============================================
+// BUILD MENU TREE FROM FLAT DATA
+// ============================================
+function buildMenuTree(items, parentId = null) {
+    return items
+        .filter(item => {
+            const itemParentId = item.parent_id || null;
+            const targetParentId = parentId || null;
+            return itemParentId === targetParentId;
+        })
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        .map(item => ({
+            ...item,
+            children: buildMenuTree(items, item.id)
+        }));
 }
 
 // ============================================
@@ -317,87 +340,111 @@ function getMenuLinkUrl(item) {
 }
 
 // ============================================
-// RENDER DESKTOP NAVIGATION - Mixed Menu Items + Categories
+// GET CATEGORY/SUBCATEGORY URL
 // ============================================
-function renderDesktopNav() {
-    let html = '';
-    
-    // Render menu items from database (Home, Products, Contact, About, Journal, etc.)
-    if (allMenuItems && allMenuItems.length > 0) {
-        allMenuItems.forEach(item => {
-            const hasChildren = item.children && item.children.length > 0;
-            const linkUrl = getMenuLinkUrl(item);
-            
-            if (item.type === 'category' && item.show_categories_from_db) {
-                // This is the categories button - show categories from DB with subcategories on hover
-                html += renderCategoriesDropdownButton(item);
-            } else if (hasChildren) {
-                html += `
-                <div class="desktop-dropdown">
-                    <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
-                        ${item.title || item.name || ''}
-                        <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
-                    </a>
-                    <div class="desktop-dropdown-menu">
-                        ${item.children.map(child => {
-                            const childUrl = getMenuLinkUrl(child);
-                            return `<a href="${childUrl}" class="desktop-dropdown-item">${child.title || child.name || ''}</a>`;
-                        }).join('')}
-                    </div>
-                </div>`;
-            } else {
-                html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
-            }
-        });
+function getCategoryUrl(category, subcategory = null) {
+    const catSlug = category.slug || createSlug(category.name);
+    if (subcategory) {
+        const subSlug = subcategory.slug || createSlug(subcategory.name);
+        return `/category/${catSlug}/${subSlug}`;
     }
-    
-    // Also render categories from database if no menu items or as additional items
-    if (allCategories && allCategories.length > 0 && (!allMenuItems || allMenuItems.length === 0)) {
-        allCategories.forEach(cat => {
-            const catSlug = cat.slug || createSlug(cat.name);
-            const catUrl = `/category/${catSlug}`;
-            const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
-            
-            if (subcategories.length > 0) {
-                html += `
-                <div class="desktop-dropdown">
-                    <a href="${catUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
-                        ${cat.name}
-                        <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
-                    </a>
-                    <div class="desktop-dropdown-menu">
-                        ${subcategories.map(sub => {
-                            const subSlug = sub.slug || createSlug(sub.name);
-                            const subUrl = `/category/${catSlug}/${subSlug}`;
-                            return `<a href="${subUrl}" class="desktop-dropdown-item">${sub.name}</a>`;
-                        }).join('')}
-                    </div>
-                </div>`;
-            } else {
-                html += `<a href="${catUrl}" class="nav-link px-5">${cat.name}</a>`;
-            }
-        });
-    }
-    
-    return html || '<span class="nav-link px-5" style="color:#86868b;">No items</span>';
+    return `/category/${catSlug}`;
 }
 
-function renderCategoriesDropdownButton(menuItem) {
+// ============================================
+// RENDER DESKTOP NAVIGATION
+// ============================================
+function renderDesktopNav(rootItems) {
+    let html = '';
+    
+    // First, render the categories dropdown from database
+    html += renderCategoriesDropdownButton();
+    
+    // Then render menu items from menu_items table
+    rootItems.forEach(item => {
+        const hasChildren = item.children && item.children.length > 0;
+        const linkUrl = getMenuLinkUrl(item);
+        
+        if (hasChildren) {
+            html += `
+            <div class="desktop-dropdown">
+                <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+                    ${item.title || item.name || ''}
+                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                </a>
+                <div class="desktop-dropdown-menu">
+                    ${renderDesktopDropdownChildren(item)}
+                </div>
+            </div>`;
+        } else {
+            html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
+        }
+    });
+    
+    return html;
+}
+
+function renderCategoriesDropdownButton() {
     if (!allCategories || allCategories.length === 0) {
-        return `<a href="${getMenuLinkUrl(menuItem)}" class="nav-link px-5">${menuItem.title || menuItem.name || 'Categories'}</a>`;
+        return '';
     }
     
     let html = `
     <div class="desktop-dropdown">
-        <a href="${getMenuLinkUrl(menuItem)}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
-            ${menuItem.title || menuItem.name || 'Categories'}
+        <a href="/products" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+            Categories
             <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
         </a>
-        <div class="desktop-dropdown-menu">`;
+        <div class="desktop-dropdown-menu">
+            ${renderCategoriesDropdown()}
+        </div>
+    </div>`;
     
+    return html;
+}
+
+function renderDesktopDropdownChildren(item) {
+    // If item has children from menu_items table, render those
+    if (item.children && item.children.length > 0) {
+        let html = '';
+        item.children.forEach(child => {
+            const hasGrandChildren = child.children && child.children.length > 0;
+            const linkUrl = getMenuLinkUrl(child);
+            
+            if (hasGrandChildren) {
+                html += `
+                <div style="position:relative;">
+                    <a href="${linkUrl}" class="desktop-dropdown-item has-children">
+                        ${child.title || child.name || ''}
+                        <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+                    </a>
+                    <div class="desktop-sub-dropdown">
+                        ${child.children.map(gc => `
+                            <a href="${getMenuLinkUrl(gc)}" class="desktop-dropdown-item">${gc.title || gc.name || ''}</a>
+                        `).join('')}
+                    </div>
+                </div>`;
+            } else {
+                html += `<a href="${linkUrl}" class="desktop-dropdown-item">${child.title || child.name || ''}</a>`;
+            }
+        });
+        return html;
+    }
+    
+    return '';
+}
+
+function renderCategoriesDropdown() {
+    if (!allCategories || allCategories.length === 0) {
+        return '<div class="desktop-dropdown-item" style="color:#86868b;">No categories found</div>';
+    }
+    
+    let html = '';
     allCategories.forEach(cat => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
+        
+        // Get subcategories for this category
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         
         if (subcategories.length > 0) {
@@ -408,6 +455,7 @@ function renderCategoriesDropdownButton(menuItem) {
                     <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
                 </a>
                 <div class="desktop-sub-dropdown">
+                    <a href="${catUrl}" class="desktop-dropdown-item" style="font-weight:600;color:#007aff;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
                         const subUrl = `/category/${catSlug}/${subSlug}`;
@@ -420,119 +468,124 @@ function renderCategoriesDropdownButton(menuItem) {
         }
     });
     
-    html += `</div></div>`;
     return html;
 }
 
 // ============================================
-// RENDER MOBILE NAVIGATION - Mixed Menu Items + Categories
+// RENDER MOBILE NAVIGATION
 // ============================================
-function renderMobileNav() {
+function renderMobileNav(rootItems) {
     let html = '';
     
-    // Render menu items from database
-    if (allMenuItems && allMenuItems.length > 0) {
-        allMenuItems.forEach((item, index) => {
-            const hasChildren = item.children && item.children.length > 0;
-            const linkUrl = getMenuLinkUrl(item);
-            const uniqueId = `mobile-menu-${index}-${Date.now()}`;
-            
-            if (item.type === 'category' && item.show_categories_from_db) {
-                // Categories button with subcategories from DB
-                html += renderMobileCategoriesSection(item, uniqueId);
-            } else if (hasChildren) {
-                html += `
-                <div>
-                    <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                        <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                    <div class="mobile-submenu" id="${uniqueId}">
-                        ${item.children.map(child => {
-                            const childUrl = getMenuLinkUrl(child);
-                            return `<a href="${childUrl}" class="mobile-sub-item">${child.title || child.name || ''}</a>`;
-                        }).join('')}
-                    </div>
-                </div>`;
-            } else {
-                // Determine icon based on type
-                let icon = 'fa-circle';
-                switch (item.type) {
-                    case 'home': icon = 'fa-house'; break;
-                    case 'products': icon = 'fa-bag-shopping'; break;
-                    case 'contact': icon = 'fa-envelope'; break;
-                    case 'about': icon = 'fa-circle-info'; break;
-                    case 'journal': icon = 'fa-newspaper'; break;
-                    case 'page': icon = 'fa-file'; break;
-                    default: icon = 'fa-circle'; break;
-                }
-                html += `
-                <a href="${linkUrl}" class="mobile-menu-item no-underline">
-                    <span><i class="fa-solid ${icon} mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
-                </a>`;
-            }
-        });
-    }
+    // First, render categories from database in mobile
+    html += renderMobileCategoriesMenu();
     
-    // Render categories if no menu items exist
-    if (allCategories && allCategories.length > 0 && (!allMenuItems || allMenuItems.length === 0)) {
-        allCategories.forEach((cat, index) => {
-            const catSlug = cat.slug || createSlug(cat.name);
-            const catUrl = `/category/${catSlug}`;
-            const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
-            const uniqueId = `mobile-cat-${index}-${Date.now()}`;
-            
-            if (subcategories.length > 0) {
-                html += `
-                <div>
-                    <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                        <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                    <div class="mobile-submenu" id="${uniqueId}">
-                        <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600;">All ${cat.name}</a>
-                        ${subcategories.map(sub => {
-                            const subSlug = sub.slug || createSlug(sub.name);
-                            const subUrl = `/category/${catSlug}/${subSlug}`;
-                            return `<a href="${subUrl}" class="mobile-sub-item">${sub.name}</a>`;
-                        }).join('')}
-                    </div>
-                </div>`;
-            } else {
-                html += `
-                <a href="${catUrl}" class="mobile-menu-item no-underline">
-                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
-                </a>`;
+    // Then render menu items from menu_items table
+    rootItems.forEach((item, index) => {
+        const hasChildren = item.children && item.children.length > 0;
+        const linkUrl = getMenuLinkUrl(item);
+        const uniqueId = `mobile-sub-${index}-${Date.now()}`;
+        
+        if (hasChildren) {
+            html += `
+            <div>
+                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                <div class="mobile-submenu" id="${uniqueId}">
+                    ${renderMobileSubItems(item, uniqueId)}
+                </div>
+            </div>`;
+        } else {
+            // Determine icon based on type
+            let icon = 'fa-circle';
+            switch (item.type) {
+                case 'home': icon = 'fa-house'; break;
+                case 'products': icon = 'fa-bag-shopping'; break;
+                case 'contact': icon = 'fa-envelope'; break;
+                case 'about': icon = 'fa-circle-info'; break;
+                case 'journal': icon = 'fa-newspaper'; break;
+                case 'page': icon = 'fa-file'; break;
+                default: icon = 'fa-circle'; break;
             }
-        });
-    }
+            html += `
+            <a href="${linkUrl}" class="mobile-menu-item no-underline">
+                <span><i class="fa-solid ${icon} mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+            </a>`;
+        }
+    });
     
-    return html || '<div class="mobile-menu-item" style="color:#86868b;">No items</div>';
+    return html;
 }
 
-function renderMobileCategoriesSection(menuItem, parentId) {
+function renderMobileCategoriesMenu() {
     if (!allCategories || allCategories.length === 0) {
-        return `<a href="${getMenuLinkUrl(menuItem)}" class="mobile-menu-item no-underline">
-            <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${menuItem.title || menuItem.name || 'Categories'}</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
-        </a>`;
+        return '';
     }
+    
+    const uniqueId = `mobile-categories-${Date.now()}`;
     
     let html = `
     <div>
-        <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${parentId}', this)" style="cursor:pointer;">
-            <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${menuItem.title || menuItem.name || 'Categories'}</span>
+        <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+            <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300" style="font-size:12px;"></i> Categories</span>
             <i class="fa-solid fa-chevron-right"></i>
         </div>
-        <div class="mobile-submenu" id="${parentId}">`;
+        <div class="mobile-submenu" id="${uniqueId}">
+            ${renderMobileCategoriesSubmenu(uniqueId)}
+        </div>
+    </div>`;
     
+    return html;
+}
+
+function renderMobileSubItems(item, parentId) {
+    // If item has children from menu_items
+    if (item.children && item.children.length > 0) {
+        let html = '';
+        item.children.forEach((child, idx) => {
+            const hasGrandChildren = child.children && child.children.length > 0;
+            const linkUrl = getMenuLinkUrl(child);
+            const uniqueId = `${parentId}-sub-${idx}`;
+            
+            if (hasGrandChildren) {
+                html += `
+                <div>
+                    <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                        ${child.title || child.name || ''}
+                        <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                    </div>
+                    <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
+                        ${child.children.map(gc => `
+                            <a href="${getMenuLinkUrl(gc)}" class="mobile-sub-item">${gc.title || gc.name || ''}</a>
+                        `).join('')}
+                    </div>
+                </div>`;
+            } else {
+                html += `<a href="${linkUrl}" class="mobile-sub-item">${child.title || child.name || ''}</a>`;
+            }
+        });
+        return html;
+    }
+    
+    return '';
+}
+
+function renderMobileCategoriesSubmenu(parentId) {
+    if (!allCategories || allCategories.length === 0) {
+        return '<div class="mobile-sub-item" style="color:#86868b;">No categories</div>';
+    }
+    
+    let html = '';
     allCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
-        const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         const uniqueId = `${parentId}-cat-${idx}`;
+        
+        // Get subcategories for this category
+        const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         
         if (subcategories.length > 0) {
             html += `
@@ -555,7 +608,6 @@ function renderMobileCategoriesSection(menuItem, parentId) {
         }
     });
     
-    html += `</div></div>`;
     return html;
 }
 
@@ -573,6 +625,9 @@ async function renderHeader() {
     allCategories = categories;
     allSubcategories = subcategories;
     
+    const menuTree = buildMenuTree(menuItems);
+    const rootItems = menuTree;
+    
     const headerHTML = `
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
@@ -586,7 +641,7 @@ async function renderHeader() {
             </button>
         </div>
         <div class="mobile-menu-scroll" id="mobileMenuContent">
-            ${renderMobileNav()}
+            ${renderMobileNav(rootItems)}
         </div>
         <div class="mobile-footer" id="mobileMenuFooter">
             <a href="/login" class="block w-full py-3 bg-primary text-white rounded-xl text-center font-bold uppercase tracking-wider text-xs no-underline">Sign In</a>
@@ -599,7 +654,7 @@ async function renderHeader() {
                 <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight font-serif text-primary">JAYENWARE</span>
             </a>
             <div class="hidden lg:flex items-center gap-0" id="desktopNavLinks">
-                ${renderDesktopNav()}
+                ${renderDesktopNav(rootItems)}
             </div>
             <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
                 <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
@@ -906,7 +961,7 @@ window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
 window.createSlug = createSlug;
-window.getMenuLinkUrl = getMenuLinkUrl;
+window.getCategoryUrl = getCategoryUrl;
 window.cart = cart;
 window.wishlist = wishlist;
 window.allMenuItems = allMenuItems;
