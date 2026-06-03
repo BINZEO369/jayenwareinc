@@ -1,6 +1,6 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.3 (Dynamic from Database - Categories as Direct Menu Items)
+// Version: 3.1 (Dynamic from Database - Categories & Menu Items)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -357,12 +357,12 @@ function getCategoryUrl(category, subcategory = null) {
 function renderDesktopNav(rootItems) {
     let html = '';
     
-    // First, render menu items from menu_items table (sorted by sort_order)
     rootItems.forEach(item => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
         
         if (hasChildren) {
+            // Check if this is a category-type item that should show categories from DB
             html += `
             <div class="desktop-dropdown">
                 <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
@@ -378,13 +378,15 @@ function renderDesktopNav(rootItems) {
         }
     });
     
-    // Then, render categories from database as direct menu buttons
-    html += renderCategoriesAsNavItems();
-    
     return html;
 }
 
 function renderDesktopDropdownChildren(item) {
+    // If the item has a specific type that maps to categories, fetch from categories table
+    if (item.type === 'category' && item.show_categories_from_db) {
+        return renderCategoriesDropdown();
+    }
+    
     // If item has children from menu_items table, render those
     if (item.children && item.children.length > 0) {
         let html = '';
@@ -412,20 +414,17 @@ function renderDesktopDropdownChildren(item) {
         return html;
     }
     
-    return '';
+    // Default: render categories from database
+    return renderCategoriesDropdown();
 }
 
-function renderCategoriesAsNavItems() {
+function renderCategoriesDropdown() {
     if (!allCategories || allCategories.length === 0) {
-        return '';
+        return '<div class="desktop-dropdown-item" style="color:#86868b;">No categories found</div>';
     }
     
     let html = '';
-    
-    // Sort categories by sort_order if available
-    const sortedCategories = [...allCategories].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-    
-    sortedCategories.forEach(cat => {
+    allCategories.forEach(cat => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
         
@@ -433,15 +432,13 @@ function renderCategoriesAsNavItems() {
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         
         if (subcategories.length > 0) {
-            // Category with subcategories - show as dropdown
             html += `
-            <div class="desktop-dropdown">
-                <a href="${catUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
+            <div style="position:relative;">
+                <a href="${catUrl}" class="desktop-dropdown-item has-children">
                     ${cat.name}
-                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                    <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
                 </a>
-                <div class="desktop-dropdown-menu">
-                    <a href="${catUrl}" class="desktop-dropdown-item" style="font-weight:600;color:#007aff;">All ${cat.name}</a>
+                <div class="desktop-sub-dropdown">
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
                         const subUrl = `/category/${catSlug}/${subSlug}`;
@@ -450,8 +447,7 @@ function renderCategoriesAsNavItems() {
                 </div>
             </div>`;
         } else {
-            // Category without subcategories - show as simple link
-            html += `<a href="${catUrl}" class="nav-link px-5">${cat.name}</a>`;
+            html += `<a href="${catUrl}" class="desktop-dropdown-item">${cat.name}</a>`;
         }
     });
     
@@ -464,11 +460,10 @@ function renderCategoriesAsNavItems() {
 function renderMobileNav(rootItems) {
     let html = '';
     
-    // First, render menu items from menu_items table
     rootItems.forEach((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
-        const uniqueId = `mobile-menu-${index}-${Date.now()}`;
+        const uniqueId = `mobile-sub-${index}-${Date.now()}`;
         
         if (hasChildren) {
             html += `
@@ -501,13 +496,15 @@ function renderMobileNav(rootItems) {
         }
     });
     
-    // Then, render categories from database
-    html += renderMobileCategoriesAsItems();
-    
     return html;
 }
 
 function renderMobileSubItems(item, parentId) {
+    // If the item type is category and should show from DB
+    if (item.type === 'category' && item.show_categories_from_db) {
+        return renderMobileCategoriesSubmenu(parentId);
+    }
+    
     // If item has children from menu_items
     if (item.children && item.children.length > 0) {
         let html = '';
@@ -536,23 +533,20 @@ function renderMobileSubItems(item, parentId) {
         return html;
     }
     
-    return '';
+    // Default: render categories
+    return renderMobileCategoriesSubmenu(parentId);
 }
 
-function renderMobileCategoriesAsItems() {
+function renderMobileCategoriesSubmenu(parentId) {
     if (!allCategories || allCategories.length === 0) {
-        return '';
+        return '<div class="mobile-sub-item" style="color:#86868b;">No categories</div>';
     }
     
     let html = '';
-    
-    // Sort categories by sort_order if available
-    const sortedCategories = [...allCategories].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-    
-    sortedCategories.forEach((cat, idx) => {
+    allCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
-        const uniqueId = `mobile-cat-${idx}-${Date.now()}`;
+        const uniqueId = `${parentId}-cat-${idx}`;
         
         // Get subcategories for this category
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
@@ -560,11 +554,11 @@ function renderMobileCategoriesAsItems() {
         if (subcategories.length > 0) {
             html += `
             <div>
-                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right"></i>
+                <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
+                    ${cat.name}
+                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}">
+                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
                     <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
@@ -574,11 +568,7 @@ function renderMobileCategoriesAsItems() {
                 </div>
             </div>`;
         } else {
-            html += `
-            <a href="${catUrl}" class="mobile-menu-item no-underline">
-                <span><i class="fa-solid fa-grid-2 mr-3 text-gray-300" style="font-size:12px;"></i> ${cat.name}</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
-            </a>`;
+            html += `<a href="${catUrl}" class="mobile-sub-item">${cat.name}</a>`;
         }
     });
     
@@ -951,7 +941,7 @@ async function initSharedComponents() {
     renderFooter();
     updateCounts();
     const yearEl = document.getElementById('display-year');
-    if (yearEl) yearEl.innerText = new Date().getFullYear();
+    if (yearEl) yearEl.innerText = new Date().getFullVersion();
 }
 
 // Auto-initialize
@@ -960,3 +950,9 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initSharedComponents, 100);
 }
+এ পি আই এভাবে কল করা হবে 
+// চেক করুন API রেসপন্স
+fetch('/api/categories').then(r => r.json()).then(d => console.log('Categories:', d));
+fetch('/api/subcategories').then(r => r.json()).then(d => console.log('Subcategories:', d));
+fetch('/api/menu-items').then(r => r.json()).then(d => console.log('Menu Items:', d));
+
