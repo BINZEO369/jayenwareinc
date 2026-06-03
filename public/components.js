@@ -1,6 +1,7 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.1 (Dynamic from Database - Categories & Menu Items)
+// Version: 3.2 (Dynamic from Database - Categories & Menu Items)
+// Fixed: url→link, type→menu_type (Database consistency)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -299,17 +300,18 @@ function buildMenuTree(items, parentId = null) {
 }
 
 // ============================================
-// GET LINK URL FOR MENU ITEM
+// GET LINK URL FOR MENU ITEM (Fixed: url→link, type→menu_type)
 // ============================================
 function getMenuLinkUrl(item) {
-    // If item has a custom URL, use it
-    if (item.url && item.url.trim() !== '') {
-        return item.url;
+    // ✅ সরাসরি ডাটাবেজের link কলাম ব্যবহার
+    if (item.link && item.link.trim() !== '') {
+        return item.link;
     }
     
     const slug = item.slug || '';
     
-    switch (item.type) {
+    // ✅ ডাটাবেজের menu_type কলাম ব্যবহার
+    switch (item.menu_type) {
         case 'home':
             return '/';
         case 'products':
@@ -327,7 +329,7 @@ function getMenuLinkUrl(item) {
         case 'page':
             return slug ? `/${slug}` : '#';
         case 'custom':
-            return item.url || '#';
+            return item.link || '#';
         case 'contact':
             return '/contact';
         case 'about':
@@ -362,7 +364,6 @@ function renderDesktopNav(rootItems) {
         const linkUrl = getMenuLinkUrl(item);
         
         if (hasChildren) {
-            // Check if this is a category-type item that should show categories from DB
             html += `
             <div class="desktop-dropdown">
                 <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
@@ -382,12 +383,11 @@ function renderDesktopNav(rootItems) {
 }
 
 function renderDesktopDropdownChildren(item) {
-    // If the item has a specific type that maps to categories, fetch from categories table
-    if (item.type === 'category' && item.show_categories_from_db) {
+    // ✅ menu_type চেক (ডাটাবেজ কনসিস্টেন্ট)
+    if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderCategoriesDropdown();
     }
     
-    // If item has children from menu_items table, render those
     if (item.children && item.children.length > 0) {
         let html = '';
         item.children.forEach(child => {
@@ -414,7 +414,6 @@ function renderDesktopDropdownChildren(item) {
         return html;
     }
     
-    // Default: render categories from database
     return renderCategoriesDropdown();
 }
 
@@ -427,8 +426,6 @@ function renderCategoriesDropdown() {
     allCategories.forEach(cat => {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
-        
-        // Get subcategories for this category
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         
         if (subcategories.length > 0) {
@@ -477,9 +474,9 @@ function renderMobileNav(rootItems) {
                 </div>
             </div>`;
         } else {
-            // Determine icon based on type
+            // ✅ menu_type দিয়ে আইকন নির্ধারণ (ডাটাবেজ কনসিস্টেন্ট)
             let icon = 'fa-circle';
-            switch (item.type) {
+            switch (item.menu_type) {
                 case 'home': icon = 'fa-house'; break;
                 case 'products': icon = 'fa-bag-shopping'; break;
                 case 'contact': icon = 'fa-envelope'; break;
@@ -500,12 +497,11 @@ function renderMobileNav(rootItems) {
 }
 
 function renderMobileSubItems(item, parentId) {
-    // If the item type is category and should show from DB
-    if (item.type === 'category' && item.show_categories_from_db) {
+    // ✅ menu_type চেক (ডাটাবেজ কনসিস্টেন্ট)
+    if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderMobileCategoriesSubmenu(parentId);
     }
     
-    // If item has children from menu_items
     if (item.children && item.children.length > 0) {
         let html = '';
         item.children.forEach((child, idx) => {
@@ -533,7 +529,6 @@ function renderMobileSubItems(item, parentId) {
         return html;
     }
     
-    // Default: render categories
     return renderMobileCategoriesSubmenu(parentId);
 }
 
@@ -547,8 +542,6 @@ function renderMobileCategoriesSubmenu(parentId) {
         const catSlug = cat.slug || createSlug(cat.name);
         const catUrl = `/category/${catSlug}`;
         const uniqueId = `${parentId}-cat-${idx}`;
-        
-        // Get subcategories for this category
         const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
         
         if (subcategories.length > 0) {
@@ -579,7 +572,6 @@ function renderMobileCategoriesSubmenu(parentId) {
 // HEADER COMPONENT
 // ============================================
 async function renderHeader() {
-    // Fetch all required data first
     const [menuItems, categories, subcategories] = await Promise.all([
         fetchMenuItems(),
         fetchCategories(),
