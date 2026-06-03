@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 1.0.1 (Fixed - Auto HTML Injection)
+// Version: 1.0.2 - Banner placed after New Arrivals Section
 // ============================================================
 
 (function() {
@@ -264,7 +264,6 @@
 
             this.heroData = data;
             
-            // Find container
             this.container = document.getElementById('hero-container');
             console.log('[HeroBanner] 📦 Container found:', !!this.container);
             
@@ -273,7 +272,6 @@
                 return;
             }
 
-            // Inject inner HTML if needed
             if (!document.getElementById('hero-banner-slides')) {
                 console.log('[HeroBanner] 🔧 Injecting inner HTML template...');
                 this.container.outerHTML = getHeroHTML();
@@ -492,6 +490,7 @@
 
     /**
      * Inject HTML into DOM at the correct position
+     * BANNER WILL BE PLACED RIGHT AFTER NEW ARRIVALS SECTION
      */
     function injectHTML() {
         // Check if already exists
@@ -509,32 +508,29 @@
 
         // Find the correct insertion point
         const homeSection = document.getElementById('home');
-        const videoSection = document.getElementById('hero-video-section');
         const newArrivalsSection = document.getElementById('new-arrivals-section');
 
-        if (homeSection) {
-            if (videoSection && videoSection.nextSibling) {
-                // Insert after video section
-                videoSection.parentNode.insertBefore(bannerElement, videoSection.nextSibling);
-                console.log('[HeroBanner] ✅ Inserted after hero-video-section');
-            } else if (newArrivalsSection) {
-                // Insert before new arrivals
-                homeSection.insertBefore(bannerElement, newArrivalsSection);
-                console.log('[HeroBanner] ✅ Inserted before new-arrivals-section');
-            } else {
-                // Insert at beginning of home section
-                homeSection.insertBefore(bannerElement, homeSection.firstChild);
-                console.log('[HeroBanner] ✅ Inserted at beginning of #home');
-            }
+        if (homeSection && newArrivalsSection && newArrivalsSection.nextSibling) {
+            // ✅ Insert RIGHT AFTER new-arrivals-section
+            newArrivalsSection.parentNode.insertBefore(bannerElement, newArrivalsSection.nextSibling);
+            console.log('[HeroBanner] ✅ Inserted after new-arrivals-section');
+        } else if (homeSection && newArrivalsSection) {
+            // If newArrivals is the last element, append after it
+            homeSection.appendChild(bannerElement);
+            console.log('[HeroBanner] ✅ Appended after new-arrivals-section (was last element)');
+        } else if (homeSection) {
+            // Fallback - insert at beginning of home section
+            homeSection.insertBefore(bannerElement, homeSection.firstChild);
+            console.log('[HeroBanner] ⚠️ Inserted at beginning of #home (fallback)');
         } else {
-            // Fallback - insert before first carousel or at body start
+            // Absolute fallback
             const firstCarousel = document.querySelector('.carousel-section');
             if (firstCarousel) {
                 firstCarousel.parentNode.insertBefore(bannerElement, firstCarousel);
-                console.log('[HeroBanner] ✅ Inserted before first carousel (fallback)');
+                console.log('[HeroBanner] ⚠️ Inserted before first carousel (absolute fallback)');
             } else {
                 document.body.insertBefore(bannerElement, document.body.firstChild);
-                console.log('[HeroBanner] ✅ Inserted at body start (fallback)');
+                console.log('[HeroBanner] ⚠️ Inserted at body start (absolute fallback)');
             }
         }
     }
@@ -601,5 +597,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v1.0.1)');
+    console.log('[HeroBanner] 📄 Component script loaded (v1.0.2)');
 })();
