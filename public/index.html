@@ -599,19 +599,17 @@
         
         footer { margin-top: auto; }
 
-        .category-showcase-section {
+        /* CATEGORY SHOWCASE - ALWAYS VISIBLE */
+        #category-showcase-section {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
             padding: 40px 0;
             background: linear-gradient(to bottom, #ffffff, #f8f8fa);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .category-showcase-section.visible {
-            opacity: 1;
-            transform: translateY(0);
+            min-height: 200px;
         }
         .category-grid {
-            display: grid;
+            display: grid !important;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             max-width: 1200px;
@@ -725,6 +723,17 @@
             0% { opacity: 0.6; }
             50% { opacity: 1; }
             100% { opacity: 0.6; }
+        }
+        .category-fallback {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            font-weight: 700;
         }
         @media (max-width: 768px) {
             .category-grid {
@@ -919,7 +928,8 @@
                 </div>
             </section>
 
-            <section id="category-showcase-section" class="category-showcase-section">
+            <!-- CATEGORY SHOWCASE SECTION -->
+            <section id="category-showcase-section">
                 <div class="category-showcase-container">
                     <div class="carousel-header">
                         <h2 class="section-title" style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 32px; color: #1d1d1f;">
@@ -1635,45 +1645,32 @@
         }
 
         function renderCategoryShowcase(categories) {
+            console.log('[Category] Starting render with', categories.length, 'categories');
+            
             const grid = document.getElementById('category-showcase-grid');
             const section = document.getElementById('category-showcase-section');
             
-            console.log('[Category] renderCategoryShowcase called');
-            console.log('[Category] Grid element:', grid);
-            console.log('[Category] Section element:', section);
-            console.log('[Category] Categories received:', categories);
-            
             if (!grid) {
-                console.error('[Category] Grid element not found!');
-                return;
-            }
-            if (!section) {
-                console.error('[Category] Section element not found!');
+                console.error('[Category] GRID NOT FOUND!');
                 return;
             }
             
-            const displayCategories = categories.filter(cat => {
-                const hasImage = cat.is_active !== false && cat.image;
-                console.log(`[Category] Category "${cat.name}": is_active=${cat.is_active}, image=${cat.image}, willShow=${hasImage}`);
-                return hasImage;
-            });
+            console.log('[Category] Grid found, clearing skeletons...');
             
-            console.log('[Category] Display categories count:', displayCategories.length);
+            const displayCategories = categories.filter(cat => cat.is_active !== false && cat.image);
+            console.log('[Category] Displayable categories:', displayCategories.length);
             
             if (displayCategories.length === 0) {
-                console.warn('[Category] No categories to display, hiding section');
-                section.style.display = 'none';
+                grid.innerHTML = '<div style="text-align:center;padding:40px;color:#86868b;">No categories available</div>';
                 return;
             }
-            
-            section.style.display = 'block';
             
             grid.innerHTML = displayCategories.map((cat, index) => {
                 const ctaTitle = cat.cta_title || 'Explore Now';
                 const ctaLink = cat.cta_link || `/category/${cat.slug || getCategorySlug(cat.name)}`;
                 const imageUrl = cat.image;
                 
-                console.log(`[Category] Rendering card for "${cat.name}", Image URL: ${imageUrl}`);
+                console.log(`[Category] Card ${index+1}: ${cat.name} | Image: ${imageUrl}`);
                 
                 return `
                 <a href="${ctaLink}" 
@@ -1685,11 +1682,9 @@
                         <img src="${imageUrl}" 
                              alt="${cat.name}" 
                              class="category-card-image" 
-                             loading="lazy"
-                             onerror="console.error('[Category] Image failed to load:', this.src); this.style.display='none'; this.parentElement.querySelector('.category-fallback').style.display='flex';">
-                        <div class="category-fallback" style="display:none; position:absolute; inset:0; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); align-items:center; justify-content:center; font-size:20px; color:white; font-weight:700;">
-                            ${cat.name}
-                        </div>
+                             loading="eager"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="category-fallback">${cat.name}</div>
                     </div>
                     <div class="category-card-overlay"></div>
                     <div class="category-card-content">
@@ -1703,16 +1698,10 @@
                 `;
             }).join('');
             
-            console.log('[Category] Grid HTML updated with', displayCategories.length, 'cards');
-            
-            setTimeout(() => {
-                section.classList.add('visible');
-                console.log('[Category] Section visible class added');
-            }, 200);
+            console.log('[Category] ✅ Render complete!', displayCategories.length, 'cards created');
         }
 
         function navigateToCategory(categoryName) {
-            console.log('[Category] Navigating to category:', categoryName);
             currentFilters.cat = categoryName;
             productsDisplayLimit = 12;
             navigate('products');
@@ -1721,9 +1710,6 @@
 
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
-            
-            console.log('[Homepage] Rendering homepage sections');
-            console.log('[Homepage] Categories data:', currentData.categories);
             
             const sections = [
                 { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel', products: currentData.products.filter(p => p.is_new_arrival === true), name: 'New Arrivals' },
@@ -1749,31 +1735,10 @@
                 }
             });
             
+            // IMMEDIATELY render categories
+            console.log('[Homepage] Rendering categories NOW...');
             if (currentData.categories && currentData.categories.length > 0) {
-                console.log('[Homepage] Rendering category showcase with', currentData.categories.length, 'categories');
                 renderCategoryShowcase(currentData.categories);
-            } else {
-                console.log('[Homepage] Categories not loaded, fetching...');
-                fetchCategoriesForShowcase().then(cats => {
-                    console.log('[Homepage] Fetched categories:', cats);
-                    if (cats.length > 0) {
-                        currentData.categories = cats;
-                        renderCategories();
-                        renderCategoryShowcase(cats);
-                    }
-                });
-            }
-        }
-
-        async function fetchCategoriesForShowcase() {
-            try {
-                console.log('[Category] Fetching categories from API...');
-                const categories = await fetchAPI('/api/categories');
-                console.log('[Category] API response:', categories);
-                return categories || [];
-            } catch (err) {
-                console.error('[Category] Failed to fetch categories:', err);
-                return [];
             }
         }
 
@@ -1911,7 +1876,7 @@
 
         async function loadData() {
             try {
-                console.log('[App] Loading all data...');
+                console.log('[App] ⏳ Loading data...');
                 const [hero, cats, prods, newsData, heroVideosData] = await Promise.all([
                     fetchAPI('/api/hero'), 
                     fetchAPI('/api/categories'),
@@ -1920,12 +1885,10 @@
                     fetchAPI('/api/hero-videos')
                 ]);
                 
-                console.log('[App] Data loaded:');
-                console.log('  - Hero:', hero?.length || 0);
-                console.log('  - Categories:', cats?.length || 0, cats);
-                console.log('  - Products:', prods?.length || 0);
-                console.log('  - News:', newsData?.length || 0);
-                console.log('  - Hero Videos:', heroVideosData?.length || 0);
+                console.log('[App] ✅ Data loaded:');
+                console.log('  Hero:', hero?.length);
+                console.log('  Categories:', cats?.length, cats?.map(c => c.name));
+                console.log('  Products:', prods?.length);
                 
                 if(hero && hero.length) currentData.hero = hero;
                 if(cats && cats.length) currentData.categories = cats;
@@ -1934,19 +1897,23 @@
                 if(heroVideosData && heroVideosData.length) currentData.heroVideos = heroVideosData;
                 
                 window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', { 
-                    detail: { 
-                        hero: currentData.hero, 
-                        heroVideos: currentData.heroVideos 
-                    } 
+                    detail: { hero: currentData.hero, heroVideos: currentData.heroVideos } 
                 }));
                 
                 renderCategories();
                 renderProducts(currentData.products);
                 renderNews(currentData.news);
+                
+                // CRITICAL: Immediately render categories
+                console.log('[App] 🎯 Rendering categories immediately...');
+                if (currentData.categories && currentData.categories.length > 0) {
+                    renderCategoryShowcase(currentData.categories);
+                }
+                
                 renderHomepageSections();
                 handleInitialRoute();
                 
-                console.log('[App] All data loaded and rendered successfully');
+                console.log('[App] ✅ All data loaded and rendered');
             } catch(err) { 
                 console.error('[App] Data load error:', err);
             }
@@ -1981,7 +1948,7 @@
         }
 
         window.onload = async () => {
-            console.log('[App] Window loaded, initializing...');
+            console.log('[App] 🚀 Window loaded');
             
             const consent = localStorage.getItem('jayenware_consent'); 
             if(!consent) {
@@ -1995,7 +1962,7 @@
             
             setTimeout(initCarouselTouchSupport, 500);
             
-            console.log('[App] Application fully initialized');
+            console.log('[App] ✅ Application fully initialized');
         };
     </script>
 </body>
