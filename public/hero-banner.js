@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 1.0.2 - Banner placed after New Arrivals Section
+// Version: 1.0.2 (Banner positioned AFTER New Arrivals)
 // ============================================================
 
 (function() {
@@ -10,6 +10,7 @@
     // ==================== CSS STYLES ====================
     const HERO_CSS = `
         <style id="hero-banner-styles">
+            /* ==================== ROLEX-STYLE HERO BANNER ==================== */
             .hero-container {
                 position: relative;
                 width: 100%;
@@ -42,6 +43,7 @@
                 from { transform: scale(1); }
                 to { transform: scale(1.05); }
             }
+            
             .hero-overlay {
                 position: absolute;
                 inset: 0;
@@ -55,6 +57,7 @@
                 );
                 z-index: 1;
             }
+            
             .hero-content {
                 position: absolute;
                 bottom: clamp(50px, 12vh, 110px);
@@ -66,6 +69,7 @@
                 max-width: 680px;
                 padding: 0 16px;
             }
+            
             .hero-subtitle {
                 display: inline-block;
                 font-family: 'Inter', sans-serif;
@@ -79,6 +83,7 @@
                 transform: translateY(8px);
                 animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
             }
+            
             .hero-title {
                 font-family: 'Playfair Display', serif;
                 font-size: clamp(22px, 4.5vw, 60px);
@@ -91,6 +96,7 @@
                 transform: translateY(12px);
                 animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
             }
+            
             .hero-cta-wrap {
                 opacity: 0;
                 transform: translateY(8px);
@@ -116,6 +122,7 @@
                 gap: 8px;
                 color: rgba(255, 255, 255, 0.85);
             }
+            
             .hero-cta .cta-arrow {
                 display: inline-flex;
                 align-items: center;
@@ -125,6 +132,7 @@
                 position: relative;
                 transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
+            
             .hero-cta .cta-arrow::after {
                 content: '';
                 position: absolute;
@@ -137,16 +145,20 @@
                 transform: translateY(-50%) rotate(45deg);
                 transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
+            
             .hero-cta:hover .cta-arrow::after {
                 right: -2px;
                 opacity: 0.8;
             }
+            
             @keyframes heroFadeInUp {
                 to {
                     opacity: 1;
                     transform: translateY(0);
                 }
             }
+
+            /* Hero Navigation Dots */
             .hero-nav-dots {
                 position: absolute;
                 bottom: clamp(30px, 5vh, 50px);
@@ -178,6 +190,8 @@
                 border-radius: 5px;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             }
+
+            /* Hero Navigation Arrows */
             .hero-arrow {
                 position: absolute;
                 top: 50%;
@@ -212,8 +226,13 @@
             }
             .hero-arrow.prev { left: 20px; }
             .hero-arrow.next { right: 20px; }
+
             @media (max-width: 640px) {
-                .hero-arrow { width: 36px; height: 36px; font-size: 12px; }
+                .hero-arrow {
+                    width: 36px;
+                    height: 36px;
+                    font-size: 12px;
+                }
                 .hero-arrow.prev { left: 10px; }
                 .hero-arrow.next { right: 10px; }
                 .hero-nav-dots { bottom: 25px; }
@@ -254,6 +273,10 @@
             this.isInitialized = false;
         }
 
+        /**
+         * Initialize the hero banner component
+         * @param {Array} data - Array of hero slide objects [{img, title, subtitle, cta_text, cta_link}]
+         */
         init(data) {
             console.log('[HeroBanner] 🚀 Init called with', data?.length, 'slides');
             
@@ -264,6 +287,7 @@
 
             this.heroData = data;
             
+            // Find container
             this.container = document.getElementById('hero-container');
             console.log('[HeroBanner] 📦 Container found:', !!this.container);
             
@@ -272,6 +296,7 @@
                 return;
             }
 
+            // Inject inner HTML if needed
             if (!document.getElementById('hero-banner-slides')) {
                 console.log('[HeroBanner] 🔧 Injecting inner HTML template...');
                 this.container.outerHTML = getHeroHTML();
@@ -287,6 +312,9 @@
             console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides');
         }
 
+        /**
+         * Render all slides
+         */
         render() {
             const slidesContainer = document.getElementById('hero-banner-slides');
             if (!slidesContainer || !this.heroData.length) return;
@@ -306,6 +334,9 @@
             this.updateContent(0);
         }
 
+        /**
+         * Render navigation dots
+         */
         renderDots() {
             const dotsContainer = document.getElementById('hero-nav-dots');
             if (!dotsContainer || this.heroData.length <= 1) {
@@ -322,6 +353,9 @@
             `).join('');
         }
 
+        /**
+         * Update active slide content (title, subtitle, CTA)
+         */
         updateContent(index) {
             const slide = this.heroData[index];
             if (!slide) return;
@@ -330,24 +364,28 @@
             const subtitleEl = document.getElementById('hero-subtitle');
             const ctaContainer = document.getElementById('hero-cta-container');
 
+            // Reset animations
             [titleEl, subtitleEl, ctaContainer].forEach(el => {
                 if (el) {
                     el.style.animation = 'none';
-                    el.offsetHeight;
+                    el.offsetHeight; // Force reflow
                     el.style.animation = '';
                 }
             });
 
+            // Update title
             if (titleEl) {
                 titleEl.textContent = slide.title || '';
                 titleEl.style.display = slide.title ? 'block' : 'none';
             }
 
+            // Update subtitle
             if (subtitleEl) {
                 subtitleEl.textContent = slide.subtitle || '';
                 subtitleEl.style.display = slide.subtitle ? 'inline-block' : 'none';
             }
 
+            // Update CTA
             if (ctaContainer) {
                 if (slide.cta_text && slide.cta_link) {
                     ctaContainer.innerHTML = `
@@ -363,6 +401,9 @@
             }
         }
 
+        /**
+         * Switch to a specific slide
+         */
         goToSlide(index) {
             if (this.isTransitioning) return;
             if (index < 0 || index >= this.heroData.length) return;
@@ -373,33 +414,58 @@
             const slides = document.querySelectorAll('.hero-slide-wrapper');
             const dots = document.querySelectorAll('.hero-nav-dot');
 
+            // Fade out all slides
             slides.forEach(slide => slide.classList.add('fade-out'));
-            if (slides[index]) slides[index].classList.remove('fade-out');
+            
+            // Fade in target slide
+            if (slides[index]) {
+                slides[index].classList.remove('fade-out');
+            }
+
+            // Update active dot
             dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
 
+            // Update content with animation
             this.updateContent(index);
             this.currentSlide = index;
 
-            setTimeout(() => { this.isTransitioning = false; }, 800);
+            // Reset transition lock after animation completes
+            setTimeout(() => {
+                this.isTransitioning = false;
+            }, 800);
         }
 
+        /**
+         * Go to next slide
+         */
         nextSlide() {
             const next = (this.currentSlide + 1) % this.heroData.length;
             this.goToSlide(next);
         }
 
+        /**
+         * Go to previous slide
+         */
         prevSlide() {
             const prev = (this.currentSlide - 1 + this.heroData.length) % this.heroData.length;
             this.goToSlide(prev);
         }
 
+        /**
+         * Start auto-sliding
+         */
         startAutoSlide() {
             this.stopAutoSlide();
             if (this.heroData.length > 1) {
-                this.slideInterval = setInterval(() => this.nextSlide(), 7000);
+                this.slideInterval = setInterval(() => {
+                    this.nextSlide();
+                }, 7000); // 7 seconds per slide
             }
         }
 
+        /**
+         * Stop auto-sliding
+         */
         stopAutoSlide() {
             if (this.slideInterval) {
                 clearInterval(this.slideInterval);
@@ -407,21 +473,51 @@
             }
         }
 
-        pauseAutoSlide() { this.stopAutoSlide(); }
-        resumeAutoSlide() { this.startAutoSlide(); }
+        /**
+         * Pause auto-slide temporarily (e.g., on hover)
+         */
+        pauseAutoSlide() {
+            this.stopAutoSlide();
+        }
 
+        /**
+         * Resume auto-slide after pause
+         */
+        resumeAutoSlide() {
+            this.startAutoSlide();
+        }
+
+        /**
+         * Bind all event listeners
+         */
         bindEvents() {
+            // Arrow buttons
             const prevBtn = document.getElementById('hero-prev-btn');
             const nextBtn = document.getElementById('hero-next-btn');
             
-            if (prevBtn) prevBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.prevSlide(); });
-            if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.nextSlide(); });
+            if (prevBtn) {
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.prevSlide();
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.nextSlide();
+                });
+            }
 
+            // Navigation dots - event delegation
             const dotsContainer = document.getElementById('hero-nav-dots');
             if (dotsContainer) {
                 dotsContainer.addEventListener('click', (e) => {
                     const dot = e.target.closest('.hero-nav-dot');
                     if (!dot) return;
+                    
                     const index = parseInt(dot.getAttribute('data-dot-index'));
                     if (!isNaN(index)) {
                         this.goToSlide(index);
@@ -431,37 +527,66 @@
                 });
             }
 
+            // Pause on hover
             if (this.container) {
                 this.container.addEventListener('mouseenter', () => this.pauseAutoSlide());
                 this.container.addEventListener('mouseleave', () => this.resumeAutoSlide());
             }
 
+            // Touch swipe support
             this.bindTouchEvents();
 
+            // Keyboard navigation
             document.addEventListener('keydown', (e) => {
                 if (!this.container || !this.container.offsetParent) return;
-                if (e.key === 'ArrowLeft') { e.preventDefault(); this.prevSlide(); this.pauseAutoSlide(); setTimeout(() => this.resumeAutoSlide(), 5000); }
-                else if (e.key === 'ArrowRight') { e.preventDefault(); this.nextSlide(); this.pauseAutoSlide(); setTimeout(() => this.resumeAutoSlide(), 5000); }
+                
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.prevSlide();
+                    this.pauseAutoSlide();
+                    setTimeout(() => this.resumeAutoSlide(), 5000);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    this.nextSlide();
+                    this.pauseAutoSlide();
+                    setTimeout(() => this.resumeAutoSlide(), 5000);
+                }
             });
         }
 
+        /**
+         * Bind touch/swipe events for mobile
+         */
         bindTouchEvents() {
             if (!this.container) return;
-            let touchStartX = 0, touchEndX = 0;
+
+            let touchStartX = 0;
+            let touchEndX = 0;
             const SWIPE_THRESHOLD = 50;
 
-            this.container.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+            this.container.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
             this.container.addEventListener('touchend', (e) => {
                 touchEndX = e.changedTouches[0].screenX;
                 const diff = touchStartX - touchEndX;
+
                 if (Math.abs(diff) > SWIPE_THRESHOLD) {
-                    if (diff > 0) this.nextSlide(); else this.prevSlide();
+                    if (diff > 0) {
+                        this.nextSlide();
+                    } else {
+                        this.prevSlide();
+                    }
                     this.pauseAutoSlide();
                     setTimeout(() => this.resumeAutoSlide(), 5000);
                 }
             }, { passive: true });
         }
 
+        /**
+         * Refresh the banner with new data
+         */
         refresh(newData) {
             this.stopAutoSlide();
             this.currentSlide = 0;
@@ -469,6 +594,9 @@
             this.init(newData);
         }
 
+        /**
+         * Destroy the component (cleanup)
+         */
         destroy() {
             this.stopAutoSlide();
             this.isInitialized = false;
@@ -477,7 +605,15 @@
     }
 
     // ==================== GLOBAL API ====================
+    // Create singleton instance
     const heroBanner = new HeroBannerComponent();
+
+    /**
+     * Initialize Hero Banner - Called from external scripts
+     * @param {Array} heroData - Array of hero slide objects
+     * 
+     * Usage: window.JAYENWARE.heroBanner.init(heroArray);
+     */
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroBanner = heroBanner;
 
@@ -490,7 +626,7 @@
 
     /**
      * Inject HTML into DOM at the correct position
-     * BANNER WILL BE PLACED RIGHT AFTER NEW ARRIVALS SECTION
+     * Position: AFTER #new-arrivals-section (ভিডিও সেকশনের কোনো পরিবর্তন নেই)
      */
     function injectHTML() {
         // Check if already exists
@@ -506,31 +642,35 @@
         tempDiv.innerHTML = getHeroHTML();
         const bannerElement = tempDiv.firstElementChild;
 
-        // Find the correct insertion point
+        // IMPORTANT: We do NOT touch hero-video-section at all
+        // ভিডিও সেকশনকে সম্পূর্ণ অপরিবর্তিত রাখা হয়েছে
+        
         const homeSection = document.getElementById('home');
         const newArrivalsSection = document.getElementById('new-arrivals-section');
 
-        if (homeSection && newArrivalsSection && newArrivalsSection.nextSibling) {
-            // ✅ Insert RIGHT AFTER new-arrivals-section
-            newArrivalsSection.parentNode.insertBefore(bannerElement, newArrivalsSection.nextSibling);
-            console.log('[HeroBanner] ✅ Inserted after new-arrivals-section');
-        } else if (homeSection && newArrivalsSection) {
-            // If newArrivals is the last element, append after it
-            homeSection.appendChild(bannerElement);
-            console.log('[HeroBanner] ✅ Appended after new-arrivals-section (was last element)');
-        } else if (homeSection) {
-            // Fallback - insert at beginning of home section
-            homeSection.insertBefore(bannerElement, homeSection.firstChild);
-            console.log('[HeroBanner] ⚠️ Inserted at beginning of #home (fallback)');
+        if (homeSection) {
+            if (newArrivalsSection && newArrivalsSection.nextSibling) {
+                // ✅ PRIMARY: Insert AFTER new arrivals section
+                newArrivalsSection.parentNode.insertBefore(bannerElement, newArrivalsSection.nextSibling);
+                console.log('[HeroBanner] ✅ Inserted AFTER new-arrivals-section');
+            } else if (newArrivalsSection) {
+                // If new arrivals is the last element, append after it
+                homeSection.appendChild(bannerElement);
+                console.log('[HeroBanner] ✅ Appended after new-arrivals-section');
+            } else {
+                // Fallback: insert at beginning of home (if new arrivals not found)
+                homeSection.insertBefore(bannerElement, homeSection.firstChild);
+                console.log('[HeroBanner] ⚠️ Inserted at beginning of #home (new-arrivals not found)');
+            }
         } else {
-            // Absolute fallback
+            // Ultimate fallback
             const firstCarousel = document.querySelector('.carousel-section');
             if (firstCarousel) {
                 firstCarousel.parentNode.insertBefore(bannerElement, firstCarousel);
-                console.log('[HeroBanner] ⚠️ Inserted before first carousel (absolute fallback)');
+                console.log('[HeroBanner] ⚠️ Inserted before first carousel (fallback)');
             } else {
                 document.body.insertBefore(bannerElement, document.body.firstChild);
-                console.log('[HeroBanner] ⚠️ Inserted at body start (absolute fallback)');
+                console.log('[HeroBanner] ⚠️ Inserted at body start (ultimate fallback)');
             }
         }
     }
@@ -542,14 +682,14 @@
         // First ensure HTML is injected
         injectHTML();
         
-        // Check for data in multiple sources
+        // Check for data in window.currentData
         const data = (window.currentData && window.currentData.hero) || null;
         
         if (data && data.length > 0) {
             console.log('[HeroBanner] 📊 Data found in window.currentData');
             heroBanner.init(data);
         } else {
-            console.log('[HeroBanner] ⏳ No data yet, waiting...');
+            console.log('[HeroBanner] ⏳ No data yet, will wait for event or retry...');
         }
     }
 
@@ -580,7 +720,7 @@
         }
     });
 
-    // Bootstrap
+    // Bootstrap - start the initialization process
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(tryInit, 50);
@@ -589,7 +729,7 @@
         setTimeout(tryInit, 50);
     }
 
-    // Retry mechanism - if data doesn't arrive via event, fetch directly
+    // Retry mechanism - if data doesn't arrive via event, fetch directly after 3 seconds
     setTimeout(() => {
         if (!heroBanner.isInitialized) {
             console.log('[HeroBanner] 🔄 Retry - fetching directly...');
@@ -597,5 +737,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v1.0.2)');
+    console.log('[HeroBanner] 📄 Component script loaded (v1.0.2 - Banner after New Arrivals)');
 })();
