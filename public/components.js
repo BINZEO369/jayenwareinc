@@ -950,9 +950,3 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initSharedComponents, 100);
 }
-এ পি আই এভাবে কল করা হবে 
-// চেক করুন API রেসপন্স
-fetch('/api/categories').then(r => r.json()).then(d => console.log('Categories:', d));
-fetch('/api/subcategories').then(r => r.json()).then(d => console.log('Subcategories:', d));
-fetch('/api/menu-items').then(r => r.json()).then(d => console.log('Menu Items:', d));
-
