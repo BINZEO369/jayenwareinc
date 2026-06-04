@@ -54,11 +54,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- ==================== COMPONENT SCRIPTS ==================== -->
-    <!-- Load Header & Footer -->
     <script src="/components.js"></script>
-    <!-- Load Hero Banner Component (Rolex-Style) -->
     <script src="/hero-banner.js"></script>
-    <!-- Load Hero Video Component (Apple-Style) -->
     <script src="/hero-video.js"></script>
     
     <script type="application/ld+json">
@@ -707,7 +704,7 @@
             }
         }
 
-        /* Category Card Styles - UPDATED */
+        /* ==================== CATEGORY CARD STYLES ==================== */
         .category-card {
             position: relative;
             border-radius: 0;
@@ -715,16 +712,31 @@
             background: #f5f5f7;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-            aspect-ratio: 15/15;
+            box-shadow: none;
+            aspect-ratio: 1/1;
             display: flex;
             align-items: flex-end;
             text-decoration: none;
         }
+        
+        @media (min-width: 768px) {
+            .category-card {
+                aspect-ratio: 4/5;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card {
+                aspect-ratio: 16/9;
+            }
+        }
+        
         .category-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+            z-index: 10;
         }
+        
         .category-card .cat-bg-img {
             position: absolute;
             inset: 0;
@@ -733,59 +745,128 @@
             object-fit: cover;
             transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+        
         .category-card:hover .cat-bg-img {
             transform: scale(1.08);
         }
+        
         .category-card .cat-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.1) 100%);
             z-index: 1;
         }
+        
         .category-card .cat-content {
             position: relative;
             z-index: 2;
-            padding: 20px;
+            padding: 16px;
             width: 100%;
             color: white;
         }
+        
+        @media (min-width: 768px) {
+            .category-card .cat-content {
+                padding: 24px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card .cat-content {
+                padding: 32px;
+            }
+        }
+        
         .category-card .cat-title {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 900;
             letter-spacing: -0.5px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
+        
+        @media (min-width: 768px) {
+            .category-card .cat-title {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card .cat-title {
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+        }
+        
         .category-card .cat-cta {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             background: white;
             color: var(--primary);
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 100px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
+        
+        @media (min-width: 768px) {
+            .category-card .cat-cta {
+                padding: 8px 18px;
+                font-size: 11px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .category-card .cat-cta {
+                padding: 10px 24px;
+                font-size: 12px;
+            }
+        }
+        
         .category-card:hover .cat-cta {
             background: var(--primary);
             color: white;
             gap: 10px;
         }
+        
         .category-card .cat-cta svg {
             transition: transform 0.3s ease;
+            width: 10px;
+            height: 10px;
         }
+        
+        @media (min-width: 768px) {
+            .category-card .cat-cta svg {
+                width: 12px;
+                height: 12px;
+            }
+        }
+        
         .category-card:hover .cat-cta svg {
             transform: translateX(3px);
         }
 
-        /* Category Grid - UPDATED */
+        /* Category Grid */
         #categories-grid {
             gap: 0 !important;
+        }
+        
+        @media (min-width: 768px) {
+            #categories-grid {
+                gap: 2px !important;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            #categories-grid {
+                gap: 4px !important;
+            }
         }
 
         #categories-section .max-w-7xl {
@@ -793,9 +874,16 @@
             padding-right: 0 !important;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 767px) {
             #categories-section .max-w-7xl {
                 padding: 0 !important;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            #categories-section .max-w-7xl {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
             }
         }
     </style>
@@ -814,10 +902,10 @@
             <!-- Hero Video Section (loaded by hero-video.js) -->
             <!-- Container will be auto-injected by hero-video.js -->
             
-            <!-- Categories Section (UPDATED) -->
+            <!-- Categories Section -->
             <section id="categories-section" class="carousel-section hidden">
                 <div class="max-w-7xl mx-auto px-0">
-                    <div class="carousel-header">
+                    <div class="carousel-header px-4 sm:px-6 lg:px-8">
                         <h2 class="section-title text-2xl sm:text-3xl font-black tracking-tight">Shop by Category</h2>
                         <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
                             View All Categories 
@@ -826,7 +914,7 @@
                             </svg>
                         </a>
                     </div>
-                    <div id="categories-grid" class="grid grid-cols-2 gap-0 mt-0">
+                    <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-0.5 lg:gap-1 mt-0">
                         <!-- Dynamically populated by JS -->
                     </div>
                 </div>
@@ -1210,7 +1298,7 @@
             container.innerHTML = html;
         }
 
-        // UPDATED: Render Category Cards on Homepage
+        // ========== RENDER CATEGORY CARDS WITH PROPER IMAGE HANDLING ==========
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
             const section = document.getElementById('categories-section');
@@ -1225,13 +1313,21 @@
             
             grid.innerHTML = currentData.categories.map(cat => {
                 const slug = getCategorySlug(cat.name);
-                const imgSrc = cat.image || cat.img || 'https://placehold.co/600x400/f5f5f7/1d1d1f?text=' + encodeURIComponent(cat.name);
+                
+                // API থেকে আসা ইমেজ URL ব্যবহার করুন
+                const imgSrc = cat.image_url || cat.image || cat.img || 
+                    `https://kfncdapeswlnwsackkdy.supabase.co/storage/v1/object/public/categories/${cat.name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+                
                 const ctaText = cat.cta_text || 'Explore ' + cat.name;
                 const ctaLink = cat.cta_link || '/category/' + slug;
                 
                 return `
                 <a href="${ctaLink}" onclick="event.preventDefault();navigate('products', {category: '${cat.name}'})" class="category-card group">
-                    <img src="${imgSrc}" alt="${cat.name}" class="cat-bg-img w-full h-full object-cover" loading="lazy">
+                    <img src="${imgSrc}" 
+                         alt="${cat.name}" 
+                         class="cat-bg-img w-full h-full object-cover" 
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f5f5f7%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22200%22 text-anchor=%22middle%22 fill=%22%2386868b%22 font-size=%2220%22 font-family=%22Inter,sans-serif%22>${cat.name}</text></svg>';">
                     <div class="cat-overlay"></div>
                     <div class="cat-content">
                         <h3 class="cat-title">${cat.name}</h3>
@@ -1246,6 +1342,8 @@
             }).join('');
             
             section.classList.add('visible');
+            
+            console.log('[Categories] Loaded categories with images:', currentData.categories.map(c => ({name: c.name, image: c.image_url || c.image || c.img})));
         }
 
         function getFilteredProducts() { 
