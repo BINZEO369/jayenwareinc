@@ -54,9 +54,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- ==================== COMPONENT SCRIPTS ==================== -->
-    <script src="/components.js"></script>
-    <script src="/hero-banner.js"></script>
-    <script src="/hero-video.js"></script>
+<script src="/components.js"></script>
+<script src="/hero-banner.js"></script>
+<script src="/hero-video.js"></script>
+<script src="/hero-secondary-banner.js"></script>
     
     <script type="application/ld+json">
     {
@@ -1310,12 +1311,13 @@
         
         // ========== GLOBAL STATE ==========
         let currentData = { 
-            products: [], 
-            categories: [], 
-            news: [], 
-            hero: [], 
-            heroVideos: [] 
-        };
+    products: [], 
+    categories: [], 
+    news: [], 
+    hero: [], 
+    heroVideos: [],
+    hero_secondary: []
+};
         
         // ========== CONSTANTS ==========
         const BASE_URL = 'https://www.jayenware.shop';
@@ -1796,18 +1798,42 @@
         window.addEventListener('popstate', () => { handleInitialRoute(); });
 
         async function loadData() {
-            try {
-                const [hero, cats, prods, newsData, heroVideosData] = await Promise.all([fetchAPI('/api/hero'), fetchAPI('/api/categories'), fetchAPI('/api/products'), fetchAPI('/api/news'), fetchAPI('/api/hero-videos')]);
-                if(hero && hero.length) currentData.hero = hero;
-                if(cats && cats.length) currentData.categories = cats;
-                if(prods && prods.length) currentData.products = prods;
-                if(newsData) currentData.news = newsData;
-                if(heroVideosData && heroVideosData.length) currentData.heroVideos = heroVideosData;
-                window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', { detail: { hero: currentData.hero, heroVideos: currentData.heroVideos } }));
-                renderCategories(); renderProducts(currentData.products); renderNews(currentData.news); renderHomepageSections(); handleInitialRoute();
-                console.log('[App] All data loaded successfully');
-            } catch(err) { console.error('[App] Data load error:', err); }
-        }
+    try {
+        const [hero, cats, prods, newsData, heroVideosData, heroSecondaryData] = await Promise.all([
+            fetchAPI('/api/hero'), 
+            fetchAPI('/api/categories'), 
+            fetchAPI('/api/products'), 
+            fetchAPI('/api/news'), 
+            fetchAPI('/api/hero-videos'),
+            fetchAPI('/api/hero-secondary')
+        ]);
+        
+        if(hero && hero.length) currentData.hero = hero;
+        if(cats && cats.length) currentData.categories = cats;
+        if(prods && prods.length) currentData.products = prods;
+        if(newsData) currentData.news = newsData;
+        if(heroVideosData && heroVideosData.length) currentData.heroVideos = heroVideosData;
+        if(heroSecondaryData && heroSecondaryData.length) currentData.hero_secondary = heroSecondaryData;
+        
+        window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', { 
+            detail: { 
+                hero: currentData.hero, 
+                heroVideos: currentData.heroVideos,
+                hero_secondary: currentData.hero_secondary
+            } 
+        }));
+        
+        renderCategories(); 
+        renderProducts(currentData.products); 
+        renderNews(currentData.news); 
+        renderHomepageSections(); 
+        handleInitialRoute();
+        
+        console.log('[App] All data loaded successfully');
+    } catch(err) { 
+        console.error('[App] Data load error:', err); 
+    }
+}
 
         function handleInitialRoute() {
             const path = window.location.pathname; const sp = new URLSearchParams(window.location.search);
