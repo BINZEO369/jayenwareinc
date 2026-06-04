@@ -710,13 +710,13 @@
         /* Category Card Styles - UPDATED */
         .category-card {
             position: relative;
-            border-radius: 0; /* Updated: No border radius */
+            border-radius: 0;
             overflow: hidden;
             background: #f5f5f7;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-            aspect-ratio: 16/9; /* Updated: Wider aspect ratio for broad look */
+            aspect-ratio: 16/9;
             display: flex;
             align-items: flex-end;
             text-decoration: none;
@@ -783,16 +783,19 @@
             transform: translateX(3px);
         }
 
-        /* Updated: Force 2 columns grid for categories on all screen sizes */
+        /* Category Grid - UPDATED */
         #categories-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Always 2 columns */
-            gap: 16px;
+            gap: 0 !important;
         }
-        
-        @media (min-width: 768px) {
-            #categories-grid {
-                gap: 24px;
+
+        #categories-section .max-w-7xl {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        @media (max-width: 640px) {
+            #categories-section .max-w-7xl {
+                padding: 0 !important;
             }
         }
     </style>
@@ -813,7 +816,7 @@
             
             <!-- Categories Section (UPDATED) -->
             <section id="categories-section" class="carousel-section hidden">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto px-0">
                     <div class="carousel-header">
                         <h2 class="section-title text-2xl sm:text-3xl font-black tracking-tight">Shop by Category</h2>
                         <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
@@ -823,7 +826,7 @@
                             </svg>
                         </a>
                     </div>
-                    <div id="categories-grid" class="mt-6">
+                    <div id="categories-grid" class="grid grid-cols-2 gap-0 mt-0">
                         <!-- Dynamically populated by JS -->
                     </div>
                 </div>
@@ -1207,7 +1210,7 @@
             container.innerHTML = html;
         }
 
-        // UPDATED: Render Category Cards on Homepage with new styles
+        // UPDATED: Render Category Cards on Homepage
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
             const section = document.getElementById('categories-section');
@@ -1222,13 +1225,13 @@
             
             grid.innerHTML = currentData.categories.map(cat => {
                 const slug = getCategorySlug(cat.name);
-                const imgSrc = cat.image || cat.img || 'https://placehold.co/600x600/f5f5f7/1d1d1f?text=' + encodeURIComponent(cat.name);
+                const imgSrc = cat.image || cat.img || 'https://placehold.co/600x400/f5f5f7/1d1d1f?text=' + encodeURIComponent(cat.name);
                 const ctaText = cat.cta_text || 'Explore ' + cat.name;
                 const ctaLink = cat.cta_link || '/category/' + slug;
                 
                 return `
                 <a href="${ctaLink}" onclick="event.preventDefault();navigate('products', {category: '${cat.name}'})" class="category-card group">
-                    <img src="${imgSrc}" alt="${cat.name}" class="cat-bg-img" loading="lazy">
+                    <img src="${imgSrc}" alt="${cat.name}" class="cat-bg-img w-full h-full object-cover" loading="lazy">
                     <div class="cat-overlay"></div>
                     <div class="cat-content">
                         <h3 class="cat-title">${cat.name}</h3>
