@@ -704,19 +704,22 @@
             }
         }
 
-        /* ==================== CATEGORY CARD STYLES ==================== */
+        /* ==================== PREMIUM CATEGORY CARD STYLES ==================== */
+        /* Inspired by: Apple, Nike, Zara, Gucci, Hermès */
+        
         .category-card {
             position: relative;
             border-radius: 0;
             overflow: hidden;
             background: #f5f5f7;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
             box-shadow: none;
             aspect-ratio: 1/1;
             display: flex;
             align-items: flex-end;
             text-decoration: none;
+            isolation: isolate;
         }
         
         @media (min-width: 768px) {
@@ -731,9 +734,35 @@
             }
         }
         
+        .category-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(0,0,0,0) 0%,
+                rgba(0,0,0,0.1) 40%,
+                rgba(0,0,0,0.5) 75%,
+                rgba(0,0,0,0.75) 100%
+            );
+            z-index: 2;
+            transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .category-card:hover::before {
+            opacity: 0.9;
+            background: linear-gradient(
+                180deg,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.3) 35%,
+                rgba(0,0,0,0.65) 70%,
+                rgba(0,0,0,0.85) 100%
+            );
+        }
+        
         .category-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             z-index: 10;
         }
         
@@ -743,113 +772,171 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 1;
         }
         
         .category-card:hover .cat-bg-img {
-            transform: scale(1.08);
-        }
-        
-        .category-card .cat-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.1) 100%);
-            z-index: 1;
+            transform: scale(1.06);
         }
         
         .category-card .cat-content {
             position: relative;
-            z-index: 2;
-            padding: 16px;
+            z-index: 3;
+            padding: 20px;
             width: 100%;
             color: white;
+            transform: translateY(0);
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
         
         @media (min-width: 768px) {
             .category-card .cat-content {
-                padding: 24px;
+                padding: 28px;
             }
         }
         
         @media (min-width: 1024px) {
             .category-card .cat-content {
-                padding: 32px;
+                padding: 36px;
             }
         }
         
+        .category-card:hover .cat-content {
+            transform: translateY(-8px);
+        }
+        
+        /* Title Animation - Apple Style */
         .category-card .cat-title {
-            font-size: 14px;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+            opacity: 0.9;
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .category-card .cat-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: white;
+            transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .category-card:hover .cat-title {
+            opacity: 1;
+            transform: translateY(-2px);
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        .category-card:hover .cat-title::after {
+            width: 100%;
         }
         
         @media (min-width: 768px) {
             .category-card .cat-title {
-                font-size: 18px;
-                margin-bottom: 12px;
+                font-size: 20px;
+                margin-bottom: 10px;
+                letter-spacing: -0.5px;
             }
         }
         
         @media (min-width: 1024px) {
             .category-card .cat-title {
-                font-size: 24px;
-                margin-bottom: 16px;
+                font-size: 26px;
+                margin-bottom: 14px;
             }
         }
         
+        /* CTA Button - Zara/Nike Minimal Style */
         .category-card .cat-cta {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: white;
-            color: var(--primary);
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 10px;
-            font-weight: 700;
+            gap: 8px;
+            background: transparent;
+            color: rgba(255,255,255,0.85);
+            padding: 0;
+            border-radius: 0;
+            font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            letter-spacing: 1.5px;
+            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+            border-bottom: 1.5px solid rgba(255,255,255,0.3);
+            padding-bottom: 4px;
+        }
+        
+        .category-card .cat-cta::before {
+            content: '';
+            position: absolute;
+            bottom: -1.5px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: white;
+            transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .category-card:hover .cat-cta {
+            color: #fff;
+            border-bottom-color: transparent;
+            gap: 14px;
+            letter-spacing: 2.5px;
+        }
+        
+        .category-card:hover .cat-cta::before {
+            width: 100%;
         }
         
         @media (min-width: 768px) {
             .category-card .cat-cta {
-                padding: 8px 18px;
                 font-size: 11px;
+                letter-spacing: 1.8px;
             }
         }
         
         @media (min-width: 1024px) {
             .category-card .cat-cta {
-                padding: 10px 24px;
                 font-size: 12px;
+                letter-spacing: 2px;
+                padding-bottom: 5px;
             }
         }
         
-        .category-card:hover .cat-cta {
-            background: var(--primary);
-            color: white;
-            gap: 10px;
+        /* Arrow Icon Animation */
+        .category-card .cat-cta svg {
+            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
         }
         
-        .category-card .cat-cta svg {
-            transition: transform 0.3s ease;
-            width: 10px;
-            height: 10px;
+        .category-card:hover .cat-cta svg {
+            transform: translateX(6px);
+            opacity: 1;
         }
         
         @media (min-width: 768px) {
             .category-card .cat-cta svg {
-                width: 12px;
-                height: 12px;
+                width: 13px;
+                height: 13px;
             }
         }
         
-        .category-card:hover .cat-cta svg {
-            transform: translateX(3px);
+        @media (min-width: 1024px) {
+            .category-card .cat-cta svg {
+                width: 14px;
+                height: 14px;
+            }
         }
 
         /* Category Grid */
@@ -859,13 +946,13 @@
         
         @media (min-width: 768px) {
             #categories-grid {
-                gap: 2px !important;
+                gap: 1px !important;
             }
         }
         
         @media (min-width: 1024px) {
             #categories-grid {
-                gap: 4px !important;
+                gap: 1px !important;
             }
         }
 
@@ -886,6 +973,37 @@
                 padding-right: 16px !important;
             }
         }
+        
+        /* Intersection Observer Animation */
+        .category-card.animate-in .cat-title {
+            animation: titleReveal 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+        
+        .category-card.animate-in .cat-cta {
+            animation: ctaReveal 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s forwards;
+        }
+        
+        @keyframes titleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes ctaReveal {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -900,7 +1018,6 @@
         <section id="home" class="page-section active-page fade-in">
             
             <!-- Hero Video Section (loaded by hero-video.js) -->
-            <!-- Container will be auto-injected by hero-video.js -->
             
             <!-- Categories Section -->
             <section id="categories-section" class="carousel-section hidden">
@@ -914,7 +1031,7 @@
                             </svg>
                         </a>
                     </div>
-                    <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-0.5 lg:gap-1 mt-0">
+                    <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-px lg:gap-px mt-0">
                         <!-- Dynamically populated by JS -->
                     </div>
                 </div>
@@ -946,7 +1063,6 @@
             </section>
 
             <!-- Hero Banner Section (loaded by hero-banner.js) -->
-            <!-- Container will be auto-injected by hero-banner.js -->
 
             <!-- Carousel: Trending Now -->
             <section id="hot-products-section" class="carousel-section hidden">
@@ -1298,7 +1414,7 @@
             container.innerHTML = html;
         }
 
-        // ========== RENDER CATEGORY CARDS WITH PROPER IMAGE HANDLING ==========
+        // ========== PREMIUM RENDER CATEGORY CARDS ==========
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
             const section = document.getElementById('categories-section');
@@ -1311,30 +1427,27 @@
             
             section.classList.remove('hidden');
             
-            grid.innerHTML = currentData.categories.map(cat => {
+            grid.innerHTML = currentData.categories.map((cat, index) => {
                 const slug = getCategorySlug(cat.name);
                 
-                // API থেকে আসা ইমেজ URL ব্যবহার করুন
                 const imgSrc = cat.image_url || cat.image || cat.img || 
                     `https://kfncdapeswlnwsackkdy.supabase.co/storage/v1/object/public/categories/${cat.name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
                 
-                const ctaText = cat.cta_text || 'Explore ' + cat.name;
-                const ctaLink = cat.cta_link || '/category/' + slug;
+                const ctaText = cat.cta_text || cat.name;
                 
                 return `
-                <a href="${ctaLink}" onclick="event.preventDefault();navigate('products', {category: '${cat.name}'})" class="category-card group">
+                <a href="/category/${slug}" onclick="event.preventDefault();navigate('products', {category: '${cat.name}'})" class="category-card group" style="animation-delay: ${index * 0.1}s">
                     <img src="${imgSrc}" 
                          alt="${cat.name}" 
                          class="cat-bg-img w-full h-full object-cover" 
                          loading="lazy"
-                         onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f5f5f7%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22200%22 text-anchor=%22middle%22 fill=%22%2386868b%22 font-size=%2220%22 font-family=%22Inter,sans-serif%22>${cat.name}</text></svg>';">
-                    <div class="cat-overlay"></div>
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%231d1d1f%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22200%22 text-anchor=%22middle%22 fill=%22%23ffffff%22 font-size=%2224%22 font-family=%22Inter,sans-serif%22 font-weight=%22700%22>${cat.name}</text></svg>';">
                     <div class="cat-content">
                         <h3 class="cat-title">${cat.name}</h3>
                         <span class="cat-cta">
                             ${ctaText}
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M5.25 2.917L9.333 7L5.25 11.083" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </span>
                     </div>
@@ -1343,7 +1456,21 @@
             
             section.classList.add('visible');
             
-            console.log('[Categories] Loaded categories with images:', currentData.categories.map(c => ({name: c.name, image: c.image_url || c.image || c.img})));
+            // Intersection Observer for scroll-triggered animations
+            setTimeout(() => {
+                const cards = grid.querySelectorAll('.category-card');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate-in');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                cards.forEach(card => observer.observe(card));
+            }, 100);
+            
+            console.log('[Categories] Premium cards rendered with:', currentData.categories.map(c => ({name: c.name, image: c.image_url || c.image || c.img})));
         }
 
         function getFilteredProducts() { 
@@ -1501,25 +1628,16 @@
             </article>`).join('');
         }
 
-        // ========== CAROUSEL FUNCTIONS ==========
+        // ========== CAROUSEL FUNCTIONS (Keep existing) ==========
         function initCarousel(carouselId) { 
             if(!carouselStates[carouselId]) {
                 carouselStates[carouselId] = { 
-                    isPaused: false, 
-                    animationFrame: null, 
-                    lastTimestamp: 0, 
-                    isDragging: false, 
-                    touchStartX: 0, 
-                    touchStartY: 0, 
-                    touchStartScrollLeft: 0, 
-                    hasMoved: false, 
-                    swipeDirection: null, 
+                    isPaused: false, animationFrame: null, lastTimestamp: 0, 
+                    isDragging: false, touchStartX: 0, touchStartY: 0, 
+                    touchStartScrollLeft: 0, hasMoved: false, swipeDirection: null, 
                     baseSpeed: parseFloat(document.getElementById(carouselId)?.dataset.speed) || 0.5, 
-                    currentIndex: 0, 
-                    totalCards: 0, 
-                    _resumeTimeout: null, 
-                    _isAnimating: false, 
-                    layout: null 
+                    currentIndex: 0, totalCards: 0, _resumeTimeout: null, 
+                    _isAnimating: false, layout: null 
                 }; 
             }
             return carouselStates[carouselId]; 
@@ -1527,257 +1645,126 @@
 
         function calculateCarouselLayout(products) {
             const count = products.length;
-            if (count === 0) {
-                return {
-                    leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0,
-                    centerDisplayIndex: null, leftProducts: [], centerProduct: null,
-                    rightProducts: [], allPositioned: []
-                };
-            }
+            if (count === 0) return { leftCount: 0, centerIndex: null, rightCount: 0, totalCount: 0, centerDisplayIndex: null, leftProducts: [], centerProduct: null, rightProducts: [], allPositioned: [] };
             const leftCount = count >> 1;
             const centerIndex = leftCount;
             const rightCount = count - leftCount - 1;
-            const leftProducts = products.slice(0, leftCount);
-            const centerProduct = products[centerIndex];
-            const rightProducts = products.slice(centerIndex + 1);
-            const allPositioned = products.map((product, index) => ({
-                product,
-                position: index < centerIndex ? 'left' : index === centerIndex ? 'center' : 'right',
-                displayIndex: index + 1,
-                distanceFromCenter: index - centerIndex
-            }));
-            return {
-                leftCount, centerIndex, rightCount, totalCount: count,
-                centerDisplayIndex: centerIndex + 1, leftProducts, centerProduct,
-                rightProducts, allPositioned,
-                isBalanced: count % 2 !== 0 ? (leftCount === rightCount) : (leftCount === rightCount + 1)
-            };
+            return { leftCount, centerIndex, rightCount, totalCount: count, centerDisplayIndex: centerIndex + 1, leftProducts: products.slice(0, leftCount), centerProduct: products[centerIndex], rightProducts: products.slice(centerIndex + 1), allPositioned: products.map((p, i) => ({ product: p, position: i < centerIndex ? 'left' : i === centerIndex ? 'center' : 'right', displayIndex: i + 1, distanceFromCenter: i - centerIndex })), isBalanced: count % 2 !== 0 ? (leftCount === rightCount) : (leftCount === rightCount + 1) };
         }
 
         function getCardDimensions(carousel) { 
             const card = carousel.querySelector('.carousel-card'); 
             if(!card) return { width: 280, gap: 20 }; 
-            const gap = parseInt(getComputedStyle(carousel).gap) || 20; 
-            return { width: card.offsetWidth, gap: gap }; 
+            return { width: card.offsetWidth, gap: parseInt(getComputedStyle(carousel).gap) || 20 }; 
         }
 
         function snapToCard(carouselId, targetIndex) {
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return;
+            const carousel = document.getElementById(carouselId); if(!carousel) return;
             const state = initCarousel(carouselId); 
             const { width, gap } = getCardDimensions(carousel);
-            const cardTotal = width + gap;
-            const scrollTarget = targetIndex * cardTotal;
             state._isAnimating = true;
             carousel.classList.add('smooth-scroll');
-            carousel.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+            carousel.scrollTo({ left: targetIndex * (width + gap), behavior: 'smooth' });
             state.currentIndex = targetIndex;
-            updateActiveCard(carouselId); 
-            updateDots(carouselId);
+            updateActiveCard(carouselId); updateDots(carouselId);
             setTimeout(() => { state._isAnimating = false; }, 500);
         }
 
         function autoScrollCarousel(carouselId, timestamp) {
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return;
+            const carousel = document.getElementById(carouselId); if(!carousel) return;
             const state = initCarousel(carouselId);
-            if(state.isPaused || state.isDragging || state._isAnimating) {
-                state.animationFrame = requestAnimationFrame((ts) => autoScrollCarousel(carouselId, ts));
-                return;
-            }
+            if(state.isPaused || state.isDragging || state._isAnimating) { state.animationFrame = requestAnimationFrame((ts) => autoScrollCarousel(carouselId, ts)); return; }
             if(!state.lastTimestamp) state.lastTimestamp = timestamp;
             const delta = Math.min(timestamp - state.lastTimestamp, 32);
             carousel.scrollLeft += delta * state.baseSpeed * 0.03;
             const { width, gap } = getCardDimensions(carousel); 
             const cardTotal = width + gap;
             const currentCardIndex = Math.round(carousel.scrollLeft / cardTotal);
-            if(currentCardIndex !== state.currentIndex && currentCardIndex >= 0 && currentCardIndex < state.totalCards) {
-                state.currentIndex = currentCardIndex; 
-                updateActiveCard(carouselId); 
-                updateDots(carouselId);
-            }
-            const maxScroll = (state.totalCards - 1) * cardTotal + 10;
-            if(carousel.scrollLeft >= maxScroll) { 
-                carousel.scrollLeft = 0; 
-                state.currentIndex = 0; 
-                updateActiveCard(carouselId); 
-                updateDots(carouselId); 
-            }
+            if(currentCardIndex !== state.currentIndex && currentCardIndex >= 0 && currentCardIndex < state.totalCards) { state.currentIndex = currentCardIndex; updateActiveCard(carouselId); updateDots(carouselId); }
+            if(carousel.scrollLeft >= (state.totalCards - 1) * cardTotal + 10) { carousel.scrollLeft = 0; state.currentIndex = 0; updateActiveCard(carouselId); updateDots(carouselId); }
             state.lastTimestamp = timestamp;
             state.animationFrame = requestAnimationFrame((ts) => autoScrollCarousel(carouselId, ts));
         }
 
         function updateActiveCard(carouselId) {
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return;
+            const carousel = document.getElementById(carouselId); if(!carousel) return;
             const { width, gap } = getCardDimensions(carousel); 
-            const cardTotal = width + gap;
-            const currentIndex = Math.round(carousel.scrollLeft / cardTotal);
-            carousel.querySelectorAll('.carousel-card').forEach((card, i) => { 
-                card.classList.toggle('snap-active', i === currentIndex); 
-                card.setAttribute('data-display-index', i + 1);
-            });
+            const currentIndex = Math.round(carousel.scrollLeft / (width + gap));
+            carousel.querySelectorAll('.carousel-card').forEach((card, i) => { card.classList.toggle('snap-active', i === currentIndex); card.setAttribute('data-display-index', i + 1); });
         }
         
         function updateDots(carouselId) {
-            const carousel = document.getElementById(carouselId);
-            const dotsContainer = document.getElementById(carouselId.replace('carousel', 'dots'));
+            const carousel = document.getElementById(carouselId); const dotsContainer = document.getElementById(carouselId.replace('carousel', 'dots'));
             if(!carousel || !dotsContainer) return;
             const state = initCarousel(carouselId); 
             const { width, gap } = getCardDimensions(carousel); 
-            const cardTotal = width + gap;
-            const currentIndex = Math.max(0, Math.min(Math.round(carousel.scrollLeft / cardTotal), state.totalCards - 1));
-            dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, i) => { 
-                dot.classList.toggle('active', i === currentIndex); 
-                dot.setAttribute('data-display-index', i + 1);
-            });
+            const currentIndex = Math.max(0, Math.min(Math.round(carousel.scrollLeft / (width + gap)), state.totalCards - 1));
+            dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, i) => { dot.classList.toggle('active', i === currentIndex); dot.setAttribute('data-display-index', i + 1); });
         }
 
         function startCarouselAutoScroll(carouselId) { 
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return; 
-            const state = initCarousel(carouselId); 
-            state.isPaused = false; 
-            state.lastTimestamp = 0; 
+            const carousel = document.getElementById(carouselId); if(!carousel) return; 
+            const state = initCarousel(carouselId); state.isPaused = false; state.lastTimestamp = 0; 
             if(state.animationFrame) cancelAnimationFrame(state.animationFrame); 
             state.animationFrame = requestAnimationFrame((ts) => autoScrollCarousel(carouselId, ts)); 
         }
         
         function stopCarouselAutoScroll(carouselId) { 
             const state = carouselStates[carouselId]; 
-            if(state && state.animationFrame) {
-                cancelAnimationFrame(state.animationFrame);
-                state.animationFrame = null;
-            } 
+            if(state && state.animationFrame) { cancelAnimationFrame(state.animationFrame); state.animationFrame = null; } 
         }
 
         function slideCarousel(carouselId, direction) {
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return;
-            const state = initCarousel(carouselId); 
-            state.isPaused = true;
+            const carousel = document.getElementById(carouselId); if(!carousel) return;
+            const state = initCarousel(carouselId); state.isPaused = true;
             const { width, gap } = getCardDimensions(carousel); 
-            const cardTotal = width + gap;
-            const currentCardIndex = Math.round(carousel.scrollLeft / cardTotal);
-            let targetIndex = direction === 'next' 
-                ? Math.min(currentCardIndex + 1, state.totalCards - 1) 
-                : Math.max(currentCardIndex - 1, 0);
+            const currentCardIndex = Math.round(carousel.scrollLeft / (width + gap));
+            let targetIndex = direction === 'next' ? Math.min(currentCardIndex + 1, state.totalCards - 1) : Math.max(currentCardIndex - 1, 0);
             snapToCard(carouselId, targetIndex);
             clearTimeout(state._resumeTimeout);
-            state._resumeTimeout = setTimeout(() => { 
-                state.isPaused = false; 
-                state.lastTimestamp = 0; 
-            }, 3000);
+            state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 3000);
         }
         
         function goToCarouselDot(carouselId, index) { 
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return; 
-            const state = initCarousel(carouselId); 
-            state.isPaused = true; 
+            const carousel = document.getElementById(carouselId); if(!carousel) return; 
+            const state = initCarousel(carouselId); state.isPaused = true; 
             snapToCard(carouselId, index); 
             clearTimeout(state._resumeTimeout); 
-            state._resumeTimeout = setTimeout(() => { 
-                state.isPaused = false; 
-                state.lastTimestamp = 0; 
-            }, 3000); 
+            state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 3000); 
         }
 
         function renderCarouselProducts(carouselId, products) {
-            const carousel = document.getElementById(carouselId); 
-            if(!carousel) return;
-            
-            if(!products || !products.length) { 
-                carousel.innerHTML = '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>'; 
-                return; 
-            }
-            
+            const carousel = document.getElementById(carouselId); if(!carousel) return;
+            if(!products || !products.length) { carousel.innerHTML = '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>'; return; }
             const state = initCarousel(carouselId);
             const layout = calculateCarouselLayout(products);
-            state.layout = layout;
-            state.totalCards = products.length;
-            state.currentIndex = layout.centerIndex;
-            
+            state.layout = layout; state.totalCards = products.length; state.currentIndex = layout.centerIndex;
             carousel.innerHTML = products.map((p, index) => {
-                const isOut = p.stock <= 0;
-                const wished = (window.wishlist || []).includes(p.id); 
-                const slug = getProductSlug(p);
-                const displayIndex = index + 1;
-                
-                let badge = '';
-                if(!isOut) {
-                    if(p.is_new_arrival) badge = '<span class="card-badge badge-new">New</span>';
-                    else if(p.is_hot) badge = '<span class="card-badge badge-hot">Hot</span>';
-                    else if(p.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>';
-                    else if(p.is_limited_edition) badge = '<span class="card-badge badge-limited">Limited</span>';
-                    else if(p.is_featured) badge = '<span class="card-badge badge-featured">Featured</span>';
-                }
-                
-                return `
-                <a href="/product/${slug}" class="carousel-card" draggable="false" data-display-index="${displayIndex}" data-layout-position="${index < layout.centerIndex ? 'left' : index > layout.centerIndex ? 'right' : 'center'}">
-                    <div class="card-img">
-                        <img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">
-                        ${badge}
-                        <button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}">
-                            <i class="fa-${wished?'solid':'regular'} fa-heart"></i>
-                        </button>
-                        ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
-                    </div>
-                    <div class="card-body">
-                        <span class="card-category">${p.category}</span>
-                        <h3 class="card-title">${p.title}</h3>
-                        <div class="card-price-row">
-                            <div>
-                                <span class="card-price">৳${p.price}</span>
-                                ${p.old_price ? `<span class="card-old-price">৳${p.old_price}</span>` : ''}
-                            </div>
-                            <button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}>
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </a>`;
+                const isOut = p.stock <= 0; const wished = (window.wishlist || []).includes(p.id); 
+                const slug = getProductSlug(p); let badge = '';
+                if(!isOut) { if(p.is_new_arrival) badge = '<span class="card-badge badge-new">New</span>'; else if(p.is_hot) badge = '<span class="card-badge badge-hot">Hot</span>'; else if(p.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>'; else if(p.is_limited_edition) badge = '<span class="card-badge badge-limited">Limited</span>'; else if(p.is_featured) badge = '<span class="card-badge badge-featured">Featured</span>'; }
+                return `<a href="/product/${slug}" class="carousel-card" draggable="false" data-display-index="${index + 1}"><div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}<button onclick="event.preventDefault();event.stopPropagation();if(typeof toggleWishlist==='function')toggleWishlist(${p.id})" class="card-wishlist-btn ${wished?'wished':''}"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}</div><div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div class="card-price-row"><div><span class="card-price">৳${p.price}</span>${p.old_price ? `<span class="card-old-price">৳${p.old_price}</span>` : ''}</div><button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn ${isOut?'disabled':''}" ${isOut?'disabled':''}><i class="fa-solid fa-plus"></i></button></div></div></a>`;
             }).join('');
-            
             const dotsContainer = document.getElementById(carouselId.replace('carousel', 'dots'));
-            if(dotsContainer) {
-                dotsContainer.innerHTML = products.map((_, i) => {
-                    const isCenter = i === layout.centerIndex;
-                    return `<div class="carousel-dot ${i === layout.centerIndex ? 'active' : ''}" onclick="goToCarouselDot('${carouselId}',${i})" data-layout-position="${isCenter ? 'center' : i < layout.centerIndex ? 'left' : 'right'}"></div>`;
-                }).join('');
-            }
-            
+            if(dotsContainer) { dotsContainer.innerHTML = products.map((_, i) => `<div class="carousel-dot ${i === layout.centerIndex ? 'active' : ''}" onclick="goToCarouselDot('${carouselId}',${i})"></div>`).join(''); }
             setTimeout(() => { snapToCard(carouselId, layout.centerIndex); }, 100);
         }
 
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
-            
-            // Render Category Cards
             renderCategoryCards();
-            
             const sections = [
-                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel', products: currentData.products.filter(p => p.is_new_arrival === true), name: 'New Arrivals' },
-                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(p => p.is_hot === true), name: 'Hot Products' },
-                { id: 'featured-products-section', carousel: 'featured-products-carousel', products: currentData.products.filter(p => p.is_featured === true), name: 'Featured' },
-                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(p => p.is_best === true), name: 'Best Sellers' },
-                { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p => p.is_on_sale === true), name: 'On Sale' },
-                { id: 'limited-edition-section', carousel: 'limited-edition-carousel', products: currentData.products.filter(p => p.is_limited_edition === true), name: 'Limited Edition' }
+                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel', products: currentData.products.filter(p => p.is_new_arrival === true) },
+                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(p => p.is_hot === true) },
+                { id: 'featured-products-section', carousel: 'featured-products-carousel', products: currentData.products.filter(p => p.is_featured === true) },
+                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(p => p.is_best === true) },
+                { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p => p.is_on_sale === true) },
+                { id: 'limited-edition-section', carousel: 'limited-edition-carousel', products: currentData.products.filter(p => p.is_limited_edition === true) }
             ];
-            
             sections.forEach((sec, i) => { 
-                const el = document.getElementById(sec.id); 
-                if (!el) return;
-                if (sec.products && sec.products.length > 0) {
-                    el.classList.remove('hidden');
-                    renderCarouselProducts(sec.carousel, sec.products);
-                    setTimeout(() => {
-                        startCarouselAutoScroll(sec.carousel);
-                        el.classList.add('visible');
-                    }, i * 100);
-                } else {
-                    el.classList.add('hidden');
-                }
+                const el = document.getElementById(sec.id); if (!el) return;
+                if (sec.products && sec.products.length > 0) { el.classList.remove('hidden'); renderCarouselProducts(sec.carousel, sec.products); setTimeout(() => { startCarouselAutoScroll(sec.carousel); el.classList.add('visible'); }, i * 100); } 
+                else { el.classList.add('hidden'); }
             });
         }
 
@@ -1785,215 +1772,57 @@
             ['new-arrivals-carousel', 'hot-products-carousel', 'featured-products-carousel', 'best-selling-carousel', 'on-sale-carousel', 'limited-edition-carousel'].forEach(id => stopCarouselAutoScroll(id)); 
         }
 
-        // ========== TOUCH & MOUSE DRAG SUPPORT ==========
         function initCarouselTouchSupport() {
-            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            const THRESHOLD = 15;
-            
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0; const THRESHOLD = 15;
             document.querySelectorAll('.carousel-track').forEach(carousel => {
                 const state = initCarousel(carousel.id);
-                
-                carousel.addEventListener('touchstart', (e) => { 
-                    state.touchStartX = e.touches[0].pageX; 
-                    state.touchStartY = e.touches[0].pageY; 
-                    state.touchStartScrollLeft = carousel.scrollLeft; 
-                    state.hasMoved = false; 
-                    state.isDragging = true; 
-                    state.swipeDirection = null; 
-                    state.isPaused = true; 
-                    carousel.classList.remove('smooth-scroll'); 
-                }, { passive: true });
-                
-                carousel.addEventListener('touchmove', (e) => { 
-                    if(state.swipeDirection === 'vertical') return; 
-                    const deltaX = e.touches[0].pageX - state.touchStartX; 
-                    const deltaY = e.touches[0].pageY - state.touchStartY; 
-                    const absX = Math.abs(deltaX); 
-                    const absY = Math.abs(deltaY); 
-                    if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) 
-                        state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; 
-                    if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { 
-                        if(!state.hasMoved) state.hasMoved = true; 
-                        carousel.scrollLeft = state.touchStartScrollLeft - deltaX; 
-                        updateActiveCard(carousel.id); 
-                        updateDots(carousel.id); 
-                    } 
-                }, { passive: true });
-                
+                carousel.addEventListener('touchstart', (e) => { state.touchStartX = e.touches[0].pageX; state.touchStartY = e.touches[0].pageY; state.touchStartScrollLeft = carousel.scrollLeft; state.hasMoved = false; state.isDragging = true; state.swipeDirection = null; state.isPaused = true; carousel.classList.remove('smooth-scroll'); }, { passive: true });
+                carousel.addEventListener('touchmove', (e) => { if(state.swipeDirection === 'vertical') return; const deltaX = e.touches[0].pageX - state.touchStartX; const deltaY = e.touches[0].pageY - state.touchStartY; const absX = Math.abs(deltaX); const absY = Math.abs(deltaY); if(!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; if(state.swipeDirection === 'horizontal' && absX > THRESHOLD) { if(!state.hasMoved) state.hasMoved = true; carousel.scrollLeft = state.touchStartScrollLeft - deltaX; updateActiveCard(carousel.id); updateDots(carousel.id); } }, { passive: true });
                 carousel.addEventListener('touchend', () => { handleDragEnd(carousel, state); });
-                
                 if (!isTouchDevice) {
-                    carousel.addEventListener('mousedown', (e) => {
-                        e.preventDefault();
-                        state.touchStartX = e.pageX; 
-                        state.touchStartY = e.pageY;
-                        state.touchStartScrollLeft = carousel.scrollLeft; 
-                        state.hasMoved = false;
-                        state.isDragging = true; 
-                        state.swipeDirection = null; 
-                        state.isPaused = true;
-                        carousel.classList.remove('smooth-scroll'); 
-                        carousel.style.cursor = 'grabbing';
-                    });
-                    
-                    window.addEventListener('mousemove', (e) => {
-                        if (!state.isDragging || state.swipeDirection === 'vertical') return;
-                        const deltaX = e.pageX - state.touchStartX; 
-                        const deltaY = e.pageY - state.touchStartY;
-                        const absX = Math.abs(deltaX); 
-                        const absY = Math.abs(deltaY);
-                        if (!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) {
-                            state.swipeDirection = absX > absY ? 'horizontal' : 'vertical';
-                            if (state.swipeDirection === 'vertical') {
-                                state.isDragging = false; 
-                                carousel.style.cursor = 'grab';
-                                carousel.classList.add('smooth-scroll'); 
-                                return;
-                            }
-                        }
-                        if (state.swipeDirection === 'horizontal' && absX > THRESHOLD) {
-                            state.hasMoved = true;
-                            carousel.scrollLeft = state.touchStartScrollLeft - deltaX;
-                            updateActiveCard(carousel.id); 
-                            updateDots(carousel.id);
-                        }
-                    });
-                    
-                    window.addEventListener('mouseup', () => { 
-                        if (!state.isDragging) return; 
-                        handleDragEnd(carousel, state); 
-                    });
-                    
-                    carousel.addEventListener('mouseleave', () => { 
-                        if (state.isDragging) handleDragEnd(carousel, state); 
-                    });
+                    carousel.addEventListener('mousedown', (e) => { e.preventDefault(); state.touchStartX = e.pageX; state.touchStartY = e.pageY; state.touchStartScrollLeft = carousel.scrollLeft; state.hasMoved = false; state.isDragging = true; state.swipeDirection = null; state.isPaused = true; carousel.classList.remove('smooth-scroll'); carousel.style.cursor = 'grabbing'; });
+                    window.addEventListener('mousemove', (e) => { if (!state.isDragging || state.swipeDirection === 'vertical') return; const deltaX = e.pageX - state.touchStartX; const deltaY = e.pageY - state.touchStartY; const absX = Math.abs(deltaX); const absY = Math.abs(deltaY); if (!state.swipeDirection && (absX > THRESHOLD || absY > THRESHOLD)) { state.swipeDirection = absX > absY ? 'horizontal' : 'vertical'; if (state.swipeDirection === 'vertical') { state.isDragging = false; carousel.style.cursor = 'grab'; carousel.classList.add('smooth-scroll'); return; } } if (state.swipeDirection === 'horizontal' && absX > THRESHOLD) { state.hasMoved = true; carousel.scrollLeft = state.touchStartScrollLeft - deltaX; updateActiveCard(carousel.id); updateDots(carousel.id); } });
+                    window.addEventListener('mouseup', () => { if (!state.isDragging) return; handleDragEnd(carousel, state); });
+                    carousel.addEventListener('mouseleave', () => { if (state.isDragging) handleDragEnd(carousel, state); });
                 }
             });
-            
-            function handleDragEnd(carousel, state) {
-                carousel.classList.add('smooth-scroll'); 
-                carousel.style.cursor = isTouchDevice ? '' : 'grab';
-                if (state.hasMoved) {
-                    const { width, gap } = getCardDimensions(carousel); 
-                    const cardTotal = width + gap;
-                    const nearestIndex = Math.round(carousel.scrollLeft / cardTotal);
-                    const targetIndex = Math.max(0, Math.min(nearestIndex, state.totalCards - 1));
-                    snapToCard(carousel.id, targetIndex);
-                }
-                state.isDragging = false; 
-                state.hasMoved = false; 
-                state.swipeDirection = null;
-                clearTimeout(state._resumeTimeout);
-                state._resumeTimeout = setTimeout(() => { 
-                    state.isPaused = false; 
-                    state.lastTimestamp = 0; 
-                }, 2500);
-            }
+            function handleDragEnd(carousel, state) { carousel.classList.add('smooth-scroll'); carousel.style.cursor = isTouchDevice ? '' : 'grab'; if (state.hasMoved) { const { width, gap } = getCardDimensions(carousel); const nearestIndex = Math.round(carousel.scrollLeft / (width + gap)); snapToCard(carousel.id, Math.max(0, Math.min(nearestIndex, state.totalCards - 1))); } state.isDragging = false; state.hasMoved = false; state.swipeDirection = null; clearTimeout(state._resumeTimeout); state._resumeTimeout = setTimeout(() => { state.isPaused = false; state.lastTimestamp = 0; }, 2500); }
         }
 
-        // ========== COOKIE CONSENT ==========
-        function handleCookieAccept() { 
-            localStorage.setItem('jayenware_consent', 'accepted'); 
-            const cookieDiv = document.getElementById('cookieConsent');
-            if(cookieDiv) cookieDiv.classList.remove('show'); 
-        }
-        
-        function handleCookieDecline() { 
-            localStorage.setItem('jayenware_consent', 'declined'); 
-            const cookieDiv = document.getElementById('cookieConsent');
-            if(cookieDiv) cookieDiv.classList.remove('show'); 
-        }
+        function handleCookieAccept() { localStorage.setItem('jayenware_consent', 'accepted'); const cookieDiv = document.getElementById('cookieConsent'); if(cookieDiv) cookieDiv.classList.remove('show'); }
+        function handleCookieDecline() { localStorage.setItem('jayenware_consent', 'declined'); const cookieDiv = document.getElementById('cookieConsent'); if(cookieDiv) cookieDiv.classList.remove('show'); }
 
-        // ========== EVENT LISTENERS ==========
-        document.addEventListener('click', e => {
-            if(!e.target.closest('#sort-container')) {
-                const dropdown = document.getElementById('sort-dropdown');
-                if(dropdown) dropdown.classList.add('hidden');
-            }
-        });
-        
-        window.addEventListener('popstate', function() {
-            handleInitialRoute();
-        });
+        document.addEventListener('click', e => { if(!e.target.closest('#sort-container')) { const dropdown = document.getElementById('sort-dropdown'); if(dropdown) dropdown.classList.add('hidden'); } });
+        window.addEventListener('popstate', () => { handleInitialRoute(); });
 
-        // ========== DATA LOADING ==========
         async function loadData() {
             try {
-                const [hero, cats, prods, newsData, heroVideosData] = await Promise.all([
-                    fetchAPI('/api/hero'), 
-                    fetchAPI('/api/categories'),
-                    fetchAPI('/api/products'), 
-                    fetchAPI('/api/news'),
-                    fetchAPI('/api/hero-videos')
-                ]);
-                
+                const [hero, cats, prods, newsData, heroVideosData] = await Promise.all([fetchAPI('/api/hero'), fetchAPI('/api/categories'), fetchAPI('/api/products'), fetchAPI('/api/news'), fetchAPI('/api/hero-videos')]);
                 if(hero && hero.length) currentData.hero = hero;
                 if(cats && cats.length) currentData.categories = cats;
                 if(prods && prods.length) currentData.products = prods;
                 if(newsData) currentData.news = newsData;
                 if(heroVideosData && heroVideosData.length) currentData.heroVideos = heroVideosData;
-                
-                window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', { 
-                    detail: { 
-                        hero: currentData.hero, 
-                        heroVideos: currentData.heroVideos 
-                    } 
-                }));
-                
-                renderCategories();
-                renderProducts(currentData.products);
-                renderNews(currentData.news);
-                renderHomepageSections();
-                handleInitialRoute();
-                
+                window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', { detail: { hero: currentData.hero, heroVideos: currentData.heroVideos } }));
+                renderCategories(); renderProducts(currentData.products); renderNews(currentData.news); renderHomepageSections(); handleInitialRoute();
                 console.log('[App] All data loaded successfully');
-            } catch(err) { 
-                console.error('[App] Data load error:', err);
-            }
+            } catch(err) { console.error('[App] Data load error:', err); }
         }
 
         function handleInitialRoute() {
-            const path = window.location.pathname;
-            const sp = new URLSearchParams(window.location.search);
-            
+            const path = window.location.pathname; const sp = new URLSearchParams(window.location.search);
             if(path.startsWith('/product/')) return;
-            
-            if(path.startsWith('/category/')) {
-                const slug = path.replace('/category/', '');
-                const cat = currentData.categories.find(c => getCategorySlug(c.name) === slug);
-                if(cat) {
-                    navigate('products');
-                    filterByCategory(cat.name);
-                }
-                return;
-            }
-            
-            if(path === '/search' && sp.get('q')) {
-                navigate('products');
-                renderProducts(currentData.products.filter(p => 
-                    p.title.toLowerCase().includes(sp.get('q').toLowerCase())
-                ));
-                return;
-            }
-            
+            if(path.startsWith('/category/')) { const slug = path.replace('/category/', ''); const cat = currentData.categories.find(c => getCategorySlug(c.name) === slug); if(cat) { navigate('products'); filterByCategory(cat.name); } return; }
+            if(path === '/search' && sp.get('q')) { navigate('products'); renderProducts(currentData.products.filter(p => p.title.toLowerCase().includes(sp.get('q').toLowerCase()))); return; }
             const routes = { '/': 'home', '/products': 'products', '/wishlist': 'wishlist', '/journal': 'news' }; 
             navigate(routes[path] || 'home');
         }
 
-        // ========== INITIALIZATION ==========
         window.onload = async () => {
             const consent = localStorage.getItem('jayenware_consent'); 
-            if(!consent) {
-                setTimeout(() => {
-                    const cookieDiv = document.getElementById('cookieConsent');
-                    if(cookieDiv) cookieDiv.classList.add('show');
-                }, 2000);
-            }
-            
+            if(!consent) { setTimeout(() => { const cookieDiv = document.getElementById('cookieConsent'); if(cookieDiv) cookieDiv.classList.add('show'); }, 2000); }
             await loadData();
-            
             setTimeout(initCarouselTouchSupport, 500);
-            
             console.log('[App] Application initialized');
         };
     </script>
