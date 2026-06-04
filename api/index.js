@@ -358,6 +358,22 @@ app.get('/api/hero-videos', async (req, res) => {
     }
 });
 
+// হিরো সেকেন্ডারি - শুধু active সেকেন্ডারি ব্যানারগুলো
+app.get('/api/hero-secondary', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ============================================
 // নিউজ
 // ============================================
