@@ -933,7 +933,7 @@ async function initSharedComponents() {
     renderFooter();
     updateCounts();
     const yearEl = document.getElementById('display-year');
-    if (yearEl) yearEl.innerText = new Date().getFullVersion();
+    if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
 
 // Auto-initialize
