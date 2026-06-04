@@ -64,33 +64,14 @@
     </script>
 
     <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Website",
-            "name": "Jayenware",
-            "alternateName": "JAYENWARE SHOP",
-            "url": "https://www.jayenware.shop",
-            "logo": "https://www.jayenware.shop/logo.png",
-            "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO. Shop authentic apparel with fast delivery across World.",
-            "priceRange": "৳450 - ৳5000",
-            "image": "https://www.jayenware.shop/logo.png",
-            "address": { "@type": "PostalAddress", "addressLocality": "Dhaka", "addressRegion": "Dhaka Division", "addressCountry": "BD" },
-            "geo": { "@type": "GeoCoordinates", "latitude": "23.8103", "longitude": "90.4125" },
-            "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "url": "https://m.me/861762253694814", "availableLanguage": ["English", "Bengali"] },
-            "sameAs": ["https://www.facebook.com/jayenware", "https://www.instagram.com/jayenware", "https://www.twitter.com/jayenware"],
-            "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "09:00", "closes": "21:00" },
-            "parentOrganization": { "@type": "Organization", "name": "BINZEO", "url": "https://binzeo.vercel.app" }
+        { "@context": "https://schema.org", "@type": "Website", "name": "Jayenware", "alternateName": "JAYENWARE SHOP", "url": "https://www.jayenware.shop", "logo": "https://www.jayenware.shop/logo.png", "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO. Shop authentic apparel with fast delivery across World.", "priceRange": "৳450 - ৳5000", "image": "https://www.jayenware.shop/logo.png", "address": { "@type": "PostalAddress", "addressLocality": "Dhaka", "addressRegion": "Dhaka Division", "addressCountry": "BD" }, "geo": { "@type": "GeoCoordinates", "latitude": "23.8103", "longitude": "90.4125" }, "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "url": "https://m.me/861762253694814", "availableLanguage": ["English", "Bengali"] }, "sameAs": ["https://www.facebook.com/jayenware", "https://www.instagram.com/jayenware", "https://www.twitter.com/jayenware"], "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "09:00", "closes": "21:00" }, "parentOrganization": { "@type": "Organization", "name": "BINZEO", "url": "https://binzeo.vercel.app" }
         }
     </script>
 
     <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@graph": [
-                { "@type": "WebSite", "name": "JAYENWARE", "alternateName": "JAYENWARE SHOP", "url": "https://www.jayenware.shop/", "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO." },
-                { "@type": "Organization", "name": "JAYENWARE", "url": "https://www.jayenware.shop/", "logo": { "@type": "ImageObject", "url": "https://www.jayenware.shop/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://www.facebook.com/jayenware", "https://www.instagram.com/jayenware", "https://www.twitter.com/jayenware"] }
-            ]
-        }
+        { "@context": "https://schema.org", "@graph": [
+            { "@type": "WebSite", "name": "JAYENWARE", "alternateName": "JAYENWARE SHOP", "url": "https://www.jayenware.shop/", "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO." }, { "@type": "Organization", "name": "JAYENWARE", "url": "https://www.jayenware.shop/", "logo": { "@type": "ImageObject", "url": "https://www.jayenware.shop/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://www.facebook.com/jayenware","https://www.instagram.com/jayenware","https://www.twitter.com/jayenware"] }
+        ] }
     </script>
 
     <script>
@@ -161,6 +142,7 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -173,9 +155,11 @@
             transition: opacity 0.3s ease, transform 0.3s ease;
             min-height: 60vh;
         }
+
         .page-section.active-page {
             display: block;
         }
+
         .page-section.fade-in {
             opacity: 1;
             transform: translateY(0);
@@ -245,9 +229,11 @@
         .carousel-track::-webkit-scrollbar {
             display: none;
         }
+
         .carousel-track:active {
             cursor: grabbing;
         }
+
         .carousel-track.dragging {
             scroll-behavior: auto;
         }
@@ -393,12 +379,10 @@
                 opacity: 0;
                 transform: translateY(4px);
             }
-
             .carousel-card:hover .card-add-btn {
                 opacity: 1;
                 transform: translateY(0);
             }
-
             .carousel-card .card-add-btn:hover {
                 background: var(--primary);
                 color: #fff;
@@ -462,11 +446,9 @@
             .carousel-nav {
                 opacity: 0;
             }
-
             .carousel-wrapper:hover .carousel-nav {
                 opacity: 1;
             }
-
             .carousel-nav:hover {
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                 transform: translateY(-50%) scale(1.05);
@@ -482,6 +464,7 @@
         .carousel-nav.prev {
             left: -20px;
         }
+
         .carousel-nav.next {
             right: -20px;
         }
@@ -503,46 +486,66 @@
             transition: width 0.1s ease;
         }
 
-        /* ==================== LIMITED EDITION DARK THEME FIX ==================== */
-        #limited-edition-section .carousel-card .card-title,
+        /* ==================== LIMITED EDITION DARK SECTION FIX ==================== */
+        #limited-edition-section .carousel-card .card-title {
+            color: #ffffff;
+        }
+
         #limited-edition-section .carousel-card .card-price {
             color: #ffffff;
         }
-        #limited-edition-section .carousel-card .card-category {
-            color: rgba(255, 255, 255, 0.6);
-        }
+
         #limited-edition-section .carousel-card .card-old-price {
-            color: rgba(255, 255, 255, 0.45);
+            color: #a1a1a6;
         }
+
+        #limited-edition-section .carousel-card .card-category {
+            color: #a1a1a6;
+        }
+
         #limited-edition-section .carousel-card .card-badge {
-            background: rgba(255, 255, 255, 0.15);
+            background: #2d2d2f;
             color: #ffffff;
         }
-        #limited-edition-section .carousel-card .badge-sale {
+
+        #limited-edition-section .carousel-card .card-badge.badge-sale {
             color: #ff6b6b !important;
         }
+
         #limited-edition-section .carousel-card .card-soldout-overlay span {
             background: #ffffff;
             color: #1d1d1f;
         }
+
+        #limited-edition-section .carousel-card .card-img {
+            background: #2d2d2f;
+        }
+
         #limited-edition-section .carousel-card .card-add-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1d1d1f;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         @media (hover: hover) {
             #limited-edition-section .carousel-card .card-add-btn:hover {
                 background: #ffffff;
                 color: #1d1d1f;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
             }
         }
+
         #limited-edition-section .carousel-card .card-add-btn:active {
             background: #ffffff;
             color: #1d1d1f;
         }
-        #limited-edition-section .carousel-card .card-img {
-            background: #2a2a2d;
+
+        #limited-edition-section .scroll-progress {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #limited-edition-section .scroll-progress-bar {
+            background: #ffffff;
         }
 
         /* ==================== WORLD-CLASS CATEGORY SECTION ==================== */
@@ -680,24 +683,6 @@
             }
         }
 
-        .category-card .cat-label {
-            display: inline-block;
-            font-size: 9px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 8px;
-        }
-
-        @media (min-width: 768px) {
-            .category-card .cat-label {
-                font-size: 10px;
-                letter-spacing: 2.5px;
-                margin-bottom: 12px;
-            }
-        }
-
         .category-card .cat-title {
             font-size: 22px;
             font-weight: 700;
@@ -768,32 +753,6 @@
             transition: transform 0.2s ease;
         }
 
-        /* Category section header */
-        .categories-header {
-            padding: 0 20px 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 768px) {
-            .categories-header {
-                padding: 0 40px 32px;
-            }
-        }
-
-        .categories-header .section-title {
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: var(--primary);
-        }
-
-        @media (min-width: 768px) {
-            .categories-header .section-title {
-                font-size: 32px;
-            }
-        }
-
         @media (max-width: 767px) {
             .carousel-container {
                 padding: 0 20px;
@@ -829,14 +788,6 @@
                 transform: translateY(0);
             }
 
-            .categories-header {
-                padding: 0 20px 20px;
-            }
-
-            .categories-header .section-title {
-                font-size: 22px;
-            }
-
             .category-card .cat-content {
                 padding: 20px;
             }
@@ -868,9 +819,11 @@
             transition: transform 0.5s;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .cookie-consent-overlay.show {
             transform: translateY(0);
         }
+
         .cookie-banner {
             max-width: 1200px;
             margin: 0 auto;
@@ -881,6 +834,7 @@
             gap: 20px;
             flex-wrap: wrap;
         }
+
         .cookie-icon {
             width: 40px;
             height: 40px;
@@ -891,32 +845,38 @@
             justify-content: center;
             flex-shrink: 0;
         }
+
         .cookie-text {
             flex: 1;
             min-width: 200px;
             color: white;
         }
+
         .cookie-text h4 {
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 4px;
             color: #fff;
         }
+
         .cookie-text p {
             font-size: 11px;
             color: #a1a1a6;
             line-height: 1.4;
             margin: 0;
         }
+
         .cookie-text a {
             color: #007aff;
             text-decoration: underline;
         }
+
         .cookie-buttons {
             display: flex;
             gap: 10px;
             flex-shrink: 0;
         }
+
         .cookie-btn {
             padding: 10px 24px;
             border-radius: 50px;
@@ -931,10 +891,12 @@
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
+
         .cookie-btn.accept {
             background: #007aff;
             color: white;
         }
+
         .cookie-btn.decline {
             background: transparent;
             color: #a1a1a6;
@@ -947,10 +909,12 @@
                 padding: 16px;
                 text-align: center;
             }
+
             .cookie-buttons {
                 width: 100%;
                 flex-direction: column;
             }
+
             .cookie-btn {
                 width: 100%;
                 text-align: center;
@@ -1254,7 +1218,8 @@
         }
 
         function getProductSlug(p) {
-            return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+            return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(
+                /^-+|-+$/g, '');
         }
 
         function updateURL(path, title = '') {
@@ -1312,7 +1277,7 @@
         }
 
         // ============================================================
-        // WORLD-CLASS CATEGORY CARDS – PURELY FROM DATABASE
+        // WORLD-CLASS CATEGORY CARDS – ALL DATA FROM DB, NO HARDCODED FALLBACKS
         // ============================================================
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
@@ -1328,26 +1293,59 @@
 
             grid.innerHTML = currentData.categories.map((cat, index) => {
                 const slug = getCategorySlug(cat.name);
+
+                // image_url সরাসরি ডাটাবেজ থেকে, কোনো ফলব্যাক নেই
                 const imgSrc = cat.image_url || '';
-                const ctaTitle = cat.image_cta_title || cat.name;
-                const ctaLink = cat.image_cta_link || '/category/' + slug;
-                const hasImage = imgSrc && imgSrc.trim().length > 0;
+
+                // CTA লিংক: ডাটাবেজের image_cta_link ব্যবহার করবে, না থাকলে ক্যাটাগরি পেজে ফ্যালব্যাক
+                let ctaLink = cat.image_cta_link || '/category/' + slug;
+                const isExternal = ctaLink.startsWith('http');
+                const externalAttrs = isExternal ? ' target="_blank" rel="noopener"' : '';
+
+                // CTA টাইটেল: ডাটাবেজের image_cta_title, না থাকলে বাটন দেখাবে না
+                const ctaTitle = cat.image_cta_title || '';
+
+                const ctaHTML = ctaTitle ? `
+                <span class="cat-link">
+                    ${ctaTitle}
+                    <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>` : '';
 
                 return `
-                <a href="${ctaLink}" onclick="event.preventDefault();navigate('products', {category: '${cat.name}'})" class="category-card">
-                    ${hasImage ? `<img src="${imgSrc}" alt="${cat.name}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.display='none'">` : ''}
+                <a href="${ctaLink}" ${externalAttrs} class="category-card" ${!isExternal ? `onclick="event.preventDefault();navigateByCTALink('${ctaLink.replace(/'/g, "\\'")}', '${cat.name.replace(/'/g, "\\'")}')"` : ''}>
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${cat.name}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
                     <div class="cat-content">
-                        <span class="cat-label">${cat.name}</span>
-                        <h3 class="cat-title">${ctaTitle}</h3>
-                        <span class="cat-link">
-                            Shop Now
-                            <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </span>
+                        <h3 class="cat-title">${cat.name}</h3>
+                        ${ctaHTML}
                     </div>
                 </a>`;
             }).join('');
+        }
+
+        // CTA লিংক অনুযায়ী নেভিগেট করার হেল্পার ফাংশন
+        function navigateByCTALink(link, categoryName) {
+            if (!link) return;
+            if (link.startsWith('/category/')) {
+                const slug = link.replace('/category/', '');
+                const cat = currentData.categories.find(c => getCategorySlug(c.name) === slug);
+                if (cat) {
+                    navigate('products', { category: cat.name });
+                    return;
+                }
+            }
+            if (link.startsWith('/products')) {
+                navigate('products');
+                return;
+            }
+            // অন্য যেকোনো ইন্টারনাল লিংক
+            if (link.startsWith('/')) {
+                window.location.href = link;
+                return;
+            }
+            // ফলব্যাক: ক্যাটাগরি পেজ
+            navigate('products', { category: categoryName });
         }
 
         function getFilteredProducts() {
@@ -1362,7 +1360,8 @@
             currentFilters.cat = cat;
             productsDisplayLimit = 12;
             renderProducts(getFilteredProducts());
-            updateURL(cat === 'all' ? '/products' : '/category/' + getCategorySlug(cat), cat === 'all' ? 'All Products' : cat);
+            updateURL(cat === 'all' ? '/products' : '/category/' + getCategorySlug(cat), cat === 'all' ? 'All Products' :
+                cat);
         }
 
         function applyPriceFilter() {
@@ -1495,7 +1494,7 @@
         }
 
         // -------------------------------------------------------
-        // SMOOTH CAROUSEL SLIDING (no snapping, momentum deceleration)
+        // SMOOTH CAROUSEL SLIDING
         // -------------------------------------------------------
         function slideCarousel(carouselId, direction) {
             const carousel = document.getElementById(carouselId);
@@ -1573,14 +1572,14 @@
             renderCategoryCards();
 
             const sections = [
-                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel', products: currentData.products
-                        .filter(p => p.is_new_arrival === true) },
-                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products
-                        .filter(p => p.is_hot === true) },
+                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
+                products: currentData.products.filter(p => p.is_new_arrival === true) },
+                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(
+                        p => p.is_hot === true) },
                 { id: 'featured-products-section', carousel: 'featured-products-carousel',
                     products: currentData.products.filter(p => p.is_featured === true) },
-                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products
-                        .filter(p => p.is_best === true) },
+                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(
+                        p => p.is_best === true) },
                 { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p =>
                         p.is_on_sale === true) },
                 { id: 'limited-edition-section', carousel: 'limited-edition-carousel',
@@ -1782,8 +1781,7 @@
                     .toLowerCase())));
                 return;
             }
-            navigate({ '/': 'home', '/products': 'products', '/wishlist': 'wishlist', '/journal': 'news' }[path] ||
-                'home');
+            navigate({ '/': 'home', '/products': 'products', '/wishlist': 'wishlist', '/journal': 'news' }[path] || 'home');
         }
 
         window.onload = async () => {
