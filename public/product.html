@@ -12,7 +12,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Fonts Configuration -->
+    <script src="/fonts.js"></script>
+    
+    <!-- Google Fonts Dynamic Loading -->
+    <script>
+        if (window.JAYENWARE_FONTS) {
+            const link = document.createElement('link');
+            link.href = JAYENWARE_FONTS.googleFontsURL;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,8 +34,9 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
+                        sans: window.JAYENWARE_FONTS?.tailwindConfig?.fontFamily?.sans || ["'Inter', 'sans-serif'"],
+                        serif: window.JAYENWARE_FONTS?.tailwindConfig?.fontFamily?.serif || ["'Manrope', 'sans-serif'"],
+                        mono: window.JAYENWARE_FONTS?.tailwindConfig?.fontFamily?.mono || ["'Sora', 'sans-serif'"]
                     },
                     colors: {
                         primary: '#1d1d1f',
@@ -52,6 +66,152 @@
         }
         
         img { max-width: 100%; height: auto; display: block; }
+        
+        /* Typography System - Uses dynamic CSS variables */
+        body {
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+        }
+        
+        .title-text {
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+        
+        .section-label {
+            font-family: var(--font-accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-widest);
+        }
+        
+        .variant-pill {
+            font-family: var(--font-accent);
+            font-weight: 700;
+            letter-spacing: var(--tracking-wider);
+            text-transform: uppercase;
+        }
+        
+        .toggle-btn {
+            font-family: var(--font-subtitle);
+            font-weight: 600;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .description-content {
+            font-family: var(--font-body);
+            line-height: 1.8;
+        }
+        
+        .detail-badge {
+            font-family: var(--font-subtitle);
+        }
+        
+        .detail-badge span:first-child {
+            font-family: var(--font-accent);
+        }
+        
+        .detail-badge span:last-child {
+            font-family: var(--font-body);
+            font-weight: 700;
+        }
+        
+        .size-btn {
+            font-family: var(--font-subtitle);
+            font-weight: 600;
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        .product-card h3 {
+            font-family: var(--font-subtitle);
+            font-weight: 600;
+        }
+        
+        .product-card p {
+            font-family: var(--font-accent);
+            font-weight: 700;
+        }
+        
+        .product-card span {
+            font-family: var(--font-body);
+            font-weight: 900;
+        }
+        
+        button, .btn {
+            font-family: var(--font-body);
+            font-weight: 700;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .star-rating label {
+            font-family: var(--font-body);
+        }
+        
+        textarea, input {
+            font-family: var(--font-body);
+        }
+        
+        .review-text {
+            font-family: var(--font-body);
+            line-height: 1.6;
+        }
+        
+        .variant-info-pill {
+            font-family: var(--font-subtitle);
+            font-weight: 500;
+        }
+        
+        .barcode-wrapper {
+            font-family: var(--font-body);
+        }
+        
+        /* Banner Typography */
+        .banner-title {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            letter-spacing: var(--tracking-tight);
+        }
+        
+        .banner-subtitle {
+            font-family: var(--font-body);
+            font-weight: 400;
+        }
+        
+        .banner-link {
+            font-family: var(--font-accent);
+            font-weight: 600;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        /* Video Overlay Typography */
+        .video-cdn-badge {
+            font-family: var(--font-accent);
+            font-weight: 600;
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        .video-title-overlay {
+            font-family: var(--font-subtitle);
+            font-weight: 600;
+        }
+        
+        /* Sticky Bar */
+        .sticky-add-bar span {
+            font-family: var(--font-body);
+            font-weight: 900;
+        }
+        
+        .sticky-add-bar button {
+            font-family: var(--font-body);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+        }
         
         /* ⚡ Color Swatch - WITH BORDER SHADOW for white colors */
         .color-swatch-btn {
@@ -124,7 +284,6 @@
             text-align: center;
             flex-shrink: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-            letter-spacing: 0.3px;
         }
         .size-btn:hover { 
             border-color: rgba(0,0,0,0.2);
@@ -310,8 +469,6 @@
             border-radius: 20px;
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
             display: inline-block;
             margin-bottom: 10px;
         }
@@ -321,15 +478,12 @@
             font-weight: 700;
             color: #1d1d1f;
             margin-bottom: 4px;
-            letter-spacing: -0.3px;
             line-height: 1.2;
         }
         
         .product-info-card .section-label {
             font-size: 10px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
             color: #86868b;
             margin-bottom: 10px;
         }
@@ -402,10 +556,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 700;
             font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             cursor: pointer;
             margin-bottom: 10px;
             transition: all 0.3s;
@@ -436,7 +588,6 @@
             margin-bottom: 16px;
             font-size: 14px;
             color: #4b5563;
-            line-height: 1.8;
             border: 1px solid rgba(0,0,0,0.04);
         }
         
@@ -542,7 +693,6 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            font-weight: 500;
         }
         .variant-info-pill span.separator {
             color: #d1d5db;
@@ -614,7 +764,6 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.4px;
             z-index: 5;
             border: 1px solid rgba(255,255,255,0.15);
             text-decoration: none;
@@ -647,7 +796,6 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.3px;
             z-index: 4;
             pointer-events: none;
             transition: opacity 0.4s;
@@ -775,22 +923,17 @@
         .product-banner-card .banner-title {
             color: white;
             font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
             margin-bottom: 6px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .product-banner-card .banner-subtitle {
             color: rgba(255,255,255,0.85);
             font-size: 15px;
-            font-weight: 400;
-            letter-spacing: 0.2px;
             text-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
         .product-banner-card .banner-link {
             color: white;
             font-size: 13px;
-            font-weight: 600;
             text-decoration: none;
             margin-top: 10px;
             border-bottom: 2px solid rgba(255,255,255,0.5);
@@ -798,7 +941,6 @@
             transition: all 0.3s;
             display: inline-block;
             width: fit-content;
-            letter-spacing: 0.6px;
             text-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
         .product-banner-card .banner-link:hover {
@@ -840,7 +982,7 @@
             }
         }
 
-        /* ⚡ Hide duplicate footer from components.js */
+        /* Hide duplicate footer from components.js */
         #components-footer + footer,
         #components-footer ~ footer:not(#components-footer) {
             display: none !important;
@@ -1442,7 +1584,7 @@
                     <div style="margin-bottom:8px;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                             <span class="section-label">Color</span>
-                            <span id="selected-color-name" style="font-size:13px;font-weight:600;color:#1d1d1f;">Select</span>
+                            <span id="selected-color-name" style="font-size:13px;font-weight:600;color:#1d1d1f;font-family:var(--font-subtitle);">Select</span>
                         </div>
                         <div class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:10px;">
                             ${productColors.map(color => { 
@@ -1459,10 +1601,10 @@
                     <div style="margin-bottom:8px;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                             <span class="section-label">Size</span>
-                            <span id="selected-size-name" style="font-size:13px;font-weight:600;color:#1d1d1f;">Select</span>
+                            <span id="selected-size-name" style="font-size:13px;font-weight:600;color:#1d1d1f;font-family:var(--font-subtitle);">Select</span>
                         </div>
                         <div id="size-buttons-container" class="no-scrollbar" style="display:flex;flex-wrap:wrap;gap:8px;">
-                            <p style="font-size:12px;color:#9ca3af;padding:6px 0;">Choose a color first</p>
+                            <p style="font-size:12px;color:#9ca3af;padding:6px 0;font-family:var(--font-body);">Choose a color first</p>
                         </div>
                     </div>`;
                 }
@@ -1491,22 +1633,22 @@
                             
                             <h1 class="title-text">${product.title || ''}</h1>
                             
-                            ${product.short_description ? `<p style="font-size:14px;color:#6b7280;margin:8px 0 0;line-height:1.6;">${product.short_description}</p>` : ''}
+                            ${product.short_description ? `<p style="font-size:14px;color:#6b7280;margin:8px 0 0;line-height:1.6;font-family:var(--font-body);">${product.short_description}</p>` : ''}
                             
                             <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:18px;">
                                 <div style="display:flex;align-items:baseline;gap:10px;">
-                                    <span id="variant-price-display" style="font-size:30px;font-weight:900;color:#1d1d1f;">৳ ${product.price||0}</span>
-                                    <span id="variant-old-price-display" style="font-size:16px;color:#86868b;text-decoration:line-through;display:${product.old_price?'inline':'none'};">${product.old_price?`৳ ${product.old_price}`:''}</span>
+                                    <span id="variant-price-display" style="font-size:30px;font-weight:900;color:#1d1d1f;font-family:var(--font-body);">৳ ${product.price||0}</span>
+                                    <span id="variant-old-price-display" style="font-size:16px;color:#86868b;text-decoration:line-through;display:${product.old_price?'inline':'none'};font-family:var(--font-body);">${product.old_price?`৳ ${product.old_price}`:''}</span>
                                 </div>
-                                <button onclick="toggleWishlist(${product.id})" data-wishlist-btn style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid rgba(0,0,0,0.08);border-radius:9999px;font-size:10px;font-weight:700;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);cursor:pointer;color:#1d1d1f;transition:all 0.3s;">
+                                <button onclick="toggleWishlist(${product.id})" data-wishlist-btn style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid rgba(0,0,0,0.08);border-radius:9999px;font-size:10px;font-weight:700;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);cursor:pointer;color:#1d1d1f;transition:all 0.3s;font-family:var(--font-accent);">
                                     <i class="fa-${wishlist.includes(product.id)?'solid':'regular'} fa-heart" style="color:${wishlist.includes(product.id)?'#ef4444':'#86868b'};font-size:14px;"></i> ${wishlist.includes(product.id)?'Saved':'Save'}
                                 </button>
                             </div>
                             
                             <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
                                 <span id="stock-status-dot" style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>
-                                <span id="stock-status-text" style="font-size:12px;font-weight:600;color:#d97706;">Select options</span>
-                                ${avgRating?`<span style="font-size:12px;color:#86868b;margin-left:6px;"><i class="fa-solid fa-star" style="color:#ff9500;font-size:11px;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
+                                <span id="stock-status-text" style="font-size:12px;font-weight:600;color:#d97706;font-family:var(--font-subtitle);">Select options</span>
+                                ${avgRating?`<span style="font-size:12px;color:#86868b;margin-left:6px;font-family:var(--font-accent);"><i class="fa-solid fa-star" style="color:#ff9500;font-size:11px;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
                             </div>
                             
                             <div class="divider"></div>
@@ -1522,8 +1664,8 @@
                         
                         <!-- Buy Buttons -->
                         <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 24px;">
-                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);">Add to Bag</button>
-                            <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:18px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;color:#1d1d1f;">Buy Now</button>
+                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-family:var(--font-body);">Add to Bag</button>
+                            <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:18px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;color:#1d1d1f;font-family:var(--font-body);">Buy Now</button>
                         </div>
                     </div>
                     
@@ -1535,15 +1677,15 @@
                         <!-- Specifications -->
                         <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
                             <span><i class="fa-solid fa-sliders"></i> &nbsp;Specifications</span>
-                            <i id="specs-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="transition: transform 0.3s;"></i>
+                            <i id="specs-icon" class="fa-solid fa-chevron-down toggle-icon-right"></i>
                         </button>
                         <div id="specs-collapse" class="collapse-section">
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0 16px;">
-                                ${product.fabric_type ? `<div class="detail-badge"><i class="fa-solid fa-shirt"></i><div><span style="color:#9ca3af;font-size:10px;">Fabric</span><br><span style="font-weight:700;">${product.fabric_type}</span></div></div>` : ''}
-                                ${product.gsm_type ? `<div class="detail-badge"><i class="fa-solid fa-weight-scale"></i><div><span style="color:#9ca3af;font-size:10px;">GSM</span><br><span style="font-weight:700;">${product.gsm_type}</span></div></div>` : ''}
-                                ${product.fit_type ? `<div class="detail-badge"><i class="fa-solid fa-ruler"></i><div><span style="color:#9ca3af;font-size:10px;">Fit</span><br><span style="font-weight:700;">${product.fit_type}</span></div></div>` : ''}
-                                ${product.gender ? `<div class="detail-badge"><i class="fa-solid fa-venus-mars"></i><div><span style="color:#9ca3af;font-size:10px;">Gender</span><br><span style="font-weight:700;">${product.gender}</span></div></div>` : ''}
-                                ${product.print_type ? `<div class="detail-badge"><i class="fa-solid fa-palette"></i><div><span style="color:#9ca3af;font-size:10px;">Print</span><br><span style="font-weight:700;">${product.print_type}</span></div></div>` : ''}
+                                ${product.fabric_type ? `<div class="detail-badge"><i class="fa-solid fa-shirt"></i><div><span style="color:#9ca3af;font-size:10px;">Fabric</span><br><span>${product.fabric_type}</span></div></div>` : ''}
+                                ${product.gsm_type ? `<div class="detail-badge"><i class="fa-solid fa-weight-scale"></i><div><span style="color:#9ca3af;font-size:10px;">GSM</span><br><span>${product.gsm_type}</span></div></div>` : ''}
+                                ${product.fit_type ? `<div class="detail-badge"><i class="fa-solid fa-ruler"></i><div><span style="color:#9ca3af;font-size:10px;">Fit</span><br><span>${product.fit_type}</span></div></div>` : ''}
+                                ${product.gender ? `<div class="detail-badge"><i class="fa-solid fa-venus-mars"></i><div><span style="color:#9ca3af;font-size:10px;">Gender</span><br><span>${product.gender}</span></div></div>` : ''}
+                                ${product.print_type ? `<div class="detail-badge"><i class="fa-solid fa-palette"></i><div><span style="color:#9ca3af;font-size:10px;">Print</span><br><span>${product.print_type}</span></div></div>` : ''}
                             </div>
                         </div>
                         
@@ -1551,7 +1693,7 @@
                         ${product.description ? `
                         <button class="toggle-btn" onclick="toggleCollapse('desc-collapse','desc-icon')">
                             <span><i class="fa-solid fa-align-left"></i> &nbsp;Description</span>
-                            <i id="desc-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="transition: transform 0.3s;"></i>
+                            <i id="desc-icon" class="fa-solid fa-chevron-down toggle-icon-right"></i>
                         </button>
                         <div id="desc-collapse" class="collapse-section">
                             <div class="description-content">${product.description}</div>
@@ -1561,7 +1703,7 @@
                         ${(product.barcode) ? `
                         <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')" style="justify-content: flex-start; gap: 12px;">
                             <span><i class="fa-solid fa-barcode"></i> &nbsp;Barcode</span>
-                            <i id="barcode-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="transition: transform 0.3s; margin-left: auto;"></i>
+                            <i id="barcode-icon" class="fa-solid fa-chevron-down toggle-icon-right" style="margin-left: auto;"></i>
                         </button>
                         <div id="barcode-collapse" class="collapse-section">
                             <div class="barcode-wrapper" id="barcode-svg-container">
@@ -1580,11 +1722,11 @@
                         <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:36px;margin-top:8px;">
                             <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
                                 <h3 style="font-size:24px;font-weight:700;">Reviews</h3>
-                                <span style="color:#9ca3af;font-size:15px;">(${prodReviews.length})</span>
+                                <span style="color:#9ca3af;font-size:15px;font-family:var(--font-accent);">(${prodReviews.length})</span>
                             </div>
                             <div style="margin-bottom:28px;">${reviewsHTML}</div>
                             <div style="background:rgba(255,255,255,0.5);backdrop-filter:blur(20px);padding:28px;border-radius:18px;">
-                                <h4 style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:16px;letter-spacing:1px;">Write a Review</h4>
+                                <h4 style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:16px;letter-spacing:1px;font-family:var(--font-accent);">Write a Review</h4>
                                 <div class="star-rating" style="margin-bottom:16px;">
                                     <input type="radio" id="star5" name="product-rating" value="5"><label for="star5"><i class="fa-solid fa-star"></i></label>
                                     <input type="radio" id="star4" name="product-rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
@@ -1592,8 +1734,8 @@
                                     <input type="radio" id="star2" name="product-rating" value="2"><label for="star2"><i class="fa-solid fa-star"></i></label>
                                     <input type="radio" id="star1" name="product-rating" value="1"><label for="star1"><i class="fa-solid fa-star"></i></label>
                                 </div>
-                                <textarea id="review-text" placeholder="Share your experience..." style="width:100%;padding:16px;border:1px solid rgba(0,0,0,0.08);border-radius:14px;font-size:14px;height:100px;margin-bottom:16px;background:rgba(255,255,255,0.6);resize:vertical;"></textarea>
-                                <button onclick="submitReview(${product.id})" style="padding:14px 32px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:0.5px;">Submit Review</button>
+                                <textarea id="review-text" placeholder="Share your experience..." style="width:100%;padding:16px;border:1px solid rgba(0,0,0,0.08);border-radius:14px;font-size:14px;height:100px;margin-bottom:16px;background:rgba(255,255,255,0.6);resize:vertical;font-family:var(--font-body);"></textarea>
+                                <button onclick="submitReview(${product.id})" style="padding:14px 32px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:0.5px;font-family:var(--font-body);">Submit Review</button>
                             </div>
                         </div>
                         
@@ -1632,7 +1774,7 @@
                     });
                 }, 200);
 
-                // ⚡ Fix duplicate footer - hide extra footers
+                // Fix duplicate footer
                 setTimeout(() => {
                     const allFooters = document.querySelectorAll('footer');
                     if (allFooters.length > 1) {
@@ -1662,5 +1804,3 @@
     </script>
 </body>
 </html>
-
-    
