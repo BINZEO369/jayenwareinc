@@ -1,100 +1,150 @@
 // ============================================================
-// JAYENWARE FONT CONFIGURATION
-// Centralized font management for the entire application
+// JAYENWARE FONTS CONFIGURATION
+// Centralized font management for the entire website
 // ============================================================
 
 const JAYENWARE_FONTS = {
-    // Primary fonts configuration
-    primary: {
+    // Google Fonts Family Names (CSS value)
+    families: {
+        // Main heading font - Titles, hero text, section headers
+        heading: "'Manrope', sans-serif",
+        
+        // Subtitle font - Secondary headings
+        subtitle: "'Sora', sans-serif",
+        
+        // Body/Description font - Paragraphs, descriptions, buttons, prices
+        body: "'Inter', sans-serif"
+    },
+
+    // Font weights mapping for each font family
+    weights: {
         heading: {
-            family: "'Playfair Display', serif",
-            weights: {
-                regular: 400,
-                bold: 700,
-                black: 900
-            },
-            styles: ['normal', 'italic']
+            regular: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800
+        },
+        subtitle: {
+            regular: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800
         },
         body: {
-            family: "'Inter', sans-serif",
-            weights: {
-                light: 300,
-                regular: 400,
-                medium: 500,
-                semibold: 600,
-                bold: 700,
-                extrabold: 800,
-                black: 900
-            },
-            styles: ['normal']
+            light: 300,
+            regular: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800,
+            black: 900
         }
     },
-    
-    // Font size scale (in pixels)
-    scale: {
-        // Titles
-        'title-xl': { size: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1.1, weight: 900, font: 'heading' },
-        'title-lg': { size: 'clamp(1.5rem, 4vw, 2.5rem)', lineHeight: 1.2, weight: 700, font: 'heading' },
-        'title-md': { size: 'clamp(1.25rem, 3vw, 2rem)', lineHeight: 1.2, weight: 700, font: 'heading' },
-        'title-sm': { size: 'clamp(1rem, 2.5vw, 1.5rem)', lineHeight: 1.3, weight: 600, font: 'heading' },
+
+    // CSS Variables injected into :root
+    cssVariables: {
+        // Font families
+        '--font-heading': "'Manrope', sans-serif",
+        '--font-subtitle': "'Sora', sans-serif",
+        '--font-body': "'Inter', sans-serif",
+        '--font-accent': "'Inter', sans-serif",
         
-        // Subtitles
-        'subtitle-lg': { size: 'clamp(1.125rem, 2vw, 1.25rem)', lineHeight: 1.4, weight: 500, font: 'body' },
-        'subtitle-md': { size: 'clamp(1rem, 1.5vw, 1.125rem)', lineHeight: 1.4, weight: 500, font: 'body' },
-        'subtitle-sm': { size: '0.875rem', lineHeight: 1.5, weight: 500, font: 'body' },
+        // Font size scale
+        '--text-xs': '0.75rem',     // 12px
+        '--text-sm': '0.875rem',    // 14px
+        '--text-base': '1rem',       // 16px
+        '--text-lg': '1.125rem',    // 18px
+        '--text-xl': '1.25rem',     // 20px
+        '--text-2xl': '1.5rem',     // 24px
+        '--text-3xl': '1.875rem',   // 30px
+        '--text-4xl': '2.25rem',    // 36px
+        '--text-5xl': '3rem',       // 48px
         
-        // Body text
-        'body-lg': { size: '1.125rem', lineHeight: 1.6, weight: 400, font: 'body' },
-        'body-md': { size: '1rem', lineHeight: 1.6, weight: 400, font: 'body' },
-        'body-sm': { size: '0.875rem', lineHeight: 1.5, weight: 400, font: 'body' },
-        'body-xs': { size: '0.75rem', lineHeight: 1.5, weight: 400, font: 'body' },
-        
-        // Small descriptions
-        'caption': { size: '0.75rem', lineHeight: 1.4, weight: 500, font: 'body' },
-        'overline': { size: '0.625rem', lineHeight: 1.4, weight: 600, font: 'body', letterSpacing: '0.1em', textTransform: 'uppercase' }
+        // Letter spacing
+        '--tracking-tight': '-0.5px',
+        '--tracking-normal': '0',
+        '--tracking-wide': '0.5px',
+        '--tracking-wider': '1px',
+        '--tracking-widest': '1.5px'
     },
-    
-    // Utility function to get font CSS
-    getFontCSS(type) {
-        const config = this.scale[type];
-        if (!config) return '';
-        
-        const family = config.font === 'heading' ? this.primary.heading.family : this.primary.body.family;
-        const css = {
-            fontFamily: family,
-            fontSize: config.size,
-            lineHeight: config.lineHeight,
-            fontWeight: config.weight
-        };
-        
-        if (config.letterSpacing) css.letterSpacing = config.letterSpacing;
-        if (config.textTransform) css.textTransform = config.textTransform;
-        
-        return Object.entries(css).map(([key, value]) => {
-            const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-            return `${cssKey}: ${value};`;
-        }).join('\n');
+
+    // Tailwind CSS font configuration
+    tailwindConfig: {
+        fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+        }
     },
-    
-    // Get Tailwind classes based on font type
-    getTailwindClasses(type) {
-        const mapping = {
-            'title-xl': 'font-serif text-4xl sm:text-5xl lg:text-6xl font-black',
-            'title-lg': 'font-serif text-3xl sm:text-4xl lg:text-5xl font-bold',
-            'title-md': 'font-serif text-2xl sm:text-3xl lg:text-4xl font-bold',
-            'title-sm': 'font-serif text-xl sm:text-2xl font-semibold',
-            'subtitle-lg': 'font-sans text-lg sm:text-xl font-medium',
-            'subtitle-md': 'font-sans text-base sm:text-lg font-medium',
-            'subtitle-sm': 'font-sans text-sm font-medium',
-            'body-lg': 'font-sans text-lg',
-            'body-md': 'font-sans text-base',
-            'body-sm': 'font-sans text-sm',
-            'body-xs': 'font-sans text-xs',
-            'caption': 'font-sans text-xs font-medium',
-            'overline': 'font-sans text-[10px] font-semibold uppercase tracking-wider'
-        };
-        
-        return mapping[type] || '';
+
+    // Google Fonts URL (auto-generated with all three fonts)
+    get googleFontsURL() {
+        const manrope = 'Manrope:wght@400;500;600;700;800';
+        const sora = 'Sora:wght@400;500;600;700;800';
+        const inter = 'Inter:wght@300;400;500;600;700;800;900';
+        return `https://fonts.googleapis.com/css2?family=${manrope}&family=${sora}&family=${inter}&display=swap`;
+    },
+
+    // CSS text styles for consistent typography
+    styles: {
+        heroTitle: {
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 800,
+            fontSize: 'var(--text-5xl)',
+            letterSpacing: 'var(--tracking-tight)'
+        },
+        sectionTitle: {
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 700,
+            fontSize: 'var(--text-3xl)',
+            letterSpacing: 'var(--tracking-tight)'
+        },
+        sectionSubtitle: {
+            fontFamily: 'var(--font-subtitle)',
+            fontWeight: 600,
+            fontSize: 'var(--text-xl)',
+            letterSpacing: 'var(--tracking-normal)'
+        },
+        cardTitle: {
+            fontFamily: 'var(--font-subtitle)',
+            fontWeight: 500,
+            fontSize: 'var(--text-sm)',
+            letterSpacing: 'var(--tracking-normal)'
+        },
+        description: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 400,
+            fontSize: 'var(--text-base)',
+            letterSpacing: 'var(--tracking-normal)',
+            lineHeight: '1.6'
+        },
+        smallText: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 500,
+            fontSize: 'var(--text-xs)',
+            letterSpacing: 'var(--tracking-wide)'
+        },
+        button: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 600,
+            fontSize: 'var(--text-xs)',
+            letterSpacing: 'var(--tracking-wider)',
+            textTransform: 'uppercase'
+        },
+        price: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 600,
+            fontSize: 'var(--text-sm)'
+        },
+        badge: {
+            fontFamily: 'var(--font-subtitle)',
+            fontWeight: 600,
+            fontSize: '0.625rem',
+            letterSpacing: 'var(--tracking-wide)',
+            textTransform: 'uppercase'
+        }
     }
 };
 
@@ -103,5 +153,21 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = JAYENWARE_FONTS;
 }
 
-// Make globally available
-window.JAYENWARE_FONTS = JAYENWARE_FONTS;
+// Auto-initialize when loaded in browser
+if (typeof window !== 'undefined') {
+    window.JAYENWARE_FONTS = JAYENWARE_FONTS;
+    
+    // Apply CSS variables to :root
+    document.addEventListener('DOMContentLoaded', () => {
+        const root = document.documentElement;
+        const vars = JAYENWARE_FONTS.cssVariables;
+        for (const [key, value] of Object.entries(vars)) {
+            root.style.setProperty(key, value);
+        }
+        
+        console.log('✅ JAYENWARE Fonts Loaded:');
+        console.log('  📝 Headings:', JAYENWARE_FONTS.families.heading);
+        console.log('  📝 Subtitles:', JAYENWARE_FONTS.families.subtitle);
+        console.log('  📝 Body/Description:', JAYENWARE_FONTS.families.body);
+    });
+}
