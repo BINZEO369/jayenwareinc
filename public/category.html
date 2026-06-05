@@ -23,6 +23,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -50,8 +53,6 @@
             --accent: #86868b;
             --soft: #f5f5f7;
             --blue: #007aff;
-            --card-width: 260px;
-            --card-gap: 16px;
         }
 
         * {
@@ -121,132 +122,291 @@
             font-weight: 600;
         }
 
-        /* ==================== CATEGORY HERO BANNER ==================== */
-        .category-hero {
+        /* ==================== ROLEX-STYLE CATEGORY HERO BANNER ==================== */
+        .category-hero-banner {
             position: relative;
-            background: #f5f5f7;
-            border-radius: 16px;
+            width: 100%;
+            height: 85vh;
+            min-height: 480px;
+            max-height: 700px;
             overflow: hidden;
-            margin-bottom: 32px;
-            min-height: 240px;
-            display: flex;
-            align-items: center;
+            background: #000;
+            margin-bottom: 40px;
+            border-radius: 0;
         }
 
-        .category-hero-content {
-            padding: 40px;
+        @media (max-width: 768px) {
+            .category-hero-banner {
+                height: 70vh;
+                min-height: 420px;
+                max-height: 550px;
+                margin-bottom: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-hero-banner {
+                height: 60vh;
+                min-height: 360px;
+                margin-bottom: 24px;
+            }
+        }
+
+        .category-hero-banner .hero-bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: heroZoom 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .category-hero-banner .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.0) 0%,
+                rgba(0,0,0,0.02) 40%,
+                rgba(0,0,0,0.15) 65%,
+                rgba(0,0,0,0.5) 85%,
+                rgba(0,0,0,0.7) 100%
+            );
+            z-index: 1;
+        }
+
+        .category-hero-banner .hero-content {
+            position: absolute;
+            bottom: clamp(50px, 12vh, 110px);
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 2;
-            flex: 1;
+            text-align: center;
+            width: 88%;
+            max-width: 680px;
+            padding: 0 16px;
         }
 
-        .category-hero h1 {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
+        .category-hero-banner .hero-subtitle {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(7px, 1vw, 9px);
+            font-weight: 500;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: clamp(12px, 2vh, 20px);
+            opacity: 0;
+            transform: translateY(8px);
+            animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
         }
 
-        .category-hero p {
-            font-size: 15px;
-            color: var(--accent);
-            max-width: 560px;
-            line-height: 1.7;
-            margin-bottom: 20px;
+        .category-hero-banner .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(22px, 4.5vw, 60px);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #ffffff;
+            margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
         }
 
-        .category-hero .hero-cta {
+        .category-hero-banner .hero-cta-wrap {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
+        }
+
+        .category-hero-banner .hero-cta {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(8px, 1vw, 10px);
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #ffffff;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
         }
 
-        .category-hero .hero-cta:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        .category-hero-banner .hero-cta:hover {
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.85);
         }
 
-        .category-hero .hero-cta i {
-            font-size: 14px;
-        }
-
-        .category-hero-image {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 45%;
-            object-fit: cover;
-            opacity: 0.75;
-            mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.6) 100%);
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.6) 100%);
-        }
-
-        /* ==================== CATEGORY VIDEO SECTION ==================== */
-        .category-video-section {
-            margin-bottom: 32px;
-            border-radius: 16px;
-            overflow: hidden;
+        .category-hero-banner .hero-cta .cta-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 14px;
             position: relative;
-            aspect-ratio: 16/9;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .category-hero-banner .hero-cta .cta-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid #ffffff;
+            border-right: 1px solid #ffffff;
+            transform: translateY(-50%) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .category-hero-banner .hero-cta:hover .cta-arrow::after {
+            right: -2px;
+            opacity: 0.8;
+        }
+
+        @keyframes heroFadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== CATEGORY VIDEO SECTION (Same size & style) ==================== */
+        .category-video-section {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            min-height: 480px;
+            max-height: 700px;
+            overflow: hidden;
             background: #000;
+            margin-bottom: 40px;
             display: none;
+            border-radius: 0;
+        }
+
+        @media (max-width: 768px) {
+            .category-video-section {
+                height: 70vh;
+                min-height: 420px;
+                max-height: 550px;
+                margin-bottom: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-video-section {
+                height: 60vh;
+                min-height: 360px;
+                margin-bottom: 24px;
+            }
         }
 
         .category-video-section video {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .category-video-overlay {
+        .category-video-section .video-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 32px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            color: #fff;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.0) 0%,
+                rgba(0,0,0,0.02) 40%,
+                rgba(0,0,0,0.15) 65%,
+                rgba(0,0,0,0.5) 85%,
+                rgba(0,0,0,0.7) 100%
+            );
+            z-index: 1;
+        }
+
+        .category-video-section .video-content {
+            position: absolute;
+            bottom: clamp(50px, 12vh, 110px);
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 2;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
+            text-align: center;
+            width: 88%;
+            max-width: 680px;
+            padding: 0 16px;
         }
 
-        .category-video-overlay h3 {
-            font-size: 20px;
-            font-weight: 700;
+        .category-video-section .video-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(22px, 4.5vw, 60px);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #ffffff;
+            margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
+            letter-spacing: -0.01em;
         }
 
-        .category-video-overlay a {
+        .category-video-section .video-cta {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: #fff;
-            color: var(--primary);
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(8px, 1vw, 10px);
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #ffffff;
             text-decoration: none;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
         }
 
-        .category-video-overlay a:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
+        .category-video-section .video-cta:hover {
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .category-video-section .video-cta .cta-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 14px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .category-video-section .video-cta .cta-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid #ffffff;
+            border-right: 1px solid #ffffff;
+            transform: translateY(-50%) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .category-video-section .video-cta:hover .cta-arrow::after {
+            right: -2px;
+            opacity: 0.8;
         }
 
         /* ==================== SUBCATEGORY PILLS ==================== */
@@ -670,36 +830,6 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            .category-hero {
-                border-radius: 0;
-                margin: 0 -16px 24px;
-                min-height: 180px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .category-hero-content {
-                padding: 24px 20px;
-            }
-            .category-hero h1 {
-                font-size: 24px;
-            }
-            .category-hero p {
-                font-size: 14px;
-            }
-            .category-hero-image {
-                position: relative;
-                width: 100%;
-                height: 160px;
-                opacity: 0.6;
-                mask-image: none;
-                -webkit-mask-image: none;
-            }
-            .category-video-overlay {
-                padding: 20px;
-            }
-            .category-video-overlay h3 {
-                font-size: 16px;
-            }
             .subcategory-pills {
                 overflow-x: auto;
                 flex-wrap: nowrap;
@@ -794,30 +924,34 @@
             </div>
         </div>
 
-        <!-- CATEGORY HERO -->
-        <section class="category-hero" id="category-hero">
-            <div class="category-hero-content">
-                <h1 id="category-name">Loading...</h1>
-                <p id="category-description">Discover our exclusive collection</p>
-                <a href="#products-section" class="hero-cta" id="hero-cta" style="display:none;">
-                    <span id="hero-cta-text">Explore Collection</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
+        <!-- ==================== ROLEX-STYLE CATEGORY HERO BANNER ==================== -->
+        <div class="category-hero-banner" id="category-hero-banner">
+            <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <p class="hero-subtitle" id="hero-subtitle">JAYENWARE</p>
+                <h1 class="hero-title" id="hero-title">Loading...</h1>
+                <div class="hero-cta-wrap" id="hero-cta-wrap" style="display:none;">
+                    <a href="#" class="hero-cta" id="hero-cta-link">
+                        <span id="hero-cta-text">Explore Collection</span>
+                        <span class="cta-arrow"></span>
+                    </a>
+                </div>
             </div>
-            <img id="category-hero-img" src="" alt="" class="category-hero-image" style="display:none;">
-        </section>
+        </div>
 
-        <!-- CATEGORY VIDEO SECTION -->
-        <section class="category-video-section" id="category-video-section">
+        <!-- ==================== CATEGORY VIDEO SECTION (Same size & design) ==================== -->
+        <div class="category-video-section" id="category-video-section">
             <video id="category-video" muted loop playsinline controls></video>
-            <div class="category-video-overlay" id="category-video-overlay" style="display:none;">
-                <h3 id="video-title"></h3>
-                <a href="#" id="video-cta-link">
+            <div class="video-overlay"></div>
+            <div class="video-content" id="video-content" style="display:none;">
+                <h2 class="video-title" id="video-title"></h2>
+                <a href="#" class="video-cta" id="video-cta-link">
                     <span id="video-cta-text">Learn More</span>
-                    <i class="fa-solid fa-arrow-right"></i>
+                    <span class="cta-arrow"></span>
                 </a>
             </div>
-        </section>
+        </div>
 
         <!-- SUBCATEGORY PILLS -->
         <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
@@ -860,8 +994,8 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - FULLY DYNAMIC WITH API-DRIVEN DATA
-        // PRODUCTION GRADE - 20 YEARS EXPERIENCE
+        // CATEGORY PAGE - FULLY DYNAMIC WITH ROLEX-STYLE HERO BANNER
+        // PRODUCTION GRADE
         // ============================================================
 
         let currentCategory = null;
@@ -891,7 +1025,7 @@
         }
 
         // ============================================================
-        // PARSE URL - Extract category and subcategory slugs
+        // PARSE URL
         // ============================================================
         function parseURL() {
             const path = window.location.pathname;
@@ -911,7 +1045,7 @@
         }
 
         // ============================================================
-        // FETCH FROM API (Server-side API routes)
+        // FETCH FROM API
         // ============================================================
         async function fetchAPI(endpoint) {
             try {
@@ -930,7 +1064,7 @@
         }
 
         // ============================================================
-        // LOAD CATEGORY BY SLUG (Using server API)
+        // LOAD CATEGORY BY SLUG
         // ============================================================
         async function loadCategoryBySlug(slug) {
             const categories = await fetchAPI('/api/categories');
@@ -941,7 +1075,7 @@
         }
 
         // ============================================================
-        // LOAD SUBCATEGORIES BY CATEGORY SLUG (Using server API)
+        // LOAD SUBCATEGORIES BY CATEGORY SLUG
         // ============================================================
         async function loadSubcategories(categorySlug) {
             const subcategories = await fetchAPI(`/api/subcategories?category_slug=${encodeURIComponent(categorySlug)}`);
@@ -949,7 +1083,7 @@
         }
 
         // ============================================================
-        // LOAD PRODUCTS BY CATEGORY SLUG (Using server API)
+        // LOAD PRODUCTS BY CATEGORY SLUG
         // ============================================================
         async function loadProductsByCategory(categorySlug) {
             const products = await fetchAPI(`/api/categories/${encodeURIComponent(categorySlug)}/products`);
@@ -957,7 +1091,7 @@
         }
 
         // ============================================================
-        // LOAD PRODUCTS BY SUBCATEGORY SLUG (Using server API)
+        // LOAD PRODUCTS BY SUBCATEGORY SLUG
         // ============================================================
         async function loadProductsBySubcategory(subcategorySlug) {
             const products = await fetchAPI(`/api/subcategories/${encodeURIComponent(subcategorySlug)}/products`);
@@ -987,7 +1121,7 @@
         // SHOW ERROR STATE
         // ============================================================
         function showErrorState() {
-            document.getElementById('category-hero').style.display = 'none';
+            document.getElementById('category-hero-banner').style.display = 'none';
             document.getElementById('category-video-section').style.display = 'none';
             document.getElementById('error-state').style.display = 'flex';
             document.getElementById('subcategory-pills').style.display = 'none';
@@ -1005,7 +1139,6 @@
             const isOut = product.stock !== undefined && product.stock !== null && product.stock <= 0;
             const slug = getProductSlug(product);
 
-            // Determine badge
             let badge = '';
             if (!isOut) {
                 if (product.is_new_arrival) {
@@ -1141,21 +1274,20 @@
             if (pageTitle) pageTitle.textContent = `${title} | JAYENWARE`;
             if (canonicalUrl) canonicalUrl.href = `https://www.jayenware.shop${url}`;
 
-            // Update URL without reload
             window.history.replaceState(
                 { category: currentCategory, subcategory: currentSubcategory }, 
                 '', 
                 url
             );
 
-            // Update meta description if available
+            // Update meta description
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
                 const desc = currentCategory?.meta_description || currentCategory?.description || 'Shop by category at Jayenware Official Store.';
                 metaDesc.setAttribute('content', desc);
             }
 
-            // Update meta keywords if available
+            // Update meta keywords
             const metaKeywords = document.querySelector('meta[name="keywords"]');
             if (metaKeywords && currentCategory?.keywords) {
                 metaKeywords.setAttribute('content', currentCategory.keywords);
@@ -1163,43 +1295,50 @@
         }
 
         // ============================================================
-        // UPDATE CATEGORY HERO WITH FULL DATA
+        // UPDATE CATEGORY HERO - Rolex Style
         // ============================================================
         function updateCategoryHero() {
             if (!currentCategory) return;
 
-            document.getElementById('category-name').textContent = currentCategory.name;
-            document.getElementById('category-description').textContent = 
-                currentCategory.description || currentCategory.meta_description || 'Discover our exclusive collection';
+            // Set title
+            document.getElementById('hero-title').textContent = currentCategory.name;
+            document.getElementById('hero-subtitle').textContent = 'JAYENWARE';
 
-            // Hero Image
-            const heroImg = document.getElementById('category-hero-img');
+            // Set background image
+            const heroImg = document.getElementById('hero-bg-img');
             if (currentCategory.image_url) {
                 heroImg.src = currentCategory.image_url;
                 heroImg.style.display = 'block';
                 heroImg.alt = currentCategory.name;
                 heroImg.onerror = function() {
-                    this.style.display = 'none';
+                    this.src = '/logo.png';
+                    this.style.objectFit = 'contain';
+                    this.style.padding = '40px';
+                    this.style.background = '#1a1a1a';
                 };
             } else {
                 heroImg.style.display = 'none';
             }
 
-            // Image CTA
-            const heroCta = document.getElementById('hero-cta');
+            // Set CTA if available
+            const heroCtaWrap = document.getElementById('hero-cta-wrap');
             const heroCtaText = document.getElementById('hero-cta-text');
+            const heroCtaLink = document.getElementById('hero-cta-link');
+
             if (currentCategory.image_cta_title && currentCategory.image_cta_link) {
-                heroCta.style.display = 'inline-flex';
+                heroCtaWrap.style.display = 'block';
                 heroCtaText.textContent = currentCategory.image_cta_title;
-                heroCta.href = currentCategory.image_cta_link;
+                heroCtaLink.href = currentCategory.image_cta_link;
             } else {
-                heroCta.style.display = 'none';
+                heroCtaWrap.style.display = 'none';
             }
 
-            // Video Section
+            // ============================================================
+            // UPDATE CATEGORY VIDEO SECTION (Same size & Rolex style)
+            // ============================================================
             const videoSection = document.getElementById('category-video-section');
             const videoEl = document.getElementById('category-video');
-            const videoOverlay = document.getElementById('category-video-overlay');
+            const videoContent = document.getElementById('video-content');
             const videoTitle = document.getElementById('video-title');
             const videoCtaLink = document.getElementById('video-cta-link');
             const videoCtaText = document.getElementById('video-cta-text');
@@ -1207,9 +1346,10 @@
             if (currentCategory.video_url) {
                 videoSection.style.display = 'block';
                 videoEl.src = currentCategory.video_url;
+                videoEl.load();
                 
                 if (currentCategory.video_cta_title || currentCategory.video_cta_link) {
-                    videoOverlay.style.display = 'flex';
+                    videoContent.style.display = 'block';
                     videoTitle.textContent = currentCategory.video_cta_title || currentCategory.name;
                     if (currentCategory.video_cta_link) {
                         videoCtaLink.href = currentCategory.video_cta_link;
@@ -1219,7 +1359,7 @@
                         videoCtaLink.style.display = 'none';
                     }
                 } else {
-                    videoOverlay.style.display = 'none';
+                    videoContent.style.display = 'none';
                 }
 
                 // Video Schema if available
@@ -1239,7 +1379,7 @@
         }
 
         // ============================================================
-        // HANDLE SUBCATEGORY CLICK (from pills)
+        // HANDLE SUBCATEGORY CLICK
         // ============================================================
         async function handleSubcategoryClick(subcategoryId) {
             const categorySlug = createSlug(currentCategory?.name || '');
@@ -1248,7 +1388,6 @@
             document.getElementById('empty-state').classList.remove('visible');
 
             if (subcategoryId === null) {
-                // All products
                 currentSubcategory = null;
                 allProducts = await loadProductsByCategory(categorySlug);
             } else {
@@ -1278,10 +1417,9 @@
         }
 
         // ============================================================
-        // INIT PAGE - Main entry point
+        // INIT PAGE
         // ============================================================
         async function initCategoryPage() {
-            // Show skeleton loading immediately
             renderSkeleton(8);
 
             const { categorySlug, subcategorySlug } = parseURL();
@@ -1303,12 +1441,12 @@
             }
 
             // Show all sections
-            document.getElementById('category-hero').style.display = 'flex';
+            document.getElementById('category-hero-banner').style.display = 'block';
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
             document.getElementById('subcategory-pills').style.display = 'flex';
 
-            // Update hero with full category data
+            // Update hero with Rolex-style design
             updateCategoryHero();
 
             // Load subcategories
@@ -1322,7 +1460,6 @@
                     currentSubcategory = foundSub;
                     allProducts = await loadProductsBySubcategory(subcategorySlug);
                 } else {
-                    // Subcategory not found, load all products for this category
                     currentSubcategory = null;
                     allProducts = await loadProductsByCategory(categorySlug);
                 }
@@ -1381,17 +1518,14 @@
                 const href = pill.getAttribute('href');
                 if (!href) return;
 
-                // Parse the href to determine action
                 const parts = href.replace(/^\/+|\/+$/g, '').split('/');
                 const categorySlug = createSlug(currentCategory?.name || '');
 
                 if (parts.length === 2 && parts[0] === 'category') {
-                    // All products in category
                     if (parts[1] === categorySlug) {
                         await handleSubcategoryClick(null);
                     }
                 } else if (parts.length === 3 && parts[0] === 'category') {
-                    // Subcategory pill
                     const subSlug = parts[2];
                     const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subSlug);
                     if (foundSub) {
@@ -1416,8 +1550,7 @@
                 currentCategory = event.state.category;
                 currentSubcategory = event.state.subcategory || null;
                 
-                // Show all sections
-                document.getElementById('category-hero').style.display = 'flex';
+                document.getElementById('category-hero-banner').style.display = 'block';
                 document.getElementById('error-state').style.display = 'none';
                 document.getElementById('sort-bar').style.display = 'flex';
                 document.getElementById('subcategory-pills').style.display = 'flex';
