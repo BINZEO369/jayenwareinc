@@ -122,17 +122,20 @@
             font-weight: 600;
         }
 
-        /* ==================== ROLEX-STYLE CATEGORY HERO BANNER ==================== */
+        /* ==================== ROLEX-STYLE CATEGORY HERO BANNER (FULL WIDTH - NO GAPS) ==================== */
         .category-hero-banner {
             position: relative;
-            width: 100%;
+            width: 100vw;
             height: 85vh;
             min-height: 480px;
             max-height: 700px;
             overflow: hidden;
             background: #000;
-            margin-bottom: 40px;
-            border-radius: 0;
+            margin-bottom: 48px;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            left: 0;
+            right: 0;
         }
 
         @media (max-width: 768px) {
@@ -140,7 +143,7 @@
                 height: 70vh;
                 min-height: 420px;
                 max-height: 550px;
-                margin-bottom: 28px;
+                margin-bottom: 36px;
             }
         }
 
@@ -148,7 +151,7 @@
             .category-hero-banner {
                 height: 60vh;
                 min-height: 360px;
-                margin-bottom: 24px;
+                margin-bottom: 28px;
             }
         }
 
@@ -283,18 +286,21 @@
             }
         }
 
-        /* ==================== CATEGORY VIDEO SECTION (Same size & style) ==================== */
+        /* ==================== CATEGORY VIDEO SECTION (FULL WIDTH - SAME SIZE & STYLE) ==================== */
         .category-video-section {
             position: relative;
-            width: 100%;
+            width: 100vw;
             height: 85vh;
             min-height: 480px;
             max-height: 700px;
             overflow: hidden;
             background: #000;
-            margin-bottom: 40px;
+            margin-bottom: 48px;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            left: 0;
+            right: 0;
             display: none;
-            border-radius: 0;
         }
 
         @media (max-width: 768px) {
@@ -302,7 +308,7 @@
                 height: 70vh;
                 min-height: 420px;
                 max-height: 550px;
-                margin-bottom: 28px;
+                margin-bottom: 36px;
             }
         }
 
@@ -310,7 +316,7 @@
             .category-video-section {
                 height: 60vh;
                 min-height: 360px;
-                margin-bottom: 24px;
+                margin-bottom: 28px;
             }
         }
 
@@ -924,7 +930,7 @@
             </div>
         </div>
 
-        <!-- ==================== ROLEX-STYLE CATEGORY HERO BANNER ==================== -->
+        <!-- ==================== ROLEX-STYLE CATEGORY HERO BANNER (FULL WIDTH - EDGE TO EDGE) ==================== -->
         <div class="category-hero-banner" id="category-hero-banner">
             <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;">
             <div class="hero-overlay"></div>
@@ -940,7 +946,7 @@
             </div>
         </div>
 
-        <!-- ==================== CATEGORY VIDEO SECTION (Same size & design) ==================== -->
+        <!-- ==================== CATEGORY VIDEO SECTION (FULL WIDTH - SAME SIZE & DESIGN) ==================== -->
         <div class="category-video-section" id="category-video-section">
             <video id="category-video" muted loop playsinline controls></video>
             <div class="video-overlay"></div>
@@ -994,7 +1000,8 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - FULLY DYNAMIC WITH ROLEX-STYLE HERO BANNER
+        // CATEGORY PAGE - FULLY DYNAMIC WITH ROLEX-STYLE FULL-WIDTH HERO BANNER
+        // EDGE-TO-EDGE DESIGN - NO GAPS - WORLD-CLASS WEBSITE STANDARD
         // PRODUCTION GRADE
         // ============================================================
 
@@ -1295,7 +1302,7 @@
         }
 
         // ============================================================
-        // UPDATE CATEGORY HERO - Rolex Style
+        // UPDATE CATEGORY HERO - Rolex Style - Full Width Edge to Edge
         // ============================================================
         function updateCategoryHero() {
             if (!currentCategory) return;
@@ -1334,7 +1341,7 @@
             }
 
             // ============================================================
-            // UPDATE CATEGORY VIDEO SECTION (Same size & Rolex style)
+            // UPDATE CATEGORY VIDEO SECTION (Full Width - Same size & Rolex style)
             // ============================================================
             const videoSection = document.getElementById('category-video-section');
             const videoEl = document.getElementById('category-video');
@@ -1446,7 +1453,7 @@
             document.getElementById('sort-bar').style.display = 'flex';
             document.getElementById('subcategory-pills').style.display = 'flex';
 
-            // Update hero with Rolex-style design
+            // Update hero with Rolex-style full-width design
             updateCategoryHero();
 
             // Load subcategories
