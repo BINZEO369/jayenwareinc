@@ -23,9 +23,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -41,11 +38,92 @@
                         accent: '#86868b',
                         soft: '#f5f5f7',
                         blue: '#007aff'
+                    },
+                    fontFamily: {
+                        sans: ["'Inter', 'sans-serif'"],
+                        serif: ["'Manrope', 'sans-serif'"],
+                        mono: ["'Sora', 'sans-serif'"]
                     }
                 }
             }
         }
     </script>
+
+    <!-- ============================================================
+    JAYENWARE FONTS CONFIGURATION
+    ============================================================ -->
+    <script>
+        const JAYENWARE_FONTS = {
+            families: {
+                heading: "'Manrope', sans-serif",
+                subtitle: "'Sora', sans-serif",
+                body: "'Inter', sans-serif"
+            },
+            weights: {
+                heading: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+                subtitle: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+                body: { light: 300, regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800, black: 900 }
+            },
+            cssVariables: {
+                '--font-heading': "'Manrope', sans-serif",
+                '--font-subtitle': "'Sora', sans-serif",
+                '--font-body': "'Inter', sans-serif",
+                '--font-accent': "'Inter', sans-serif",
+                '--text-xs': '0.75rem',
+                '--text-sm': '0.875rem',
+                '--text-base': '1rem',
+                '--text-lg': '1.125rem',
+                '--text-xl': '1.25rem',
+                '--text-2xl': '1.5rem',
+                '--text-3xl': '1.875rem',
+                '--text-4xl': '2.25rem',
+                '--text-5xl': '3rem',
+                '--tracking-tight': '-0.5px',
+                '--tracking-normal': '0',
+                '--tracking-wide': '0.5px',
+                '--tracking-wider': '1px',
+                '--tracking-widest': '1.5px'
+            },
+            tailwindConfig: {
+                fontFamily: {
+                    sans: ["'Inter', 'sans-serif'"],
+                    serif: ["'Manrope', 'sans-serif'"],
+                    mono: ["'Sora', 'sans-serif'"]
+                }
+            },
+            get googleFontsURL() {
+                const manrope = 'Manrope:wght@400;500;600;700;800';
+                const sora = 'Sora:wght@400;500;600;700;800';
+                const inter = 'Inter:wght@300;400;500;600;700;800;900';
+                return `https://fonts.googleapis.com/css2?family=${manrope}&family=${sora}&family=${inter}&display=swap`;
+            },
+            styles: {
+                heroTitle: { fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'var(--text-5xl)', letterSpacing: 'var(--tracking-tight)' },
+                sectionTitle: { fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-3xl)', letterSpacing: 'var(--tracking-tight)' },
+                sectionSubtitle: { fontFamily: 'var(--font-subtitle)', fontWeight: 600, fontSize: 'var(--text-xl)', letterSpacing: 'var(--tracking-normal)' },
+                cardTitle: { fontFamily: 'var(--font-subtitle)', fontWeight: 500, fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-normal)' },
+                description: { fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 'var(--text-base)', letterSpacing: 'var(--tracking-normal)', lineHeight: '1.6' },
+                smallText: { fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wide)' },
+                button: { fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase' },
+                price: { fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 'var(--text-sm)' },
+                badge: { fontFamily: 'var(--font-subtitle)', fontWeight: 600, fontSize: '0.625rem', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }
+            }
+        };
+
+        window.JAYENWARE_FONTS = JAYENWARE_FONTS;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = document.documentElement;
+            const vars = JAYENWARE_FONTS.cssVariables;
+            for (const [key, value] of Object.entries(vars)) {
+                root.style.setProperty(key, value);
+            }
+            console.log('✅ JAYENWARE Fonts Loaded');
+        });
+    </script>
+
+    <!-- Google Fonts - Manrope, Sora, Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -64,7 +142,7 @@
             background-color: #ffffff;
             color: #1d1d1f;
             overflow-x: hidden;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
@@ -105,6 +183,7 @@
             font-size: 13px;
             color: var(--accent);
             padding: 16px 0;
+            font-family: var(--font-body);
         }
         .breadcrumb a {
             color: var(--accent);
@@ -197,7 +276,7 @@
 
         .category-hero-banner .hero-subtitle {
             display: inline-block;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-size: clamp(7px, 1vw, 9px);
             font-weight: 500;
             letter-spacing: 0.45em;
@@ -210,13 +289,13 @@
         }
 
         .category-hero-banner .hero-title {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-heading);
             font-size: clamp(22px, 4.5vw, 60px);
-            font-weight: 900;
+            font-weight: 800;
             line-height: 1.1;
             color: #ffffff;
             margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
-            letter-spacing: -0.01em;
+            letter-spacing: var(--tracking-tight);
             opacity: 0;
             transform: translateY(12px);
             animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
@@ -232,10 +311,10 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-size: clamp(8px, 1vw, 10px);
-            font-weight: 500;
-            letter-spacing: 0.25em;
+            font-weight: 600;
+            letter-spacing: var(--tracking-wider);
             text-transform: uppercase;
             color: #ffffff;
             text-decoration: none;
@@ -356,23 +435,23 @@
         }
 
         .category-video-section .video-title {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-heading);
             font-size: clamp(22px, 4.5vw, 60px);
-            font-weight: 900;
+            font-weight: 800;
             line-height: 1.1;
             color: #ffffff;
             margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
-            letter-spacing: -0.01em;
+            letter-spacing: var(--tracking-tight);
         }
 
         .category-video-section .video-cta {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-size: clamp(8px, 1vw, 10px);
-            font-weight: 500;
-            letter-spacing: 0.25em;
+            font-weight: 600;
+            letter-spacing: var(--tracking-wider);
             text-transform: uppercase;
             color: #ffffff;
             text-decoration: none;
@@ -414,73 +493,6 @@
         .category-video-section .video-cta:hover .cta-arrow::after {
             right: -2px;
             opacity: 0.8;
-        }
-
-        /* ==================== SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES) ==================== */
-        .subnav-container {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            overflow-x: auto;
-            padding: 12px 0 16px 0;
-            margin-bottom: 24px;
-            border-bottom: 1px solid #e5e5ea;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .subnav-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .subnav-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.25s ease;
-            cursor: pointer;
-            border: 1.5px solid #e5e5ea;
-            background: #fff;
-            color: var(--primary);
-            white-space: nowrap;
-            user-select: none;
-            flex-shrink: 0;
-        }
-
-        .subnav-btn:hover {
-            border-color: #c0c0c5;
-            background: #fafafa;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        }
-
-        .subnav-btn.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-
-        .subnav-btn .count {
-            font-size: 11px;
-            margin-left: 8px;
-            opacity: 0.7;
-            background: rgba(0,0,0,0.06);
-            padding: 2px 8px;
-            border-radius: 50px;
-        }
-
-        .subnav-btn.active .count {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .subnav-btn .icon {
-            margin-right: 6px;
-            font-size: 12px;
         }
 
         /* ==================== PRODUCT GRID ==================== */
@@ -561,6 +573,7 @@
         }
 
         .product-card .card-category {
+            font-family: var(--font-body);
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -570,6 +583,7 @@
         }
 
         .product-card .card-title {
+            font-family: var(--font-subtitle);
             font-size: 14px;
             font-weight: 500;
             color: var(--primary);
@@ -579,6 +593,7 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             margin-bottom: 8px;
+            letter-spacing: var(--tracking-normal);
         }
 
         .product-card .card-price-row {
@@ -589,8 +604,9 @@
         }
 
         .product-card .card-price {
+            font-family: var(--font-body);
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary);
         }
 
@@ -607,13 +623,14 @@
             left: 10px;
             z-index: 2;
             padding: 4px 10px;
+            font-family: var(--font-subtitle);
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             background: #ffffff;
             color: var(--primary);
             border-radius: 4px;
-            letter-spacing: 0.5px;
+            letter-spacing: var(--tracking-wide);
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
@@ -648,11 +665,12 @@
         .product-card .soldout-overlay span {
             background: var(--primary);
             color: #fff;
+            font-family: var(--font-subtitle);
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             padding: 8px 20px;
-            letter-spacing: 1px;
+            letter-spacing: var(--tracking-wide);
             border-radius: 4px;
         }
 
@@ -672,12 +690,14 @@
             margin-bottom: 24px;
         }
         .error-state h2 {
+            font-family: var(--font-heading);
             font-size: 28px;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 12px;
         }
         .error-state p {
+            font-family: var(--font-body);
             font-size: 15px;
             color: var(--accent);
             max-width: 480px;
@@ -692,6 +712,7 @@
             background: var(--primary);
             color: #fff;
             border-radius: 50px;
+            font-family: var(--font-body);
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
@@ -711,6 +732,7 @@
             color: var(--primary);
             border: 1.5px solid #d1d1d6;
             border-radius: 50px;
+            font-family: var(--font-body);
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
@@ -740,6 +762,7 @@
         }
 
         .empty-state h3 {
+            font-family: var(--font-heading);
             font-size: 20px;
             font-weight: 600;
             color: var(--primary);
@@ -747,6 +770,7 @@
         }
 
         .empty-state p {
+            font-family: var(--font-body);
             font-size: 14px;
             color: var(--accent);
             max-width: 420px;
@@ -762,6 +786,7 @@
             background: var(--primary);
             color: #fff;
             border-radius: 50px;
+            font-family: var(--font-body);
             font-size: 13px;
             font-weight: 600;
             text-decoration: none;
@@ -820,6 +845,7 @@
         }
 
         .sort-bar .result-count {
+            font-family: var(--font-body);
             font-size: 13px;
             color: var(--accent);
             font-weight: 500;
@@ -829,6 +855,7 @@
             padding: 10px 36px 10px 14px;
             border-radius: 10px;
             border: 1.5px solid #e5e5ea;
+            font-family: var(--font-body);
             font-size: 13px;
             font-weight: 600;
             color: var(--primary);
@@ -850,14 +877,6 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            .subnav-container {
-                gap: 4px;
-                padding: 8px 0 12px 0;
-            }
-            .subnav-btn {
-                padding: 6px 14px;
-                font-size: 12px;
-            }
             .back-to-top {
                 bottom: 20px;
                 right: 20px;
@@ -954,11 +973,6 @@
                     </a>
                 </div>
             </div>
-        </div>
-
-        <!-- ==================== SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES) ==================== -->
-        <div class="subnav-container no-scrollbar" id="subnav-container" style="display:none;">
-            <!-- Dynamically populated -->
         </div>
 
         <!-- SORT BAR -->
@@ -1141,7 +1155,6 @@
             document.getElementById('category-hero-banner').style.display = 'none';
             document.getElementById('category-video-section').style.display = 'none';
             document.getElementById('error-state').style.display = 'flex';
-            document.getElementById('subnav-container').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'none';
             document.getElementById('products-grid').innerHTML = '';
             document.getElementById('empty-state').classList.remove('visible');
@@ -1227,51 +1240,6 @@
             emptyState.classList.remove('visible');
             resultCount.textContent = `${sorted.length} product${sorted.length !== 1 ? 's' : ''}`;
             grid.innerHTML = sorted.map(renderProductCard).join('');
-        }
-
-        // ============================================================
-        // RENDER SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES)
-        // ============================================================
-        function renderSubnav() {
-            const container = document.getElementById('subnav-container');
-            if (!container) return;
-
-            if (!currentCategory) {
-                container.style.display = 'none';
-                return;
-            }
-
-            container.style.display = 'flex';
-
-            const categorySlug = createSlug(currentCategory.name || '');
-            const categoryName = currentCategory.name || 'Category';
-
-            // Home Button
-            const homeBtn = `
-            <a href="/" class="subnav-btn">
-                <span class="icon"><i class="fa-solid fa-house"></i></span>
-                Home
-            </a>`;
-
-            // Category Button (Current)
-            const categoryBtn = `
-            <a href="/category/${categorySlug}" class="subnav-btn ${!currentSubcategory ? 'active' : ''}">
-                <span class="icon"><i class="fa-solid fa-folder"></i></span>
-                ${categoryName}
-                <span class="count">${allProducts.length}</span>
-            </a>`;
-
-            // Subcategory Buttons
-            const subBtns = allSubcategories.map(sub => {
-                const subSlug = createSlug(sub.name);
-                const isActive = currentSubcategory && currentSubcategory.id === sub.id;
-                return `
-                <a href="/category/${categorySlug}/${subSlug}" class="subnav-btn ${isActive ? 'active' : ''}">
-                    ${sub.name}
-                </a>`;
-            }).join('');
-
-            container.innerHTML = homeBtn + categoryBtn + subBtns;
         }
 
         // ============================================================
@@ -1429,7 +1397,6 @@
             }
 
             updateBreadcrumbAndURL();
-            renderSubnav();
             renderProducts();
             
             const gridEl = document.getElementById('products-grid');
@@ -1474,7 +1441,6 @@
             document.getElementById('category-hero-banner').style.display = 'block';
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
-            document.getElementById('subnav-container').style.display = 'flex';
 
             // Update hero
             updateCategoryHero();
@@ -1502,7 +1468,6 @@
 
             // Update UI
             updateBreadcrumbAndURL();
-            renderSubnav();
             renderProducts();
 
             // Update video section (below products)
@@ -1537,50 +1502,11 @@
         }
 
         // ============================================================
-        // DELEGATE CLICK EVENTS FOR SUBNAV
-        // ============================================================
-        function initSubnavClickDelegation() {
-            const container = document.getElementById('subnav-container');
-            if (!container) return;
-
-            container.addEventListener('click', async (e) => {
-                const btn = e.target.closest('.subnav-btn');
-                if (!btn) return;
-
-                e.preventDefault();
-                const href = btn.getAttribute('href');
-                if (!href) return;
-
-                const parts = href.replace(/^\/+|\/+$/g, '').split('/');
-                const categorySlug = createSlug(currentCategory?.name || '');
-
-                if (parts.length === 1 && parts[0] === '') {
-                    // Home button - navigate to home
-                    window.location.href = '/';
-                    return;
-                }
-
-                if (parts.length === 2 && parts[0] === 'category') {
-                    if (parts[1] === categorySlug) {
-                        await handleSubcategoryClick(null);
-                    }
-                } else if (parts.length === 3 && parts[0] === 'category') {
-                    const subSlug = parts[2];
-                    const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subSlug);
-                    if (foundSub) {
-                        await handleSubcategoryClick(foundSub.id);
-                    }
-                }
-            });
-        }
-
-        // ============================================================
         // STARTUP
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             initCategoryPage();
             initBackToTop();
-            initSubnavClickDelegation();
         });
 
         // Handle browser back/forward
@@ -1592,14 +1518,12 @@
                 document.getElementById('category-hero-banner').style.display = 'block';
                 document.getElementById('error-state').style.display = 'none';
                 document.getElementById('sort-bar').style.display = 'flex';
-                document.getElementById('subnav-container').style.display = 'flex';
                 
                 if (currentCategory) {
                     updateCategoryHero();
                 }
                 
                 updateBreadcrumbAndURL();
-                renderSubnav();
                 renderProducts();
                 updateCategoryVideo();
             } else {
