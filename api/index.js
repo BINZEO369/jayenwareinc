@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
@@ -12,16 +14,19 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
-// Helper: Slug থেকে last segment বের করা
+// Helper: Create slug from string
 // ============================================
-function getLastSlugSegment(fullSlug) {
-    if (!fullSlug) return '';
-    const parts = fullSlug.split('/');
-    return parts[parts.length - 1];
+function createSlug(text) {
+    return text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')   // Remove special characters
+        .replace(/\s+/g, '-')       // Replace spaces with hyphens
+        .replace(/-+/g, '-')        // Replace multiple hyphens with single
+        .replace(/^-+|-+$/g, '');   // Remove leading/trailing hyphens
 }
 
 // ============================================
-// API Routes
+// API Routes - সব ডাটা OUR SERVER হয়ে যাবে
 // ============================================
 
 // সব প্রোডাক্ট
@@ -39,7 +44,7 @@ app.get('/api/products', async (req, res) => {
 });
 
 // ============================================
-// ক্যাটাগরি API (Slug-based - সরাসরি ডাটাবেস থেকে)
+// ক্যাটাগরি API (Slug-based)
 // ============================================
 
 // সব ক্যাটাগরি - Public
@@ -51,208 +56,83 @@ app.get('/api/categories', async (req, res) => {
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
-        res.json(data);
+        
+        // Add slugs to categories
+        const categoriesWithSlugs = data.map(cat => ({
+            ...cat,
+            slug: createSlug(cat.name)
+        }));
+        
+        res.json(categoriesWithSlugs);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে (ডাটাবেস slug ফিল্ড থেকে সরাসরি)
+// ক্যাটাগরি ডিটেইলস - slug দিয়ে
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
         
-        console.log('Fetching category with slug:', slug);
-        
-        // প্রথমে exact slug match করার চেষ্টা
-        let { data, error } = await supabase
+        const { data, error } = await supabase
             .from('categories')
             .select('*')
-            .eq('slug', slug)
-            .eq('is_active', true)
-            .single();
+            .eq('is_active', true);
+        if (error) return res.status(500).json({ error: error.message });
         
-        // যদি exact match না মেলে, তাহলে last segment দিয়ে খোঁজা
-        if (!data || error) {
-            console.log('Exact match failed, trying last segment...');
-            
-            const lastSegment = getLastSlugSegment(slug);
-            console.log('Looking for last segment:', lastSegment);
-            
-            const { data: allData, error: allError } = await supabase
-                .from('categories')
-                .select('*')
-                .eq('is_active', true);
-            
-            if (allError) {
-                console.error('Error fetching all categories:', allError);
-                return res.status(500).json({ error: allError.message });
-            }
-            
-            console.log('All categories count:', allData?.length || 0);
-            
-            data = allData?.find(cat => {
-                const catLastSegment = getLastSlugSegment(cat.slug);
-                console.log('Comparing:', cat.slug, '->', catLastSegment, 'with', lastSegment);
-                return catLastSegment === lastSegment || cat.slug === slug;
-            });
-            
-            if (!data) {
-                console.error('Category not found for slug:', slug);
-                return res.status(404).json({ error: 'Category not found', slug });
-            }
-        }
+        const category = data.find(cat => createSlug(cat.name) === slug);
+        if (!category) return res.status(404).json({ error: 'Category not found' });
         
-        if (error && error.code !== 'PGRST116') {
-            console.error('Supabase query error:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        console.log('Category found:', data.name, 'ID:', data.id, 'Slug:', data.slug);
-        res.json(data);
-        
+        res.json({
+            ...category,
+            slug: createSlug(category.name)
+        });
     } catch (err) {
-        console.error('Server error:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ক্যাটাগরি প্রোডাক্টস - slug দিয়ে
-app.get('/api/categories/:slug/products', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        console.log('Fetching products for category slug:', slug);
-        
-        // ক্যাটাগরি খুঁজুন - সরাসরি slug দিয়ে
-        let { data: category, error: catError } = await supabase
-            .from('categories')
-            .select('id, name, slug')
-            .eq('slug', slug)
-            .eq('is_active', true)
-            .single();
-        
-        // Fallback: last segment দিয়ে খোঁজা
-        if (!category || catError) {
-            console.log('Exact match failed for category, trying fallback...');
-            
-            const lastSegment = getLastSlugSegment(slug);
-            const { data: allCategories } = await supabase
-                .from('categories')
-                .select('id, name, slug')
-                .eq('is_active', true);
-            
-            category = allCategories?.find(cat => {
-                const catLastSegment = getLastSlugSegment(cat.slug);
-                return catLastSegment === lastSegment || cat.slug === slug;
-            });
-            
-            if (!category) {
-                console.error('Category not found for slug:', slug);
-                return res.status(404).json({ error: 'Category not found', slug });
-            }
-        }
-        
-        console.log('Category found:', category.name, 'ID:', category.id);
-        
-        // প্রোডাক্ট ফেচ করুন
-        const { data: products, error: prodError } = await supabase
-            .from('products')
-            .select('*')
-            .eq('category_id', category.id)
-            .order('created_at', { ascending: false });
-        
-        if (prodError) {
-            console.error('Products query error:', prodError);
-            return res.status(500).json({ error: prodError.message });
-        }
-        
-        console.log(`Found ${products?.length || 0} products for category:`, category.name);
-        res.json(products || []);
-        
-    } catch (err) {
-        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
 
 // ============================================
-// সাব-ক্যাটাগরি API (Slug-based - সরাসরি ডাটাবেস থেকে)
+// সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি বা ক্যাটাগরি অনুযায়ী ফিল্টার
+// সব সাব-ক্যাটাগরি - Public (Optional: filter by category)
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
         
-        console.log('Fetching subcategories, category_slug:', category_slug);
-        
-        if (category_slug) {
-            // প্রথমে ক্যাটাগরি খুঁজুন
-            let { data: category, error: catError } = await supabase
-                .from('categories')
-                .select('id, name, slug')
-                .eq('slug', category_slug)
-                .eq('is_active', true)
-                .single();
-            
-            // Fallback
-            if (!category || catError) {
-                console.log('Category exact match failed, trying fallback...');
-                
-                const lastSegment = getLastSlugSegment(category_slug);
-                const { data: allCategories } = await supabase
-                    .from('categories')
-                    .select('id, name, slug')
-                    .eq('is_active', true);
-                
-                category = allCategories?.find(cat => {
-                    const catLastSegment = getLastSlugSegment(cat.slug);
-                    return catLastSegment === lastSegment || cat.slug === category_slug;
-                });
-                
-                if (!category) {
-                    console.error('Category not found for slug:', category_slug);
-                    return res.status(404).json({ error: 'Category not found', category_slug });
-                }
-            }
-            
-            console.log('Category found:', category.name, 'ID:', category.id);
-            
-            // সাব-ক্যাটাগরি ফেচ করুন
-            const { data, error } = await supabase
-                .from('subcategories')
-                .select('*')
-                .eq('category_id', category.id)
-                .eq('is_active', true)
-                .order('sort_order', { ascending: true });
-            
-            if (error) {
-                console.error('Subcategories query error:', error);
-                return res.status(500).json({ error: error.message });
-            }
-            
-            console.log(`Found ${data?.length || 0} subcategories for category:`, category.name);
-            return res.json(data || []);
-        }
-        
-        // সব সাব-ক্যাটাগরি
-        const { data, error } = await supabase
+        let query = supabase
             .from('subcategories')
-            .select('*')
+            .select('*, categories(name, id)')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
-        if (error) {
-            console.error('All subcategories query error:', error);
-            return res.status(500).json({ error: error.message });
+        if (category_slug) {
+            // Get category ID from slug
+            const { data: categories } = await supabase
+                .from('categories')
+                .select('id')
+                .eq('is_active', true);
+            
+            const category = categories.find(cat => createSlug(cat.name) === category_slug);
+            if (category) {
+                query = query.eq('category_id', category.id);
+            } else {
+                return res.status(404).json({ error: 'Category not found' });
+            }
         }
         
-        console.log(`Found ${data?.length || 0} subcategories total`);
-        res.json(data || []);
+        const { data, error } = await query;
+        if (error) return res.status(500).json({ error: error.message });
         
+        const subcategoriesWithSlugs = data.map(sub => ({
+            ...sub,
+            slug: createSlug(sub.name),
+            category_slug: createSlug(sub.categories?.name || '')
+        }));
+        
+        res.json(subcategoriesWithSlugs);
     } catch (err) {
-        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -261,140 +141,68 @@ app.get('/api/subcategories', async (req, res) => {
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
+        const { category_slug } = req.query;
         
-        console.log('Fetching subcategory with slug:', slug);
-        
-        // Exact slug match
-        let { data, error } = await supabase
+        const { data, error } = await supabase
             .from('subcategories')
-            .select('*')
-            .eq('slug', slug)
-            .eq('is_active', true)
-            .single();
+            .select('*, categories(name, id)')
+            .eq('is_active', true);
+        if (error) return res.status(500).json({ error: error.message });
         
-        // Fallback
-        if (!data || error) {
-            console.log('Exact match failed for subcategory, trying fallback...');
-            
-            const lastSegment = getLastSlugSegment(slug);
-            const { data: allData } = await supabase
-                .from('subcategories')
-                .select('*')
-                .eq('is_active', true);
-            
-            data = allData?.find(sub => {
-                const subLastSegment = getLastSlugSegment(sub.slug);
-                return subLastSegment === lastSegment || sub.slug === slug;
-            });
-            
-            if (!data) {
-                console.error('Subcategory not found for slug:', slug);
-                return res.status(404).json({ error: 'Subcategory not found', slug });
+        let subcategory = data.find(sub => createSlug(sub.name) === slug);
+        
+        // If category_slug is provided, filter by it too
+        if (category_slug && subcategory) {
+            const catSlug = createSlug(subcategory.categories?.name || '');
+            if (catSlug !== category_slug) {
+                subcategory = null;
             }
         }
         
-        if (error && error.code !== 'PGRST116') {
-            console.error('Supabase query error:', error);
-            return res.status(500).json({ error: error.message });
-        }
+        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
         
-        console.log('Subcategory found:', data.name, 'ID:', data.id, 'Slug:', data.slug);
-        res.json(data);
-        
+        res.json({
+            ...subcategory,
+            slug: createSlug(subcategory.name),
+            category_slug: createSlug(subcategory.categories?.name || '')
+        });
     } catch (err) {
-        console.error('Server error:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// সাব-ক্যাটাগরি প্রোডাক্টস
-app.get('/api/subcategories/:slug/products', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        console.log('Fetching products for subcategory slug:', slug);
-        
-        // সাব-ক্যাটাগরি খুঁজুন
-        let { data: subcategory, error: subError } = await supabase
-            .from('subcategories')
-            .select('id, name, slug, category_id')
-            .eq('slug', slug)
-            .eq('is_active', true)
-            .single();
-        
-        // Fallback
-        if (!subcategory || subError) {
-            console.log('Exact match failed for subcategory, trying fallback...');
-            
-            const lastSegment = getLastSlugSegment(slug);
-            const { data: allSubcategories } = await supabase
-                .from('subcategories')
-                .select('id, name, slug, category_id')
-                .eq('is_active', true);
-            
-            subcategory = allSubcategories?.find(sub => {
-                const subLastSegment = getLastSlugSegment(sub.slug);
-                return subLastSegment === lastSegment || sub.slug === slug;
-            });
-            
-            if (!subcategory) {
-                console.error('Subcategory not found for slug:', slug);
-                return res.status(404).json({ error: 'Subcategory not found', slug });
-            }
-        }
-        
-        console.log('Subcategory found:', subcategory.name, 'ID:', subcategory.id);
-        
-        // প্রোডাক্ট ফেচ করুন
-        const { data: products, error: prodError } = await supabase
-            .from('products')
-            .select('*')
-            .eq('subcategory_id', subcategory.id)
-            .order('created_at', { ascending: false });
-        
-        if (prodError) {
-            console.error('Products query error:', prodError);
-            return res.status(500).json({ error: prodError.message });
-        }
-        
-        console.log(`Found ${products?.length || 0} products for subcategory:`, subcategory.name);
-        res.json(products || []);
-        
-    } catch (err) {
-        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
 
 // ============================================
-// মেনু API
+// মেনু আইটেমস API (Complete Menu Structure)
 // ============================================
 
-// Main Menu - সমস্ত মেনু আইটেম
+// Main Menu - সমস্ত মেনু আইটেম হায়ারার্কি সহ
 app.get('/api/menu', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('menu_items')
             .select(`
                 *,
-                categories:category_id (id, name, slug),
-                subcategories:subcategory_id (id, name, slug)
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
             `)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         
-        // Build menu hierarchy
+        // Build menu hierarchy and add slugs
         const buildMenuTree = (items, parentId = null) => {
             return items
                 .filter(item => item.parent_id === parentId)
-                .map(item => ({
-                    ...item,
-                    category_slug: item.categories?.slug || null,
-                    subcategory_slug: item.subcategories?.slug || null,
-                    children: buildMenuTree(items, item.id)
-                }));
+                .map(item => {
+                    const menuItem = {
+                        ...item,
+                        slug: createSlug(item.title),
+                        category_slug: item.categories ? createSlug(item.categories.name) : null,
+                        subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
+                        children: buildMenuTree(items, item.id)
+                    };
+                    return menuItem;
+                });
         };
         
         const menuTree = buildMenuTree(data);
@@ -404,37 +212,125 @@ app.get('/api/menu', async (req, res) => {
     }
 });
 
-// Flat menu items
+// Flat menu items (simplified)
 app.get('/api/menu-items', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('menu_items')
             .select(`
                 *,
-                categories:category_id (id, name, slug),
-                subcategories:subcategory_id (id, name, slug)
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
             `)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         
-        const menuItems = data.map(item => ({
+        const menuItemsWithSlugs = data.map(item => ({
             ...item,
-            category_slug: item.categories?.slug || null,
-            subcategory_slug: item.subcategories?.slug || null
+            slug: createSlug(item.title),
+            category_slug: item.categories ? createSlug(item.categories.name) : null,
+            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
         }));
         
-        res.json(menuItems);
+        res.json(menuItemsWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Menu item by slug
+app.get('/api/menu-items/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true);
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItem = data.find(item => createSlug(item.title) === slug);
+        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
+        
+        res.json({
+            ...menuItem,
+            slug: createSlug(menuItem.title),
+            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
+            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
 // ============================================
-// হিরো API
+// Category Product API (Get products by category)
 // ============================================
+app.get('/api/categories/:slug/products', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        // Get category
+        const { data: categories } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true);
+        
+        const category = categories.find(cat => createSlug(cat.name) === slug);
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+        
+        // Get products for this category
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('category_id', category.id)
+            .order('created_at', { ascending: false });
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
+// ============================================
+// Subcategory Products API
+// ============================================
+app.get('/api/subcategories/:slug/products', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        // Get subcategory
+        const { data: subcategories } = await supabase
+            .from('subcategories')
+            .select('*')
+            .eq('is_active', true);
+        
+        const subcategory = subcategories.find(sub => createSlug(sub.name) === slug);
+        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
+        
+        // Get products for this subcategory
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('subcategory_id', subcategory.id)
+            .order('created_at', { ascending: false });
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// হিরো স্লাইড
+// ============================================
 app.get('/api/hero', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -448,6 +344,7 @@ app.get('/api/hero', async (req, res) => {
     }
 });
 
+// হিরো ভিডিও - শুধু active ভিডিওগুলো
 app.get('/api/hero-videos', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -455,6 +352,7 @@ app.get('/api/hero-videos', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
+        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -462,6 +360,7 @@ app.get('/api/hero-videos', async (req, res) => {
     }
 });
 
+// হিরো সেকেন্ডারি - শুধু active সেকেন্ডারি ব্যানারগুলো
 app.get('/api/hero-secondary', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -469,6 +368,7 @@ app.get('/api/hero-secondary', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
+        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -477,7 +377,7 @@ app.get('/api/hero-secondary', async (req, res) => {
 });
 
 // ============================================
-// নিউজ API
+// নিউজ
 // ============================================
 app.get('/api/news', async (req, res) => {
     try {
@@ -493,42 +393,33 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
-// প্রোডাক্ট API
-// ============================================
-
 // প্রোডাক্ট ডিটেইলস - slug দিয়ে
+// ============================================
 app.get('/api/product/:slug', async (req, res) => {
     try {
-        const { slug } = req.params;
+        const slug = req.params.slug;
         const { data, error } = await supabase
             .from('products')
             .select('*')
-            .eq('slug', slug)
-            .single();
-        
-        if (error && error.code === 'PGRST116') {
-            return res.status(404).json({ error: 'Product not found' });
-        }
+            .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
         
-        res.json(data);
+        const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.status(404).json({ error: 'Product not found' });
+        res.json(product);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// প্রোডাক্ট কালার
+// প্রোডাক্ট কালার - slug দিয়ে
 app.get('/api/product-colors', async (req, res) => {
     try {
-        const { slug } = req.query;
+        const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: product } = await supabase
-            .from('products')
-            .select('id')
-            .eq('slug', slug)
-            .single();
-        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
         const { data, error } = await supabase
@@ -536,7 +427,6 @@ app.get('/api/product-colors', async (req, res) => {
             .select('*')
             .eq('product_id', product.id)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -544,18 +434,14 @@ app.get('/api/product-colors', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ভেরিয়েন্ট
+// প্রোডাক্ট ভেরিয়েন্ট - slug দিয়ে
 app.get('/api/product-variants', async (req, res) => {
     try {
-        const { slug } = req.query;
+        const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: product } = await supabase
-            .from('products')
-            .select('id')
-            .eq('slug', slug)
-            .single();
-        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
         const { data, error } = await supabase
@@ -563,7 +449,6 @@ app.get('/api/product-variants', async (req, res) => {
             .select('*')
             .eq('product_id', product.id)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -571,18 +456,14 @@ app.get('/api/product-variants', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট রিভিউ
+// প্রোডাক্ট রিভিউ - slug দিয়ে
 app.get('/api/product-reviews', async (req, res) => {
     try {
-        const { slug } = req.query;
+        const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: product } = await supabase
-            .from('products')
-            .select('id')
-            .eq('slug', slug)
-            .single();
-        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
         const { data, error } = await supabase
@@ -590,7 +471,6 @@ app.get('/api/product-reviews', async (req, res) => {
             .select('*')
             .eq('product_id', product.id)
             .order('created_at', { ascending: false });
-        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -598,18 +478,14 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ভিডিও
+// প্রোডাক্ট ভিডিও - slug দিয়ে
 app.get('/api/product-videos', async (req, res) => {
     try {
-        const { slug } = req.query;
+        const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: product } = await supabase
-            .from('products')
-            .select('id')
-            .eq('slug', slug)
-            .single();
-        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
         const { data, error } = await supabase
@@ -618,7 +494,6 @@ app.get('/api/product-videos', async (req, res) => {
             .eq('product_id', product.id)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -626,18 +501,14 @@ app.get('/api/product-videos', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ব্যানার
+// প্রোডাক্ট ব্যানার - slug দিয়ে
 app.get('/api/product-banners', async (req, res) => {
     try {
-        const { slug } = req.query;
+        const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: product } = await supabase
-            .from('products')
-            .select('id')
-            .eq('slug', slug)
-            .single();
-        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
         const { data, error } = await supabase
@@ -646,7 +517,6 @@ app.get('/api/product-banners', async (req, res) => {
             .eq('product_id', product.id)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -654,7 +524,7 @@ app.get('/api/product-banners', async (req, res) => {
     }
 });
 
-// কালার সাইজ
+// কালার সাইজ - color ids দিয়ে
 app.get('/api/color-sizes', async (req, res) => {
     try {
         const ids = req.query.ids;
@@ -668,7 +538,6 @@ app.get('/api/color-sizes', async (req, res) => {
             .select('*')
             .in('color_id', idArray)
             .order('sort_order', { ascending: true });
-        
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -703,7 +572,7 @@ app.post('/api/submit-review', express.json(), async (req, res) => {
 });
 
 // ============================================
-// SPA Fallback
+// SPA Fallback - সব রাউট index.html এ ফরোয়ার্ড
 // ============================================
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
