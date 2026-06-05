@@ -62,6 +62,8 @@ app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
         
+        console.log('Fetching category with slug:', slug);
+        
         // প্রথমে exact slug match করার চেষ্টা
         let { data, error } = await supabase
             .from('categories')
@@ -71,29 +73,46 @@ app.get('/api/categories/:slug', async (req, res) => {
             .single();
         
         // যদি exact match না মেলে, তাহলে last segment দিয়ে খোঁজা
-        if (!data) {
+        if (!data || error) {
+            console.log('Exact match failed, trying last segment...');
+            
             const lastSegment = getLastSlugSegment(slug);
+            console.log('Looking for last segment:', lastSegment);
+            
             const { data: allData, error: allError } = await supabase
                 .from('categories')
                 .select('*')
                 .eq('is_active', true);
             
-            if (allError) return res.status(500).json({ error: allError.message });
+            if (allError) {
+                console.error('Error fetching all categories:', allError);
+                return res.status(500).json({ error: allError.message });
+            }
             
-            data = allData.find(cat => {
+            console.log('All categories count:', allData?.length || 0);
+            
+            data = allData?.find(cat => {
                 const catLastSegment = getLastSlugSegment(cat.slug);
+                console.log('Comparing:', cat.slug, '->', catLastSegment, 'with', lastSegment);
                 return catLastSegment === lastSegment || cat.slug === slug;
             });
             
-            if (!data) return res.status(404).json({ error: 'Category not found' });
+            if (!data) {
+                console.error('Category not found for slug:', slug);
+                return res.status(404).json({ error: 'Category not found', slug });
+            }
         }
         
         if (error && error.code !== 'PGRST116') {
+            console.error('Supabase query error:', error);
             return res.status(500).json({ error: error.message });
         }
         
+        console.log('Category found:', data.name, 'ID:', data.id, 'Slug:', data.slug);
         res.json(data);
+        
     } catch (err) {
+        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -103,32 +122,38 @@ app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         
-        // ক্যাটাগরি খুঁজুন
+        console.log('Fetching products for category slug:', slug);
+        
+        // ক্যাটাগরি খুঁজুন - সরাসরি slug দিয়ে
         let { data: category, error: catError } = await supabase
             .from('categories')
-            .select('id, slug')
+            .select('id, name, slug')
             .eq('slug', slug)
             .eq('is_active', true)
             .single();
         
-        if (!category) {
+        // Fallback: last segment দিয়ে খোঁজা
+        if (!category || catError) {
+            console.log('Exact match failed for category, trying fallback...');
+            
             const lastSegment = getLastSlugSegment(slug);
             const { data: allCategories } = await supabase
                 .from('categories')
-                .select('id, slug')
+                .select('id, name, slug')
                 .eq('is_active', true);
             
-            category = allCategories.find(cat => {
+            category = allCategories?.find(cat => {
                 const catLastSegment = getLastSlugSegment(cat.slug);
                 return catLastSegment === lastSegment || cat.slug === slug;
             });
             
-            if (!category) return res.status(404).json({ error: 'Category not found' });
+            if (!category) {
+                console.error('Category not found for slug:', slug);
+                return res.status(404).json({ error: 'Category not found', slug });
+            }
         }
         
-        if (catError && catError.code !== 'PGRST116') {
-            return res.status(500).json({ error: catError.message });
-        }
+        console.log('Category found:', category.name, 'ID:', category.id);
         
         // প্রোডাক্ট ফেচ করুন
         const { data: products, error: prodError } = await supabase
@@ -137,10 +162,16 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .eq('category_id', category.id)
             .order('created_at', { ascending: false });
         
-        if (prodError) return res.status(500).json({ error: prodError.message });
+        if (prodError) {
+            console.error('Products query error:', prodError);
+            return res.status(500).json({ error: prodError.message });
+        }
         
+        console.log(`Found ${products?.length || 0} products for category:`, category.name);
         res.json(products || []);
+        
     } catch (err) {
+        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -154,30 +185,41 @@ app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
         
+        console.log('Fetching subcategories, category_slug:', category_slug);
+        
         if (category_slug) {
             // প্রথমে ক্যাটাগরি খুঁজুন
-            let { data: category } = await supabase
+            let { data: category, error: catError } = await supabase
                 .from('categories')
-                .select('id, slug')
+                .select('id, name, slug')
                 .eq('slug', category_slug)
                 .eq('is_active', true)
                 .single();
             
-            if (!category) {
+            // Fallback
+            if (!category || catError) {
+                console.log('Category exact match failed, trying fallback...');
+                
                 const lastSegment = getLastSlugSegment(category_slug);
                 const { data: allCategories } = await supabase
                     .from('categories')
-                    .select('id, slug')
+                    .select('id, name, slug')
                     .eq('is_active', true);
                 
-                category = allCategories.find(cat => {
+                category = allCategories?.find(cat => {
                     const catLastSegment = getLastSlugSegment(cat.slug);
                     return catLastSegment === lastSegment || cat.slug === category_slug;
                 });
                 
-                if (!category) return res.status(404).json({ error: 'Category not found' });
+                if (!category) {
+                    console.error('Category not found for slug:', category_slug);
+                    return res.status(404).json({ error: 'Category not found', category_slug });
+                }
             }
             
+            console.log('Category found:', category.name, 'ID:', category.id);
+            
+            // সাব-ক্যাটাগরি ফেচ করুন
             const { data, error } = await supabase
                 .from('subcategories')
                 .select('*')
@@ -185,7 +227,12 @@ app.get('/api/subcategories', async (req, res) => {
                 .eq('is_active', true)
                 .order('sort_order', { ascending: true });
             
-            if (error) return res.status(500).json({ error: error.message });
+            if (error) {
+                console.error('Subcategories query error:', error);
+                return res.status(500).json({ error: error.message });
+            }
+            
+            console.log(`Found ${data?.length || 0} subcategories for category:`, category.name);
             return res.json(data || []);
         }
         
@@ -196,9 +243,16 @@ app.get('/api/subcategories', async (req, res) => {
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
-        if (error) return res.status(500).json({ error: error.message });
+        if (error) {
+            console.error('All subcategories query error:', error);
+            return res.status(500).json({ error: error.message });
+        }
+        
+        console.log(`Found ${data?.length || 0} subcategories total`);
         res.json(data || []);
+        
     } catch (err) {
+        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -208,6 +262,8 @@ app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
         
+        console.log('Fetching subcategory with slug:', slug);
+        
         // Exact slug match
         let { data, error } = await supabase
             .from('subcategories')
@@ -216,28 +272,37 @@ app.get('/api/subcategories/:slug', async (req, res) => {
             .eq('is_active', true)
             .single();
         
-        if (!data) {
-            // Last segment দিয়ে খোঁজা
+        // Fallback
+        if (!data || error) {
+            console.log('Exact match failed for subcategory, trying fallback...');
+            
             const lastSegment = getLastSlugSegment(slug);
             const { data: allData } = await supabase
                 .from('subcategories')
                 .select('*')
                 .eq('is_active', true);
             
-            data = allData.find(sub => {
+            data = allData?.find(sub => {
                 const subLastSegment = getLastSlugSegment(sub.slug);
                 return subLastSegment === lastSegment || sub.slug === slug;
             });
             
-            if (!data) return res.status(404).json({ error: 'Subcategory not found' });
+            if (!data) {
+                console.error('Subcategory not found for slug:', slug);
+                return res.status(404).json({ error: 'Subcategory not found', slug });
+            }
         }
         
         if (error && error.code !== 'PGRST116') {
+            console.error('Supabase query error:', error);
             return res.status(500).json({ error: error.message });
         }
         
+        console.log('Subcategory found:', data.name, 'ID:', data.id, 'Slug:', data.slug);
         res.json(data);
+        
     } catch (err) {
+        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -247,40 +312,56 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         
+        console.log('Fetching products for subcategory slug:', slug);
+        
         // সাব-ক্যাটাগরি খুঁজুন
-        let { data: subcategory } = await supabase
+        let { data: subcategory, error: subError } = await supabase
             .from('subcategories')
-            .select('id, slug')
+            .select('id, name, slug, category_id')
             .eq('slug', slug)
             .eq('is_active', true)
             .single();
         
-        if (!subcategory) {
+        // Fallback
+        if (!subcategory || subError) {
+            console.log('Exact match failed for subcategory, trying fallback...');
+            
             const lastSegment = getLastSlugSegment(slug);
             const { data: allSubcategories } = await supabase
                 .from('subcategories')
-                .select('id, slug')
+                .select('id, name, slug, category_id')
                 .eq('is_active', true);
             
-            subcategory = allSubcategories.find(sub => {
+            subcategory = allSubcategories?.find(sub => {
                 const subLastSegment = getLastSlugSegment(sub.slug);
                 return subLastSegment === lastSegment || sub.slug === slug;
             });
             
-            if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
+            if (!subcategory) {
+                console.error('Subcategory not found for slug:', slug);
+                return res.status(404).json({ error: 'Subcategory not found', slug });
+            }
         }
         
+        console.log('Subcategory found:', subcategory.name, 'ID:', subcategory.id);
+        
         // প্রোডাক্ট ফেচ করুন
-        const { data: products, error } = await supabase
+        const { data: products, error: prodError } = await supabase
             .from('products')
             .select('*')
             .eq('subcategory_id', subcategory.id)
             .order('created_at', { ascending: false });
         
-        if (error) return res.status(500).json({ error: error.message });
+        if (prodError) {
+            console.error('Products query error:', prodError);
+            return res.status(500).json({ error: prodError.message });
+        }
         
+        console.log(`Found ${products?.length || 0} products for subcategory:`, subcategory.name);
         res.json(products || []);
+        
     } catch (err) {
+        console.error('Server error:', err);
         res.status(500).json({ error: err.message });
     }
 });
