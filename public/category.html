@@ -169,6 +169,70 @@
             }
         }
 
+        /* ==================== ERROR STATE ==================== */
+        .error-state {
+            text-align: center;
+            padding: 64px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+        }
+        .error-state i {
+            font-size: 56px;
+            color: #d1d1d6;
+            margin-bottom: 20px;
+        }
+        .error-state h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .error-state p {
+            font-size: 14px;
+            color: var(--accent);
+            max-width: 450px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+        .error-state .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .error-state .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+        .error-state .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid #d1d1d6;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+        .error-state .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
         /* ==================== SUBCATEGORY PILLS ==================== */
         .subcategory-pills {
             display: flex;
@@ -367,6 +431,11 @@
         .empty-state {
             text-align: center;
             padding: 64px 20px;
+            display: none;
+        }
+
+        .empty-state.visible {
+            display: block;
         }
 
         .empty-state i {
@@ -483,7 +552,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-14 sm:h-16">
                 <a href="/" class="flex items-center gap-2 text-primary no-underline">
-                    <img src="/logo.png" alt="JAYENWARE" class="h-8 w-8 rounded-lg">
+                    <img src="/logo.png" alt="JAYENWARE" class="h-8 w-8 rounded-lg" onerror="this.style.display='none'">
                     <span class="font-bold text-lg hidden sm:inline">JAYENWARE</span>
                 </a>
                 <nav class="hidden md:flex items-center gap-6">
@@ -518,13 +587,28 @@
             <img id="category-hero-img" src="" alt="" class="category-hero-image" style="display:none;">
         </section>
 
+        <!-- ERROR STATE (initially hidden) -->
+        <div class="error-state" id="error-state" style="display:none;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <h2>Category Not Found</h2>
+            <p>The category you're looking for doesn't exist or may have been removed. Please check the URL or browse our available categories.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+                <a href="/" class="btn-primary">
+                    <i class="fa-solid fa-house"></i> Back to Home
+                </a>
+                <a href="/products" class="btn-secondary">
+                    <i class="fa-solid fa-grid"></i> All Products
+                </a>
+            </div>
+        </div>
+
         <!-- SUBCATEGORY PILLS -->
-        <div class="subcategory-pills no-scrollbar" id="subcategory-pills">
+        <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
             <!-- Dynamically populated -->
         </div>
 
         <!-- SORT BAR -->
-        <div class="sort-bar">
+        <div class="sort-bar" id="sort-bar" style="display:none;">
             <span class="result-count" id="result-count">Loading products...</span>
             <select class="sort-select" id="sort-select" onchange="handleSort(this.value)">
                 <option value="newest">Newest First</option>
@@ -540,11 +624,11 @@
         </div>
 
         <!-- EMPTY STATE -->
-        <div class="empty-state hidden" id="empty-state">
+        <div class="empty-state" id="empty-state">
             <i class="fa-solid fa-box-open"></i>
             <h3>No Products Found</h3>
             <p>There are no products in this category yet. Check back soon or browse other categories.</p>
-            <a href="/" class="inline-block mt-4 px-6 py-2 bg-primary text-white rounded-full text-sm font-semibold no-underline">
+            <a href="/" class="btn-primary" style="display:inline-flex;margin-top:16px;">
                 Back to Home
             </a>
         </div>
@@ -558,11 +642,8 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - FULLY DYNAMIC WITH SLUG-BASED ROUTING
+        // CATEGORY PAGE - FULLY DYNAMIC WITH API-DRIVEN DATA
         // ============================================================
-
-        const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
 
         let currentCategory = null;
         let currentSubcategory = null;
@@ -584,11 +665,17 @@
         }
 
         // ============================================================
+        // HELPER: Get product slug
+        // ============================================================
+        function getProductSlug(product) {
+            return product.slug || createSlug(product.title || 'product');
+        }
+
+        // ============================================================
         // PARSE URL
         // ============================================================
         function parseURL() {
             const path = window.location.pathname;
-            // Expected: /category/:category_slug or /category/:category_slug/:subcategory_slug
             const parts = path.replace(/^\/+|\/+$/g, '').split('/');
 
             let categorySlug = null;
@@ -605,107 +692,55 @@
         }
 
         // ============================================================
-        // FETCH FROM SUPABASE
+        // FETCH FROM API (Server-side API routes)
         // ============================================================
-        async function fetchSupabase(table, query = {}) {
-            const url = new URL(`${SUPABASE_URL}/rest/v1/${table}`);
-            url.searchParams.append('apikey', SUPABASE_KEY);
-            url.searchParams.append('Authorization', `Bearer ${SUPABASE_KEY}`);
-
-            // Add query parameters
-            Object.entries(query).forEach(([key, value]) => {
-                if (value !== undefined && value !== null) {
-                    url.searchParams.append(key, value);
-                }
-            });
-
+        async function fetchAPI(endpoint) {
             try {
-                const res = await fetch(url.toString(), {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const res = await fetch(endpoint);
+                if (!res.ok) {
+                    console.error(`API Error: ${endpoint} returned ${res.status}`);
+                    return null;
+                }
                 return await res.json();
             } catch (err) {
-                console.error(`Error fetching ${table}:`, err);
-                return [];
+                console.error(`Fetch error for ${endpoint}:`, err);
+                return null;
             }
         }
 
         // ============================================================
-        // LOAD CATEGORY BY SLUG
+        // LOAD CATEGORY BY SLUG (Using server API)
         // ============================================================
         async function loadCategoryBySlug(slug) {
-            const categories = await fetchSupabase('categories', {
-                select: '*',
-                is_active: 'eq.true'
-            });
-
-            const category = categories.find(cat => createSlug(cat.name) === slug);
+            const categories = await fetchAPI('/api/categories');
+            if (!categories || !Array.isArray(categories)) return null;
+            
+            const category = categories.find(cat => cat.slug === slug || createSlug(cat.name) === slug);
             return category || null;
         }
 
         // ============================================================
-        // LOAD SUBCATEGORIES BY CATEGORY ID
+        // LOAD SUBCATEGORIES BY CATEGORY SLUG (Using server API)
         // ============================================================
-        async function loadSubcategories(categoryId) {
-            return await fetchSupabase('subcategories', {
-                select: '*',
-                category_id: `eq.${categoryId}`,
-                is_active: 'eq.true',
-                order: 'sort_order.asc'
-            });
+        async function loadSubcategories(categorySlug) {
+            const subcategories = await fetchAPI(`/api/subcategories?category_slug=${encodeURIComponent(categorySlug)}`);
+            return subcategories || [];
         }
 
         // ============================================================
-        // LOAD PRODUCTS BY CATEGORY / SUBCATEGORY
+        // LOAD PRODUCTS BY CATEGORY SLUG (Using server API)
         // ============================================================
-        async function loadProducts(categoryId, subcategoryId = null) {
-            let query = {
-                select: '*',
-                category_id: `eq.${categoryId}`,
-                order: 'created_at.desc'
-            };
+        async function loadProductsByCategory(categorySlug) {
+            const products = await fetchAPI(`/api/categories/${encodeURIComponent(categorySlug)}/products`);
+            return products || [];
+        }
 
-            if (subcategoryId) {
-                query.subcategory_id = `eq.${subcategoryId}`;
-            }
-
-            const products = await fetchSupabase('products', query);
-
-            // Fetch category and subcategory names for each product
-            const productsWithNames = await Promise.all(products.map(async (product) => {
-                let catName = '';
-                let subcatName = '';
-
-                if (product.category_id) {
-                    const cat = await fetchSupabase('categories', {
-                        select: 'name',
-                        id: `eq.${product.category_id}`
-                    });
-                    if (cat.length) catName = cat[0].name;
-                }
-
-                if (product.subcategory_id) {
-                    const subcat = await fetchSupabase('subcategories', {
-                        select: 'name',
-                        id: `eq.${product.subcategory_id}`
-                    });
-                    if (subcat.length) subcatName = subcat[0].name;
-                }
-
-                return {
-                    ...product,
-                    category: catName,
-                    subcategory: subcatName,
-                    slug: product.slug || createSlug(product.title)
-                };
-            }));
-
-            return productsWithNames;
+        // ============================================================
+        // LOAD PRODUCTS BY SUBCATEGORY SLUG (Using server API)
+        // ============================================================
+        async function loadProductsBySubcategory(subcategorySlug) {
+            const products = await fetchAPI(`/api/subcategories/${encodeURIComponent(subcategorySlug)}/products`);
+            return products || [];
         }
 
         // ============================================================
@@ -726,11 +761,25 @@
         }
 
         // ============================================================
+        // SHOW ERROR STATE
+        // ============================================================
+        function showErrorState() {
+            document.getElementById('category-hero').style.display = 'none';
+            document.getElementById('error-state').style.display = 'flex';
+            document.getElementById('subcategory-pills').style.display = 'none';
+            document.getElementById('sort-bar').style.display = 'none';
+            document.getElementById('products-grid').innerHTML = '';
+            document.getElementById('empty-state').classList.remove('visible');
+            document.getElementById('breadcrumb-current').textContent = 'Not Found';
+            document.title = 'Category Not Found | JAYENWARE';
+        }
+
+        // ============================================================
         // RENDER PRODUCT CARD
         // ============================================================
         function renderProductCard(product) {
-            const isOut = product.stock !== undefined && product.stock <= 0;
-            const slug = product.slug || createSlug(product.title);
+            const isOut = product.stock !== undefined && product.stock !== null && product.stock <= 0;
+            const slug = getProductSlug(product);
 
             let badge = '';
             if (!isOut) {
@@ -739,10 +788,12 @@
                 else if (product.is_limited_edition) badge = '<span class="card-badge">Limited</span>';
             }
 
+            const imgSrc = product.img || '/logo.png';
+
             return `
             <a href="/product/${slug}" class="product-card">
                 <div class="card-img">
-                    <img src="${product.img || '/placeholder.png'}" alt="${product.title || 'Product'}" loading="lazy" onerror="this.src='/placeholder.png'">
+                    <img src="${imgSrc}" alt="${product.title || 'Product'}" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
                     ${badge}
                     ${isOut ? '<div class="soldout-overlay"><span>Sold Out</span></div>' : ''}
                 </div>
@@ -787,12 +838,12 @@
 
             if (!sorted.length) {
                 grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
+                emptyState.classList.add('visible');
                 resultCount.textContent = '0 products';
                 return;
             }
 
-            emptyState.classList.add('hidden');
+            emptyState.classList.remove('visible');
             resultCount.textContent = `${sorted.length} product${sorted.length !== 1 ? 's' : ''}`;
             grid.innerHTML = sorted.map(renderProductCard).join('');
         }
@@ -805,70 +856,96 @@
             if (!container) return;
 
             if (!allSubcategories.length) {
-                container.innerHTML = '';
+                container.style.display = 'none';
                 return;
             }
 
+            container.style.display = 'flex';
+
+            const categorySlug = createSlug(currentCategory?.name || '');
+
             const allPill = `
-            <span class="subcategory-pill ${!currentSubcategory ? 'active' : ''}" onclick="handleSubcategoryClick(null)">
+            <a href="/category/${categorySlug}" class="subcategory-pill ${!currentSubcategory ? 'active' : ''}">
                 All
                 <span class="count">${allProducts.length}</span>
-            </span>`;
+            </a>`;
 
             const pills = allSubcategories.map(sub => {
+                const subSlug = createSlug(sub.name);
                 const count = allProducts.filter(p => p.subcategory_id === sub.id).length;
                 const isActive = currentSubcategory && currentSubcategory.id === sub.id;
                 return `
-                <span class="subcategory-pill ${isActive ? 'active' : ''}" onclick="handleSubcategoryClick(${sub.id})">
+                <a href="/category/${categorySlug}/${subSlug}" class="subcategory-pill ${isActive ? 'active' : ''}">
                     ${sub.name}
                     <span class="count">${count}</span>
-                </span>`;
+                </a>`;
             }).join('');
 
             container.innerHTML = allPill + pills;
         }
 
         // ============================================================
-        // UPDATE BREADCRUMB & URL
+        // UPDATE BREADCRUMB & URL & META
         // ============================================================
         function updateBreadcrumbAndURL() {
             const breadcrumbCurrent = document.getElementById('breadcrumb-current');
             const pageTitle = document.getElementById('page-title');
             const canonicalUrl = document.getElementById('canonical-url');
+            const categoryName = currentCategory?.name || 'Category';
+            const categorySlug = createSlug(categoryName);
 
-            let url = `/category/${createSlug(currentCategory.name)}`;
-            let title = currentCategory.name;
+            let url = `/category/${categorySlug}`;
+            let title = categoryName;
+            let breadcrumbHTML = `<a href="/">Home</a><span class="separator">/</span>`;
 
             if (currentSubcategory) {
-                url += `/${createSlug(currentSubcategory.name)}`;
-                title = `${currentSubcategory.name} - ${currentCategory.name}`;
+                const subSlug = createSlug(currentSubcategory.name);
+                url += `/${subSlug}`;
+                title = `${currentSubcategory.name} - ${categoryName}`;
+                breadcrumbHTML += `<a href="/category/${categorySlug}">${categoryName}</a><span class="separator">/</span><span class="current">${currentSubcategory.name}</span>`;
+            } else {
+                breadcrumbHTML += `<span class="current">${categoryName}</span>`;
             }
 
-            breadcrumbCurrent.textContent = currentSubcategory ? currentSubcategory.name : currentCategory.name;
-            pageTitle.textContent = `${title} | JAYENWARE`;
-            canonicalUrl.href = `https://www.jayenware.shop${url}`;
+            document.getElementById('breadcrumb').innerHTML = breadcrumbHTML;
             document.title = `${title} | JAYENWARE`;
+            if (pageTitle) pageTitle.textContent = `${title} | JAYENWARE`;
+            if (canonicalUrl) canonicalUrl.href = `https://www.jayenware.shop${url}`;
 
             // Update URL without reload
-            window.history.replaceState({ category: currentCategory, subcategory: currentSubcategory }, '', url);
+            window.history.replaceState(
+                { category: currentCategory, subcategory: currentSubcategory }, 
+                '', 
+                url
+            );
         }
 
         // ============================================================
-        // HANDLE SUBCATEGORY CLICK
+        // HANDLE SUBCATEGORY CLICK (from pills)
         // ============================================================
         async function handleSubcategoryClick(subcategoryId) {
+            const categorySlug = createSlug(currentCategory?.name || '');
+
             if (subcategoryId === null) {
+                // All products
                 currentSubcategory = null;
-                allProducts = await loadProducts(currentCategory.id);
+                allProducts = await loadProductsByCategory(categorySlug);
             } else {
                 currentSubcategory = allSubcategories.find(s => s.id === subcategoryId) || null;
-                allProducts = await loadProducts(currentCategory.id, subcategoryId);
+                if (currentSubcategory) {
+                    const subSlug = createSlug(currentSubcategory.name);
+                    allProducts = await loadProductsBySubcategory(subSlug);
+                }
             }
 
             updateBreadcrumbAndURL();
             renderSubcategoryPills();
             renderProducts();
-            window.scrollTo({ top: document.getElementById('products-grid').offsetTop - 100, behavior: 'smooth' });
+            
+            const gridEl = document.getElementById('products-grid');
+            if (gridEl) {
+                window.scrollTo({ top: gridEl.offsetTop - 100, behavior: 'smooth' });
+            }
         }
 
         // ============================================================
@@ -887,52 +964,62 @@
 
             const { categorySlug, subcategorySlug } = parseURL();
 
+            console.log('[Category Page] Parsed URL:', { categorySlug, subcategorySlug });
+
             if (!categorySlug) {
-                // Redirect to home if no category slug
                 window.location.href = '/';
                 return;
             }
 
             // Load category
             currentCategory = await loadCategoryBySlug(categorySlug);
+            console.log('[Category Page] Loaded category:', currentCategory);
 
             if (!currentCategory) {
-                // Category not found - show 404 or redirect
-                document.getElementById('category-name').textContent = 'Category Not Found';
-                document.getElementById('category-description').textContent = 'The category you are looking for does not exist.';
-                document.getElementById('products-grid').innerHTML = '';
-                document.getElementById('empty-state').classList.remove('hidden');
-                document.getElementById('result-count').textContent = '';
-                document.getElementById('subcategory-pills').innerHTML = '';
-                document.title = 'Category Not Found | JAYENWARE';
+                showErrorState();
                 return;
             }
 
-            // Update hero
+            // Show hero
+            document.getElementById('category-hero').style.display = 'flex';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('sort-bar').style.display = 'flex';
+
             document.getElementById('category-name').textContent = currentCategory.name;
-            document.getElementById('category-description').textContent = currentCategory.description || 'Discover our exclusive collection';
+            document.getElementById('category-description').textContent = 
+                currentCategory.description || 'Discover our exclusive collection';
             
             if (currentCategory.image_url) {
                 const heroImg = document.getElementById('category-hero-img');
                 heroImg.src = currentCategory.image_url;
                 heroImg.style.display = 'block';
                 heroImg.alt = currentCategory.name;
+                heroImg.onerror = function() {
+                    this.style.display = 'none';
+                };
             }
 
             // Load subcategories
-            allSubcategories = await loadSubcategories(currentCategory.id);
+            allSubcategories = await loadSubcategories(categorySlug);
+            console.log('[Category Page] Loaded subcategories:', allSubcategories.length);
 
             // Load products
-            let targetSubcategoryId = null;
             if (subcategorySlug) {
                 const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subcategorySlug);
                 if (foundSub) {
                     currentSubcategory = foundSub;
-                    targetSubcategoryId = foundSub.id;
+                    allProducts = await loadProductsBySubcategory(subcategorySlug);
+                } else {
+                    // Subcategory not found, load all products for this category
+                    currentSubcategory = null;
+                    allProducts = await loadProductsByCategory(categorySlug);
                 }
+            } else {
+                currentSubcategory = null;
+                allProducts = await loadProductsByCategory(categorySlug);
             }
 
-            allProducts = await loadProducts(currentCategory.id, targetSubcategoryId);
+            console.log('[Category Page] Loaded products:', allProducts.length);
 
             // Update UI
             updateBreadcrumbAndURL();
@@ -966,8 +1053,28 @@
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.category) {
                 currentCategory = event.state.category;
-                currentSubcategory = event.state.subcategory;
-                initCategoryPage();
+                currentSubcategory = event.state.subcategory || null;
+                // Re-initialize with current state
+                document.getElementById('category-hero').style.display = 'flex';
+                document.getElementById('error-state').style.display = 'none';
+                document.getElementById('sort-bar').style.display = 'flex';
+                
+                if (currentCategory) {
+                    document.getElementById('category-name').textContent = currentCategory.name;
+                    document.getElementById('category-description').textContent = 
+                        currentCategory.description || 'Discover our exclusive collection';
+                    
+                    if (currentCategory.image_url) {
+                        const heroImg = document.getElementById('category-hero-img');
+                        heroImg.src = currentCategory.image_url;
+                        heroImg.style.display = 'block';
+                        heroImg.alt = currentCategory.name;
+                    }
+                }
+                
+                updateBreadcrumbAndURL();
+                renderSubcategoryPills();
+                renderProducts();
             } else {
                 initCategoryPage();
             }
