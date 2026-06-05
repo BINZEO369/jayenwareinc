@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
@@ -19,25 +17,46 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 function createSlug(text) {
     return text
         .toLowerCase()
-        .replace(/[^\w\s-]/g, '')   // Remove special characters
-        .replace(/\s+/g, '-')       // Replace spaces with hyphens
-        .replace(/-+/g, '-')        // Replace multiple hyphens with single
-        .replace(/^-+|-+$/g, '');   // Remove leading/trailing hyphens
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
 }
 
 // ============================================
-// API Routes - সব ডাটা OUR SERVER হয়ে যাবে
+// Helper: Format product with category/subcategory names
+// ============================================
+function formatProduct(product) {
+    if (!product) return null;
+    return {
+        ...product,
+        category: product.categories?.name || null,
+        subcategory: product.subcategories?.name || null
+    };
+}
+
+function formatProducts(products) {
+    if (!products) return [];
+    return products.map(formatProduct);
+}
+
+// ============================================
+// API Routes
 // ============================================
 
-// সব প্রোডাক্ট
+// সব প্রোডাক্ট - ক্যাটাগরি ও সাব-ক্যাটাগরি নাম সহ
 app.get('/api/products', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('products')
-            .select('*')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
-        res.json(data);
+        res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -57,7 +76,6 @@ app.get('/api/categories', async (req, res) => {
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
         
-        // Add slugs to categories
         const categoriesWithSlugs = data.map(cat => ({
             ...cat,
             slug: createSlug(cat.name)
@@ -96,7 +114,7 @@ app.get('/api/categories/:slug', async (req, res) => {
 // সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি - Public (Optional: filter by category)
+// সব সাব-ক্যাটাগরি - Public
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
@@ -108,7 +126,6 @@ app.get('/api/subcategories', async (req, res) => {
             .order('sort_order', { ascending: true });
         
         if (category_slug) {
-            // Get category ID from slug
             const { data: categories } = await supabase
                 .from('categories')
                 .select('id')
@@ -151,7 +168,6 @@ app.get('/api/subcategories/:slug', async (req, res) => {
         
         let subcategory = data.find(sub => createSlug(sub.name) === slug);
         
-        // If category_slug is provided, filter by it too
         if (category_slug && subcategory) {
             const catSlug = createSlug(subcategory.categories?.name || '');
             if (catSlug !== category_slug) {
@@ -189,7 +205,6 @@ app.get('/api/menu', async (req, res) => {
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
         
-        // Build menu hierarchy and add slugs
         const buildMenuTree = (items, parentId = null) => {
             return items
                 .filter(item => item.parent_id === parentId)
@@ -275,7 +290,6 @@ app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         
-        // Get category
         const { data: categories } = await supabase
             .from('categories')
             .select('*')
@@ -284,15 +298,18 @@ app.get('/api/categories/:slug/products', async (req, res) => {
         const category = categories.find(cat => createSlug(cat.name) === slug);
         if (!category) return res.status(404).json({ error: 'Category not found' });
         
-        // Get products for this category
         const { data, error } = await supabase
             .from('products')
-            .select('*')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .eq('category_id', category.id)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
         
-        res.json(data || []);
+        res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -305,7 +322,6 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         
-        // Get subcategory
         const { data: subcategories } = await supabase
             .from('subcategories')
             .select('*')
@@ -314,15 +330,18 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
         const subcategory = subcategories.find(sub => createSlug(sub.name) === slug);
         if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
         
-        // Get products for this subcategory
         const { data, error } = await supabase
             .from('products')
-            .select('*')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .eq('subcategory_id', subcategory.id)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
         
-        res.json(data || []);
+        res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -400,13 +419,18 @@ app.get('/api/product/:slug', async (req, res) => {
         const slug = req.params.slug;
         const { data, error } = await supabase
             .from('products')
-            .select('*')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
         
         const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.status(404).json({ error: 'Product not found' });
-        res.json(product);
+        
+        res.json(formatProduct(product));
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -418,7 +442,9 @@ app.get('/api/product-colors', async (req, res) => {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -440,7 +466,9 @@ app.get('/api/product-variants', async (req, res) => {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -462,7 +490,9 @@ app.get('/api/product-reviews', async (req, res) => {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -484,7 +514,9 @@ app.get('/api/product-videos', async (req, res) => {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -507,7 +539,9 @@ app.get('/api/product-banners', async (req, res) => {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
