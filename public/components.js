@@ -1,7 +1,6 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 3.3 (Font System Integration + Dynamic from Database)
-// Fixed: url→link, type→menu_type (Database consistency)
+// Version: 4.0 (Dynamic Font System Integration + Database Driven)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -12,69 +11,126 @@ let allCategories = [];
 let allSubcategories = [];
 
 // ============================================
-// SHARED CSS STYLES (Font System Integration)
+// FONT CONFIGURATION LOADER
+// ============================================
+function loadFontsConfiguration() {
+    if (!window.JAYENWARE_FONTS) {
+        const script = document.createElement('script');
+        script.src = '/fonts.js';
+        script.async = false;
+        script.onload = () => {
+            applyFontVariables();
+        };
+        document.head.appendChild(script);
+    } else {
+        applyFontVariables();
+    }
+}
+
+function applyFontVariables() {
+    const fonts = window.JAYENWARE_FONTS;
+    if (!fonts) return;
+    
+    const root = document.documentElement;
+    const vars = fonts.cssVariables;
+    for (const [key, value] of Object.entries(vars)) {
+        root.style.setProperty(key, value);
+    }
+    
+    // Override component-specific variables
+    root.style.setProperty('--font-heading', fonts.families.heading);
+    root.style.setProperty('--font-subtitle', fonts.families.subtitle);
+    root.style.setProperty('--font-body', fonts.families.body);
+    root.style.setProperty('--font-accent', fonts.families.body);
+}
+
+// ============================================
+// SHARED CSS STYLES (Dynamic Font System)
 // ============================================
 function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
         :root {
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Inter', sans-serif;
             --primary: #1d1d1f;
             --accent: #86868b;
             --soft: #f5f5f7;
             --blue: #007aff;
         }
         
-        /* Font Utility Classes */
-        .text-title-xl { 
+        /* ==================== TYPOGRAPHY SYSTEM ==================== */
+        /* Heading Styles - Uses --font-heading (Manrope) */
+        .text-heading-hero { 
+            font-family: var(--font-heading); 
+            font-size: clamp(2.5rem, 6vw, 4.5rem); 
+            line-height: 1.05; 
+            font-weight: 800; 
+            letter-spacing: -0.02em;
+        }
+        .text-heading-xl { 
             font-family: var(--font-heading); 
             font-size: clamp(2rem, 5vw, 3.5rem); 
             line-height: 1.1; 
-            font-weight: 900; 
+            font-weight: 700; 
+            letter-spacing: -0.015em;
         }
-        .text-title-lg { 
+        .text-heading-lg { 
             font-family: var(--font-heading); 
             font-size: clamp(1.5rem, 4vw, 2.5rem); 
-            line-height: 1.2; 
+            line-height: 1.15; 
             font-weight: 700; 
+            letter-spacing: -0.01em;
         }
-        .text-title-md { 
+        .text-heading-md { 
             font-family: var(--font-heading); 
             font-size: clamp(1.25rem, 3vw, 2rem); 
             line-height: 1.2; 
-            font-weight: 700; 
+            font-weight: 600; 
         }
-        .text-title-sm { 
+        .text-heading-sm { 
             font-family: var(--font-heading); 
             font-size: clamp(1rem, 2.5vw, 1.5rem); 
-            line-height: 1.3; 
+            line-height: 1.25; 
             font-weight: 600; 
         }
         
+        /* Subtitle Styles - Uses --font-subtitle (Sora) */
+        .text-subtitle-xl {
+            font-family: var(--font-subtitle);
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.3;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+        }
         .text-subtitle-lg { 
-            font-family: var(--font-body); 
+            font-family: var(--font-subtitle); 
             font-size: clamp(1.125rem, 2vw, 1.25rem); 
             line-height: 1.4; 
             font-weight: 500; 
         }
         .text-subtitle-md { 
-            font-family: var(--font-body); 
+            font-family: var(--font-subtitle); 
             font-size: clamp(1rem, 1.5vw, 1.125rem); 
             line-height: 1.4; 
             font-weight: 500; 
         }
         .text-subtitle-sm { 
-            font-family: var(--font-body); 
+            font-family: var(--font-subtitle); 
             font-size: 0.875rem; 
             line-height: 1.5; 
             font-weight: 500; 
         }
         
+        /* Body/Description Styles - Uses --font-body (Inter) */
+        .text-body-xl { 
+            font-family: var(--font-body); 
+            font-size: 1.25rem; 
+            line-height: 1.7; 
+            font-weight: 400; 
+        }
         .text-body-lg { 
             font-family: var(--font-body); 
             font-size: 1.125rem; 
-            line-height: 1.6; 
+            line-height: 1.65; 
             font-weight: 400; 
         }
         .text-body-md { 
@@ -86,7 +142,7 @@ function injectSharedStyles() {
         .text-body-sm { 
             font-family: var(--font-body); 
             font-size: 0.875rem; 
-            line-height: 1.5; 
+            line-height: 1.55; 
             font-weight: 400; 
         }
         .text-body-xs { 
@@ -96,21 +152,32 @@ function injectSharedStyles() {
             font-weight: 400; 
         }
         
+        /* Accent/Small Text Styles */
         .text-caption { 
-            font-family: var(--font-body); 
+            font-family: var(--font-accent); 
             font-size: 0.75rem; 
             line-height: 1.4; 
             font-weight: 500; 
+            letter-spacing: 0.01em;
         }
         .text-overline { 
-            font-family: var(--font-body); 
+            font-family: var(--font-accent); 
             font-size: 0.625rem; 
             line-height: 1.4; 
             font-weight: 600; 
             letter-spacing: 0.1em; 
             text-transform: uppercase; 
         }
+        .text-label {
+            font-family: var(--font-accent);
+            font-size: 0.6875rem;
+            line-height: 1.4;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
         
+        /* ==================== NAVIGATION STYLES ==================== */
         .glass-nav {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(50px) saturate(180%);
@@ -118,12 +185,14 @@ function injectSharedStyles() {
             border-bottom: 1px solid rgba(0,0,0,0.06);
             transition: all 0.3s ease;
         }
+        
+        /* Desktop Nav Links - Uses heading font for main items */
         .nav-link {
             position: relative;
-            font-family: var(--font-body);
-            font-size: 11px;
+            font-family: var(--font-heading);
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             padding: 8px 0;
             transition: color 0.3s ease;
@@ -165,18 +234,20 @@ function injectSharedStyles() {
             visibility: visible;
             transform: translateX(-50%) translateY(0);
         }
+        
+        /* Dropdown Items - Uses subtitle font */
         .desktop-dropdown-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            font-family: var(--font-body);
+            font-family: var(--font-subtitle);
             font-size: 12px;
             font-weight: 500;
             color: #1d1d1f;
             text-decoration: none;
             transition: all 0.2s ease;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             white-space: nowrap;
             cursor: pointer;
         }
@@ -188,6 +259,7 @@ function injectSharedStyles() {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-weight: 600;
         }
         .desktop-sub-dropdown {
             position: absolute;
@@ -233,17 +305,20 @@ function injectSharedStyles() {
         }
         .mobile-menu-drawer .mobile-menu-header span {
             font-family: var(--font-heading);
+            font-weight: 800;
         }
         .mobile-menu-drawer .mobile-menu-scroll {
             flex: 1; overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 12px 20px;
         }
+        
+        /* Mobile Menu Items - Uses heading font */
         .mobile-menu-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 0; border-bottom: 1px solid #f5f5f5;
-            font-family: var(--font-body);
-            font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
+            font-family: var(--font-heading);
+            font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
             cursor: pointer; color: #1d1d1f; text-decoration: none;
             transition: color 0.2s ease;
         }
@@ -260,10 +335,12 @@ function injectSharedStyles() {
             margin: 4px 0 4px 8px;
         }
         .mobile-submenu.open { display: block; }
+        
+        /* Mobile Sub Items - Uses subtitle font */
         .mobile-sub-item {
             display: block;
             padding: 11px 12px;
-            font-family: var(--font-body);
+            font-family: var(--font-subtitle);
             font-size: 13px;
             color: #86868b;
             text-decoration: none;
@@ -287,9 +364,10 @@ function injectSharedStyles() {
         }
         .mobile-footer a {
             font-family: var(--font-body);
+            font-weight: 600;
         }
         
-        /* Cart Drawer */
+        /* ==================== CART DRAWER ==================== */
         #cart-drawer {
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
@@ -300,7 +378,7 @@ function injectSharedStyles() {
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
         
-        /* Toast */
+        /* ==================== TOAST ==================== */
         #toast {
             position: fixed; top: 16px; right: 16px; z-index: 9999;
             transform: translateX(120%);
@@ -309,30 +387,64 @@ function injectSharedStyles() {
         }
         #toast p {
             font-family: var(--font-body);
+            font-weight: 600;
         }
         
+        /* ==================== FOOTER ==================== */
+        #main-footer {
+            font-family: var(--font-body);
+        }
+        #main-footer h4 {
+            font-family: var(--font-heading);
+            font-weight: 800;
+        }
+        #main-footer h5 {
+            font-family: var(--font-subtitle);
+            font-weight: 600;
+        }
+        #main-footer ul li a {
+            font-family: var(--font-body);
+            font-weight: 400;
+        }
+        
+        /* ==================== GLOBAL ==================== */
         body { 
             padding-top: 56px; 
             font-family: var(--font-body);
         }
         @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
+        
+        /* ==================== BUTTON STYLES ==================== */
+        .btn-primary {
+            font-family: var(--font-body);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .btn-secondary {
+            font-family: var(--font-subtitle);
+            font-weight: 500;
+        }
+        
+        /* ==================== PRODUCT CARD TYPOGRAPHY ==================== */
+        .product-card-title {
+            font-family: var(--font-subtitle);
+            font-weight: 500;
+        }
+        .product-card-price {
+            font-family: var(--font-body);
+            font-weight: 600;
+        }
+        .product-card-category {
+            font-family: var(--font-accent);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
-}
-
-// ============================================
-// LOAD FONTS CONFIGURATION
-// ============================================
-function loadFontsConfiguration() {
-    // Check if fonts.js is already loaded
-    if (!window.JAYENWARE_FONTS) {
-        const script = document.createElement('script');
-        script.src = '/fonts.js';
-        script.async = false;
-        document.head.appendChild(script);
-    }
 }
 
 // ============================================
@@ -417,17 +529,15 @@ function buildMenuTree(items, parentId = null) {
 }
 
 // ============================================
-// GET LINK URL FOR MENU ITEM (Fixed: url→link, type→menu_type)
+// GET LINK URL FOR MENU ITEM
 // ============================================
 function getMenuLinkUrl(item) {
-    // ✅ সরাসরি ডাটাবেজের link কলাম ব্যবহার
     if (item.link && item.link.trim() !== '') {
         return item.link;
     }
     
     const slug = item.slug || '';
     
-    // ✅ ডাটাবেজের menu_type কলাম ব্যবহার
     switch (item.menu_type) {
         case 'home':
             return '/';
@@ -500,7 +610,6 @@ function renderDesktopNav(rootItems) {
 }
 
 function renderDesktopDropdownChildren(item) {
-    // ✅ menu_type চেক (ডাটাবেজ কনসিস্টেন্ট)
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderCategoriesDropdown();
     }
@@ -536,7 +645,7 @@ function renderDesktopDropdownChildren(item) {
 
 function renderCategoriesDropdown() {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="desktop-dropdown-item" style="color:#86868b;">No categories found</div>';
+        return '<div class="desktop-dropdown-item" style="color:#86868b; font-family: var(--font-subtitle);">No categories found</div>';
     }
     
     let html = '';
@@ -591,7 +700,6 @@ function renderMobileNav(rootItems) {
                 </div>
             </div>`;
         } else {
-            // ✅ menu_type দিয়ে আইকন নির্ধারণ (ডাটাবেজ কনসিস্টেন্ট)
             let icon = 'fa-circle';
             switch (item.menu_type) {
                 case 'home': icon = 'fa-house'; break;
@@ -614,7 +722,6 @@ function renderMobileNav(rootItems) {
 }
 
 function renderMobileSubItems(item, parentId) {
-    // ✅ menu_type চেক (ডাটাবেজ কনসিস্টেন্ট)
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderMobileCategoriesSubmenu(parentId);
     }
@@ -651,7 +758,7 @@ function renderMobileSubItems(item, parentId) {
 
 function renderMobileCategoriesSubmenu(parentId) {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-sub-item" style="color:#86868b;">No categories</div>';
+        return '<div class="mobile-sub-item" style="color:#86868b; font-family: var(--font-subtitle);">No categories</div>';
     }
     
     let html = '';
@@ -669,7 +776,7 @@ function renderMobileCategoriesSubmenu(parentId) {
                     <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
                 </div>
                 <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
-                    <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600;">All ${cat.name}</a>
+                    <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600; font-family: var(--font-heading);">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
                         const subUrl = `/category/${catSlug}/${subSlug}`;
@@ -775,11 +882,11 @@ async function renderHeader() {
 // ============================================
 function renderFooter() {
     const footerHTML = `
-    <footer class="bg-primary text-gray-400 pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer" style="font-family: var(--font-body);">
+    <footer class="bg-primary text-gray-400 pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 sm:mb-12">
                 <div class="col-span-2 md:col-span-1">
-                    <h4 class="text-white font-black text-base sm:text-lg mb-3 sm:mb-4" style="font-family: var(--font-heading);">JAYENWARE</h4>
+                    <h4>JAYENWARE</h4>
                     <p class="text-[10px] sm:text-xs leading-relaxed mb-4" style="font-family: var(--font-body);">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition">BINZEO</a>.</p>
                     <div class="flex gap-3 text-base sm:text-lg">
                         <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook"></i></a>
@@ -788,8 +895,8 @@ function renderFooter() {
                     </div>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4" style="font-family: var(--font-body);">Quick Links</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0" style="font-family: var(--font-body);">
+                    <h5>Quick Links</h5>
+                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
                         <li><a href="/about" class="hover:text-white transition no-underline">About</a></li>
                         <li><a href="/shipping" class="hover:text-white transition no-underline">Shipping</a></li>
                         <li><a href="/returns" class="hover:text-white transition no-underline">Returns</a></li>
@@ -797,14 +904,14 @@ function renderFooter() {
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4" style="font-family: var(--font-body);">Legal</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0" style="font-family: var(--font-body);">
+                    <h5>Legal</h5>
+                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
                         <li><a href="/privacy-policy" class="hover:text-white transition no-underline">Privacy Policy</a></li>
                         <li><a href="/terms-and-conditions" class="hover:text-white transition no-underline">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-3 sm:mb-4" style="font-family: var(--font-body);">Contact</h5>
+                    <h5>Contact</h5>
                     <p class="text-[9px] text-gray-500" style="font-family: var(--font-body);"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
                 </div>
             </div>
@@ -920,11 +1027,11 @@ function renderCartItems() {
         sub += itemTotal;
         return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
             <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
-            <div class="flex-grow min-w-0" style="font-family: var(--font-body);">
-                <h4 class="text-xs sm:text-sm font-bold truncate">${item.title}</h4>
+            <div class="flex-grow min-w-0">
+                <h4 class="text-xs sm:text-sm font-bold truncate" style="font-family: var(--font-subtitle);">${item.title}</h4>
                 <div class="flex items-center gap-2 mt-1">
-                    <p class="text-xs sm:text-sm font-black">৳${itemTotal.toFixed(2)}</p>
-                    <span class="text-[10px] text-gray-400">Qty: ${item.quantity || 1}</span>
+                    <p class="text-xs sm:text-sm font-black" style="font-family: var(--font-body);">৳${itemTotal.toFixed(2)}</p>
+                    <span class="text-[10px] text-gray-400" style="font-family: var(--font-body);">Qty: ${item.quantity || 1}</span>
                 </div>
             </div>
             <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
