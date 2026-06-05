@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title id="page-title">Loading... | JAYENWARE</title>
+    <title id="page-title">Category | JAYENWARE</title>
 
     <meta name="description" content="Shop premium lifestyle products at JAYENWARE Bangladesh">
     <meta name="theme-color" content="#ffffff">
@@ -69,16 +69,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        body.loading {
-            opacity: 0;
-        }
-
-        body.loaded {
-            opacity: 1;
         }
 
         main {
@@ -88,37 +78,6 @@
         img {
             max-width: 100%;
             height: auto;
-        }
-
-        /* Full Page Loader */
-        .page-loader {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-
-        .page-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .loader-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #f0f0f0;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         /* Category Hero Banner */
@@ -131,12 +90,6 @@
             display: flex;
             align-items: flex-end;
             isolation: isolate;
-            transition: opacity 0.5s ease;
-            opacity: 0;
-        }
-
-        .category-hero.visible {
-            opacity: 1;
         }
 
         @media (min-width: 768px) {
@@ -212,14 +165,6 @@
             margin-bottom: 16px;
             letter-spacing: 0.1em;
             font-family: var(--font-body);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.5s ease 0.2s;
-        }
-
-        .category-hero-badge.visible {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         .category-hero-title {
@@ -231,14 +176,6 @@
             font-family: var(--font-heading);
             letter-spacing: var(--tracking-tight);
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.5s ease 0.3s;
-        }
-
-        .category-hero-title.visible {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         @media (min-width: 768px) {
@@ -260,14 +197,6 @@
             line-height: 1.6;
             margin-bottom: 24px;
             font-family: var(--font-body);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.5s ease 0.4s;
-        }
-
-        .category-hero-desc.visible {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         @media (min-width: 768px) {
@@ -293,14 +222,6 @@
             font-family: var(--font-body);
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        .category-hero-cta.visible {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.5s ease 0.5s, background 0.3s ease, transform 0.3s ease;
         }
 
         .category-hero-cta:hover {
@@ -314,78 +235,6 @@
             transition: transform 0.1s ease;
         }
 
-        /* Hero Skeleton */
-        .hero-skeleton {
-            position: absolute;
-            inset: 0;
-            background: #1d1d1f;
-            z-index: 10;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .hero-skeleton.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .hero-skeleton-shimmer {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255,255,255,0.05) 50%, 
-                transparent 100%);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .hero-skeleton-content {
-            position: relative;
-            z-index: 11;
-            padding: 32px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            height: 100%;
-            min-height: 50vh;
-        }
-
-        @media (min-width: 768px) {
-            .hero-skeleton-content {
-                padding: 48px 40px;
-                min-height: 60vh;
-            }
-        }
-
-        .hero-skeleton-title {
-            width: 60%;
-            max-width: 400px;
-            height: 36px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            margin-bottom: 12px;
-        }
-
-        @media (min-width: 768px) {
-            .hero-skeleton-title {
-                height: 56px;
-            }
-        }
-
-        .hero-skeleton-subtitle {
-            width: 40%;
-            max-width: 300px;
-            height: 14px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 4px;
-        }
-
         /* Subcategory Pills */
         .subcategories-section {
             padding: 32px 0;
@@ -397,13 +246,6 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.95);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        .subcategories-section.hidden-section {
-            opacity: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
         }
 
         .subcategories-container {
@@ -470,12 +312,6 @@
         .products-section {
             padding: 40px 0 80px;
             background: #ffffff;
-            transition: opacity 0.4s ease;
-        }
-
-        .products-section.loading-section {
-            opacity: 0.5;
-            pointer-events: none;
         }
 
         .products-container {
@@ -504,11 +340,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            transition: opacity 0.3s ease;
-        }
-
-        .products-grid.updating {
-            opacity: 0.4;
         }
 
         @media (min-width: 640px) {
@@ -532,22 +363,9 @@
             text-decoration: none;
             color: inherit;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease;
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            animation: fadeInUp 0.5s ease forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .product-card:active {
@@ -736,7 +554,6 @@
         .empty-state {
             text-align: center;
             padding: 80px 20px;
-            animation: fadeInUp 0.5s ease forwards;
         }
 
         .empty-state-icon {
@@ -884,6 +701,60 @@
             margin-top: 8px;
         }
 
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .error-state-icon {
+            font-size: 64px;
+            color: #ff3b30;
+            margin-bottom: 24px;
+        }
+
+        .error-state-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-family: var(--font-heading);
+        }
+
+        .error-state-text {
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 32px;
+            font-family: var(--font-body);
+        }
+
+        .retry-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+        }
+
+        .retry-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .retry-btn:active {
+            transform: scale(0.96);
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
             .category-hero-title {
@@ -902,32 +773,14 @@
                 padding: 6px 16px;
                 font-size: 11px;
             }
-
-            .hero-skeleton-title {
-                height: 28px;
-                width: 80%;
-            }
         }
     </style>
 </head>
-<body class="loading">
-
-    <!-- Full Page Loader -->
-    <div id="page-loader" class="page-loader">
-        <div class="loader-spinner"></div>
-    </div>
+<body class="antialiased">
 
     <main>
         <!-- Category Hero Section -->
         <section id="category-hero" class="category-hero">
-            <!-- Hero Skeleton -->
-            <div id="hero-skeleton" class="hero-skeleton">
-                <div class="hero-skeleton-shimmer"></div>
-                <div class="hero-skeleton-content">
-                    <div class="hero-skeleton-title"></div>
-                    <div class="hero-skeleton-subtitle"></div>
-                </div>
-            </div>
             <!-- Video Background (if available) -->
             <video id="hero-video" class="category-hero-video" style="display: none;" loop muted playsinline></video>
             <!-- Image Background -->
@@ -937,7 +790,7 @@
             <!-- Content -->
             <div class="category-hero-content">
                 <span id="hero-badge" class="category-hero-badge" style="display: none;"></span>
-                <h1 id="hero-title" class="category-hero-title"></h1>
+                <h1 id="hero-title" class="category-hero-title">Loading...</h1>
                 <p id="hero-desc" class="category-hero-desc" style="display: none;"></p>
                 <a id="hero-cta" class="category-hero-cta" style="display: none;" href="#">
                     <span id="hero-cta-text"></span>
@@ -947,7 +800,7 @@
         </section>
 
         <!-- Subcategories Navigation -->
-        <section id="subcategories-section" class="subcategories-section hidden-section">
+        <section id="subcategories-section" class="subcategories-section" style="display: none;">
             <div id="subcategories-container" class="subcategories-container">
                 <a href="#" class="subcategory-pill active" data-subcategory="all" onclick="filterBySubcategory('all', event)">
                     All
@@ -956,13 +809,13 @@
         </section>
 
         <!-- Products Section -->
-        <section class="products-section loading-section" id="products-section-wrapper">
+        <section class="products-section">
             <div class="products-container">
                 <!-- Breadcrumb -->
                 <nav class="breadcrumb">
                     <a href="/">Home</a>
                     <span class="separator">/</span>
-                    <span id="breadcrumb-category" class="current">...</span>
+                    <span id="breadcrumb-category" class="current">Category</span>
                     <span id="breadcrumb-subcategory" style="display: none;">
                         <span class="separator">/</span>
                         <span id="breadcrumb-subcategory-name" class="current"></span>
@@ -976,7 +829,7 @@
 
                 <!-- Products Grid -->
                 <div id="products-grid" class="products-grid">
-                    <!-- Skeleton Loading -->
+                    <!-- Skeleton Loading will be inserted here -->
                 </div>
 
                 <!-- Load More -->
@@ -999,13 +852,26 @@
                         Back to Home
                     </a>
                 </div>
+
+                <!-- Error State -->
+                <div id="error-state" class="error-state" style="display: none;">
+                    <div class="error-state-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h2 class="error-state-title">Something went wrong</h2>
+                    <p class="error-state-text">We couldn't load this category. Please try again.</p>
+                    <button class="retry-btn" onclick="retryLoadCategory()">
+                        <i class="fa-solid fa-rotate"></i>
+                        Try Again
+                    </button>
+                </div>
             </div>
         </section>
     </main>
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - COMPLETE APPLICATION WITH SMOOTH LOADING
+        // CATEGORY PAGE - ROBUST APPLICATION WITH PROPER TIMING
         // ============================================================
 
         const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
@@ -1017,8 +883,9 @@
         let allProducts = [];
         let allSubcategories = [];
         let displayLimit = 16;
+        let isLoading = false;
+        let hasError = false;
         const LOAD_MORE_INCREMENT = 16;
-        let isInitialLoad = true;
 
         // Helper: Create slug
         function createSlug(text) {
@@ -1055,25 +922,50 @@
         }
 
         // ============================================================
-        // FETCH API FUNCTIONS
+        // FETCH API FUNCTIONS WITH PROPER ERROR HANDLING
         // ============================================================
+
+        async function fetchWithTimeout(url, timeout = 10000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
+            try {
+                const response = await fetch(url, {
+                    signal: controller.signal,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timeout');
+                }
+                throw error;
+            }
+        }
 
         async function fetchCategory(slug) {
             try {
-                const response = await fetch(`/api/categories/${slug}`);
-                if (!response.ok) return null;
-                return await response.json();
+                const data = await fetchWithTimeout(`/api/categories/${slug}`);
+                return data;
             } catch (error) {
                 console.error('Error fetching category:', error);
-                return null;
+                throw error;
             }
         }
 
         async function fetchCategoryProducts(slug) {
             try {
-                const response = await fetch(`/api/categories/${slug}/products`);
-                if (!response.ok) return [];
-                return await response.json();
+                const data = await fetchWithTimeout(`/api/categories/${slug}/products`);
+                return Array.isArray(data) ? data : [];
             } catch (error) {
                 console.error('Error fetching products:', error);
                 return [];
@@ -1082,9 +974,8 @@
 
         async function fetchSubcategories(categorySlug) {
             try {
-                const response = await fetch(`/api/subcategories?category_slug=${categorySlug}`);
-                if (!response.ok) return [];
-                return await response.json();
+                const data = await fetchWithTimeout(`/api/subcategories?category_slug=${categorySlug}`);
+                return Array.isArray(data) ? data : [];
             } catch (error) {
                 console.error('Error fetching subcategories:', error);
                 return [];
@@ -1093,9 +984,8 @@
 
         async function fetchSubcategoryProducts(slug) {
             try {
-                const response = await fetch(`/api/subcategories/${slug}/products`);
-                if (!response.ok) return [];
-                return await response.json();
+                const data = await fetchWithTimeout(`/api/subcategories/${slug}/products`);
+                return Array.isArray(data) ? data : [];
             } catch (error) {
                 console.error('Error fetching subcategory products:', error);
                 return [];
@@ -1103,14 +993,51 @@
         }
 
         // ============================================================
+        // UI HELPER FUNCTIONS
+        // ============================================================
+
+        function showLoading() {
+            document.getElementById('products-grid').style.display = 'grid';
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('products-count').textContent = 'Loading products...';
+            renderSkeleton();
+        }
+
+        function showError() {
+            document.getElementById('products-grid').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'block';
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('products-count').textContent = '';
+            document.getElementById('hero-title').textContent = 'Error Loading Category';
+        }
+
+        function showEmpty() {
+            document.getElementById('products-grid').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'block';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('products-count').textContent = 'No products found';
+        }
+
+        function showProducts() {
+            document.getElementById('products-grid').style.display = 'grid';
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'none';
+        }
+
+        // ============================================================
         // RENDER FUNCTIONS
         // ============================================================
 
         function renderHero() {
-            if (!currentCategory) return;
+            if (!currentCategory) {
+                document.getElementById('hero-title').textContent = 'Loading...';
+                return;
+            }
 
-            const heroSection = document.getElementById('category-hero');
-            const heroSkeleton = document.getElementById('hero-skeleton');
             const video = document.getElementById('hero-video');
             const image = document.getElementById('hero-image');
             const badge = document.getElementById('hero-badge');
@@ -1119,7 +1046,7 @@
             const cta = document.getElementById('hero-cta');
             const ctaText = document.getElementById('hero-cta-text');
 
-            // Set title first
+            // Set title
             title.textContent = currentCategory.name || 'Category';
 
             // Set page title and meta
@@ -1144,7 +1071,16 @@
                 video.style.display = 'block';
                 image.style.display = 'none';
                 video.src = currentCategory.video_url;
-                video.play().catch(() => {});
+                video.load();
+                video.play().catch(() => {
+                    // Autoplay blocked, show image fallback if available
+                    if (currentCategory.image_url) {
+                        video.style.display = 'none';
+                        image.style.display = 'block';
+                        image.src = currentCategory.image_url;
+                        image.alt = currentCategory.name;
+                    }
+                });
             } else if (currentCategory.image_url) {
                 video.style.display = 'none';
                 image.style.display = 'block';
@@ -1153,6 +1089,7 @@
             } else {
                 video.style.display = 'none';
                 image.style.display = 'none';
+                // Keep dark background
             }
 
             // Video Schema (JSON-LD)
@@ -1193,6 +1130,7 @@
                 cta.style.display = 'inline-flex';
                 ctaText.textContent = currentCategory.image_cta_title;
                 cta.href = currentCategory.image_cta_link;
+
                 if (currentCategory.image_cta_link.startsWith('http')) {
                     cta.setAttribute('target', '_blank');
                     cta.setAttribute('rel', 'noopener');
@@ -1207,26 +1145,6 @@
 
             // Breadcrumb
             document.getElementById('breadcrumb-category').textContent = currentCategory.name;
-
-            // Hide skeleton and show hero with animation
-            if (heroSkeleton) {
-                heroSkeleton.classList.add('hidden');
-            }
-            heroSection.classList.add('visible');
-
-            // Animate hero elements sequentially
-            requestAnimationFrame(() => {
-                if (badge.style.display !== 'none') {
-                    setTimeout(() => badge.classList.add('visible'), 100);
-                }
-                setTimeout(() => title.classList.add('visible'), 200);
-                if (desc.style.display !== 'none') {
-                    setTimeout(() => desc.classList.add('visible'), 300);
-                }
-                if (cta.style.display !== 'none') {
-                    setTimeout(() => cta.classList.add('visible'), 400);
-                }
-            });
         }
 
         function renderSubcategories() {
@@ -1234,9 +1152,11 @@
             const container = document.getElementById('subcategories-container');
 
             if (!allSubcategories || allSubcategories.length === 0) {
-                section.classList.add('hidden-section');
+                section.style.display = 'none';
                 return;
             }
+
+            section.style.display = 'block';
 
             let html = `
             <a href="#" class="subcategory-pill ${currentSubcategory === 'all' ? 'active' : ''}" 
@@ -1260,39 +1180,28 @@
             });
 
             container.innerHTML = html;
-
-            // Show with animation
-            section.classList.remove('hidden-section');
         }
 
         function renderProducts(productsToRender = null) {
             const grid = document.getElementById('products-grid');
             const countEl = document.getElementById('products-count');
             const loadMoreContainer = document.getElementById('load-more-container');
-            const emptyState = document.getElementById('empty-state');
-            const productsSection = document.getElementById('products-section-wrapper');
 
             const products = productsToRender || allProducts;
 
-            // Remove loading state
-            productsSection.classList.remove('loading-section');
-
             if (!products || products.length === 0) {
-                grid.innerHTML = '';
-                countEl.textContent = 'No products found';
-                loadMoreContainer.style.display = 'none';
-                emptyState.style.display = 'block';
+                showEmpty();
                 return;
             }
 
-            emptyState.style.display = 'none';
+            showProducts();
 
             const displayProducts = products.slice(0, displayLimit);
             const total = products.length;
 
             countEl.textContent = `Showing ${Math.min(displayLimit, total)} of ${total} products`;
 
-            grid.innerHTML = displayProducts.map((product, index) => {
+            grid.innerHTML = displayProducts.map(product => {
                 const isOut = product.stock <= 0;
                 const slug = getProductSlug(product);
 
@@ -1305,7 +1214,7 @@
                 }
 
                 return `
-                <a href="/product/${slug}" class="product-card" style="animation-delay: ${index * 0.05}s">
+                <a href="/product/${slug}" class="product-card">
                     <div class="product-card-img">
                         <img src="${product.img || product.image_url || ''}" alt="${product.title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22><rect fill=%22%23f5f5f7%22 width=%22300%22 height=%22400%22/><text fill=%22%2386868b%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22>No Image</text></svg>'">
                         ${badge}
@@ -1351,17 +1260,16 @@
         // ACTIONS
         // ============================================================
 
-        function filterBySubcategory(subSlug, event) {
+        async function filterBySubcategory(subSlug, event) {
             if (event) {
                 event.preventDefault();
             }
 
+            if (isLoading) return; // Prevent multiple simultaneous requests
+
             currentSubcategory = subSlug;
             displayLimit = 16;
-
-            // Add updating class for smooth transition
-            const grid = document.getElementById('products-grid');
-            grid.classList.add('updating');
+            isLoading = true;
 
             // Update active pill
             document.querySelectorAll('.subcategory-pill').forEach(pill => {
@@ -1385,20 +1293,24 @@
                 window.history.pushState({}, '', `/category/${createSlug(currentCategory.name)}/${subSlug}`);
             }
 
-            // Show skeleton while loading
-            renderSkeleton();
-            document.getElementById('products-count').textContent = 'Loading products...';
+            // Show loading state
+            showLoading();
 
-            // Fetch products for subcategory
-            const fetchPromise = subSlug === 'all' 
-                ? fetchCategoryProducts(createSlug(currentCategory.name))
-                : fetchSubcategoryProducts(subSlug);
-
-            fetchPromise.then(products => {
-                allProducts = products;
-                grid.classList.remove('updating');
+            try {
+                // Fetch products
+                if (subSlug === 'all') {
+                    allProducts = await fetchCategoryProducts(createSlug(currentCategory.name));
+                } else {
+                    allProducts = await fetchSubcategoryProducts(subSlug);
+                }
+                
                 renderProducts();
-            });
+            } catch (error) {
+                console.error('Error filtering products:', error);
+                showError();
+            } finally {
+                isLoading = false;
+            }
         }
 
         function loadMoreProducts() {
@@ -1407,11 +1319,13 @@
         }
 
         function addToCartProduct(productId) {
+            // Check if addToCart function exists (from main site)
             if (typeof window.parent !== 'undefined' && window.parent.addToCart) {
                 window.parent.addToCart(productId, null);
             } else if (typeof addToCart === 'function') {
                 addToCart(productId, null);
             } else {
+                // Simple cart in localStorage
                 let cart = JSON.parse(localStorage.getItem('jayenware_cart') || '[]');
                 const existing = cart.find(item => item.productId === productId);
                 if (existing) {
@@ -1420,17 +1334,33 @@
                     cart.push({ productId, quantity: 1, variantId: null });
                 }
                 localStorage.setItem('jayenware_cart', JSON.stringify(cart));
-                alert('Product added to cart!');
+                
+                // Show a subtle notification instead of alert
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: #1d1d1f;
+                    color: #fff;
+                    padding: 12px 24px;
+                    border-radius: 50px;
+                    font-size: 14px;
+                    z-index: 9999;
+                    animation: fadeInOut 2s ease;
+                `;
+                notification.textContent = 'Added to cart ✓';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
             }
         }
 
-        function hidePageLoader() {
-            const loader = document.getElementById('page-loader');
-            if (loader) {
-                loader.classList.add('hidden');
-            }
-            document.body.classList.remove('loading');
-            document.body.classList.add('loaded');
+        async function retryLoadCategory() {
+            await initCategoryPage();
         }
 
         // ============================================================
@@ -1441,97 +1371,108 @@
             const categorySlug = getCategorySlugFromURL();
             const subcategorySlug = getSubcategorySlugFromURL();
 
+            // Reset state
+            isLoading = true;
+            hasError = false;
+            currentCategory = null;
+            allProducts = [];
+            allSubcategories = [];
+
             if (!categorySlug) {
                 window.location.href = '/';
                 return;
             }
 
-            // Show skeletons
-            renderSkeleton();
+            // Show loading state immediately
+            showLoading();
+            document.getElementById('hero-title').textContent = 'Loading...';
 
-            // Fetch category data
-            currentCategory = await fetchCategory(categorySlug);
+            try {
+                // Fetch category data
+                currentCategory = await fetchCategory(categorySlug);
 
-            if (!currentCategory) {
-                // Category not found
-                document.getElementById('products-grid').innerHTML = '';
-                document.getElementById('products-count').textContent = 'Category not found';
-                document.getElementById('empty-state').style.display = 'block';
-                document.getElementById('hero-title').textContent = 'Category Not Found';
-                document.getElementById('hero-skeleton').classList.add('hidden');
-                document.getElementById('category-hero').classList.add('visible');
-                document.getElementById('hero-title').classList.add('visible');
-                document.title = 'Category Not Found | JAYENWARE';
-                document.getElementById('breadcrumb-category').textContent = 'Not Found';
-                document.getElementById('products-section-wrapper').classList.remove('loading-section');
-                hidePageLoader();
-                return;
-            }
-
-            // Render hero (this hides the skeleton)
-            renderHero();
-
-            // Fetch subcategories
-            allSubcategories = await fetchSubcategories(categorySlug);
-            renderSubcategories();
-
-            // Set current subcategory from URL
-            if (subcategorySlug) {
-                currentSubcategory = subcategorySlug;
-                
-                // Update active pill
-                setTimeout(() => {
-                    document.querySelectorAll('.subcategory-pill').forEach(pill => {
-                        pill.classList.remove('active');
-                        if (pill.dataset.subcategory === subcategorySlug) {
-                            pill.classList.add('active');
-                        }
-                    });
-                }, 100);
-
-                // Update breadcrumb
-                const subcategory = allSubcategories.find(s => (s.slug || createSlug(s.name)) === subcategorySlug);
-                if (subcategory) {
-                    document.getElementById('breadcrumb-subcategory').style.display = 'inline';
-                    document.getElementById('breadcrumb-subcategory-name').textContent = subcategory.name;
+                if (!currentCategory) {
+                    showError();
+                    document.getElementById('hero-title').textContent = 'Category Not Found';
+                    document.title = 'Category Not Found | JAYENWARE';
+                    return;
                 }
 
-                // Fetch subcategory products
-                allProducts = await fetchSubcategoryProducts(subcategorySlug);
-            } else {
-                currentSubcategory = 'all';
-                // Fetch category products
-                allProducts = await fetchCategoryProducts(categorySlug);
+                // Render hero immediately after getting category data
+                renderHero();
+
+                // Fetch subcategories and products in parallel for better performance
+                const [subcategories, products] = await Promise.all([
+                    fetchSubcategories(categorySlug),
+                    subcategorySlug ? 
+                        fetchSubcategoryProducts(subcategorySlug) : 
+                        fetchCategoryProducts(categorySlug)
+                ]);
+
+                allSubcategories = subcategories;
+                allProducts = products;
+
+                // Set current subcategory from URL
+                if (subcategorySlug) {
+                    currentSubcategory = subcategorySlug;
+                } else {
+                    currentSubcategory = 'all';
+                }
+
+                // Render subcategories and products
+                renderSubcategories();
+                renderProducts();
+
+                // Update breadcrumb for subcategory
+                if (subcategorySlug) {
+                    const subcategory = allSubcategories.find(s => (s.slug || createSlug(s.name)) === subcategorySlug);
+                    if (subcategory) {
+                        document.getElementById('breadcrumb-subcategory').style.display = 'inline';
+                        document.getElementById('breadcrumb-subcategory-name').textContent = subcategory.name;
+                    }
+                }
+
+            } catch (error) {
+                console.error('Failed to initialize category page:', error);
+                hasError = true;
+                showError();
+                
+                if (currentCategory) {
+                    // If we got category data but products failed, still show category info
+                    renderHero();
+                } else {
+                    document.getElementById('hero-title').textContent = 'Error Loading Category';
+                }
+            } finally {
+                isLoading = false;
             }
-
-            // Render products
-            renderProducts();
-
-            // Hide full page loader
-            hidePageLoader();
-
-            isInitialLoad = false;
         }
 
         // Handle browser back/forward
         window.addEventListener('popstate', () => {
             displayLimit = 16;
-            // Show loading state
-            document.getElementById('products-section-wrapper').classList.add('loading-section');
-            renderSkeleton();
-            document.getElementById('products-count').textContent = 'Loading products...';
-            
-            initCategoryPage().then(() => {
-                document.getElementById('products-section-wrapper').classList.remove('loading-section');
-            });
-        });
-
-        // Start
-        document.addEventListener('DOMContentLoaded', () => {
-            // Show skeleton immediately
-            renderSkeleton();
             initCategoryPage();
         });
+
+        // Add fadeInOut animation for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Start application when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCategoryPage);
+        } else {
+            // DOM already loaded
+            initCategoryPage();
+        }
     </script>
 </body>
 </html>
