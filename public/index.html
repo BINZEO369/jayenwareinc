@@ -1263,9 +1263,8 @@
 
             let urlPath = '/' + pageId;
             if (params?.category) {
-                // Updated: Use /category/slug format instead of SPA navigation
-                window.location.href = '/category/' + getCategorySlug(params.category);
-                return;
+                urlPath = '/category/' + getCategorySlug(params.category);
+                updateURL(urlPath, params.category);
             } else if (params?.search) {
                 urlPath = '/search?q=' + encodeURIComponent(params.search);
                 updateURL(urlPath, 'Search: ' + params.search);
@@ -1291,13 +1290,13 @@
             let html =
                 `<a href="/products" onclick="event.preventDefault();filterByCategory('all')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</a>`;
             html += currentData.categories.map(c =>
-                `<a href="/category/${getCategorySlug(c.name)}" onclick="event.preventDefault();filterByCategory('${c.name}')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</a>`
+                `<a href="/products?category=${getCategorySlug(c.name)}" onclick="event.preventDefault();filterByCategory('${c.name}')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</a>`
             ).join('');
             container.innerHTML = html;
         }
 
         // ============================================================
-        // WORLD-CLASS CATEGORY CARDS – ALL DATA FROM DB, NO HARDCODED FALLBACKS
+        // WORLD-CLASS CATEGORY CARDS – DIRECT DB LINKS, NO HARDCODED PREFIXES
         // ============================================================
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
@@ -1312,17 +1311,24 @@
             section.classList.remove('hidden');
 
             grid.innerHTML = currentData.categories.map((cat, index) => {
-                const slug = getCategorySlug(cat.name);
+                const catName = cat.name || '';
 
-                // image_url সরাসরি ডাটাবেজ থেকে, কোনো ফলব্যাক নেই
+                // সরাসরি ডাটাবেজের image_url ব্যবহার, কোনো ফ্যালব্যাক নেই
                 const imgSrc = cat.image_url || '';
 
-                // CTA লিংক: ডাটাবেজের image_cta_link ব্যবহার করবে, না থাকলে ক্যাটাগরি পেজে ফ্যালব্যাক
-                let ctaLink = cat.image_cta_link || '/category/' + slug;
+                // CTA লিংক: সরাসরি ডাটাবেজের image_cta_link ব্যবহার
+                // যদি না থাকে, তাহলে ক্যাটাগরি পেজে ফ্যালব্যাক
+                let ctaLink = cat.image_cta_link || '';
+                
+                // যদি image_cta_link খালি থাকে, তাহলে ক্যাটাগরি স্লাগ বেসড লিংক
+                if (!ctaLink) {
+                    ctaLink = '/category/' + getCategorySlug(catName);
+                }
+
                 const isExternal = ctaLink.startsWith('http');
                 const externalAttrs = isExternal ? ' target="_blank" rel="noopener"' : '';
 
-                // CTA টাইটেল: ডাটাবেজের image_cta_title, না থাকলে বাটন দেখাবে না
+                // CTA টাইটেল: image_cta_title, না থাকলে দেখাবে না
                 const ctaTitle = cat.image_cta_title || '';
 
                 const ctaHTML = ctaTitle ? `
@@ -1333,16 +1339,34 @@
                     </svg>
                 </span>` : '';
 
-                // Updated: Category cards now link to /category/slug page
+                // Determine onclick handler
+                let onClickAttr = '';
+                if (!isExternal) {
+                    if (ctaLink.startsWith('/category/')) {
+                        const catSlug = ctaLink.replace('/category/', '');
+                        onClickAttr = `onclick="event.preventDefault();navigateToCategory('${catSlug.replace(/'/g, "\\'")}')"`;
+                    }
+                    // অন্য ইন্টারনাল লিংক সরাসরি নেভিগেট হবে
+                }
+
                 return `
-                <a href="${isExternal ? ctaLink : '/category/' + slug}" ${externalAttrs} class="category-card">
-                    ${imgSrc ? `<img src="${imgSrc}" alt="${cat.name}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
+                <a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="category-card">
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${catName}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
                     <div class="cat-content">
-                        <h3 class="cat-title">${cat.name}</h3>
+                        <h3 class="cat-title">${catName}</h3>
                         ${ctaHTML}
                     </div>
                 </a>`;
             }).join('');
+        }
+
+        // ============================================================
+        // NAVIGATE TO CATEGORY PAGE (CATEGORY.HTML)
+        // ============================================================
+        function navigateToCategory(categorySlug) {
+            if (!categorySlug) return;
+            // ক্যাটাগরি পেজে রিডাইরেক্ট
+            window.location.href = '/category/' + categorySlug;
         }
 
         function getFilteredProducts() {
@@ -1356,17 +1380,9 @@
         function filterByCategory(cat) {
             currentFilters.cat = cat;
             productsDisplayLimit = 12;
-            
-            // Updated: Navigate to category page instead of filtering in SPA
-            if (cat === 'all') {
-                navigate('products');
-                updateURL('/products', 'All Products');
-            } else {
-                window.location.href = '/category/' + getCategorySlug(cat);
-                return;
-            }
-            
             renderProducts(getFilteredProducts());
+            updateURL(cat === 'all' ? '/products' : '/products?category=' + getCategorySlug(cat), cat === 'all' ? 'All Products' :
+                cat);
         }
 
         function applyPriceFilter() {
@@ -1773,9 +1789,10 @@
             const path = window.location.pathname;
             const sp = new URLSearchParams(window.location.search);
             
-            // Handle category pages - redirect to category.html
+            // ক্যাটাগরি পেজ – আলাদা category.html হ্যান্ডেল করবে
             if (path.startsWith('/category/')) {
-                // Don't intercept, let the server handle it
+                // index.html থেকে সরাসরি category.html এ রিডাইরেক্ট
+                window.location.href = path;
                 return;
             }
             
