@@ -20,22 +20,6 @@
       "dest": "/public/components.js"
     },
     {
-      "src": "/hero-banner.js",
-      "dest": "/public/hero-banner.js"
-    },
-    {
-      "src": "/hero-video.js",
-      "dest": "/public/hero-video.js"
-    },
-    {
-      "src": "/hero-secondary-banner.js",
-      "dest": "/public/hero-secondary-banner.js"
-    },
-    {
-      "src": "/fonts.js",
-      "dest": "/public/fonts.js"
-    },
-    {
       "src": "/logo.png",
       "dest": "/public/logo.png"
     },
