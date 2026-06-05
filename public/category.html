@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title id="page-title">Category | JAYENWARE</title>
 
-    <meta name="description" content="Shop by category at Jayenware Official Store. Discover authentic Bangladesh heritage fashion.">
+    <meta name="description" id="meta-description" content="Shop by category at Jayenware Official Store. Discover authentic Bangladesh heritage fashion.">
+    <meta name="keywords" id="meta-keywords" content="">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#ffffff">
 
@@ -87,6 +88,46 @@
             100% { background-position: 200% 0; }
         }
 
+        /* ==================== PAGE LOADER (ROTATOR) ==================== */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
         /* ==================== BREADCRUMB ==================== */
         .breadcrumb {
             display: flex;
@@ -113,7 +154,7 @@
             font-weight: 600;
         }
 
-        /* ==================== CATEGORY HERO BANNER ==================== */
+        /* ==================== CATEGORY HERO ==================== */
         .category-hero {
             position: relative;
             background: #f5f5f7;
@@ -128,6 +169,7 @@
         .category-hero-content {
             padding: 32px;
             z-index: 2;
+            position: relative;
         }
 
         .category-hero h1 {
@@ -154,6 +196,58 @@
             opacity: 0.6;
         }
 
+        .category-hero-video {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        /* CTA Buttons */
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .hero-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            margin-left: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid #d1d1d6;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta-secondary:hover {
+            border-color: var(--primary);
+        }
+
         @media (max-width: 768px) {
             .category-hero {
                 border-radius: 0;
@@ -163,10 +257,106 @@
             .category-hero h1 {
                 font-size: 24px;
             }
-            .category-hero-image {
+            .category-hero-image,
+            .category-hero-video {
                 width: 100%;
                 opacity: 0.25;
             }
+        }
+
+        /* ==================== SUBCATEGORY CARDS GRID ==================== */
+        .subcategory-cards-section {
+            margin-bottom: 40px;
+        }
+
+        .subcategory-cards-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .subcategory-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .subcategory-cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .subcategory-cards-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        .subcategory-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fafafa;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subcategory-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .subcategory-card:active {
+            transform: scale(0.97);
+        }
+
+        .subcategory-card-img {
+            aspect-ratio: 1/1;
+            overflow: hidden;
+        }
+
+        .subcategory-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .subcategory-card:hover .subcategory-card-img img {
+            transform: scale(1.05);
+        }
+
+        .subcategory-card-body {
+            padding: 12px;
+        }
+
+        .subcategory-card-body h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .subcategory-card-body p {
+            font-size: 12px;
+            color: var(--accent);
+            line-height: 1.4;
+        }
+
+        .subcategory-card-cta {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--blue);
+            text-decoration: none;
         }
 
         /* ==================== ERROR STATE ==================== */
@@ -427,6 +617,148 @@
             letter-spacing: 0.5px;
         }
 
+        /* ==================== BOTTOM CTA SECTION ==================== */
+        .bottom-cta-section {
+            margin-top: 48px;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .bottom-cta-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .bottom-cta-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            background: #f5f5f7;
+            text-decoration: none;
+        }
+
+        .bottom-cta-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .bottom-cta-card video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .bottom-cta-content {
+            position: relative;
+            z-index: 2;
+            padding: 32px;
+        }
+
+        .bottom-cta-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .bottom-cta-content p {
+            font-size: 13px;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .bottom-cta-content .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-cta-content .cta-btn:hover {
+            background: #333;
+        }
+
+        /* ==================== VIDEO SECTION ==================== */
+        .category-video-section {
+            margin-top: 48px;
+            margin-bottom: 32px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+
+        .category-video-section video {
+            width: 100%;
+            display: block;
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .category-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .category-video-overlay h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .category-video-overlay p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 16px;
+        }
+
+        .category-video-overlay .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 24px;
+            background: #fff;
+            color: var(--primary);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .category-video-overlay .cta-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
         /* ==================== EMPTY STATE ==================== */
         .empty-state {
             text-align: center;
@@ -542,10 +874,19 @@
             .subcategory-pill {
                 flex-shrink: 0;
             }
+            .bottom-cta-card {
+                min-height: 200px;
+            }
         }
     </style>
 </head>
 <body class="antialiased">
+
+    <!-- ==================== PAGE LOADER (ROTATOR) ==================== -->
+    <div class="page-loader" id="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading...</div>
+    </div>
 
     <!-- ==================== HEADER ==================== -->
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
@@ -583,8 +924,19 @@
             <div class="category-hero-content">
                 <h1 id="category-name">Loading...</h1>
                 <p id="category-description">Discover our exclusive collection</p>
+                <div id="hero-cta-buttons" style="display:none;">
+                    <a href="#" id="hero-cta-image" class="hero-cta" style="display:none;">
+                        <span id="hero-cta-image-text">Shop Now</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#" id="hero-cta-video" class="hero-cta-secondary" style="display:none;">
+                        <span id="hero-cta-video-text">Watch Video</span>
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
             </div>
             <img id="category-hero-img" src="" alt="" class="category-hero-image" style="display:none;">
+            <video id="category-hero-video" class="category-hero-video" style="display:none;" muted loop autoplay playsinline></video>
         </section>
 
         <!-- ERROR STATE (initially hidden) -->
@@ -606,6 +958,14 @@
         <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
             <!-- Dynamically populated -->
         </div>
+
+        <!-- SUBCATEGORY CARDS GRID -->
+        <section class="subcategory-cards-section" id="subcategory-cards-section" style="display:none;">
+            <h2>Explore Subcategories</h2>
+            <div class="subcategory-cards-grid" id="subcategory-cards-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
 
         <!-- SORT BAR -->
         <div class="sort-bar" id="sort-bar" style="display:none;">
@@ -633,6 +993,47 @@
             </a>
         </div>
 
+        <!-- BOTTOM CTA SECTION (Image + Video CTA) -->
+        <section class="bottom-cta-section" id="bottom-cta-section" style="display:none;">
+            <!-- Image CTA Card -->
+            <a href="#" class="bottom-cta-card" id="bottom-cta-image-card" style="display:none;">
+                <img src="" alt="" id="bottom-cta-image">
+                <div class="bottom-cta-content">
+                    <h3 id="bottom-cta-image-title">Shop the Collection</h3>
+                    <p>Discover our latest arrivals</p>
+                    <span class="cta-btn">
+                        <span id="bottom-cta-image-btn-text">Explore Now</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+            </a>
+            <!-- Video CTA Card -->
+            <a href="#" class="bottom-cta-card" id="bottom-cta-video-card" style="display:none;">
+                <video src="" muted loop autoplay playsinline id="bottom-cta-video"></video>
+                <div class="bottom-cta-content">
+                    <h3 id="bottom-cta-video-title">Watch the Story</h3>
+                    <p>See the craftsmanship behind our products</p>
+                    <span class="cta-btn">
+                        <span id="bottom-cta-video-btn-text">Watch Now</span>
+                        <i class="fa-solid fa-play"></i>
+                    </span>
+                </div>
+            </a>
+        </section>
+
+        <!-- CATEGORY VIDEO SECTION -->
+        <section class="category-video-section" id="category-video-section" style="display:none;">
+            <video src="" id="category-main-video" muted loop autoplay playsinline></video>
+            <div class="category-video-overlay" id="category-video-overlay" style="display:none;">
+                <h3 id="video-overlay-title">Experience the Collection</h3>
+                <p id="video-overlay-description">Watch our exclusive video showcase</p>
+                <a href="#" class="cta-btn" id="video-overlay-cta">
+                    <span id="video-overlay-cta-text">Learn More</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+
     </main>
 
     <!-- BACK TO TOP -->
@@ -642,7 +1043,7 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - FULLY DYNAMIC WITH API-DRIVEN DATA
+        // CATEGORY PAGE - COMPLETE DYNAMIC API-DRIVEN PAGE
         // ============================================================
 
         let currentCategory = null;
@@ -650,6 +1051,19 @@
         let allProducts = [];
         let allSubcategories = [];
         let currentSort = 'newest';
+
+        // ============================================================
+        // PAGE LOADER
+        // ============================================================
+        function hidePageLoader() {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.classList.add('hidden');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 400);
+            }
+        }
 
         // ============================================================
         // HELPER: Create Slug
@@ -692,7 +1106,7 @@
         }
 
         // ============================================================
-        // FETCH FROM API (Server-side API routes)
+        // FETCH FROM API
         // ============================================================
         async function fetchAPI(endpoint) {
             try {
@@ -709,7 +1123,7 @@
         }
 
         // ============================================================
-        // LOAD CATEGORY BY SLUG (Using server API)
+        // LOAD CATEGORY BY SLUG
         // ============================================================
         async function loadCategoryBySlug(slug) {
             const categories = await fetchAPI('/api/categories');
@@ -720,7 +1134,7 @@
         }
 
         // ============================================================
-        // LOAD SUBCATEGORIES BY CATEGORY SLUG (Using server API)
+        // LOAD SUBCATEGORIES BY CATEGORY SLUG
         // ============================================================
         async function loadSubcategories(categorySlug) {
             const subcategories = await fetchAPI(`/api/subcategories?category_slug=${encodeURIComponent(categorySlug)}`);
@@ -728,7 +1142,7 @@
         }
 
         // ============================================================
-        // LOAD PRODUCTS BY CATEGORY SLUG (Using server API)
+        // LOAD PRODUCTS BY CATEGORY SLUG
         // ============================================================
         async function loadProductsByCategory(categorySlug) {
             const products = await fetchAPI(`/api/categories/${encodeURIComponent(categorySlug)}/products`);
@@ -736,7 +1150,7 @@
         }
 
         // ============================================================
-        // LOAD PRODUCTS BY SUBCATEGORY SLUG (Using server API)
+        // LOAD PRODUCTS BY SUBCATEGORY SLUG
         // ============================================================
         async function loadProductsBySubcategory(subcategorySlug) {
             const products = await fetchAPI(`/api/subcategories/${encodeURIComponent(subcategorySlug)}/products`);
@@ -767,11 +1181,16 @@
             document.getElementById('category-hero').style.display = 'none';
             document.getElementById('error-state').style.display = 'flex';
             document.getElementById('subcategory-pills').style.display = 'none';
+            document.getElementById('subcategory-cards-section').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'none';
             document.getElementById('products-grid').innerHTML = '';
             document.getElementById('empty-state').classList.remove('visible');
+            document.getElementById('bottom-cta-section').style.display = 'none';
+            document.getElementById('category-video-section').style.display = 'none';
             document.getElementById('breadcrumb-current').textContent = 'Not Found';
             document.title = 'Category Not Found | JAYENWARE';
+            document.getElementById('meta-description').content = 'Category not found. Browse our available categories at Jayenware.';
+            hidePageLoader();
         }
 
         // ============================================================
@@ -804,6 +1223,27 @@
                         <span class="card-price">৳${product.price || 0}</span>
                         ${product.old_price ? `<span class="card-old-price">৳${product.old_price}</span>` : ''}
                     </div>
+                </div>
+            </a>`;
+        }
+
+        // ============================================================
+        // RENDER SUBCATEGORY CARD
+        // ============================================================
+        function renderSubcategoryCard(subcategory) {
+            const categorySlug = createSlug(currentCategory?.name || '');
+            const subSlug = createSlug(subcategory.name);
+            const imgSrc = subcategory.image_url || '/logo.png';
+            
+            return `
+            <a href="/category/${categorySlug}/${subSlug}" class="subcategory-card">
+                <div class="subcategory-card-img">
+                    <img src="${imgSrc}" alt="${subcategory.name}" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
+                </div>
+                <div class="subcategory-card-body">
+                    <h3>${subcategory.name}</h3>
+                    ${subcategory.meta_description ? `<p>${subcategory.meta_description}</p>` : ''}
+                    ${subcategory.image_cta_title ? `<span class="subcategory-card-cta">${subcategory.image_cta_title} <i class="fa-solid fa-arrow-right"></i></span>` : ''}
                 </div>
             </a>`;
         }
@@ -885,12 +1325,99 @@
         }
 
         // ============================================================
+        // RENDER SUBCATEGORY CARDS
+        // ============================================================
+        function renderSubcategoryCards() {
+            const section = document.getElementById('subcategory-cards-section');
+            const grid = document.getElementById('subcategory-cards-grid');
+            
+            if (!section || !grid) return;
+
+            if (!allSubcategories.length) {
+                section.style.display = 'none';
+                return;
+            }
+
+            // Show cards only when viewing "All" (no specific subcategory selected)
+            if (currentSubcategory) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            grid.innerHTML = allSubcategories.map(renderSubcategoryCard).join('');
+        }
+
+        // ============================================================
+        // RENDER BOTTOM CTA SECTION
+        // ============================================================
+        function renderBottomCTA() {
+            const section = document.getElementById('bottom-cta-section');
+            const imageCard = document.getElementById('bottom-cta-image-card');
+            const videoCard = document.getElementById('bottom-cta-video-card');
+            
+            if (!section || !currentCategory) return;
+
+            let hasContent = false;
+
+            // Image CTA
+            if (currentCategory.image_url && currentCategory.image_cta_title) {
+                imageCard.style.display = 'flex';
+                imageCard.href = currentCategory.image_cta_link || '#';
+                document.getElementById('bottom-cta-image').src = currentCategory.image_url;
+                document.getElementById('bottom-cta-image-title').textContent = currentCategory.image_cta_title;
+                document.getElementById('bottom-cta-image-btn-text').textContent = currentCategory.image_cta_title || 'Explore Now';
+                hasContent = true;
+            } else {
+                imageCard.style.display = 'none';
+            }
+
+            // Video CTA
+            if (currentCategory.video_url && currentCategory.video_cta_title) {
+                videoCard.style.display = 'flex';
+                videoCard.href = currentCategory.video_cta_link || '#';
+                document.getElementById('bottom-cta-video').src = currentCategory.video_url;
+                document.getElementById('bottom-cta-video-title').textContent = currentCategory.video_cta_title;
+                document.getElementById('bottom-cta-video-btn-text').textContent = currentCategory.video_cta_title || 'Watch Now';
+                hasContent = true;
+            } else {
+                videoCard.style.display = 'none';
+            }
+
+            section.style.display = hasContent ? 'grid' : 'none';
+        }
+
+        // ============================================================
+        // RENDER CATEGORY VIDEO SECTION
+        // ============================================================
+        function renderCategoryVideoSection() {
+            const section = document.getElementById('category-video-section');
+            const overlay = document.getElementById('category-video-overlay');
+            
+            if (!section || !currentCategory) return;
+
+            if (currentCategory.video_url) {
+                section.style.display = 'block';
+                document.getElementById('category-main-video').src = currentCategory.video_url;
+
+                if (currentCategory.video_cta_title) {
+                    overlay.style.display = 'flex';
+                    document.getElementById('video-overlay-title').textContent = currentCategory.video_cta_title;
+                    document.getElementById('video-overlay-description').textContent = currentCategory.meta_description || '';
+                    document.getElementById('video-overlay-cta').href = currentCategory.video_cta_link || '#';
+                    document.getElementById('video-overlay-cta-text').textContent = currentCategory.video_cta_title;
+                } else {
+                    overlay.style.display = 'none';
+                }
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        // ============================================================
         // UPDATE BREADCRUMB & URL & META
         // ============================================================
         function updateBreadcrumbAndURL() {
-            const breadcrumbCurrent = document.getElementById('breadcrumb-current');
-            const pageTitle = document.getElementById('page-title');
-            const canonicalUrl = document.getElementById('canonical-url');
             const categoryName = currentCategory?.name || 'Category';
             const categorySlug = createSlug(categoryName);
 
@@ -908,9 +1435,25 @@
             }
 
             document.getElementById('breadcrumb').innerHTML = breadcrumbHTML;
-            document.title = `${title} | JAYENWARE`;
-            if (pageTitle) pageTitle.textContent = `${title} | JAYENWARE`;
-            if (canonicalUrl) canonicalUrl.href = `https://www.jayenware.shop${url}`;
+            
+            // Update Page Title
+            const seoTitle = currentSubcategory?.meta_title || currentCategory?.meta_title || title;
+            document.title = `${seoTitle} | JAYENWARE`;
+            document.getElementById('page-title').textContent = `${seoTitle} | JAYENWARE`;
+            
+            // Update Meta Description
+            const seoDesc = currentSubcategory?.meta_description || currentCategory?.meta_description || `Shop ${title} at Jayenware Official Store.`;
+            document.getElementById('meta-description').content = seoDesc;
+            
+            // Update Meta Keywords
+            const seoKeywords = currentSubcategory?.keywords || currentCategory?.keywords || '';
+            document.getElementById('meta-keywords').content = seoKeywords;
+            
+            // Update Canonical URL
+            document.getElementById('canonical-url').href = `https://www.jayenware.shop${url}`;
+
+            // Inject Video Schema if available
+            injectVideoSchema();
 
             // Update URL without reload
             window.history.replaceState(
@@ -918,6 +1461,89 @@
                 '', 
                 url
             );
+        }
+
+        // ============================================================
+        // INJECT VIDEO SCHEMA (Structured Data)
+        // ============================================================
+        function injectVideoSchema() {
+            // Remove existing schema
+            const existing = document.getElementById('video-schema');
+            if (existing) existing.remove();
+
+            const videoSchema = currentSubcategory?.video_schema || currentCategory?.video_schema;
+            if (!videoSchema) return;
+
+            try {
+                const schemaObj = typeof videoSchema === 'string' ? JSON.parse(videoSchema) : videoSchema;
+                const script = document.createElement('script');
+                script.id = 'video-schema';
+                script.type = 'application/ld+json';
+                script.textContent = JSON.stringify(schemaObj);
+                document.head.appendChild(script);
+            } catch (e) {
+                console.warn('Invalid video schema JSON');
+            }
+        }
+
+        // ============================================================
+        // UPDATE HERO SECTION
+        // ============================================================
+        function updateHeroSection() {
+            if (!currentCategory) return;
+
+            document.getElementById('category-name').textContent = currentCategory.name;
+            document.getElementById('category-description').textContent = 
+                currentCategory.meta_description || currentCategory.description || 'Discover our exclusive collection';
+
+            // Hero Image
+            const heroImg = document.getElementById('category-hero-img');
+            if (currentCategory.image_url) {
+                heroImg.src = currentCategory.image_url;
+                heroImg.style.display = 'block';
+                heroImg.alt = currentCategory.name;
+                heroImg.onerror = function() {
+                    this.style.display = 'none';
+                };
+            } else {
+                heroImg.style.display = 'none';
+            }
+
+            // Hero Video (as background alternative to image)
+            const heroVideo = document.getElementById('category-hero-video');
+            if (currentCategory.video_url && !currentCategory.image_url) {
+                heroVideo.src = currentCategory.video_url;
+                heroVideo.style.display = 'block';
+            } else {
+                heroVideo.style.display = 'none';
+            }
+
+            // Hero CTA Buttons
+            const ctaContainer = document.getElementById('hero-cta-buttons');
+            const ctaImage = document.getElementById('hero-cta-image');
+            const ctaVideo = document.getElementById('hero-cta-video');
+            
+            let hasCTA = false;
+
+            if (currentCategory.image_cta_title) {
+                ctaImage.style.display = 'inline-flex';
+                ctaImage.href = currentCategory.image_cta_link || '#';
+                document.getElementById('hero-cta-image-text').textContent = currentCategory.image_cta_title;
+                hasCTA = true;
+            } else {
+                ctaImage.style.display = 'none';
+            }
+
+            if (currentCategory.video_cta_title) {
+                ctaVideo.style.display = 'inline-flex';
+                ctaVideo.href = currentCategory.video_cta_link || '#';
+                document.getElementById('hero-cta-video-text').textContent = currentCategory.video_cta_title;
+                hasCTA = true;
+            } else {
+                ctaVideo.style.display = 'none';
+            }
+
+            ctaContainer.style.display = hasCTA ? 'block' : 'none';
         }
 
         // ============================================================
@@ -939,8 +1565,12 @@
             }
 
             updateBreadcrumbAndURL();
+            updateHeroSection();
             renderSubcategoryPills();
+            renderSubcategoryCards();
             renderProducts();
+            renderBottomCTA();
+            renderCategoryVideoSection();
             
             const gridEl = document.getElementById('products-grid');
             if (gridEl) {
@@ -968,6 +1598,7 @@
 
             if (!categorySlug) {
                 window.location.href = '/';
+                hidePageLoader();
                 return;
             }
 
@@ -985,19 +1616,7 @@
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
 
-            document.getElementById('category-name').textContent = currentCategory.name;
-            document.getElementById('category-description').textContent = 
-                currentCategory.description || 'Discover our exclusive collection';
-            
-            if (currentCategory.image_url) {
-                const heroImg = document.getElementById('category-hero-img');
-                heroImg.src = currentCategory.image_url;
-                heroImg.style.display = 'block';
-                heroImg.alt = currentCategory.name;
-                heroImg.onerror = function() {
-                    this.style.display = 'none';
-                };
-            }
+            updateHeroSection();
 
             // Load subcategories
             allSubcategories = await loadSubcategories(categorySlug);
@@ -1010,7 +1629,6 @@
                     currentSubcategory = foundSub;
                     allProducts = await loadProductsBySubcategory(subcategorySlug);
                 } else {
-                    // Subcategory not found, load all products for this category
                     currentSubcategory = null;
                     allProducts = await loadProductsByCategory(categorySlug);
                 }
@@ -1021,10 +1639,16 @@
 
             console.log('[Category Page] Loaded products:', allProducts.length);
 
-            // Update UI
+            // Update all UI sections
             updateBreadcrumbAndURL();
             renderSubcategoryPills();
+            renderSubcategoryCards();
             renderProducts();
+            renderBottomCTA();
+            renderCategoryVideoSection();
+
+            // Hide loader
+            hidePageLoader();
         }
 
         // ============================================================
@@ -1054,27 +1678,22 @@
             if (event.state && event.state.category) {
                 currentCategory = event.state.category;
                 currentSubcategory = event.state.subcategory || null;
-                // Re-initialize with current state
+                
                 document.getElementById('category-hero').style.display = 'flex';
                 document.getElementById('error-state').style.display = 'none';
                 document.getElementById('sort-bar').style.display = 'flex';
                 
                 if (currentCategory) {
-                    document.getElementById('category-name').textContent = currentCategory.name;
-                    document.getElementById('category-description').textContent = 
-                        currentCategory.description || 'Discover our exclusive collection';
-                    
-                    if (currentCategory.image_url) {
-                        const heroImg = document.getElementById('category-hero-img');
-                        heroImg.src = currentCategory.image_url;
-                        heroImg.style.display = 'block';
-                        heroImg.alt = currentCategory.name;
-                    }
+                    updateHeroSection();
                 }
                 
                 updateBreadcrumbAndURL();
                 renderSubcategoryPills();
+                renderSubcategoryCards();
                 renderProducts();
+                renderBottomCTA();
+                renderCategoryVideoSection();
+                hidePageLoader();
             } else {
                 initCategoryPage();
             }
