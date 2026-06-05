@@ -66,7 +66,7 @@ app.get('/api/products', async (req, res) => {
 // ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব ক্যাটাগরি - Public
+// সব ক্যাটাগরি - Public (আপডেট করা)
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -76,9 +76,11 @@ app.get('/api/categories', async (req, res) => {
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
         
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+        // আমরা API-তে শুধু 'xxxx' পাঠাব
         const categoriesWithSlugs = data.map(cat => ({
             ...cat,
-            slug: createSlug(cat.name)
+            slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
         }));
         
         res.json(categoriesWithSlugs);
@@ -87,7 +89,7 @@ app.get('/api/categories', async (req, res) => {
     }
 });
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে
+// ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -98,12 +100,18 @@ app.get('/api/categories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
-        const category = data.find(cat => createSlug(cat.name) === slug);
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+        // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
+        const category = data.find(cat => {
+            const dbSlug = cat.slug || createSlug(cat.name);
+            return dbSlug.replace(/^category\//, '') === slug;
+        });
+        
         if (!category) return res.status(404).json({ error: 'Category not found' });
         
         res.json({
             ...category,
-            slug: createSlug(category.name)
+            slug: category.slug ? category.slug.replace(/^category\//, '') : createSlug(category.name)
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -114,24 +122,30 @@ app.get('/api/categories/:slug', async (req, res) => {
 // সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি - Public
+// সব সাব-ক্যাটাগরি - Public (আপডেট করা)
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
         
         let query = supabase
             .from('subcategories')
-            .select('*, categories(name, id)')
+            .select('*, categories(name, id, slug)')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
         if (category_slug) {
             const { data: categories } = await supabase
                 .from('categories')
-                .select('id')
+                .select('id, slug')
                 .eq('is_active', true);
             
-            const category = categories.find(cat => createSlug(cat.name) === category_slug);
+            // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+            // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
+            const category = categories.find(cat => {
+                const dbSlug = cat.slug || createSlug(cat.name);
+                return dbSlug.replace(/^category\//, '') === category_slug;
+            });
+            
             if (category) {
                 query = query.eq('category_id', category.id);
             } else {
@@ -144,8 +158,8 @@ app.get('/api/subcategories', async (req, res) => {
         
         const subcategoriesWithSlugs = data.map(sub => ({
             ...sub,
-            slug: createSlug(sub.name),
-            category_slug: createSlug(sub.categories?.name || '')
+            slug: sub.slug ? sub.slug.replace(/^category\/[^/]+\//, '') : createSlug(sub.name),
+            category_slug: sub.categories ? sub.categories.name : ''
         }));
         
         res.json(subcategoriesWithSlugs);
@@ -154,7 +168,7 @@ app.get('/api/subcategories', async (req, res) => {
     }
 });
 
-// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে
+// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -162,15 +176,20 @@ app.get('/api/subcategories/:slug', async (req, res) => {
         
         const { data, error } = await supabase
             .from('subcategories')
-            .select('*, categories(name, id)')
+            .select('*, categories(name, id, slug)')
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
-        let subcategory = data.find(sub => createSlug(sub.name) === slug);
+        // সাব-ক্যাটাগরি খুঁজুন
+        let subcategory = data.find(sub => {
+            const dbSlug = sub.slug || createSlug(sub.name);
+            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
+        });
         
         if (category_slug && subcategory) {
-            const catSlug = createSlug(subcategory.categories?.name || '');
-            if (catSlug !== category_slug) {
+            const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
+            const cleanCatSlug = catSlug.replace(/^category\//, '');
+            if (cleanCatSlug !== category_slug) {
                 subcategory = null;
             }
         }
@@ -179,8 +198,8 @@ app.get('/api/subcategories/:slug', async (req, res) => {
         
         res.json({
             ...subcategory,
-            slug: createSlug(subcategory.name),
-            category_slug: createSlug(subcategory.categories?.name || '')
+            slug: subcategory.slug ? subcategory.slug.replace(/^category\/[^/]+\//, '') : createSlug(subcategory.name),
+            category_slug: subcategory.categories ? subcategory.categories.name : ''
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -295,7 +314,12 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
-        const category = categories.find(cat => createSlug(cat.name) === slug);
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+        const category = categories.find(cat => {
+            const dbSlug = cat.slug || createSlug(cat.name);
+            return dbSlug.replace(/^category\//, '') === slug;
+        });
+        
         if (!category) return res.status(404).json({ error: 'Category not found' });
         
         const { data, error } = await supabase
@@ -327,7 +351,12 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
-        const subcategory = subcategories.find(sub => createSlug(sub.name) === slug);
+        // সাব-ক্যাটাগরি খুঁজুন
+        const subcategory = subcategories.find(sub => {
+            const dbSlug = sub.slug || createSlug(sub.name);
+            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
+        });
+        
         if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
         
         const { data, error } = await supabase
