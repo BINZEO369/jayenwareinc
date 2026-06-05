@@ -1263,8 +1263,9 @@
 
             let urlPath = '/' + pageId;
             if (params?.category) {
-                urlPath = '/category/' + getCategorySlug(params.category);
-                updateURL(urlPath, params.category);
+                // Updated: Use /category/slug format instead of SPA navigation
+                window.location.href = '/category/' + getCategorySlug(params.category);
+                return;
             } else if (params?.search) {
                 urlPath = '/search?q=' + encodeURIComponent(params.search);
                 updateURL(urlPath, 'Search: ' + params.search);
@@ -1332,8 +1333,9 @@
                     </svg>
                 </span>` : '';
 
+                // Updated: Category cards now link to /category/slug page
                 return `
-                <a href="${ctaLink}" ${externalAttrs} class="category-card" ${!isExternal ? `onclick="event.preventDefault();navigateByCTALink('${ctaLink.replace(/'/g, "\\'")}', '${cat.name.replace(/'/g, "\\'")}')"` : ''}>
+                <a href="${isExternal ? ctaLink : '/category/' + slug}" ${externalAttrs} class="category-card">
                     ${imgSrc ? `<img src="${imgSrc}" alt="${cat.name}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
                     <div class="cat-content">
                         <h3 class="cat-title">${cat.name}</h3>
@@ -1341,30 +1343,6 @@
                     </div>
                 </a>`;
             }).join('');
-        }
-
-        // CTA লিংক অনুযায়ী নেভিগেট করার হেল্পার ফাংশন
-        function navigateByCTALink(link, categoryName) {
-            if (!link) return;
-            if (link.startsWith('/category/')) {
-                const slug = link.replace('/category/', '');
-                const cat = currentData.categories.find(c => getCategorySlug(c.name) === slug);
-                if (cat) {
-                    navigate('products', { category: cat.name });
-                    return;
-                }
-            }
-            if (link.startsWith('/products')) {
-                navigate('products');
-                return;
-            }
-            // অন্য যেকোনো ইন্টারনাল লিংক
-            if (link.startsWith('/')) {
-                window.location.href = link;
-                return;
-            }
-            // ফলব্যাক: ক্যাটাগরি পেজ
-            navigate('products', { category: categoryName });
         }
 
         function getFilteredProducts() {
@@ -1378,9 +1356,17 @@
         function filterByCategory(cat) {
             currentFilters.cat = cat;
             productsDisplayLimit = 12;
+            
+            // Updated: Navigate to category page instead of filtering in SPA
+            if (cat === 'all') {
+                navigate('products');
+                updateURL('/products', 'All Products');
+            } else {
+                window.location.href = '/category/' + getCategorySlug(cat);
+                return;
+            }
+            
             renderProducts(getFilteredProducts());
-            updateURL(cat === 'all' ? '/products' : '/category/' + getCategorySlug(cat), cat === 'all' ? 'All Products' :
-                cat);
         }
 
         function applyPriceFilter() {
@@ -1786,14 +1772,15 @@
         function handleInitialRoute() {
             const path = window.location.pathname;
             const sp = new URLSearchParams(window.location.search);
-            if (path.startsWith('/product/')) return;
+            
+            // Handle category pages - redirect to category.html
             if (path.startsWith('/category/')) {
-                const slug = path.replace('/category/', '');
-                const cat = currentData.categories.find(c => getCategorySlug(c.name) === slug);
-                if (cat) { navigate('products');
-                    filterByCategory(cat.name); }
+                // Don't intercept, let the server handle it
                 return;
             }
+            
+            if (path.startsWith('/product/')) return;
+            
             if (path === '/search' && sp.get('q')) {
                 navigate('products');
                 renderProducts(currentData.products.filter(p => p.title.toLowerCase().includes(sp.get('q')
