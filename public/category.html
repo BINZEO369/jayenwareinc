@@ -43,8 +43,6 @@
             --accent: #86868b;
             --soft: #f5f5f7;
             --blue: #007aff;
-            --card-width: 260px;
-            --card-gap: 16px;
         }
 
         * {
@@ -75,20 +73,7 @@
             scrollbar-width: none;
         }
 
-        /* ==================== LOADING SKELETON ==================== */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 4px;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* ==================== PAGE LOADER (ROTATOR) ==================== */
+        /* ==================== PAGE LOADER ==================== */
         .page-loader {
             position: fixed;
             inset: 0;
@@ -128,6 +113,19 @@
             font-weight: 500;
         }
 
+        /* ==================== LOADING SKELETON ==================== */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
         /* ==================== BREADCRUMB ==================== */
         .breadcrumb {
             display: flex;
@@ -154,209 +152,152 @@
             font-weight: 600;
         }
 
-        /* ==================== CATEGORY HERO ==================== */
-        .category-hero {
+        /* ==================== IMAGE BANNER ==================== */
+        .image-banner {
             position: relative;
-            background: #f5f5f7;
-            border-radius: 16px;
+            width: 100%;
+            border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 32px;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
+            margin-bottom: 40px;
+            background: #f5f5f7;
         }
 
-        .category-hero-content {
-            padding: 32px;
-            z-index: 2;
-            position: relative;
+        .image-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: cover;
         }
 
-        .category-hero h1 {
+        .image-banner-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 48px 40px;
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+            color: #fff;
+        }
+
+        .image-banner-content h2 {
             font-size: 32px;
             font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            color: #fff;
         }
 
-        .category-hero p {
-            font-size: 14px;
-            color: var(--accent);
-            max-width: 500px;
-            line-height: 1.6;
-        }
-
-        .category-hero-image {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            object-fit: cover;
-            opacity: 0.6;
-        }
-
-        .category-hero-video {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            object-fit: cover;
-            opacity: 0.6;
-        }
-
-        /* CTA Buttons */
-        .hero-cta {
+        .image-banner-content .banner-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 16px;
-            padding: 10px 20px;
-            background: var(--primary);
-            color: #fff;
+            padding: 12px 28px;
+            background: #fff;
+            color: var(--primary);
             border-radius: 50px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
-        .hero-cta:hover {
-            background: #333;
+        .image-banner-content .banner-link:hover {
+            background: #f0f0f0;
             transform: translateY(-2px);
         }
 
-        .hero-cta-secondary {
+        @media (max-width: 768px) {
+            .image-banner {
+                border-radius: 0;
+                margin: 0 -16px 32px;
+            }
+            .image-banner img {
+                aspect-ratio: 4/3;
+            }
+            .image-banner-content {
+                padding: 32px 20px;
+            }
+            .image-banner-content h2 {
+                font-size: 22px;
+            }
+            .image-banner-content .banner-link {
+                padding: 10px 20px;
+                font-size: 12px;
+            }
+        }
+
+        /* ==================== VIDEO BANNER ==================== */
+        .video-banner {
+            position: relative;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            background: #000;
+        }
+
+        .video-banner video {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .video-banner-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 48px 40px;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+            color: #fff;
+        }
+
+        .video-banner-content h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .video-banner-content .banner-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 16px;
-            margin-left: 8px;
-            padding: 10px 20px;
-            background: transparent;
+            padding: 12px 28px;
+            background: #fff;
             color: var(--primary);
-            border: 1px solid #d1d1d6;
             border-radius: 50px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
-        .hero-cta-secondary:hover {
-            border-color: var(--primary);
+        .video-banner-content .banner-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
-            .category-hero {
+            .video-banner {
                 border-radius: 0;
-                margin: 0 -16px 24px;
-                min-height: 160px;
+                margin: 0 -16px 32px;
             }
-            .category-hero h1 {
-                font-size: 24px;
+            .video-banner video {
+                aspect-ratio: 4/3;
             }
-            .category-hero-image,
-            .category-hero-video {
-                width: 100%;
-                opacity: 0.25;
+            .video-banner-content {
+                padding: 32px 20px;
             }
-        }
-
-        /* ==================== SUBCATEGORY CARDS GRID ==================== */
-        .subcategory-cards-section {
-            margin-bottom: 40px;
-        }
-
-        .subcategory-cards-section h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .subcategory-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        @media (min-width: 640px) {
-            .subcategory-cards-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
+            .video-banner-content h2 {
+                font-size: 22px;
             }
-        }
-
-        @media (min-width: 1024px) {
-            .subcategory-cards-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
+            .video-banner-content .banner-link {
+                padding: 10px 20px;
+                font-size: 12px;
             }
-        }
-
-        .subcategory-card {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #fafafa;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .subcategory-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .subcategory-card:active {
-            transform: scale(0.97);
-        }
-
-        .subcategory-card-img {
-            aspect-ratio: 1/1;
-            overflow: hidden;
-        }
-
-        .subcategory-card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .subcategory-card:hover .subcategory-card-img img {
-            transform: scale(1.05);
-        }
-
-        .subcategory-card-body {
-            padding: 12px;
-        }
-
-        .subcategory-card-body h3 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .subcategory-card-body p {
-            font-size: 12px;
-            color: var(--accent);
-            line-height: 1.4;
-        }
-
-        .subcategory-card-cta {
-            display: inline-block;
-            margin-top: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--blue);
-            text-decoration: none;
         }
 
         /* ==================== ERROR STATE ==================== */
@@ -617,148 +558,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* ==================== BOTTOM CTA SECTION ==================== */
-        .bottom-cta-section {
-            margin-top: 48px;
-            margin-bottom: 32px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 768px) {
-            .bottom-cta-section {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .bottom-cta-card {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            min-height: 250px;
-            display: flex;
-            align-items: center;
-            background: #f5f5f7;
-            text-decoration: none;
-        }
-
-        .bottom-cta-card img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-        }
-
-        .bottom-cta-card video {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-        }
-
-        .bottom-cta-content {
-            position: relative;
-            z-index: 2;
-            padding: 32px;
-        }
-
-        .bottom-cta-content h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .bottom-cta-content p {
-            font-size: 13px;
-            color: var(--accent);
-            margin-bottom: 16px;
-        }
-
-        .bottom-cta-content .cta-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 20px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .bottom-cta-content .cta-btn:hover {
-            background: #333;
-        }
-
-        /* ==================== VIDEO SECTION ==================== */
-        .category-video-section {
-            margin-top: 48px;
-            margin-bottom: 32px;
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-            background: #000;
-        }
-
-        .category-video-section video {
-            width: 100%;
-            display: block;
-            max-height: 500px;
-            object-fit: cover;
-        }
-
-        .category-video-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 32px;
-            text-align: center;
-        }
-
-        .category-video-overlay h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 8px;
-        }
-
-        .category-video-overlay p {
-            font-size: 14px;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 16px;
-        }
-
-        .category-video-overlay .cta-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 24px;
-            background: #fff;
-            color: var(--primary);
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .category-video-overlay .cta-btn:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-        }
-
         /* ==================== EMPTY STATE ==================== */
         .empty-state {
             text-align: center;
@@ -855,15 +654,6 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 639px) {
-            .category-hero {
-                min-height: 140px;
-            }
-            .category-hero-content {
-                padding: 20px;
-            }
-            .category-hero h1 {
-                font-size: 20px;
-            }
             .subcategory-pills {
                 overflow-x: auto;
                 flex-wrap: nowrap;
@@ -874,15 +664,12 @@
             .subcategory-pill {
                 flex-shrink: 0;
             }
-            .bottom-cta-card {
-                min-height: 200px;
-            }
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- ==================== PAGE LOADER (ROTATOR) ==================== -->
+    <!-- ==================== PAGE LOADER ==================== -->
     <div class="page-loader" id="page-loader">
         <div class="loader-spinner"></div>
         <div class="loader-text">Loading...</div>
@@ -919,53 +706,43 @@
             <span class="current" id="breadcrumb-current">Category</span>
         </nav>
 
-        <!-- CATEGORY HERO -->
-        <section class="category-hero" id="category-hero">
-            <div class="category-hero-content">
-                <h1 id="category-name">Loading...</h1>
-                <p id="category-description">Discover our exclusive collection</p>
-                <div id="hero-cta-buttons" style="display:none;">
-                    <a href="#" id="hero-cta-image" class="hero-cta" style="display:none;">
-                        <span id="hero-cta-image-text">Shop Now</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                    <a href="#" id="hero-cta-video" class="hero-cta-secondary" style="display:none;">
-                        <span id="hero-cta-video-text">Watch Video</span>
-                        <i class="fa-solid fa-play"></i>
-                    </a>
-                </div>
+        <!-- IMAGE BANNER -->
+        <section class="image-banner" id="image-banner-section" style="display:none;">
+            <img src="" alt="" id="banner-image">
+            <div class="image-banner-content">
+                <h2 id="banner-image-title"></h2>
+                <a href="#" class="banner-link" id="banner-image-link">
+                    <span id="banner-image-link-text">Explore</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
-            <img id="category-hero-img" src="" alt="" class="category-hero-image" style="display:none;">
-            <video id="category-hero-video" class="category-hero-video" style="display:none;" muted loop autoplay playsinline></video>
         </section>
 
-        <!-- ERROR STATE (initially hidden) -->
+        <!-- VIDEO BANNER -->
+        <section class="video-banner" id="video-banner-section" style="display:none;">
+            <video src="" id="banner-video" muted loop autoplay playsinline></video>
+            <div class="video-banner-content">
+                <h2 id="banner-video-title"></h2>
+                <a href="#" class="banner-link" id="banner-video-link">
+                    <span id="banner-video-link-text">Watch</span>
+                    <i class="fa-solid fa-play"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- ERROR STATE -->
         <div class="error-state" id="error-state" style="display:none;">
             <i class="fa-solid fa-circle-exclamation"></i>
             <h2>Category Not Found</h2>
-            <p>The category you're looking for doesn't exist or may have been removed. Please check the URL or browse our available categories.</p>
+            <p>The category you're looking for doesn't exist or may have been removed.</p>
             <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-                <a href="/" class="btn-primary">
-                    <i class="fa-solid fa-house"></i> Back to Home
-                </a>
-                <a href="/products" class="btn-secondary">
-                    <i class="fa-solid fa-grid"></i> All Products
-                </a>
+                <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
+                <a href="/products" class="btn-secondary"><i class="fa-solid fa-grid"></i> All Products</a>
             </div>
         </div>
 
         <!-- SUBCATEGORY PILLS -->
-        <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
-            <!-- Dynamically populated -->
-        </div>
-
-        <!-- SUBCATEGORY CARDS GRID -->
-        <section class="subcategory-cards-section" id="subcategory-cards-section" style="display:none;">
-            <h2>Explore Subcategories</h2>
-            <div class="subcategory-cards-grid" id="subcategory-cards-grid">
-                <!-- Dynamically populated -->
-            </div>
-        </section>
+        <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;"></div>
 
         <!-- SORT BAR -->
         <div class="sort-bar" id="sort-bar" style="display:none;">
@@ -979,60 +756,15 @@
         </div>
 
         <!-- PRODUCTS GRID -->
-        <div class="products-grid" id="products-grid">
-            <!-- SKELETON LOADING -->
-        </div>
+        <div class="products-grid" id="products-grid"></div>
 
         <!-- EMPTY STATE -->
         <div class="empty-state" id="empty-state">
             <i class="fa-solid fa-box-open"></i>
             <h3>No Products Found</h3>
-            <p>There are no products in this category yet. Check back soon or browse other categories.</p>
-            <a href="/" class="btn-primary" style="display:inline-flex;margin-top:16px;">
-                Back to Home
-            </a>
+            <p>There are no products in this category yet.</p>
+            <a href="/" class="btn-primary" style="display:inline-flex;margin-top:16px;">Back to Home</a>
         </div>
-
-        <!-- BOTTOM CTA SECTION (Image + Video CTA) -->
-        <section class="bottom-cta-section" id="bottom-cta-section" style="display:none;">
-            <!-- Image CTA Card -->
-            <a href="#" class="bottom-cta-card" id="bottom-cta-image-card" style="display:none;">
-                <img src="" alt="" id="bottom-cta-image">
-                <div class="bottom-cta-content">
-                    <h3 id="bottom-cta-image-title">Shop the Collection</h3>
-                    <p>Discover our latest arrivals</p>
-                    <span class="cta-btn">
-                        <span id="bottom-cta-image-btn-text">Explore Now</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-                </div>
-            </a>
-            <!-- Video CTA Card -->
-            <a href="#" class="bottom-cta-card" id="bottom-cta-video-card" style="display:none;">
-                <video src="" muted loop autoplay playsinline id="bottom-cta-video"></video>
-                <div class="bottom-cta-content">
-                    <h3 id="bottom-cta-video-title">Watch the Story</h3>
-                    <p>See the craftsmanship behind our products</p>
-                    <span class="cta-btn">
-                        <span id="bottom-cta-video-btn-text">Watch Now</span>
-                        <i class="fa-solid fa-play"></i>
-                    </span>
-                </div>
-            </a>
-        </section>
-
-        <!-- CATEGORY VIDEO SECTION -->
-        <section class="category-video-section" id="category-video-section" style="display:none;">
-            <video src="" id="category-main-video" muted loop autoplay playsinline></video>
-            <div class="category-video-overlay" id="category-video-overlay" style="display:none;">
-                <h3 id="video-overlay-title">Experience the Collection</h3>
-                <p id="video-overlay-description">Watch our exclusive video showcase</p>
-                <a href="#" class="cta-btn" id="video-overlay-cta">
-                    <span id="video-overlay-cta-text">Learn More</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
-            </div>
-        </section>
 
     </main>
 
@@ -1043,7 +775,7 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - COMPLETE DYNAMIC API-DRIVEN PAGE
+        // CATEGORY PAGE - CLEAN & PREMIUM DESIGN
         // ============================================================
 
         let currentCategory = null;
@@ -1059,28 +791,18 @@
             const loader = document.getElementById('page-loader');
             if (loader) {
                 loader.classList.add('hidden');
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 400);
+                setTimeout(() => { loader.style.display = 'none'; }, 400);
             }
         }
 
         // ============================================================
-        // HELPER: Create Slug
+        // HELPERS
         // ============================================================
         function createSlug(text) {
             if (!text) return '';
-            return text
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .replace(/^-+|-+$/g, '');
+            return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
         }
 
-        // ============================================================
-        // HELPER: Get product slug
-        // ============================================================
         function getProductSlug(product) {
             return product.slug || createSlug(product.title || 'product');
         }
@@ -1091,67 +813,45 @@
         function parseURL() {
             const path = window.location.pathname;
             const parts = path.replace(/^\/+|\/+$/g, '').split('/');
-
-            let categorySlug = null;
-            let subcategorySlug = null;
-
-            if (parts.length >= 2 && parts[0] === 'category') {
-                categorySlug = parts[1];
-            }
-            if (parts.length >= 3) {
-                subcategorySlug = parts[2];
-            }
-
+            let categorySlug = null, subcategorySlug = null;
+            if (parts.length >= 2 && parts[0] === 'category') categorySlug = parts[1];
+            if (parts.length >= 3) subcategorySlug = parts[2];
             return { categorySlug, subcategorySlug };
         }
 
         // ============================================================
-        // FETCH FROM API
+        // FETCH API
         // ============================================================
         async function fetchAPI(endpoint) {
             try {
                 const res = await fetch(endpoint);
-                if (!res.ok) {
-                    console.error(`API Error: ${endpoint} returned ${res.status}`);
-                    return null;
-                }
+                if (!res.ok) { console.error(`API Error: ${endpoint} ${res.status}`); return null; }
                 return await res.json();
             } catch (err) {
-                console.error(`Fetch error for ${endpoint}:`, err);
+                console.error(`Fetch error: ${endpoint}`, err);
                 return null;
             }
         }
 
         // ============================================================
-        // LOAD CATEGORY BY SLUG
+        // LOAD DATA
         // ============================================================
         async function loadCategoryBySlug(slug) {
             const categories = await fetchAPI('/api/categories');
             if (!categories || !Array.isArray(categories)) return null;
-            
-            const category = categories.find(cat => cat.slug === slug || createSlug(cat.name) === slug);
-            return category || null;
+            return categories.find(cat => cat.slug === slug || createSlug(cat.name) === slug) || null;
         }
 
-        // ============================================================
-        // LOAD SUBCATEGORIES BY CATEGORY SLUG
-        // ============================================================
         async function loadSubcategories(categorySlug) {
             const subcategories = await fetchAPI(`/api/subcategories?category_slug=${encodeURIComponent(categorySlug)}`);
             return subcategories || [];
         }
 
-        // ============================================================
-        // LOAD PRODUCTS BY CATEGORY SLUG
-        // ============================================================
         async function loadProductsByCategory(categorySlug) {
             const products = await fetchAPI(`/api/categories/${encodeURIComponent(categorySlug)}/products`);
             return products || [];
         }
 
-        // ============================================================
-        // LOAD PRODUCTS BY SUBCATEGORY SLUG
-        // ============================================================
         async function loadProductsBySubcategory(subcategorySlug) {
             const products = await fetchAPI(`/api/subcategories/${encodeURIComponent(subcategorySlug)}/products`);
             return products || [];
@@ -1175,22 +875,67 @@
         }
 
         // ============================================================
-        // SHOW ERROR STATE
+        // SHOW ERROR
         // ============================================================
         function showErrorState() {
-            document.getElementById('category-hero').style.display = 'none';
+            document.getElementById('image-banner-section').style.display = 'none';
+            document.getElementById('video-banner-section').style.display = 'none';
             document.getElementById('error-state').style.display = 'flex';
             document.getElementById('subcategory-pills').style.display = 'none';
-            document.getElementById('subcategory-cards-section').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'none';
             document.getElementById('products-grid').innerHTML = '';
             document.getElementById('empty-state').classList.remove('visible');
-            document.getElementById('bottom-cta-section').style.display = 'none';
-            document.getElementById('category-video-section').style.display = 'none';
             document.getElementById('breadcrumb-current').textContent = 'Not Found';
             document.title = 'Category Not Found | JAYENWARE';
             document.getElementById('meta-description').content = 'Category not found. Browse our available categories at Jayenware.';
             hidePageLoader();
+        }
+
+        // ============================================================
+        // RENDER BANNERS
+        // ============================================================
+        function renderBanners() {
+            if (!currentCategory) return;
+
+            const imageSection = document.getElementById('image-banner-section');
+            const videoSection = document.getElementById('video-banner-section');
+
+            // IMAGE BANNER
+            if (currentCategory.image_url) {
+                imageSection.style.display = 'block';
+                document.getElementById('banner-image').src = currentCategory.image_url;
+                document.getElementById('banner-image').alt = currentCategory.image_cta_title || currentCategory.name;
+
+                if (currentCategory.image_cta_title) {
+                    document.getElementById('banner-image-title').textContent = currentCategory.image_cta_title;
+                    document.getElementById('banner-image-link').href = currentCategory.image_cta_link || '#';
+                    document.getElementById('banner-image-link-text').textContent = currentCategory.image_cta_title;
+                    document.getElementById('banner-image-link').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('banner-image-title').textContent = currentCategory.name;
+                    document.getElementById('banner-image-link').style.display = 'none';
+                }
+            } else {
+                imageSection.style.display = 'none';
+            }
+
+            // VIDEO BANNER
+            if (currentCategory.video_url) {
+                videoSection.style.display = 'block';
+                document.getElementById('banner-video').src = currentCategory.video_url;
+
+                if (currentCategory.video_cta_title) {
+                    document.getElementById('banner-video-title').textContent = currentCategory.video_cta_title;
+                    document.getElementById('banner-video-link').href = currentCategory.video_cta_link || '#';
+                    document.getElementById('banner-video-link-text').textContent = currentCategory.video_cta_title;
+                    document.getElementById('banner-video-link').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('banner-video-title').textContent = currentCategory.name;
+                    document.getElementById('banner-video-link').style.display = 'none';
+                }
+            } else {
+                videoSection.style.display = 'none';
+            }
         }
 
         // ============================================================
@@ -1199,16 +944,13 @@
         function renderProductCard(product) {
             const isOut = product.stock !== undefined && product.stock !== null && product.stock <= 0;
             const slug = getProductSlug(product);
-
             let badge = '';
             if (!isOut) {
                 if (product.is_new_arrival) badge = '<span class="card-badge">New</span>';
                 else if (product.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>';
                 else if (product.is_limited_edition) badge = '<span class="card-badge">Limited</span>';
             }
-
             const imgSrc = product.img || '/logo.png';
-
             return `
             <a href="/product/${slug}" class="product-card">
                 <div class="card-img">
@@ -1228,64 +970,38 @@
         }
 
         // ============================================================
-        // RENDER SUBCATEGORY CARD
-        // ============================================================
-        function renderSubcategoryCard(subcategory) {
-            const categorySlug = createSlug(currentCategory?.name || '');
-            const subSlug = createSlug(subcategory.name);
-            const imgSrc = subcategory.image_url || '/logo.png';
-            
-            return `
-            <a href="/category/${categorySlug}/${subSlug}" class="subcategory-card">
-                <div class="subcategory-card-img">
-                    <img src="${imgSrc}" alt="${subcategory.name}" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
-                </div>
-                <div class="subcategory-card-body">
-                    <h3>${subcategory.name}</h3>
-                    ${subcategory.meta_description ? `<p>${subcategory.meta_description}</p>` : ''}
-                    ${subcategory.image_cta_title ? `<span class="subcategory-card-cta">${subcategory.image_cta_title} <i class="fa-solid fa-arrow-right"></i></span>` : ''}
-                </div>
-            </a>`;
-        }
-
-        // ============================================================
-        // SORT PRODUCTS
+        // SORT & RENDER PRODUCTS
         // ============================================================
         function sortProducts(products, sortType) {
             const sorted = [...products];
             switch (sortType) {
-                case 'price-low':
-                    return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
-                case 'price-high':
-                    return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
-                case 'name-az':
-                    return sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                case 'price-low': return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+                case 'price-high': return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+                case 'name-az': return sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
                 case 'newest':
-                default:
-                    return sorted.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+                default: return sorted.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
             }
         }
 
-        // ============================================================
-        // RENDER PRODUCTS
-        // ============================================================
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             const emptyState = document.getElementById('empty-state');
             const resultCount = document.getElementById('result-count');
-
             const sorted = sortProducts(allProducts, currentSort);
-
             if (!sorted.length) {
                 grid.innerHTML = '';
                 emptyState.classList.add('visible');
                 resultCount.textContent = '0 products';
                 return;
             }
-
             emptyState.classList.remove('visible');
             resultCount.textContent = `${sorted.length} product${sorted.length !== 1 ? 's' : ''}`;
             grid.innerHTML = sorted.map(renderProductCard).join('');
+        }
+
+        function handleSort(sortType) {
+            currentSort = sortType;
+            renderProducts();
         }
 
         // ============================================================
@@ -1294,133 +1010,31 @@
         function renderSubcategoryPills() {
             const container = document.getElementById('subcategory-pills');
             if (!container) return;
-
             if (!allSubcategories.length) {
                 container.style.display = 'none';
                 return;
             }
-
             container.style.display = 'flex';
-
             const categorySlug = createSlug(currentCategory?.name || '');
-
             const allPill = `
             <a href="/category/${categorySlug}" class="subcategory-pill ${!currentSubcategory ? 'active' : ''}">
-                All
-                <span class="count">${allProducts.length}</span>
+                All<span class="count">${allProducts.length}</span>
             </a>`;
-
             const pills = allSubcategories.map(sub => {
                 const subSlug = createSlug(sub.name);
                 const count = allProducts.filter(p => p.subcategory_id === sub.id).length;
                 const isActive = currentSubcategory && currentSubcategory.id === sub.id;
-                return `
-                <a href="/category/${categorySlug}/${subSlug}" class="subcategory-pill ${isActive ? 'active' : ''}">
-                    ${sub.name}
-                    <span class="count">${count}</span>
-                </a>`;
+                return `<a href="/category/${categorySlug}/${subSlug}" class="subcategory-pill ${isActive ? 'active' : ''}">${sub.name}<span class="count">${count}</span></a>`;
             }).join('');
-
             container.innerHTML = allPill + pills;
         }
 
         // ============================================================
-        // RENDER SUBCATEGORY CARDS
+        // UPDATE META & URL
         // ============================================================
-        function renderSubcategoryCards() {
-            const section = document.getElementById('subcategory-cards-section');
-            const grid = document.getElementById('subcategory-cards-grid');
-            
-            if (!section || !grid) return;
-
-            if (!allSubcategories.length) {
-                section.style.display = 'none';
-                return;
-            }
-
-            // Show cards only when viewing "All" (no specific subcategory selected)
-            if (currentSubcategory) {
-                section.style.display = 'none';
-                return;
-            }
-
-            section.style.display = 'block';
-            grid.innerHTML = allSubcategories.map(renderSubcategoryCard).join('');
-        }
-
-        // ============================================================
-        // RENDER BOTTOM CTA SECTION
-        // ============================================================
-        function renderBottomCTA() {
-            const section = document.getElementById('bottom-cta-section');
-            const imageCard = document.getElementById('bottom-cta-image-card');
-            const videoCard = document.getElementById('bottom-cta-video-card');
-            
-            if (!section || !currentCategory) return;
-
-            let hasContent = false;
-
-            // Image CTA
-            if (currentCategory.image_url && currentCategory.image_cta_title) {
-                imageCard.style.display = 'flex';
-                imageCard.href = currentCategory.image_cta_link || '#';
-                document.getElementById('bottom-cta-image').src = currentCategory.image_url;
-                document.getElementById('bottom-cta-image-title').textContent = currentCategory.image_cta_title;
-                document.getElementById('bottom-cta-image-btn-text').textContent = currentCategory.image_cta_title || 'Explore Now';
-                hasContent = true;
-            } else {
-                imageCard.style.display = 'none';
-            }
-
-            // Video CTA
-            if (currentCategory.video_url && currentCategory.video_cta_title) {
-                videoCard.style.display = 'flex';
-                videoCard.href = currentCategory.video_cta_link || '#';
-                document.getElementById('bottom-cta-video').src = currentCategory.video_url;
-                document.getElementById('bottom-cta-video-title').textContent = currentCategory.video_cta_title;
-                document.getElementById('bottom-cta-video-btn-text').textContent = currentCategory.video_cta_title || 'Watch Now';
-                hasContent = true;
-            } else {
-                videoCard.style.display = 'none';
-            }
-
-            section.style.display = hasContent ? 'grid' : 'none';
-        }
-
-        // ============================================================
-        // RENDER CATEGORY VIDEO SECTION
-        // ============================================================
-        function renderCategoryVideoSection() {
-            const section = document.getElementById('category-video-section');
-            const overlay = document.getElementById('category-video-overlay');
-            
-            if (!section || !currentCategory) return;
-
-            if (currentCategory.video_url) {
-                section.style.display = 'block';
-                document.getElementById('category-main-video').src = currentCategory.video_url;
-
-                if (currentCategory.video_cta_title) {
-                    overlay.style.display = 'flex';
-                    document.getElementById('video-overlay-title').textContent = currentCategory.video_cta_title;
-                    document.getElementById('video-overlay-description').textContent = currentCategory.meta_description || '';
-                    document.getElementById('video-overlay-cta').href = currentCategory.video_cta_link || '#';
-                    document.getElementById('video-overlay-cta-text').textContent = currentCategory.video_cta_title;
-                } else {
-                    overlay.style.display = 'none';
-                }
-            } else {
-                section.style.display = 'none';
-            }
-        }
-
-        // ============================================================
-        // UPDATE BREADCRUMB & URL & META
-        // ============================================================
-        function updateBreadcrumbAndURL() {
+        function updateMetaAndURL() {
             const categoryName = currentCategory?.name || 'Category';
             const categorySlug = createSlug(categoryName);
-
             let url = `/category/${categorySlug}`;
             let title = categoryName;
             let breadcrumbHTML = `<a href="/">Home</a><span class="separator">/</span>`;
@@ -1435,155 +1049,56 @@
             }
 
             document.getElementById('breadcrumb').innerHTML = breadcrumbHTML;
-            
-            // Update Page Title
+
             const seoTitle = currentSubcategory?.meta_title || currentCategory?.meta_title || title;
             document.title = `${seoTitle} | JAYENWARE`;
             document.getElementById('page-title').textContent = `${seoTitle} | JAYENWARE`;
-            
-            // Update Meta Description
+
             const seoDesc = currentSubcategory?.meta_description || currentCategory?.meta_description || `Shop ${title} at Jayenware Official Store.`;
             document.getElementById('meta-description').content = seoDesc;
-            
-            // Update Meta Keywords
+
             const seoKeywords = currentSubcategory?.keywords || currentCategory?.keywords || '';
             document.getElementById('meta-keywords').content = seoKeywords;
-            
-            // Update Canonical URL
+
             document.getElementById('canonical-url').href = `https://www.jayenware.shop${url}`;
 
-            // Inject Video Schema if available
-            injectVideoSchema();
-
-            // Update URL without reload
-            window.history.replaceState(
-                { category: currentCategory, subcategory: currentSubcategory }, 
-                '', 
-                url
-            );
-        }
-
-        // ============================================================
-        // INJECT VIDEO SCHEMA (Structured Data)
-        // ============================================================
-        function injectVideoSchema() {
-            // Remove existing schema
+            // Video Schema
             const existing = document.getElementById('video-schema');
             if (existing) existing.remove();
-
             const videoSchema = currentSubcategory?.video_schema || currentCategory?.video_schema;
-            if (!videoSchema) return;
-
-            try {
-                const schemaObj = typeof videoSchema === 'string' ? JSON.parse(videoSchema) : videoSchema;
-                const script = document.createElement('script');
-                script.id = 'video-schema';
-                script.type = 'application/ld+json';
-                script.textContent = JSON.stringify(schemaObj);
-                document.head.appendChild(script);
-            } catch (e) {
-                console.warn('Invalid video schema JSON');
+            if (videoSchema) {
+                try {
+                    const schemaObj = typeof videoSchema === 'string' ? JSON.parse(videoSchema) : videoSchema;
+                    const script = document.createElement('script');
+                    script.id = 'video-schema';
+                    script.type = 'application/ld+json';
+                    script.textContent = JSON.stringify(schemaObj);
+                    document.head.appendChild(script);
+                } catch (e) { console.warn('Invalid video schema JSON'); }
             }
+
+            window.history.replaceState({ category: currentCategory, subcategory: currentSubcategory }, '', url);
         }
 
         // ============================================================
-        // UPDATE HERO SECTION
-        // ============================================================
-        function updateHeroSection() {
-            if (!currentCategory) return;
-
-            document.getElementById('category-name').textContent = currentCategory.name;
-            document.getElementById('category-description').textContent = 
-                currentCategory.meta_description || currentCategory.description || 'Discover our exclusive collection';
-
-            // Hero Image
-            const heroImg = document.getElementById('category-hero-img');
-            if (currentCategory.image_url) {
-                heroImg.src = currentCategory.image_url;
-                heroImg.style.display = 'block';
-                heroImg.alt = currentCategory.name;
-                heroImg.onerror = function() {
-                    this.style.display = 'none';
-                };
-            } else {
-                heroImg.style.display = 'none';
-            }
-
-            // Hero Video (as background alternative to image)
-            const heroVideo = document.getElementById('category-hero-video');
-            if (currentCategory.video_url && !currentCategory.image_url) {
-                heroVideo.src = currentCategory.video_url;
-                heroVideo.style.display = 'block';
-            } else {
-                heroVideo.style.display = 'none';
-            }
-
-            // Hero CTA Buttons
-            const ctaContainer = document.getElementById('hero-cta-buttons');
-            const ctaImage = document.getElementById('hero-cta-image');
-            const ctaVideo = document.getElementById('hero-cta-video');
-            
-            let hasCTA = false;
-
-            if (currentCategory.image_cta_title) {
-                ctaImage.style.display = 'inline-flex';
-                ctaImage.href = currentCategory.image_cta_link || '#';
-                document.getElementById('hero-cta-image-text').textContent = currentCategory.image_cta_title;
-                hasCTA = true;
-            } else {
-                ctaImage.style.display = 'none';
-            }
-
-            if (currentCategory.video_cta_title) {
-                ctaVideo.style.display = 'inline-flex';
-                ctaVideo.href = currentCategory.video_cta_link || '#';
-                document.getElementById('hero-cta-video-text').textContent = currentCategory.video_cta_title;
-                hasCTA = true;
-            } else {
-                ctaVideo.style.display = 'none';
-            }
-
-            ctaContainer.style.display = hasCTA ? 'block' : 'none';
-        }
-
-        // ============================================================
-        // HANDLE SUBCATEGORY CLICK (from pills)
+        // HANDLE SUBCATEGORY CLICK
         // ============================================================
         async function handleSubcategoryClick(subcategoryId) {
             const categorySlug = createSlug(currentCategory?.name || '');
-
             if (subcategoryId === null) {
-                // All products
                 currentSubcategory = null;
                 allProducts = await loadProductsByCategory(categorySlug);
             } else {
                 currentSubcategory = allSubcategories.find(s => s.id === subcategoryId) || null;
                 if (currentSubcategory) {
-                    const subSlug = createSlug(currentSubcategory.name);
-                    allProducts = await loadProductsBySubcategory(subSlug);
+                    allProducts = await loadProductsBySubcategory(createSlug(currentSubcategory.name));
                 }
             }
-
-            updateBreadcrumbAndURL();
-            updateHeroSection();
+            updateMetaAndURL();
             renderSubcategoryPills();
-            renderSubcategoryCards();
             renderProducts();
-            renderBottomCTA();
-            renderCategoryVideoSection();
-            
             const gridEl = document.getElementById('products-grid');
-            if (gridEl) {
-                window.scrollTo({ top: gridEl.offsetTop - 100, behavior: 'smooth' });
-            }
-        }
-
-        // ============================================================
-        // HANDLE SORT
-        // ============================================================
-        function handleSort(sortType) {
-            currentSort = sortType;
-            renderProducts();
+            if (gridEl) window.scrollTo({ top: gridEl.offsetTop - 100, behavior: 'smooth' });
         }
 
         // ============================================================
@@ -1591,63 +1106,35 @@
         // ============================================================
         async function initCategoryPage() {
             renderSkeleton();
-
             const { categorySlug, subcategorySlug } = parseURL();
+            console.log('[Category] URL:', { categorySlug, subcategorySlug });
 
-            console.log('[Category Page] Parsed URL:', { categorySlug, subcategorySlug });
+            if (!categorySlug) { window.location.href = '/'; hidePageLoader(); return; }
 
-            if (!categorySlug) {
-                window.location.href = '/';
-                hidePageLoader();
-                return;
-            }
-
-            // Load category
             currentCategory = await loadCategoryBySlug(categorySlug);
-            console.log('[Category Page] Loaded category:', currentCategory);
+            console.log('[Category] Loaded:', currentCategory);
 
-            if (!currentCategory) {
-                showErrorState();
-                return;
-            }
+            if (!currentCategory) { showErrorState(); return; }
 
-            // Show hero
-            document.getElementById('category-hero').style.display = 'flex';
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
 
-            updateHeroSection();
-
-            // Load subcategories
+            renderBanners();
             allSubcategories = await loadSubcategories(categorySlug);
-            console.log('[Category Page] Loaded subcategories:', allSubcategories.length);
 
-            // Load products
             if (subcategorySlug) {
                 const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subcategorySlug);
-                if (foundSub) {
-                    currentSubcategory = foundSub;
-                    allProducts = await loadProductsBySubcategory(subcategorySlug);
-                } else {
-                    currentSubcategory = null;
-                    allProducts = await loadProductsByCategory(categorySlug);
-                }
+                currentSubcategory = foundSub || null;
+                allProducts = foundSub ? await loadProductsBySubcategory(subcategorySlug) : await loadProductsByCategory(categorySlug);
             } else {
                 currentSubcategory = null;
                 allProducts = await loadProductsByCategory(categorySlug);
             }
 
-            console.log('[Category Page] Loaded products:', allProducts.length);
-
-            // Update all UI sections
-            updateBreadcrumbAndURL();
+            console.log('[Category] Products:', allProducts.length);
+            updateMetaAndURL();
             renderSubcategoryPills();
-            renderSubcategoryCards();
             renderProducts();
-            renderBottomCTA();
-            renderCategoryVideoSection();
-
-            // Hide loader
             hidePageLoader();
         }
 
@@ -1657,11 +1144,7 @@
         function initBackToTop() {
             const btn = document.getElementById('back-to-top');
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 500) {
-                    btn.classList.add('visible');
-                } else {
-                    btn.classList.remove('visible');
-                }
+                btn.classList.toggle('visible', window.scrollY > 500);
             }, { passive: true });
         }
 
@@ -1673,26 +1156,16 @@
             initBackToTop();
         });
 
-        // Handle browser back/forward
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.category) {
                 currentCategory = event.state.category;
                 currentSubcategory = event.state.subcategory || null;
-                
-                document.getElementById('category-hero').style.display = 'flex';
                 document.getElementById('error-state').style.display = 'none';
                 document.getElementById('sort-bar').style.display = 'flex';
-                
-                if (currentCategory) {
-                    updateHeroSection();
-                }
-                
-                updateBreadcrumbAndURL();
+                renderBanners();
+                updateMetaAndURL();
                 renderSubcategoryPills();
-                renderSubcategoryCards();
                 renderProducts();
-                renderBottomCTA();
-                renderCategoryVideoSection();
                 hidePageLoader();
             } else {
                 initCategoryPage();
