@@ -1,623 +1,1084 @@
-const express = require('express');
-const path = require('path');
-const { createClient } = require('@supabase/supabase-js');
+<!DOCTYPE html>
+<html lang="en-BD" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title id="page-title">Category | JAYENWARE</title>
 
-const app = express();
+    <meta name="description" content="Shop by category at Jayenware Official Store. Discover authentic Bangladesh heritage fashion.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffffff">
 
-const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
+    <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-// ============================================
-// Helper: Create slug from string
-// ============================================
-function createSlug(text) {
-    return text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
-}
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1d1d1f',
+                        accent: '#86868b',
+                        soft: '#f5f5f7',
+                        blue: '#007aff'
+                    }
+                }
+            }
+        }
+    </script>
 
-// ============================================
-// Helper: Format product with category/subcategory names
-// ============================================
-function formatProduct(product) {
-    if (!product) return null;
-    return {
-        ...product,
-        category: product.categories?.name || null,
-        subcategory: product.subcategories?.name || null
-    };
-}
+    <style>
+        :root {
+            --primary: #1d1d1f;
+            --accent: #86868b;
+            --soft: #f5f5f7;
+            --blue: #007aff;
+            --card-width: 260px;
+            --card-gap: 16px;
+        }
 
-function formatProducts(products) {
-    if (!products) return [];
-    return products.map(formatProduct);
-}
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
 
-// ============================================
-// API Routes
-// ============================================
+        body {
+            background-color: #ffffff;
+            color: #1d1d1f;
+            overflow-x: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
 
-// সব প্রোডাক্ট - ক্যাটাগরি ও সাব-ক্যাটাগরি নাম সহ
-app.get('/api/products', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .order('created_at', { ascending: false });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(formatProducts(data));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+        img {
+            max-width: 100%;
+            height: auto;
+        }
 
-// ============================================
-// ক্যাটাগরি API (Slug-based)
-// ============================================
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-// সব ক্যাটাগরি - Public
-app.get('/api/categories', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const categoriesWithSlugs = data.map(cat => ({
-            ...cat,
-            slug: createSlug(cat.name)
-        }));
-        
-        res.json(categoriesWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+        /* ==================== LOADING SKELETON ==================== */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে
-app.get('/api/categories/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true);
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const category = data.find(cat => createSlug(cat.name) === slug);
-        if (!category) return res.status(404).json({ error: 'Category not found' });
-        
-        res.json({
-            ...category,
-            slug: createSlug(category.name)
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
 
-// ============================================
-// সাব-ক্যাটাগরি API (Slug-based)
-// ============================================
+        /* ==================== BREADCRUMB ==================== */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--accent);
+            padding: 16px 0;
+        }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+        .breadcrumb .separator {
+            font-size: 10px;
+        }
+        .breadcrumb .current {
+            color: var(--primary);
+            font-weight: 600;
+        }
 
-// সব সাব-ক্যাটাগরি - Public
-app.get('/api/subcategories', async (req, res) => {
-    try {
-        const { category_slug } = req.query;
-        
-        let query = supabase
-            .from('subcategories')
-            .select('*, categories(name, id)')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (category_slug) {
-            const { data: categories } = await supabase
-                .from('categories')
-                .select('id')
-                .eq('is_active', true);
+        /* ==================== CATEGORY HERO BANNER ==================== */
+        .category-hero {
+            position: relative;
+            background: #f5f5f7;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-hero-content {
+            padding: 32px;
+            z-index: 2;
+        }
+
+        .category-hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .category-hero p {
+            font-size: 14px;
+            color: var(--accent);
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .category-hero-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .category-hero {
+                border-radius: 0;
+                margin: 0 -16px 24px;
+                min-height: 160px;
+            }
+            .category-hero h1 {
+                font-size: 24px;
+            }
+            .category-hero-image {
+                width: 100%;
+                opacity: 0.25;
+            }
+        }
+
+        /* ==================== ERROR STATE ==================== */
+        .error-state {
+            text-align: center;
+            padding: 64px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+        }
+        .error-state i {
+            font-size: 56px;
+            color: #d1d1d6;
+            margin-bottom: 20px;
+        }
+        .error-state h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .error-state p {
+            font-size: 14px;
+            color: var(--accent);
+            max-width: 450px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+        .error-state .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .error-state .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+        .error-state .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid #d1d1d6;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+        .error-state .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
+        /* ==================== SUBCATEGORY PILLS ==================== */
+        .subcategory-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e5e5ea;
+        }
+
+        .subcategory-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid #e5e5ea;
+            background: #fff;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .subcategory-pill:hover {
+            border-color: var(--primary);
+            background: #fafafa;
+        }
+
+        .subcategory-pill.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .subcategory-pill .count {
+            font-size: 10px;
+            margin-left: 6px;
+            opacity: 0.7;
+        }
+
+        /* ==================== PRODUCT GRID ==================== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .products-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 24px;
+            }
+        }
+
+        /* ==================== PRODUCT CARD ==================== */
+        .product-card {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .product-card:active {
+            transform: scale(0.97);
+        }
+
+        @media (hover: hover) {
+            .product-card:hover {
+                transform: translateY(-4px);
+            }
+        }
+
+        .product-card .card-img {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: #fafafa;
+            overflow: hidden;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .product-card .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        @media (hover: hover) {
+            .product-card:hover .card-img img {
+                transform: scale(1.05);
+            }
+        }
+
+        .product-card .card-body {
+            padding: 0 4px;
+        }
+
+        .product-card .card-category {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .product-card .card-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .product-card .card-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .product-card .card-old-price {
+            font-size: 12px;
+            color: #b0b0b5;
+            text-decoration: line-through;
+            margin-left: 6px;
+            font-weight: 400;
+        }
+
+        .product-card .card-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 2;
+            padding: 3px 8px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #ffffff;
+            color: var(--primary);
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .product-card .badge-sale {
+            color: #d70015 !important;
+        }
+
+        .product-card .soldout-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .product-card .soldout-overlay span {
+            background: var(--primary);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 64px 20px;
+            display: none;
+        }
+
+        .empty-state.visible {
+            display: block;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #d1d1d6;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+            color: var(--accent);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ==================== BACK TO TOP ==================== */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-to-top:active {
+            transform: scale(0.9);
+        }
+
+        /* ==================== SORT BAR ==================== */
+        .sort-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .sort-bar .result-count {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .sort-select {
+            padding: 8px 32px 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e5ea;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            background: #fff;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 8l3-3.5' stroke='%2386868b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 639px) {
+            .category-hero {
+                min-height: 140px;
+            }
+            .category-hero-content {
+                padding: 20px;
+            }
+            .category-hero h1 {
+                font-size: 20px;
+            }
+            .subcategory-pills {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 8px;
+                margin-bottom: 20px;
+            }
+            .subcategory-pill {
+                flex-shrink: 0;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-16">
+                <a href="/" class="flex items-center gap-2 text-primary no-underline">
+                    <img src="/logo.png" alt="JAYENWARE" class="h-8 w-8 rounded-lg" onerror="this.style.display='none'">
+                    <span class="font-bold text-lg hidden sm:inline">JAYENWARE</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="/" class="text-sm font-medium text-accent hover:text-primary transition no-underline">Home</a>
+                    <a href="/products" class="text-sm font-medium text-accent hover:text-primary transition no-underline">All Products</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/wishlist" class="text-accent hover:text-primary transition">
+                        <i class="fa-regular fa-heart"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+
+        <!-- BREADCRUMB -->
+        <nav class="breadcrumb" id="breadcrumb">
+            <a href="/">Home</a>
+            <span class="separator">/</span>
+            <span class="current" id="breadcrumb-current">Category</span>
+        </nav>
+
+        <!-- CATEGORY HERO -->
+        <section class="category-hero" id="category-hero">
+            <div class="category-hero-content">
+                <h1 id="category-name">Loading...</h1>
+                <p id="category-description">Discover our exclusive collection</p>
+            </div>
+            <img id="category-hero-img" src="" alt="" class="category-hero-image" style="display:none;">
+        </section>
+
+        <!-- ERROR STATE (initially hidden) -->
+        <div class="error-state" id="error-state" style="display:none;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <h2>Category Not Found</h2>
+            <p>The category you're looking for doesn't exist or may have been removed. Please check the URL or browse our available categories.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+                <a href="/" class="btn-primary">
+                    <i class="fa-solid fa-house"></i> Back to Home
+                </a>
+                <a href="/products" class="btn-secondary">
+                    <i class="fa-solid fa-grid"></i> All Products
+                </a>
+            </div>
+        </div>
+
+        <!-- SUBCATEGORY PILLS -->
+        <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- SORT BAR -->
+        <div class="sort-bar" id="sort-bar" style="display:none;">
+            <span class="result-count" id="result-count">Loading products...</span>
+            <select class="sort-select" id="sort-select" onchange="handleSort(this.value)">
+                <option value="newest">Newest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name-az">Name: A to Z</option>
+            </select>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div class="products-grid" id="products-grid">
+            <!-- SKELETON LOADING -->
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" id="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>No Products Found</h3>
+            <p>There are no products in this category yet. Check back soon or browse other categories.</p>
+            <a href="/" class="btn-primary" style="display:inline-flex;margin-top:16px;">
+                Back to Home
+            </a>
+        </div>
+
+    </main>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // ============================================================
+        // CATEGORY PAGE - FULLY DYNAMIC WITH API-DRIVEN DATA
+        // ============================================================
+
+        let currentCategory = null;
+        let currentSubcategory = null;
+        let allProducts = [];
+        let allSubcategories = [];
+        let currentSort = 'newest';
+
+        // ============================================================
+        // HELPER: Create Slug
+        // ============================================================
+        function createSlug(text) {
+            if (!text) return '';
+            return text
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        // ============================================================
+        // HELPER: Get product slug
+        // ============================================================
+        function getProductSlug(product) {
+            return product.slug || createSlug(product.title || 'product');
+        }
+
+        // ============================================================
+        // PARSE URL
+        // ============================================================
+        function parseURL() {
+            const path = window.location.pathname;
+            const parts = path.replace(/^\/+|\/+$/g, '').split('/');
+
+            let categorySlug = null;
+            let subcategorySlug = null;
+
+            if (parts.length >= 2 && parts[0] === 'category') {
+                categorySlug = parts[1];
+            }
+            if (parts.length >= 3) {
+                subcategorySlug = parts[2];
+            }
+
+            return { categorySlug, subcategorySlug };
+        }
+
+        // ============================================================
+        // FETCH FROM API (Server-side API routes)
+        // ============================================================
+        async function fetchAPI(endpoint) {
+            try {
+                const res = await fetch(endpoint);
+                if (!res.ok) {
+                    console.error(`API Error: ${endpoint} returned ${res.status}`);
+                    return null;
+                }
+                return await res.json();
+            } catch (err) {
+                console.error(`Fetch error for ${endpoint}:`, err);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD CATEGORY BY SLUG (Using server API)
+        // ============================================================
+        async function loadCategoryBySlug(slug) {
+            const categories = await fetchAPI('/api/categories');
+            if (!categories || !Array.isArray(categories)) return null;
             
-            const category = categories.find(cat => createSlug(cat.name) === category_slug);
-            if (category) {
-                query = query.eq('category_id', category.id);
+            const category = categories.find(cat => cat.slug === slug || createSlug(cat.name) === slug);
+            return category || null;
+        }
+
+        // ============================================================
+        // LOAD SUBCATEGORIES BY CATEGORY SLUG (Using server API)
+        // ============================================================
+        async function loadSubcategories(categorySlug) {
+            const subcategories = await fetchAPI(`/api/subcategories?category_slug=${encodeURIComponent(categorySlug)}`);
+            return subcategories || [];
+        }
+
+        // ============================================================
+        // LOAD PRODUCTS BY CATEGORY SLUG (Using server API)
+        // ============================================================
+        async function loadProductsByCategory(categorySlug) {
+            const products = await fetchAPI(`/api/categories/${encodeURIComponent(categorySlug)}/products`);
+            return products || [];
+        }
+
+        // ============================================================
+        // LOAD PRODUCTS BY SUBCATEGORY SLUG (Using server API)
+        // ============================================================
+        async function loadProductsBySubcategory(subcategorySlug) {
+            const products = await fetchAPI(`/api/subcategories/${encodeURIComponent(subcategorySlug)}/products`);
+            return products || [];
+        }
+
+        // ============================================================
+        // RENDER SKELETON
+        // ============================================================
+        function renderSkeleton(count = 8) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = Array(count).fill(`
+                <div class="product-card">
+                    <div class="card-img skeleton" style="aspect-ratio:3/4;"></div>
+                    <div class="card-body">
+                        <div class="skeleton" style="height:10px;width:40%;margin-bottom:8px;"></div>
+                        <div class="skeleton" style="height:14px;width:80%;margin-bottom:4px;"></div>
+                        <div class="skeleton" style="height:14px;width:60%;"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // SHOW ERROR STATE
+        // ============================================================
+        function showErrorState() {
+            document.getElementById('category-hero').style.display = 'none';
+            document.getElementById('error-state').style.display = 'flex';
+            document.getElementById('subcategory-pills').style.display = 'none';
+            document.getElementById('sort-bar').style.display = 'none';
+            document.getElementById('products-grid').innerHTML = '';
+            document.getElementById('empty-state').classList.remove('visible');
+            document.getElementById('breadcrumb-current').textContent = 'Not Found';
+            document.title = 'Category Not Found | JAYENWARE';
+        }
+
+        // ============================================================
+        // RENDER PRODUCT CARD
+        // ============================================================
+        function renderProductCard(product) {
+            const isOut = product.stock !== undefined && product.stock !== null && product.stock <= 0;
+            const slug = getProductSlug(product);
+
+            let badge = '';
+            if (!isOut) {
+                if (product.is_new_arrival) badge = '<span class="card-badge">New</span>';
+                else if (product.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>';
+                else if (product.is_limited_edition) badge = '<span class="card-badge">Limited</span>';
+            }
+
+            const imgSrc = product.img || '/logo.png';
+
+            return `
+            <a href="/product/${slug}" class="product-card">
+                <div class="card-img">
+                    <img src="${imgSrc}" alt="${product.title || 'Product'}" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
+                    ${badge}
+                    ${isOut ? '<div class="soldout-overlay"><span>Sold Out</span></div>' : ''}
+                </div>
+                <div class="card-body">
+                    <span class="card-category">${product.subcategory || product.category || ''}</span>
+                    <h3 class="card-title">${product.title || 'Untitled'}</h3>
+                    <div>
+                        <span class="card-price">৳${product.price || 0}</span>
+                        ${product.old_price ? `<span class="card-old-price">৳${product.old_price}</span>` : ''}
+                    </div>
+                </div>
+            </a>`;
+        }
+
+        // ============================================================
+        // SORT PRODUCTS
+        // ============================================================
+        function sortProducts(products, sortType) {
+            const sorted = [...products];
+            switch (sortType) {
+                case 'price-low':
+                    return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+                case 'price-high':
+                    return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+                case 'name-az':
+                    return sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                case 'newest':
+                default:
+                    return sorted.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+            }
+        }
+
+        // ============================================================
+        // RENDER PRODUCTS
+        // ============================================================
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const emptyState = document.getElementById('empty-state');
+            const resultCount = document.getElementById('result-count');
+
+            const sorted = sortProducts(allProducts, currentSort);
+
+            if (!sorted.length) {
+                grid.innerHTML = '';
+                emptyState.classList.add('visible');
+                resultCount.textContent = '0 products';
+                return;
+            }
+
+            emptyState.classList.remove('visible');
+            resultCount.textContent = `${sorted.length} product${sorted.length !== 1 ? 's' : ''}`;
+            grid.innerHTML = sorted.map(renderProductCard).join('');
+        }
+
+        // ============================================================
+        // RENDER SUBCATEGORY PILLS
+        // ============================================================
+        function renderSubcategoryPills() {
+            const container = document.getElementById('subcategory-pills');
+            if (!container) return;
+
+            if (!allSubcategories.length) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'flex';
+
+            const categorySlug = createSlug(currentCategory?.name || '');
+
+            const allPill = `
+            <a href="/category/${categorySlug}" class="subcategory-pill ${!currentSubcategory ? 'active' : ''}">
+                All
+                <span class="count">${allProducts.length}</span>
+            </a>`;
+
+            const pills = allSubcategories.map(sub => {
+                const subSlug = createSlug(sub.name);
+                const count = allProducts.filter(p => p.subcategory_id === sub.id).length;
+                const isActive = currentSubcategory && currentSubcategory.id === sub.id;
+                return `
+                <a href="/category/${categorySlug}/${subSlug}" class="subcategory-pill ${isActive ? 'active' : ''}">
+                    ${sub.name}
+                    <span class="count">${count}</span>
+                </a>`;
+            }).join('');
+
+            container.innerHTML = allPill + pills;
+        }
+
+        // ============================================================
+        // UPDATE BREADCRUMB & URL & META
+        // ============================================================
+        function updateBreadcrumbAndURL() {
+            const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+            const pageTitle = document.getElementById('page-title');
+            const canonicalUrl = document.getElementById('canonical-url');
+            const categoryName = currentCategory?.name || 'Category';
+            const categorySlug = createSlug(categoryName);
+
+            let url = `/category/${categorySlug}`;
+            let title = categoryName;
+            let breadcrumbHTML = `<a href="/">Home</a><span class="separator">/</span>`;
+
+            if (currentSubcategory) {
+                const subSlug = createSlug(currentSubcategory.name);
+                url += `/${subSlug}`;
+                title = `${currentSubcategory.name} - ${categoryName}`;
+                breadcrumbHTML += `<a href="/category/${categorySlug}">${categoryName}</a><span class="separator">/</span><span class="current">${currentSubcategory.name}</span>`;
             } else {
-                return res.status(404).json({ error: 'Category not found' });
+                breadcrumbHTML += `<span class="current">${categoryName}</span>`;
+            }
+
+            document.getElementById('breadcrumb').innerHTML = breadcrumbHTML;
+            document.title = `${title} | JAYENWARE`;
+            if (pageTitle) pageTitle.textContent = `${title} | JAYENWARE`;
+            if (canonicalUrl) canonicalUrl.href = `https://www.jayenware.shop${url}`;
+
+            // Update URL without reload
+            window.history.replaceState(
+                { category: currentCategory, subcategory: currentSubcategory }, 
+                '', 
+                url
+            );
+        }
+
+        // ============================================================
+        // HANDLE SUBCATEGORY CLICK (from pills)
+        // ============================================================
+        async function handleSubcategoryClick(subcategoryId) {
+            const categorySlug = createSlug(currentCategory?.name || '');
+
+            if (subcategoryId === null) {
+                // All products
+                currentSubcategory = null;
+                allProducts = await loadProductsByCategory(categorySlug);
+            } else {
+                currentSubcategory = allSubcategories.find(s => s.id === subcategoryId) || null;
+                if (currentSubcategory) {
+                    const subSlug = createSlug(currentSubcategory.name);
+                    allProducts = await loadProductsBySubcategory(subSlug);
+                }
+            }
+
+            updateBreadcrumbAndURL();
+            renderSubcategoryPills();
+            renderProducts();
+            
+            const gridEl = document.getElementById('products-grid');
+            if (gridEl) {
+                window.scrollTo({ top: gridEl.offsetTop - 100, behavior: 'smooth' });
             }
         }
-        
-        const { data, error } = await query;
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const subcategoriesWithSlugs = data.map(sub => ({
-            ...sub,
-            slug: createSlug(sub.name),
-            category_slug: createSlug(sub.categories?.name || '')
-        }));
-        
-        res.json(subcategoriesWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
-// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে
-app.get('/api/subcategories/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const { category_slug } = req.query;
-        
-        const { data, error } = await supabase
-            .from('subcategories')
-            .select('*, categories(name, id)')
-            .eq('is_active', true);
-        if (error) return res.status(500).json({ error: error.message });
-        
-        let subcategory = data.find(sub => createSlug(sub.name) === slug);
-        
-        if (category_slug && subcategory) {
-            const catSlug = createSlug(subcategory.categories?.name || '');
-            if (catSlug !== category_slug) {
-                subcategory = null;
+        // ============================================================
+        // HANDLE SORT
+        // ============================================================
+        function handleSort(sortType) {
+            currentSort = sortType;
+            renderProducts();
+        }
+
+        // ============================================================
+        // INIT PAGE
+        // ============================================================
+        async function initCategoryPage() {
+            renderSkeleton();
+
+            const { categorySlug, subcategorySlug } = parseURL();
+
+            console.log('[Category Page] Parsed URL:', { categorySlug, subcategorySlug });
+
+            if (!categorySlug) {
+                window.location.href = '/';
+                return;
             }
+
+            // Load category
+            currentCategory = await loadCategoryBySlug(categorySlug);
+            console.log('[Category Page] Loaded category:', currentCategory);
+
+            if (!currentCategory) {
+                showErrorState();
+                return;
+            }
+
+            // Show hero
+            document.getElementById('category-hero').style.display = 'flex';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('sort-bar').style.display = 'flex';
+
+            document.getElementById('category-name').textContent = currentCategory.name;
+            document.getElementById('category-description').textContent = 
+                currentCategory.description || 'Discover our exclusive collection';
+            
+            if (currentCategory.image_url) {
+                const heroImg = document.getElementById('category-hero-img');
+                heroImg.src = currentCategory.image_url;
+                heroImg.style.display = 'block';
+                heroImg.alt = currentCategory.name;
+                heroImg.onerror = function() {
+                    this.style.display = 'none';
+                };
+            }
+
+            // Load subcategories
+            allSubcategories = await loadSubcategories(categorySlug);
+            console.log('[Category Page] Loaded subcategories:', allSubcategories.length);
+
+            // Load products
+            if (subcategorySlug) {
+                const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subcategorySlug);
+                if (foundSub) {
+                    currentSubcategory = foundSub;
+                    allProducts = await loadProductsBySubcategory(subcategorySlug);
+                } else {
+                    // Subcategory not found, load all products for this category
+                    currentSubcategory = null;
+                    allProducts = await loadProductsByCategory(categorySlug);
+                }
+            } else {
+                currentSubcategory = null;
+                allProducts = await loadProductsByCategory(categorySlug);
+            }
+
+            console.log('[Category Page] Loaded products:', allProducts.length);
+
+            // Update UI
+            updateBreadcrumbAndURL();
+            renderSubcategoryPills();
+            renderProducts();
         }
-        
-        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
-        
-        res.json({
-            ...subcategory,
-            slug: createSlug(subcategory.name),
-            category_slug: createSlug(subcategory.categories?.name || '')
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
-// ============================================
-// মেনু আইটেমস API (Complete Menu Structure)
-// ============================================
-
-// Main Menu - সমস্ত মেনু আইটেম হায়ারার্কি সহ
-app.get('/api/menu', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select(`
-                *,
-                categories:category_id (id, name),
-                subcategories:subcategory_id (id, name)
-            `)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const buildMenuTree = (items, parentId = null) => {
-            return items
-                .filter(item => item.parent_id === parentId)
-                .map(item => {
-                    const menuItem = {
-                        ...item,
-                        slug: createSlug(item.title),
-                        category_slug: item.categories ? createSlug(item.categories.name) : null,
-                        subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
-                        children: buildMenuTree(items, item.id)
-                    };
-                    return menuItem;
-                });
-        };
-        
-        const menuTree = buildMenuTree(data);
-        res.json(menuTree);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Flat menu items (simplified)
-app.get('/api/menu-items', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select(`
-                *,
-                categories:category_id (id, name),
-                subcategories:subcategory_id (id, name)
-            `)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const menuItemsWithSlugs = data.map(item => ({
-            ...item,
-            slug: createSlug(item.title),
-            category_slug: item.categories ? createSlug(item.categories.name) : null,
-            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
-        }));
-        
-        res.json(menuItemsWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Menu item by slug
-app.get('/api/menu-items/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select(`
-                *,
-                categories:category_id (id, name),
-                subcategories:subcategory_id (id, name)
-            `)
-            .eq('is_active', true);
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const menuItem = data.find(item => createSlug(item.title) === slug);
-        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
-        
-        res.json({
-            ...menuItem,
-            slug: createSlug(menuItem.title),
-            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
-            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// Category Product API (Get products by category)
-// ============================================
-app.get('/api/categories/:slug/products', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data: categories } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true);
-        
-        const category = categories.find(cat => createSlug(cat.name) === slug);
-        if (!category) return res.status(404).json({ error: 'Category not found' });
-        
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .eq('category_id', category.id)
-            .order('created_at', { ascending: false });
-        if (error) return res.status(500).json({ error: error.message });
-        
-        res.json(formatProducts(data));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// Subcategory Products API
-// ============================================
-app.get('/api/subcategories/:slug/products', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data: subcategories } = await supabase
-            .from('subcategories')
-            .select('*')
-            .eq('is_active', true);
-        
-        const subcategory = subcategories.find(sub => createSlug(sub.name) === slug);
-        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
-        
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .eq('subcategory_id', subcategory.id)
-            .order('created_at', { ascending: false });
-        if (error) return res.status(500).json({ error: error.message });
-        
-        res.json(formatProducts(data));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// হিরো স্লাইড
-// ============================================
-app.get('/api/hero', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('hero')
-            .select('*')
-            .order('created_at', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// হিরো ভিডিও - শুধু active ভিডিওগুলো
-app.get('/api/hero-videos', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('hero_videos')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// হিরো সেকেন্ডারি - শুধু active সেকেন্ডারি ব্যানারগুলো
-app.get('/api/hero-secondary', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('hero_secondary')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// নিউজ
-// ============================================
-app.get('/api/news', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .order('created_at', { ascending: false });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// প্রোডাক্ট ডিটেইলস - slug দিয়ে
-// ============================================
-app.get('/api/product/:slug', async (req, res) => {
-    try {
-        const slug = req.params.slug;
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .order('created_at', { ascending: false });
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.status(404).json({ error: 'Product not found' });
-        
-        res.json(formatProduct(product));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// প্রোডাক্ট কালার - slug দিয়ে
-app.get('/api/product-colors', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_colors')
-            .select('*')
-            .eq('product_id', product.id)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// প্রোডাক্ট ভেরিয়েন্ট - slug দিয়ে
-app.get('/api/product-variants', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_variants')
-            .select('*')
-            .eq('product_id', product.id)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// প্রোডাক্ট রিভিউ - slug দিয়ে
-app.get('/api/product-reviews', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_reviews')
-            .select('*')
-            .eq('product_id', product.id)
-            .order('created_at', { ascending: false });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// প্রোডাক্ট ভিডিও - slug দিয়ে
-app.get('/api/product-videos', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_videos')
-            .select('*')
-            .eq('product_id', product.id)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// প্রোডাক্ট ব্যানার - slug দিয়ে
-app.get('/api/product-banners', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_banners')
-            .select('*')
-            .eq('product_id', product.id)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// কালার সাইজ - color ids দিয়ে
-app.get('/api/color-sizes', async (req, res) => {
-    try {
-        const ids = req.query.ids;
-        if (!ids) return res.json([]);
-        
-        const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-        if (!idArray.length) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('color_sizes')
-            .select('*')
-            .in('color_id', idArray)
-            .order('sort_order', { ascending: true });
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// রিভিউ সাবমিট
-// ============================================
-app.post('/api/submit-review', express.json(), async (req, res) => {
-    try {
-        const { product_id, user_name, rating, review_text } = req.body;
-        if (!product_id || !rating || !review_text) {
-            return res.status(400).json({ error: 'Missing fields' });
+        // ============================================================
+        // BACK TO TOP
+        // ============================================================
+        function initBackToTop() {
+            const btn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    btn.classList.add('visible');
+                } else {
+                    btn.classList.remove('visible');
+                }
+            }, { passive: true });
         }
-        
-        const { data, error } = await supabase
-            .from('product_reviews')
-            .insert([{
-                product_id,
-                user_name: user_name || 'Guest User',
-                rating: parseInt(rating),
-                review_text
-            }]);
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json({ success: true, data });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
-// ============================================
-// CATEGORY PAGE ROUTE - Slug-based dynamic routing
-// ============================================
-// যেকোনো /category/:slug বা /category/:slug/:subcategory_slug রাউট category.html এ ফরোয়ার্ড
-app.get('/category/:slug*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
-});
+        // ============================================================
+        // STARTUP
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initCategoryPage();
+            initBackToTop();
+        });
 
-// ============================================
-// SPA Fallback - সব রাউট index.html এ ফরোয়ার্ড
-// ============================================
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-});
-
-module.exports = app;
+        // Handle browser back/forward
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.category) {
+                currentCategory = event.state.category;
+                currentSubcategory = event.state.subcategory || null;
+                // Re-initialize with current state
+                document.getElementById('category-hero').style.display = 'flex';
+                document.getElementById('error-state').style.display = 'none';
+                document.getElementById('sort-bar').style.display = 'flex';
+                
+                if (currentCategory) {
+                    document.getElementById('category-name').textContent = currentCategory.name;
+                    document.getElementById('category-description').textContent = 
+                        currentCategory.description || 'Discover our exclusive collection';
+                    
+                    if (currentCategory.image_url) {
+                        const heroImg = document.getElementById('category-hero-img');
+                        heroImg.src = currentCategory.image_url;
+                        heroImg.style.display = 'block';
+                        heroImg.alt = currentCategory.name;
+                    }
+                }
+                
+                updateBreadcrumbAndURL();
+                renderSubcategoryPills();
+                renderProducts();
+            } else {
+                initCategoryPage();
+            }
+        });
+    </script>
+</body>
+</html>
