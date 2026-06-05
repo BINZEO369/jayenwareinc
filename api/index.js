@@ -606,6 +606,14 @@ app.post('/api/submit-review', express.json(), async (req, res) => {
 });
 
 // ============================================
+// CATEGORY PAGE ROUTE - Slug-based dynamic routing
+// ============================================
+// যেকোনো /category/:slug বা /category/:slug/:subcategory_slug রাউট category.html এ ফরোয়ার্ড
+app.get('/category/:slug*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
+});
+
+// ============================================
 // SPA Fallback - সব রাউট index.html এ ফরোয়ার্ড
 // ============================================
 app.get('*', (req, res) => {
