@@ -841,12 +841,18 @@
 
         async function fetchCategory(slug) {
             try {
+                console.log('Fetching category with slug:', slug);
                 const response = await fetch(`/api/categories/${slug}`);
+                console.log('Category API response status:', response.status);
+                
                 if (!response.ok) {
                     console.error('Category fetch failed:', response.status);
                     return null;
                 }
-                return await response.json();
+                
+                const data = await response.json();
+                console.log('Category data received:', data);
+                return data;
             } catch (error) {
                 console.error('Error fetching category:', error);
                 return null;
@@ -855,12 +861,18 @@
 
         async function fetchCategoryProducts(categorySlug) {
             try {
+                console.log('Fetching products for category slug:', categorySlug);
                 const response = await fetch(`/api/categories/${categorySlug}/products`);
+                console.log('Products API response status:', response.status);
+                
                 if (!response.ok) {
                     console.error('Products fetch failed:', response.status);
                     return [];
                 }
-                return await response.json();
+                
+                const data = await response.json();
+                console.log('Products data received:', data?.length || 0, 'products');
+                return data;
             } catch (error) {
                 console.error('Error fetching products:', error);
                 return [];
@@ -869,12 +881,18 @@
 
         async function fetchSubcategories(categorySlug) {
             try {
+                console.log('Fetching subcategories for category slug:', categorySlug);
                 const response = await fetch(`/api/subcategories?category_slug=${categorySlug}`);
+                console.log('Subcategories API response status:', response.status);
+                
                 if (!response.ok) {
                     console.error('Subcategories fetch failed:', response.status);
                     return [];
                 }
-                return await response.json();
+                
+                const data = await response.json();
+                console.log('Subcategories data received:', data?.length || 0, 'subcategories');
+                return data;
             } catch (error) {
                 console.error('Error fetching subcategories:', error);
                 return [];
@@ -883,12 +901,18 @@
 
         async function fetchSubcategoryProducts(subcategorySlug) {
             try {
+                console.log('Fetching products for subcategory slug:', subcategorySlug);
                 const response = await fetch(`/api/subcategories/${subcategorySlug}/products`);
+                console.log('Subcategory products API response status:', response.status);
+                
                 if (!response.ok) {
                     console.error('Subcategory products fetch failed:', response.status);
                     return [];
                 }
-                return await response.json();
+                
+                const data = await response.json();
+                console.log('Subcategory products data received:', data?.length || 0, 'products');
+                return data;
             } catch (error) {
                 console.error('Error fetching subcategory products:', error);
                 return [];
@@ -1075,7 +1099,8 @@
             countEl.textContent = `Showing ${Math.min(displayLimit, total)} of ${total} products`;
 
             grid.innerHTML = displayProducts.map(product => {
-                const isOut = product.stock <= 0;
+                // FIXED: is_out_of_stock ব্যবহার করা হচ্ছে
+                const isOut = product.is_out_of_stock === true;
                 const productSlug = getProductSlug(product);
 
                 let badge = '';
@@ -1163,6 +1188,7 @@
                 renderSkeleton();
                 
                 // Fetch category products
+                console.log('Filtering by all products...');
                 allProducts = await fetchCategoryProducts(currentCategory.slug);
                 renderProducts();
             } else {
@@ -1177,6 +1203,7 @@
                 renderSkeleton();
                 
                 // Fetch subcategory products
+                console.log('Filtering by subcategory:', subSlug);
                 allProducts = await fetchSubcategoryProducts(subSlug);
                 renderProducts();
             }
@@ -1214,11 +1241,17 @@
         // ============================================================
 
         async function initCategoryPage() {
+            console.log('Initializing category page...');
+            
             const categorySlug = getCategorySlugFromURL();
             const subcategorySlug = getSubcategorySlugFromURL();
 
+            console.log('Category slug from URL:', categorySlug);
+            console.log('Subcategory slug from URL:', subcategorySlug);
+
             if (!categorySlug) {
                 // No category slug, redirect to home
+                console.log('No category slug found, redirecting to home...');
                 window.location.href = '/';
                 return;
             }
@@ -1227,10 +1260,12 @@
             renderSkeleton();
 
             // Fetch category data - সরাসরি slug ব্যবহার করে
+            console.log('Fetching category data...');
             currentCategory = await fetchCategory(categorySlug);
 
             if (!currentCategory) {
                 // Category not found
+                console.error('Category not found!');
                 document.getElementById('products-grid').innerHTML = '';
                 document.getElementById('products-count').textContent = 'Category not found';
                 document.getElementById('empty-state').style.display = 'block';
@@ -1239,10 +1274,13 @@
                 return;
             }
 
+            console.log('Category loaded successfully:', currentCategory.name);
+
             // Render hero section
             renderHero();
 
             // Fetch subcategories - ক্যাটাগরির slug ব্যবহার করে
+            console.log('Fetching subcategories...');
             allSubcategories = await fetchSubcategories(currentCategory.slug);
             renderSubcategories();
 
@@ -1250,13 +1288,17 @@
             if (subcategorySlug) {
                 currentSubcategory = subcategorySlug;
                 
+                console.log('Loading subcategory products for:', subcategorySlug);
+                
                 // Update active pill
-                document.querySelectorAll('.subcategory-pill').forEach(pill => {
-                    pill.classList.remove('active');
-                    if (pill.dataset.subcategory === subcategorySlug) {
-                        pill.classList.add('active');
-                    }
-                });
+                setTimeout(() => {
+                    document.querySelectorAll('.subcategory-pill').forEach(pill => {
+                        pill.classList.remove('active');
+                        if (pill.dataset.subcategory === subcategorySlug) {
+                            pill.classList.add('active');
+                        }
+                    });
+                }, 100);
 
                 // Update breadcrumb
                 const subcategory = allSubcategories.find(s => s.slug === subcategorySlug);
@@ -1270,16 +1312,21 @@
             } else {
                 currentSubcategory = 'all';
                 
+                console.log('Loading all category products...');
+                
                 // Fetch category products
                 allProducts = await fetchCategoryProducts(currentCategory.slug);
             }
 
             // Render products
+            console.log('Rendering products...');
             renderProducts();
+            console.log('Category page initialization complete!');
         }
 
         // Handle browser back/forward
         window.addEventListener('popstate', () => {
+            console.log('Navigation state changed, reinitializing...');
             displayLimit = 16;
             initCategoryPage();
         });
@@ -1289,6 +1336,7 @@
             document.addEventListener('DOMContentLoaded', initCategoryPage);
         } else {
             // DOM already loaded
+            console.log('DOM already loaded, initializing immediately...');
             initCategoryPage();
         }
     </script>
