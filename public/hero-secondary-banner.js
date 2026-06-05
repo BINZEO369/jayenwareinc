@@ -629,31 +629,38 @@
      * Position: AFTER #hero-container (Hero Banner এর পরে)
      */
     function injectHTML() {
-        // Check if already exists
-        let container = document.getElementById('hero-secondary-container');
-        if (container) {
-            console.log('[HeroSecondaryBanner] 📦 Container already exists in DOM');
-            return;
-        }
+    let container = document.getElementById('hero-secondary-container');
+    if (container) {
+        console.log('[HeroSecondaryBanner] 📦 Container already exists in DOM');
+        return;
+    }
 
-        console.log('[HeroSecondaryBanner] 🔧 Creating and injecting container...');
-        
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = getHeroSecondaryHTML();
-        const bannerElement = tempDiv.firstElementChild;
+    console.log('[HeroSecondaryBanner] 🔧 Creating and injecting container...');
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = getHeroSecondaryHTML();
+    const bannerElement = tempDiv.firstElementChild;
 
+    // 🔥 Hot Products সেকশনের পরে বসবে
+    const hotProductsSection = document.getElementById('hot-products-section');
+
+    if (hotProductsSection && hotProductsSection.parentNode) {
+        // ✅ PRIMARY: Insert AFTER hot-products-section
+        hotProductsSection.parentNode.insertBefore(bannerElement, hotProductsSection.nextSibling);
+        console.log('[HeroSecondaryBanner] ✅ Inserted AFTER hot-products-section');
+    } else {
+        // Fallback 1: hero-container এর পরে
         const heroContainer = document.getElementById('hero-container');
-
         if (heroContainer && heroContainer.parentNode) {
-            // ✅ PRIMARY: Insert AFTER hero container
             heroContainer.parentNode.insertBefore(bannerElement, heroContainer.nextSibling);
-            console.log('[HeroSecondaryBanner] ✅ Inserted AFTER hero-container');
+            console.log('[HeroSecondaryBanner] ⚠️ Inserted AFTER hero-container (fallback)');
         } else {
-            // Fallback: insert at beginning of body
+            // Fallback 2: body এর শুরুতে
             document.body.insertBefore(bannerElement, document.body.firstChild);
-            console.log('[HeroSecondaryBanner] ⚠️ Inserted at body start (hero-container not found)');
+            console.log('[HeroSecondaryBanner] ⚠️ Inserted at body start (ultimate fallback)');
         }
     }
+}
 
     /**
      * Try to initialize with available data
