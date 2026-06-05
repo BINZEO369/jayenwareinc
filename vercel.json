@@ -20,12 +20,32 @@
       "dest": "/public/components.js"
     },
     {
+      "src": "/hero-banner.js",
+      "dest": "/public/hero-banner.js"
+    },
+    {
+      "src": "/hero-video.js",
+      "dest": "/public/hero-video.js"
+    },
+    {
+      "src": "/hero-secondary-banner.js",
+      "dest": "/public/hero-secondary-banner.js"
+    },
+    {
+      "src": "/fonts.js",
+      "dest": "/public/fonts.js"
+    },
+    {
       "src": "/logo.png",
       "dest": "/public/logo.png"
     },
     {
       "src": "/product/(.*)",
       "dest": "/public/product.html"
+    },
+    {
+      "src": "/category/(.*)",
+      "dest": "/public/category.html"
     },
     {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
@@ -41,10 +61,6 @@
     },
     {
       "src": "/journal",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/category/(.*)",
       "dest": "/public/index.html"
     },
     {
