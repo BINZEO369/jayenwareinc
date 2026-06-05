@@ -804,11 +804,8 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - COMPLETE APPLICATION
+        // CATEGORY PAGE - COMPLETE APPLICATION (SLUG-BASED)
         // ============================================================
-
-        const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
 
         // State
         let currentCategory = null;
@@ -818,34 +815,20 @@
         let displayLimit = 16;
         const LOAD_MORE_INCREMENT = 16;
 
-        // Helper: Create slug
-        function createSlug(text) {
-            if (!text) return '';
-            return text
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .replace(/^-+|-+$/g, '');
-        }
-
-        // Helper: Get product slug
+        // Helper: Get product slug (falls back to product.slug from database)
         function getProductSlug(product) {
-            return (product.slug || product.title || 'product')
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/^-+|-+$/g, '');
+            return product.slug || '';
         }
 
-        // Get category slug from URL
+        // Helper: URL থেকে category slug বের করা
         function getCategorySlugFromURL() {
             const path = window.location.pathname;
+            // URL pattern: /category/category-slug বা /category/category-slug/subcategory-slug
             const match = path.match(/\/category\/([^\/]+)/);
             return match ? match[1] : null;
         }
 
-        // Get subcategory slug from URL
+        // Helper: URL থেকে subcategory slug বের করা
         function getSubcategorySlugFromURL() {
             const path = window.location.pathname;
             const match = path.match(/\/category\/[^\/]+\/([^\/]+)/);
@@ -853,13 +836,16 @@
         }
 
         // ============================================================
-        // FETCH API FUNCTIONS
+        // FETCH API FUNCTIONS - সরাসরি ডাটাবেস slug ব্যবহার করে
         // ============================================================
 
         async function fetchCategory(slug) {
             try {
                 const response = await fetch(`/api/categories/${slug}`);
-                if (!response.ok) return null;
+                if (!response.ok) {
+                    console.error('Category fetch failed:', response.status);
+                    return null;
+                }
                 return await response.json();
             } catch (error) {
                 console.error('Error fetching category:', error);
@@ -867,10 +853,13 @@
             }
         }
 
-        async function fetchCategoryProducts(slug) {
+        async function fetchCategoryProducts(categorySlug) {
             try {
-                const response = await fetch(`/api/categories/${slug}/products`);
-                if (!response.ok) return [];
+                const response = await fetch(`/api/categories/${categorySlug}/products`);
+                if (!response.ok) {
+                    console.error('Products fetch failed:', response.status);
+                    return [];
+                }
                 return await response.json();
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -881,7 +870,10 @@
         async function fetchSubcategories(categorySlug) {
             try {
                 const response = await fetch(`/api/subcategories?category_slug=${categorySlug}`);
-                if (!response.ok) return [];
+                if (!response.ok) {
+                    console.error('Subcategories fetch failed:', response.status);
+                    return [];
+                }
                 return await response.json();
             } catch (error) {
                 console.error('Error fetching subcategories:', error);
@@ -889,10 +881,13 @@
             }
         }
 
-        async function fetchSubcategoryProducts(slug) {
+        async function fetchSubcategoryProducts(subcategorySlug) {
             try {
-                const response = await fetch(`/api/subcategories/${slug}/products`);
-                if (!response.ok) return [];
+                const response = await fetch(`/api/subcategories/${subcategorySlug}/products`);
+                if (!response.ok) {
+                    console.error('Subcategory products fetch failed:', response.status);
+                    return [];
+                }
                 return await response.json();
             } catch (error) {
                 console.error('Error fetching subcategory products:', error);
@@ -907,7 +902,6 @@
         function renderHero() {
             if (!currentCategory) return;
 
-            const heroSection = document.getElementById('category-hero');
             const video = document.getElementById('hero-video');
             const image = document.getElementById('hero-image');
             const badge = document.getElementById('hero-badge');
@@ -930,10 +924,11 @@
                     `Shop ${currentCategory.name} collection at JAYENWARE Bangladesh. Premium quality products with fast delivery.`;
             }
 
-            // Canonical URL
+            // Canonical URL - ডাটাবেস slug ব্যবহার করে
             const canonicalUrl = document.getElementById('canonical-url');
             if (canonicalUrl) {
-                canonicalUrl.href = `https://www.jayenware.shop/category/${createSlug(currentCategory.name)}`;
+                const categorySlug = currentCategory.slug || '';
+                canonicalUrl.href = `https://www.jayenware.shop/category/${categorySlug}`;
             }
 
             // Video or Image Background
@@ -943,6 +938,12 @@
                 video.src = currentCategory.video_url;
                 video.play().catch(() => {
                     // Autoplay blocked, show image fallback
+                    if (currentCategory.image_url) {
+                        video.style.display = 'none';
+                        image.style.display = 'block';
+                        image.src = currentCategory.image_url;
+                        image.alt = currentCategory.name;
+                    }
                 });
             } else if (currentCategory.image_url) {
                 video.style.display = 'none';
@@ -972,7 +973,7 @@
                 }
             }
 
-            // Badge (using meta_title or custom)
+            // Badge (meta_title)
             if (currentCategory.meta_title) {
                 badge.style.display = 'inline-block';
                 badge.textContent = currentCategory.meta_title;
@@ -994,10 +995,12 @@
                 ctaText.textContent = currentCategory.image_cta_title;
                 cta.href = currentCategory.image_cta_link;
 
-                // If external link, open in new tab
                 if (currentCategory.image_cta_link.startsWith('http')) {
                     cta.setAttribute('target', '_blank');
                     cta.setAttribute('rel', 'noopener');
+                } else {
+                    cta.removeAttribute('target');
+                    cta.removeAttribute('rel');
                 }
             } else if (currentCategory.video_cta_title && currentCategory.video_cta_link) {
                 cta.style.display = 'inline-flex';
@@ -1022,20 +1025,22 @@
 
             section.style.display = 'block';
 
+            // All pill
             let html = `
             <a href="#" class="subcategory-pill ${currentSubcategory === 'all' ? 'active' : ''}" 
                data-subcategory="all" onclick="filterBySubcategory('all', event)">
                 All
             </a>`;
 
+            // Subcategory pills - ডাটাবেস slug ব্যবহার করে
             allSubcategories.forEach(sub => {
-                const subSlug = sub.slug || createSlug(sub.name);
+                const subSlug = sub.slug || '';
                 const isActive = currentSubcategory === subSlug;
                 const imgHTML = sub.image_url ? 
                     `<img src="${sub.image_url}" alt="${sub.name}" class="subcategory-pill-icon">` : '';
 
                 html += `
-                <a href="/category/${createSlug(currentCategory.name)}/${subSlug}" 
+                <a href="/category/${currentCategory.slug}/${subSlug}" 
                    class="subcategory-pill ${isActive ? 'active' : ''}"
                    data-subcategory="${subSlug}" 
                    onclick="filterBySubcategory('${subSlug}', event)">
@@ -1071,7 +1076,7 @@
 
             grid.innerHTML = displayProducts.map(product => {
                 const isOut = product.stock <= 0;
-                const slug = getProductSlug(product);
+                const productSlug = getProductSlug(product);
 
                 let badge = '';
                 if (!isOut) {
@@ -1082,7 +1087,7 @@
                 }
 
                 return `
-                <a href="/product/${slug}" class="product-card">
+                <a href="/product/${productSlug}" class="product-card">
                     <div class="product-card-img">
                         <img src="${product.img || product.image_url || ''}" alt="${product.title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22><rect fill=%22%23f5f5f7%22 width=%22300%22 height=%22400%22/><text fill=%22%2386868b%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22>No Image</text></svg>'">
                         ${badge}
@@ -1122,13 +1127,14 @@
                 </div>`;
             }
             grid.innerHTML = html;
+            document.getElementById('products-count').textContent = 'Loading products...';
         }
 
         // ============================================================
         // ACTIONS
         // ============================================================
 
-        function filterBySubcategory(subSlug, event) {
+        async function filterBySubcategory(subSlug, event) {
             if (event) {
                 event.preventDefault();
             }
@@ -1150,27 +1156,29 @@
 
             if (subSlug === 'all') {
                 breadcrumbSub.style.display = 'none';
-                // Update URL
-                window.history.pushState({}, '', `/category/${createSlug(currentCategory.name)}`);
+                // Update URL - ডাটাবেস slug ব্যবহার করে
+                window.history.pushState({}, '', `/category/${currentCategory.slug}`);
+                
+                // Show skeleton while loading
+                renderSkeleton();
+                
+                // Fetch category products
+                allProducts = await fetchCategoryProducts(currentCategory.slug);
+                renderProducts();
             } else {
-                const subcategory = allSubcategories.find(s => (s.slug || createSlug(s.name)) === subSlug);
+                const subcategory = allSubcategories.find(s => s.slug === subSlug);
                 breadcrumbSub.style.display = 'inline';
                 breadcrumbSubName.textContent = subcategory ? subcategory.name : subSlug;
-                // Update URL
-                window.history.pushState({}, '', `/category/${createSlug(currentCategory.name)}/${subSlug}`);
-            }
-
-            // Fetch products for subcategory
-            if (subSlug === 'all') {
-                fetchCategoryProducts(createSlug(currentCategory.name)).then(products => {
-                    allProducts = products;
-                    renderProducts();
-                });
-            } else {
-                fetchSubcategoryProducts(subSlug).then(products => {
-                    allProducts = products;
-                    renderProducts();
-                });
+                
+                // Update URL - ডাটাবেস slug ব্যবহার করে
+                window.history.pushState({}, '', `/category/${currentCategory.slug}/${subSlug}`);
+                
+                // Show skeleton while loading
+                renderSkeleton();
+                
+                // Fetch subcategory products
+                allProducts = await fetchSubcategoryProducts(subSlug);
+                renderProducts();
             }
         }
 
@@ -1180,13 +1188,13 @@
         }
 
         function addToCartProduct(productId) {
-            // Check if addToCart function exists (from main site)
-            if (typeof window.parent !== 'undefined' && window.parent.addToCart) {
+            // চেক করুন addToCart ফাংশন গ্লোবালি আছে কিনা
+            if (typeof window.addToCart === 'function') {
+                window.addToCart(productId, null);
+            } else if (typeof window.parent !== 'undefined' && typeof window.parent.addToCart === 'function') {
                 window.parent.addToCart(productId, null);
-            } else if (typeof addToCart === 'function') {
-                addToCart(productId, null);
             } else {
-                // Simple cart in localStorage
+                // Fallback: Simple cart in localStorage
                 let cart = JSON.parse(localStorage.getItem('jayenware_cart') || '[]');
                 const existing = cart.find(item => item.productId === productId);
                 if (existing) {
@@ -1195,7 +1203,9 @@
                     cart.push({ productId, quantity: 1, variantId: null });
                 }
                 localStorage.setItem('jayenware_cart', JSON.stringify(cart));
-                alert('Product added to cart!');
+                
+                // Optional: Show toast notification
+                console.log('Product added to cart:', productId);
             }
         }
 
@@ -1216,7 +1226,7 @@
             // Show skeleton while loading
             renderSkeleton();
 
-            // Fetch category data
+            // Fetch category data - সরাসরি slug ব্যবহার করে
             currentCategory = await fetchCategory(categorySlug);
 
             if (!currentCategory) {
@@ -1229,16 +1239,17 @@
                 return;
             }
 
-            // Render hero
+            // Render hero section
             renderHero();
 
-            // Fetch subcategories
-            allSubcategories = await fetchSubcategories(categorySlug);
+            // Fetch subcategories - ক্যাটাগরির slug ব্যবহার করে
+            allSubcategories = await fetchSubcategories(currentCategory.slug);
             renderSubcategories();
 
-            // Set current subcategory from URL
+            // Determine which products to fetch
             if (subcategorySlug) {
                 currentSubcategory = subcategorySlug;
+                
                 // Update active pill
                 document.querySelectorAll('.subcategory-pill').forEach(pill => {
                     pill.classList.remove('active');
@@ -1248,7 +1259,7 @@
                 });
 
                 // Update breadcrumb
-                const subcategory = allSubcategories.find(s => (s.slug || createSlug(s.name)) === subcategorySlug);
+                const subcategory = allSubcategories.find(s => s.slug === subcategorySlug);
                 if (subcategory) {
                     document.getElementById('breadcrumb-subcategory').style.display = 'inline';
                     document.getElementById('breadcrumb-subcategory-name').textContent = subcategory.name;
@@ -1258,8 +1269,9 @@
                 allProducts = await fetchSubcategoryProducts(subcategorySlug);
             } else {
                 currentSubcategory = 'all';
+                
                 // Fetch category products
-                allProducts = await fetchCategoryProducts(categorySlug);
+                allProducts = await fetchCategoryProducts(currentCategory.slug);
             }
 
             // Render products
@@ -1272,9 +1284,13 @@
             initCategoryPage();
         });
 
-        // Start
-        document.addEventListener('DOMContentLoaded', initCategoryPage);
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCategoryPage);
+        } else {
+            // DOM already loaded
+            initCategoryPage();
+        }
     </script>
 </body>
 </html>
-
