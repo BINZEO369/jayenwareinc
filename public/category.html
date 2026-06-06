@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ল<!DOCTYPE html>
 <html lang="bn-BD" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -23,13 +23,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- JAYENWARE Centralized Fonts Configuration (MUST be loaded before Tailwind) -->
+    <!-- JAYENWARE Centralized Fonts Configuration -->
     <script>
-        /**
-         * JAYENWARE FONTS CONFIGURATION
-         * Centralized font management for the entire website
-         * @version 1.0.0
-         */
         const JAYENWARE_FONTS = {
             families: {
                 heading: "'Manrope', sans-serif",
@@ -86,18 +81,17 @@
                 badge: { fontFamily: 'var(--font-subtitle)', fontWeight: 600, fontSize: '0.625rem', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }
             }
         };
-
         if (typeof module !== 'undefined' && module.exports) { module.exports = JAYENWARE_FONTS; }
         if (typeof window !== 'undefined') { window.JAYENWARE_FONTS = JAYENWARE_FONTS; }
     </script>
 
-    <!-- Google Fonts (Dynamic via JAYENWARE_FONTS) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Tailwind CSS with Custom Fonts -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -417,7 +411,7 @@
 </head>
 <body class="antialiased">
 
-    <!-- ==================== DYNAMIC HEADER (Loaded by front.js) ==================== -->
+    <!-- ==================== DYNAMIC HEADER (Loaded by components.js) ==================== -->
     <div id="dynamic-header"></div>
 
     <!-- ==================== MAIN CONTENT ==================== -->
@@ -509,7 +503,7 @@
 
     </main>
 
-    <!-- ==================== DYNAMIC FOOTER (Loaded by front.js) ==================== -->
+    <!-- ==================== DYNAMIC FOOTER (Loaded by components.js) ==================== -->
     <div id="dynamic-footer"></div>
 
     <!-- BACK TO TOP -->
@@ -517,8 +511,8 @@
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
-    <!-- ==================== FRONT.JS (Header/Footer Loader) ==================== -->
-    <script src="/front.js"></script>
+    <!-- ==================== COMPONENTS.JS (Header/Footer Loader) ==================== -->
+    <script src="/components.js"></script>
 
     <!-- ==================== CATEGORY PAGE LOGIC ==================== -->
     <script>
@@ -532,7 +526,7 @@
                 }
             }
 
-            // Initialize category page after a short delay to allow front.js to load header/footer
+            // Initialize category page after a short delay to allow components.js to load header/footer
             setTimeout(initCategoryPage, 100);
         });
 
@@ -746,7 +740,6 @@
             if (!currentCategory) return;
             const heroData = currentSubcategory || currentCategory;
             document.getElementById('hero-title').textContent = heroData.name;
-            // Subtitle is left empty, no hardcoded text
             document.getElementById('hero-subtitle').textContent = '';
             const heroImg = document.getElementById('hero-bg-img');
             if (heroData.image_url) {
