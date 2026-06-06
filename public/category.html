@@ -122,16 +122,16 @@
             font-weight: 600;
         }
 
-        /* ==================== ROLEX-STYLE FULL-WIDTH BANNER (Category & Subcategory Common) ==================== */
-        .fullwidth-banner {
+        /* ==================== CATEGORY HERO BANNER ==================== */
+        .category-hero-banner {
             position: relative;
             width: 100vw;
-            height: 85vh;
-            min-height: 480px;
-            max-height: 700px;
+            height: 60vh;
+            min-height: 380px;
+            max-height: 550px;
             overflow: hidden;
             background: #000;
-            margin-bottom: 48px;
+            margin-bottom: 32px;
             margin-left: calc(-50vw + 50%);
             margin-right: calc(-50vw + 50%);
             left: 0;
@@ -139,23 +139,23 @@
         }
 
         @media (max-width: 768px) {
-            .fullwidth-banner {
-                height: 70vh;
-                min-height: 420px;
-                max-height: 550px;
-                margin-bottom: 36px;
+            .category-hero-banner {
+                height: 50vh;
+                min-height: 320px;
+                max-height: 420px;
+                margin-bottom: 24px;
             }
         }
 
         @media (max-width: 480px) {
-            .fullwidth-banner {
-                height: 60vh;
-                min-height: 360px;
-                margin-bottom: 28px;
+            .category-hero-banner {
+                height: 40vh;
+                min-height: 280px;
+                margin-bottom: 20px;
             }
         }
 
-        .fullwidth-banner .banner-bg-img {
+        .category-hero-banner .hero-bg-img {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -169,7 +169,7 @@
             to { transform: scale(1.05); }
         }
 
-        .fullwidth-banner .banner-overlay {
+        .category-hero-banner .hero-overlay {
             position: absolute;
             inset: 0;
             background: linear-gradient(
@@ -183,9 +183,9 @@
             z-index: 1;
         }
 
-        .fullwidth-banner .banner-content {
+        .category-hero-banner .hero-content {
             position: absolute;
-            bottom: clamp(50px, 12vh, 110px);
+            bottom: clamp(40px, 10vh, 80px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
@@ -195,7 +195,7 @@
             padding: 0 16px;
         }
 
-        .fullwidth-banner .banner-subtitle {
+        .category-hero-banner .hero-subtitle {
             display: inline-block;
             font-family: 'Inter', sans-serif;
             font-size: clamp(7px, 1vw, 9px);
@@ -209,7 +209,7 @@
             animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
         }
 
-        .fullwidth-banner .banner-title {
+        .category-hero-banner .hero-title {
             font-family: 'Playfair Display', serif;
             font-size: clamp(22px, 4.5vw, 60px);
             font-weight: 900;
@@ -222,13 +222,13 @@
             animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
         }
 
-        .fullwidth-banner .banner-cta-wrap {
+        .category-hero-banner .hero-cta-wrap {
             opacity: 0;
             transform: translateY(8px);
             animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
         }
 
-        .fullwidth-banner .banner-cta {
+        .category-hero-banner .hero-cta {
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -246,12 +246,12 @@
             cursor: pointer;
         }
 
-        .fullwidth-banner .banner-cta:hover {
+        .category-hero-banner .hero-cta:hover {
             gap: 8px;
             color: rgba(255, 255, 255, 0.85);
         }
 
-        .fullwidth-banner .banner-cta .cta-arrow {
+        .category-hero-banner .hero-cta .cta-arrow {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -261,7 +261,7 @@
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
 
-        .fullwidth-banner .banner-cta .cta-arrow::after {
+        .category-hero-banner .hero-cta .cta-arrow::after {
             content: '';
             position: absolute;
             top: 50%;
@@ -274,7 +274,7 @@
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
 
-        .fullwidth-banner .banner-cta:hover .cta-arrow::after {
+        .category-hero-banner .hero-cta:hover .cta-arrow::after {
             right: -2px;
             opacity: 0.8;
         }
@@ -286,21 +286,157 @@
             }
         }
 
-        /* ==================== SUBCATEGORY PILLS (Navigation Bar Style) ==================== */
-        .subcategory-nav {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e5e5ea;
+        /* ==================== VIDEO SECTION (Below Products) ==================== */
+        .category-video-section {
+            position: relative;
+            width: 100vw;
+            height: 60vh;
+            min-height: 380px;
+            max-height: 550px;
+            overflow: hidden;
+            background: #000;
+            margin-top: 48px;
+            margin-bottom: 0;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            left: 0;
+            right: 0;
+            display: none;
         }
 
-        .subcategory-nav-item {
+        @media (max-width: 768px) {
+            .category-video-section {
+                height: 50vh;
+                min-height: 320px;
+                max-height: 420px;
+                margin-top: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-video-section {
+                height: 40vh;
+                min-height: 280px;
+                margin-top: 24px;
+            }
+        }
+
+        .category-video-section video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-video-section .video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.0) 0%,
+                rgba(0,0,0,0.02) 40%,
+                rgba(0,0,0,0.15) 65%,
+                rgba(0,0,0,0.5) 85%,
+                rgba(0,0,0,0.7) 100%
+            );
+            z-index: 1;
+        }
+
+        .category-video-section .video-content {
+            position: absolute;
+            bottom: clamp(40px, 10vh, 80px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            width: 88%;
+            max-width: 680px;
+            padding: 0 16px;
+        }
+
+        .category-video-section .video-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(22px, 4.5vw, 60px);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #ffffff;
+            margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
+            letter-spacing: -0.01em;
+        }
+
+        .category-video-section .video-cta {
             display: inline-flex;
             align-items: center;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(8px, 1vw, 10px);
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .category-video-section .video-cta:hover {
             gap: 8px;
-            padding: 10px 20px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .category-video-section .video-cta .cta-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 14px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .category-video-section .video-cta .cta-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid #ffffff;
+            border-right: 1px solid #ffffff;
+            transform: translateY(-50%) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .category-video-section .video-cta:hover .cta-arrow::after {
+            right: -2px;
+            opacity: 0.8;
+        }
+
+        /* ==================== SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES) ==================== */
+        .subnav-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            overflow-x: auto;
+            padding: 12px 0 16px 0;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e5e5ea;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .subnav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .subnav-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
             border-radius: 50px;
             font-size: 13px;
             font-weight: 600;
@@ -312,38 +448,39 @@
             color: var(--primary);
             white-space: nowrap;
             user-select: none;
+            flex-shrink: 0;
         }
 
-        .subcategory-nav-item:hover {
+        .subnav-btn:hover {
             border-color: #c0c0c5;
             background: #fafafa;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
-        .subcategory-nav-item.active {
+        .subnav-btn.active {
             background: var(--primary);
             color: #fff;
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
 
-        .subcategory-nav-item i {
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        .subcategory-nav-item .count {
+        .subnav-btn .count {
             font-size: 11px;
-            margin-left: 4px;
+            margin-left: 8px;
             opacity: 0.7;
             background: rgba(0,0,0,0.06);
             padding: 2px 8px;
             border-radius: 50px;
         }
 
-        .subcategory-nav-item.active .count {
+        .subnav-btn.active .count {
             background: rgba(255,255,255,0.2);
+        }
+
+        .subnav-btn .icon {
+            margin-right: 6px;
+            font-size: 12px;
         }
 
         /* ==================== PRODUCT GRID ==================== */
@@ -711,154 +848,14 @@
             box-shadow: 0 0 0 3px rgba(29,29,31,0.06);
         }
 
-        /* ==================== SECTION DIVIDER ==================== */
-        .section-divider {
-            width: 100%;
-            height: 1px;
-            background: #e5e5ea;
-            margin: 48px 0;
-        }
-
-        /* ==================== SUBCATEGORY BANNERS GRID ==================== */
-        .subcategory-banners-section {
-            margin-top: 48px;
-        }
-
-        .subcategory-banners-section .section-heading {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 32px;
-            text-align: center;
-        }
-
-        .subcategory-banners-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 48px;
-        }
-
-        @media (min-width: 768px) {
-            .subcategory-banners-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 32px;
-            }
-        }
-
-        /* Subcategory Banner Card (Smaller version) */
-        .subcat-banner-card {
-            position: relative;
-            width: 100%;
-            height: 60vh;
-            min-height: 380px;
-            max-height: 560px;
-            overflow: hidden;
-            background: #000;
-            border-radius: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.4s ease;
-        }
-
-        .subcat-banner-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 48px rgba(0,0,0,0.2);
-        }
-
-        .subcat-banner-card .subcat-bg-img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-
-        .subcat-banner-card:hover .subcat-bg-img {
-            transform: scale(1.05);
-        }
-
-        .subcat-banner-card .subcat-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                to bottom,
-                rgba(0,0,0,0.05) 0%,
-                rgba(0,0,0,0.1) 40%,
-                rgba(0,0,0,0.35) 65%,
-                rgba(0,0,0,0.65) 85%,
-                rgba(0,0,0,0.8) 100%
-            );
-            z-index: 1;
-        }
-
-        .subcat-banner-card .subcat-content {
-            position: absolute;
-            bottom: clamp(30px, 8vh, 60px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            text-align: center;
-            width: 85%;
-            max-width: 400px;
-            padding: 0 12px;
-        }
-
-        .subcat-banner-card .subcat-label {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(6px, 0.8vw, 8px);
-            font-weight: 500;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.55);
-            margin-bottom: clamp(8px, 1.5vh, 14px);
-        }
-
-        .subcat-banner-card .subcat-name {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(18px, 3vw, 36px);
-            font-weight: 900;
-            line-height: 1.15;
-            color: #ffffff;
-            margin: 0;
-            letter-spacing: -0.01em;
-        }
-
-        .subcat-banner-card .subcat-video-badge {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            z-index: 3;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            .subcategory-nav {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 8px;
-                margin-bottom: 24px;
+            .subnav-container {
+                gap: 4px;
+                padding: 8px 0 12px 0;
             }
-            .subcategory-nav-item {
-                flex-shrink: 0;
-                padding: 8px 16px;
+            .subnav-btn {
+                padding: 6px 14px;
                 font-size: 12px;
             }
             .back-to-top {
@@ -866,16 +863,6 @@
                 right: 20px;
                 width: 44px;
                 height: 44px;
-            }
-            .subcategory-banners-grid {
-                grid-template-columns: 1fr;
-                gap: 28px;
-            }
-            .subcat-banner-card {
-                height: 45vh;
-                min-height: 300px;
-                max-height: 420px;
-                border-radius: 8px;
             }
         }
 
@@ -897,11 +884,6 @@
             .sort-bar {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-            .subcat-banner-card {
-                height: 35vh;
-                min-height: 240px;
-                max-height: 320px;
             }
         }
     </style>
@@ -958,15 +940,15 @@
             </div>
         </div>
 
-        <!-- ==================== CATEGORY HERO BANNER (FULL WIDTH) ==================== -->
-        <div class="fullwidth-banner" id="category-hero-banner">
-            <img id="hero-bg-img" src="" alt="" class="banner-bg-img" style="display:none;">
-            <div class="banner-overlay"></div>
-            <div class="banner-content">
-                <p class="banner-subtitle" id="hero-subtitle">JAYENWARE</p>
-                <h1 class="banner-title" id="hero-title">Loading...</h1>
-                <div class="banner-cta-wrap" id="hero-cta-wrap" style="display:none;">
-                    <a href="#" class="banner-cta" id="hero-cta-link">
+        <!-- ==================== CATEGORY HERO BANNER ==================== -->
+        <div class="category-hero-banner" id="category-hero-banner">
+            <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <p class="hero-subtitle" id="hero-subtitle">JAYENWARE</p>
+                <h1 class="hero-title" id="hero-title">Loading...</h1>
+                <div class="hero-cta-wrap" id="hero-cta-wrap" style="display:none;">
+                    <a href="#" class="hero-cta" id="hero-cta-link">
                         <span id="hero-cta-text">Explore Collection</span>
                         <span class="cta-arrow"></span>
                     </a>
@@ -974,8 +956,8 @@
             </div>
         </div>
 
-        <!-- ==================== SUBCATEGORY NAVIGATION PILLS ==================== -->
-        <div class="subcategory-nav no-scrollbar" id="subcategory-nav" style="display:none;">
+        <!-- ==================== SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES) ==================== -->
+        <div class="subnav-container no-scrollbar" id="subnav-container" style="display:none;">
             <!-- Dynamically populated -->
         </div>
 
@@ -1006,26 +988,16 @@
             </a>
         </div>
 
-        <!-- ==================== CATEGORY VIDEO SECTION (AFTER PRODUCTS) ==================== -->
-        <div class="fullwidth-banner" id="category-video-section" style="display:none;">
-            <video id="category-video" muted loop playsinline controls style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
-            <div class="banner-overlay"></div>
-            <div class="banner-content" id="video-content" style="display:none;">
-                <h2 class="banner-title" id="video-title"></h2>
-                <div class="banner-cta-wrap">
-                    <a href="#" class="banner-cta" id="video-cta-link">
-                        <span id="video-cta-text">Learn More</span>
-                        <span class="cta-arrow"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== SUBCATEGORY BANNERS SECTION (AFTER VIDEO) ==================== -->
-        <div class="subcategory-banners-section" id="subcategory-banners-section" style="display:none;">
-            <h2 class="section-heading">Explore Subcategories</h2>
-            <div class="subcategory-banners-grid" id="subcategory-banners-grid">
-                <!-- Dynamically populated -->
+        <!-- ==================== CATEGORY VIDEO SECTION (Below Products) ==================== -->
+        <div class="category-video-section" id="category-video-section">
+            <video id="category-video" muted loop playsinline controls></video>
+            <div class="video-overlay"></div>
+            <div class="video-content" id="video-content" style="display:none;">
+                <h2 class="video-title" id="video-title"></h2>
+                <a href="#" class="video-cta" id="video-cta-link">
+                    <span id="video-cta-text">Learn More</span>
+                    <span class="cta-arrow"></span>
+                </a>
             </div>
         </div>
 
@@ -1038,8 +1010,9 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - COMPLETE WITH SUBCATEGORY BANNERS & VIDEO BELOW PRODUCTS
-        // PRODUCTION GRADE - WORLD-CLASS STANDARD
+        // CATEGORY PAGE - FULLY DYNAMIC WITH SUBNAVIGATION
+        // VIDEO SECTION DISPLAYED BELOW PRODUCTS
+        // PRODUCTION GRADE
         // ============================================================
 
         let currentCategory = null;
@@ -1167,9 +1140,8 @@
         function showErrorState() {
             document.getElementById('category-hero-banner').style.display = 'none';
             document.getElementById('category-video-section').style.display = 'none';
-            document.getElementById('subcategory-banners-section').style.display = 'none';
             document.getElementById('error-state').style.display = 'flex';
-            document.getElementById('subcategory-nav').style.display = 'none';
+            document.getElementById('subnav-container').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'none';
             document.getElementById('products-grid').innerHTML = '';
             document.getElementById('empty-state').classList.remove('visible');
@@ -1258,77 +1230,48 @@
         }
 
         // ============================================================
-        // RENDER SUBCATEGORY NAV PILLS
+        // RENDER SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES)
         // ============================================================
-        function renderSubcategoryNav() {
-            const container = document.getElementById('subcategory-nav');
+        function renderSubnav() {
+            const container = document.getElementById('subnav-container');
             if (!container) return;
 
-            if (!allSubcategories.length) {
+            if (!currentCategory) {
                 container.style.display = 'none';
                 return;
             }
 
             container.style.display = 'flex';
 
-            const categorySlug = createSlug(currentCategory?.name || '');
+            const categorySlug = createSlug(currentCategory.name || '');
+            const categoryName = currentCategory.name || 'Category';
 
-            const allPill = `
-            <a href="/category/${categorySlug}" class="subcategory-nav-item ${!currentSubcategory ? 'active' : ''}">
-                <i class="fa-solid fa-grid"></i> All
+            // Home Button
+            const homeBtn = `
+            <a href="/" class="subnav-btn">
+                <span class="icon"><i class="fa-solid fa-house"></i></span>
+                Home
+            </a>`;
+
+            // Category Button (Current)
+            const categoryBtn = `
+            <a href="/category/${categorySlug}" class="subnav-btn ${!currentSubcategory ? 'active' : ''}">
+                <span class="icon"><i class="fa-solid fa-folder"></i></span>
+                ${categoryName}
                 <span class="count">${allProducts.length}</span>
             </a>`;
 
-            const pills = allSubcategories.map(sub => {
+            // Subcategory Buttons
+            const subBtns = allSubcategories.map(sub => {
                 const subSlug = createSlug(sub.name);
                 const isActive = currentSubcategory && currentSubcategory.id === sub.id;
-                const icon = sub.image_url ? '<i class="fa-solid fa-image"></i>' : '<i class="fa-solid fa-tag"></i>';
                 return `
-                <a href="/category/${categorySlug}/${subSlug}" class="subcategory-nav-item ${isActive ? 'active' : ''}">
-                    ${icon} ${sub.name}
+                <a href="/category/${categorySlug}/${subSlug}" class="subnav-btn ${isActive ? 'active' : ''}">
+                    ${sub.name}
                 </a>`;
             }).join('');
 
-            container.innerHTML = allPill + pills;
-        }
-
-        // ============================================================
-        // RENDER SUBCATEGORY BANNERS (Rolex-Style Cards)
-        // ============================================================
-        function renderSubcategoryBanners() {
-            const section = document.getElementById('subcategory-banners-section');
-            const grid = document.getElementById('subcategory-banners-grid');
-            
-            if (!section || !grid) return;
-
-            if (!allSubcategories.length) {
-                section.style.display = 'none';
-                return;
-            }
-
-            section.style.display = 'block';
-
-            const categorySlug = createSlug(currentCategory?.name || '');
-
-            grid.innerHTML = allSubcategories.map(sub => {
-                const subSlug = createSlug(sub.name);
-                const imgSrc = sub.image_url || '/logo.png';
-                const hasVideo = sub.video_url ? true : false;
-
-                return `
-                <a href="/category/${categorySlug}/${subSlug}" class="subcat-banner-card">
-                    <img src="${imgSrc}" alt="${sub.name}" class="subcat-bg-img" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='30px';this.style.background='#1a1a1a';">
-                    <div class="subcat-overlay"></div>
-                    ${hasVideo ? `
-                    <div class="subcat-video-badge">
-                        <i class="fa-solid fa-play"></i> Video
-                    </div>` : ''}
-                    <div class="subcat-content">
-                        <span class="subcat-label">${currentCategory?.name || 'Category'}</span>
-                        <h3 class="subcat-name">${sub.name}</h3>
-                    </div>
-                </a>`;
-            }).join('');
+            container.innerHTML = homeBtn + categoryBtn + subBtns;
         }
 
         // ============================================================
@@ -1365,12 +1308,14 @@
                 url
             );
 
+            // Update meta description
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
                 const desc = currentCategory?.meta_description || currentCategory?.description || 'Shop by category at Jayenware Official Store.';
                 metaDesc.setAttribute('content', desc);
             }
 
+            // Update meta keywords
             const metaKeywords = document.querySelector('meta[name="keywords"]');
             if (metaKeywords && currentCategory?.keywords) {
                 metaKeywords.setAttribute('content', currentCategory.keywords);
@@ -1378,14 +1323,16 @@
         }
 
         // ============================================================
-        // UPDATE CATEGORY HERO BANNER
+        // UPDATE CATEGORY HERO
         // ============================================================
         function updateCategoryHero() {
             if (!currentCategory) return;
 
+            // Set title
             document.getElementById('hero-title').textContent = currentCategory.name;
             document.getElementById('hero-subtitle').textContent = 'JAYENWARE';
 
+            // Set background image
             const heroImg = document.getElementById('hero-bg-img');
             if (currentCategory.image_url) {
                 heroImg.src = currentCategory.image_url;
@@ -1401,6 +1348,7 @@
                 heroImg.style.display = 'none';
             }
 
+            // Set CTA if available
             const heroCtaWrap = document.getElementById('hero-cta-wrap');
             const heroCtaText = document.getElementById('hero-cta-text');
             const heroCtaLink = document.getElementById('hero-cta-link');
@@ -1418,8 +1366,6 @@
         // UPDATE CATEGORY VIDEO SECTION (Below Products)
         // ============================================================
         function updateCategoryVideo() {
-            if (!currentCategory) return;
-
             const videoSection = document.getElementById('category-video-section');
             const videoEl = document.getElementById('category-video');
             const videoContent = document.getElementById('video-content');
@@ -1427,7 +1373,7 @@
             const videoCtaLink = document.getElementById('video-cta-link');
             const videoCtaText = document.getElementById('video-cta-text');
 
-            if (currentCategory.video_url) {
+            if (currentCategory?.video_url) {
                 videoSection.style.display = 'block';
                 videoEl.src = currentCategory.video_url;
                 videoEl.load();
@@ -1446,6 +1392,7 @@
                     videoContent.style.display = 'none';
                 }
 
+                // Video Schema if available
                 if (currentCategory.video_schema) {
                     let schemaScript = document.getElementById('video-schema');
                     if (!schemaScript) {
@@ -1482,10 +1429,8 @@
             }
 
             updateBreadcrumbAndURL();
-            renderSubcategoryNav();
+            renderSubnav();
             renderProducts();
-            updateCategoryVideo();
-            renderSubcategoryBanners();
             
             const gridEl = document.getElementById('products-grid');
             if (gridEl) {
@@ -1516,6 +1461,7 @@
                 return;
             }
 
+            // Load category
             currentCategory = await loadCategoryBySlug(categorySlug);
             console.log('[Category Page] Loaded category:', currentCategory);
 
@@ -1524,16 +1470,20 @@
                 return;
             }
 
+            // Show all sections
             document.getElementById('category-hero-banner').style.display = 'block';
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
-            document.getElementById('subcategory-nav').style.display = 'flex';
+            document.getElementById('subnav-container').style.display = 'flex';
 
+            // Update hero
             updateCategoryHero();
 
+            // Load subcategories
             allSubcategories = await loadSubcategories(categorySlug);
             console.log('[Category Page] Loaded subcategories:', allSubcategories.length);
 
+            // Load products
             if (subcategorySlug) {
                 const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subcategorySlug);
                 if (foundSub) {
@@ -1550,12 +1500,15 @@
 
             console.log('[Category Page] Loaded products:', allProducts.length);
 
+            // Update UI
             updateBreadcrumbAndURL();
-            renderSubcategoryNav();
+            renderSubnav();
             renderProducts();
-            updateCategoryVideo();
-            renderSubcategoryBanners();
 
+            // Update video section (below products)
+            updateCategoryVideo();
+
+            // Set meta title if available
             if (currentCategory.meta_title) {
                 document.title = `${currentCategory.meta_title} | JAYENWARE`;
             }
@@ -1584,22 +1537,28 @@
         }
 
         // ============================================================
-        // DELEGATE CLICK EVENTS FOR SUBCATEGORY NAV PILLS
+        // DELEGATE CLICK EVENTS FOR SUBNAV
         // ============================================================
-        function initNavClickDelegation() {
-            const navContainer = document.getElementById('subcategory-nav');
-            if (!navContainer) return;
+        function initSubnavClickDelegation() {
+            const container = document.getElementById('subnav-container');
+            if (!container) return;
 
-            navContainer.addEventListener('click', async (e) => {
-                const item = e.target.closest('.subcategory-nav-item');
-                if (!item) return;
+            container.addEventListener('click', async (e) => {
+                const btn = e.target.closest('.subnav-btn');
+                if (!btn) return;
 
                 e.preventDefault();
-                const href = item.getAttribute('href');
+                const href = btn.getAttribute('href');
                 if (!href) return;
 
                 const parts = href.replace(/^\/+|\/+$/g, '').split('/');
                 const categorySlug = createSlug(currentCategory?.name || '');
+
+                if (parts.length === 1 && parts[0] === '') {
+                    // Home button - navigate to home
+                    window.location.href = '/';
+                    return;
+                }
 
                 if (parts.length === 2 && parts[0] === 'category') {
                     if (parts[1] === categorySlug) {
@@ -1621,9 +1580,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             initCategoryPage();
             initBackToTop();
-            initNavClickDelegation();
+            initSubnavClickDelegation();
         });
 
+        // Handle browser back/forward
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.category) {
                 currentCategory = event.state.category;
@@ -1632,17 +1592,16 @@
                 document.getElementById('category-hero-banner').style.display = 'block';
                 document.getElementById('error-state').style.display = 'none';
                 document.getElementById('sort-bar').style.display = 'flex';
-                document.getElementById('subcategory-nav').style.display = 'flex';
+                document.getElementById('subnav-container').style.display = 'flex';
                 
                 if (currentCategory) {
                     updateCategoryHero();
-                    updateCategoryVideo();
-                    renderSubcategoryBanners();
                 }
                 
                 updateBreadcrumbAndURL();
-                renderSubcategoryNav();
+                renderSubnav();
                 renderProducts();
+                updateCategoryVideo();
             } else {
                 initCategoryPage();
             }
@@ -1650,3 +1609,4 @@
     </script>
 </body>
 </html>
+
