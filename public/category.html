@@ -15,25 +15,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
-  <!-- JAYENWARE Centralized Fonts Configuration -->
-  <script>
-    const JAYENWARE_FONTS = {
-      families: {
-        heading: "'Manrope', sans-serif",
-        subtitle: "'Sora', sans-serif",
-        body: "'Inter', sans-serif"
-      },
-      cssVariables: {
-        '--font-heading': "'Manrope', sans-serif",
-        '--font-subtitle': "'Sora', sans-serif",
-        '--font-body': "'Inter', sans-serif",
-        '--font-accent': "'Inter', sans-serif"
-      }
-    };
-    window.JAYENWARE_FONTS = JAYENWARE_FONTS;
-  </script>
+  <!-- Dynamic Fonts Configuration (fonts.js loaded externally) -->
+  <script src="/fonts.js"></script>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (fallback if fonts.js fails) -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   
   <!-- Font Awesome -->
@@ -102,7 +87,7 @@
       100% { background-position: 200% 0; }
     }
 
-    /* Breadcrumb (hidden visually) */
+    /* Breadcrumb (hidden visually, for SEO) */
     .breadcrumb {
       display: none;
       align-items: center;
@@ -127,6 +112,7 @@
       margin-right: calc(-50vw + 50%);
       left: 0;
       right: 0;
+      margin-top: 0; /* directly after header */
     }
     @media (max-width: 768px) {
       .category-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
@@ -233,24 +219,6 @@
     }
     .category-video-section .video-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
 
-    /* Navigation Pills */
-    .nav-pills-container {
-      display: flex; align-items: center; flex-wrap: nowrap; gap: 8px; margin-bottom: 24px;
-      padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; -ms-overflow-style: none;
-    }
-    .nav-pills-container::-webkit-scrollbar { display: none; }
-    .nav-pill {
-      display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 50px;
-      font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.25s ease;
-      cursor: pointer; border: 1.5px solid #e5e5ea; background: #fff; color: var(--primary);
-      white-space: nowrap; user-select: none; flex-shrink: 0;
-    }
-    .nav-pill:hover { border-color: #c0c0c5; background: #fafafa; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-    .nav-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-    .nav-pill.home-pill { background: var(--soft); border-color: var(--soft); }
-    .nav-pill.category-pill { font-weight: 700; }
-
     /* Subcategory Pills */
     .subcategory-pills {
       display: flex; gap: 8px; flex-wrap: nowrap; margin-bottom: 32px; padding-bottom: 24px;
@@ -327,7 +295,7 @@
     .sort-select { padding: 10px 36px 10px 14px; border-radius: 10px; border: 1.5px solid #e5e5ea; font-size: 13px; font-weight: 600; color: var(--primary); background: #fff; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 8l3-3.5' stroke='%2386868b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; transition: border-color 0.2s; }
     .sort-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29,29,31,0.06); }
 
-    @media (max-width: 768px) { .subcategory-pills { padding-bottom: 8px; margin-bottom: 24px; } .nav-pills-container { gap: 6px; } .nav-pill, .subcategory-pill { padding: 8px 16px; font-size: 12px; } .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; } }
+    @media (max-width: 768px) { .subcategory-pills { padding-bottom: 8px; margin-bottom: 24px; } .subcategory-pill { padding: 8px 16px; font-size: 12px; } .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; } }
     @media (max-width: 480px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } .product-card .card-img { border-radius: 6px; margin-bottom: 8px; } .product-card .card-title { font-size: 12px; } .product-card .card-price { font-size: 13px; } .sort-bar { flex-direction: column; align-items: flex-start; } }
   </style>
 </head>
@@ -338,18 +306,7 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
 
-    <!-- NAVIGATION PILLS -->
-    <div class="nav-pills-container no-scrollbar" id="nav-pills-container">
-      <a href="/" class="nav-pill home-pill">
-        <i class="fa-solid fa-house" style="margin-right:6px;font-size:11px;"></i> Home
-      </a>
-      <span style="color:#c0c0c5;font-size:10px;flex-shrink:0;">›</span>
-      <a href="#" class="nav-pill category-pill active" id="nav-category-pill">Category</a>
-      <span style="color:#c0c0c5;font-size:10px;flex-shrink:0;" id="nav-separator-sub" hidden>›</span>
-      <a href="#" class="nav-pill" id="nav-subcategory-pill" hidden>Subcategory</a>
-    </div>
-
-    <!-- BREADCRUMB (SEO) -->
+    <!-- BREADCRUMB (hidden for SEO) -->
     <nav class="breadcrumb" id="breadcrumb">
       <a href="/">Home</a>
       <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
@@ -367,7 +324,7 @@
       </div>
     </div>
 
-    <!-- HERO BANNER -->
+    <!-- HERO BANNER (directly after header) -->
     <div class="category-hero-banner" id="category-hero-banner">
       <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;" />
       <div class="hero-overlay"></div>
@@ -438,6 +395,7 @@
   <!-- CATEGORY PAGE LOGIC -->
   <script>
     (function() {
+      // Ensure fonts.js CSS variables are applied (also done by fonts.js itself)
       document.addEventListener('DOMContentLoaded', () => {
         if (window.JAYENWARE_FONTS) {
           const root = document.documentElement;
@@ -533,9 +491,6 @@
         document.getElementById('empty-state').classList.remove('visible');
         document.getElementById('breadcrumb-current').textContent = 'Not Found';
         document.title = 'Category Not Found | JAYENWARE';
-        document.getElementById('nav-category-pill').textContent = 'Not Found';
-        document.getElementById('nav-subcategory-pill').hidden = true;
-        document.getElementById('nav-separator-sub').hidden = true;
       }
 
       function renderProductCard(product) {
@@ -608,29 +563,6 @@
         container.innerHTML = allPill + pills;
       }
 
-      function updateNavPills() {
-        const categoryName = currentCategory?.name || 'Category';
-        const categorySlug = createSlug(categoryName);
-        const subcategoryName = currentSubcategory?.name || null;
-        const navCategoryPill = document.getElementById('nav-category-pill');
-        const navSubcategoryPill = document.getElementById('nav-subcategory-pill');
-        const navSeparatorSub = document.getElementById('nav-separator-sub');
-        navCategoryPill.textContent = categoryName;
-        navCategoryPill.href = `/category/${categorySlug}`;
-        navCategoryPill.classList.add('active');
-        if (subcategoryName && currentSubcategory) {
-          const subSlug = createSlug(subcategoryName);
-          navSubcategoryPill.textContent = subcategoryName;
-          navSubcategoryPill.href = `/category/${categorySlug}/${subSlug}`;
-          navSubcategoryPill.hidden = false;
-          navSubcategoryPill.classList.add('active');
-          navSeparatorSub.hidden = false;
-        } else {
-          navSubcategoryPill.hidden = true;
-          navSeparatorSub.hidden = true;
-        }
-      }
-
       function updateBreadcrumbAndURL() {
         const categoryName = currentCategory?.name || 'Category';
         const categorySlug = createSlug(categoryName);
@@ -652,7 +584,6 @@
         window.history.replaceState({ category: currentCategory, subcategory: currentSubcategory }, '', url);
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute('content', currentCategory?.meta_description || currentCategory?.description || 'Shop by category at Jayenware Official Store.');
-        updateNavPills();
       }
 
       function updateCategoryHero() {
@@ -765,7 +696,6 @@
         updateCategoryVideo();
         renderSubcategoryPills();
         renderProducts();
-        updateNavPills();
       }
 
       function initBackToTop() {
@@ -803,18 +733,6 @@
             }
           });
         }
-        const navContainer = document.getElementById('nav-pills-container');
-        if (navContainer) {
-          navContainer.addEventListener('click', async (e) => {
-            const pill = e.target.closest('.nav-pill');
-            if (!pill) return;
-            const href = pill.getAttribute('href');
-            if (href === '/' || href === window.location.pathname) {
-              e.preventDefault();
-              if (href === '/') window.location.href = '/';
-            }
-          });
-        }
       }
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -832,7 +750,6 @@
           document.getElementById('subcategory-pills').style.display = 'flex';
           if (currentCategory) { updateCategoryHero(); updateCategoryVideo(); }
           updateBreadcrumbAndURL();
-          updateNavPills();
           renderSubcategoryPills();
           renderProducts();
         } else { initCategoryPage(); }
