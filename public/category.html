@@ -15,16 +15,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
-  <!-- Dynamic Fonts Configuration (fonts.js loaded externally) -->
   <script src="/fonts.js"></script>
 
-  <!-- Google Fonts (fallback if fonts.js fails) -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -66,6 +62,7 @@
       -moz-osx-font-smoothing: grayscale;
       min-height: 100vh;
       margin: 0;
+      padding: 0;
     }
     img {
       max-width: 100%;
@@ -75,7 +72,6 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Skeleton */
     .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
@@ -87,7 +83,6 @@
       100% { background-position: 200% 0; }
     }
 
-    /* Breadcrumb (hidden visually, for SEO) */
     .breadcrumb {
       display: none;
       align-items: center;
@@ -98,7 +93,6 @@
       padding: 16px 0;
     }
 
-    /* Hero Banner */
     .category-hero-banner {
       position: relative;
       width: 100vw;
@@ -112,7 +106,7 @@
       margin-right: calc(-50vw + 50%);
       left: 0;
       right: 0;
-      margin-top: 0; /* directly after header */
+      margin-top: 0;
     }
     @media (max-width: 768px) {
       .category-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
@@ -173,7 +167,6 @@
     .category-hero-banner .hero-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
     @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* Video Section */
     .category-video-section {
       position: relative; width: 100vw; height: 85vh; min-height: 480px; max-height: 700px;
       overflow: hidden; background: #000; margin-top: 48px; margin-bottom: 0;
@@ -219,7 +212,6 @@
     }
     .category-video-section .video-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
 
-    /* Subcategory Pills */
     .subcategory-pills {
       display: flex; gap: 8px; flex-wrap: nowrap; margin-bottom: 32px; padding-bottom: 24px;
       border-bottom: 1px solid #e5e5ea; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -237,13 +229,11 @@
     .subcategory-pill .count { font-size: 11px; margin-left: 8px; opacity: 0.7; background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: 50px; }
     .subcategory-pill.active .count { background: rgba(255,255,255,0.2); }
 
-    /* Product Grid */
     .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
     @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
     @media (min-width: 1400px) { .products-grid { grid-template-columns: repeat(5, 1fr); gap: 24px; } }
 
-    /* Product Card */
     .product-card {
       text-decoration: none; color: inherit; display: flex; flex-direction: column;
       transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.35s ease;
@@ -267,7 +257,6 @@
     .product-card .soldout-overlay { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 5; pointer-events: none; }
     .product-card .soldout-overlay span { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 8px 20px; letter-spacing: 1px; border-radius: 4px; }
 
-    /* Error & Empty States */
     .error-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
     .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
     .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
@@ -283,13 +272,11 @@
     .empty-state p { font-size: 14px; color: var(--accent); max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
     .empty-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; }
 
-    /* Back to Top */
     .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; }
     .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
     .back-to-top:active { transform: scale(0.9); }
     @media (hover: hover) { .back-to-top:hover { background: #333; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.25); } }
 
-    /* Sort Bar */
     .sort-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
     .sort-bar .result-count { font-size: 13px; color: var(--accent); font-weight: 500; }
     .sort-select { padding: 10px 36px 10px 14px; border-radius: 10px; border: 1.5px solid #e5e5ea; font-size: 13px; font-weight: 600; color: var(--primary); background: #fff; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 8l3-3.5' stroke='%2386868b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; transition: border-color 0.2s; }
@@ -301,19 +288,16 @@
 </head>
 <body class="antialiased">
 
-  <!-- DYNAMIC HEADER from components.js -->
   <div id="dynamic-header"></div>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" style="margin-bottom: 0; padding-bottom: 0;">
 
-    <!-- BREADCRUMB (hidden for SEO) -->
     <nav class="breadcrumb" id="breadcrumb">
       <a href="/">Home</a>
       <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
       <span class="current" id="breadcrumb-current">Category</span>
     </nav>
 
-    <!-- ERROR STATE -->
     <div class="error-state" id="error-state" style="display:none;">
       <i class="fa-solid fa-circle-exclamation"></i>
       <h2>Category Not Found</h2>
@@ -324,7 +308,6 @@
       </div>
     </div>
 
-    <!-- HERO BANNER (directly after header) -->
     <div class="category-hero-banner" id="category-hero-banner">
       <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;" />
       <div class="hero-overlay"></div>
@@ -340,10 +323,8 @@
       </div>
     </div>
 
-    <!-- SUBCATEGORY PILLS -->
     <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;"></div>
 
-    <!-- SORT BAR -->
     <div class="sort-bar" id="sort-bar">
       <span class="result-count" id="result-count">Loading products...</span>
       <select class="sort-select" id="sort-select" onchange="handleSort(this.value)">
@@ -355,10 +336,8 @@
       </select>
     </div>
 
-    <!-- PRODUCTS GRID -->
     <div class="products-grid" id="products-grid"></div>
 
-    <!-- EMPTY STATE -->
     <div class="empty-state" id="empty-state">
       <i class="fa-solid fa-box-open"></i>
       <h3>No Products Found</h3>
@@ -366,7 +345,6 @@
       <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
     </div>
 
-    <!-- VIDEO SECTION -->
     <div class="category-video-section" id="category-video-section">
       <video id="category-video" muted loop playsinline controls></video>
       <div class="video-overlay"></div>
@@ -381,21 +359,16 @@
 
   </main>
 
-  <!-- DYNAMIC FOOTER from components.js -->
   <div id="dynamic-footer"></div>
 
-  <!-- BACK TO TOP -->
   <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
-  <!-- COMPONENTS.JS (Header/Footer Loader) -->
   <script src="/components.js"></script>
 
-  <!-- CATEGORY PAGE LOGIC -->
   <script>
     (function() {
-      // Ensure fonts.js CSS variables are applied (also done by fonts.js itself)
       document.addEventListener('DOMContentLoaded', () => {
         if (window.JAYENWARE_FONTS) {
           const root = document.documentElement;
