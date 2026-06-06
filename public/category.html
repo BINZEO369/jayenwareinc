@@ -122,16 +122,16 @@
             font-weight: 600;
         }
 
-        /* ==================== CATEGORY HERO BANNER ==================== */
+        /* ==================== ROLEX-STYLE CATEGORY HERO BANNER (FULL WIDTH - NO GAPS) ==================== */
         .category-hero-banner {
             position: relative;
             width: 100vw;
-            height: 60vh;
-            min-height: 380px;
-            max-height: 550px;
+            height: 85vh;
+            min-height: 480px;
+            max-height: 700px;
             overflow: hidden;
             background: #000;
-            margin-bottom: 32px;
+            margin-bottom: 48px;
             margin-left: calc(-50vw + 50%);
             margin-right: calc(-50vw + 50%);
             left: 0;
@@ -140,18 +140,18 @@
 
         @media (max-width: 768px) {
             .category-hero-banner {
-                height: 50vh;
-                min-height: 320px;
-                max-height: 420px;
-                margin-bottom: 24px;
+                height: 70vh;
+                min-height: 420px;
+                max-height: 550px;
+                margin-bottom: 36px;
             }
         }
 
         @media (max-width: 480px) {
             .category-hero-banner {
-                height: 40vh;
-                min-height: 280px;
-                margin-bottom: 20px;
+                height: 60vh;
+                min-height: 360px;
+                margin-bottom: 28px;
             }
         }
 
@@ -185,7 +185,7 @@
 
         .category-hero-banner .hero-content {
             position: absolute;
-            bottom: clamp(40px, 10vh, 80px);
+            bottom: clamp(50px, 12vh, 110px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
@@ -286,13 +286,13 @@
             }
         }
 
-        /* ==================== VIDEO SECTION (Below Products) ==================== */
+        /* ==================== CATEGORY VIDEO SECTION (FULL WIDTH - NOW BELOW PRODUCTS) ==================== */
         .category-video-section {
             position: relative;
             width: 100vw;
-            height: 60vh;
-            min-height: 380px;
-            max-height: 550px;
+            height: 85vh;
+            min-height: 480px;
+            max-height: 700px;
             overflow: hidden;
             background: #000;
             margin-top: 48px;
@@ -306,18 +306,18 @@
 
         @media (max-width: 768px) {
             .category-video-section {
-                height: 50vh;
-                min-height: 320px;
-                max-height: 420px;
-                margin-top: 32px;
+                height: 70vh;
+                min-height: 420px;
+                max-height: 550px;
+                margin-top: 36px;
             }
         }
 
         @media (max-width: 480px) {
             .category-video-section {
-                height: 40vh;
-                min-height: 280px;
-                margin-top: 24px;
+                height: 60vh;
+                min-height: 360px;
+                margin-top: 28px;
             }
         }
 
@@ -345,7 +345,7 @@
 
         .category-video-section .video-content {
             position: absolute;
-            bottom: clamp(40px, 10vh, 80px);
+            bottom: clamp(50px, 12vh, 110px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
@@ -416,27 +416,27 @@
             opacity: 0.8;
         }
 
-        /* ==================== SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES) ==================== */
-        .subnav-container {
+        /* ==================== BREADCRUMB NAVIGATION PILLS ==================== */
+        .nav-pills-container {
             display: flex;
             align-items: center;
-            gap: 4px;
-            overflow-x: auto;
-            padding: 12px 0 16px 0;
+            flex-wrap: nowrap;
+            gap: 8px;
             margin-bottom: 24px;
-            border-bottom: 1px solid #e5e5ea;
+            padding: 0;
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-
-        .subnav-container::-webkit-scrollbar {
+        .nav-pills-container::-webkit-scrollbar {
             display: none;
         }
-
-        .subnav-btn {
+        
+        .nav-pill {
             display: inline-flex;
             align-items: center;
-            padding: 8px 18px;
+            padding: 10px 20px;
             border-radius: 50px;
             font-size: 13px;
             font-weight: 600;
@@ -451,21 +451,79 @@
             flex-shrink: 0;
         }
 
-        .subnav-btn:hover {
+        .nav-pill:hover {
             border-color: #c0c0c5;
             background: #fafafa;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
-        .subnav-btn.active {
+        .nav-pill.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .nav-pill.home-pill {
+            background: var(--soft);
+            border-color: var(--soft);
+        }
+        
+        .nav-pill.category-pill {
+            font-weight: 700;
+        }
+
+        /* ==================== SUBCATEGORY PILLS (now integrated with breadcrumb) ==================== */
+        .subcategory-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e5e5ea;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .subcategory-pills::-webkit-scrollbar {
+            display: none;
+        }
+
+        .subcategory-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: 1.5px solid #e5e5ea;
+            background: #fff;
+            color: var(--primary);
+            white-space: nowrap;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .subcategory-pill:hover {
+            border-color: #c0c0c5;
+            background: #fafafa;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .subcategory-pill.active {
             background: var(--primary);
             color: #fff;
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
 
-        .subnav-btn .count {
+        .subcategory-pill .count {
             font-size: 11px;
             margin-left: 8px;
             opacity: 0.7;
@@ -474,13 +532,8 @@
             border-radius: 50px;
         }
 
-        .subnav-btn.active .count {
+        .subcategory-pill.active .count {
             background: rgba(255,255,255,0.2);
-        }
-
-        .subnav-btn .icon {
-            margin-right: 6px;
-            font-size: 12px;
         }
 
         /* ==================== PRODUCT GRID ==================== */
@@ -850,12 +903,15 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            .subnav-container {
-                gap: 4px;
-                padding: 8px 0 12px 0;
+            .subcategory-pills {
+                padding-bottom: 8px;
+                margin-bottom: 24px;
             }
-            .subnav-btn {
-                padding: 6px 14px;
+            .nav-pills-container {
+                gap: 6px;
+            }
+            .nav-pill, .subcategory-pill {
+                padding: 8px 16px;
                 font-size: 12px;
             }
             .back-to-top {
@@ -918,8 +974,19 @@
     <!-- ==================== MAIN CONTENT ==================== -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
 
-        <!-- BREADCRUMB -->
-        <nav class="breadcrumb" id="breadcrumb">
+        <!-- BREADCRUMB + NAVIGATION PILLS (Home, Category, Subcategory buttons in one line) -->
+        <div class="nav-pills-container no-scrollbar" id="nav-pills-container">
+            <a href="/" class="nav-pill home-pill">
+                <i class="fa-solid fa-house" style="margin-right:6px;font-size:11px;"></i> Home
+            </a>
+            <span style="color:#c0c0c5;font-size:10px;flex-shrink:0;">›</span>
+            <a href="#" class="nav-pill category-pill active" id="nav-category-pill">Category</a>
+            <span style="color:#c0c0c5;font-size:10px;flex-shrink:0;" id="nav-separator-sub" hidden>›</span>
+            <a href="#" class="nav-pill" id="nav-subcategory-pill" hidden>Subcategory</a>
+        </div>
+
+        <!-- TRADITIONAL BREADCRUMB (hidden, kept for SEO) -->
+        <nav class="breadcrumb" id="breadcrumb" style="display:none;">
             <a href="/">Home</a>
             <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
             <span class="current" id="breadcrumb-current">Category</span>
@@ -940,7 +1007,7 @@
             </div>
         </div>
 
-        <!-- ==================== CATEGORY HERO BANNER ==================== -->
+        <!-- ==================== ROLEX-STYLE CATEGORY HERO BANNER (FULL WIDTH) ==================== -->
         <div class="category-hero-banner" id="category-hero-banner">
             <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;">
             <div class="hero-overlay"></div>
@@ -956,8 +1023,8 @@
             </div>
         </div>
 
-        <!-- ==================== SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES) ==================== -->
-        <div class="subnav-container no-scrollbar" id="subnav-container" style="display:none;">
+        <!-- SUBCATEGORY PILLS (Below breadcrumb) -->
+        <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
             <!-- Dynamically populated -->
         </div>
 
@@ -988,7 +1055,7 @@
             </a>
         </div>
 
-        <!-- ==================== CATEGORY VIDEO SECTION (Below Products) ==================== -->
+        <!-- ==================== CATEGORY VIDEO SECTION (FULL WIDTH - NOW BELOW PRODUCTS) ==================== -->
         <div class="category-video-section" id="category-video-section">
             <video id="category-video" muted loop playsinline controls></video>
             <div class="video-overlay"></div>
@@ -1010,8 +1077,9 @@
 
     <script>
         // ============================================================
-        // CATEGORY PAGE - FULLY DYNAMIC WITH SUBNAVIGATION
-        // VIDEO SECTION DISPLAYED BELOW PRODUCTS
+        // CATEGORY PAGE - FULLY DYNAMIC WITH ROLEX-STYLE FULL-WIDTH HERO BANNER
+        // VIDEO SECTION NOW BELOW PRODUCTS
+        // NAVIGATION PILLS: Home > Category > Subcategory in one line
         // PRODUCTION GRADE
         // ============================================================
 
@@ -1116,6 +1184,17 @@
         }
 
         // ============================================================
+        // LOAD SUBCATEGORY BY SLUG (for subcategory page)
+        // ============================================================
+        async function loadSubcategoryBySlug(subcategorySlug) {
+            const subcategories = await fetchAPI('/api/subcategories');
+            if (!subcategories || !Array.isArray(subcategories)) return null;
+            
+            const subcategory = subcategories.find(sub => sub.slug === subcategorySlug || createSlug(sub.name) === subcategorySlug);
+            return subcategory || null;
+        }
+
+        // ============================================================
         // RENDER SKELETON LOADING
         // ============================================================
         function renderSkeleton(count = 8) {
@@ -1141,12 +1220,17 @@
             document.getElementById('category-hero-banner').style.display = 'none';
             document.getElementById('category-video-section').style.display = 'none';
             document.getElementById('error-state').style.display = 'flex';
-            document.getElementById('subnav-container').style.display = 'none';
+            document.getElementById('subcategory-pills').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'none';
             document.getElementById('products-grid').innerHTML = '';
             document.getElementById('empty-state').classList.remove('visible');
             document.getElementById('breadcrumb-current').textContent = 'Not Found';
             document.title = 'Category Not Found | JAYENWARE';
+            
+            // Update nav pills for error state
+            document.getElementById('nav-category-pill').textContent = 'Not Found';
+            document.getElementById('nav-subcategory-pill').hidden = true;
+            document.getElementById('nav-separator-sub').hidden = true;
         }
 
         // ============================================================
@@ -1230,48 +1314,68 @@
         }
 
         // ============================================================
-        // RENDER SUBNAVIGATION (HOME | CATEGORY | SUBCATEGORIES)
+        // RENDER SUBCATEGORY PILLS (Below breadcrumb)
         // ============================================================
-        function renderSubnav() {
-            const container = document.getElementById('subnav-container');
+        function renderSubcategoryPills() {
+            const container = document.getElementById('subcategory-pills');
             if (!container) return;
 
-            if (!currentCategory) {
+            if (!allSubcategories.length) {
                 container.style.display = 'none';
                 return;
             }
 
             container.style.display = 'flex';
 
-            const categorySlug = createSlug(currentCategory.name || '');
-            const categoryName = currentCategory.name || 'Category';
+            const categorySlug = createSlug(currentCategory?.name || '');
 
-            // Home Button
-            const homeBtn = `
-            <a href="/" class="subnav-btn">
-                <span class="icon"><i class="fa-solid fa-house"></i></span>
-                Home
-            </a>`;
-
-            // Category Button (Current)
-            const categoryBtn = `
-            <a href="/category/${categorySlug}" class="subnav-btn ${!currentSubcategory ? 'active' : ''}">
-                <span class="icon"><i class="fa-solid fa-folder"></i></span>
-                ${categoryName}
+            const allPill = `
+            <a href="/category/${categorySlug}" class="subcategory-pill ${!currentSubcategory ? 'active' : ''}">
+                All
                 <span class="count">${allProducts.length}</span>
             </a>`;
 
-            // Subcategory Buttons
-            const subBtns = allSubcategories.map(sub => {
+            const pills = allSubcategories.map(sub => {
                 const subSlug = createSlug(sub.name);
                 const isActive = currentSubcategory && currentSubcategory.id === sub.id;
                 return `
-                <a href="/category/${categorySlug}/${subSlug}" class="subnav-btn ${isActive ? 'active' : ''}">
+                <a href="/category/${categorySlug}/${subSlug}" class="subcategory-pill ${isActive ? 'active' : ''}">
                     ${sub.name}
                 </a>`;
             }).join('');
 
-            container.innerHTML = homeBtn + categoryBtn + subBtns;
+            container.innerHTML = allPill + pills;
+        }
+
+        // ============================================================
+        // UPDATE NAVIGATION PILLS (Home > Category > Subcategory in one line)
+        // ============================================================
+        function updateNavPills() {
+            const categoryName = currentCategory?.name || 'Category';
+            const categorySlug = createSlug(categoryName);
+            const subcategoryName = currentSubcategory?.name || null;
+            
+            const navCategoryPill = document.getElementById('nav-category-pill');
+            const navSubcategoryPill = document.getElementById('nav-subcategory-pill');
+            const navSeparatorSub = document.getElementById('nav-separator-sub');
+            
+            // Update category pill
+            navCategoryPill.textContent = categoryName;
+            navCategoryPill.href = `/category/${categorySlug}`;
+            navCategoryPill.classList.add('active');
+            
+            // Update subcategory pill if exists
+            if (subcategoryName && currentSubcategory) {
+                const subSlug = createSlug(subcategoryName);
+                navSubcategoryPill.textContent = subcategoryName;
+                navSubcategoryPill.href = `/category/${categorySlug}/${subSlug}`;
+                navSubcategoryPill.hidden = false;
+                navSubcategoryPill.classList.add('active');
+                navSeparatorSub.hidden = false;
+            } else {
+                navSubcategoryPill.hidden = true;
+                navSeparatorSub.hidden = true;
+            }
         }
 
         // ============================================================
@@ -1320,24 +1424,30 @@
             if (metaKeywords && currentCategory?.keywords) {
                 metaKeywords.setAttribute('content', currentCategory.keywords);
             }
+            
+            // Update navigation pills
+            updateNavPills();
         }
 
         // ============================================================
-        // UPDATE CATEGORY HERO
+        // UPDATE CATEGORY HERO - Rolex Style - Full Width Edge to Edge
         // ============================================================
         function updateCategoryHero() {
             if (!currentCategory) return;
+            
+            // If we have a subcategory, use its data, otherwise use category data
+            const heroData = currentSubcategory || currentCategory;
 
             // Set title
-            document.getElementById('hero-title').textContent = currentCategory.name;
+            document.getElementById('hero-title').textContent = heroData.name;
             document.getElementById('hero-subtitle').textContent = 'JAYENWARE';
 
             // Set background image
             const heroImg = document.getElementById('hero-bg-img');
-            if (currentCategory.image_url) {
-                heroImg.src = currentCategory.image_url;
+            if (heroData.image_url) {
+                heroImg.src = heroData.image_url;
                 heroImg.style.display = 'block';
-                heroImg.alt = currentCategory.name;
+                heroImg.alt = heroData.name;
                 heroImg.onerror = function() {
                     this.src = '/logo.png';
                     this.style.objectFit = 'contain';
@@ -1353,17 +1463,17 @@
             const heroCtaText = document.getElementById('hero-cta-text');
             const heroCtaLink = document.getElementById('hero-cta-link');
 
-            if (currentCategory.image_cta_title && currentCategory.image_cta_link) {
+            if (heroData.image_cta_title && heroData.image_cta_link) {
                 heroCtaWrap.style.display = 'block';
-                heroCtaText.textContent = currentCategory.image_cta_title;
-                heroCtaLink.href = currentCategory.image_cta_link;
+                heroCtaText.textContent = heroData.image_cta_title;
+                heroCtaLink.href = heroData.image_cta_link;
             } else {
                 heroCtaWrap.style.display = 'none';
             }
         }
 
         // ============================================================
-        // UPDATE CATEGORY VIDEO SECTION (Below Products)
+        // UPDATE CATEGORY VIDEO SECTION (Full Width - Below Products)
         // ============================================================
         function updateCategoryVideo() {
             const videoSection = document.getElementById('category-video-section');
@@ -1373,17 +1483,22 @@
             const videoCtaLink = document.getElementById('video-cta-link');
             const videoCtaText = document.getElementById('video-cta-text');
 
-            if (currentCategory?.video_url) {
+            // If we have a subcategory, use its data, otherwise use category data
+            const videoData = currentSubcategory || currentCategory;
+            
+            if (!videoData) return;
+
+            if (videoData.video_url) {
                 videoSection.style.display = 'block';
-                videoEl.src = currentCategory.video_url;
+                videoEl.src = videoData.video_url;
                 videoEl.load();
                 
-                if (currentCategory.video_cta_title || currentCategory.video_cta_link) {
+                if (videoData.video_cta_title || videoData.video_cta_link) {
                     videoContent.style.display = 'block';
-                    videoTitle.textContent = currentCategory.video_cta_title || currentCategory.name;
-                    if (currentCategory.video_cta_link) {
-                        videoCtaLink.href = currentCategory.video_cta_link;
-                        videoCtaText.textContent = currentCategory.video_cta_title || 'Learn More';
+                    videoTitle.textContent = videoData.video_cta_title || videoData.name;
+                    if (videoData.video_cta_link) {
+                        videoCtaLink.href = videoData.video_cta_link;
+                        videoCtaText.textContent = videoData.video_cta_title || 'Learn More';
                         videoCtaLink.style.display = 'inline-flex';
                     } else {
                         videoCtaLink.style.display = 'none';
@@ -1393,7 +1508,7 @@
                 }
 
                 // Video Schema if available
-                if (currentCategory.video_schema) {
+                if (videoData.video_schema) {
                     let schemaScript = document.getElementById('video-schema');
                     if (!schemaScript) {
                         schemaScript = document.createElement('script');
@@ -1401,7 +1516,7 @@
                         schemaScript.type = 'application/ld+json';
                         document.head.appendChild(schemaScript);
                     }
-                    schemaScript.textContent = currentCategory.video_schema;
+                    schemaScript.textContent = videoData.video_schema;
                 }
             } else {
                 videoSection.style.display = 'none';
@@ -1418,18 +1533,31 @@
             document.getElementById('empty-state').classList.remove('visible');
 
             if (subcategoryId === null) {
+                // Show all products for the category
                 currentSubcategory = null;
                 allProducts = await loadProductsByCategory(categorySlug);
+                updateCategoryHero();
+                updateCategoryVideo();
             } else {
+                // Show products for specific subcategory
                 currentSubcategory = allSubcategories.find(s => s.id === subcategoryId) || null;
                 if (currentSubcategory) {
                     const subSlug = createSlug(currentSubcategory.name);
                     allProducts = await loadProductsBySubcategory(subSlug);
+                    
+                    // Load full subcategory data for hero and video
+                    const fullSubcategory = await loadSubcategoryBySlug(subSlug);
+                    if (fullSubcategory) {
+                        currentSubcategory = { ...currentSubcategory, ...fullSubcategory };
+                    }
+                    
+                    updateCategoryHero();
+                    updateCategoryVideo();
                 }
             }
 
             updateBreadcrumbAndURL();
-            renderSubnav();
+            renderSubcategoryPills();
             renderProducts();
             
             const gridEl = document.getElementById('products-grid');
@@ -1474,21 +1602,24 @@
             document.getElementById('category-hero-banner').style.display = 'block';
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
-            document.getElementById('subnav-container').style.display = 'flex';
-
-            // Update hero
-            updateCategoryHero();
+            document.getElementById('subcategory-pills').style.display = 'flex';
 
             // Load subcategories
             allSubcategories = await loadSubcategories(categorySlug);
             console.log('[Category Page] Loaded subcategories:', allSubcategories.length);
 
-            // Load products
+            // Load products based on whether we have a subcategory slug
             if (subcategorySlug) {
                 const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subcategorySlug);
                 if (foundSub) {
                     currentSubcategory = foundSub;
                     allProducts = await loadProductsBySubcategory(subcategorySlug);
+                    
+                    // Load full subcategory data for hero and video
+                    const fullSubcategory = await loadSubcategoryBySlug(subcategorySlug);
+                    if (fullSubcategory) {
+                        currentSubcategory = { ...currentSubcategory, ...fullSubcategory };
+                    }
                 } else {
                     currentSubcategory = null;
                     allProducts = await loadProductsByCategory(categorySlug);
@@ -1502,16 +1633,23 @@
 
             // Update UI
             updateBreadcrumbAndURL();
-            renderSubnav();
-            renderProducts();
-
+            
+            // Update hero with category or subcategory data
+            updateCategoryHero();
+            
             // Update video section (below products)
             updateCategoryVideo();
+            
+            renderSubcategoryPills();
+            renderProducts();
 
             // Set meta title if available
             if (currentCategory.meta_title) {
                 document.title = `${currentCategory.meta_title} | JAYENWARE`;
             }
+            
+            // Update navigation pills
+            updateNavPills();
         }
 
         // ============================================================
@@ -1537,28 +1675,22 @@
         }
 
         // ============================================================
-        // DELEGATE CLICK EVENTS FOR SUBNAV
+        // DELEGATE CLICK EVENTS FOR SUBCATEGORY PILLS
         // ============================================================
-        function initSubnavClickDelegation() {
-            const container = document.getElementById('subnav-container');
-            if (!container) return;
+        function initPillClickDelegation() {
+            const pillsContainer = document.getElementById('subcategory-pills');
+            if (!pillsContainer) return;
 
-            container.addEventListener('click', async (e) => {
-                const btn = e.target.closest('.subnav-btn');
-                if (!btn) return;
+            pillsContainer.addEventListener('click', async (e) => {
+                const pill = e.target.closest('.subcategory-pill');
+                if (!pill) return;
 
                 e.preventDefault();
-                const href = btn.getAttribute('href');
+                const href = pill.getAttribute('href');
                 if (!href) return;
 
                 const parts = href.replace(/^\/+|\/+$/g, '').split('/');
                 const categorySlug = createSlug(currentCategory?.name || '');
-
-                if (parts.length === 1 && parts[0] === '') {
-                    // Home button - navigate to home
-                    window.location.href = '/';
-                    return;
-                }
 
                 if (parts.length === 2 && parts[0] === 'category') {
                     if (parts[1] === categorySlug) {
@@ -1572,6 +1704,25 @@
                     }
                 }
             });
+            
+            // Also handle navigation pill clicks
+            const navContainer = document.getElementById('nav-pills-container');
+            if (!navContainer) return;
+            
+            navContainer.addEventListener('click', async (e) => {
+                const pill = e.target.closest('.nav-pill');
+                if (!pill) return;
+                
+                // Don't prevent default for navigation pills - allow normal navigation
+                // But update the UI before navigation
+                const href = pill.getAttribute('href');
+                if (href === '/' || href === window.location.pathname) {
+                    e.preventDefault();
+                    if (href === '/') {
+                        window.location.href = '/';
+                    }
+                }
+            });
         }
 
         // ============================================================
@@ -1580,7 +1731,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initCategoryPage();
             initBackToTop();
-            initSubnavClickDelegation();
+            initPillClickDelegation();
         });
 
         // Handle browser back/forward
@@ -1592,16 +1743,17 @@
                 document.getElementById('category-hero-banner').style.display = 'block';
                 document.getElementById('error-state').style.display = 'none';
                 document.getElementById('sort-bar').style.display = 'flex';
-                document.getElementById('subnav-container').style.display = 'flex';
+                document.getElementById('subcategory-pills').style.display = 'flex';
                 
                 if (currentCategory) {
                     updateCategoryHero();
+                    updateCategoryVideo();
                 }
                 
                 updateBreadcrumbAndURL();
-                renderSubnav();
+                updateNavPills();
+                renderSubcategoryPills();
                 renderProducts();
-                updateCategoryVideo();
             } else {
                 initCategoryPage();
             }
@@ -1609,4 +1761,3 @@
     </script>
 </body>
 </html>
-
