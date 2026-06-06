@@ -11,17 +11,26 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
   <link rel="apple-touch-icon" href="/logo.png" />
+  
+  <!-- Preconnect & DNS Prefetch for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
 
-  <script src="/fonts.js"></script>
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" />
+  
+  <script src="/fonts.js" defer></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
   
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS with performance optimization -->
+  <script src="https://cdn.tailwindcss.com" defer></script>
   <script>
     tailwind.config = {
       theme: {
@@ -49,7 +58,7 @@
       --soft: #f5f5f7;
       --blue: #007aff;
     }
-    * {
+    *, *::before, *::after {
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
     }
@@ -63,6 +72,8 @@
       min-height: 100vh;
       margin: 0;
       padding: 0;
+      content-visibility: auto;
+      contain-intrinsic-size: auto 100vh;
     }
     img {
       max-width: 100%;
@@ -72,15 +83,18 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+    /* Optimized Skeleton Loader - White/Soft Theme */
     .skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background: linear-gradient(110deg, #f0f0f0 8%, #f8f8f8 18%, #f0f0f0 33%);
       background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
+      animation: shimmer 1.2s ease-in-out infinite;
       border-radius: 4px;
+      will-change: background-position;
+      transform: translateZ(0);
     }
     @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .breadcrumb {
@@ -107,6 +121,7 @@
       left: 0;
       right: 0;
       margin-top: 0;
+      contain: paint layout style;
     }
     @media (max-width: 768px) {
       .category-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
@@ -122,6 +137,8 @@
       object-fit: cover;
       object-position: top center;
       animation: heroZoom 20s ease-in-out infinite alternate;
+      will-change: transform;
+      transform: translateZ(0);
     }
     @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
     .category-hero-banner .hero-overlay {
@@ -172,11 +189,44 @@
     .category-hero-banner .hero-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
     @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* Video Section */
+    /* Video Section Skeleton */
+    .video-skeleton {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, #1a1a1a 8%, #222222 18%, #1a1a1a 33%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s ease-in-out infinite;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: background-position;
+      transform: translateZ(0);
+    }
+    .video-skeleton.hidden { display: none; }
+    .video-skeleton .play-icon-skeleton {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-skeleton .play-icon-skeleton i {
+      color: rgba(255,255,255,0.25);
+      font-size: 24px;
+    }
+    @media (max-width: 480px) {
+      .video-skeleton .play-icon-skeleton { width: 50px; height: 50px; }
+      .video-skeleton .play-icon-skeleton i { font-size: 18px; }
+    }
+
     .category-video-section {
       position: relative; width: 100vw; height: 85vh; min-height: 480px; max-height: 700px;
       overflow: hidden; background: #000; margin-top: 48px; margin-bottom: 0;
       margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); left: 0; right: 0; display: none;
+      contain: paint layout style;
     }
     @media (max-width: 768px) {
       .category-video-section { height: 70vh; min-height: 420px; max-height: 550px; margin-top: 36px; }
@@ -186,8 +236,9 @@
     }
     .category-video-section video { 
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; 
-      pointer-events: none;
+      pointer-events: none; opacity: 0; transition: opacity 0.6s ease;
     }
+    .category-video-section video.loaded { opacity: 1; }
     .category-video-section .video-overlay {
       position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.15) 65%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0.7) 100%);
@@ -226,7 +277,7 @@
     }
     .category-video-section .video-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
 
-    /* Custom Sound Toggle Button - Liquid Glass Design at Bottom */
+    /* Liquid Glass Sound Toggle */
     .video-sound-toggle {
       position: absolute;
       bottom: 24px;
@@ -248,7 +299,10 @@
       font-size: 17px;
       pointer-events: auto;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), background 0.4s ease, box-shadow 0.4s ease;
     }
+    .video-sound-toggle.visible { opacity: 1; }
     .video-sound-toggle:hover {
       background: rgba(255, 255, 255, 0.2);
       border-color: rgba(255, 255, 255, 0.4);
@@ -286,7 +340,7 @@
     .subcategory-pill .count { font-size: 11px; margin-left: 8px; opacity: 0.7; background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: 50px; }
     .subcategory-pill.active .count { background: rgba(255,255,255,0.2); }
 
-    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; contain: layout style; }
     @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
     @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
     @media (min-width: 1400px) { .products-grid { grid-template-columns: repeat(5, 1fr); gap: 24px; } }
@@ -305,6 +359,8 @@
       object-fit: cover;
       object-position: top center;
       transition: transform 0.6s ease; 
+      will-change: transform;
+      transform: translateZ(0);
     }
     @media (hover: hover) { .product-card:hover .card-img img { transform: scale(1.08); } }
     .product-card .card-body { padding: 0 4px; }
@@ -335,7 +391,7 @@
     .empty-state p { font-size: 14px; color: var(--accent); max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
     .empty-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; }
 
-    .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; }
+    .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; will-change: transform, opacity; }
     .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
     .back-to-top:active { transform: scale(0.9); }
     @media (hover: hover) { .back-to-top:hover { background: #333; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.25); } }
@@ -372,7 +428,7 @@
     </div>
 
     <div class="category-hero-banner" id="category-hero-banner">
-      <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;" />
+      <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;" loading="eager" />
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <p class="hero-subtitle" id="hero-subtitle"></p>
@@ -410,6 +466,11 @@
 
     <div class="category-video-section" id="category-video-section">
       <video id="category-video" muted loop playsinline autoplay preload="metadata"></video>
+      <div class="video-skeleton" id="video-skeleton">
+        <div class="play-icon-skeleton">
+          <i class="fa-solid fa-play"></i>
+        </div>
+      </div>
       <div class="video-overlay"></div>
       <button class="video-sound-toggle" id="video-sound-toggle" aria-label="Toggle sound">
         <i class="fa-solid fa-volume-xmark"></i>
@@ -431,7 +492,7 @@
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
-  <script src="/components.js"></script>
+  <script src="/components.js" defer></script>
 
   <script>
     (function() {
@@ -443,7 +504,9 @@
             root.style.setProperty(key, value);
           }
         }
-        setTimeout(initCategoryPage, 100);
+        requestAnimationFrame(() => {
+          setTimeout(initCategoryPage, 50);
+        });
         initVideoSoundToggle();
       });
 
@@ -471,11 +534,15 @@
         return { categorySlug, subcategorySlug };
       }
 
+      const fetchCache = new Map();
       async function fetchAPI(endpoint) {
+        if (fetchCache.has(endpoint)) return fetchCache.get(endpoint);
         try {
           const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
           if (!res.ok) { console.error(`API Error: ${endpoint} returned ${res.status}`); return null; }
-          return await res.json();
+          const data = await res.json();
+          fetchCache.set(endpoint, data);
+          return data;
         } catch (err) { console.error(`Fetch error for ${endpoint}:`, err); return null; }
       }
 
@@ -655,10 +722,23 @@
         if (!videoData) return;
         const videoSection = document.getElementById('category-video-section');
         const videoEl = document.getElementById('category-video');
+        const videoSkeleton = document.getElementById('video-skeleton');
+        const soundToggle = document.getElementById('video-sound-toggle');
         if (videoData.video_url) {
           videoSection.style.display = 'block';
+          videoSkeleton.classList.remove('hidden');
+          soundToggle.classList.remove('visible');
+          videoEl.classList.remove('loaded');
           videoEl.src = videoData.video_url;
           videoEl.load();
+          videoEl.onloadeddata = () => {
+            videoSkeleton.classList.add('hidden');
+            videoEl.classList.add('loaded');
+            soundToggle.classList.add('visible');
+          };
+          videoEl.onerror = () => {
+            videoSkeleton.classList.add('hidden');
+          };
           const videoContent = document.getElementById('video-content');
           if (videoData.video_cta_title || videoData.video_cta_link) {
             videoContent.style.display = 'block';
