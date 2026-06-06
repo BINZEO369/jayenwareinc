@@ -23,8 +23,70 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
+    <!-- Google Fonts (loaded via JAYENWARE_FONTS config) -->
+    <script>
+        // ============================================================
+        // JAYENWARE FONTS CONFIGURATION
+        // Centralized font management for the entire website
+        // ============================================================
+        const JAYENWARE_FONTS = {
+            families: {
+                heading: "'Manrope', sans-serif",
+                subtitle: "'Sora', sans-serif",
+                body: "'Inter', sans-serif"
+            },
+            weights: {
+                heading: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+                subtitle: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+                body: { light: 300, regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800, black: 900 }
+            },
+            cssVariables: {
+                '--font-heading': "'Manrope', sans-serif",
+                '--font-subtitle': "'Sora', sans-serif",
+                '--font-body': "'Inter', sans-serif",
+                '--font-accent': "'Inter', sans-serif",
+                '--text-xs': '0.75rem',
+                '--text-sm': '0.875rem',
+                '--text-base': '1rem',
+                '--text-lg': '1.125rem',
+                '--text-xl': '1.25rem',
+                '--text-2xl': '1.5rem',
+                '--text-3xl': '1.875rem',
+                '--text-4xl': '2.25rem',
+                '--text-5xl': '3rem',
+                '--tracking-tight': '-0.5px',
+                '--tracking-normal': '0',
+                '--tracking-wide': '0.5px',
+                '--tracking-wider': '1px',
+                '--tracking-widest': '1.5px'
+            },
+            tailwindConfig: {
+                fontFamily: {
+                    sans: ["'Inter', 'sans-serif'"],
+                    serif: ["'Manrope', 'sans-serif'"],
+                    mono: ["'Sora', 'sans-serif'"]
+                }
+            },
+            get googleFontsURL() {
+                return 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap';
+            },
+            styles: {
+                heroTitle: { fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'var(--text-5xl)', letterSpacing: 'var(--tracking-tight)' },
+                sectionTitle: { fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-3xl)', letterSpacing: 'var(--tracking-tight)' },
+                sectionSubtitle: { fontFamily: 'var(--font-subtitle)', fontWeight: 600, fontSize: 'var(--text-xl)', letterSpacing: 'var(--tracking-normal)' },
+                cardTitle: { fontFamily: 'var(--font-subtitle)', fontWeight: 500, fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-normal)' },
+                description: { fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 'var(--text-base)', letterSpacing: 'var(--tracking-normal)', lineHeight: '1.6' },
+                smallText: { fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wide)' },
+                button: { fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase' },
+                price: { fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 'var(--text-sm)' },
+                badge: { fontFamily: 'var(--font-subtitle)', fontWeight: 600, fontSize: '0.625rem', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }
+            }
+        };
+        window.JAYENWARE_FONTS = JAYENWARE_FONTS;
+    </script>
+    
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -41,6 +103,11 @@
                         accent: '#86868b',
                         soft: '#f5f5f7',
                         blue: '#007aff'
+                    },
+                    fontFamily: {
+                        sans: ["'Inter', 'sans-serif'"],
+                        serif: ["'Manrope', 'sans-serif'"],
+                        mono: ["'Sora', 'sans-serif'"]
                     }
                 }
             }
@@ -64,7 +131,7 @@
             background-color: #ffffff;
             color: #1d1d1f;
             overflow-x: hidden;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: var(--font-body);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
@@ -75,13 +142,8 @@
             height: auto;
         }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* ==================== LOADING SKELETON ==================== */
         .skeleton {
@@ -90,7 +152,6 @@
             animation: shimmer 1.5s infinite;
             border-radius: 4px;
         }
-
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
@@ -111,18 +172,14 @@
             text-decoration: none;
             transition: color 0.2s;
         }
-        .breadcrumb a:hover {
-            color: var(--primary);
-        }
-        .breadcrumb .separator {
-            font-size: 10px;
-        }
+        .breadcrumb a:hover { color: var(--primary); }
+        .breadcrumb .separator { font-size: 10px; }
         .breadcrumb .current {
             color: var(--primary);
             font-weight: 600;
         }
 
-        /* ==================== ROLEX-STYLE CATEGORY HERO BANNER (FULL WIDTH - NO GAPS) ==================== */
+        /* ==================== ROLEX-STYLE CATEGORY HERO BANNER ==================== */
         .category-hero-banner {
             position: relative;
             width: 100vw;
@@ -137,22 +194,11 @@
             left: 0;
             right: 0;
         }
-
         @media (max-width: 768px) {
-            .category-hero-banner {
-                height: 70vh;
-                min-height: 420px;
-                max-height: 550px;
-                margin-bottom: 36px;
-            }
+            .category-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
         }
-
         @media (max-width: 480px) {
-            .category-hero-banner {
-                height: 60vh;
-                min-height: 360px;
-                margin-bottom: 28px;
-            }
+            .category-hero-banner { height: 60vh; min-height: 360px; margin-bottom: 28px; }
         }
 
         .category-hero-banner .hero-bg-img {
@@ -163,7 +209,6 @@
             object-fit: cover;
             animation: heroZoom 20s ease-in-out infinite alternate;
         }
-
         @keyframes heroZoom {
             from { transform: scale(1); }
             to { transform: scale(1.05); }
@@ -197,7 +242,7 @@
 
         .category-hero-banner .hero-subtitle {
             display: inline-block;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-subtitle);
             font-size: clamp(7px, 1vw, 9px);
             font-weight: 500;
             letter-spacing: 0.45em;
@@ -210,7 +255,7 @@
         }
 
         .category-hero-banner .hero-title {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-heading);
             font-size: clamp(22px, 4.5vw, 60px);
             font-weight: 900;
             line-height: 1.1;
@@ -232,7 +277,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-size: clamp(8px, 1vw, 10px);
             font-weight: 500;
             letter-spacing: 0.25em;
@@ -245,12 +290,10 @@
             background: none;
             cursor: pointer;
         }
-
         .category-hero-banner .hero-cta:hover {
             gap: 8px;
             color: rgba(255, 255, 255, 0.85);
         }
-
         .category-hero-banner .hero-cta .cta-arrow {
             display: inline-flex;
             align-items: center;
@@ -260,7 +303,6 @@
             position: relative;
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-
         .category-hero-banner .hero-cta .cta-arrow::after {
             content: '';
             position: absolute;
@@ -273,20 +315,16 @@
             transform: translateY(-50%) rotate(45deg);
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-
         .category-hero-banner .hero-cta:hover .cta-arrow::after {
             right: -2px;
             opacity: 0.8;
         }
 
         @keyframes heroFadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ==================== CATEGORY VIDEO SECTION (FULL WIDTH - NOW BELOW PRODUCTS) ==================== */
+        /* ==================== CATEGORY VIDEO SECTION ==================== */
         .category-video-section {
             position: relative;
             width: 100vw;
@@ -303,22 +341,11 @@
             right: 0;
             display: none;
         }
-
         @media (max-width: 768px) {
-            .category-video-section {
-                height: 70vh;
-                min-height: 420px;
-                max-height: 550px;
-                margin-top: 36px;
-            }
+            .category-video-section { height: 70vh; min-height: 420px; max-height: 550px; margin-top: 36px; }
         }
-
         @media (max-width: 480px) {
-            .category-video-section {
-                height: 60vh;
-                min-height: 360px;
-                margin-top: 28px;
-            }
+            .category-video-section { height: 60vh; min-height: 360px; margin-top: 28px; }
         }
 
         .category-video-section video {
@@ -356,7 +383,7 @@
         }
 
         .category-video-section .video-title {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-heading);
             font-size: clamp(22px, 4.5vw, 60px);
             font-weight: 900;
             line-height: 1.1;
@@ -369,7 +396,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-size: clamp(8px, 1vw, 10px);
             font-weight: 500;
             letter-spacing: 0.25em;
@@ -382,12 +409,10 @@
             background: none;
             cursor: pointer;
         }
-
         .category-video-section .video-cta:hover {
             gap: 8px;
             color: rgba(255, 255, 255, 0.85);
         }
-
         .category-video-section .video-cta .cta-arrow {
             display: inline-flex;
             align-items: center;
@@ -397,7 +422,6 @@
             position: relative;
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-
         .category-video-section .video-cta .cta-arrow::after {
             content: '';
             position: absolute;
@@ -410,13 +434,12 @@
             transform: translateY(-50%) rotate(45deg);
             transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-
         .category-video-section .video-cta:hover .cta-arrow::after {
             right: -2px;
             opacity: 0.8;
         }
 
-        /* ==================== BREADCRUMB NAVIGATION PILLS ==================== */
+        /* ==================== NAVIGATION PILLS ==================== */
         .nav-pills-container {
             display: flex;
             align-items: center;
@@ -429,9 +452,7 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .nav-pills-container::-webkit-scrollbar {
-            display: none;
-        }
+        .nav-pills-container::-webkit-scrollbar { display: none; }
         
         .nav-pill {
             display: inline-flex;
@@ -450,31 +471,27 @@
             user-select: none;
             flex-shrink: 0;
         }
-
         .nav-pill:hover {
             border-color: #c0c0c5;
             background: #fafafa;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
-
         .nav-pill.active {
             background: var(--primary);
             color: #fff;
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
-        
         .nav-pill.home-pill {
             background: var(--soft);
             border-color: var(--soft);
         }
-        
         .nav-pill.category-pill {
             font-weight: 700;
         }
 
-        /* ==================== SUBCATEGORY PILLS (now integrated with breadcrumb) ==================== */
+        /* ==================== SUBCATEGORY PILLS ==================== */
         .subcategory-pills {
             display: flex;
             gap: 8px;
@@ -487,9 +504,7 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .subcategory-pills::-webkit-scrollbar {
-            display: none;
-        }
+        .subcategory-pills::-webkit-scrollbar { display: none; }
 
         .subcategory-pill {
             display: inline-flex;
@@ -508,21 +523,18 @@
             user-select: none;
             flex-shrink: 0;
         }
-
         .subcategory-pill:hover {
             border-color: #c0c0c5;
             background: #fafafa;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
-
         .subcategory-pill.active {
             background: var(--primary);
             color: #fff;
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
-
         .subcategory-pill .count {
             font-size: 11px;
             margin-left: 8px;
@@ -531,7 +543,6 @@
             padding: 2px 8px;
             border-radius: 50px;
         }
-
         .subcategory-pill.active .count {
             background: rgba(255,255,255,0.2);
         }
@@ -542,26 +553,14 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
-
         @media (min-width: 640px) {
-            .products-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
-            }
+            .products-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
         }
-
         @media (min-width: 1024px) {
-            .products-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
-            }
+            .products-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
         }
-
         @media (min-width: 1400px) {
-            .products-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 24px;
-            }
+            .products-grid { grid-template-columns: repeat(5, 1fr); gap: 24px; }
         }
 
         /* ==================== PRODUCT CARD ==================== */
@@ -575,11 +574,7 @@
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
-
-        .product-card:active {
-            transform: scale(0.97);
-        }
-
+        .product-card:active { transform: scale(0.97); }
         @media (hover: hover) {
             .product-card:hover {
                 transform: translateY(-6px);
@@ -595,25 +590,20 @@
             margin-bottom: 12px;
             border-radius: 10px;
         }
-
         .product-card .card-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.6s ease;
         }
-
         @media (hover: hover) {
-            .product-card:hover .card-img img {
-                transform: scale(1.08);
-            }
+            .product-card:hover .card-img img { transform: scale(1.08); }
         }
 
-        .product-card .card-body {
-            padding: 0 4px;
-        }
+        .product-card .card-body { padding: 0 4px; }
 
         .product-card .card-category {
+            font-family: var(--font-body);
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -623,6 +613,7 @@
         }
 
         .product-card .card-title {
+            font-family: var(--font-subtitle);
             font-size: 14px;
             font-weight: 500;
             color: var(--primary);
@@ -642,6 +633,7 @@
         }
 
         .product-card .card-price {
+            font-family: var(--font-body);
             font-size: 15px;
             font-weight: 700;
             color: var(--primary);
@@ -660,6 +652,7 @@
             left: 10px;
             z-index: 2;
             padding: 4px 10px;
+            font-family: var(--font-subtitle);
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
@@ -669,21 +662,9 @@
             letter-spacing: 0.5px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-
-        .product-card .badge-sale {
-            background: #ffe5e8 !important;
-            color: #d70015 !important;
-        }
-
-        .product-card .badge-new {
-            background: #e8f5e9 !important;
-            color: #1b5e20 !important;
-        }
-
-        .product-card .badge-limited {
-            background: #fff3e0 !important;
-            color: #e65100 !important;
-        }
+        .product-card .badge-sale { background: #ffe5e8 !important; color: #d70015 !important; }
+        .product-card .badge-new { background: #e8f5e9 !important; color: #1b5e20 !important; }
+        .product-card .badge-limited { background: #fff3e0 !important; color: #e65100 !important; }
 
         .product-card .soldout-overlay {
             position: absolute;
@@ -697,7 +678,6 @@
             z-index: 5;
             pointer-events: none;
         }
-
         .product-card .soldout-overlay span {
             background: var(--primary);
             color: #fff;
@@ -719,24 +699,9 @@
             justify-content: center;
             min-height: 50vh;
         }
-        .error-state i {
-            font-size: 64px;
-            color: #d1d1d6;
-            margin-bottom: 24px;
-        }
-        .error-state h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-        .error-state p {
-            font-size: 15px;
-            color: var(--accent);
-            max-width: 480px;
-            margin: 0 auto 28px;
-            line-height: 1.7;
-        }
+        .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
+        .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+        .error-state p { font-size: 15px; color: var(--accent); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; }
         .error-state .btn-primary {
             display: inline-flex;
             align-items: center;
@@ -781,32 +746,10 @@
             padding: 64px 20px;
             display: none;
         }
-
-        .empty-state.visible {
-            display: block;
-        }
-
-        .empty-state i {
-            font-size: 52px;
-            color: #d1d1d6;
-            margin-bottom: 20px;
-        }
-
-        .empty-state h3 {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            font-size: 14px;
-            color: var(--accent);
-            max-width: 420px;
-            margin: 0 auto 20px;
-            line-height: 1.6;
-        }
-
+        .empty-state.visible { display: block; }
+        .empty-state i { font-size: 52px; color: #d1d1d6; margin-bottom: 20px; }
+        .empty-state h3 { font-size: 20px; font-weight: 600; color: var(--primary); margin-bottom: 10px; }
+        .empty-state p { font-size: 14px; color: var(--accent); max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
         .empty-state .btn-primary {
             display: inline-flex;
             align-items: center;
@@ -843,17 +786,8 @@
             box-shadow: 0 6px 24px rgba(0,0,0,0.2);
             pointer-events: none;
         }
-
-        .back-to-top.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .back-to-top:active {
-            transform: scale(0.9);
-        }
-
+        .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .back-to-top:active { transform: scale(0.9); }
         @media (hover: hover) {
             .back-to-top:hover {
                 background: #333;
@@ -871,13 +805,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-
-        .sort-bar .result-count {
-            font-size: 13px;
-            color: var(--accent);
-            font-weight: 500;
-        }
-
+        .sort-bar .result-count { font-size: 13px; color: var(--accent); font-weight: 500; }
         .sort-select {
             padding: 10px 36px 10px 14px;
             border-radius: 10px;
@@ -894,7 +822,6 @@
             background-position: right 10px center;
             transition: border-color 0.2s;
         }
-
         .sort-select:focus {
             outline: none;
             border-color: var(--primary);
@@ -903,78 +830,29 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            .subcategory-pills {
-                padding-bottom: 8px;
-                margin-bottom: 24px;
-            }
-            .nav-pills-container {
-                gap: 6px;
-            }
-            .nav-pill, .subcategory-pill {
-                padding: 8px 16px;
-                font-size: 12px;
-            }
-            .back-to-top {
-                bottom: 20px;
-                right: 20px;
-                width: 44px;
-                height: 44px;
-            }
+            .subcategory-pills { padding-bottom: 8px; margin-bottom: 24px; }
+            .nav-pills-container { gap: 6px; }
+            .nav-pill, .subcategory-pill { padding: 8px 16px; font-size: 12px; }
+            .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; }
         }
-
         @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            .product-card .card-img {
-                border-radius: 6px;
-                margin-bottom: 8px;
-            }
-            .product-card .card-title {
-                font-size: 12px;
-            }
-            .product-card .card-price {
-                font-size: 13px;
-            }
-            .sort-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .product-card .card-img { border-radius: 6px; margin-bottom: 8px; }
+            .product-card .card-title { font-size: 12px; }
+            .product-card .card-price { font-size: 13px; }
+            .sort-bar { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- ==================== HEADER ==================== -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-14 sm:h-16">
-                <a href="/" class="flex items-center gap-2 text-primary no-underline">
-                    <img src="/logo.png" alt="JAYENWARE" class="h-8 w-8 rounded-lg" onerror="this.style.display='none'">
-                    <span class="font-bold text-lg hidden sm:inline">JAYENWARE</span>
-                </a>
-                <nav class="hidden md:flex items-center gap-8">
-                    <a href="/" class="text-sm font-medium text-accent hover:text-primary transition no-underline">Home</a>
-                    <a href="/products" class="text-sm font-medium text-accent hover:text-primary transition no-underline">All Products</a>
-                    <a href="/category" class="text-sm font-medium text-primary transition no-underline">Categories</a>
-                </nav>
-                <div class="flex items-center gap-4">
-                    <a href="/wishlist" class="text-accent hover:text-primary transition relative">
-                        <i class="fa-regular fa-heart text-lg"></i>
-                    </a>
-                    <a href="/cart" class="text-accent hover:text-primary transition relative">
-                        <i class="fa-solid fa-bag-shopping text-lg"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+    <!-- ==================== HEADER PLACEHOLDER ==================== -->
+    <div id="header-placeholder"></div>
 
     <!-- ==================== MAIN CONTENT ==================== -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
 
-        <!-- BREADCRUMB + NAVIGATION PILLS (Home, Category, Subcategory buttons in one line) -->
+        <!-- BREADCRUMB + NAVIGATION PILLS -->
         <div class="nav-pills-container no-scrollbar" id="nav-pills-container">
             <a href="/" class="nav-pill home-pill">
                 <i class="fa-solid fa-house" style="margin-right:6px;font-size:11px;"></i> Home
@@ -985,14 +863,14 @@
             <a href="#" class="nav-pill" id="nav-subcategory-pill" hidden>Subcategory</a>
         </div>
 
-        <!-- TRADITIONAL BREADCRUMB (hidden, kept for SEO) -->
+        <!-- TRADITIONAL BREADCRUMB (hidden, SEO only) -->
         <nav class="breadcrumb" id="breadcrumb" style="display:none;">
             <a href="/">Home</a>
             <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
             <span class="current" id="breadcrumb-current">Category</span>
         </nav>
 
-        <!-- ERROR STATE (initially hidden) -->
+        <!-- ERROR STATE -->
         <div class="error-state" id="error-state" style="display:none;">
             <i class="fa-solid fa-circle-exclamation"></i>
             <h2>Category Not Found</h2>
@@ -1007,12 +885,12 @@
             </div>
         </div>
 
-        <!-- ==================== ROLEX-STYLE CATEGORY HERO BANNER (FULL WIDTH) ==================== -->
+        <!-- ==================== HERO BANNER ==================== -->
         <div class="category-hero-banner" id="category-hero-banner">
             <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;">
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <p class="hero-subtitle" id="hero-subtitle">JAYENWARE</p>
+                <p class="hero-subtitle" id="hero-subtitle"></p>
                 <h1 class="hero-title" id="hero-title">Loading...</h1>
                 <div class="hero-cta-wrap" id="hero-cta-wrap" style="display:none;">
                     <a href="#" class="hero-cta" id="hero-cta-link">
@@ -1023,7 +901,7 @@
             </div>
         </div>
 
-        <!-- SUBCATEGORY PILLS (Below breadcrumb) -->
+        <!-- SUBCATEGORY PILLS -->
         <div class="subcategory-pills no-scrollbar" id="subcategory-pills" style="display:none;">
             <!-- Dynamically populated -->
         </div>
@@ -1055,7 +933,7 @@
             </a>
         </div>
 
-        <!-- ==================== CATEGORY VIDEO SECTION (FULL WIDTH - NOW BELOW PRODUCTS) ==================== -->
+        <!-- ==================== VIDEO SECTION ==================== -->
         <div class="category-video-section" id="category-video-section">
             <video id="category-video" muted loop playsinline controls></video>
             <div class="video-overlay"></div>
@@ -1070,17 +948,26 @@
 
     </main>
 
+    <!-- ==================== FOOTER PLACEHOLDER ==================== -->
+    <div id="footer-placeholder"></div>
+
     <!-- BACK TO TOP -->
     <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="/front.js"></script>
+    <script src="/components.js"></script>
+
     <script>
         // ============================================================
         // CATEGORY PAGE - FULLY DYNAMIC WITH ROLEX-STYLE FULL-WIDTH HERO BANNER
-        // VIDEO SECTION NOW BELOW PRODUCTS
+        // VIDEO SECTION BELOW PRODUCTS
         // NAVIGATION PILLS: Home > Category > Subcategory in one line
-        // PRODUCTION GRADE
+        // "JAYENWARE" HARDCODED SUBTITLE REMOVED - uses dynamic data from API
+        // HEADER & FOOTER LOADED VIA components.js
+        // FRONT CONFIG LOADED VIA front.js
         // ============================================================
 
         let currentCategory = null;
@@ -1184,7 +1071,7 @@
         }
 
         // ============================================================
-        // LOAD SUBCATEGORY BY SLUG (for subcategory page)
+        // LOAD SUBCATEGORY BY SLUG (for full details)
         // ============================================================
         async function loadSubcategoryBySlug(subcategorySlug) {
             const subcategories = await fetchAPI('/api/subcategories');
@@ -1227,7 +1114,6 @@
             document.getElementById('breadcrumb-current').textContent = 'Not Found';
             document.title = 'Category Not Found | JAYENWARE';
             
-            // Update nav pills for error state
             document.getElementById('nav-category-pill').textContent = 'Not Found';
             document.getElementById('nav-subcategory-pill').hidden = true;
             document.getElementById('nav-separator-sub').hidden = true;
@@ -1314,7 +1200,7 @@
         }
 
         // ============================================================
-        // RENDER SUBCATEGORY PILLS (Below breadcrumb)
+        // RENDER SUBCATEGORY PILLS
         // ============================================================
         function renderSubcategoryPills() {
             const container = document.getElementById('subcategory-pills');
@@ -1348,7 +1234,7 @@
         }
 
         // ============================================================
-        // UPDATE NAVIGATION PILLS (Home > Category > Subcategory in one line)
+        // UPDATE NAVIGATION PILLS
         // ============================================================
         function updateNavPills() {
             const categoryName = currentCategory?.name || 'Category';
@@ -1359,12 +1245,10 @@
             const navSubcategoryPill = document.getElementById('nav-subcategory-pill');
             const navSeparatorSub = document.getElementById('nav-separator-sub');
             
-            // Update category pill
             navCategoryPill.textContent = categoryName;
             navCategoryPill.href = `/category/${categorySlug}`;
             navCategoryPill.classList.add('active');
             
-            // Update subcategory pill if exists
             if (subcategoryName && currentSubcategory) {
                 const subSlug = createSlug(subcategoryName);
                 navSubcategoryPill.textContent = subcategoryName;
@@ -1412,20 +1296,17 @@
                 url
             );
 
-            // Update meta description
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
                 const desc = currentCategory?.meta_description || currentCategory?.description || 'Shop by category at Jayenware Official Store.';
                 metaDesc.setAttribute('content', desc);
             }
 
-            // Update meta keywords
             const metaKeywords = document.querySelector('meta[name="keywords"]');
             if (metaKeywords && currentCategory?.keywords) {
                 metaKeywords.setAttribute('content', currentCategory.keywords);
             }
             
-            // Update navigation pills
             updateNavPills();
         }
 
@@ -1435,14 +1316,13 @@
         function updateCategoryHero() {
             if (!currentCategory) return;
             
-            // If we have a subcategory, use its data, otherwise use category data
             const heroData = currentSubcategory || currentCategory;
 
-            // Set title
             document.getElementById('hero-title').textContent = heroData.name;
-            document.getElementById('hero-subtitle').textContent = 'JAYENWARE';
+            
+            // Subtitle removed - was hardcoded "JAYENWARE"
+            document.getElementById('hero-subtitle').textContent = '';
 
-            // Set background image
             const heroImg = document.getElementById('hero-bg-img');
             if (heroData.image_url) {
                 heroImg.src = heroData.image_url;
@@ -1458,7 +1338,6 @@
                 heroImg.style.display = 'none';
             }
 
-            // Set CTA if available
             const heroCtaWrap = document.getElementById('hero-cta-wrap');
             const heroCtaText = document.getElementById('hero-cta-text');
             const heroCtaLink = document.getElementById('hero-cta-link');
@@ -1473,7 +1352,7 @@
         }
 
         // ============================================================
-        // UPDATE CATEGORY VIDEO SECTION (Full Width - Below Products)
+        // UPDATE CATEGORY VIDEO SECTION
         // ============================================================
         function updateCategoryVideo() {
             const videoSection = document.getElementById('category-video-section');
@@ -1483,7 +1362,6 @@
             const videoCtaLink = document.getElementById('video-cta-link');
             const videoCtaText = document.getElementById('video-cta-text');
 
-            // If we have a subcategory, use its data, otherwise use category data
             const videoData = currentSubcategory || currentCategory;
             
             if (!videoData) return;
@@ -1507,7 +1385,6 @@
                     videoContent.style.display = 'none';
                 }
 
-                // Video Schema if available
                 if (videoData.video_schema) {
                     let schemaScript = document.getElementById('video-schema');
                     if (!schemaScript) {
@@ -1533,19 +1410,16 @@
             document.getElementById('empty-state').classList.remove('visible');
 
             if (subcategoryId === null) {
-                // Show all products for the category
                 currentSubcategory = null;
                 allProducts = await loadProductsByCategory(categorySlug);
                 updateCategoryHero();
                 updateCategoryVideo();
             } else {
-                // Show products for specific subcategory
                 currentSubcategory = allSubcategories.find(s => s.id === subcategoryId) || null;
                 if (currentSubcategory) {
                     const subSlug = createSlug(currentSubcategory.name);
                     allProducts = await loadProductsBySubcategory(subSlug);
                     
-                    // Load full subcategory data for hero and video
                     const fullSubcategory = await loadSubcategoryBySlug(subSlug);
                     if (fullSubcategory) {
                         currentSubcategory = { ...currentSubcategory, ...fullSubcategory };
@@ -1589,7 +1463,6 @@
                 return;
             }
 
-            // Load category
             currentCategory = await loadCategoryBySlug(categorySlug);
             console.log('[Category Page] Loaded category:', currentCategory);
 
@@ -1598,24 +1471,20 @@
                 return;
             }
 
-            // Show all sections
             document.getElementById('category-hero-banner').style.display = 'block';
             document.getElementById('error-state').style.display = 'none';
             document.getElementById('sort-bar').style.display = 'flex';
             document.getElementById('subcategory-pills').style.display = 'flex';
 
-            // Load subcategories
             allSubcategories = await loadSubcategories(categorySlug);
             console.log('[Category Page] Loaded subcategories:', allSubcategories.length);
 
-            // Load products based on whether we have a subcategory slug
             if (subcategorySlug) {
                 const foundSub = allSubcategories.find(sub => createSlug(sub.name) === subcategorySlug);
                 if (foundSub) {
                     currentSubcategory = foundSub;
                     allProducts = await loadProductsBySubcategory(subcategorySlug);
                     
-                    // Load full subcategory data for hero and video
                     const fullSubcategory = await loadSubcategoryBySlug(subcategorySlug);
                     if (fullSubcategory) {
                         currentSubcategory = { ...currentSubcategory, ...fullSubcategory };
@@ -1631,24 +1500,16 @@
 
             console.log('[Category Page] Loaded products:', allProducts.length);
 
-            // Update UI
             updateBreadcrumbAndURL();
-            
-            // Update hero with category or subcategory data
             updateCategoryHero();
-            
-            // Update video section (below products)
             updateCategoryVideo();
-            
             renderSubcategoryPills();
             renderProducts();
 
-            // Set meta title if available
             if (currentCategory.meta_title) {
                 document.title = `${currentCategory.meta_title} | JAYENWARE`;
             }
             
-            // Update navigation pills
             updateNavPills();
         }
 
@@ -1705,7 +1566,6 @@
                 }
             });
             
-            // Also handle navigation pill clicks
             const navContainer = document.getElementById('nav-pills-container');
             if (!navContainer) return;
             
@@ -1713,8 +1573,6 @@
                 const pill = e.target.closest('.nav-pill');
                 if (!pill) return;
                 
-                // Don't prevent default for navigation pills - allow normal navigation
-                // But update the UI before navigation
                 const href = pill.getAttribute('href');
                 if (href === '/' || href === window.location.pathname) {
                     e.preventDefault();
@@ -1726,12 +1584,32 @@
         }
 
         // ============================================================
+        // APPLY FONTS CSS VARIABLES
+        // ============================================================
+        function applyFontsConfig() {
+            if (window.JAYENWARE_FONTS && window.JAYENWARE_FONTS.cssVariables) {
+                const root = document.documentElement;
+                const vars = window.JAYENWARE_FONTS.cssVariables;
+                for (const [key, value] of Object.entries(vars)) {
+                    root.style.setProperty(key, value);
+                }
+                console.log('✅ JAYENWARE Fonts Applied from front.js config');
+            }
+        }
+
+        // ============================================================
         // STARTUP
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
+            applyFontsConfig();
             initCategoryPage();
             initBackToTop();
             initPillClickDelegation();
+            
+            // Load header and footer via components.js
+            if (typeof window.loadComponents === 'function') {
+                window.loadComponents();
+            }
         });
 
         // Handle browser back/forward
