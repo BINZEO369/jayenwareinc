@@ -9,14 +9,11 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="robots" content="noindex, follow">
 
-    <link rel="icon" type="image/png" sizes="32x32" href="https://www.jayenware.shop/logo.png">
-    <link rel="apple-touch-icon" href="https://www.jayenware.shop/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -78,7 +75,7 @@
 
         .auth-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             background: #ffffff;
             border-radius: 24px;
             padding: 48px 40px;
@@ -88,7 +85,7 @@
 
         @media (max-width: 640px) {
             .auth-container {
-                padding: 32px 24px;
+                padding: 32px 20px;
                 border-radius: 20px;
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
             }
@@ -124,31 +121,72 @@
             font-size: 14px;
             color: var(--accent);
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
             line-height: 1.5;
         }
 
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e5ea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .form-label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            font-family: 'Inter', sans-serif;
+        }
+
+        .form-label .optional {
+            color: var(--accent);
+            font-weight: 400;
+            text-transform: none;
+            font-size: 10px;
         }
 
         .form-input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 14px;
             border: 1.5px solid #e5e5ea;
-            border-radius: 14px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 14px;
             font-family: 'Inter', sans-serif;
             color: var(--primary);
             background: #fafafa;
@@ -165,7 +203,7 @@
 
         .form-input::placeholder {
             color: #b0b0b5;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .form-input.error {
@@ -174,9 +212,9 @@
         }
 
         .error-message {
-            font-size: 11px;
+            font-size: 10px;
             color: #ff3b30;
-            margin-top: 6px;
+            margin-top: 4px;
             display: none;
             font-weight: 500;
         }
@@ -191,14 +229,14 @@
 
         .password-toggle {
             position: absolute;
-            right: 16px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--accent);
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             padding: 4px;
             transition: color 0.2s ease;
         }
@@ -218,8 +256,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 12px;
-            font-family: 'Inter', sans-serif;
+            margin-top: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -242,55 +279,9 @@
             box-shadow: none;
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 32px 0;
-            color: var(--accent);
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e5e5ea;
-        }
-
-        .social-login-btn {
-            width: 100%;
-            padding: 14px;
-            background: #ffffff;
-            color: var(--primary);
-            border: 1.5px solid #e5e5ea;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .social-login-btn:hover {
-            background: #fafafa;
-            border-color: #d1d1d6;
-        }
-
-        .social-login-btn img {
-            width: 20px;
-            height: 20px;
-        }
-
         .auth-footer {
             text-align: center;
-            margin-top: 28px;
+            margin-top: 24px;
             font-size: 14px;
             color: var(--accent);
         }
@@ -376,7 +367,6 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
         }
 
@@ -406,51 +396,42 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 16px 0;
-            font-size: 12px;
-            color: var(--accent);
-            line-height: 1.5;
-        }
-
-        .terms-checkbox input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            border-radius: 6px;
-            border: 1.5px solid #e5e5ea;
-            cursor: pointer;
-            accent-color: var(--blue);
-            margin-top: 1px;
-            flex-shrink: 0;
-        }
-
-        .terms-checkbox a {
-            color: var(--blue);
-            text-decoration: none;
+        .server-error {
+            background: #fff5f5;
+            border: 1px solid #ffd5d5;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #cc0000;
+            display: none;
+            text-align: center;
             font-weight: 500;
         }
 
-        .terms-checkbox a:hover {
-            text-decoration: underline;
+        .server-error.show {
+            display: block;
+        }
+
+        .country-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2386868b'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- HEADER (Homepage-style) -->
+    <!-- HEADER -->
     <header class="bg-white border-b border-gray-100 header-shadow sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
                 <a href="/" class="flex items-center gap-2 no-underline">
-                    <img src="https://www.jayenware.shop/logo.png" alt="JAYENWARE" class="h-8 w-8 rounded-lg">
+                    <img src="/logo.png" alt="JAYENWARE" class="h-8 w-8 rounded-lg">
                     <span class="font-bold text-lg text-primary font-serif">JAYENWARE</span>
                 </a>
-
-                <!-- Back to Home -->
                 <a href="/" class="flex items-center gap-2 text-sm font-medium text-accent hover:text-primary transition no-underline">
                     <i class="fa-solid fa-arrow-left text-xs"></i>
                     <span class="hidden sm:inline">Back to Store</span>
@@ -462,105 +443,148 @@
     <!-- MAIN CONTENT -->
     <main>
         <div class="auth-container">
-            <!-- Logo -->
             <div class="auth-logo">
                 <i class="fa-solid fa-user-plus text-white text-2xl"></i>
             </div>
 
-            <!-- Title -->
             <h1 class="auth-title">Create Account</h1>
             <p class="auth-subtitle">Join JAYENWARE and discover premium Bangladesh fashion</p>
 
-            <!-- Signup Form -->
+            <div class="server-error" id="serverError"></div>
+
             <form id="signupForm" onsubmit="handleSignup(event)" novalidate>
-                <!-- Full Name -->
-                <div class="form-group">
-                    <label class="form-label" for="fullName">Full Name *</label>
-                    <input 
-                        type="text" 
-                        id="fullName" 
-                        class="form-input" 
-                        placeholder="Enter your full name"
-                        required
-                        minlength="2"
-                        autocomplete="name"
-                    >
-                    <div class="error-message" id="fullNameError">Please enter your full name (minimum 2 characters)</div>
-                </div>
-
-                <!-- Email -->
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address *</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        class="form-input" 
-                        placeholder="your@email.com"
-                        required
-                        autocomplete="email"
-                    >
-                    <div class="error-message" id="emailError">Please enter a valid email address</div>
-                </div>
-
-                <!-- Phone (Optional) -->
-                <div class="form-group">
-                    <label class="form-label" for="phone">Phone Number (Optional)</label>
-                    <input 
-                        type="tel" 
-                        id="phone" 
-                        class="form-input" 
-                        placeholder="+880 1XXX-XXXXXX"
-                        autocomplete="tel"
-                    >
-                    <div class="error-message" id="phoneError">Please enter a valid phone number (7-15 digits)</div>
-                </div>
-
-                <!-- Password -->
-                <div class="form-group">
-                    <label class="form-label" for="password">Password *</label>
-                    <div class="password-field">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            class="form-input" 
-                            placeholder="Minimum 6 characters"
-                            required
-                            minlength="6"
-                            autocomplete="new-password"
-                        >
-                        <button type="button" class="password-toggle" onclick="togglePassword('password')" tabindex="-1">
-                            <i class="fa-regular fa-eye" id="passwordToggleIcon"></i>
-                        </button>
+                
+                <!-- ACCOUNT INFORMATION -->
+                <div class="form-section">
+                    <h3 class="section-title">Account Info</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required minlength="2" autocomplete="name">
+                        <div class="error-message" id="fullNameError">Please enter your full name (minimum 2 characters)</div>
                     </div>
-                    <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address *</label>
+                        <input type="email" id="email" class="form-input" placeholder="your@email.com" required autocomplete="email">
+                        <div class="error-message" id="emailError">Please enter a valid email address</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="phoneCountryCode">Country Code</label>
+                            <select id="phoneCountryCode" class="form-input country-select">
+                                <option value="+880">+880 (Bangladesh)</option>
+                                <option value="+91">+91 (India)</option>
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+971">+971 (UAE)</option>
+                                <option value="+966">+966 (Saudi Arabia)</option>
+                                <option value="+60">+60 (Malaysia)</option>
+                                <option value="+65">+65 (Singapore)</option>
+                                <option value="+61">+61 (Australia)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number <span class="optional">(optional)</span></label>
+                            <input type="tel" id="phone" class="form-input" placeholder="1XXX-XXXXXX" autocomplete="tel">
+                            <div class="error-message" id="phoneError">Please enter a valid phone number (7-15 digits)</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password *</label>
+                        <div class="password-field">
+                            <input type="password" id="password" class="form-input" placeholder="Minimum 6 characters" required minlength="6" autocomplete="new-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword()" tabindex="-1">
+                                <i class="fa-regular fa-eye" id="passwordToggleIcon"></i>
+                            </button>
+                        </div>
+                        <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+                    </div>
                 </div>
 
-                <!-- Terms Checkbox -->
-                <div class="terms-checkbox">
-                    <input type="checkbox" id="termsCheckbox" required>
-                    <label for="termsCheckbox">
-                        I agree to the <a href="#" onclick="event.preventDefault()">Terms of Service</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>
-                    </label>
+                <!-- ADDRESS INFORMATION -->
+                <div class="form-section">
+                    <h3 class="section-title">Address <span class="optional" style="font-size:10px;font-weight:400;text-transform:none;">(optional)</span></h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="country">Country</label>
+                            <select id="country" class="form-input country-select">
+                                <option value="">Select Country</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="India">India</option>
+                                <option value="USA">USA</option>
+                                <option value="UK">UK</option>
+                                <option value="UAE">UAE</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Canada">Canada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="countryIsoCode">Country ISO Code</label>
+                            <input type="text" id="countryIsoCode" class="form-input" placeholder="BD, IN, US..." maxlength="3" style="text-transform:uppercase;">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="stateProvince">State / Province</label>
+                            <input type="text" id="stateProvince" class="form-input" placeholder="Dhaka, California...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="city">City</label>
+                            <input type="text" id="city" class="form-input" placeholder="Dhaka, New York...">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="postalCode">Postal Code</label>
+                            <input type="text" id="postalCode" class="form-input" placeholder="1212, 10001...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="areaLocality">Area / Locality</label>
+                            <input type="text" id="areaLocality" class="form-input" placeholder="Gulshan, Banani...">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="streetAddress1">Street Address 1</label>
+                        <input type="text" id="streetAddress1" class="form-input" placeholder="House/Road/Village">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="streetAddress2">Street Address 2</label>
+                        <input type="text" id="streetAddress2" class="form-input" placeholder="Additional address info">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="landmark">Landmark</label>
+                        <input type="text" id="landmark" class="form-input" placeholder="Nearby landmark">
+                    </div>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- USERNAME (Optional) -->
+                <div class="form-section">
+                    <h3 class="section-title">Username <span class="optional" style="font-size:10px;font-weight:400;text-transform:none;">(optional - auto-generated if empty)</span></h3>
+                    <div class="form-group">
+                        <input type="text" id="username" class="form-input" placeholder="Choose a username or leave empty" autocomplete="off">
+                        <div class="error-message" id="usernameError">Username can only contain letters, numbers, and underscores</div>
+                    </div>
+                </div>
+
                 <button type="submit" class="submit-btn" id="submitBtn">
                     Create Account
                 </button>
             </form>
 
-            <!-- Divider -->
-            <div class="divider">or sign up with</div>
-
-            <!-- Google Signup -->
-            <button type="button" class="social-login-btn" onclick="handleGoogleSignup()">
-                <i class="fa-brands fa-google text-red-500"></i>
-                Continue with Google
-            </button>
-
-            <!-- Footer Link -->
             <div class="auth-footer">
-                Already have an account? <a href="/auth-login.html">Sign In</a>
+                Already have an account? <a href="/login">Sign In</a>
             </div>
         </div>
     </main>
@@ -596,17 +620,11 @@
     </footer>
 
     <script>
-        // ============================================
-        // JAYENWARE SIGNUP PAGE JAVASCRIPT
-        // ============================================
-
         const API_BASE = window.location.origin;
 
-        // Toggle Password Visibility
-        function togglePassword(fieldId) {
-            const input = document.getElementById(fieldId);
+        function togglePassword() {
+            const input = document.getElementById('password');
             const icon = document.getElementById('passwordToggleIcon');
-            
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -618,23 +636,28 @@
             }
         }
 
-        // Clear Error
         function clearError(fieldId) {
             const input = document.getElementById(fieldId);
             const error = document.getElementById(fieldId + 'Error');
-            input.classList.remove('error');
+            if (input) input.classList.remove('error');
             if (error) error.classList.remove('show');
         }
 
-        // Show Error
         function showError(fieldId, message) {
             const input = document.getElementById(fieldId);
             const error = document.getElementById(fieldId + 'Error');
-            input.classList.add('error');
+            if (input) input.classList.add('error');
             if (error) {
                 error.textContent = message;
                 error.classList.add('show');
             }
+        }
+
+        function showServerError(message) {
+            const errorEl = document.getElementById('serverError');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 6000);
         }
 
         // Real-time validation
@@ -670,18 +693,37 @@
             }
         });
 
-        // Handle Signup
+        document.getElementById('username').addEventListener('input', function() {
+            clearError('username');
+            const usernameRegex = /^[a-zA-Z0-9_]*$/;
+            if (this.value.length > 0 && !usernameRegex.test(this.value)) {
+                showError('username', 'Only letters, numbers, and underscores allowed');
+            }
+        });
+
         async function handleSignup(event) {
             event.preventDefault();
 
-            // Reset errors
-            ['fullName', 'email', 'phone', 'password'].forEach(clearError);
+            // Clear all errors
+            ['fullName', 'email', 'phone', 'password', 'username'].forEach(clearError);
+            document.getElementById('serverError').classList.remove('show');
 
+            // Get form values
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim();
+            const phoneCountryCode = document.getElementById('phoneCountryCode').value;
             const phone = document.getElementById('phone').value.trim();
             const password = document.getElementById('password').value;
-            const termsChecked = document.getElementById('termsCheckbox').checked;
+            const username = document.getElementById('username').value.trim();
+            const country = document.getElementById('country').value;
+            const countryIsoCode = document.getElementById('countryIsoCode').value.trim().toUpperCase();
+            const stateProvince = document.getElementById('stateProvince').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const postalCode = document.getElementById('postalCode').value.trim();
+            const areaLocality = document.getElementById('areaLocality').value.trim();
+            const streetAddress1 = document.getElementById('streetAddress1').value.trim();
+            const streetAddress2 = document.getElementById('streetAddress2').value.trim();
+            const landmark = document.getElementById('landmark').value.trim();
 
             let isValid = true;
 
@@ -698,7 +740,7 @@
                 isValid = false;
             }
 
-            // Validate Phone (Optional)
+            // Validate Phone (optional)
             if (phone) {
                 const cleanPhone = phone.replace(/[^0-9]/g, '');
                 if (cleanPhone.length < 7 || cleanPhone.length > 15) {
@@ -713,61 +755,69 @@
                 isValid = false;
             }
 
-            // Validate Terms
-            if (!termsChecked) {
-                alert('Please agree to the Terms of Service and Privacy Policy');
-                isValid = false;
+            // Validate Username (optional)
+            if (username) {
+                const usernameRegex = /^[a-zA-Z0-9_]+$/;
+                if (!usernameRegex.test(username)) {
+                    showError('username', 'Only letters, numbers, and underscores allowed');
+                    isValid = false;
+                }
             }
 
             if (!isValid) return;
 
-            // Show loading state
+            // Show loading
             const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="loading-spinner"></span> Creating Account...';
 
             try {
+                // Build request body matching user_profiles table
+                const requestBody = {
+                    email,
+                    password,
+                    full_name: fullName,
+                    phone: phone || null,
+                    phone_country_code: phoneCountryCode,
+                    username: username || null,
+                    country: country || null,
+                    country_iso_code: countryIsoCode || null,
+                    state_province: stateProvince || null,
+                    city: city || null,
+                    postal_code: postalCode || null,
+                    area_locality: areaLocality || null,
+                    street_address_1: streetAddress1 || null,
+                    street_address_2: streetAddress2 || null,
+                    landmark: landmark || null
+                };
+
                 const response = await fetch(`${API_BASE}/api/auth/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                        full_name: fullName,
-                        phone: phone || null,
-                        phone_country_code: '+880'
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                    // Show success overlay
                     document.getElementById('successOverlay').classList.add('show');
                 } else {
-                    alert(data.error || 'Signup failed. Please try again.');
+                    showServerError(data.error || 'Signup failed. Please try again.');
                 }
             } catch (error) {
                 console.error('Signup error:', error);
-                alert('Network error. Please check your connection and try again.');
+                showServerError('Network error. Please check your connection and try again.');
             } finally {
-                // Reset button
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             }
         }
 
-        // Handle Google Signup
-        function handleGoogleSignup() {
-            alert('Google Sign Up will be available soon!');
-        }
-
-        // Redirect to Login
         function redirectToLogin() {
-            window.location.href = '/auth-login.html';
+            window.location.href = '/login';
         }
     </script>
 </body>
