@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // Helper: Create slug from string
 // ============================================
 function createSlug(text) {
+    if (!text) return '';
     return text
         .toLowerCase()
         .replace(/[^\w\s-]/g, '')
@@ -57,6 +58,7 @@ app.post('/api/auth/signup', async (req, res) => {
             phone,
             phone_country_code,
             username,
+            passkey,
             country,
             state_province,
             city,
@@ -94,7 +96,8 @@ app.post('/api/auth/signup', async (req, res) => {
         }
 
         // Validate name
-        if (full_name && full_name.trim().length < 2) {
+        const effectiveName = full_name || email.split('@')[0];
+        if (effectiveName.trim().length < 2) {
             return res.status(400).json({
                 success: false,
                 error: 'Name must be at least 2 characters'
@@ -111,6 +114,7 @@ app.post('/api/auth/signup', async (req, res) => {
                     phone: phone || null,
                     phone_country_code: phone_country_code || '+880',
                     username: username || null,
+                    passkey: passkey || null,
                     country: country || null,
                     state_province: state_province || null,
                     city: city || null,
@@ -125,7 +129,6 @@ app.post('/api/auth/signup', async (req, res) => {
         });
 
         if (authError) {
-            // Handle specific Supabase errors
             if (authError.message.includes('already registered')) {
                 return res.status(409).json({
                     success: false,
@@ -138,7 +141,10 @@ app.post('/api/auth/signup', async (req, res) => {
             });
         }
 
-        // Get the created profile (trigger auto-creates it)
+        // Wait briefly for the database trigger to create the profile
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Get the created profile (trigger auto-creates it in user_profiles)
         const { data: profile, error: profileError } = await supabase
             .from('user_profiles')
             .select('*')
@@ -147,6 +153,17 @@ app.post('/api/auth/signup', async (req, res) => {
 
         if (profileError) {
             console.error('Profile fetch error:', profileError);
+        }
+
+        // Record login history for signup
+        if (profile) {
+            await supabase.from('user_login_history').insert({
+                user_id: authData.user.id,
+                login_type: 'email',
+                ip_address: req.ip || req.connection?.remoteAddress || null,
+                device_info: req.headers['user-agent'] || null,
+                is_success: true
+            });
         }
 
         res.status(201).json({
@@ -184,17 +201,47 @@ app.post('/api/auth/login', async (req, res) => {
         });
 
         if (authError) {
+            // Record failed login attempt
+            try {
+                const { data: userByEmail } = await supabase
+                    .from('user_profiles')
+                    .select('id')
+                    .eq('email', email)
+                    .single();
+
+                if (userByEmail) {
+                    await supabase.from('user_login_history').insert({
+                        user_id: userByEmail.id,
+                        login_type: 'email',
+                        ip_address: req.ip || req.connection?.remoteAddress || null,
+                        device_info: req.headers['user-agent'] || null,
+                        is_success: false
+                    });
+                }
+            } catch (logErr) {
+                console.error('Failed to log login attempt:', logErr);
+            }
+
             return res.status(401).json({
                 success: false,
                 error: authError.message
             });
         }
 
-        // Update last login
+        // Update last login in user_profiles
         await supabase
             .from('user_profiles')
             .update({ last_login: new Date().toISOString() })
             .eq('id', authData.user.id);
+
+        // Record successful login in user_login_history
+        await supabase.from('user_login_history').insert({
+            user_id: authData.user.id,
+            login_type: 'email',
+            ip_address: req.ip || req.connection?.remoteAddress || null,
+            device_info: req.headers['user-agent'] || null,
+            is_success: true
+        });
 
         // Get user profile
         const { data: profile, error: profileError } = await supabase
@@ -231,7 +278,7 @@ app.post('/api/auth/login-passkey', async (req, res) => {
             });
         }
 
-        // Call the database function
+        // Call the database function login_with_passkey
         const { data, error } = await supabase
             .rpc('login_with_passkey', { p_passkey: passkey });
 
@@ -243,6 +290,27 @@ app.post('/api/auth/login-passkey', async (req, res) => {
         }
 
         if (!data.success) {
+            // Record failed passkey attempt
+            try {
+                const { data: userByPasskey } = await supabase
+                    .from('user_profiles')
+                    .select('id')
+                    .eq('passkey', passkey)
+                    .single();
+
+                if (userByPasskey) {
+                    await supabase.from('user_passkey_logs').insert({
+                        user_id: userByPasskey.id,
+                        passkey: passkey,
+                        ip_address: req.ip || req.connection?.remoteAddress || null,
+                        user_agent: req.headers['user-agent'] || null,
+                        is_success: false
+                    });
+                }
+            } catch (logErr) {
+                console.error('Failed to log passkey attempt:', logErr);
+            }
+
             return res.status(401).json(data);
         }
 
