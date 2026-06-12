@@ -1,162 +1,413 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-BD" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Jabiyen</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sign Up | JAYENWARE Official Store</title>
+
+    <meta name="description" content="Create your JAYENWARE account. Join Bangladesh's premium lifestyle fashion store by BINZEO.">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.jayenware.shop/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://www.jayenware.shop/logo.png">
+    <link rel="apple-touch-icon" href="https://www.jayenware.shop/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <script src="/fonts.js"></script>
+    <script>
+        if (window.JAYENWARE_FONTS) {
+            const link = document.createElement('link');
+            link.href = JAYENWARE_FONTS.googleFontsURL;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/components.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: window.JAYENWARE_FONTS?.tailwindConfig?.fontFamily?.sans || ["'Inter', 'sans-serif'"],
+                        serif: window.JAYENWARE_FONTS?.tailwindConfig?.fontFamily?.serif || ["'Manrope', 'sans-serif'"],
+                        mono: window.JAYENWARE_FONTS?.tailwindConfig?.fontFamily?.mono || ["'Sora', 'sans-serif'"]
+                    },
+                    colors: {
+                        primary: '#1d1d1f',
+                        accent: '#86868b',
+                        soft: '#f5f5f7',
+                        blue: '#007aff'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        :root {
+            --primary: #1d1d1f;
+            --accent: #86868b;
+            --soft: #f5f5f7;
+            --blue: #007aff;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
+            -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #ffffff;
+            color: #1d1d1f;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
+            font-family: var(--font-body, 'Inter', sans-serif);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        main {
+            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
+            min-height: calc(100vh - 280px);
         }
 
         .signup-container {
             width: 100%;
-            max-width: 550px;
+            max-width: 680px;
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
+            border-radius: 24px;
+            padding: 40px 32px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 2px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        @media (max-width: 640px) {
+            .signup-container {
+                padding: 28px 20px;
+                border-radius: 20px;
+                border: none;
+                box-shadow: none;
+            }
+            main {
+                padding: 20px 12px;
+            }
         }
 
         .signup-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px 40px;
             text-align: center;
-            color: white;
+            margin-bottom: 36px;
         }
 
-        .signup-header .logo {
-            font-size: 32px;
+        .signup-header .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            font-family: var(--font-heading, 'Manrope', sans-serif);
         }
 
-        .signup-header .logo span {
-            color: #ffd700;
+        .signup-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 6px 0;
+            font-family: var(--font-heading, 'Manrope', sans-serif);
+            letter-spacing: -0.5px;
         }
 
         .signup-header p {
             font-size: 14px;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .signup-form {
-            padding: 35px 40px;
+            color: var(--accent);
+            margin: 0;
+            font-family: var(--font-body, 'Inter', sans-serif);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        @media (max-width: 640px) {
+            .form-row.three-col {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
-            color: #374151;
-            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-family: var(--font-body, 'Inter', sans-serif);
         }
 
-        .form-group label .required {
-            color: #ef4444;
-            margin-left: 2px;
+        .form-group label .optional {
+            color: var(--accent);
+            font-weight: 400;
+            text-transform: none;
+            font-size: 10px;
         }
 
-        .input-wrapper {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #e5e5ea;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: var(--font-body, 'Inter', sans-serif);
+            color: var(--primary);
+            background: #fafafa;
+            transition: all 0.2s ease;
+            outline: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.06);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #c7c7cc;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-group .input-with-icon {
             position: relative;
         }
 
-        .input-wrapper i {
+        .form-group .input-with-icon input {
+            padding-left: 40px;
+        }
+
+        .form-group .input-with-icon .input-icon {
             position: absolute;
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #9ca3af;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 14px 12px 40px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
             font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            color: #374151;
-            transition: all 0.3s ease;
-            background: #f9fafb;
+            color: var(--accent);
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group input:focus + i,
-        .input-wrapper:focus-within i {
-            color: #667eea;
-        }
-
-        .form-group input::placeholder {
-            color: #9ca3af;
-            font-weight: 300;
-        }
-
-        .phone-group {
+        .form-group .phone-wrapper {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .phone-group select {
-            width: 130px;
-            padding: 12px 10px;
+        .form-group .phone-wrapper select {
+            width: 90px;
             flex-shrink: 0;
+            padding: 12px 8px;
+            font-size: 13px;
+            background: #fafafa;
+            border: 1px solid #e5e5ea;
+            border-radius: 12px;
+            color: var(--primary);
         }
 
-        .phone-group .input-wrapper {
+        .form-group .phone-wrapper input {
             flex: 1;
         }
 
-        .password-wrapper {
-            position: relative;
+        .form-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 28px 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-family: var(--font-body, 'Inter', sans-serif);
         }
 
-        .password-wrapper input {
-            padding-right: 45px;
+        .submit-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 24px;
+            font-family: var(--font-body, 'Inter', sans-serif);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .submit-btn:hover {
+            background: #000000;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+
+        .submit-btn:disabled {
+            background: #c7c7cc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .signup-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--accent);
+        }
+
+        .signup-footer a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #ffcccc;
+            color: #d70015;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: none;
+            font-family: var(--font-body, 'Inter', sans-serif);
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #b7ebc9;
+            color: #1a7a32;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: none;
+            font-family: var(--font-body, 'Inter', sans-serif);
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .password-strength {
+            height: 3px;
+            border-radius: 3px;
+            margin-top: 6px;
+            transition: all 0.3s ease;
+            background: #e5e5ea;
+        }
+
+        .password-strength.weak { background: #d70015; width: 25%; }
+        .password-strength.fair { background: #ff9500; width: 50%; }
+        .password-strength.good { background: #ffcc00; width: 75%; }
+        .password-strength.strong { background: #34c759; width: 100%; }
+
+        .password-hint {
+            font-size: 10px;
+            color: var(--accent);
+            margin-top: 4px;
+            font-family: var(--font-body, 'Inter', sans-serif);
         }
 
         .toggle-password {
@@ -165,552 +416,241 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #9ca3af;
-            font-size: 15px;
-            transition: color 0.3s ease;
+            color: var(--accent);
+            font-size: 14px;
+            z-index: 2;
             background: none;
             border: none;
+            padding: 4px;
         }
 
-        .toggle-password:hover {
-            color: #667eea;
-        }
-
-        .terms-checkbox {
+        .terms-check {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            margin: 25px 0;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--accent);
+            font-family: var(--font-body, 'Inter', sans-serif);
         }
 
-        .terms-checkbox input[type="checkbox"] {
+        .terms-check input[type="checkbox"] {
             width: 18px;
             height: 18px;
             margin-top: 2px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
-
-        .terms-checkbox label {
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.5;
+            accent-color: var(--primary);
             cursor: pointer;
         }
 
-        .terms-checkbox label a {
-            color: #667eea;
+        .terms-check a {
+            color: var(--blue);
             text-decoration: none;
-            font-weight: 600;
-        }
-
-        .terms-checkbox label a:hover {
-            text-decoration: underline;
-        }
-
-        .signup-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.5px;
-        }
-
-        .signup-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .signup-btn:active {
-            transform: translateY(0);
-        }
-
-        .signup-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .signup-btn .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin-right: 10px;
-        }
-
-        .signup-btn.loading .spinner {
-            display: inline-block;
-        }
-
-        .signup-btn.loading .btn-text {
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e5e7eb;
-        }
-
-        .divider span {
-            padding: 0 15px;
-        }
-
-        .social-signup {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .social-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #374151;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .social-btn:hover {
-            border-color: #667eea;
-            background: #f9fafb;
-        }
-
-        .social-btn i {
-            font-size: 18px;
-        }
-
-        .social-btn.google i {
-            color: #ea4335;
-        }
-
-        .social-btn.facebook i {
-            color: #1877f2;
-        }
-
-        .error-message {
-            background: #fef2f2;
-            color: #dc2626;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 20px;
-            display: none;
-            border-left: 4px solid #dc2626;
-        }
-
-        .error-message.show {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-
-        .success-message {
-            background: #f0fdf4;
-            color: #16a34a;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 20px;
-            display: none;
-            border-left: 4px solid #16a34a;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 30px;
-        }
-
-        .step-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #e5e7eb;
-            transition: all 0.3s ease;
-        }
-
-        .step-dot.active {
-            background: #667eea;
-            width: 30px;
-            border-radius: 5px;
-        }
-
-        .form-step {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .form-step.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .back-btn {
-            flex: 1;
-            padding: 14px;
-            background: #f3f4f6;
-            color: #374151;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .back-btn:hover {
-            background: #e5e7eb;
-        }
-
-        @media (max-width: 600px) {
-            .signup-container {
-                border-radius: 15px;
-            }
-            
-            .signup-header {
-                padding: 25px 25px;
-            }
-            
-            .signup-form {
-                padding: 25px;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            
-            .form-row .form-group {
-                margin-bottom: 20px;
-            }
-            
-            .social-signup {
-                flex-direction: column;
-            }
-            
-            .phone-group {
-                flex-direction: column;
-            }
-            
-            .phone-group select {
-                width: 100%;
-            }
         }
     </style>
 </head>
-<body>
-    <div class="signup-container">
-        <!-- Header -->
-        <div class="signup-header">
-            <div class="logo">Jab<span>i</span>yen</div>
-            <p>Create your account and start shopping</p>
-        </div>
+<body class="antialiased">
 
-        <!-- Form -->
-        <div class="signup-form">
-            <!-- Error Message -->
-            <div class="error-message" id="errorMessage">
-                <i class="fas fa-exclamation-circle"></i>
-                <span id="errorText"></span>
+    <!-- HEADER -->
+    <div id="header-container"></div>
+
+    <main>
+        <div class="signup-container">
+            <div class="signup-header">
+                <div class="logo-icon">J</div>
+                <h2>Create Account</h2>
+                <p>Join JAYENWARE and discover premium lifestyle fashion</p>
             </div>
+
+            <!-- Error Message -->
+            <div id="signup-error" class="error-message"></div>
 
             <!-- Success Message -->
-            <div class="success-message" id="successMessage">
-                <i class="fas fa-check-circle"></i>
-                <span id="successText"></span>
-            </div>
+            <div id="signup-success" class="success-message"></div>
 
-            <!-- Step Indicator -->
-            <div class="step-indicator">
-                <div class="step-dot active" id="stepDot1"></div>
-                <div class="step-dot" id="stepDot2"></div>
-            </div>
-
-            <form id="signupForm">
-                <!-- Step 1: Account Information -->
-                <div class="form-step active" id="step1">
-                    <div class="form-group">
-                        <label>Full Name <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="fullName" placeholder="Enter your full name" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email Address <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" placeholder="you@example.com" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <div class="phone-group">
-                            <select id="phoneCode">
-                                <option value="+880">🇧🇩 +880</option>
-                                <option value="+91">🇮🇳 +91</option>
-                                <option value="+1">🇺🇸 +1</option>
-                                <option value="+44">🇬🇧 +44</option>
-                                <option value="+971">🇦🇪 +971</option>
-                                <option value="+966">🇸🇦 +966</option>
-                                <option value="+60">🇲🇾 +60</option>
-                                <option value="+65">🇸🇬 +65</option>
-                            </select>
-                            <div class="input-wrapper">
-                                <i class="fas fa-phone"></i>
-                                <input type="tel" id="phone" placeholder="1XXXXXXXXX">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Username (Optional)</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-at"></i>
-                            <input type="text" id="username" placeholder="Choose a username">
-                        </div>
-                    </div>
-
-                    <button type="button" class="signup-btn" onclick="nextStep()">
-                        <span class="spinner"></span>
-                        <span class="btn-text">Continue →</span>
-                    </button>
+            <form id="signup-form" novalidate autocomplete="on">
+                
+                <!-- ============================================ -->
+                <!-- BASIC INFORMATION -->
+                <!-- ============================================ -->
+                <div class="form-section-title">
+                    <i class="fa-regular fa-user"></i>&nbsp; Basic Information
                 </div>
 
-                <!-- Step 2: Password & Address -->
-                <div class="form-step" id="step2">
+                <div class="form-group">
+                    <label for="full_name">Full Name *</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required minlength="2" autocomplete="name">
+                </div>
+
+                <div class="form-row">
                     <div class="form-group">
-                        <label>Password <span class="required">*</span></label>
-                        <div class="input-wrapper password-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" placeholder="At least 6 characters" required minlength="6">
-                            <button type="button" class="toggle-password" onclick="togglePassword('password')">
-                                <i class="fas fa-eye"></i>
+                        <label for="email">Email Address *</label>
+                        <div class="input-with-icon">
+                            <i class="fa-regular fa-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username <span class="optional">(optional)</span></label>
+                        <div class="input-with-icon">
+                            <i class="fa-regular fa-at input-icon"></i>
+                            <input type="text" id="username" name="username" placeholder="Auto-generated if empty" autocomplete="username">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" id="password" name="password" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', this)" aria-label="Toggle password visibility">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <div id="password-strength-bar" class="password-strength"></div>
+                        <p class="password-hint">Use 8+ characters with letters, numbers & symbols for a strong password</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password *</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required minlength="6" autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirm_password', this)" aria-label="Toggle password visibility">
+                                <i class="fa-regular fa-eye"></i>
                             </button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Confirm Password <span class="required">*</span></label>
-                        <div class="input-wrapper password-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
-                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
+                <!-- ============================================ -->
+                <!-- CONTACT INFORMATION -->
+                <!-- ============================================ -->
+                <div class="form-section-title">
+                    <i class="fa-solid fa-phone"></i>&nbsp; Contact Information
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Country</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-globe"></i>
-                                <input type="text" id="country" placeholder="Bangladesh">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>City</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-city"></i>
-                                <input type="text" id="city" placeholder="Dhaka">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Street Address</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <input type="text" id="streetAddress" placeholder="House, Road, Area">
-                        </div>
-                    </div>
-
-                    <div class="terms-checkbox">
-                        <input type="checkbox" id="termsCheckbox" required>
-                        <label for="termsCheckbox">
-                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                        </label>
-                    </div>
-
-                    <div class="nav-buttons">
-                        <button type="button" class="back-btn" onclick="prevStep()">← Back</button>
-                        <button type="submit" class="signup-btn" id="submitBtn">
-                            <span class="spinner"></span>
-                            <span class="btn-text">Create Account</span>
-                        </button>
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="optional">(optional)</span></label>
+                    <div class="phone-wrapper">
+                        <select id="phone_country_code" name="phone_country_code">
+                            <option value="+880">🇧🇩 +880</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+60">🇲🇾 +60</option>
+                            <option value="+65">🇸🇬 +65</option>
+                        </select>
+                        <input type="tel" id="phone" name="phone" placeholder="1XXXXXXXXX" autocomplete="tel">
                     </div>
                 </div>
+
+                <!-- ============================================ -->
+                <!-- ADDRESS INFORMATION (user_profiles table) -->
+                <!-- ============================================ -->
+                <div class="form-section-title">
+                    <i class="fa-solid fa-map-location-dot"></i>&nbsp; Address <span class="optional">(optional)</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" placeholder="e.g. Bangladesh" autocomplete="country-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="country_iso_code">Country Code</label>
+                        <input type="text" id="country_iso_code" name="country_iso_code" placeholder="e.g. BD" maxlength="2" autocomplete="country">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="state_province">State / Province</label>
+                        <input type="text" id="state_province" name="state_province" placeholder="e.g. Dhaka" autocomplete="address-level1">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="e.g. Gulshan" autocomplete="address-level2">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code</label>
+                        <input type="text" id="postal_code" name="postal_code" placeholder="e.g. 1212" autocomplete="postal-code">
+                    </div>
+                    <div class="form-group">
+                        <label for="area_locality">Area / Locality</label>
+                        <input type="text" id="area_locality" name="area_locality" placeholder="e.g. Banani" autocomplete="address-level3">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="street_address_1">Street Address 1</label>
+                    <input type="text" id="street_address_1" name="street_address_1" placeholder="House / Road / Village" autocomplete="address-line1">
+                </div>
+
+                <div class="form-group">
+                    <label for="street_address_2">Street Address 2</label>
+                    <input type="text" id="street_address_2" name="street_address_2" placeholder="Additional address info" autocomplete="address-line2">
+                </div>
+
+                <div class="form-group">
+                    <label for="landmark">Landmark</label>
+                    <input type="text" id="landmark" name="landmark" placeholder="e.g. Near Jamuna Future Park" autocomplete="off">
+                </div>
+
+                <!-- ============================================ -->
+                <!-- PASSKEY (Optional Custom) -->
+                <!-- ============================================ -->
+                <div class="form-section-title">
+                    <i class="fa-solid fa-key"></i>&nbsp; Passkey <span class="optional">(optional)</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="passkey">Custom Passkey <span class="optional">(Auto-generated if empty)</span></label>
+                    <input type="text" id="passkey" name="passkey" placeholder="Leave empty for auto-generated passkey" maxlength="12" autocomplete="off">
+                    <p class="password-hint">Passkey allows quick login without password. Keep it safe!</p>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- TERMS & SUBMIT -->
+                <!-- ============================================ -->
+                <div class="terms-check">
+                    <input type="checkbox" id="agree_terms" name="agree_terms" required>
+                    <label for="agree_terms">
+                        I agree to the <a href="#" onclick="event.preventDefault();openPolicy('terms')">Terms & Conditions</a> and <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    <span id="btn-text">Create Account</span>
+                    <span id="btn-spinner" class="spinner" style="display:none;"></span>
+                </button>
+
+                <p class="signup-footer">
+                    Already have an account? <a href="/login">Sign In</a>
+                </p>
             </form>
-
-            <!-- Social Signup -->
-            <div class="divider">
-                <span>or sign up with</span>
-            </div>
-
-            <div class="social-signup">
-                <button class="social-btn google" onclick="socialSignup('google')">
-                    <i class="fab fa-google"></i> Google
-                </button>
-                <button class="social-btn facebook" onclick="socialSignup('facebook')">
-                    <i class="fab fa-facebook-f"></i> Facebook
-                </button>
-            </div>
-
-            <!-- Login Link -->
-            <div class="login-link">
-                Already have an account? <a href="/login">Sign in</a>
-            </div>
         </div>
-    </div>
+    </main>
+
+    <!-- FOOTER -->
+    <div id="footer-container"></div>
 
     <script>
-        // ============================================
-        // Step Navigation
-        // ============================================
-        let currentStep = 1;
+        // ============================================================
+        // SIGNUP FORM HANDLING
+        // ============================================================
 
-        function showStep(step) {
-            document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.step-dot').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`step${step}`).classList.add('active');
-            document.getElementById(`stepDot${step}`).classList.add('active');
-            
-            currentStep = step;
-            
-            // Hide messages when switching steps
-            hideError();
-            hideSuccess();
-        }
+        const API_BASE = '/api/auth';
 
-        function nextStep() {
-            // Validate Step 1 fields
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            
-            if (!fullName) {
-                showError('Please enter your full name');
-                return;
-            }
-            
-            if (fullName.length < 2) {
-                showError('Name must be at least 2 characters');
-                return;
-            }
-            
-            if (!email) {
-                showError('Please enter your email address');
-                return;
-            }
-            
-            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-            if (!emailRegex.test(email)) {
-                showError('Please enter a valid email address');
-                return;
-            }
-            
-            showStep(2);
-        }
-
-        function prevStep() {
-            showStep(1);
-        }
-
-        // ============================================
-        // Toggle Password Visibility
-        // ============================================
-        function togglePassword(inputId) {
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId, btn) {
             const input = document.getElementById(inputId);
-            const icon = input.parentElement.querySelector('.toggle-password i');
-            
+            const icon = btn.querySelector('i');
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -722,140 +662,239 @@
             }
         }
 
-        // ============================================
-        // Show/Hide Messages
-        // ============================================
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const bar = document.getElementById('password-strength-bar');
+            if (!bar) return;
+
+            bar.className = 'password-strength';
+
+            if (!password || password.length === 0) {
+                bar.className = 'password-strength';
+                return;
+            }
+
+            let score = 0;
+            if (password.length >= 6) score++;
+            if (password.length >= 8) score++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+            if (/\d/.test(password)) score++;
+            if (/[^a-zA-Z\d]/.test(password)) score++;
+
+            if (score <= 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('fair');
+            else if (score === 3) bar.classList.add('good');
+            else bar.classList.add('strong');
+        }
+
+        // Show error message
         function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            errorText.textContent = message;
-            errorDiv.classList.add('show');
-            document.getElementById('successMessage').classList.remove('show');
+            const errorEl = document.getElementById('signup-error');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+                setTimeout(() => errorEl.classList.remove('show'), 6000);
+            }
         }
 
-        function hideError() {
-            document.getElementById('errorMessage').classList.remove('show');
-        }
-
+        // Show success message
         function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            const successText = document.getElementById('successText');
-            successText.textContent = message;
-            successDiv.classList.add('show');
-            document.getElementById('errorMessage').classList.remove('show');
+            const successEl = document.getElementById('signup-success');
+            if (successEl) {
+                successEl.textContent = message;
+                successEl.classList.add('show');
+                setTimeout(() => successEl.classList.remove('show'), 10000);
+            }
         }
 
-        function hideSuccess() {
-            document.getElementById('successMessage').classList.remove('show');
+        // Hide messages
+        function hideMessages() {
+            document.getElementById('signup-error')?.classList.remove('show');
+            document.getElementById('signup-success')?.classList.remove('show');
         }
 
-        // ============================================
-        // Form Submission
-        // ============================================
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        // Set loading state
+        function setLoading(isLoading) {
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+
+            if (isLoading) {
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                btnSpinner.style.display = 'inline-block';
+            } else {
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                btnSpinner.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
+            hideMessages();
+
+            // Basic validation
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const termsCheckbox = document.getElementById('termsCheckbox');
-            
-            // Validate password
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const agreeTerms = document.getElementById('agree_terms').checked;
+
+            // Required fields
+            if (!fullName) {
+                showError('Please enter your full name.');
+                document.getElementById('full_name').focus();
+                return;
+            }
+
+            if (fullName.length < 2) {
+                showError('Name must be at least 2 characters.');
+                document.getElementById('full_name').focus();
+                return;
+            }
+
+            if (!email) {
+                showError('Please enter your email address.');
+                document.getElementById('email').focus();
+                return;
+            }
+
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address.');
+                document.getElementById('email').focus();
+                return;
+            }
+
             if (!password) {
-                showError('Please enter a password');
+                showError('Please enter a password.');
+                document.getElementById('password').focus();
                 return;
             }
-            
+
             if (password.length < 6) {
-                showError('Password must be at least 6 characters');
+                showError('Password must be at least 6 characters.');
+                document.getElementById('password').focus();
                 return;
             }
-            
+
             if (password !== confirmPassword) {
-                showError('Passwords do not match');
+                showError('Passwords do not match.');
+                document.getElementById('confirm_password').focus();
                 return;
             }
-            
-            if (!termsCheckbox.checked) {
-                showError('Please agree to the Terms of Service');
+
+            if (!agreeTerms) {
+                showError('You must agree to the Terms & Conditions and Privacy Policy.');
                 return;
             }
-            
-            // Show loading state
-            submitBtn.classList.add('loading');
-            submitBtn.disabled = true;
-            hideError();
-            hideSuccess();
-            
-            // Prepare data
-            const signupData = {
-                email: document.getElementById('email').value.trim(),
+
+            // Collect all form data matching user_profiles table columns
+            const formData = {
+                email: email,
                 password: password,
-                full_name: document.getElementById('fullName').value.trim(),
+                full_name: fullName || null,
+                username: username || null,
                 phone: document.getElementById('phone').value.trim() || null,
-                phone_country_code: document.getElementById('phoneCode').value,
-                username: document.getElementById('username').value.trim() || null,
+                phone_country_code: document.getElementById('phone_country_code').value || '+880',
+                passkey: document.getElementById('passkey').value.trim() || null,
                 country: document.getElementById('country').value.trim() || null,
+                country_iso_code: document.getElementById('country_iso_code').value.trim().toUpperCase() || null,
+                state_province: document.getElementById('state_province').value.trim() || null,
                 city: document.getElementById('city').value.trim() || null,
-                street_address_1: document.getElementById('streetAddress').value.trim() || null
+                postal_code: document.getElementById('postal_code').value.trim() || null,
+                street_address_1: document.getElementById('street_address_1').value.trim() || null,
+                street_address_2: document.getElementById('street_address_2').value.trim() || null,
+                area_locality: document.getElementById('area_locality').value.trim() || null,
+                landmark: document.getElementById('landmark').value.trim() || null
             };
-            
+
+            setLoading(true);
+
             try {
-                const response = await fetch('/api/auth/signup', {
+                const response = await fetch(`${API_BASE}/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(signupData)
+                    body: JSON.stringify(formData)
                 });
-                
+
                 const result = await response.json();
-                
-                if (result.success) {
-                    showSuccess(result.message || 'Account created successfully! Please check your email for verification.');
-                    
-                    // Store token if available
-                    if (result.user) {
-                        // Save to localStorage
-                        const userData = {
-                            id: result.user.id,
-                            email: result.user.email,
-                            profile: result.profile
-                        };
-                        localStorage.setItem('jabiyen_user', JSON.stringify(userData));
-                        
-                        // Redirect after delay
-                        setTimeout(() => {
-                            window.location.href = '/';
-                        }, 2000);
-                    }
-                } else {
+
+                if (!response.ok || !result.success) {
                     showError(result.error || 'Signup failed. Please try again.');
-                    submitBtn.classList.remove('loading');
-                    submitBtn.disabled = false;
+                    setLoading(false);
+                    return;
                 }
-            } catch (error) {
-                console.error('Signup error:', error);
+
+                // Success
+                showSuccess(result.message || 'Account created successfully! Redirecting to login...');
+
+                // Optionally display generated passkey/username if returned
+                if (result.profile) {
+                    console.log('Profile created:', result.profile);
+                    if (result.profile.passkey) {
+                        showSuccess(
+                            `Account created! Your passkey: <strong>${result.profile.passkey}</strong>. Save it for quick login. Redirecting...`
+                            );
+                    }
+                    if (result.profile.username) {
+                        console.log('Username:', result.profile.username);
+                    }
+                }
+
+                // Redirect to login page after a short delay
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2500);
+
+            } catch (err) {
+                console.error('Signup error:', err);
                 showError('Network error. Please check your connection and try again.');
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
+                setLoading(false);
             }
         });
 
-        // ============================================
-        // Social Signup (Placeholder)
-        // ============================================
-        function socialSignup(provider) {
-            showError(`${provider} signup is coming soon!`);
-            setTimeout(hideError, 3000);
+        // Password strength listener
+        document.getElementById('password').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+
+        // Real-time validation for confirm password
+        document.getElementById('confirm_password').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            if (this.value && this.value !== password) {
+                this.style.borderColor = '#d70015';
+            } else if (this.value) {
+                this.style.borderColor = '#34c759';
+            } else {
+                this.style.borderColor = '#e5e5ea';
+            }
+        });
+
+        // Username auto-suggestion
+        document.getElementById('full_name').addEventListener('blur', function() {
+            const usernameInput = document.getElementById('username');
+            if (!usernameInput.value && this.value) {
+                const suggested = 'jabiyen' + this.value.replace(/[^a-zA-Z]/g, '').toLowerCase().slice(0, 4);
+                usernameInput.placeholder = 'Suggested: ' + suggested;
+            }
+        });
+
+        // Policy link handler
+        function openPolicy(type) {
+            if (type === 'terms') {
+                window.open('/terms', '_blank');
+            } else if (type === 'privacy') {
+                window.open('/privacy', '_blank');
+            }
         }
 
-        // ============================================
-        // Clear error on input focus
-        // ============================================
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', hideError);
-        });
+        console.log('[Signup] Page ready');
     </script>
 </body>
 </html>
