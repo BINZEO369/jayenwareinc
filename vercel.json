@@ -40,6 +40,14 @@
       "dest": "/public/logo.png"
     },
     {
+      "src": "/auth-signup.html",
+      "dest": "/public/auth-signup.html"
+    },
+    {
+      "src": "/auth-login.html",
+      "dest": "/public/auth-login.html"
+    },
+    {
       "src": "/product/(.*)",
       "dest": "/public/product.html"
     },
