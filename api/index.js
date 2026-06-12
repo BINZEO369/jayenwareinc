@@ -9,8 +9,10 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// Body parser middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
 // Helper: Create slug from string
@@ -42,17 +44,17 @@ function formatProducts(products) {
 }
 
 // ============================================
-// AUTH API Routes - SIGNUP & LOGIN
+// AUTH API Routes
 // ============================================
 
-// SIGNUP - ইউজার রেজিস্ট্রেশন
+// SIGNUP - Create new account
 app.post('/api/auth/signup', async (req, res) => {
     try {
-        const { 
-            email, 
-            password, 
-            full_name, 
-            phone, 
+        const {
+            email,
+            password,
+            full_name,
+            phone,
             phone_country_code,
             username,
             country,
@@ -66,56 +68,46 @@ app.post('/api/auth/signup', async (req, res) => {
             country_iso_code
         } = req.body;
 
-        // ভ্যালিডেশন
+        // Validation
         if (!email || !password) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Email and password are required' 
+            return res.status(400).json({
+                success: false,
+                error: 'Email and password are required'
             });
         }
 
-        if (!full_name || full_name.trim().length < 2) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Full name is required (minimum 2 characters)' 
-            });
-        }
-
-        // ইমেইল ফরম্যাট ভ্যালিডেশন
+        // Validate email format
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Invalid email format' 
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid email format'
             });
         }
 
-        // পাসওয়ার্ড স্ট্রেংথ ভ্যালিডেশন
+        // Validate password strength
         if (password.length < 6) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Password must be at least 6 characters' 
+            return res.status(400).json({
+                success: false,
+                error: 'Password must be at least 6 characters'
             });
         }
 
-        // ফোন নম্বর ভ্যালিডেশন (যদি থাকে)
-        if (phone) {
-            const cleanPhone = phone.replace(/[^0-9]/g, '');
-            if (cleanPhone.length < 7 || cleanPhone.length > 15) {
-                return res.status(400).json({ 
-                    success: false, 
-                    error: 'Phone number must have 7-15 digits' 
-                });
-            }
+        // Validate name
+        if (full_name && full_name.trim().length < 2) {
+            return res.status(400).json({
+                success: false,
+                error: 'Name must be at least 2 characters'
+            });
         }
 
-        // Supabase Auth সাইনআপ
+        // Sign up with Supabase Auth
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
-                    full_name: full_name.trim(),
+                    full_name: full_name || null,
                     phone: phone || null,
                     phone_country_code: phone_country_code || '+880',
                     username: username || null,
@@ -133,183 +125,134 @@ app.post('/api/auth/signup', async (req, res) => {
         });
 
         if (authError) {
-            return res.status(400).json({ 
-                success: false, 
-                error: authError.message 
+            // Handle specific Supabase errors
+            if (authError.message.includes('already registered')) {
+                return res.status(409).json({
+                    success: false,
+                    error: 'This email is already registered'
+                });
+            }
+            return res.status(400).json({
+                success: false,
+                error: authError.message
             });
         }
 
-        res.json({
+        // Get the created profile (trigger auto-creates it)
+        const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', authData.user.id)
+            .single();
+
+        if (profileError) {
+            console.error('Profile fetch error:', profileError);
+        }
+
+        res.status(201).json({
             success: true,
-            message: 'Account created successfully! Please check your email for verification.',
-            user: authData.user ? {
-                id: authData.user.id,
-                email: authData.user.email,
-                created_at: authData.user.created_at
-            } : null
+            message: 'Account created successfully. Please check your email for verification.',
+            user: authData.user,
+            profile: profile || null
         });
 
     } catch (err) {
         console.error('Signup error:', err);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Server error during signup' 
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
         });
     }
 });
 
-// LOGIN - ইমেইল ও পাসওয়ার্ড দিয়ে লগইন
+// LOGIN - With email and password
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Email and password are required' 
+            return res.status(400).json({
+                success: false,
+                error: 'Email and password are required'
             });
         }
 
-        // Supabase Auth সাইনইন
+        // Sign in with Supabase Auth
         const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
             email,
             password
         });
 
         if (authError) {
-            return res.status(401).json({ 
-                success: false, 
-                error: 'Invalid email or password' 
+            return res.status(401).json({
+                success: false,
+                error: authError.message
             });
         }
 
-        // প্রোফাইল ডাটা আনুন
-        const { data: profileData } = await supabase
+        // Update last login
+        await supabase
+            .from('user_profiles')
+            .update({ last_login: new Date().toISOString() })
+            .eq('id', authData.user.id);
+
+        // Get user profile
+        const { data: profile, error: profileError } = await supabase
             .from('user_profiles')
             .select('*')
             .eq('id', authData.user.id)
             .single();
 
-        // last_login আপডেট
-        if (profileData) {
-            await supabase
-                .from('user_profiles')
-                .update({ last_login: new Date().toISOString() })
-                .eq('id', authData.user.id);
-        }
-
         res.json({
             success: true,
-            message: 'Login successful!',
-            user: {
-                id: authData.user.id,
-                email: authData.user.email,
-                name: profileData?.name || authData.user.user_metadata?.full_name,
-                username: profileData?.username,
-                phone: profileData?.phone,
-                passkey: profileData?.passkey,
-                avatar_url: profileData?.avatar_url,
-                last_login: new Date().toISOString()
-            },
-            session: {
-                access_token: authData.session.access_token,
-                refresh_token: authData.session.refresh_token,
-                expires_at: authData.session.expires_at
-            }
+            message: 'Login successful',
+            user: authData.user,
+            profile: profile || null
         });
 
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Server error during login' 
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
         });
     }
 });
 
-// PASSKEY LOGIN - পাসকি দিয়ে লগইন
-app.post('/api/auth/passkey-login', async (req, res) => {
+// LOGIN - With passkey
+app.post('/api/auth/login-passkey', async (req, res) => {
     try {
         const { passkey } = req.body;
 
         if (!passkey) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Passkey is required' 
+            return res.status(400).json({
+                success: false,
+                error: 'Passkey is required'
             });
         }
 
-        const { data, error } = await supabase.rpc('login_with_passkey', {
-            p_passkey: passkey
-        });
+        // Call the database function
+        const { data, error } = await supabase
+            .rpc('login_with_passkey', { p_passkey: passkey });
 
         if (error) {
-            return res.status(500).json({ 
-                success: false, 
-                error: error.message 
+            return res.status(500).json({
+                success: false,
+                error: error.message
             });
+        }
+
+        if (!data.success) {
+            return res.status(401).json(data);
         }
 
         res.json(data);
 
     } catch (err) {
         console.error('Passkey login error:', err);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Server error during passkey login' 
-        });
-    }
-});
-
-// GET USER PROFILE
-app.get('/api/auth/profile', async (req, res) => {
-    try {
-        const token = req.headers.authorization?.split(' ')[1];
-        
-        if (!token) {
-            return res.status(401).json({ 
-                success: false, 
-                error: 'No token provided' 
-            });
-        }
-
-        // টোকেন ভেরিফাই করে ইউজার পান
-        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-        if (authError || !user) {
-            return res.status(401).json({ 
-                success: false, 
-                error: 'Invalid token' 
-            });
-        }
-
-        // প্রোফাইল ডাটা আনুন
-        const { data: profile, error: profileError } = await supabase
-            .from('user_profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-
-        if (profileError) {
-            return res.status(500).json({ 
-                success: false, 
-                error: 'Error fetching profile' 
-            });
-        }
-
-        res.json({
-            success: true,
-            user: {
-                ...profile,
-                email: user.email
-            }
-        });
-
-    } catch (err) {
-        console.error('Profile fetch error:', err);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Server error' 
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
         });
     }
 });
@@ -318,30 +261,241 @@ app.get('/api/auth/profile', async (req, res) => {
 app.post('/api/auth/logout', async (req, res) => {
     try {
         const { error } = await supabase.auth.signOut();
-        
+
         if (error) {
-            return res.status(500).json({ 
-                success: false, 
-                error: error.message 
+            return res.status(500).json({
+                success: false,
+                error: error.message
             });
         }
 
-        res.json({ 
-            success: true, 
-            message: 'Logged out successfully' 
+        res.json({
+            success: true,
+            message: 'Logged out successfully'
         });
 
     } catch (err) {
         console.error('Logout error:', err);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Server error during logout' 
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+});
+
+// GET CURRENT USER
+app.get('/api/auth/user', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                success: false,
+                error: 'No authorization token provided'
+            });
+        }
+
+        const token = authHeader.split(' ')[1];
+
+        // Get user from token
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({
+                success: false,
+                error: 'Invalid or expired token'
+            });
+        }
+
+        // Get user profile
+        const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        res.json({
+            success: true,
+            user,
+            profile: profile || null
+        });
+
+    } catch (err) {
+        console.error('Get user error:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+});
+
+// UPDATE PROFILE
+app.put('/api/auth/profile', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                success: false,
+                error: 'No authorization token provided'
+            });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({
+                success: false,
+                error: 'Invalid or expired token'
+            });
+        }
+
+        // Only allow updating certain fields
+        const allowedFields = [
+            'name',
+            'phone',
+            'phone_country_code',
+            'country',
+            'state_province',
+            'city',
+            'postal_code',
+            'street_address_1',
+            'street_address_2',
+            'area_locality',
+            'landmark',
+            'country_iso_code',
+            'avatar_url'
+        ];
+
+        const updateData = {};
+        for (const field of allowedFields) {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        }
+
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'No valid fields to update'
+            });
+        }
+
+        // Phone validation if provided
+        if (updateData.phone) {
+            const phoneDigits = updateData.phone.replace(/[^0-9]/g, '');
+            if (phoneDigits.length < 7) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Phone number must have at least 7 digits'
+                });
+            }
+        }
+
+        const { data: profile, error: updateError } = await supabase
+            .from('user_profiles')
+            .update(updateData)
+            .eq('id', user.id)
+            .select()
+            .single();
+
+        if (updateError) {
+            return res.status(400).json({
+                success: false,
+                error: updateError.message
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            profile
+        });
+
+    } catch (err) {
+        console.error('Profile update error:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+});
+
+// FORGOT PASSWORD
+app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                error: 'Email is required'
+            });
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
+        });
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                error: error.message
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Password reset link sent to your email'
+        });
+
+    } catch (err) {
+        console.error('Forgot password error:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+});
+
+// RESET PASSWORD
+app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        if (!password || password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                error: 'Password must be at least 6 characters'
+            });
+        }
+
+        const { error } = await supabase.auth.updateUser({
+            password
+        });
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                error: error.message
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Password updated successfully'
+        });
+
+    } catch (err) {
+        console.error('Reset password error:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
         });
     }
 });
 
 // ============================================
-// PRODUCTS API
+// API Routes (Products, Categories, etc.)
 // ============================================
 
 // সব প্রোডাক্ট - ক্যাটাগরি ও সাব-ক্যাটাগরি নাম সহ
@@ -363,10 +517,10 @@ app.get('/api/products', async (req, res) => {
 });
 
 // ============================================
-// CATEGORIES API (Slug-based)
+// ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব ক্যাটাগরি - Public
+// সব ক্যাটাগরি - Public (আপডেট করা)
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -376,6 +530,8 @@ app.get('/api/categories', async (req, res) => {
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
         
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+        // আমরা API-তে শুধু 'xxxx' পাঠাব
         const categoriesWithSlugs = data.map(cat => ({
             ...cat,
             slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
@@ -387,7 +543,7 @@ app.get('/api/categories', async (req, res) => {
     }
 });
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে
+// ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -398,6 +554,8 @@ app.get('/api/categories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+        // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
         const category = data.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
@@ -415,10 +573,10 @@ app.get('/api/categories/:slug', async (req, res) => {
 });
 
 // ============================================
-// SUBCATEGORIES API (Slug-based)
+// সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি - Public
+// সব সাব-ক্যাটাগরি - Public (আপডেট করা)
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
@@ -435,6 +593,8 @@ app.get('/api/subcategories', async (req, res) => {
                 .select('id, slug')
                 .eq('is_active', true);
             
+            // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+            // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
             const category = categories.find(cat => {
                 const dbSlug = cat.slug || createSlug(cat.name);
                 return dbSlug.replace(/^category\//, '') === category_slug;
@@ -462,7 +622,7 @@ app.get('/api/subcategories', async (req, res) => {
     }
 });
 
-// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে
+// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -474,6 +634,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
+        // সাব-ক্যাটাগরি খুঁজুন
         let subcategory = data.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
@@ -500,7 +661,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
 });
 
 // ============================================
-// MENU ITEMS API
+// মেনু আইটেমস API (Complete Menu Structure)
 // ============================================
 
 // Main Menu - সমস্ত মেনু আইটেম হায়ারার্কি সহ
@@ -596,7 +757,7 @@ app.get('/api/menu-items/:slug', async (req, res) => {
 });
 
 // ============================================
-// CATEGORY PRODUCTS API
+// Category Product API (Get products by category)
 // ============================================
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
@@ -607,6 +768,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
         const category = categories.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
@@ -632,7 +794,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
 });
 
 // ============================================
-// SUBCATEGORY PRODUCTS API
+// Subcategory Products API
 // ============================================
 app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
@@ -643,6 +805,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
+        // সাব-ক্যাটাগরি খুঁজুন
         const subcategory = subcategories.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
@@ -668,7 +831,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
 });
 
 // ============================================
-// HERO SLIDES
+// হিরো স্লাইড
 // ============================================
 app.get('/api/hero', async (req, res) => {
     try {
@@ -683,7 +846,7 @@ app.get('/api/hero', async (req, res) => {
     }
 });
 
-// হিরো ভিডিও
+// হিরো ভিডিও - শুধু active ভিডিওগুলো
 app.get('/api/hero-videos', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -699,7 +862,7 @@ app.get('/api/hero-videos', async (req, res) => {
     }
 });
 
-// হিরো সেকেন্ডারি
+// হিরো সেকেন্ডারি - শুধু active সেকেন্ডারি ব্যানারগুলো
 app.get('/api/hero-secondary', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -716,7 +879,7 @@ app.get('/api/hero-secondary', async (req, res) => {
 });
 
 // ============================================
-// NEWS
+// নিউজ
 // ============================================
 app.get('/api/news', async (req, res) => {
     try {
@@ -732,7 +895,7 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
-// PRODUCT DETAILS - slug দিয়ে
+// প্রোডাক্ট ডিটেইলস - slug দিয়ে
 // ============================================
 app.get('/api/product/:slug', async (req, res) => {
     try {
@@ -756,13 +919,15 @@ app.get('/api/product/:slug', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট কালার
+// প্রোডাক্ট কালার - slug দিয়ে
 app.get('/api/product-colors', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -778,13 +943,15 @@ app.get('/api/product-colors', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ভেরিয়েন্ট
+// প্রোডাক্ট ভেরিয়েন্ট - slug দিয়ে
 app.get('/api/product-variants', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -800,13 +967,15 @@ app.get('/api/product-variants', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট রিভিউ
+// প্রোডাক্ট রিভিউ - slug দিয়ে
 app.get('/api/product-reviews', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -822,13 +991,15 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ভিডিও
+// প্রোডাক্ট ভিডিও - slug দিয়ে
 app.get('/api/product-videos', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -845,13 +1016,15 @@ app.get('/api/product-videos', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ব্যানার
+// প্রোডাক্ট ব্যানার - slug দিয়ে
 app.get('/api/product-banners', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase.from('products').select('*');
+        const { data: products } = await supabase
+            .from('products')
+            .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -868,7 +1041,7 @@ app.get('/api/product-banners', async (req, res) => {
     }
 });
 
-// কালার সাইজ
+// কালার সাইজ - color ids দিয়ে
 app.get('/api/color-sizes', async (req, res) => {
     try {
         const ids = req.query.ids;
@@ -890,9 +1063,9 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
-// REVIEW SUBMIT
+// রিভিউ সাবমিট
 // ============================================
-app.post('/api/submit-review', async (req, res) => {
+app.post('/api/submit-review', express.json(), async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
         if (!product_id || !rating || !review_text) {
@@ -916,14 +1089,30 @@ app.post('/api/submit-review', async (req, res) => {
 });
 
 // ============================================
-// CATEGORY PAGE ROUTE
+// CATEGORY PAGE ROUTE - Slug-based dynamic routing
 // ============================================
+// যেকোনো /category/:slug বা /category/:slug/:subcategory_slug রাউট category.html এ ফরোয়ার্ড
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
 
 // ============================================
-// SPA Fallback
+// AUTH PAGES ROUTING
+// ============================================
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'signup.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
+});
+
+// ============================================
+// SPA Fallback - সব রাউট index.html এ ফরোয়ার্ড
 // ============================================
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
