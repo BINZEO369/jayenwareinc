@@ -1,913 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - Jabiyen</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>Sign Up - অ্যাকাউন্ট তৈরি করুন</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+        
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
         }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        
+        .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.1;
-        }
-
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: white;
-            animation: float 20s infinite;
-        }
-
-        .bg-circle:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: -150px;
-            left: -150px;
-            animation-delay: 0s;
-        }
-
-        .bg-circle:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            bottom: -100px;
-            right: -100px;
-            animation-delay: -7s;
-        }
-
-        .bg-circle:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            top: 50%;
-            right: 10%;
-            animation-delay: -14s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-            25% {
-                transform: translateY(-50px) scale(1.1);
-            }
-            50% {
-                transform: translateY(-25px) scale(0.9);
-            }
-            75% {
-                transform: translateY(-75px) scale(1.05);
-            }
-        }
-
-        /* Main Container */
-        .signup-container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 520px;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header Section */
-        .signup-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 40px 30px;
-            text-align: center;
-            color: white;
-        }
-
-        .signup-logo {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .signup-logo span {
-            color: #fbbf24;
-        }
-
-        .signup-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        /* Form Section */
-        .signup-form {
-            padding: 40px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 14px 16px 14px 44px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            color: #1f2937;
-            transition: all 0.3s ease;
-            background: #f9fafb;
+        
+        .input-focus:focus {
             outline: none;
-        }
-
-        .form-control:focus {
             border-color: #667eea;
-            background: white;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
-        .form-control:focus + i,
-        .input-wrapper:focus-within i {
-            color: #667eea;
-        }
-
-        .form-control::placeholder {
-            color: #d1d5db;
-        }
-
-        /* Password Field */
-        .password-toggle {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #9ca3af;
-            transition: color 0.3s ease;
-            background: none;
-            border: none;
-            font-size: 16px;
-            padding: 0;
-        }
-
-        .password-toggle:hover {
-            color: #667eea;
-        }
-
-        /* Password Strength Indicator */
-        .password-strength {
-            margin-top: 8px;
-            height: 4px;
-            background: #e5e7eb;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-            width: 0;
-        }
-
-        .strength-text {
-            font-size: 11px;
-            margin-top: 4px;
-            color: #6b7280;
-        }
-
-        /* Terms Checkbox */
-        .terms-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .terms-group input[type="checkbox"] {
-            margin-top: 2px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
-
-        .terms-group label {
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.5;
-            cursor: pointer;
-        }
-
-        .terms-group a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .terms-group a:hover {
-            text-decoration: underline;
-        }
-
-        /* Submit Button */
-        .btn-signup {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-signup:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-signup:active {
-            transform: translateY(0);
-        }
-
-        .btn-signup:disabled {
-            background: #d1d5db;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-signup .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
         }
-
-        .btn-signup.loading .spinner {
-            display: inline-block;
-        }
-
-        .btn-signup.loading .btn-text {
-            display: none;
-        }
-
+        
         @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Divider */
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 32px 0;
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .divider span {
-            padding: 0 16px;
-        }
-
-        /* Social Signup Buttons */
-        .social-signup {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .btn-social {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #374151;
-        }
-
-        .btn-social:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-            transform: translateY(-1px);
-        }
-
-        .btn-social i {
-            font-size: 18px;
-        }
-
-        .btn-google i {
-            color: #ea4335;
-        }
-
-        .btn-facebook i {
-            color: #1877f2;
-        }
-
-        /* Login Link */
-        .login-link {
-            text-align: center;
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Alert Messages */
-        .alert {
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert-success {
-            background: #ecfdf5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 640px) {
-            .signup-container {
-                border-radius: 20px;
-            }
-
-            .signup-header {
-                padding: 30px 24px 24px;
-            }
-
-            .signup-form {
-                padding: 24px;
-            }
-
-            .social-signup {
-                flex-direction: column;
-            }
-
-            .signup-logo {
-                font-size: 28px;
-            }
-        }
-
-        /* Success Overlay */
-        .success-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .success-overlay.show {
-            display: flex;
-        }
-
-        .success-modal {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            animation: scaleIn 0.3s ease-out;
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 40px;
-            color: white;
-        }
-
-        .success-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 8px;
-        }
-
-        .success-message {
-            color: #6b7280;
-            margin-bottom: 24px;
-            line-height: 1.6;
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body>
-    <!-- Animated Background -->
-    <div class="bg-animation">
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-    </div>
-
-    <!-- Success Overlay -->
-    <div class="success-overlay" id="successOverlay">
-        <div class="success-modal">
-            <div class="success-icon">
-                <i class="fas fa-check"></i>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="text-2xl font-bold">আপনার সাইট</a>
+                <a href="/login" class="text-white hover:text-gray-200 transition">
+                    লগইন করুন
+                </a>
             </div>
-            <div class="success-title">Account Created!</div>
-            <div class="success-message">
-                Your account has been created successfully. Please check your email to verify your account.
-            </div>
-            <button class="btn-signup" onclick="window.location.href='/login'">
-                Go to Login
-            </button>
         </div>
-    </div>
+    </header>
 
-    <!-- Signup Container -->
-    <div class="signup-container">
-        <!-- Header -->
-        <div class="signup-header">
-            <div class="signup-logo">Jab<span>i</span>yen</div>
-            <p class="signup-subtitle">Create your account to get started</p>
-        </div>
-
-        <!-- Form -->
-        <div class="signup-form">
-            <!-- Alert Messages -->
-            <div class="alert alert-error" id="errorAlert">
-                <i class="fas fa-exclamation-circle"></i>
-                <span id="errorMessage"></span>
-            </div>
-            <div class="alert alert-success" id="successAlert">
-                <i class="fas fa-check-circle"></i>
-                <span id="successMessage"></span>
-            </div>
-
-            <form id="signupForm" onsubmit="handleSignup(event)">
-                <!-- Full Name -->
-                <div class="form-group">
-                    <label for="fullName">Full Name *</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-user"></i>
-                        <input 
-                            type="text" 
-                            id="fullName" 
-                            class="form-control" 
-                            placeholder="Enter your full name"
-                            required
-                            autocomplete="name"
-                        >
-                    </div>
+    <!-- Signup Form -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">অ্যাকাউন্ট তৈরি করুন</h2>
+                    <p class="text-gray-600">নতুন অ্যাকাউন্ট তৈরি করতে ফর্মটি পূরণ করুন</p>
                 </div>
 
-                <!-- Email -->
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-envelope"></i>
+                <!-- Error/Success Message -->
+                <div id="messageBox" class="hidden mb-4 p-4 rounded-lg"></div>
+
+                <!-- Signup Form -->
+                <form id="signupForm" class="space-y-4">
+                    
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">নাম *</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name"
+                            placeholder="আপনার পূর্ণ নাম লিখুন"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                            required
+                        >
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">ইমেইল *</label>
                         <input 
                             type="email" 
                             id="email" 
-                            class="form-control" 
-                            placeholder="you@example.com"
+                            name="email"
+                            placeholder="example@email.com"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
                             required
-                            autocomplete="email"
                         >
                     </div>
-                </div>
 
-                <!-- Phone (Optional) -->
-                <div class="form-group">
-                    <label for="phone">Phone Number (Optional)</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-phone"></i>
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">ফোন নম্বর</label>
                         <input 
                             type="tel" 
                             id="phone" 
-                            class="form-control" 
-                            placeholder="+880 1XXX-XXXXXX"
-                            autocomplete="tel"
+                            name="phone"
+                            placeholder="01XXXXXXXXX"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
                         >
                     </div>
-                </div>
 
-                <!-- Password -->
-                <div class="form-group">
-                    <label for="password">Password *</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock"></i>
+                    <!-- Username -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">ইউজারনেম</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username"
+                            placeholder="ইউজারনেম (খালি রাখলে অটো জেনারেট হবে)"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                        >
+                    </div>
+
+                    <!-- Passkey -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">পাসকি (১২ সংখ্যা)</label>
+                        <input 
+                            type="text" 
+                            id="passkey" 
+                            name="passkey"
+                            placeholder="খালি রাখলে অটো জেনারেট হবে"
+                            maxlength="12"
+                            pattern="[0-9]{12}"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">শুধু সংখ্যা, ১২ ডিজিট</p>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">পাসওয়ার্ড *</label>
                         <input 
                             type="password" 
                             id="password" 
-                            class="form-control" 
-                            placeholder="Create a strong password"
+                            name="password"
+                            placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                            minlength="6"
                             required
-                            minlength="8"
-                            autocomplete="new-password"
                         >
-                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                            <i class="fas fa-eye"></i>
-                        </button>
                     </div>
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
-                    </div>
-                    <div class="strength-text" id="strengthText">Password strength: Enter password</div>
-                </div>
 
-                <!-- Confirm Password -->
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password *</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock"></i>
+                    <!-- Confirm Password -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">পাসওয়ার্ড নিশ্চিত করুন *</label>
                         <input 
                             type="password" 
                             id="confirmPassword" 
-                            class="form-control" 
-                            placeholder="Re-enter your password"
+                            name="confirmPassword"
+                            placeholder="পাসওয়ার্ডটি আবার লিখুন"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                            minlength="6"
                             required
-                            autocomplete="new-password"
                         >
-                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
-                            <i class="fas fa-eye"></i>
-                        </button>
                     </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        id="submitBtn"
+                        class="gradient-bg w-full text-white font-bold py-3 rounded-lg hover:opacity-90 transition duration-200 transform hover:scale-[1.02]"
+                    >
+                        <span id="btnText">অ্যাকাউন্ট তৈরি করুন</span>
+                        <span id="btnLoader" class="hidden">
+                            <span class="loading-spinner inline-block mr-2"></span>
+                            তৈরি হচ্ছে...
+                        </span>
+                    </button>
+
+                </form>
+
+                <!-- Login Link -->
+                <div class="text-center mt-6">
+                    <p class="text-gray-600">
+                        ইতিমধ্যে অ্যাকাউন্ট আছে? 
+                        <a href="/login" class="text-purple-600 font-semibold hover:text-purple-700">
+                            লগইন করুন
+                        </a>
+                    </p>
                 </div>
 
-                <!-- Terms & Conditions -->
-                <div class="terms-group">
-                    <input type="checkbox" id="termsCheckbox" required>
-                    <label for="termsCheckbox">
-                        I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
-                    </label>
+                <!-- Passkey Login Link -->
+                <div class="text-center mt-3">
+                    <a href="/login?mode=passkey" class="text-sm text-gray-500 hover:text-gray-700">
+                        পাসকি দিয়ে লগইন করুন
+                    </a>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-signup" id="signupButton">
-                    <div class="spinner"></div>
-                    <span class="btn-text">Create Account</span>
-                </button>
-            </form>
-
-            <!-- Divider -->
-            <div class="divider">
-                <span>or sign up with</span>
-            </div>
-
-            <!-- Social Signup -->
-            <div class="social-signup">
-                <button type="button" class="btn-social btn-google" onclick="socialSignup('google')">
-                    <i class="fab fa-google"></i>
-                    Google
-                </button>
-                <button type="button" class="btn-social btn-facebook" onclick="socialSignup('facebook')">
-                    <i class="fab fa-facebook-f"></i>
-                    Facebook
-                </button>
-            </div>
-
-            <!-- Login Link -->
-            <div class="login-link">
-                Already have an account? <a href="/login">Sign in</a>
             </div>
         </div>
     </div>
 
     <script>
-        // API Configuration
-        const API_BASE_URL = window.location.origin;
-        
-        // Toggle Password Visibility
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const button = field.nextElementSibling.querySelector('i');
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            if (field.type === 'password') {
-                field.type = 'text';
-                button.classList.remove('fa-eye');
-                button.classList.add('fa-eye-slash');
-            } else {
-                field.type = 'password';
-                button.classList.remove('fa-eye-slash');
-                button.classList.add('fa-eye');
-            }
-        }
-
-        // Password Strength Checker
-        document.getElementById('password').addEventListener('input', function(e) {
-            const password = e.target.value;
-            const strengthBar = document.getElementById('passwordStrengthBar');
-            const strengthText = document.getElementById('strengthText');
-            
-            let strength = 0;
-            
-            if (password.length >= 8) strength++;
-            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
-            if (password.match(/\d/)) strength++;
-            if (password.match(/[^a-zA-Z\d]/)) strength++;
-            
-            const strengthPercentage = (strength / 4) * 100;
-            strengthBar.style.width = strengthPercentage + '%';
-            
-            switch(strength) {
-                case 0:
-                    strengthBar.style.background = '#ef4444';
-                    strengthText.textContent = 'Password strength: Very weak';
-                    strengthText.style.color = '#ef4444';
-                    break;
-                case 1:
-                    strengthBar.style.background = '#f59e0b';
-                    strengthText.textContent = 'Password strength: Weak';
-                    strengthText.style.color = '#f59e0b';
-                    break;
-                case 2:
-                    strengthBar.style.background = '#fbbf24';
-                    strengthText.textContent = 'Password strength: Medium';
-                    strengthText.style.color = '#f59e0b';
-                    break;
-                case 3:
-                    strengthBar.style.background = '#10b981';
-                    strengthText.textContent = 'Password strength: Strong';
-                    strengthText.style.color = '#10b981';
-                    break;
-                case 4:
-                    strengthBar.style.background = '#059669';
-                    strengthText.textContent = 'Password strength: Very strong';
-                    strengthText.style.color = '#059669';
-                    break;
-            }
-            
-            if (password.length === 0) {
-                strengthBar.style.width = '0';
-                strengthText.textContent = 'Password strength: Enter password';
-                strengthText.style.color = '#6b7280';
-            }
-        });
-
-        // Show Alert
-        function showAlert(type, message) {
-            const errorAlert = document.getElementById('errorAlert');
-            const successAlert = document.getElementById('successAlert');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            
-            // Hide all alerts
-            errorAlert.style.display = 'none';
-            successAlert.style.display = 'none';
-            
-            if (type === 'error') {
-                errorMessage.textContent = message;
-                errorAlert.style.display = 'flex';
-                setTimeout(() => {
-                    errorAlert.style.display = 'none';
-                }, 5000);
-            } else if (type === 'success') {
-                successMessage.textContent = message;
-                successAlert.style.display = 'flex';
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 5000);
-            }
-        }
-
-        // Handle Form Submission
-        async function handleSignup(event) {
-            event.preventDefault();
-            
-            const signupButton = document.getElementById('signupButton');
-            const fullName = document.getElementById('fullName').value.trim();
+            // Get form values
+            const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const passkey = document.getElementById('passkey').value.trim();
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            const termsCheckbox = document.getElementById('termsCheckbox');
             
-            // Validate passwords match
+            // Basic validation
+            const messageBox = document.getElementById('messageBox');
+            
+            // Clear previous messages
+            messageBox.classList.add('hidden');
+            
+            if (!name || !email || !password || !confirmPassword) {
+                showMessage('সব প্রয়োজনীয় ফিল্ড পূরণ করুন', 'error');
+                return;
+            }
+            
             if (password !== confirmPassword) {
-                showAlert('error', 'Passwords do not match. Please try again.');
+                showMessage('পাসওয়ার্ড মিলছে না', 'error');
                 return;
             }
             
-            // Validate password strength
-            if (password.length < 8) {
-                showAlert('error', 'Password must be at least 8 characters long.');
+            if (password.length < 6) {
+                showMessage('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে', 'error');
                 return;
             }
             
-            // Validate terms
-            if (!termsCheckbox.checked) {
-                showAlert('error', 'Please agree to the Terms of Service and Privacy Policy.');
+            if (passkey && !/^\d{12}$/.test(passkey)) {
+                showMessage('পাসকি ১২ সংখ্যার হতে হবে', 'error');
                 return;
             }
             
-            // Disable button and show loading
-            signupButton.disabled = true;
-            signupButton.classList.add('loading');
+            // Show loading state
+            toggleLoading(true);
             
             try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+                const response = await fetch('/api/auth/signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        email: email,
-                        password: password,
-                        full_name: fullName,
-                        phone: phone || ''
+                        email,
+                        password,
+                        name,
+                        phone,
+                        username,
+                        passkey
                     })
                 });
                 
                 const data = await response.json();
                 
-                if (response.ok && data.success) {
-                    // Show success overlay
-                    document.getElementById('successOverlay').classList.add('show');
+                if (data.success) {
+                    showMessage('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! ইমেইল ভেরিফিকেশন চেক করুন।', 'success');
                     
-                    // Clear form
-                    document.getElementById('signupForm').reset();
-                    document.getElementById('passwordStrengthBar').style.width = '0';
-                    document.getElementById('strengthText').textContent = 'Password strength: Enter password';
-                    
-                    // If email confirmation is not required, redirect to login
-                    if (data.user?.email_confirmed_at) {
-                        setTimeout(() => {
-                            window.location.href = '/login';
-                        }, 2000);
-                    }
+                    // Redirect to login after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 3000);
                 } else {
-                    showAlert('error', data.error || 'Signup failed. Please try again.');
+                    showMessage(data.error || 'সাইনআপ ব্যর্থ হয়েছে', 'error');
                 }
+                
             } catch (error) {
+                showMessage('সার্ভার এরর! আবার চেষ্টা করুন।', 'error');
                 console.error('Signup error:', error);
-                showAlert('error', 'Network error. Please check your connection and try again.');
             } finally {
-                // Re-enable button
-                signupButton.disabled = false;
-                signupButton.classList.remove('loading');
-            }
-        }
-
-        // Social Signup (Placeholder)
-        function socialSignup(provider) {
-            showAlert('error', `${provider.charAt(0).toUpperCase() + provider.slice(1)} signup is coming soon!`);
-            
-            // For Supabase social auth, you would redirect to:
-            // window.location.href = `${API_BASE_URL}/api/auth/social/${provider}`;
-        }
-
-        // Real-time password match validation
-        document.getElementById('confirmPassword').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            
-            if (confirmPassword && password !== confirmPassword) {
-                this.style.borderColor = '#ef4444';
-            } else if (confirmPassword) {
-                this.style.borderColor = '#10b981';
-            } else {
-                this.style.borderColor = '#e5e7eb';
+                toggleLoading(false);
             }
         });
+        
+        function showMessage(message, type) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.classList.remove('hidden');
+            messageBox.textContent = message;
+            
+            if (type === 'error') {
+                messageBox.className = 'mb-4 p-4 rounded-lg bg-red-100 text-red-700 border border-red-200';
+            } else if (type === 'success') {
+                messageBox.className = 'mb-4 p-4 rounded-lg bg-green-100 text-green-700 border border-green-200';
+            }
+        }
+        
+        function toggleLoading(isLoading) {
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (isLoading) {
+                btnText.classList.add('hidden');
+                btnLoader.classList.remove('hidden');
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+            } else {
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
+        }
     </script>
+
 </body>
 </html>
