@@ -9,6 +9,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
@@ -41,7 +42,384 @@ function formatProducts(products) {
 }
 
 // ============================================
-// API Routes
+// AUTHENTICATION API ROUTES
+// ============================================
+
+// Signup with Email & Password
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { email, password, full_name, phone } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        // Create auth user
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: full_name || '',
+                    phone: phone || ''
+                }
+            }
+        });
+
+        if (authError) return res.status(400).json({ error: authError.message });
+
+        // Profile will be auto-created by database trigger (handle_new_user_signup)
+        res.json({
+            success: true,
+            message: 'Signup successful. Please check your email for verification.',
+            user: authData.user
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Login with Email & Password
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            // Log failed login attempt
+            if (data?.user) {
+                await supabase.from('user_login_history').insert({
+                    user_id: data.user.id,
+                    login_type: 'email',
+                    is_success: false
+                });
+            }
+            return res.status(401).json({ error: error.message });
+        }
+
+        // Log successful login
+        await supabase.from('user_login_history').insert({
+            user_id: data.user.id,
+            login_type: 'email',
+            is_success: true
+        });
+
+        res.json({
+            success: true,
+            message: 'Login successful',
+            session: data.session,
+            user: data.user
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Login with Passkey (12-digit)
+app.post('/api/auth/login-passkey', async (req, res) => {
+    try {
+        const { passkey } = req.body;
+
+        if (!passkey) {
+            return res.status(400).json({ error: 'Passkey is required' });
+        }
+
+        const { data, error } = await supabase.rpc('login_with_passkey', {
+            p_passkey: passkey
+        });
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        if (!data.success) {
+            return res.status(401).json({ error: data.message });
+        }
+
+        res.json({
+            success: true,
+            message: 'Login successful with passkey',
+            user: data
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Logout
+app.post('/api/auth/logout', async (req, res) => {
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({ success: true, message: 'Logged out successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get current session
+app.get('/api/auth/session', async (req, res) => {
+    try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Refresh session
+app.post('/api/auth/refresh', async (req, res) => {
+    try {
+        const { refresh_token } = req.body;
+
+        if (!refresh_token) {
+            return res.status(400).json({ error: 'Refresh token is required' });
+        }
+
+        const { data, error } = await supabase.auth.refreshSession({
+            refresh_token
+        });
+
+        if (error) return res.status(401).json({ error: error.message });
+
+        res.json({
+            success: true,
+            session: data.session,
+            user: data.user
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Reset Password Request
+app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${req.protocol}://${req.get('host')}/update-password`
+        });
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({
+            success: true,
+            message: 'Password reset link sent to your email'
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update Password (after reset)
+app.post('/api/auth/update-password', async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        if (!password) {
+            return res.status(400).json({ error: 'New password is required' });
+        }
+
+        const { data, error } = await supabase.auth.updateUser({
+            password: password
+        });
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({
+            success: true,
+            message: 'Password updated successfully',
+            user: data.user
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// USER PROFILE API ROUTES
+// ============================================
+
+// Get user profile
+app.get('/api/user/profile', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'Authorization header required' });
+        }
+
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({ error: 'Invalid or expired token' });
+        }
+
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Profile not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update user profile
+app.put('/api/user/profile', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'Authorization header required' });
+        }
+
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({ error: 'Invalid or expired token' });
+        }
+
+        const { name, username, phone } = req.body;
+        const updates = {};
+
+        if (name) updates.name = name;
+        if (username) updates.username = username;
+        if (phone) updates.phone = phone;
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: 'No fields to update' });
+        }
+
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .update(updates)
+            .eq('id', user.id)
+            .select()
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            profile: data
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get user's passkey
+app.get('/api/user/passkey', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'Authorization header required' });
+        }
+
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({ error: 'Invalid or expired token' });
+        }
+
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .select('passkey')
+            .eq('id', user.id)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Profile not found' });
+
+        res.json({ passkey: data.passkey });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get login history
+app.get('/api/user/login-history', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'Authorization header required' });
+        }
+
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({ error: 'Invalid or expired token' });
+        }
+
+        const { data, error } = await supabase
+            .from('user_login_history')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete account
+app.delete('/api/user/account', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'Authorization header required' });
+        }
+
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+        if (authError || !user) {
+            return res.status(401).json({ error: 'Invalid or expired token' });
+        }
+
+        // Profile will be auto-deleted via CASCADE
+        const { error } = await supabase.auth.admin.deleteUser(user.id);
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({
+            success: true,
+            message: 'Account deleted successfully'
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// PRODUCT API ROUTES
 // ============================================
 
 // সব প্রোডাক্ট - ক্যাটাগরি ও সাব-ক্যাটাগরি নাম সহ
@@ -66,7 +444,7 @@ app.get('/api/products', async (req, res) => {
 // ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব ক্যাটাগরি - Public (আপডেট করা)
+// সব ক্যাটাগরি - Public
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -75,40 +453,36 @@ app.get('/api/categories', async (req, res) => {
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
-        
-        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
-        // আমরা API-তে শুধু 'xxxx' পাঠাব
+
         const categoriesWithSlugs = data.map(cat => ({
             ...cat,
             slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
         }));
-        
+
         res.json(categoriesWithSlugs);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
+// ক্যাটাগরি ডিটেইলস - slug দিয়ে
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        
+
         const { data, error } = await supabase
             .from('categories')
             .select('*')
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
-        
-        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
-        // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
+
         const category = data.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
         });
-        
+
         if (!category) return res.status(404).json({ error: 'Category not found' });
-        
+
         res.json({
             ...category,
             slug: category.slug ? category.slug.replace(/^category\//, '') : createSlug(category.name)
@@ -122,70 +496,67 @@ app.get('/api/categories/:slug', async (req, res) => {
 // সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি - Public (আপডেট করা)
+// সব সাব-ক্যাটাগরি - Public
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
-        
+
         let query = supabase
             .from('subcategories')
             .select('*, categories(name, id, slug)')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
+
         if (category_slug) {
             const { data: categories } = await supabase
                 .from('categories')
                 .select('id, slug')
                 .eq('is_active', true);
-            
-            // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
-            // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
+
             const category = categories.find(cat => {
                 const dbSlug = cat.slug || createSlug(cat.name);
                 return dbSlug.replace(/^category\//, '') === category_slug;
             });
-            
+
             if (category) {
                 query = query.eq('category_id', category.id);
             } else {
                 return res.status(404).json({ error: 'Category not found' });
             }
         }
-        
+
         const { data, error } = await query;
         if (error) return res.status(500).json({ error: error.message });
-        
+
         const subcategoriesWithSlugs = data.map(sub => ({
             ...sub,
             slug: sub.slug ? sub.slug.replace(/^category\/[^/]+\//, '') : createSlug(sub.name),
             category_slug: sub.categories ? sub.categories.name : ''
         }));
-        
+
         res.json(subcategoriesWithSlugs);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
+// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
         const { category_slug } = req.query;
-        
+
         const { data, error } = await supabase
             .from('subcategories')
             .select('*, categories(name, id, slug)')
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
-        
-        // সাব-ক্যাটাগরি খুঁজুন
+
         let subcategory = data.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
         });
-        
+
         if (category_slug && subcategory) {
             const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
             const cleanCatSlug = catSlug.replace(/^category\//, '');
@@ -193,9 +564,9 @@ app.get('/api/subcategories/:slug', async (req, res) => {
                 subcategory = null;
             }
         }
-        
+
         if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
-        
+
         res.json({
             ...subcategory,
             slug: subcategory.slug ? subcategory.slug.replace(/^category\/[^/]+\//, '') : createSlug(subcategory.name),
@@ -223,7 +594,7 @@ app.get('/api/menu', async (req, res) => {
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
-        
+
         const buildMenuTree = (items, parentId = null) => {
             return items
                 .filter(item => item.parent_id === parentId)
@@ -238,7 +609,7 @@ app.get('/api/menu', async (req, res) => {
                     return menuItem;
                 });
         };
-        
+
         const menuTree = buildMenuTree(data);
         res.json(menuTree);
     } catch (err) {
@@ -259,14 +630,14 @@ app.get('/api/menu-items', async (req, res) => {
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
-        
+
         const menuItemsWithSlugs = data.map(item => ({
             ...item,
             slug: createSlug(item.title),
             category_slug: item.categories ? createSlug(item.categories.name) : null,
             subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
         }));
-        
+
         res.json(menuItemsWithSlugs);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -277,7 +648,7 @@ app.get('/api/menu-items', async (req, res) => {
 app.get('/api/menu-items/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        
+
         const { data, error } = await supabase
             .from('menu_items')
             .select(`
@@ -287,10 +658,10 @@ app.get('/api/menu-items/:slug', async (req, res) => {
             `)
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
-        
+
         const menuItem = data.find(item => createSlug(item.title) === slug);
         if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
-        
+
         res.json({
             ...menuItem,
             slug: createSlug(menuItem.title),
@@ -308,20 +679,19 @@ app.get('/api/menu-items/:slug', async (req, res) => {
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
-        
+
         const { data: categories } = await supabase
             .from('categories')
             .select('*')
             .eq('is_active', true);
-        
-        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+
         const category = categories.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
         });
-        
+
         if (!category) return res.status(404).json({ error: 'Category not found' });
-        
+
         const { data, error } = await supabase
             .from('products')
             .select(`
@@ -332,7 +702,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .eq('category_id', category.id)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
-        
+
         res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -345,20 +715,19 @@ app.get('/api/categories/:slug/products', async (req, res) => {
 app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
-        
+
         const { data: subcategories } = await supabase
             .from('subcategories')
             .select('*')
             .eq('is_active', true);
-        
-        // সাব-ক্যাটাগরি খুঁজুন
+
         const subcategory = subcategories.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
         });
-        
+
         if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
-        
+
         const { data, error } = await supabase
             .from('products')
             .select(`
@@ -369,7 +738,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
             .eq('subcategory_id', subcategory.id)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
-        
+
         res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -400,7 +769,7 @@ app.get('/api/hero-videos', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
+
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -416,7 +785,7 @@ app.get('/api/hero-secondary', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
+
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -455,10 +824,10 @@ app.get('/api/product/:slug', async (req, res) => {
             `)
             .order('created_at', { ascending: false });
         if (error) return res.status(500).json({ error: error.message });
-        
+
         const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.status(404).json({ error: 'Product not found' });
-        
+
         res.json(formatProduct(product));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -470,13 +839,13 @@ app.get('/api/product-colors', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
+
         const { data: products } = await supabase
             .from('products')
             .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
-        
+
         const { data, error } = await supabase
             .from('product_colors')
             .select('*')
@@ -494,13 +863,13 @@ app.get('/api/product-variants', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
+
         const { data: products } = await supabase
             .from('products')
             .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
-        
+
         const { data, error } = await supabase
             .from('product_variants')
             .select('*')
@@ -518,13 +887,13 @@ app.get('/api/product-reviews', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
+
         const { data: products } = await supabase
             .from('products')
             .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
-        
+
         const { data, error } = await supabase
             .from('product_reviews')
             .select('*')
@@ -542,13 +911,13 @@ app.get('/api/product-videos', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
+
         const { data: products } = await supabase
             .from('products')
             .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
-        
+
         const { data, error } = await supabase
             .from('product_videos')
             .select('*')
@@ -567,13 +936,13 @@ app.get('/api/product-banners', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
+
         const { data: products } = await supabase
             .from('products')
             .select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
-        
+
         const { data, error } = await supabase
             .from('product_banners')
             .select('*')
@@ -592,10 +961,10 @@ app.get('/api/color-sizes', async (req, res) => {
     try {
         const ids = req.query.ids;
         if (!ids) return res.json([]);
-        
+
         const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
         if (!idArray.length) return res.json([]);
-        
+
         const { data, error } = await supabase
             .from('color_sizes')
             .select('*')
@@ -611,13 +980,13 @@ app.get('/api/color-sizes', async (req, res) => {
 // ============================================
 // রিভিউ সাবমিট
 // ============================================
-app.post('/api/submit-review', express.json(), async (req, res) => {
+app.post('/api/submit-review', async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
         if (!product_id || !rating || !review_text) {
             return res.status(400).json({ error: 'Missing fields' });
         }
-        
+
         const { data, error } = await supabase
             .from('product_reviews')
             .insert([{
@@ -626,7 +995,7 @@ app.post('/api/submit-review', express.json(), async (req, res) => {
                 rating: parseInt(rating),
                 review_text
             }]);
-        
+
         if (error) return res.status(500).json({ error: error.message });
         res.json({ success: true, data });
     } catch (err) {
@@ -637,7 +1006,6 @@ app.post('/api/submit-review', express.json(), async (req, res) => {
 // ============================================
 // CATEGORY PAGE ROUTE - Slug-based dynamic routing
 // ============================================
-// যেকোনো /category/:slug বা /category/:slug/:subcategory_slug রাউট category.html এ ফরোয়ার্ড
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
