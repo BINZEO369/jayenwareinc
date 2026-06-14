@@ -26,6 +26,22 @@ function createSlug(text) {
 }
 
 // ============================================
+// Helper: Build full address from components
+// ============================================
+function buildFullAddress(data) {
+    const parts = [
+        data.apartment_house,
+        data.street_address,
+        data.city,
+        data.state_province,
+        data.postal_code,
+        data.country || 'Bangladesh'
+    ].filter(Boolean);
+    
+    return parts.join(', ') || 'Address not provided';
+}
+
+// ============================================
 // Helper: Format product with category/subcategory names
 // ============================================
 function formatProduct(product) {
@@ -43,18 +59,58 @@ function formatProducts(products) {
 }
 
 // ============================================
+// Helper: Format phone number to international
+// ============================================
+function formatPhoneNumber(phone) {
+    if (!phone || phone === 'N/A') return phone;
+    
+    // Remove all non-digit characters
+    let cleaned = phone.replace(/[^\d]/g, '');
+    
+    // If starts with 01, convert to +8801 format
+    if (cleaned.startsWith('01') && cleaned.length === 11) {
+        return '+880' + cleaned.substring(1);
+    }
+    
+    // If starts with 8801, add +
+    if (cleaned.startsWith('8801') && cleaned.length === 13) {
+        return '+' + cleaned;
+    }
+    
+    // Return original if already formatted
+    return phone;
+}
+
+// ============================================
 // AUTHENTICATION API ROUTES
 // ============================================
 
-// সাইনআপ - নতুন ইউজার রেজিস্ট্রেশন
+// সাইনআপ - Professional Signup with full address
 app.post('/api/auth/signup', async (req, res) => {
     try {
-        const { email, password, name, phone, address } = req.body;
+        const { 
+            email, 
+            password, 
+            name, 
+            phone,
+            country,
+            state_province,
+            city,
+            postal_code,
+            street_address,
+            apartment_house
+        } = req.body;
 
         // বেসিক ভ্যালিডেশন
         if (!email || !password) {
             return res.status(400).json({ 
                 error: 'Email and password are required' 
+            });
+        }
+
+        if (!name || name.trim().length < 3) {
+            return res.status(400).json({
+                error: 'Full name is required (minimum 3 characters)'
             });
         }
 
@@ -64,21 +120,45 @@ app.post('/api/auth/signup', async (req, res) => {
             });
         }
 
+        // ফোন নম্বর ফরম্যাটিং
+        const formattedPhone = formatPhoneNumber(phone);
+
+        // Complete address building
+        const fullAddress = buildFullAddress({
+            apartment_house: apartment_house || '',
+            street_address: street_address || '',
+            city: city || '',
+            state_province: state_province || '',
+            postal_code: postal_code || '',
+            country: country || 'Bangladesh'
+        });
+
+        if (!fullAddress || fullAddress.length < 10) {
+            return res.status(400).json({
+                error: 'Please provide complete address details (minimum 10 characters)'
+            });
+        }
+
         // Supabase সাইনআপ - user_metadata সহ
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
-                    full_name: name || '',
-                    phone: phone || '',
-                    address: address || ''
+                    full_name: name.trim(),
+                    phone: formattedPhone || 'N/A',
+                    country: country || 'Bangladesh',
+                    state_province: state_province || null,
+                    city: city || null,
+                    postal_code: postal_code || null,
+                    street_address: street_address || null,
+                    apartment_house: apartment_house || null,
+                    full_address: fullAddress
                 }
             }
         });
 
         if (error) {
-            // Supabase এরর মেসেজগুলো ইউজার-ফ্রেন্ডলি করা
             if (error.message.includes('already registered')) {
                 return res.status(400).json({ 
                     error: 'This email is already registered. Please login instead.' 
@@ -87,14 +167,28 @@ app.post('/api/auth/signup', async (req, res) => {
             return res.status(400).json({ error: error.message });
         }
 
+        // Generate passkey from profile
+        let passkey = null;
+        if (data.user) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('jbyn_passkey')
+                .eq('id', data.user.id)
+                .single();
+            
+            passkey = profile?.jbyn_passkey || null;
+        }
+
         // SQL ট্রিগার ইউজার তৈরি হলে অটো প্রোফাইল তৈরি করবে
         res.status(201).json({
             message: 'Registration successful! Please check your email for verification.',
             user: data.user,
-            session: data.session
+            session: data.session,
+            passkey: passkey
         });
 
     } catch (err) {
+        console.error('Signup error:', err);
         res.status(500).json({ error: 'Registration failed. Please try again.' });
     }
 });
@@ -110,7 +204,6 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Supabase লগইন
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -130,7 +223,7 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: error.message });
         }
 
-        // প্রোফাইল ডেটা ফেচ করা (RLS অটো ইউজারের নিজের ডেটা দেবে)
+        // Fetch complete profile data
         const { data: profile } = await supabase
             .from('profiles')
             .select('*')
@@ -145,6 +238,7 @@ app.post('/api/auth/login', async (req, res) => {
         });
 
     } catch (err) {
+        console.error('Login error:', err);
         res.status(500).json({ error: 'Login failed. Please try again.' });
     }
 });
@@ -164,7 +258,7 @@ app.post('/api/auth/logout', async (req, res) => {
     }
 });
 
-// বর্তমান ইউজার সেশন চেক
+// বর্তমান ইউজার সেশন চেক (Enhanced with complete profile)
 app.get('/api/auth/user', async (req, res) => {
     try {
         const { data: { user }, error } = await supabase.auth.getUser();
@@ -173,7 +267,7 @@ app.get('/api/auth/user', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        // প্রোফাইল ডেটা ফেচ
+        // Complete profile fetch
         const { data: profile } = await supabase
             .from('profiles')
             .select('*')
@@ -190,36 +284,67 @@ app.get('/api/auth/user', async (req, res) => {
     }
 });
 
-// প্রোফাইল আপডেট
+// প্রোফাইল আপডেট (Professional fields)
 app.put('/api/auth/profile', async (req, res) => {
     try {
-        // প্রথমে ইউজার ভেরিফাই
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         
         if (userError || !user) {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { name, phone, address, avatar_url } = req.body;
+        const { 
+            name, 
+            phone, 
+            country,
+            state_province,
+            city,
+            postal_code,
+            street_address,
+            apartment_house,
+            avatar_url 
+        } = req.body;
 
-        // ভ্যালিডেশন (SQL ট্রিগারের মতোই)
+        // ভ্যালিডেশন
         if (name && name.trim().length < 3) {
             return res.status(400).json({ error: 'Name must be at least 3 characters' });
         }
 
-        if (phone && !/^01[3-9]\d{8}$/.test(phone)) {
-            return res.status(400).json({ error: 'Invalid phone number format (01XXXXXXXXX)' });
+        if (phone && !/^\+?88?01[3-9]\d{8}$/.test(phone) && !/^\+\d{10,15}$/.test(phone)) {
+            return res.status(400).json({ error: 'Invalid phone number format' });
         }
 
-        if (address && address.trim().length < 10) {
-            return res.status(400).json({ error: 'Please enter complete address (minimum 10 characters)' });
+        // Build full address from components
+        let fullAddress = null;
+        if (street_address || apartment_house || city || state_province || postal_code) {
+            // First get existing profile to merge with new data
+            const { data: existingProfile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            fullAddress = buildFullAddress({
+                apartment_house: apartment_house || existingProfile?.apartment_house || '',
+                street_address: street_address || existingProfile?.street_address || '',
+                city: city || existingProfile?.city || '',
+                state_province: state_province || existingProfile?.state_province || '',
+                postal_code: postal_code || existingProfile?.postal_code || '',
+                country: country || existingProfile?.country || 'Bangladesh'
+            });
         }
 
-        // প্রোফাইল আপডেট
+        // প্রোফাইল আপডেট ডাটা তৈরি
         const updateData = {};
         if (name) updateData.name = name.trim();
-        if (phone) updateData.phone = phone.trim();
-        if (address) updateData.address = address.trim();
+        if (phone) updateData.phone = formatPhoneNumber(phone);
+        if (country) updateData.country = country;
+        if (state_province !== undefined) updateData.state_province = state_province;
+        if (city !== undefined) updateData.city = city;
+        if (postal_code !== undefined) updateData.postal_code = postal_code;
+        if (street_address !== undefined) updateData.street_address = street_address;
+        if (apartment_house !== undefined) updateData.apartment_house = apartment_house;
+        if (fullAddress) updateData.full_address = fullAddress;
         if (avatar_url) updateData.avatar_url = avatar_url;
         updateData.updated_at = new Date();
 
@@ -240,7 +365,36 @@ app.put('/api/auth/profile', async (req, res) => {
         });
 
     } catch (err) {
+        console.error('Profile update error:', err);
         res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+// JBYN Passkey রিট্রিভ (Self lookup)
+app.get('/api/auth/passkey', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('jbyn_passkey')
+            .eq('id', user.id)
+            .single();
+
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        res.json({
+            passkey: profile.jbyn_passkey
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to retrieve passkey' });
     }
 });
 
@@ -322,7 +476,7 @@ app.get('/api/products', async (req, res) => {
 // ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব ক্যাটাগরি - Public (আপডেট করা)
+// সব ক্যাটাগরি - Public
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -332,8 +486,6 @@ app.get('/api/categories', async (req, res) => {
             .order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
         
-        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
-        // আমরা API-তে শুধু 'xxxx' পাঠাব
         const categoriesWithSlugs = data.map(cat => ({
             ...cat,
             slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
@@ -345,7 +497,7 @@ app.get('/api/categories', async (req, res) => {
     }
 });
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
+// ক্যাটাগরি ডিটেইলস - slug দিয়ে
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -356,8 +508,6 @@ app.get('/api/categories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
-        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
-        // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
         const category = data.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
@@ -378,7 +528,7 @@ app.get('/api/categories/:slug', async (req, res) => {
 // সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি - Public (আপডেট করা)
+// সব সাব-ক্যাটাগরি - Public
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
@@ -395,8 +545,6 @@ app.get('/api/subcategories', async (req, res) => {
                 .select('id, slug')
                 .eq('is_active', true);
             
-            // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
-            // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
             const category = categories.find(cat => {
                 const dbSlug = cat.slug || createSlug(cat.name);
                 return dbSlug.replace(/^category\//, '') === category_slug;
@@ -424,7 +572,7 @@ app.get('/api/subcategories', async (req, res) => {
     }
 });
 
-// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
+// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -436,7 +584,6 @@ app.get('/api/subcategories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
-        // সাব-ক্যাটাগরি খুঁজুন
         let subcategory = data.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
@@ -466,7 +613,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
 // মেনু আইটেমস API (Complete Menu Structure)
 // ============================================
 
-// Main Menu - সমস্ত মেনু আইটেম হায়ারার্কি সহ
+// Main Menu - হায়ারার্কি সহ
 app.get('/api/menu', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -483,16 +630,13 @@ app.get('/api/menu', async (req, res) => {
         const buildMenuTree = (items, parentId = null) => {
             return items
                 .filter(item => item.parent_id === parentId)
-                .map(item => {
-                    const menuItem = {
-                        ...item,
-                        slug: createSlug(item.title),
-                        category_slug: item.categories ? createSlug(item.categories.name) : null,
-                        subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
-                        children: buildMenuTree(items, item.id)
-                    };
-                    return menuItem;
-                });
+                .map(item => ({
+                    ...item,
+                    slug: createSlug(item.title),
+                    category_slug: item.categories ? createSlug(item.categories.name) : null,
+                    subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
+                    children: buildMenuTree(items, item.id)
+                }));
         };
         
         const menuTree = buildMenuTree(data);
@@ -502,7 +646,7 @@ app.get('/api/menu', async (req, res) => {
     }
 });
 
-// Flat menu items (simplified)
+// Flat menu items
 app.get('/api/menu-items', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -559,7 +703,7 @@ app.get('/api/menu-items/:slug', async (req, res) => {
 });
 
 // ============================================
-// Category Product API (Get products by category)
+// Category Product API
 // ============================================
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
@@ -570,7 +714,6 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
-        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
         const category = categories.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
@@ -607,7 +750,6 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
-        // সাব-ক্যাটাগরি খুঁজুন
         const subcategory = subcategories.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
@@ -648,7 +790,7 @@ app.get('/api/hero', async (req, res) => {
     }
 });
 
-// হিরো ভিডিও - শুধু active ভিডিওগুলো
+// হিরো ভিডিও
 app.get('/api/hero-videos', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -664,7 +806,7 @@ app.get('/api/hero-videos', async (req, res) => {
     }
 });
 
-// হিরো সেকেন্ডারি - শুধু active সেকেন্ডারি ব্যানারগুলো
+// হিরো সেকেন্ডারি
 app.get('/api/hero-secondary', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -721,15 +863,13 @@ app.get('/api/product/:slug', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট কালার - slug দিয়ে
+// প্রোডাক্ট কালার
 app.get('/api/product-colors', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
+        const { data: products } = await supabase.from('products').select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -745,15 +885,13 @@ app.get('/api/product-colors', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ভেরিয়েন্ট - slug দিয়ে
+// প্রোডাক্ট ভেরিয়েন্ট
 app.get('/api/product-variants', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
+        const { data: products } = await supabase.from('products').select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -769,15 +907,13 @@ app.get('/api/product-variants', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট রিভিউ - slug দিয়ে
+// প্রোডাক্ট রিভিউ
 app.get('/api/product-reviews', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
+        const { data: products } = await supabase.from('products').select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -793,15 +929,13 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ভিডিও - slug দিয়ে
+// প্রোডাক্ট ভিডিও
 app.get('/api/product-videos', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
+        const { data: products } = await supabase.from('products').select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -818,15 +952,13 @@ app.get('/api/product-videos', async (req, res) => {
     }
 });
 
-// প্রোডাক্ট ব্যানার - slug দিয়ে
+// প্রোডাক্ট ব্যানার
 app.get('/api/product-banners', async (req, res) => {
     try {
         const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
         
-        const { data: products } = await supabase
-            .from('products')
-            .select('*');
+        const { data: products } = await supabase.from('products').select('*');
         const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.json([]);
         
@@ -843,7 +975,7 @@ app.get('/api/product-banners', async (req, res) => {
     }
 });
 
-// কালার সাইজ - color ids দিয়ে
+// কালার সাইজ
 app.get('/api/color-sizes', async (req, res) => {
     try {
         const ids = req.query.ids;
@@ -893,36 +1025,35 @@ app.post('/api/submit-review', async (req, res) => {
 // ============================================
 // AUTH PAGES ROUTES
 // ============================================
-// লগইন পেজ
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
 });
 
-// সাইনআপ পেজ
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'signup.html'));
 });
 
-// পাসওয়ার্ড রিসেট পেজ
 app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
 });
 
-// প্রোফাইল পেজ (প্রোটেক্টেড)
 app.get('/profile', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'profile.html'));
 });
 
+app.get('/account', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'account.html'));
+});
+
 // ============================================
-// CATEGORY PAGE ROUTE - Slug-based dynamic routing
+// CATEGORY PAGE ROUTE
 // ============================================
-// যেকোনো /category/:slug বা /category/:slug/:subcategory_slug রাউট category.html এ ফরোয়ার্ড
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
 
 // ============================================
-// SPA Fallback - সব রাউট index.html এ ফরোয়ার্ড
+// SPA Fallback
 // ============================================
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
