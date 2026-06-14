@@ -9,6 +9,8 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// JSON body parser for POST requests
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
@@ -41,7 +43,261 @@ function formatProducts(products) {
 }
 
 // ============================================
-// API Routes
+// AUTHENTICATION API ROUTES
+// ============================================
+
+// সাইনআপ - নতুন ইউজার রেজিস্ট্রেশন
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { email, password, name, phone, address } = req.body;
+
+        // বেসিক ভ্যালিডেশন
+        if (!email || !password) {
+            return res.status(400).json({ 
+                error: 'Email and password are required' 
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters' 
+            });
+        }
+
+        // Supabase সাইনআপ - user_metadata সহ
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: name || '',
+                    phone: phone || '',
+                    address: address || ''
+                }
+            }
+        });
+
+        if (error) {
+            // Supabase এরর মেসেজগুলো ইউজার-ফ্রেন্ডলি করা
+            if (error.message.includes('already registered')) {
+                return res.status(400).json({ 
+                    error: 'This email is already registered. Please login instead.' 
+                });
+            }
+            return res.status(400).json({ error: error.message });
+        }
+
+        // SQL ট্রিগার ইউজার তৈরি হলে অটো প্রোফাইল তৈরি করবে
+        res.status(201).json({
+            message: 'Registration successful! Please check your email for verification.',
+            user: data.user,
+            session: data.session
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Registration failed. Please try again.' });
+    }
+});
+
+// লগইন - ইউজার অথেন্টিকেশন
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ 
+                error: 'Email and password are required' 
+            });
+        }
+
+        // Supabase লগইন
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            if (error.message.includes('Invalid login credentials')) {
+                return res.status(401).json({ 
+                    error: 'Invalid email or password' 
+                });
+            }
+            if (error.message.includes('Email not confirmed')) {
+                return res.status(401).json({ 
+                    error: 'Please verify your email before logging in' 
+                });
+            }
+            return res.status(401).json({ error: error.message });
+        }
+
+        // প্রোফাইল ডেটা ফেচ করা (RLS অটো ইউজারের নিজের ডেটা দেবে)
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
+
+        res.json({
+            message: 'Login successful!',
+            user: data.user,
+            session: data.session,
+            profile: profile || null
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Login failed. Please try again.' });
+    }
+});
+
+// লগআউট
+app.post('/api/auth/logout', async (req, res) => {
+    try {
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({ message: 'Logged out successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Logout failed' });
+    }
+});
+
+// বর্তমান ইউজার সেশন চেক
+app.get('/api/auth/user', async (req, res) => {
+    try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if (error || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        // প্রোফাইল ডেটা ফেচ
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        res.json({
+            user,
+            profile: profile || null
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get user data' });
+    }
+});
+
+// প্রোফাইল আপডেট
+app.put('/api/auth/profile', async (req, res) => {
+    try {
+        // প্রথমে ইউজার ভেরিফাই
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { name, phone, address, avatar_url } = req.body;
+
+        // ভ্যালিডেশন (SQL ট্রিগারের মতোই)
+        if (name && name.trim().length < 3) {
+            return res.status(400).json({ error: 'Name must be at least 3 characters' });
+        }
+
+        if (phone && !/^01[3-9]\d{8}$/.test(phone)) {
+            return res.status(400).json({ error: 'Invalid phone number format (01XXXXXXXXX)' });
+        }
+
+        if (address && address.trim().length < 10) {
+            return res.status(400).json({ error: 'Please enter complete address (minimum 10 characters)' });
+        }
+
+        // প্রোফাইল আপডেট
+        const updateData = {};
+        if (name) updateData.name = name.trim();
+        if (phone) updateData.phone = phone.trim();
+        if (address) updateData.address = address.trim();
+        if (avatar_url) updateData.avatar_url = avatar_url;
+        updateData.updated_at = new Date();
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .update(updateData)
+            .eq('id', user.id)
+            .select()
+            .single();
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({
+            message: 'Profile updated successfully',
+            profile: data
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+// পাসওয়ার্ড রিসেট রিকোয়েস্ট
+app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
+        });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.json({ 
+            message: 'Password reset link sent to your email' 
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to send reset email' });
+    }
+});
+
+// পাসওয়ার্ড আপডেট (রিসেটের পর)
+app.put('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        if (!password || password.length < 6) {
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters' 
+            });
+        }
+
+        const { error } = await supabase.auth.updateUser({
+            password: password
+        });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.json({ message: 'Password updated successfully' });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update password' });
+    }
+});
+
+// ============================================
+// API Routes (Products, Categories, etc.)
 // ============================================
 
 // সব প্রোডাক্ট - ক্যাটাগরি ও সাব-ক্যাটাগরি নাম সহ
@@ -611,7 +867,7 @@ app.get('/api/color-sizes', async (req, res) => {
 // ============================================
 // রিভিউ সাবমিট
 // ============================================
-app.post('/api/submit-review', express.json(), async (req, res) => {
+app.post('/api/submit-review', async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
         if (!product_id || !rating || !review_text) {
@@ -632,6 +888,29 @@ app.post('/api/submit-review', express.json(), async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+// ============================================
+// AUTH PAGES ROUTES
+// ============================================
+// লগইন পেজ
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
+});
+
+// সাইনআপ পেজ
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'signup.html'));
+});
+
+// পাসওয়ার্ড রিসেট পেজ
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
+});
+
+// প্রোফাইল পেজ (প্রোটেক্টেড)
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'profile.html'));
 });
 
 // ============================================
