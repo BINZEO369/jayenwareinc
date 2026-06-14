@@ -9,7 +9,6 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
@@ -42,357 +41,6 @@ function formatProducts(products) {
 }
 
 // ============================================
-// Middleware: Authenticate User
-// ============================================
-async function authenticateUser(req, res, next) {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ error: 'Authorization header required' });
-        }
-
-        const token = authHeader.replace('Bearer ', '');
-        const { data: { user }, error } = await supabase.auth.getUser(token);
-
-        if (error || !user) {
-            return res.status(401).json({ error: 'Invalid or expired token' });
-        }
-
-        req.user = user;
-        next();
-    } catch (err) {
-        res.status(401).json({ error: 'Authentication failed' });
-    }
-}
-
-// ============================================
-// Middleware: Check Admin (ডায়নামিক)
-// ============================================
-async function requireAdmin(req, res, next) {
-    try {
-        if (!req.user) {
-            return res.status(401).json({ error: 'Authentication required' });
-        }
-
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', req.user.id)
-            .single();
-
-        if (error || !profile) {
-            return res.status(403).json({ error: 'Profile not found' });
-        }
-
-        if (!['admin', 'super_admin'].includes(profile.role)) {
-            return res.status(403).json({ error: 'Admin access required' });
-        }
-
-        req.userProfile = profile;
-        next();
-    } catch (err) {
-        res.status(500).json({ error: 'Admin check failed' });
-    }
-}
-
-// ============================================
-// AUTH ROUTES
-// ============================================
-
-// Sign Up
-app.post('/api/auth/signup', async (req, res) => {
-    try {
-        const { email, password, full_name, username, phone } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
-        }
-
-        // Supabase Auth সাইন আপ
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name: full_name || email.split('@')[0],
-                    username: username || email.split('@')[0]
-                }
-            }
-        });
-
-        if (authError) {
-            return res.status(400).json({ error: authError.message });
-        }
-
-        // Profiles টেবিলে ইউজারনেম/ফোন আপডেট (ট্রিগার অটো ক্রিয়েট করবে)
-        if (authData.user) {
-            const { error: profileError } = await supabase
-                .from('profiles')
-                .update({
-                    username: username || email.split('@')[0],
-                    full_name: full_name || email.split('@')[0],
-                    phone: phone || null
-                })
-                .eq('id', authData.user.id);
-
-            if (profileError) {
-                console.error('Profile update error:', profileError);
-            }
-        }
-
-        res.json({
-            success: true,
-            message: 'Sign up successful! Please check your email for verification.',
-            user: authData.user,
-            session: authData.session
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Sign In (Login)
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
-        }
-
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
-
-        if (error) {
-            return res.status(401).json({ error: error.message });
-        }
-
-        // লগইন টাইম রেকর্ড (ট্রিগার অটো করবে)
-        const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', data.user.id)
-            .single();
-
-        res.json({
-            success: true,
-            message: 'Login successful',
-            user: data.user,
-            session: data.session,
-            profile: profile
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Sign Out (Logout)
-app.post('/api/auth/logout', async (req, res) => {
-    try {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Logged out successfully'
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get Current User
-app.get('/api/auth/user', authenticateUser, async (req, res) => {
-    try {
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', req.user.id)
-            .single();
-
-        if (error) {
-            return res.status(404).json({ error: 'Profile not found' });
-        }
-
-        res.json({
-            user: req.user,
-            profile: profile
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Update Profile
-app.put('/api/auth/profile', authenticateUser, async (req, res) => {
-    try {
-        const { full_name, username, phone, avatar_url } = req.body;
-        const updates = {};
-
-        if (full_name) updates.full_name = full_name;
-        if (username) updates.username = username;
-        if (phone) updates.phone = phone;
-        if (avatar_url) updates.avatar_url = avatar_url;
-
-        const { data, error } = await supabase
-            .from('profiles')
-            .update(updates)
-            .eq('id', req.user.id)
-            .select()
-            .single();
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Profile updated successfully',
-            profile: data
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Forgot Password
-app.post('/api/auth/forgot-password', async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        if (!email) {
-            return res.status(400).json({ error: 'Email is required' });
-        }
-
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
-        });
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Password reset link sent to your email'
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Reset Password
-app.post('/api/auth/reset-password', async (req, res) => {
-    try {
-        const { password } = req.body;
-
-        if (!password) {
-            return res.status(400).json({ error: 'New password is required' });
-        }
-
-        const { data, error } = await supabase.auth.updateUser({
-            password: password
-        });
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Password reset successful'
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// ADMIN PROFILE ROUTES (ডায়নামিক অ্যাডমিন)
-// ============================================
-
-// সব প্রোফাইল লিস্ট (শুধু অ্যাডমিন)
-app.get('/api/admin/profiles', authenticateUser, requireAdmin, async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-
-        res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ইউজারের রোল আপডেট (শুধু super_admin)
-app.put('/api/admin/profile/:userId/role', authenticateUser, requireAdmin, async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { role } = req.body;
-
-        if (!role || !['user', 'admin', 'super_admin'].includes(role)) {
-            return res.status(400).json({ error: 'Valid role is required' });
-        }
-
-        // শুধু super_admin ই রোল চেঞ্জ করতে পারে
-        if (req.userProfile.role !== 'super_admin') {
-            return res.status(403).json({ error: 'Only super admin can change roles' });
-        }
-
-        const { data, error } = await supabase
-            .from('profiles')
-            .update({ role })
-            .eq('id', userId)
-            .select()
-            .single();
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Role updated successfully',
-            profile: data
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// প্রোফাইল ডিলিট (শুধু অ্যাডমিন)
-app.delete('/api/admin/profile/:userId', authenticateUser, requireAdmin, async (req, res) => {
-    try {
-        const { userId } = req.params;
-
-        const { error } = await supabase
-            .from('profiles')
-            .delete()
-            .eq('id', userId);
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Profile deleted successfully'
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
 // API Routes
 // ============================================
 
@@ -418,7 +66,7 @@ app.get('/api/products', async (req, res) => {
 // ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব ক্যাটাগরি - Public
+// সব ক্যাটাগরি - Public (আপডেট করা)
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -441,7 +89,7 @@ app.get('/api/categories', async (req, res) => {
     }
 });
 
-// ক্যাটাগরি ডিটেইলস - slug দিয়ে
+// ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -452,6 +100,8 @@ app.get('/api/categories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+        // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
         const category = data.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
@@ -472,7 +122,7 @@ app.get('/api/categories/:slug', async (req, res) => {
 // সাব-ক্যাটাগরি API (Slug-based)
 // ============================================
 
-// সব সাব-ক্যাটাগরি - Public
+// সব সাব-ক্যাটাগরি - Public (আপডেট করা)
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
@@ -489,6 +139,8 @@ app.get('/api/subcategories', async (req, res) => {
                 .select('id, slug')
                 .eq('is_active', true);
             
+            // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
+            // API 'xxxx' পায়, তাই তুলনার সময় 'category/' বাদ দিতে হবে
             const category = categories.find(cat => {
                 const dbSlug = cat.slug || createSlug(cat.name);
                 return dbSlug.replace(/^category\//, '') === category_slug;
@@ -516,7 +168,7 @@ app.get('/api/subcategories', async (req, res) => {
     }
 });
 
-// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে
+// সাব-ক্যাটাগরি ডিটেইলস - slug দিয়ে (আপডেট করা)
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -528,6 +180,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
             .eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
+        // সাব-ক্যাটাগরি খুঁজুন
         let subcategory = data.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
@@ -661,6 +314,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
+        // SQL ট্রিগার 'category/xxxx' ফরম্যাটে slug সংরক্ষণ করে
         const category = categories.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
             return dbSlug.replace(/^category\//, '') === slug;
@@ -697,6 +351,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
             .select('*')
             .eq('is_active', true);
         
+        // সাব-ক্যাটাগরি খুঁজুন
         const subcategory = subcategories.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
@@ -956,7 +611,7 @@ app.get('/api/color-sizes', async (req, res) => {
 // ============================================
 // রিভিউ সাবমিট
 // ============================================
-app.post('/api/submit-review', async (req, res) => {
+app.post('/api/submit-review', express.json(), async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
         if (!product_id || !rating || !review_text) {
@@ -980,32 +635,9 @@ app.post('/api/submit-review', async (req, res) => {
 });
 
 // ============================================
-// অ্যাডমিন চেক এন্ডপয়েন্ট
-// ============================================
-app.get('/api/auth/check-admin', authenticateUser, async (req, res) => {
-    try {
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', req.user.id)
-            .single();
-
-        if (error || !profile) {
-            return res.json({ isAdmin: false });
-        }
-
-        res.json({
-            isAdmin: ['admin', 'super_admin'].includes(profile.role),
-            role: profile.role
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
 // CATEGORY PAGE ROUTE - Slug-based dynamic routing
 // ============================================
+// যেকোনো /category/:slug বা /category/:slug/:subcategory_slug রাউট category.html এ ফরোয়ার্ড
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
