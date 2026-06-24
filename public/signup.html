@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Core Scripts -->
+    <!-- Core Scripts - CRITICAL: components.js must load before page scripts -->
     <script src="/js/fonts.js"></script>
     <script src="/js/components.js"></script>
     
@@ -66,7 +66,6 @@
             flex-direction: column;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-            /* padding-top components.js থেকে auto-add হবে */
         }
 
         main {
@@ -1046,8 +1045,30 @@
     </div>
 
     <script>
-        // Wait for components.js to fully load before running page-specific scripts
-        window.addEventListener('load', function() {
+        // Force initialize components.js
+        if (typeof initSharedComponents === 'function') {
+            console.log('🔄 Initializing shared components...');
+            initSharedComponents().then(() => {
+                console.log('✅ Header & Footer loaded');
+                initializePageScripts();
+            }).catch(err => {
+                console.error('❌ Failed to initialize components:', err);
+                initializePageScripts();
+            });
+        } else {
+            console.warn('⚠️ initSharedComponents not found, waiting...');
+            // Retry after a short delay
+            setTimeout(() => {
+                if (typeof initSharedComponents === 'function') {
+                    initSharedComponents().then(() => initializePageScripts());
+                } else {
+                    console.error('❌ components.js failed to load');
+                    initializePageScripts();
+                }
+            }, 1000);
+        }
+
+        function initializePageScripts() {
             // DOM Elements
             const loader = document.getElementById('global-loader');
             const signupForm = document.getElementById('signup-form');
@@ -1122,7 +1143,7 @@
             function showFieldError(inputEl, errorEl, message) {
                 if (inputEl) inputEl.classList.add('input-error');
                 if (errorEl) {
-                    errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+                    errorEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + message;
                     errorEl.style.display = 'flex';
                 }
             }
@@ -1511,19 +1532,10 @@
 
             checkSession();
             
-            // Update auth area in nav
-            if (window.userSession && document.getElementById('auth-nav-area')) {
-                document.getElementById('auth-nav-area').innerHTML = `
-                    <a href="/account" class="flex items-center gap-2 text-primary no-underline">
-                        <i class="fa-solid fa-user-circle text-xl"></i>
-                        <span class="text-sm font-bold" style="font-family: var(--font-body);">${window.userSession.name || 'Account'}</span>
-                    </a>`;
-            }
-            
             console.log('✅ JAYENWARE Signup Page Ready');
             console.log('📦 Header & Footer loaded via components.js');
             console.log('🎨 Fonts loaded via fonts.js');
-        });
+        }
     </script>
 </body>
 </html>
