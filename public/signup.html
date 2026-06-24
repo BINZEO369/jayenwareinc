@@ -11,7 +11,6 @@
     
     <link rel="canonical" href="https://www.jayenware.shop/signup" />
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,11 +34,6 @@
                         gold: '#c9a96e',
                         error: '#dc2626',
                         success: '#059669'
-                    },
-                    fontFamily: {
-                        sans: ["'Inter', 'sans-serif'"],
-                        serif: ["'Manrope', 'sans-serif'"],
-                        mono: ["'Sora', 'sans-serif'"]
                     }
                 }
             }
@@ -55,7 +49,7 @@
             --gold: #c9a96e;
         }
         
-        * {
+        *, *::before, *::after {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
             margin: 0;
@@ -64,8 +58,8 @@
         
         body {
             background: #f5f5f7;
-            color: #1d1d1f;
-            font-family: 'Inter', sans-serif;
+            color: var(--primary);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
@@ -75,497 +69,347 @@
             overflow-x: hidden;
         }
 
-        /* Ambient Background */
-        .ambient-bg {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.4;
-        }
-        
-        .ambient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            animation: float 20s ease-in-out infinite;
-        }
-        
-        .ambient-orb:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            background: rgba(0,122,255,0.08);
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
-        }
-        
-        .ambient-orb:nth-child(2) {
-            width: 350px;
-            height: 350px;
-            background: rgba(201,169,110,0.06);
-            bottom: -80px;
-            right: -80px;
-            animation-delay: -7s;
-        }
-        
-        .ambient-orb:nth-child(3) {
-            width: 300px;
-            height: 300px;
-            background: rgba(5,150,105,0.05);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -14s;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(30px, -30px) scale(1.05); }
-            50% { transform: translate(-20px, 20px) scale(0.95); }
-            75% { transform: translate(-30px, -10px) scale(1.02); }
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         main {
-            flex-grow: 1;
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 100px 16px 48px;
+            padding: 88px 16px 40px;
             width: 100%;
             position: relative;
             z-index: 1;
         }
         
-        @media (min-width: 640px) { main { padding: 120px 24px 64px; } }
-        @media (min-width: 1024px) { main { padding: 140px 32px 80px; } }
+        @media (min-width: 640px) { main { padding: 104px 24px 56px; } }
+        @media (min-width: 1024px) { main { padding: 120px 32px 72px; } }
 
-        .cinematic-container {
+        .container-signup {
             width: 100%;
-            max-width: 540px;
-            position: relative;
+            max-width: 500px;
         }
 
-        /* Progress Indicator */
-        .progress-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 40px;
-            padding: 0 4px;
-        }
-        
-        .progress-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #d1d1d6;
-            transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
-            position: relative;
-        }
-        
-        .progress-dot.completed {
-            background: #007aff;
-            box-shadow: 0 0 12px rgba(0,122,255,0.4);
-            animation: dotComplete 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .progress-dot.active {
-            width: 12px;
-            height: 12px;
-            background: #007aff;
-            box-shadow: 0 0 16px rgba(0,122,255,0.6);
-            animation: dotPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes dotComplete {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.8); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes dotPulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(0,122,255,0.3); }
-            50% { box-shadow: 0 0 20px rgba(0,122,255,0.7); }
-        }
-
-        /* Auth Card */
-        .auth-card {
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-radius: 28px;
-            padding: 44px 28px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.03), 0 8px 40px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.8);
-            position: relative;
-            overflow: hidden;
-            min-height: 440px;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        
-        @media (min-width: 640px) {
-            .auth-card { padding: 52px 36px; border-radius: 32px; min-height: 480px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .auth-card { padding: 60px 44px; border-radius: 36px; min-height: 520px; }
-        }
-
-        /* Card Glow Effect */
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(0,122,255,0.1), rgba(201,169,110,0.1), rgba(5,150,105,0.1));
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .auth-card.glow::before {
-            opacity: 1;
-        }
-
-        /* Step Content */
-        .step-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-        }
-
-        .step-content {
-            animation: stepEnter 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        
-        @keyframes stepEnter {
-            from { opacity: 0; transform: translateY(30px); filter: blur(4px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-        
-        .step-content.exit {
-            animation: stepExit 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-        }
-        
-        @keyframes stepExit {
-            to { opacity: 0; transform: translateY(-20px); filter: blur(4px); }
-        }
-
-        /* Typography */
-        .step-emoji {
-            font-size: 40px;
-            margin-bottom: 16px;
-            animation: emojiFloat 3s ease-in-out infinite;
-        }
-        
-        @keyframes emojiFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-8px) rotate(2deg); }
-            75% { transform: translateY(4px) rotate(-2deg); }
-        }
-        
-        .step-question {
-            font-family: 'Manrope', sans-serif;
-            font-weight: 700;
-            font-size: 26px;
-            line-height: 1.2;
-            margin-bottom: 8px;
-            color: #1d1d1f;
-            letter-spacing: -0.2px;
-        }
-        
-        @media (min-width: 640px) {
-            .step-question { font-size: 30px; }
-        }
-        
-        .step-description {
-            font-size: 14px;
-            color: #86868b;
-            margin-bottom: 36px;
-            line-height: 1.6;
-            font-weight: 400;
-        }
-
-        /* Input Field */
-        .input-container {
-            position: relative;
-            margin-bottom: 8px;
-        }
-        
-        .cinematic-input {
-            width: 100%;
-            padding: 18px 20px;
-            border: 2px solid #e5e5ea;
-            border-radius: 14px;
-            font-size: 17px;
-            font-family: 'Inter', sans-serif;
-            background: rgba(255,255,255,0.9);
-            outline: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-            color: #1d1d1f;
-        }
-        
-        .cinematic-input:hover {
-            border-color: #c0c0c5;
-        }
-        
-        .cinematic-input:focus {
-            border-color: #007aff;
-            box-shadow: 0 0 0 8px rgba(0,122,255,0.06);
-            background: #ffffff;
-            transform: translateY(-1px);
-        }
-        
-        .cinematic-input.error {
-            border-color: #dc2626;
-            animation: inputShake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-            box-shadow: 0 0 0 8px rgba(220,38,38,0.06);
-        }
-        
-        @keyframes inputShake {
-            10%, 90% { transform: translateX(-1px); }
-            20%, 80% { transform: translateX(2px); }
-            30%, 50%, 70% { transform: translateX(-4px); }
-            40%, 60% { transform: translateX(4px); }
-        }
-        
-        .cinematic-input.success {
-            border-color: #059669;
-            box-shadow: 0 0 0 8px rgba(5,150,105,0.06);
-        }
-
-        /* Floating Label */
-        .floating-label {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 17px;
-            color: #c0c0c5;
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-            font-weight: 400;
-        }
-        
-        .cinematic-input:focus ~ .floating-label,
-        .cinematic-input:not(:placeholder-shown) ~ .floating-label {
-            top: -10px;
-            left: 16px;
-            font-size: 12px;
-            color: #007aff;
-            background: white;
-            padding: 0 8px;
-            font-weight: 600;
-        }
-
-        /* Error Message */
-        .field-message {
-            font-size: 12px;
-            margin-top: 8px;
-            min-height: 20px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .field-message.error {
-            color: #dc2626;
-        }
-        
-        .field-message.success {
-            color: #059669;
-        }
-        
-        .field-message.hint {
-            color: #86868b;
-        }
-
-        /* Buttons */
-        .nav-row {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
-            padding-top: 36px;
-            align-items: center;
-        }
-        
-        .btn-back {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: #f5f5f7;
-            border: 1.5px solid #e5e5ea;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #86868b;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        
-        .btn-back:hover {
-            background: #ebebed;
-            border-color: #c0c0c5;
-            color: #1d1d1f;
-            transform: translateX(-2px);
-        }
-        
-        .btn-back:active {
-            transform: scale(0.95);
-        }
-        
-        .btn-next {
-            flex: 1;
-            padding: 16px 28px;
-            background: #1d1d1f;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-            font-family: 'Inter', sans-serif;
+        /* Progress Steps */
+        .progress-steps {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            letter-spacing: 0.2px;
+            margin-bottom: 32px;
         }
         
-        .btn-next:hover {
-            background: #333;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-        
-        .btn-next:active {
-            transform: scale(0.98);
-        }
-        
-        .btn-next:disabled {
+        .progress-step {
+            width: 32px;
+            height: 4px;
+            border-radius: 2px;
             background: #d1d1d6;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .progress-step.done {
+            background: var(--blue);
+        }
+        
+        .progress-step.current {
+            background: var(--blue);
+            width: 40px;
+        }
+
+        /* Card */
+        .auth-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 36px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        @media (min-width: 640px) {
+            .auth-card { padding: 44px 32px; border-radius: 24px; min-height: 440px; }
+        }
+        
+        @media (min-width: 1024px) {
+            .auth-card { padding: 52px 40px; border-radius: 28px; min-height: 480px; }
+        }
+
+        .step-inner {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step-view {
+            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Icon Circle */
+        .icon-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-circle.blue { background: #e8f2ff; color: var(--blue); }
+        .icon-circle.green { background: #ecfdf5; color: var(--success); }
+        .icon-circle.gold { background: #fdf8f0; color: var(--gold); }
+        .icon-circle.purple { background: #f3f0ff; color: #7c3aed; }
+        .icon-circle.rose { background: #fff1f2; color: #e11d48; }
+        
+        @media (min-width: 640px) {
+            .icon-circle { width: 56px; height: 56px; font-size: 24px; }
+        }
+
+        /* Typography */
+        .step-heading {
+            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 1.25;
+            margin-bottom: 6px;
+            color: var(--primary);
+            letter-spacing: -0.2px;
+        }
+        
+        @media (min-width: 640px) {
+            .step-heading { font-size: 26px; }
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: var(--accent);
+            margin-bottom: 28px;
+            line-height: 1.55;
+        }
+        
+        @media (min-width: 640px) {
+            .step-desc { font-size: 14px; margin-bottom: 32px; }
+        }
+
+        /* Input */
+        .input-wrap {
+            position: relative;
+            margin-bottom: 4px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px 16px;
+            border: 1.5px solid #e0e0e5;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+            color: var(--primary);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .form-input:hover { border-color: #c5c5cc; }
+        
+        .form-input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(0,122,255,0.08);
+        }
+        
+        .form-input.has-error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 4px rgba(220,38,38,0.06);
+        }
+        
+        .form-input.is-valid {
+            border-color: var(--success);
+        }
+
+        @media (min-width: 640px) {
+            .form-input { padding: 16px; font-size: 16px; }
+        }
+
+        .input-feedback {
+            font-size: 12px;
+            min-height: 20px;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .input-feedback.error { color: var(--error); }
+        .input-feedback.success { color: var(--success); }
+        .input-feedback.hint { color: var(--accent); }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 28px;
+            align-items: center;
+        }
+        
+        .btn-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #f5f5f7;
+            border: 1.5px solid #e0e0e5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 15px;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn-back:hover {
+            background: #ebebed;
+            border-color: #c5c5cc;
+            color: var(--primary);
+        }
+        
+        .btn-back:active { transform: scale(0.96); }
+        
+        .btn-primary {
+            flex: 1;
+            padding: 15px 24px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.1px;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn-primary:hover {
+            background: #333;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .btn-primary:active { transform: scale(0.98); }
+        
+        .btn-primary:disabled {
+            background: #c5c5cc;
             cursor: not-allowed;
-            transform: none;
             box-shadow: none;
         }
         
-        .btn-next .icon-arrow {
-            transition: transform 0.3s ease;
-        }
-        
-        .btn-next:hover .icon-arrow {
-            transform: translateX(4px);
-        }
-
-        /* Skip Button */
-        .btn-skip {
-            background: transparent;
-            border: none;
-            color: #86868b;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .btn-skip:hover {
-            color: #1d1d1f;
-            background: rgba(0,0,0,0.03);
+        @media (min-width: 640px) {
+            .btn-back { width: 48px; height: 48px; }
+            .btn-primary { padding: 16px 28px; font-size: 15px; }
         }
 
         /* Location Button */
-        .location-trigger {
+        .locate-btn {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 14px 18px;
+            padding: 13px 16px;
             background: #f5f5f7;
-            border: 1.5px solid #e5e5ea;
-            border-radius: 14px;
+            border: 1.5px solid #e0e0e5;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 13px;
             font-weight: 500;
-            color: #007aff;
-            margin-bottom: 20px;
+            color: var(--blue);
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .location-trigger:hover {
-            background: #ebebed;
-            border-color: #007aff;
-        }
-        
-        .location-trigger.loading {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        
-        .location-trigger i {
-            font-size: 18px;
-        }
+        .locate-btn:hover { background: #ebebed; border-color: var(--blue); }
+        .locate-btn:active { transform: scale(0.98); }
+        .locate-btn.is-loading { opacity: 0.7; pointer-events: none; }
 
-        /* Checkbox */
-        .agreement-box {
+        /* Agreement */
+        .agree-box {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            padding: 16px;
+            padding: 14px 16px;
             background: #f5f5f7;
-            border-radius: 14px;
-            border: 1.5px solid #e5e5ea;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            border: 1.5px solid #e0e0e5;
+            transition: all 0.2s ease;
         }
         
-        .agreement-box:hover {
-            border-color: #c0c0c5;
-        }
+        .agree-box:hover { border-color: #c5c5cc; }
         
-        .agreement-box input[type="checkbox"] {
+        .agree-box input[type="checkbox"] {
             margin-top: 1px;
-            accent-color: #007aff;
-            width: 20px;
-            height: 20px;
+            accent-color: var(--blue);
+            width: 18px;
+            height: 18px;
             cursor: pointer;
             flex-shrink: 0;
         }
         
-        .agreement-box label {
-            font-size: 13px;
-            color: #86868b;
+        .agree-box label {
+            font-size: 12px;
+            color: var(--accent);
             line-height: 1.6;
             cursor: pointer;
         }
         
-        .agreement-box a {
-            color: #007aff;
+        @media (min-width: 640px) {
+            .agree-box label { font-size: 13px; }
+        }
+        
+        .agree-box a {
+            color: var(--blue);
             font-weight: 600;
             text-decoration: none;
         }
         
-        .agreement-box a:hover {
-            text-decoration: underline;
-        }
+        .agree-box a:hover { text-decoration: underline; }
 
-        /* Success State */
-        .success-state {
+        /* Success Overlay */
+        .success-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -574,147 +418,134 @@
             z-index: 10;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-            padding: 40px;
+            transition: opacity 0.5s ease;
+            padding: 32px;
         }
         
-        .success-state.show {
+        .success-overlay.visible {
             opacity: 1;
             pointer-events: auto;
         }
         
-        .success-ring {
-            width: 100px;
-            height: 100px;
+        .success-check {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             background: #ecfdf5;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 28px;
-            position: relative;
+            margin-bottom: 24px;
         }
         
-        .success-ring::before {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 2px solid #059669;
-            opacity: 0.3;
-            animation: ringPulse 2s ease-out infinite;
+        .success-check i {
+            font-size: 32px;
+            color: var(--success);
         }
         
-        @keyframes ringPulse {
-            0% { transform: scale(0.8); opacity: 0.8; }
-            100% { transform: scale(1.4); opacity: 0; }
+        @media (min-width: 640px) {
+            .success-check { width: 80px; height: 80px; }
+            .success-check i { font-size: 36px; }
         }
         
-        .success-ring i {
-            font-size: 40px;
-            color: #059669;
-            animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
-        }
-        
-        @keyframes checkPop {
-            from { transform: scale(0) rotate(-45deg); opacity: 0; }
-            to { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        
-        .success-title {
-            font-family: 'Manrope', sans-serif;
-            font-weight: 800;
-            font-size: 24px;
-            margin-bottom: 8px;
+        .success-heading {
+            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 6px;
             text-align: center;
         }
         
-        .success-subtitle {
-            font-size: 14px;
-            color: #86868b;
+        .success-text {
+            font-size: 13px;
+            color: var(--accent);
             text-align: center;
-            max-width: 300px;
+            max-width: 280px;
             line-height: 1.6;
+        }
+        
+        @media (min-width: 640px) {
+            .success-heading { font-size: 22px; }
+            .success-text { font-size: 14px; }
         }
 
         /* Toast */
         #toast {
             position: fixed;
-            top: 80px;
-            right: 16px;
+            top: 76px;
+            right: 12px;
             z-index: 9999;
-            transform: translateX(calc(100% + 32px));
-            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            max-width: calc(100vw - 32px);
+            transform: translateX(calc(100% + 24px));
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: calc(100vw - 24px);
+        }
+        
+        @media (min-width: 640px) {
+            #toast { top: 88px; right: 20px; }
         }
         
         #toast.show { transform: translateX(0); }
         
-        #toast .toast-inner {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border-radius: 16px;
-            padding: 14px 18px;
+        #toast .toast-box {
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 14px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            min-width: 280px;
-            border: 1px solid rgba(0,0,0,0.06);
+            gap: 10px;
+            min-width: 260px;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
-        #toast .toast-icon {
-            width: 36px;
-            height: 36px;
+        #toast .toast-icon-wrap {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             flex-shrink: 0;
         }
         
-        .toast-success { background: #ecfdf5; color: #059669; }
-        .toast-error { background: #fef2f2; color: #dc2626; }
+        .toast-icon-wrap.success { background: #ecfdf5; color: var(--success); }
+        .toast-icon-wrap.error { background: #fef2f2; color: var(--error); }
         
-        #toast .toast-text {
-            font-size: 13px;
+        #toast .toast-msg {
+            font-size: 12px;
             font-weight: 600;
-            flex-grow: 1;
+            flex: 1;
             line-height: 1.4;
         }
         
         #toast .toast-close {
-            color: #86868b;
+            color: var(--accent);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 14px;
-            padding: 6px;
+            font-size: 13px;
+            padding: 4px;
             border-radius: 50%;
             transition: all 0.2s ease;
         }
         
-        #toast .toast-close:hover {
-            color: #1d1d1f;
-            background: rgba(0,0,0,0.05);
-        }
+        #toast .toast-close:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
 
         /* Particles */
-        .particle {
+        .confetti {
             position: fixed;
             pointer-events: none;
             z-index: 9998;
-            animation: particleFly 1.2s ease-out forwards;
+            animation: confettiFall 1s ease-out forwards;
         }
         
-        @keyframes particleFly {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        @keyframes confettiFall {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
         }
 
-        .sr-only {
+        .visually-hidden {
             position: absolute;
             width: 1px;
             height: 1px;
@@ -726,48 +557,41 @@
             border: 0;
         }
 
-        @media (max-width: 480px) {
-            .step-question { font-size: 22px; }
-            .cinematic-input { padding: 16px 18px; font-size: 16px; }
-            .auth-card { padding: 32px 20px; min-height: 380px; }
+        @media (max-width: 380px) {
+            .auth-card { padding: 28px 18px; min-height: 360px; }
+            .step-heading { font-size: 20px; }
+            .form-input { padding: 13px 14px; font-size: 14px; }
         }
     </style>
 </head>
-<body class="antialiased">
-
-    <!-- Ambient Background -->
-    <div class="ambient-bg">
-        <div class="ambient-orb"></div>
-        <div class="ambient-orb"></div>
-        <div class="ambient-orb"></div>
-    </div>
+<body>
 
     <div id="dynamic-header"></div>
 
     <main>
-        <div class="cinematic-container">
-            <!-- Progress Dots -->
-            <div class="progress-wrapper" id="progress-wrapper">
-                <div class="progress-dot active" data-step="0"></div>
-                <div class="progress-dot" data-step="1"></div>
-                <div class="progress-dot" data-step="2"></div>
-                <div class="progress-dot" data-step="3"></div>
-                <div class="progress-dot" data-step="4"></div>
-                <div class="progress-dot" data-step="5"></div>
-                <div class="progress-dot" data-step="6"></div>
+        <div class="container-signup">
+            <!-- Progress -->
+            <div class="progress-steps" id="progress-steps">
+                <div class="progress-step current"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
             </div>
 
-            <!-- Auth Card -->
+            <!-- Card -->
             <div class="auth-card" id="auth-card">
-                <div class="step-wrapper" id="step-wrapper"></div>
+                <div class="step-inner" id="step-inner"></div>
                 
-                <!-- Success State -->
-                <div class="success-state" id="success-state">
-                    <div class="success-ring">
+                <!-- Success -->
+                <div class="success-overlay" id="success-overlay">
+                    <div class="success-check">
                         <i class="fa-solid fa-check"></i>
                     </div>
-                    <h2 class="success-title">Welcome to the family!</h2>
-                    <p class="success-subtitle" id="success-message">Your account is ready. Taking you to your dashboard...</p>
+                    <h2 class="success-heading">Account Created</h2>
+                    <p class="success-text" id="success-msg">Welcome aboard! Redirecting you now...</p>
                 </div>
             </div>
         </div>
@@ -777,9 +601,9 @@
 
     <!-- Toast -->
     <div id="toast" role="alert" aria-live="polite">
-        <div class="toast-inner">
-            <div class="toast-icon" id="toast-icon"></div>
-            <span class="toast-text" id="toast-text"></span>
+        <div class="toast-box">
+            <div class="toast-icon-wrap" id="toast-icon-wrap"></div>
+            <span class="toast-msg" id="toast-msg"></span>
             <button class="toast-close" onclick="hideToast()" aria-label="Close">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -789,409 +613,351 @@
     <script src="/components.js"></script>
 
     <script>
-        (function() {
+        (() => {
+            // Font variables
             document.addEventListener('DOMContentLoaded', () => {
                 if (window.JAYENWARE_FONTS) {
-                    const root = document.documentElement;
-                    for (const [key, value] of Object.entries(window.JAYENWARE_FONTS.cssVariables)) {
-                        root.style.setProperty(key, value);
-                    }
+                    const r = document.documentElement;
+                    Object.entries(window.JAYENWARE_FONTS.cssVariables).forEach(([k, v]) => r.style.setProperty(k, v));
                 }
             });
 
-            window.addEventListener('load', () => setTimeout(initApp, 300));
+            window.addEventListener('load', () => setTimeout(boot, 200));
 
-            function initApp() {
-                console.log('✨ Cinematic Signup Ready');
-                
-                let currentStep = 0;
-                let isTransitioning = false;
-                
-                const formData = {
+            function boot() {
+                let step = 0;
+                let busy = false;
+
+                const data = {
                     name: '', email: '', phone: '', password: '',
                     country: 'Bangladesh', state_province: '', city: '',
                     postal_code: '', street_address: '', apartment_house: '',
                     terms: false
                 };
 
-                const el = {
-                    wrapper: document.getElementById('step-wrapper'),
-                    progress: document.getElementById('progress-wrapper'),
-                    success: document.getElementById('success-state'),
-                    card: document.getElementById('auth-card'),
-                    toast: document.getElementById('toast'),
-                    toastIcon: document.getElementById('toast-icon'),
-                    toastText: document.getElementById('toast-text')
-                };
+                const $ = (id) => document.getElementById(id);
+                const progressBar = $('progress-steps');
+                const stepInner = $('step-inner');
+                const successOverlay = $('success-overlay');
+                const toast = $('toast');
+                const API = window.location.origin;
 
-                const API_BASE = window.location.origin;
                 let toastTimer;
 
                 // Toast
-                function showToast(text, type = 'success') {
-                    if (!el.toast) return;
-                    el.toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
-                    el.toastIcon.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
-                    el.toastText.innerText = text;
-                    el.toast.classList.add('show');
+                function notify(msg, type = 'success') {
+                    const icon = $('toast-icon-wrap');
+                    const text = $('toast-msg');
+                    if (!icon || !text) return;
+                    
+                    icon.className = 'toast-icon-wrap ' + type;
+                    icon.innerHTML = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation"></i>';
+                    text.textContent = msg;
+                    toast.classList.add('show');
                     clearTimeout(toastTimer);
-                    toastTimer = setTimeout(() => el.toast?.classList.remove('show'), 3500);
+                    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
                 }
 
                 window.hideToast = () => {
-                    el.toast?.classList.remove('show');
+                    toast.classList.remove('show');
                     clearTimeout(toastTimer);
                 };
 
                 // Progress
-                function updateProgress(step) {
-                    el.progress.querySelectorAll('.progress-dot').forEach((dot, i) => {
-                        dot.classList.remove('completed', 'active');
-                        if (i < step) dot.classList.add('completed');
-                        if (i === step) dot.classList.add('active');
+                function setProgress(n) {
+                    progressBar.querySelectorAll('.progress-step').forEach((el, i) => {
+                        el.classList.remove('done', 'current');
+                        if (i < n) el.classList.add('done');
+                        if (i === n) el.classList.add('current');
                     });
                 }
 
-                // Step definitions
+                // Steps config
                 const steps = [
                     {
-                        emoji: '👋',
+                        icon: 'fa-solid fa-user',
+                        iconClass: 'blue',
                         question: "What's your name?",
-                        description: "We'd love to know who you are. This is how we'll address you.",
-                        field: 'name',
-                        type: 'text',
-                        placeholder: 'Your full name',
+                        desc: "We'll use this to personalize your experience.",
+                        field: 'name', type: 'text', placeholder: 'Your full name',
                         autocomplete: 'name',
-                        validate: v => v.trim().length >= 3 ? null : 'Name must be at least 3 characters',
-                        hint: 'Enter your first and last name'
+                        check: v => v.trim().length >= 3 ? null : 'Name must be at least 3 characters',
+                        hint: 'First and last name'
                     },
                     {
-                        emoji: '📧',
+                        icon: 'fa-solid fa-envelope',
+                        iconClass: 'blue',
                         question: "What's your email?",
-                        description: "We'll send order confirmations and exclusive deals here.",
-                        field: 'email',
-                        type: 'email',
-                        placeholder: 'you@example.com',
+                        desc: "For order updates and account security.",
+                        field: 'email', type: 'email', placeholder: 'you@example.com',
                         autocomplete: 'email',
-                        validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Please enter a valid email',
-                        hint: 'We respect your privacy'
+                        check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Enter a valid email address',
+                        hint: 'We never share your email'
                     },
                     {
-                        emoji: '📱',
+                        icon: 'fa-solid fa-phone',
+                        iconClass: 'green',
                         question: "Your phone number?",
-                        description: "For delivery updates and account recovery.",
-                        field: 'phone',
-                        type: 'tel',
-                        placeholder: '01XXXXXXXXX',
+                        desc: "For delivery coordination and recovery.",
+                        field: 'phone', type: 'tel', placeholder: '01XXXXXXXXX',
                         autocomplete: 'tel-national',
-                        validate: v => {
-                            const c = v.replace(/[^\d+]/g, '');
-                            return /^\+?88?01[3-9]\d{8}$/.test(c) ? null : 'Enter valid BD number';
-                        },
-                        hint: 'Bangladesh numbers only',
+                        check: v => { const c = v.replace(/[^\d+]/g, ''); return /^\+?88?01[3-9]\d{8}$/.test(c) ? null : 'Enter valid BD number'; },
+                        hint: 'Bangladesh numbers',
                         format: true
                     },
                     {
-                        emoji: '🔐',
+                        icon: 'fa-solid fa-lock',
+                        iconClass: 'purple',
                         question: "Create a password",
-                        description: "Make it strong! Use at least 8 characters.",
-                        field: 'password',
-                        type: 'password',
-                        placeholder: 'Min 8 characters',
+                        desc: "Use 8+ characters for a strong password.",
+                        field: 'password', type: 'password', placeholder: 'Minimum 8 characters',
                         autocomplete: 'new-password',
-                        validate: v => v.length >= 8 ? null : 'At least 8 characters',
-                        hint: 'Store it safely'
+                        check: v => v.length >= 8 ? null : 'At least 8 characters required',
+                        hint: 'Keep it safe'
                     },
                     {
-                        emoji: '📍',
-                        question: "Where are you?",
-                        description: "We'll auto-detect your location or you can fill it manually.",
+                        icon: 'fa-solid fa-location-dot',
+                        iconClass: 'rose',
+                        question: "Where are you located?",
+                        desc: "Auto-detect or enter your location manually.",
                         isLocation: true
                     },
                     {
-                        emoji: '🏠',
-                        question: "Delivery address",
-                        description: "Help us find your doorstep for smooth deliveries.",
+                        icon: 'fa-solid fa-house',
+                        iconClass: 'gold',
+                        question: "Your delivery address",
+                        desc: "For smooth and accurate deliveries.",
                         isAddress: true
                     },
                     {
-                        emoji: '🎉',
-                        question: "Almost done!",
-                        description: "Just review and accept our terms.",
+                        icon: 'fa-solid fa-shield-check',
+                        iconClass: 'green',
+                        question: "Almost there!",
+                        desc: "Review and accept our terms to finish.",
                         isTerms: true
                     }
                 ];
 
-                // Render step
-                function renderStep(index) {
-                    if (isTransitioning) return;
-                    isTransitioning = true;
+                function render(n) {
+                    if (busy) return;
+                    busy = true;
                     
-                    const step = steps[index];
-                    updateProgress(index);
+                    const s = steps[n];
+                    setProgress(n);
                     
                     let html = '';
                     
-                    if (step.isLocation) {
+                    if (s.isLocation) {
                         html = `
-                            <div class="step-content">
-                                <div class="step-emoji">${step.emoji}</div>
-                                <h2 class="step-question">${step.question}</h2>
-                                <p class="step-description">${step.description}</p>
+                            <div class="step-view">
+                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <h2 class="step-heading">${s.question}</h2>
+                                <p class="step-desc">${s.desc}</p>
                                 
-                                <button type="button" class="location-trigger" id="locate-btn">
-                                    <i class="fa-solid fa-location-crosshairs"></i>
-                                    <span>Auto-detect my location</span>
+                                <button type="button" class="locate-btn" id="locate-btn">
+                                    <i class="fa-solid fa-location-crosshairs"></i> Detect my location
                                 </button>
-                                <div class="field-message hint" id="locate-status"></div>
+                                <div class="input-feedback hint" id="locate-status"></div>
                                 
-                                <div style="margin-bottom:12px;">
-                                    <input type="text" class="cinematic-input" id="loc-country" placeholder="Country" value="${formData.country}">
+                                <div style="margin-bottom:10px;">
+                                    <input type="text" class="form-input" id="loc-country" placeholder="Country" value="${data.country}">
                                 </div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-                                    <input type="text" class="cinematic-input" id="loc-state" placeholder="State" value="${formData.state_province}">
-                                    <input type="text" class="cinematic-input" id="loc-city" placeholder="City" value="${formData.city}">
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                                    <input type="text" class="form-input" id="loc-state" placeholder="State" value="${data.state_province}">
+                                    <input type="text" class="form-input" id="loc-city" placeholder="City" value="${data.city}">
                                 </div>
-                                <div class="field-message" id="loc-error"></div>
+                                <div class="input-feedback" id="loc-error"></div>
                                 
-                                <div class="nav-row">
-                                    <button class="btn-back" onclick="goTo(${index - 1})">
-                                        <i class="fa-solid fa-arrow-left"></i>
-                                    </button>
-                                    <button class="btn-next" onclick="validateLocation()">
-                                        Continue <i class="fa-solid fa-arrow-right icon-arrow"></i>
-                                    </button>
+                                <div class="btn-row">
+                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
+                                    <button class="btn-primary" onclick="checkLocation()">Continue <i class="fa-solid fa-arrow-right"></i></button>
                                 </div>
                             </div>`;
-                    } else if (step.isAddress) {
+                    } else if (s.isAddress) {
                         html = `
-                            <div class="step-content">
-                                <div class="step-emoji">${step.emoji}</div>
-                                <h2 class="step-question">${step.question}</h2>
-                                <p class="step-description">${step.description}</p>
+                            <div class="step-view">
+                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <h2 class="step-heading">${s.question}</h2>
+                                <p class="step-desc">${s.desc}</p>
                                 
-                                <div style="margin-bottom:12px;">
-                                    <input type="text" class="cinematic-input" id="addr-postal" placeholder="Postal Code" value="${formData.postal_code}">
+                                <div style="margin-bottom:10px;">
+                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal code" value="${data.postal_code}">
                                 </div>
-                                <div style="margin-bottom:12px;">
-                                    <input type="text" class="cinematic-input" id="addr-street" placeholder="Street address (Line 1)" value="${formData.street_address}">
+                                <div style="margin-bottom:10px;">
+                                    <input type="text" class="form-input" id="addr-street" placeholder="Street address" value="${data.street_address}">
                                 </div>
-                                <div style="margin-bottom:12px;">
-                                    <input type="text" class="cinematic-input" id="addr-apt" placeholder="Apartment / House (Line 2)" value="${formData.apartment_house}">
+                                <div style="margin-bottom:10px;">
+                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment / House no." value="${data.apartment_house}">
                                 </div>
-                                <div class="field-message" id="addr-error"></div>
+                                <div class="input-feedback" id="addr-error"></div>
                                 
-                                <div class="nav-row">
-                                    <button class="btn-back" onclick="goTo(${index - 1})">
-                                        <i class="fa-solid fa-arrow-left"></i>
-                                    </button>
-                                    <button class="btn-next" onclick="validateAddress()">
-                                        Continue <i class="fa-solid fa-arrow-right icon-arrow"></i>
-                                    </button>
+                                <div class="btn-row">
+                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
+                                    <button class="btn-primary" onclick="checkAddress()">Continue <i class="fa-solid fa-arrow-right"></i></button>
                                 </div>
                             </div>`;
-                    } else if (step.isTerms) {
+                    } else if (s.isTerms) {
                         html = `
-                            <div class="step-content">
-                                <div class="step-emoji">${step.emoji}</div>
-                                <h2 class="step-question">${step.question}</h2>
-                                <p class="step-description">${step.description}</p>
+                            <div class="step-view">
+                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <h2 class="step-heading">${s.question}</h2>
+                                <p class="step-desc">${s.desc}</p>
                                 
-                                <div class="agreement-box">
-                                    <input type="checkbox" id="terms-check" ${formData.terms ? 'checked' : ''}>
+                                <div class="agree-box">
+                                    <input type="checkbox" id="terms-check" ${data.terms ? 'checked' : ''}>
                                     <label for="terms-check">
                                         I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a>
                                     </label>
                                 </div>
-                                <div class="field-message" id="terms-error"></div>
+                                <div class="input-feedback" id="terms-error" style="margin-top:8px;"></div>
                                 
-                                <div class="nav-row">
-                                    <button class="btn-back" onclick="goTo(${index - 1})">
-                                        <i class="fa-solid fa-arrow-left"></i>
-                                    </button>
-                                    <button class="btn-next" id="submit-btn" onclick="submitForm()">
-                                        <i class="fa-solid fa-sparkles"></i> Create My Account
+                                <div class="btn-row">
+                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
+                                    <button class="btn-primary" id="submit-btn" onclick="submit()">
+                                        <i class="fa-solid fa-user-check"></i> Create Account
                                     </button>
                                 </div>
                             </div>`;
                     } else {
                         html = `
-                            <div class="step-content">
-                                <div class="step-emoji">${step.emoji}</div>
-                                <h2 class="step-question">${step.question}</h2>
-                                <p class="step-description">${step.description}</p>
+                            <div class="step-view">
+                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <h2 class="step-heading">${s.question}</h2>
+                                <p class="step-desc">${s.desc}</p>
                                 
-                                <div class="input-container">
-                                    <input type="${step.type}" class="cinematic-input" id="main-input" 
-                                           placeholder="${step.placeholder}" 
-                                           value="${formData[step.field] || ''}"
-                                           autocomplete="${step.autocomplete}"
+                                <div class="input-wrap">
+                                    <input type="${s.type}" class="form-input" id="main-input" 
+                                           placeholder="${s.placeholder}" 
+                                           value="${data[s.field] || ''}"
+                                           autocomplete="${s.autocomplete}"
                                            autofocus>
                                 </div>
-                                <div class="field-message hint" id="field-hint">${step.hint || ''}</div>
-                                <div class="field-message" id="field-error"></div>
+                                <div class="input-feedback hint" id="field-hint">${s.hint}</div>
+                                <div class="input-feedback" id="field-error"></div>
                                 
-                                <div class="nav-row">
-                                    ${index > 0 ? `
-                                        <button class="btn-back" onclick="goTo(${index - 1})">
-                                            <i class="fa-solid fa-arrow-left"></i>
-                                        </button>
-                                    ` : '<div></div>'}
-                                    <button class="btn-next" onclick="validateField()">
-                                        Continue <i class="fa-solid fa-arrow-right icon-arrow"></i>
-                                    </button>
+                                <div class="btn-row">
+                                    ${n > 0 ? `<button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>` : '<div></div>'}
+                                    <button class="btn-primary" onclick="checkField()">Continue <i class="fa-solid fa-arrow-right"></i></button>
                                 </div>
                             </div>`;
                     }
                     
-                    el.wrapper.innerHTML = html;
+                    stepInner.innerHTML = html;
                     
                     // Focus
                     setTimeout(() => {
-                        const input = document.getElementById('main-input');
-                        if (input) input.focus();
-                    }, 150);
+                        const inp = document.getElementById('main-input');
+                        if (inp) inp.focus();
+                    }, 100);
                     
-                    // Attach enter key
-                    const mainInput = document.getElementById('main-input');
-                    if (mainInput) {
-                        mainInput.addEventListener('keydown', e => {
-                            if (e.key === 'Enter') validateField();
-                        });
+                    // Enter key
+                    const mainInp = document.getElementById('main-input');
+                    if (mainInp) {
+                        mainInp.addEventListener('keydown', e => { if (e.key === 'Enter') checkField(); });
                     }
                     
-                    // Format phone
-                    if (step.format && mainInput) {
-                        mainInput.addEventListener('input', function() {
+                    // Phone format
+                    if (s.format && mainInp) {
+                        mainInp.addEventListener('input', function() {
                             let v = this.value.replace(/[^\d+]/g, '');
-                            if (!v.startsWith('+') && v.length > 3 && !v.includes('-')) {
-                                v = v.slice(0, 3) + '-' + v.slice(3);
-                            }
+                            if (!v.startsWith('+') && v.length > 3 && !v.includes('-')) v = v.slice(0,3) + '-' + v.slice(3);
                             this.value = v;
                         });
                     }
                     
-                    // Location detection
-                    if (step.isLocation) {
+                    // Location
+                    if (s.isLocation) {
                         setTimeout(() => {
                             document.getElementById('locate-btn')?.addEventListener('click', detectLocation);
-                        }, 200);
+                        }, 150);
                     }
                     
-                    // Glow effect
-                    el.card.classList.add('glow');
-                    setTimeout(() => el.card.classList.remove('glow'), 800);
-                    
-                    isTransitioning = false;
+                    busy = false;
                 }
 
-                // Validate field
-                window.validateField = function() {
-                    const step = steps[currentStep];
-                    const input = document.getElementById('main-input');
-                    const value = input?.value || '';
-                    const error = step.validate(value);
-                    
-                    const errorEl = document.getElementById('field-error');
+                // Field validation
+                window.checkField = function() {
+                    const s = steps[step];
+                    const inp = document.getElementById('main-input');
+                    const val = inp?.value || '';
+                    const err = s.check(val);
+                    const errEl = document.getElementById('field-error');
                     const hintEl = document.getElementById('field-hint');
                     
-                    if (error) {
-                        if (input) {
-                            input.classList.add('error');
-                            setTimeout(() => input.classList.remove('error'), 600);
-                        }
-                        if (errorEl) {
-                            errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${error}`;
-                            errorEl.className = 'field-message error';
-                        }
+                    if (err) {
+                        if (inp) { inp.classList.add('has-error'); setTimeout(() => inp.classList.remove('has-error'), 600); }
+                        if (errEl) { errEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${err}`; errEl.className = 'input-feedback error'; }
                         if (hintEl) hintEl.style.display = 'none';
                         return;
                     }
                     
-                    // Success
-                    if (input) input.classList.add('success');
-                    formData[step.field] = value;
-                    if (errorEl) errorEl.className = 'field-message';
+                    if (inp) inp.classList.add('is-valid');
+                    data[s.field] = val;
+                    if (errEl) errEl.className = 'input-feedback';
                     if (hintEl) hintEl.style.display = 'block';
                     
-                    setTimeout(() => {
-                        if (input) input.classList.remove('success');
-                        goTo(currentStep + 1);
-                    }, 300);
+                    setTimeout(() => { if (inp) inp.classList.remove('is-valid'); go(step + 1); }, 250);
                 };
 
-                // Validate location
-                window.validateLocation = function() {
+                window.checkLocation = function() {
                     const country = document.getElementById('loc-country')?.value.trim();
                     const city = document.getElementById('loc-city')?.value.trim();
-                    const errorEl = document.getElementById('loc-error');
+                    const errEl = document.getElementById('loc-error');
                     
                     if (!country || !city) {
-                        if (errorEl) {
-                            errorEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Country and City are required';
-                            errorEl.className = 'field-message error';
-                        }
+                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Country and city are required'; errEl.className = 'input-feedback error'; }
                         return;
                     }
                     
-                    formData.country = country;
-                    formData.state_province = document.getElementById('loc-state')?.value.trim() || '';
-                    formData.city = city;
-                    
-                    if (errorEl) errorEl.className = 'field-message';
-                    goTo(currentStep + 1);
+                    data.country = country;
+                    data.state_province = document.getElementById('loc-state')?.value.trim() || '';
+                    data.city = city;
+                    if (errEl) errEl.className = 'input-feedback';
+                    go(step + 1);
                 };
 
-                // Validate address
-                window.validateAddress = function() {
+                window.checkAddress = function() {
                     const street = document.getElementById('addr-street')?.value.trim();
-                    const errorEl = document.getElementById('addr-error');
+                    const errEl = document.getElementById('addr-error');
                     
                     if (!street) {
-                        if (errorEl) {
-                            errorEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Street address is required';
-                            errorEl.className = 'field-message error';
-                        }
+                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Street address is required'; errEl.className = 'input-feedback error'; }
                         return;
                     }
                     
-                    formData.postal_code = document.getElementById('addr-postal')?.value.trim() || '';
-                    formData.street_address = street;
-                    formData.apartment_house = document.getElementById('addr-apt')?.value.trim() || '';
-                    
-                    if (errorEl) errorEl.className = 'field-message';
-                    goTo(currentStep + 1);
+                    data.postal_code = document.getElementById('addr-postal')?.value.trim() || '';
+                    data.street_address = street;
+                    data.apartment_house = document.getElementById('addr-apt')?.value.trim() || '';
+                    if (errEl) errEl.className = 'input-feedback';
+                    go(step + 1);
                 };
 
                 // Navigate
-                window.goTo = function(target) {
-                    if (isTransitioning || target < 0 || target >= steps.length || target === currentStep) return;
-                    currentStep = target;
-                    renderStep(currentStep);
+                window.go = function(target) {
+                    if (busy || target < 0 || target >= steps.length || target === step) return;
+                    step = target;
+                    render(step);
                 };
 
-                // Location detection
+                // Detect location
                 async function detectLocation() {
-                    if (!navigator.geolocation) {
-                        showToast('Location not supported', 'error');
-                        return;
-                    }
+                    if (!navigator.geolocation) { notify('Location not supported', 'error'); return; }
                     
                     const btn = document.getElementById('locate-btn');
                     const status = document.getElementById('locate-status');
                     
-                    btn.classList.add('loading');
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Detecting...</span>';
+                    btn.classList.add('is-loading');
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
                     if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Accessing GPS...';
                     
                     try {
                         const pos = await new Promise((res, rej) => {
                             navigator.geolocation.getCurrentPosition(res, rej, {
-                                enableHighAccuracy: true, timeout: 15000, maximumAge: 0
+                                enableHighAccuracy: true, timeout: 12000, maximumAge: 0
                             });
                         });
                         
-                        if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Finding address...';
+                        if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Looking up address...';
                         
                         const resp = await fetch(
                             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&addressdetails=1&accept-language=en`,
@@ -1200,131 +966,115 @@
                         
                         if (!resp.ok) throw new Error('API error');
                         
-                        const data = await resp.json();
-                        const addr = data.address || {};
+                        const d = await resp.json();
+                        const addr = d.address || {};
                         
                         document.getElementById('loc-country').value = addr.country || 'Bangladesh';
                         document.getElementById('loc-state').value = addr.state || '';
                         document.getElementById('loc-city').value = addr.city || addr.town || '';
                         
                         if (status) {
-                            status.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected! Fields auto-filled.';
-                            status.className = 'field-message success';
+                            status.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected and filled';
+                            status.className = 'input-feedback success';
                         }
                         
-                        showToast('Location detected! ✨', 'success');
+                        notify('Location found!', 'success');
                         
-                    } catch (err) {
+                    } catch {
                         if (status) {
-                            status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Could not detect. Please fill manually.';
-                            status.className = 'field-message error';
+                            status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Unable to detect. Please fill manually.';
+                            status.className = 'input-feedback error';
                         }
                     } finally {
-                        btn.classList.remove('loading');
-                        btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> <span>Auto-detect my location</span>';
+                        btn.classList.remove('is-loading');
+                        btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Detect my location';
                     }
                 }
 
                 // Submit
-                window.submitForm = async function() {
+                window.submit = async function() {
                     const checked = document.getElementById('terms-check')?.checked;
                     
                     if (!checked) {
-                        const err = document.getElementById('terms-error');
-                        if (err) {
-                            err.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue';
-                            err.className = 'field-message error';
-                        }
+                        const errEl = document.getElementById('terms-error');
+                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue'; errEl.className = 'input-feedback error'; }
                         return;
                     }
                     
-                    formData.terms = true;
+                    data.terms = true;
                     
                     const btn = document.getElementById('submit-btn');
                     btn.disabled = true;
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
                     
                     try {
-                        const resp = await fetch(`${API_BASE}/api/auth/signup`, {
+                        const resp = await fetch(`${API}/api/auth/signup`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                email: formData.email,
-                                password: formData.password,
-                                name: formData.name,
-                                phone: formData.phone.replace(/[-\s()]/g, ''),
-                                country: formData.country,
-                                state_province: formData.state_province,
-                                city: formData.city,
-                                postal_code: formData.postal_code,
-                                street_address: formData.street_address,
-                                apartment_house: formData.apartment_house
+                                email: data.email, password: data.password, name: data.name,
+                                phone: data.phone.replace(/[-\s()]/g, ''),
+                                country: data.country, state_province: data.state_province,
+                                city: data.city, postal_code: data.postal_code,
+                                street_address: data.street_address, apartment_house: data.apartment_house
                             })
                         });
                         
                         const result = await resp.json();
-                        
                         if (!resp.ok) throw new Error(result.error || 'Registration failed');
                         
-                        // Success!
-                        document.getElementById('success-message').textContent = 
-                            `Hey ${formData.name.split(' ')[0]}! Your account is ready. Taking you to your dashboard...`;
-                        el.success.classList.add('show');
+                        // Success
+                        $('success-msg').textContent = `Welcome, ${data.name.split(' ')[0]}! Redirecting to your account...`;
+                        successOverlay.classList.add('visible');
                         
-                        spawnParticles();
+                        // Confetti
+                        spawnConfetti();
                         
-                        setTimeout(() => { window.location.href = '/account'; }, 2500);
+                        setTimeout(() => { window.location.href = '/account'; }, 2200);
                         
                     } catch (err) {
-                        showToast(err.message || 'Something went wrong', 'error');
+                        notify(err.message || 'Something went wrong', 'error');
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> Create My Account';
+                        btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
                     }
                 };
 
-                // Celebration particles
-                function spawnParticles() {
-                    const colors = ['#007aff', '#059669', '#c9a96e', '#f59e0b', '#8b5cf6', '#ec4899'];
-                    const rect = el.card.getBoundingClientRect();
+                function spawnConfetti() {
+                    const colors = ['#007aff', '#059669', '#c9a96e', '#f59e0b', '#7c3aed', '#e11d48'];
+                    const card = document.getElementById('auth-card');
+                    const rect = card.getBoundingClientRect();
                     const cx = rect.left + rect.width / 2;
                     const cy = rect.top + rect.height / 2;
                     
-                    for (let i = 0; i < 50; i++) {
-                        const particle = document.createElement('div');
+                    for (let i = 0; i < 40; i++) {
+                        const el = document.createElement('div');
                         const angle = Math.random() * Math.PI * 2;
-                        const distance = 80 + Math.random() * 250;
-                        const tx = Math.cos(angle) * distance;
-                        const ty = Math.sin(angle) * distance;
-                        const size = 4 + Math.random() * 8;
+                        const dist = 60 + Math.random() * 200;
+                        const x = Math.cos(angle) * dist;
+                        const y = Math.sin(angle) * dist;
+                        const size = 4 + Math.random() * 7;
                         const color = colors[Math.floor(Math.random() * colors.length)];
                         
-                        particle.className = 'particle';
-                        particle.style.cssText = `
-                            left: ${cx}px;
-                            top: ${cy}px;
-                            width: ${size}px;
-                            height: ${size}px;
-                            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-                            background: ${color};
-                            --tx: ${tx}px;
-                            --ty: ${ty}px;
-                            animation-delay: ${Math.random() * 0.3}s;
-                            animation-duration: ${0.8 + Math.random() * 1.2}s;
+                        el.className = 'confetti';
+                        el.style.cssText = `
+                            left:${cx}px;top:${cy}px;width:${size}px;height:${size}px;
+                            border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+                            background:${color};--x:${x}px;--y:${y}px;--r:${Math.random()*720-360}deg;
+                            animation-delay:${Math.random()*0.2}s;
                         `;
                         
-                        document.body.appendChild(particle);
-                        setTimeout(() => particle.remove(), 1600);
+                        document.body.appendChild(el);
+                        setTimeout(() => el.remove(), 1200);
                     }
                 }
 
-                // Init
-                renderStep(0);
-                
+                // Close toast
                 document.addEventListener('click', e => {
-                    if (el.toast?.classList.contains('show') && !el.toast.contains(e.target)) {
-                        window.hideToast();
-                    }
+                    if (toast.classList.contains('show') && !toast.contains(e.target)) window.hideToast();
                 });
+
+                // Init
+                render(0);
             }
         })();
     </script>
