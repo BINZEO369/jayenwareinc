@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1a1a1a">
     
-    <link rel="icon" type="image/png" sizes="32x32" href="https://www.jayenware.shop/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,32 +19,10 @@
     
     <!-- Dynamic Font System -->
     <script src="/fonts.js"></script>
+    <!-- Shared Components -->
+    <script src="/components.js"></script>
     
     <style>
-        :root {
-            --primary: #1a1a1a;
-            --accent: #c9a96e;
-            --soft-bg: #f8f6f3;
-            --error: #dc2626;
-            --success: #059669;
-            --info: #3b82f6;
-            --warning: #f59e0b;
-            --border: #e5e5e5;
-            --text-muted: #999;
-            --text-light: #666;
-            --white: #ffffff;
-            --shadow-sm: 0 8px 24px rgba(0,0,0,0.08);
-            --shadow-md: 0 20px 60px rgba(0,0,0,0.08);
-            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --radius-2xl: 32px;
-            --transition-fast: 0.2s ease;
-            --transition-base: 0.3s ease;
-        }
-        
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
@@ -53,39 +31,39 @@
         }
         
         body {
-            background-color: var(--soft-bg);
-            color: var(--primary);
-            font-family: var(--font-body, 'Inter', sans-serif);
+            background-color: var(--soft-bg, #f8f6f3);
+            color: var(--primary, #1a1a1a);
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-            padding-top: 56px;
         }
-        
-        @media (min-width: 640px) { body { padding-top: 64px; } }
-        @media (min-width: 1024px) { body { padding-top: 80px; } }
 
         main {
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 16px;
+            padding: 80px 16px 40px;
         }
         
-        @media (min-width: 640px) { main { padding: 60px 24px; } }
-        @media (min-width: 1024px) { main { padding: 80px 32px; } }
+        @media (min-width: 640px) { 
+            main { padding: 100px 24px 60px; } 
+        }
+        
+        @media (min-width: 1024px) { 
+            main { padding: 120px 32px 80px; } 
+        }
 
         .auth-card {
-            background: var(--white);
+            background: #ffffff;
             width: 100%;
             max-width: 520px;
-            border-radius: var(--radius-2xl);
+            border-radius: 32px;
             padding: 28px 20px;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
             max-height: 90vh;
             max-height: 90dvh;
             overflow-y: auto;
@@ -111,9 +89,9 @@
         .auth-card .logo-area img {
             width: 56px;
             height: 56px;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             margin-bottom: 12px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
         
         @media (min-width: 640px) {
@@ -121,17 +99,17 @@
         }
         
         .auth-card .logo-area h1 {
-            font-family: var(--font-heading, 'Playfair Display', serif);
-            font-weight: 900;
+            font-family: var(--font-heading);
+            font-weight: 800;
             font-size: 22px;
-            color: var(--primary);
+            color: #1a1a1a;
         }
         
         .auth-card .logo-area p {
             font-size: 12px;
-            color: var(--text-muted);
+            color: #999;
             margin-top: 6px;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         @media (min-width: 640px) {
@@ -156,9 +134,9 @@
             letter-spacing: 0.8px;
             text-decoration: none;
             border-bottom: 3px solid transparent;
-            transition: all var(--transition-fast);
+            transition: all 0.2s ease;
             color: #bbb;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         @media (min-width: 640px) {
@@ -166,13 +144,13 @@
         }
         
         .tab-buttons a.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
+            color: #1a1a1a;
+            border-bottom-color: #1a1a1a;
             font-weight: 700;
         }
         
         .tab-buttons a.inactive:hover {
-            color: var(--primary);
+            color: #1a1a1a;
             border-bottom-color: #ccc;
         }
         
@@ -181,7 +159,7 @@
         .section-title {
             font-size: 11px;
             font-weight: 700;
-            color: var(--text-light);
+            color: #666;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin: 20px 0 12px;
@@ -190,7 +168,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: var(--font-heading, 'Inter', sans-serif);
+            font-family: var(--font-heading);
         }
         
         .section-title:first-of-type {
@@ -217,15 +195,15 @@
             align-items: center;
             gap: 6px;
             padding: 8px 14px;
-            background: var(--info);
+            background: #3b82f6;
             color: white;
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: 8px;
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            transition: all var(--transition-fast);
-            font-family: var(--font-body, 'Inter', sans-serif);
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
             white-space: nowrap;
         }
         
@@ -242,22 +220,22 @@
         
         .location-status {
             font-size: 10px;
-            color: var(--text-muted);
+            color: #999;
             margin-top: 4px;
             display: flex;
             align-items: center;
             gap: 4px;
             min-height: 18px;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
-        .location-status.success { color: var(--success); }
-        .location-status.error { color: var(--error); }
-        .location-status.loading { color: var(--info); }
+        .location-status.success { color: #059669; }
+        .location-status.error { color: #dc2626; }
+        .location-status.loading { color: #3b82f6; }
 
         .input-group input.location-filled,
         .input-group textarea.location-filled {
-            border-color: var(--success) !important;
+            border-color: #059669 !important;
             background: #f0fdf4 !important;
         }
 
@@ -276,13 +254,13 @@
             transform: translateY(-50%);
             color: #bbb;
             font-size: 15px;
-            transition: color var(--transition-fast);
+            transition: color 0.2s ease;
             pointer-events: none;
         }
         
         .input-group input:focus ~ i,
         .input-group textarea:focus ~ i {
-            color: var(--accent);
+            color: #c9a96e;
         }
         
         .input-group input,
@@ -290,14 +268,14 @@
         .input-group select {
             width: 100%;
             padding: 14px 14px 14px 44px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
+            border: 1.5px solid #e5e5e5;
+            border-radius: 12px;
             font-size: 14px;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
             background: #fafafa;
             outline: none;
-            transition: all var(--transition-fast);
-            color: var(--primary);
+            transition: all 0.2s ease;
+            color: #1a1a1a;
         }
         
         @media (min-width: 640px) {
@@ -312,8 +290,8 @@
         .input-group input:focus,
         .input-group textarea:focus,
         .input-group select:focus {
-            border-color: var(--accent);
-            background: var(--white);
+            border-color: #c9a96e;
+            background: #ffffff;
             box-shadow: 0 0 0 4px rgba(201,169,110,0.08);
         }
         
@@ -361,19 +339,19 @@
         }
 
         .input-error {
-            border-color: var(--error) !important;
+            border-color: #dc2626 !important;
             background: #fef2f2 !important;
         }
         
         .error-message {
             font-size: 11px;
-            color: var(--error);
+            color: #dc2626;
             margin-top: 6px;
             font-weight: 500;
             display: flex;
             align-items: center;
             gap: 4px;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         .error-message i { font-size: 10px; }
@@ -381,21 +359,21 @@
         .submit-btn {
             width: 100%;
             padding: 15px;
-            background: var(--primary);
-            color: var(--white);
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.2px;
             cursor: pointer;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all var(--transition-fast);
+            transition: all 0.2s ease;
             margin-top: 22px;
         }
         
@@ -404,7 +382,7 @@
         }
         
         .submit-btn:hover {
-            background: var(--accent);
+            background: #c9a96e;
             box-shadow: 0 10px 28px rgba(201,169,110,0.35);
             transform: translateY(-1px);
         }
@@ -418,13 +396,13 @@
 
         .outline-btn {
             background: transparent !important;
-            color: var(--primary) !important;
-            border: 2px solid var(--primary) !important;
+            color: #1a1a1a !important;
+            border: 2px solid #1a1a1a !important;
         }
         
         .outline-btn:hover {
-            border-color: var(--accent) !important;
-            color: var(--accent) !important;
+            border-color: #c9a96e !important;
+            color: #c9a96e !important;
             background: transparent !important;
         }
 
@@ -437,7 +415,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             position: relative;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         .divider::before,
@@ -453,27 +431,11 @@
         .divider::before { left: 0; }
         .divider::after { right: 0; }
 
-        .home-link {
-            display: block;
-            text-align: center;
-            margin-top: 18px;
-            font-size: 12px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color var(--transition-fast);
-            padding: 8px;
-            font-family: var(--font-body, 'Inter', sans-serif);
-        }
-        
-        .home-link:hover { color: var(--primary); }
-        .home-link i { margin-right: 5px; }
-
         .benefits {
             margin-top: 24px;
             padding: 16px;
             background: #fafafa;
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
             border: 1px solid #f0f0f0;
         }
         
@@ -486,12 +448,12 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.2px;
-            color: var(--accent);
+            color: #c9a96e;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: var(--font-heading, 'Inter', sans-serif);
+            font-family: var(--font-heading);
         }
         
         .benefits ul {
@@ -503,12 +465,12 @@
         
         .benefits ul li {
             font-size: 12px;
-            color: var(--text-light);
+            color: #666;
             display: flex;
             align-items: center;
             gap: 8px;
             font-weight: 500;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         @media (min-width: 640px) {
@@ -516,7 +478,7 @@
         }
         
         .benefits ul li i {
-            color: var(--success);
+            color: #059669;
             font-size: 12px;
             flex-shrink: 0;
         }
@@ -527,15 +489,15 @@
             gap: 10px;
             margin-top: 16px;
             font-size: 12px;
-            color: var(--text-light);
+            color: #666;
             font-weight: 500;
             line-height: 1.4;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         .terms-check input[type="checkbox"] {
             margin-top: 2px;
-            accent-color: var(--primary);
+            accent-color: #1a1a1a;
             width: 18px;
             height: 18px;
             flex-shrink: 0;
@@ -543,13 +505,13 @@
         }
         
         .terms-check a {
-            color: var(--accent);
+            color: #c9a96e;
             font-weight: 700;
             text-decoration: none;
         }
         
         .terms-check a:hover {
-            color: var(--primary);
+            color: #1a1a1a;
             text-decoration: underline;
         }
 
@@ -566,9 +528,9 @@
         #toast.show { transform: translateX(0); }
         
         #toast .toast-inner {
-            background: var(--white);
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-lg);
+            background: #ffffff;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border-radius: 16px;
             padding: 14px 16px;
             display: flex;
             align-items: center;
@@ -592,15 +554,15 @@
             flex-shrink: 0;
         }
         
-        .toast-success { background: #ecfdf5; color: var(--success); }
-        .toast-error { background: #fef2f2; color: var(--error); }
+        .toast-success { background: #ecfdf5; color: #059669; }
+        .toast-error { background: #fef2f2; color: #dc2626; }
         
         #toast .toast-text {
             font-size: 13px;
             font-weight: 600;
             flex-grow: 1;
             line-height: 1.4;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         #toast .toast-close {
@@ -612,11 +574,11 @@
             flex-shrink: 0;
             padding: 4px;
             border-radius: 50%;
-            transition: all var(--transition-fast);
+            transition: all 0.2s ease;
         }
         
         #toast .toast-close:hover {
-            color: var(--primary);
+            color: #1a1a1a;
             background: rgba(0,0,0,0.05);
         }
 
@@ -645,7 +607,7 @@
             width: 48px;
             height: 48px;
             border: 3px solid #e5e5e5;
-            border-top-color: var(--primary);
+            border-top-color: #1a1a1a;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -661,7 +623,7 @@
             letter-spacing: 4px;
             font-size: 12px;
             color: rgba(26,26,26,0.5);
-            font-family: var(--font-heading, 'Inter', sans-serif);
+            font-family: var(--font-heading);
         }
 
         .location-modal-overlay {
@@ -685,12 +647,12 @@
         }
         
         .location-modal {
-            background: var(--white);
-            border-radius: var(--radius-xl);
+            background: #ffffff;
+            border-radius: 24px;
             padding: 24px 20px;
             max-width: 400px;
             width: 100%;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
             transform: translateY(20px);
             transition: transform 0.3s ease;
             max-height: 90vh;
@@ -702,23 +664,23 @@
         }
         
         .location-modal h3 {
-            font-family: var(--font-heading, 'Playfair Display', serif);
+            font-family: var(--font-heading);
             font-size: 18px;
-            font-weight: 900;
+            font-weight: 800;
             margin-bottom: 8px;
-            color: var(--primary);
+            color: #1a1a1a;
         }
         
         .location-modal p {
             font-size: 12px;
-            color: var(--text-light);
+            color: #666;
             margin-bottom: 16px;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         .location-modal .location-preview {
             background: #f8fafc;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             padding: 14px;
             margin-bottom: 18px;
             border: 1px solid #e2e8f0;
@@ -730,7 +692,7 @@
             padding: 6px 0;
             font-size: 12px;
             border-bottom: 1px solid #f1f5f9;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: var(--font-body);
         }
         
         .location-modal .location-preview .preview-item:last-child {
@@ -739,12 +701,12 @@
         
         .location-modal .location-preview .preview-label {
             font-weight: 600;
-            color: var(--text-light);
+            color: #666;
             min-width: 70px;
         }
         
         .location-modal .location-preview .preview-value {
-            color: var(--primary);
+            color: #1a1a1a;
             text-align: right;
             font-weight: 500;
             flex: 1;
@@ -759,42 +721,71 @@
         .location-modal .modal-btn {
             flex: 1;
             padding: 12px;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             cursor: pointer;
-            transition: all var(--transition-fast);
-            font-family: var(--font-body, 'Inter', sans-serif);
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
             border: none;
         }
         
         .modal-btn.confirm-btn {
-            background: var(--primary);
+            background: #1a1a1a;
             color: white;
         }
         
         .modal-btn.confirm-btn:hover {
-            background: var(--accent);
+            background: #c9a96e;
         }
         
         .modal-btn.cancel-btn {
             background: transparent;
-            color: var(--text-light);
-            border: 1.5px solid var(--border);
+            color: #666;
+            border: 1.5px solid #e5e5e5;
         }
         
         .modal-btn.cancel-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+            border-color: #1a1a1a;
+            color: #1a1a1a;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            background: #1a1a1a;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            z-index: 100;
+            font-weight: 600;
+            text-decoration: none;
+            transition: top 0.2s;
+            font-family: var(--font-body);
+        }
+        
+        .skip-link:focus { top: 16px; }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
         }
 
         .passkey-preview {
             background: linear-gradient(135deg, #1a1a1a, #333);
-            color: var(--accent);
+            color: #c9a96e;
             padding: 12px 16px;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             font-family: 'Courier New', monospace;
             font-size: 13px;
             font-weight: 700;
@@ -813,35 +804,6 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .skip-link {
-            position: absolute;
-            top: -100px;
-            left: 16px;
-            background: var(--primary);
-            color: white;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            z-index: 100;
-            font-weight: 600;
-            text-decoration: none;
-            transition: top 0.2s;
-            font-family: var(--font-body, 'Inter', sans-serif);
-        }
-        
-        .skip-link:focus { top: 16px; }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-            white-space: nowrap;
-            border: 0;
-        }
     </style>
 </head>
 <body>
@@ -858,7 +820,7 @@
     <main id="main-content">
         <div class="auth-card" role="form" aria-labelledby="signup-heading">
             <div class="logo-area">
-                <img src="https://www.jayenware.shop/logo.png" alt="JAYENWARE Logo" width="64" height="64" loading="eager">
+                <img src="/logo.png" alt="JAYENWARE Logo" width="64" height="64" loading="eager">
                 <h1 id="signup-heading">Create Account</h1>
                 <p>Join JAYENWARE for exclusive deals</p>
             </div>
@@ -1012,16 +974,12 @@
                 <h4><i class="fa-solid fa-gift"></i> Member Benefits</h4>
                 <ul>
                     <li><i class="fa-solid fa-check"></i> Faster checkout experience</li>
-                    <li><i class="fa-solid fa-check"></i> Order tracking &amp; history</li>
+                    <li><i class="fa-solid fa-check"></i> Order tracking & history</li>
                     <li><i class="fa-solid fa-check"></i> Exclusive member discounts</li>
-                    <li><i class="fa-solid fa-check"></i> Wishlist &amp; save for later</li>
+                    <li><i class="fa-solid fa-check"></i> Wishlist & save for later</li>
                     <li><i class="fa-solid fa-check"></i> Early access to new collections</li>
                 </ul>
             </div>
-
-            <a href="/" class="home-link">
-                <i class="fa-solid fa-arrow-left"></i> Back to Store
-            </a>
         </div>
     </main>
 
@@ -1071,22 +1029,47 @@
         </div>
     </div>
 
-    <!-- Load Components JS -->
-    <script src="/components.js"></script>
-    
     <script>
-        // Wait for components to load before initializing page-specific scripts
-        document.addEventListener('DOMContentLoaded', function() {
-            // Wait a bit for components.js to fully render header and footer
-            setTimeout(initSignupPage, 500);
+        // Wait for fonts.js and components.js to fully load
+        window.addEventListener('DOMContentLoaded', async function() {
+            // Ensure fonts are loaded
+            if (window.JAYENWARE_FONTS) {
+                const fontsURL = window.JAYENWARE_FONTS.googleFontsURL;
+                const link = document.createElement('link');
+                link.href = fontsURL;
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+                
+                // Apply font CSS variables
+                const root = document.documentElement;
+                const vars = window.JAYENWARE_FONTS.cssVariables;
+                for (const [key, value] of Object.entries(vars)) {
+                    root.style.setProperty(key, value);
+                }
+            }
+            
+            // Wait for components to initialize
+            if (typeof initSharedComponents === 'function') {
+                await initSharedComponents();
+            }
+            
+            // Initialize signup functionality
+            initSignupPage();
+            
+            // Hide loader
+            const loader = document.getElementById('global-loader');
+            if (loader) {
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                }, 800);
+            }
         });
-
+        
         function initSignupPage() {
             // DOM Elements
             const toast = document.getElementById('toast');
             const toastIcon = document.getElementById('toast-icon');
             const toastText = document.getElementById('toast-text');
-            const loader = document.getElementById('global-loader');
             const signupForm = document.getElementById('signup-form');
             const submitButton = document.getElementById('submit-button');
             
@@ -1133,33 +1116,27 @@
             let detectedLocationData = null;
             const API_BASE = window.location.origin;
 
-            // Hide loader
-            setTimeout(() => {
-                if (loader) loader.classList.add('hidden');
-            }, 800);
-
             // Toast Functions
             let toastTimeout;
 
             function showToast(text, type = 'success') {
-                if (!toast || !toastIcon || !toastText) {
-                    // Fallback to components.js toast
-                    if (window.showToast) {
-                        window.showToast(text, type);
-                    }
-                    return;
-                }
+                if (!toast || !toastIcon || !toastText) return;
+                
                 toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
                 toastIcon.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
                 toastText.innerText = text;
                 toast.classList.add('show');
                 clearTimeout(toastTimeout);
-                toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+                toastTimeout = setTimeout(() => {
+                    if (toast) toast.classList.remove('show');
+                }, 3500);
             }
 
             window.hideToast = function() {
-                if (toast) toast.classList.remove('show');
-                clearTimeout(toastTimeout);
+                if (toast) {
+                    toast.classList.remove('show');
+                    clearTimeout(toastTimeout);
+                }
             };
 
             function clearErrors() {
@@ -1173,11 +1150,10 @@
             }
 
             function showFieldError(inputEl, errorEl, message) {
-                if (inputEl) inputEl.classList.add('input-error');
-                if (errorEl) {
-                    errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
-                    errorEl.style.display = 'flex';
-                }
+                if (!inputEl || !errorEl) return;
+                inputEl.classList.add('input-error');
+                errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+                errorEl.style.display = 'flex';
             }
 
             function isValidEmail(email) {
@@ -1222,6 +1198,8 @@
             }
 
             function showLocationModal(locationData) {
+                if (!locationData || !locationModalOverlay) return;
+                
                 const addr = locationData.fullData;
                 if (previewCountry) previewCountry.textContent = addr.country || locationData.country || 'Not detected';
                 if (previewState) previewState.textContent = addr.state || locationData.state || 'Not detected';
@@ -1229,14 +1207,18 @@
                 if (previewRoad) previewRoad.textContent = addr.road || addr.street || 'Not detected';
                 if (previewPostal) previewPostal.textContent = addr.postcode || 'Not detected';
                 if (previewFull) previewFull.textContent = locationData.address || 'Not detected';
-                if (locationModalOverlay) locationModalOverlay.classList.add('active');
+                locationModalOverlay.classList.add('active');
             }
 
             function hideLocationModal() {
-                if (locationModalOverlay) locationModalOverlay.classList.remove('active');
+                if (locationModalOverlay) {
+                    locationModalOverlay.classList.remove('active');
+                }
             }
 
             function applyLocationToForm(locationData) {
+                if (!locationData) return;
+                
                 const addr = locationData.fullData;
                 if (countryInput) countryInput.value = addr.country || 'Bangladesh';
                 if (stateInput) stateInput.value = addr.state || '';
@@ -1397,20 +1379,7 @@
                 });
             }
 
-            async function checkSession() {
-                try {
-                    const response = await fetch(`${API_BASE}/api/auth/user`);
-                    if (response.ok) {
-                        window.location.href = '/account';
-                        return;
-                    }
-                } catch (e) {
-                    console.warn('Session check failed:', e.message);
-                }
-                if (loader) loader.classList.add('hidden');
-            }
-
-            // Handle Sign-Up with Professional Fields
+            // Handle Sign-Up
             if (signupForm) {
                 signupForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -1522,7 +1491,6 @@
                             return;
                         }
                         
-                        // Show passkey if available
                         if (result.passkey) {
                             if (passkeyText) passkeyText.textContent = result.passkey;
                             if (passkeyPreview) passkeyPreview.classList.add('show');
@@ -1565,8 +1533,7 @@
                 }
             });
 
-            checkSession();
-            console.log('✅ JAYENWARE Signup page initialized with dynamic components');
+            console.log('✅ Signup page initialized successfully');
         }
     </script>
 </body>
