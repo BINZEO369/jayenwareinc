@@ -22,7 +22,7 @@
     
     <!-- Core Scripts -->
     <script src="/js/fonts.js"></script>
-    <script src="/js/components.js" defer></script>
+    <script src="/js/components.js"></script>
     
     <style>
         :root {
@@ -66,6 +66,7 @@
             flex-direction: column;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            /* padding-top components.js থেকে auto-add হবে */
         }
 
         main {
@@ -839,9 +840,6 @@
         <p class="loader-text">JAYENWARE</p>
     </div>
 
-    <!-- Dynamic Header Placeholder -->
-    <div id="jayenware-header"></div>
-
     <!-- Main Content -->
     <main id="main-content">
         <div class="auth-card" role="form" aria-labelledby="signup-heading">
@@ -1009,9 +1007,6 @@
         </div>
     </main>
 
-    <!-- Dynamic Footer Placeholder -->
-    <div id="jayenware-footer"></div>
-
     <!-- Location Confirmation Modal -->
     <div class="location-modal-overlay" id="location-modal-overlay">
         <div class="location-modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
@@ -1050,459 +1045,485 @@
         </div>
     </div>
 
-    <div id="toast" role="alert" aria-live="polite">
-        <div class="toast-inner">
-            <div class="toast-icon" id="toast-icon"></div>
-            <span class="toast-text" id="toast-text"></span>
-            <button class="toast-close" onclick="hideToast()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-    </div>
-
     <script>
-        // DOM Elements
-        const toast = document.getElementById('toast');
-        const toastIcon = document.getElementById('toast-icon');
-        const toastText = document.getElementById('toast-text');
-        const loader = document.getElementById('global-loader');
-        const signupForm = document.getElementById('signup-form');
-        const submitButton = document.getElementById('submit-button');
-        
-        const nameInput = document.getElementById('signup-name');
-        const emailInput = document.getElementById('signup-email');
-        const phoneInput = document.getElementById('signup-phone');
-        const passwordInput = document.getElementById('signup-password');
-        const countryInput = document.getElementById('signup-country');
-        const stateInput = document.getElementById('signup-state');
-        const cityInput = document.getElementById('signup-city');
-        const postalInput = document.getElementById('signup-postal');
-        const streetInput = document.getElementById('signup-street');
-        const apartmentInput = document.getElementById('signup-apartment');
-        const termsCheckbox = document.getElementById('terms-agree');
-        
-        const detectLocationBtn = document.getElementById('detect-location-btn');
-        const locationStatus = document.getElementById('location-status');
-        const locationModalOverlay = document.getElementById('location-modal-overlay');
-        const previewCountry = document.getElementById('preview-country');
-        const previewState = document.getElementById('preview-state');
-        const previewCity = document.getElementById('preview-city');
-        const previewRoad = document.getElementById('preview-road');
-        const previewPostal = document.getElementById('preview-postal');
-        const previewFull = document.getElementById('preview-full');
-        const modalConfirm = document.getElementById('modal-confirm');
-        const modalCancel = document.getElementById('modal-cancel');
-        const passkeyPreview = document.getElementById('passkey-preview');
-        const passkeyText = document.getElementById('passkey-text');
-        
-        const errorElements = {
-            name: document.getElementById('name-error'),
-            email: document.getElementById('email-error'),
-            phone: document.getElementById('phone-error'),
-            password: document.getElementById('password-error'),
-            country: document.getElementById('country-error'),
-            state: document.getElementById('state-error'),
-            city: document.getElementById('city-error'),
-            postal: document.getElementById('postal-error'),
-            street: document.getElementById('street-error'),
-            apartment: document.getElementById('apartment-error'),
-            terms: document.getElementById('terms-error')
-        };
-
-        let detectedLocationData = null;
-        const API_BASE = window.location.origin;
-
-        // Toast Functions
-        let toastTimeout;
-
-        function showToast(text, type = 'success') {
-            toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
-            toastIcon.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
-            toastText.innerText = text;
-            toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        function hideToast() {
-            toast.classList.remove('show');
-            clearTimeout(toastTimeout);
-        }
-
-        function showLoader(ms = 1500) {
-            loader.classList.remove('hidden');
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    loader.classList.add('hidden');
-                    setTimeout(resolve, 400);
-                }, ms);
-            });
-        }
-
-        function clearErrors() {
-            Object.values(errorElements).forEach(el => {
-                el.style.display = 'none';
-                el.textContent = '';
-            });
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-        }
-
-        function showFieldError(inputEl, errorEl, message) {
-            inputEl.classList.add('input-error');
-            errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
-            errorEl.style.display = 'flex';
-        }
-
-        function isValidEmail(email) {
-            return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
-        }
-
-        function isValidPhone(phone) {
-            const cleaned = phone.replace(/[^\d+]/g, '');
-            return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned);
-        }
-
-        function markLocationFilled() {
-            [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
-                el.classList.add('location-filled');
-            });
-        }
-
-        function clearLocationFilled() {
-            [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
-                el.classList.remove('location-filled');
-            });
-        }
-
-        function buildFullAddress(addressData) {
-            const parts = [];
-            if (addressData.house_number) parts.push(addressData.house_number);
-            if (addressData.building) parts.push(addressData.building);
-            if (addressData.road) parts.push(addressData.road);
-            if (addressData.street) parts.push(addressData.street);
-            if (addressData.neighbourhood) parts.push(addressData.neighbourhood);
-            if (addressData.suburb) parts.push(addressData.suburb);
-            if (addressData.village) parts.push(addressData.village);
-            if (addressData.town) parts.push(addressData.town);
-            if (addressData.city) parts.push(addressData.city);
-            if (addressData.state_district) parts.push(addressData.state_district);
-            if (addressData.state) parts.push(addressData.state);
-            if (addressData.postcode) parts.push('Postal: ' + addressData.postcode);
-            if (addressData.country) parts.push(addressData.country);
+        // Wait for components.js to fully load before running page-specific scripts
+        window.addEventListener('load', function() {
+            // DOM Elements
+            const loader = document.getElementById('global-loader');
+            const signupForm = document.getElementById('signup-form');
+            const submitButton = document.getElementById('submit-button');
             
-            const uniqueParts = [...new Set(parts)];
-            return uniqueParts.join(', ') || 'Address detected via GPS';
-        }
-
-        function showLocationModal(locationData) {
-            const addr = locationData.fullData;
-            previewCountry.textContent = addr.country || locationData.country || 'Not detected';
-            previewState.textContent = addr.state || locationData.state || 'Not detected';
-            previewCity.textContent = addr.city || locationData.city || addr.town || 'Not detected';
-            previewRoad.textContent = addr.road || addr.street || 'Not detected';
-            previewPostal.textContent = addr.postcode || 'Not detected';
-            previewFull.textContent = locationData.address || 'Not detected';
-            locationModalOverlay.classList.add('active');
-        }
-
-        function hideLocationModal() {
-            locationModalOverlay.classList.remove('active');
-        }
-
-        function applyLocationToForm(locationData) {
-            const addr = locationData.fullData;
-            countryInput.value = addr.country || 'Bangladesh';
-            stateInput.value = addr.state || '';
-            cityInput.value = addr.city || addr.town || addr.state_district || '';
-            postalInput.value = addr.postcode || '';
-            streetInput.value = addr.road || addr.street || '';
+            const nameInput = document.getElementById('signup-name');
+            const emailInput = document.getElementById('signup-email');
+            const phoneInput = document.getElementById('signup-phone');
+            const passwordInput = document.getElementById('signup-password');
+            const countryInput = document.getElementById('signup-country');
+            const stateInput = document.getElementById('signup-state');
+            const cityInput = document.getElementById('signup-city');
+            const postalInput = document.getElementById('signup-postal');
+            const streetInput = document.getElementById('signup-street');
+            const apartmentInput = document.getElementById('signup-apartment');
+            const termsCheckbox = document.getElementById('terms-agree');
             
-            markLocationFilled();
-            locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location set successfully';
-            locationStatus.className = 'location-status success';
-            showToast('Location applied successfully!', 'success');
+            const detectLocationBtn = document.getElementById('detect-location-btn');
+            const locationStatus = document.getElementById('location-status');
+            const locationModalOverlay = document.getElementById('location-modal-overlay');
+            const previewCountry = document.getElementById('preview-country');
+            const previewState = document.getElementById('preview-state');
+            const previewCity = document.getElementById('preview-city');
+            const previewRoad = document.getElementById('preview-road');
+            const previewPostal = document.getElementById('preview-postal');
+            const previewFull = document.getElementById('preview-full');
+            const modalConfirm = document.getElementById('modal-confirm');
+            const modalCancel = document.getElementById('modal-cancel');
+            const passkeyPreview = document.getElementById('passkey-preview');
+            const passkeyText = document.getElementById('passkey-text');
             
-            setTimeout(() => {
-                locationStatus.textContent = '';
-                locationStatus.className = 'location-status';
-            }, 5000);
-        }
+            const errorElements = {
+                name: document.getElementById('name-error'),
+                email: document.getElementById('email-error'),
+                phone: document.getElementById('phone-error'),
+                password: document.getElementById('password-error'),
+                country: document.getElementById('country-error'),
+                state: document.getElementById('state-error'),
+                city: document.getElementById('city-error'),
+                postal: document.getElementById('postal-error'),
+                street: document.getElementById('street-error'),
+                apartment: document.getElementById('apartment-error'),
+                terms: document.getElementById('terms-error')
+            };
 
-        function enableManualEdit() {
-            clearLocationFilled();
-            locationStatus.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit your address details';
-            locationStatus.className = 'location-status';
-        }
+            let detectedLocationData = null;
+            const API_BASE = window.location.origin;
 
-        async function detectUserLocation() {
-            if (!navigator.geolocation) {
-                showToast('Your browser does not support location detection', 'error');
-                return null;
-            }
-
-            detectLocationBtn.disabled = true;
-            detectLocationBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
-            locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location permission...';
-            locationStatus.className = 'location-status loading';
-
-            try {
-                const position = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 0
+            function showLoader(ms = 1500) {
+                if (loader) {
+                    loader.classList.remove('hidden');
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            loader.classList.add('hidden');
+                            setTimeout(resolve, 400);
+                        }, ms);
                     });
+                }
+                return Promise.resolve();
+            }
+
+            function clearErrors() {
+                Object.values(errorElements).forEach(el => {
+                    if (el) {
+                        el.style.display = 'none';
+                        el.textContent = '';
+                    }
                 });
+                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            }
 
-                const { latitude, longitude } = position.coords;
-                locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address details...';
-                
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
-                    { headers: { 'User-Agent': 'JAYENWARE_Store_SignUp/1.0' } }
-                );
-
-                if (!response.ok) throw new Error('Failed to fetch address');
-
-                const data = await response.json();
-                const address = data.address || {};
-                
-                let finalAddress = buildFullAddress(address);
-                if (!finalAddress || finalAddress.length < 10) {
-                    finalAddress = data.display_name || `GPS: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+            function showFieldError(inputEl, errorEl, message) {
+                if (inputEl) inputEl.classList.add('input-error');
+                if (errorEl) {
+                    errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+                    errorEl.style.display = 'flex';
                 }
-                
-                finalAddress = finalAddress.replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim();
-                
-                const locationData = {
-                    country: address.country || 'Bangladesh',
-                    state: address.state || '',
-                    city: address.city || address.town || address.state_district || '',
-                    postal: address.postcode || '',
-                    road: address.road || address.street || '',
-                    address: finalAddress,
-                    fullData: address,
-                    coordinates: { latitude, longitude }
-                };
+            }
 
-                detectedLocationData = locationData;
-                showLocationModal(locationData);
-                
-                detectLocationBtn.disabled = false;
-                detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
-                locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Address detected - please confirm';
-                locationStatus.className = 'location-status success';
-                
-                return locationData;
+            function isValidEmail(email) {
+                return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+            }
 
-            } catch (error) {
-                let errorMessage = 'Could not detect location.';
-                if (error.code === 1) errorMessage = 'Location permission denied.';
-                else if (error.code === 2) errorMessage = 'Location unavailable.';
-                else if (error.code === 3) errorMessage = 'Location request timed out.';
-                
-                showToast(errorMessage, 'error');
-                enableManualEdit();
-                detectLocationBtn.disabled = false;
-                detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
-                return null;
+            function isValidPhone(phone) {
+                const cleaned = phone.replace(/[^\d+]/g, '');
+                return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned);
             }
-        }
 
-        // Event Listeners
-        detectLocationBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await detectUserLocation();
-        });
-
-        modalConfirm.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (detectedLocationData) {
-                applyLocationToForm(detectedLocationData);
-                hideLocationModal();
-            }
-        });
-
-        modalCancel.addEventListener('click', (e) => {
-            e.preventDefault();
-            hideLocationModal();
-            enableManualEdit();
-            if (detectedLocationData) {
-                const addr = detectedLocationData.fullData;
-                countryInput.value = addr.country || 'Bangladesh';
-                stateInput.value = addr.state || '';
-                cityInput.value = addr.city || '';
-                postalInput.value = addr.postcode || '';
-                streetInput.value = addr.road || '';
-            }
-        });
-
-        locationModalOverlay.addEventListener('click', (e) => {
-            if (e.target === locationModalOverlay) {
-                hideLocationModal();
-                enableManualEdit();
-            }
-        });
-
-        async function checkSession() {
-            try {
-                const response = await fetch(`${API_BASE}/api/auth/user`);
-                if (response.ok) {
-                    window.location.href = '/account';
-                    return;
-                }
-            } catch (e) {
-                console.warn('Session check failed:', e.message);
-            }
-            loader.classList.add('hidden');
-        }
-
-        // Handle Sign-Up with Professional Fields
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearErrors();
-            
-            const name = nameInput.value.trim();
-            const email = emailInput.value.trim();
-            const phone = phoneInput.value.trim();
-            const password = passwordInput.value;
-            const country = countryInput.value.trim();
-            const state_province = stateInput.value.trim();
-            const city = cityInput.value.trim();
-            const postal_code = postalInput.value.trim();
-            const street_address = streetInput.value.trim();
-            const apartment_house = apartmentInput.value.trim();
-            const terms = termsCheckbox.checked;
-            
-            let hasError = false;
-            
-            if (!name || name.length < 3) {
-                showFieldError(nameInput, errorElements.name, 'Full name is required (minimum 3 characters)');
-                hasError = true;
-            }
-            
-            if (!email) {
-                showFieldError(emailInput, errorElements.email, 'Email address is required');
-                hasError = true;
-            } else if (!isValidEmail(email)) {
-                showFieldError(emailInput, errorElements.email, 'Please enter a valid email address');
-                hasError = true;
-            }
-            
-            if (!phone) {
-                showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
-                hasError = true;
-            } else if (!isValidPhone(phone)) {
-                showFieldError(phoneInput, errorElements.phone, 'Enter valid phone (01XXXXXXXXX or +8801XXXXXXXXX)');
-                hasError = true;
-            }
-            
-            if (!password) {
-                showFieldError(passwordInput, errorElements.password, 'Password is required');
-                hasError = true;
-            } else if (password.length < 8) {
-                showFieldError(passwordInput, errorElements.password, 'Password must be at least 8 characters');
-                hasError = true;
-            }
-            
-            if (!country) {
-                showFieldError(countryInput, errorElements.country, 'Country is required');
-                hasError = true;
-            }
-            
-            if (!city) {
-                showFieldError(cityInput, errorElements.city, 'City is required');
-                hasError = true;
-            }
-            
-            if (!street_address) {
-                showFieldError(streetInput, errorElements.street, 'Street address is required');
-                hasError = true;
-            }
-            
-            if (!terms) {
-                errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms & Privacy Policy';
-                errorElements.terms.style.display = 'flex';
-                hasError = true;
-            }
-            
-            if (hasError) {
-                const firstError = document.querySelector('.input-error');
-                if (firstError) firstError.focus();
-                return;
-            }
-            
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
-            await showLoader(2000);
-            
-            try {
-                const response = await fetch(`${API_BASE}/api/auth/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                        name,
-                        phone: phone.replace(/[-\s()]/g, ''),
-                        country,
-                        state_province,
-                        city,
-                        postal_code,
-                        street_address,
-                        apartment_house
-                    })
+            function markLocationFilled() {
+                [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
+                    if (el) el.classList.add('location-filled');
                 });
+            }
+
+            function clearLocationFilled() {
+                [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
+                    if (el) el.classList.remove('location-filled');
+                });
+            }
+
+            function buildFullAddress(addressData) {
+                const parts = [];
+                if (addressData.house_number) parts.push(addressData.house_number);
+                if (addressData.building) parts.push(addressData.building);
+                if (addressData.road) parts.push(addressData.road);
+                if (addressData.street) parts.push(addressData.street);
+                if (addressData.neighbourhood) parts.push(addressData.neighbourhood);
+                if (addressData.suburb) parts.push(addressData.suburb);
+                if (addressData.village) parts.push(addressData.village);
+                if (addressData.town) parts.push(addressData.town);
+                if (addressData.city) parts.push(addressData.city);
+                if (addressData.state_district) parts.push(addressData.state_district);
+                if (addressData.state) parts.push(addressData.state);
+                if (addressData.postcode) parts.push('Postal: ' + addressData.postcode);
+                if (addressData.country) parts.push(addressData.country);
                 
-                const result = await response.json();
+                const uniqueParts = [...new Set(parts)];
+                return uniqueParts.join(', ') || 'Address detected via GPS';
+            }
+
+            function showLocationModal(locationData) {
+                const addr = locationData.fullData;
+                if (previewCountry) previewCountry.textContent = addr.country || locationData.country || 'Not detected';
+                if (previewState) previewState.textContent = addr.state || locationData.state || 'Not detected';
+                if (previewCity) previewCity.textContent = addr.city || locationData.city || addr.town || 'Not detected';
+                if (previewRoad) previewRoad.textContent = addr.road || addr.street || 'Not detected';
+                if (previewPostal) previewPostal.textContent = addr.postcode || 'Not detected';
+                if (previewFull) previewFull.textContent = locationData.address || 'Not detected';
+                if (locationModalOverlay) locationModalOverlay.classList.add('active');
+            }
+
+            function hideLocationModal() {
+                if (locationModalOverlay) locationModalOverlay.classList.remove('active');
+            }
+
+            function applyLocationToForm(locationData) {
+                const addr = locationData.fullData;
+                if (countryInput) countryInput.value = addr.country || 'Bangladesh';
+                if (stateInput) stateInput.value = addr.state || '';
+                if (cityInput) cityInput.value = addr.city || addr.town || addr.state_district || '';
+                if (postalInput) postalInput.value = addr.postcode || '';
+                if (streetInput) streetInput.value = addr.road || addr.street || '';
                 
-                if (!response.ok) {
-                    showToast(result.error || 'Registration failed', 'error');
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
-                    return;
+                markLocationFilled();
+                if (locationStatus) {
+                    locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location set successfully';
+                    locationStatus.className = 'location-status success';
                 }
-                
-                // Show passkey if available
-                if (result.passkey) {
-                    passkeyText.textContent = result.passkey;
-                    passkeyPreview.classList.add('show');
-                    showToast('Account created! Your JBYN Passkey is ready.', 'success');
-                } else {
-                    showToast('Account created successfully! Please verify your email.', 'success');
+                if (window.showToast) {
+                    window.showToast('Location applied successfully!', 'success');
                 }
                 
                 setTimeout(() => {
-                    window.location.href = '/account';
-                }, 2500);
-                
-            } catch (err) {
-                console.error('Signup error:', err);
-                showToast('Network error. Please check your connection and try again.', 'error');
-                submitButton.disabled = false;
-                submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+                    if (locationStatus) {
+                        locationStatus.textContent = '';
+                        locationStatus.className = 'location-status';
+                    }
+                }, 5000);
             }
-        });
 
-        // Phone formatting
-        phoneInput.addEventListener('input', function() {
-            let value = this.value.replace(/[^\d+]/g, '');
-            if (!value.startsWith('+')) {
-                if (value.length > 11) value = value.slice(0, 11);
-                if (value.length >= 4) value = value.slice(0, 3) + '-' + value.slice(3);
-                if (value.length >= 9) value = value.slice(0, 8) + '-' + value.slice(8);
+            function enableManualEdit() {
+                clearLocationFilled();
+                if (locationStatus) {
+                    locationStatus.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit your address details';
+                    locationStatus.className = 'location-status';
+                }
             }
-            this.value = value;
-        });
 
-        document.addEventListener('click', (e) => {
-            if (toast.classList.contains('show') && !toast.contains(e.target)) {
-                hideToast();
+            async function detectUserLocation() {
+                if (!navigator.geolocation) {
+                    if (window.showToast) window.showToast('Your browser does not support location detection', 'error');
+                    return null;
+                }
+
+                if (detectLocationBtn) {
+                    detectLocationBtn.disabled = true;
+                    detectLocationBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
+                }
+                if (locationStatus) {
+                    locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location permission...';
+                    locationStatus.className = 'location-status loading';
+                }
+
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 15000,
+                            maximumAge: 0
+                        });
+                    });
+
+                    const { latitude, longitude } = position.coords;
+                    if (locationStatus) {
+                        locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address details...';
+                    }
+                    
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
+                        { headers: { 'User-Agent': 'JAYENWARE_Store_SignUp/1.0' } }
+                    );
+
+                    if (!response.ok) throw new Error('Failed to fetch address');
+
+                    const data = await response.json();
+                    const address = data.address || {};
+                    
+                    let finalAddress = buildFullAddress(address);
+                    if (!finalAddress || finalAddress.length < 10) {
+                        finalAddress = data.display_name || `GPS: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+                    }
+                    
+                    finalAddress = finalAddress.replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim();
+                    
+                    const locationData = {
+                        country: address.country || 'Bangladesh',
+                        state: address.state || '',
+                        city: address.city || address.town || address.state_district || '',
+                        postal: address.postcode || '',
+                        road: address.road || address.street || '',
+                        address: finalAddress,
+                        fullData: address,
+                        coordinates: { latitude, longitude }
+                    };
+
+                    detectedLocationData = locationData;
+                    showLocationModal(locationData);
+                    
+                    if (detectLocationBtn) {
+                        detectLocationBtn.disabled = false;
+                        detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
+                    }
+                    if (locationStatus) {
+                        locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Address detected - please confirm';
+                        locationStatus.className = 'location-status success';
+                    }
+                    
+                    return locationData;
+
+                } catch (error) {
+                    let errorMessage = 'Could not detect location.';
+                    if (error.code === 1) errorMessage = 'Location permission denied.';
+                    else if (error.code === 2) errorMessage = 'Location unavailable.';
+                    else if (error.code === 3) errorMessage = 'Location request timed out.';
+                    
+                    if (window.showToast) window.showToast(errorMessage, 'error');
+                    enableManualEdit();
+                    if (detectLocationBtn) {
+                        detectLocationBtn.disabled = false;
+                        detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
+                    }
+                    return null;
+                }
             }
-        });
 
-        checkSession();
-        console.log('✅ JAYENWARE Signup Page Ready');
-        console.log('📦 Header & Footer loaded dynamically from components.js');
-        console.log('🎨 Fonts loaded dynamically from fonts.js');
+            // Event Listeners
+            if (detectLocationBtn) {
+                detectLocationBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    await detectUserLocation();
+                });
+            }
+
+            if (modalConfirm) {
+                modalConfirm.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (detectedLocationData) {
+                        applyLocationToForm(detectedLocationData);
+                        hideLocationModal();
+                    }
+                });
+            }
+
+            if (modalCancel) {
+                modalCancel.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    hideLocationModal();
+                    enableManualEdit();
+                    if (detectedLocationData) {
+                        const addr = detectedLocationData.fullData;
+                        if (countryInput) countryInput.value = addr.country || 'Bangladesh';
+                        if (stateInput) stateInput.value = addr.state || '';
+                        if (cityInput) cityInput.value = addr.city || '';
+                        if (postalInput) postalInput.value = addr.postcode || '';
+                        if (streetInput) streetInput.value = addr.road || '';
+                    }
+                });
+            }
+
+            if (locationModalOverlay) {
+                locationModalOverlay.addEventListener('click', (e) => {
+                    if (e.target === locationModalOverlay) {
+                        hideLocationModal();
+                        enableManualEdit();
+                    }
+                });
+            }
+
+            // Handle Sign-Up
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    clearErrors();
+                    
+                    const name = nameInput ? nameInput.value.trim() : '';
+                    const email = emailInput ? emailInput.value.trim() : '';
+                    const phone = phoneInput ? phoneInput.value.trim() : '';
+                    const password = passwordInput ? passwordInput.value : '';
+                    const country = countryInput ? countryInput.value.trim() : '';
+                    const state_province = stateInput ? stateInput.value.trim() : '';
+                    const city = cityInput ? cityInput.value.trim() : '';
+                    const postal_code = postalInput ? postalInput.value.trim() : '';
+                    const street_address = streetInput ? streetInput.value.trim() : '';
+                    const apartment_house = apartmentInput ? apartmentInput.value.trim() : '';
+                    const terms = termsCheckbox ? termsCheckbox.checked : false;
+                    
+                    let hasError = false;
+                    
+                    if (!name || name.length < 3) {
+                        showFieldError(nameInput, errorElements.name, 'Full name is required (minimum 3 characters)');
+                        hasError = true;
+                    }
+                    
+                    if (!email) {
+                        showFieldError(emailInput, errorElements.email, 'Email address is required');
+                        hasError = true;
+                    } else if (!isValidEmail(email)) {
+                        showFieldError(emailInput, errorElements.email, 'Please enter a valid email address');
+                        hasError = true;
+                    }
+                    
+                    if (!phone) {
+                        showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
+                        hasError = true;
+                    } else if (!isValidPhone(phone)) {
+                        showFieldError(phoneInput, errorElements.phone, 'Enter valid phone (01XXXXXXXXX or +8801XXXXXXXXX)');
+                        hasError = true;
+                    }
+                    
+                    if (!password) {
+                        showFieldError(passwordInput, errorElements.password, 'Password is required');
+                        hasError = true;
+                    } else if (password.length < 8) {
+                        showFieldError(passwordInput, errorElements.password, 'Password must be at least 8 characters');
+                        hasError = true;
+                    }
+                    
+                    if (!country) {
+                        showFieldError(countryInput, errorElements.country, 'Country is required');
+                        hasError = true;
+                    }
+                    
+                    if (!city) {
+                        showFieldError(cityInput, errorElements.city, 'City is required');
+                        hasError = true;
+                    }
+                    
+                    if (!street_address) {
+                        showFieldError(streetInput, errorElements.street, 'Street address is required');
+                        hasError = true;
+                    }
+                    
+                    if (!terms) {
+                        if (errorElements.terms) {
+                            errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms & Privacy Policy';
+                            errorElements.terms.style.display = 'flex';
+                        }
+                        hasError = true;
+                    }
+                    
+                    if (hasError) {
+                        const firstError = document.querySelector('.input-error');
+                        if (firstError) firstError.focus();
+                        return;
+                    }
+                    
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+                    }
+                    await showLoader(2000);
+                    
+                    try {
+                        const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                email,
+                                password,
+                                name,
+                                phone: phone.replace(/[-\s()]/g, ''),
+                                country,
+                                state_province,
+                                city,
+                                postal_code,
+                                street_address,
+                                apartment_house
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (!response.ok) {
+                            if (window.showToast) window.showToast(result.error || 'Registration failed', 'error');
+                            if (submitButton) {
+                                submitButton.disabled = false;
+                                submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+                            }
+                            return;
+                        }
+                        
+                        if (result.passkey) {
+                            if (passkeyText) passkeyText.textContent = result.passkey;
+                            if (passkeyPreview) passkeyPreview.classList.add('show');
+                            if (window.showToast) window.showToast('Account created! Your JBYN Passkey is ready.', 'success');
+                        } else {
+                            if (window.showToast) window.showToast('Account created successfully! Please verify your email.', 'success');
+                        }
+                        
+                        setTimeout(() => {
+                            window.location.href = '/account';
+                        }, 2500);
+                        
+                    } catch (err) {
+                        console.error('Signup error:', err);
+                        if (window.showToast) window.showToast('Network error. Please check your connection and try again.', 'error');
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+                        }
+                    }
+                });
+            }
+
+            // Phone formatting
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    let value = this.value.replace(/[^\d+]/g, '');
+                    if (!value.startsWith('+')) {
+                        if (value.length > 11) value = value.slice(0, 11);
+                        if (value.length >= 4) value = value.slice(0, 3) + '-' + value.slice(3);
+                        if (value.length >= 9) value = value.slice(0, 8) + '-' + value.slice(8);
+                    }
+                    this.value = value;
+                });
+            }
+
+            // Session check
+            async function checkSession() {
+                try {
+                    const response = await fetch(`${API_BASE}/api/auth/user`);
+                    if (response.ok) {
+                        window.location.href = '/account';
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('Session check failed:', e.message);
+                }
+                if (loader) loader.classList.add('hidden');
+            }
+
+            checkSession();
+            
+            // Update auth area in nav
+            if (window.userSession && document.getElementById('auth-nav-area')) {
+                document.getElementById('auth-nav-area').innerHTML = `
+                    <a href="/account" class="flex items-center gap-2 text-primary no-underline">
+                        <i class="fa-solid fa-user-circle text-xl"></i>
+                        <span class="text-sm font-bold" style="font-family: var(--font-body);">${window.userSession.name || 'Account'}</span>
+                    </a>`;
+            }
+            
+            console.log('✅ JAYENWARE Signup Page Ready');
+            console.log('📦 Header & Footer loaded via components.js');
+            console.log('🎨 Fonts loaded via fonts.js');
+        });
     </script>
 </body>
 </html>
