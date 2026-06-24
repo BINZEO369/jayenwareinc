@@ -18,16 +18,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
-    <!-- Dynamic Font System -->
     <script src="/fonts.js"></script>
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -69,7 +65,7 @@
         }
         
         body {
-            background-color: #ffffff;
+            background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 50%, #f0f0f2 100%);
             color: #1d1d1f;
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -78,6 +74,7 @@
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         main {
@@ -87,6 +84,7 @@
             justify-content: center;
             padding: 100px 16px 48px;
             width: 100%;
+            perspective: 1000px;
         }
         
         @media (min-width: 640px) { 
@@ -97,242 +95,325 @@
             main { padding: 140px 32px 80px; } 
         }
 
-        /* Auth Card - Apple-style Design */
+        /* Cinematic Card Container */
+        .cinematic-container {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+        
+        .progress-step {
+            flex: 1;
+            height: 3px;
+            background: #e5e5ea;
+            border-radius: 2px;
+            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+        }
+        
+        .progress-step.completed {
+            background: #007aff;
+            box-shadow: 0 0 12px rgba(0,122,255,0.3);
+        }
+        
+        .progress-step.active {
+            background: #007aff;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Auth Card */
         .auth-card {
             background: #ffffff;
-            width: 100%;
-            max-width: 480px;
             border-radius: 24px;
-            padding: 32px 24px;
+            padding: 40px 28px;
             box-shadow: 0 2px 20px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
             border: 1px solid rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
         
         @media (min-width: 640px) {
             .auth-card { 
-                padding: 40px 32px; 
+                padding: 48px 36px; 
                 border-radius: 28px;
+                min-height: 460px;
             }
         }
         
         @media (min-width: 1024px) {
             .auth-card { 
-                padding: 48px 40px; 
+                padding: 56px 44px; 
                 border-radius: 32px;
+                min-height: 500px;
             }
         }
 
-        /* Logo Area */
-        .logo-area {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-        
-        .logo-area img {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            margin: 0 auto 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        
-        @media (min-width: 640px) {
-            .logo-area img { width: 56px; height: 56px; }
-        }
-        
-        .logo-area h1 {
-            font-family: 'Manrope', sans-serif;
-            font-weight: 800;
-            font-size: 24px;
-            letter-spacing: -0.3px;
-            margin-bottom: 4px;
-            color: #1d1d1f;
-        }
-        
-        .logo-area p {
-            font-size: 13px;
-            color: #86868b;
-            font-weight: 400;
-        }
-        
-        @media (min-width: 640px) {
-            .logo-area h1 { font-size: 28px; }
-            .logo-area p { font-size: 14px; }
-        }
-
-        /* Tab Buttons */
-        .tab-buttons {
-            display: flex;
-            gap: 0;
-            background: #f5f5f7;
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 24px;
-        }
-        
-        .tab-buttons a {
+        /* Step Container */
+        .step-container {
             flex: 1;
-            text-align: center;
-            padding: 10px 8px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            color: #86868b;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        @media (min-width: 640px) {
-            .tab-buttons a { font-size: 13px; padding: 11px 12px; }
-        }
-        
-        .tab-buttons a.active {
-            background: #ffffff;
-            color: #1d1d1f;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-            font-weight: 700;
-        }
-        
-        .tab-buttons a.inactive:hover {
-            color: #1d1d1f;
-        }
-
-        /* Section Title */
-        .section-title {
-            font-size: 10px;
-            font-weight: 700;
-            color: #86868b;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin: 24px 0 12px;
-            padding-top: 16px;
-            border-top: 1px solid #f0f0f0;
             display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideInRight 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
         
-        .section-title:first-of-type {
-            margin-top: 0;
-            padding-top: 0;
-            border-top: none;
+        .step-container.exit-left {
+            animation: slideOutLeft 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
         }
         
-        @media (min-width: 640px) {
-            .section-title { font-size: 11px; }
+        .step-container.exit-right {
+            animation: slideOutRight 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
         }
 
-        /* Form Groups */
-        .form-group { margin-bottom: 14px; }
-        
-        @media (min-width: 640px) {
-            .form-group { margin-bottom: 16px; }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(60px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
-        .input-group { position: relative; }
-        
-        .input-group i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #86868b;
-            font-size: 14px;
-            transition: color 0.2s ease;
-            pointer-events: none;
-            z-index: 1;
+        @keyframes slideOutLeft {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-60px); }
         }
         
-        .input-group input:focus ~ i,
-        .input-group textarea:focus ~ i {
-            color: #007aff;
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(60px); }
         }
-        
-        .input-group input,
-        .input-group textarea,
-        .input-group select {
-            width: 100%;
-            padding: 12px 14px 12px 40px;
-            border: 1.5px solid #e5e5ea;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            background: #ffffff;
-            outline: none;
-            transition: all 0.2s ease;
+
+        /* Step Question */
+        .step-question {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 1.2;
+            margin-bottom: 8px;
             color: #1d1d1f;
+            letter-spacing: -0.3px;
         }
         
         @media (min-width: 640px) {
-            .input-group input,
-            .input-group textarea,
-            .input-group select {
-                font-size: 15px;
-                padding: 13px 14px 13px 42px;
-            }
-        }
-        
-        .input-group input:focus,
-        .input-group textarea:focus,
-        .input-group select:focus {
-            border-color: #007aff;
-            box-shadow: 0 0 0 4px rgba(0,122,255,0.06);
-        }
-        
-        .input-group input::placeholder,
-        .input-group textarea::placeholder {
-            color: #c0c0c5;
-            font-weight: 400;
+            .step-question { font-size: 32px; }
         }
 
-        .input-error {
-            border-color: #dc2626 !important;
-            box-shadow: 0 0 0 4px rgba(220,38,38,0.06) !important;
+        .step-subtitle {
+            font-size: 14px;
+            color: #86868b;
+            margin-bottom: 32px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Input Styling */
+        .cinematic-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-bottom: 2px solid #e5e5ea;
+            font-size: 18px;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            outline: none;
+            transition: all 0.3s ease;
+            color: #1d1d1f;
+            border-radius: 0;
         }
         
-        .error-message {
-            font-size: 11px;
+        .cinematic-input:focus {
+            border-bottom-color: #007aff;
+        }
+        
+        .cinematic-input.error {
+            border-bottom-color: #dc2626;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        
+        .cinematic-input::placeholder {
+            color: #c0c0c5;
+            font-weight: 300;
+        }
+
+        .input-error-message {
+            font-size: 12px;
             color: #dc2626;
-            margin-top: 6px;
+            margin-top: 8px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 4px;
-            display: none;
-        }
-
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
         }
         
-        @media (max-width: 480px) {
-            .input-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
+        .input-error-message.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Location Detection */
-        .location-detect-btn {
-            display: inline-flex;
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 32px;
+        }
+        
+        .btn-back {
+            padding: 14px 24px;
+            background: transparent;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #86868b;
+            display: flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 14px;
-            background: #f5f5f7;
-            color: #007aff;
-            border: 1px solid #e5e5ea;
-            border-radius: 8px;
-            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-back:hover {
+            border-color: #1d1d1f;
+            color: #1d1d1f;
+            background: #fafafa;
+        }
+        
+        .btn-next {
+            flex: 1;
+            padding: 14px 28px;
+            background: #1d1d1f;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-next:hover {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-next:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-next:disabled {
+            background: #d1d1d6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Success Animation */
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 24px;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .success-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #ecfdf5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .success-icon i {
+            font-size: 36px;
+            color: #059669;
+        }
+        
+        .success-title {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
             margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+        
+        .success-message {
+            font-size: 14px;
+            color: #86868b;
+            text-align: center;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        /* Location Button */
+        .location-detect-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #f5f5f7;
+            color: #007aff;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 16px;
         }
         
         .location-detect-btn:hover {
@@ -346,183 +427,46 @@
         }
         
         .location-status {
-            font-size: 11px;
-            color: #86868b;
-            margin-bottom: 12px;
-            min-height: 18px;
-            transition: color 0.2s ease;
-        }
-        
-        .location-filled {
-            border-color: #059669 !important;
-        }
-
-        /* Buttons - Apple Style */
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: #1d1d1f;
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            margin-top: 20px;
-        }
-        
-        @media (min-width: 640px) {
-            .submit-btn { font-size: 14px; padding: 15px; margin-top: 24px; }
-        }
-        
-        .submit-btn:hover {
-            background: #333;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .submit-btn:disabled {
-            background: #d1d1d6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .outline-btn {
-            background: transparent !important;
-            color: #1d1d1f !important;
-            border: 1.5px solid #d1d1d6 !important;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .outline-btn:hover {
-            border-color: #1d1d1f !important;
-            background: #fafafa !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            color: #86868b;
-            font-size: 11px;
-            font-weight: 500;
-            position: relative;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background: #e5e5ea;
-        }
-        
-        .divider::before { left: 0; }
-        .divider::after { right: 0; }
-
-        /* Benefits Section */
-        .benefits {
-            margin-top: 24px;
-            padding: 16px;
-            background: #f5f5f7;
-            border-radius: 12px;
-        }
-        
-        @media (min-width: 640px) {
-            .benefits { margin-top: 28px; padding: 20px; }
-        }
-        
-        .benefits h4 {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #86868b;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .benefits ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .benefits ul li {
             font-size: 12px;
-            color: #1d1d1f;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-        
-        @media (min-width: 640px) {
-            .benefits ul li { font-size: 13px; gap: 10px; }
-        }
-        
-        .benefits ul li i {
-            color: #059669;
-            font-size: 11px;
-            flex-shrink: 0;
+            color: #86868b;
+            margin-bottom: 8px;
+            min-height: 20px;
         }
 
-        /* Terms Check */
-        .terms-check {
+        /* Checkbox Styling */
+        .checkbox-wrapper {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin-top: 16px;
-            font-size: 12px;
-            color: #86868b;
-            font-weight: 500;
-            line-height: 1.5;
+            gap: 12px;
+            margin-top: 8px;
         }
         
-        .terms-check input[type="checkbox"] {
+        .checkbox-wrapper input[type="checkbox"] {
             margin-top: 2px;
             accent-color: #007aff;
-            width: 16px;
-            height: 16px;
-            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
         }
         
-        .terms-check a {
+        .checkbox-wrapper label {
+            font-size: 13px;
+            color: #86868b;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+        
+        .checkbox-wrapper a {
             color: #007aff;
             font-weight: 600;
             text-decoration: none;
         }
         
-        .terms-check a:hover {
+        .checkbox-wrapper a:hover {
             text-decoration: underline;
         }
 
-        /* Toast Notification */
+        /* Toast */
         #toast {
             position: fixed;
             top: 80px;
@@ -532,10 +476,6 @@
             transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
             max-width: calc(100vw - 32px);
             pointer-events: none;
-        }
-        
-        @media (min-width: 640px) {
-            #toast { top: 96px; right: 24px; }
         }
         
         #toast.show { 
@@ -553,13 +493,6 @@
             gap: 10px;
             min-width: 280px;
             border: 1px solid rgba(0,0,0,0.06);
-        }
-        
-        @media (max-width: 480px) {
-            #toast .toast-inner { 
-                min-width: auto; 
-                padding: 10px 14px; 
-            }
         }
         
         #toast .toast-icon {
@@ -601,6 +534,16 @@
             background: rgba(0,0,0,0.05);
         }
 
+        /* Step Counter */
+        .step-counter {
+            font-size: 11px;
+            font-weight: 600;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
         .sr-only {
             position: absolute;
             width: 1px;
@@ -612,169 +555,65 @@
             white-space: nowrap;
             border: 0;
         }
+
+        /* Loading dots */
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Dynamic Header from components.js -->
     <div id="dynamic-header"></div>
 
-    <!-- Main Content -->
     <main>
-        <div class="auth-card">
-            <div class="logo-area">
-                <img src="/logo.png" alt="JAYENWARE Logo" width="56" height="56" loading="eager">
-                <h1>Create Account</h1>
-                <p>Join JAYENWARE for exclusive deals</p>
+        <div class="cinematic-container">
+            <!-- Progress Bar -->
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-step active" data-step="0"></div>
+                <div class="progress-step" data-step="1"></div>
+                <div class="progress-step" data-step="2"></div>
+                <div class="progress-step" data-step="3"></div>
+                <div class="progress-step" data-step="4"></div>
+                <div class="progress-step" data-step="5"></div>
+                <div class="progress-step" data-step="6"></div>
             </div>
 
-            <div class="tab-buttons">
-                <a href="/login" class="inactive">
-                    <i class="fa-solid fa-right-to-bracket text-xs"></i> Login
-                </a>
-                <a href="#" class="active" onclick="return false;">
-                    <i class="fa-solid fa-user-plus text-xs"></i> Sign Up
-                </a>
-            </div>
-
-            <!-- Sign-Up Form -->
-            <form id="signup-form" autocomplete="on" novalidate>
+            <!-- Auth Card -->
+            <div class="auth-card" id="auth-card">
+                <!-- Step Content will be rendered here -->
+                <div id="step-content"></div>
                 
-                <h3 class="section-title">
-                    <i class="fa-solid fa-user-circle"></i> Personal Information
-                </h3>
-
-                <div class="form-group">
-                    <label for="signup-name" class="sr-only">Full Name</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-user"></i>
-                        <input type="text" id="signup-name" name="name" placeholder="Full Name" required autocomplete="name">
+                <!-- Success Overlay -->
+                <div class="success-overlay" id="success-overlay">
+                    <div class="success-icon">
+                        <i class="fa-solid fa-check"></i>
                     </div>
-                    <div class="error-message" id="name-error"></div>
+                    <h2 class="success-title">Welcome to JAYENWARE!</h2>
+                    <p class="success-message" id="success-message">Your account has been created successfully. Redirecting you to your dashboard...</p>
                 </div>
-
-                <div class="form-group">
-                    <label for="signup-email" class="sr-only">Email Address</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="signup-email" name="email" placeholder="Email Address" required autocomplete="email">
-                    </div>
-                    <div class="error-message" id="email-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-phone" class="sr-only">Phone Number</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-phone"></i>
-                        <input type="tel" id="signup-phone" name="phone" placeholder="Phone Number (01XXXXXXXXX)" required autocomplete="tel-national">
-                    </div>
-                    <div class="error-message" id="phone-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-password" class="sr-only">Password</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="signup-password" name="password" placeholder="Password (min 8 characters)" required autocomplete="new-password" minlength="8">
-                    </div>
-                    <div class="error-message" id="password-error"></div>
-                </div>
-
-                <h3 class="section-title">
-                    <i class="fa-solid fa-map-location-dot"></i> Delivery Address
-                </h3>
-
-                <button type="button" class="location-detect-btn" id="detect-location-btn">
-                    <i class="fa-solid fa-location-arrow"></i> Auto-Detect Location
-                </button>
-                <div class="location-status" id="location-status"></div>
-
-                <div class="form-group">
-                    <label for="signup-country" class="sr-only">Country</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-globe"></i>
-                        <input type="text" id="signup-country" name="country" placeholder="Country" value="Bangladesh" required autocomplete="country-name">
-                    </div>
-                    <div class="error-message" id="country-error"></div>
-                </div>
-
-                <div class="input-row">
-                    <div class="form-group">
-                        <label for="signup-state" class="sr-only">State</label>
-                        <div class="input-group">
-                            <i class="fa-solid fa-flag"></i>
-                            <input type="text" id="signup-state" name="state_province" placeholder="State / Province" autocomplete="address-level1">
-                        </div>
-                        <div class="error-message" id="state-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-city" class="sr-only">City</label>
-                        <div class="input-group">
-                            <i class="fa-solid fa-city"></i>
-                            <input type="text" id="signup-city" name="city" placeholder="City" required autocomplete="address-level2">
-                        </div>
-                        <div class="error-message" id="city-error"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-postal" class="sr-only">Postal Code</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-mailbox"></i>
-                        <input type="text" id="signup-postal" name="postal_code" placeholder="Postal Code (ZIP)" autocomplete="postal-code">
-                    </div>
-                    <div class="error-message" id="postal-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-street" class="sr-only">Street Address</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-road"></i>
-                        <input type="text" id="signup-street" name="street_address" placeholder="Street Address (Line 1)" required autocomplete="street-address">
-                    </div>
-                    <div class="error-message" id="street-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-apartment" class="sr-only">Apartment</label>
-                    <div class="input-group">
-                        <i class="fa-solid fa-building"></i>
-                        <input type="text" id="signup-apartment" name="apartment_house" placeholder="Apartment / House No. (Line 2)" autocomplete="address-line2">
-                    </div>
-                    <div class="error-message" id="apartment-error"></div>
-                </div>
-
-                <div class="terms-check">
-                    <input type="checkbox" id="terms-agree" name="terms" required>
-                    <label for="terms-agree">I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a></label>
-                </div>
-                <div class="error-message" id="terms-error"></div>
-
-                <button type="submit" class="submit-btn" id="submit-button">
-                    <i class="fa-solid fa-user-plus"></i> Create Account
-                </button>
-            </form>
-
-            <div class="divider">Already have an account?</div>
-
-            <a href="/login" class="submit-btn outline-btn">
-                <i class="fa-solid fa-right-to-bracket"></i> Sign In Instead
-            </a>
-
-            <div class="benefits">
-                <h4><i class="fa-solid fa-gift"></i> Member Benefits</h4>
-                <ul>
-                    <li><i class="fa-solid fa-check"></i> Faster checkout experience</li>
-                    <li><i class="fa-solid fa-check"></i> Order tracking & history</li>
-                    <li><i class="fa-solid fa-check"></i> Exclusive member discounts</li>
-                    <li><i class="fa-solid fa-check"></i> Wishlist & save for later</li>
-                    <li><i class="fa-solid fa-check"></i> Early access to new collections</li>
-                </ul>
             </div>
         </div>
     </main>
 
-    <!-- Dynamic Footer from components.js -->
     <div id="dynamic-footer"></div>
 
     <!-- Toast Notification -->
@@ -788,12 +627,10 @@
         </div>
     </div>
 
-    <!-- Components JS - Dynamic Header & Footer -->
     <script src="/components.js"></script>
 
     <script>
         (function() {
-            // Apply font CSS variables
             document.addEventListener('DOMContentLoaded', () => {
                 if (window.JAYENWARE_FONTS) {
                     const root = document.documentElement;
@@ -804,324 +641,542 @@
                 }
             });
 
-            // Initialize signup functionality
             window.addEventListener('load', () => {
-                setTimeout(initSignupPage, 200);
+                setTimeout(initCinematicSignup, 300);
             });
 
-            function initSignupPage() {
-                console.log('✅ JAYENWARE Signup Page Initialized');
+            function initCinematicSignup() {
+                console.log('🎬 Cinematic Signup Initialized');
                 
+                // State
+                let currentStep = 0;
+                let isAnimating = false;
+                
+                // Form Data
+                const formData = {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    country: 'Bangladesh',
+                    state_province: '',
+                    city: '',
+                    postal_code: '',
+                    street_address: '',
+                    apartment_house: '',
+                    terms: false
+                };
+
                 // DOM Elements
+                const stepContent = document.getElementById('step-content');
+                const progressBar = document.getElementById('progress-bar');
+                const successOverlay = document.getElementById('success-overlay');
                 const toast = document.getElementById('toast');
                 const toastIcon = document.getElementById('toast-icon');
                 const toastText = document.getElementById('toast-text');
-                const signupForm = document.getElementById('signup-form');
-                const submitButton = document.getElementById('submit-button');
                 
-                // Input fields
-                const nameInput = document.getElementById('signup-name');
-                const emailInput = document.getElementById('signup-email');
-                const phoneInput = document.getElementById('signup-phone');
-                const passwordInput = document.getElementById('signup-password');
-                const countryInput = document.getElementById('signup-country');
-                const stateInput = document.getElementById('signup-state');
-                const cityInput = document.getElementById('signup-city');
-                const postalInput = document.getElementById('signup-postal');
-                const streetInput = document.getElementById('signup-street');
-                const apartmentInput = document.getElementById('signup-apartment');
-                const termsCheckbox = document.getElementById('terms-agree');
-                
-                // Error elements
-                const errorElements = {
-                    name: document.getElementById('name-error'),
-                    email: document.getElementById('email-error'),
-                    phone: document.getElementById('phone-error'),
-                    password: document.getElementById('password-error'),
-                    country: document.getElementById('country-error'),
-                    state: document.getElementById('state-error'),
-                    city: document.getElementById('city-error'),
-                    postal: document.getElementById('postal-error'),
-                    street: document.getElementById('street-error'),
-                    apartment: document.getElementById('apartment-error'),
-                    terms: document.getElementById('terms-error')
-                };
-                
-                // Location elements
-                const detectLocationBtn = document.getElementById('detect-location-btn');
-                const locationStatus = document.getElementById('location-status');
-                
-                let toastTimeout;
                 const API_BASE = window.location.origin;
+                let toastTimeout;
+
+                // Steps Configuration
+                const steps = [
+                    {
+                        id: 'name',
+                        question: "What's your name?",
+                        subtitle: "Let's start with the basics. We'd love to know who you are.",
+                        icon: 'fa-user',
+                        inputType: 'text',
+                        placeholder: 'Enter your full name...',
+                        autocomplete: 'name',
+                        field: 'name',
+                        validation: (val) => val.trim().length >= 3 ? null : 'Please enter at least 3 characters'
+                    },
+                    {
+                        id: 'email',
+                        question: "What's your email address?",
+                        subtitle: "We'll send you order updates and exclusive offers.",
+                        icon: 'fa-envelope',
+                        inputType: 'email',
+                        placeholder: 'you@example.com',
+                        autocomplete: 'email',
+                        field: 'email',
+                        validation: (val) => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(val) ? null : 'Please enter a valid email address'
+                    },
+                    {
+                        id: 'phone',
+                        question: "What's your phone number?",
+                        subtitle: "For delivery updates and account security.",
+                        icon: 'fa-phone',
+                        inputType: 'tel',
+                        placeholder: '01XXXXXXXXX',
+                        autocomplete: 'tel-national',
+                        field: 'phone',
+                        validation: (val) => {
+                            const cleaned = val.replace(/[^\d+]/g, '');
+                            return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned) ? null : 'Enter valid BD phone number';
+                        }
+                    },
+                    {
+                        id: 'password',
+                        question: "Create a secure password",
+                        subtitle: "Use at least 8 characters with a mix of letters and numbers.",
+                        icon: 'fa-lock',
+                        inputType: 'password',
+                        placeholder: 'Min 8 characters...',
+                        autocomplete: 'new-password',
+                        field: 'password',
+                        validation: (val) => val.length >= 8 ? null : 'Password must be at least 8 characters'
+                    },
+                    {
+                        id: 'location',
+                        question: "Where should we deliver?",
+                        subtitle: "We'll use this for shipping your orders.",
+                        icon: 'fa-map-location-dot',
+                        isLocationStep: true
+                    },
+                    {
+                        id: 'address',
+                        question: "Your delivery address",
+                        subtitle: "Help us find your doorstep.",
+                        icon: 'fa-road',
+                        isAddressStep: true
+                    },
+                    {
+                        id: 'terms',
+                        question: "Almost there!",
+                        subtitle: "Just a few more things before we finish.",
+                        icon: 'fa-check-circle',
+                        isTermsStep: true
+                    }
+                ];
 
                 // Toast Functions
                 function showToast(text, type = 'success') {
                     if (!toast || !toastIcon || !toastText) return;
-                    
                     toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
-                    toastIcon.innerHTML = type === 'success' ? 
-                        '<i class="fa-solid fa-check"></i>' : 
-                        '<i class="fa-solid fa-exclamation"></i>';
+                    toastIcon.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
                     toastText.innerText = text;
                     toast.classList.add('show');
-                    
                     clearTimeout(toastTimeout);
-                    toastTimeout = setTimeout(() => {
-                        if (toast) toast.classList.remove('show');
-                    }, 3500);
+                    toastTimeout = setTimeout(() => { if (toast) toast.classList.remove('show'); }, 3500);
                 }
 
                 window.hideToast = function() {
-                    if (toast) {
-                        toast.classList.remove('show');
-                        clearTimeout(toastTimeout);
+                    if (toast) { toast.classList.remove('show'); clearTimeout(toastTimeout); }
+                };
+
+                // Update Progress Bar
+                function updateProgress(step) {
+                    const steps = progressBar.querySelectorAll('.progress-step');
+                    steps.forEach((s, i) => {
+                        s.classList.remove('completed', 'active');
+                        if (i < step) s.classList.add('completed');
+                        if (i === step) s.classList.add('active');
+                    });
+                }
+
+                // Render Step
+                function renderStep(stepIndex, direction = 'forward') {
+                    if (isAnimating) return;
+                    isAnimating = true;
+                    
+                    const step = steps[stepIndex];
+                    updateProgress(stepIndex);
+                    
+                    let html = '';
+                    
+                    if (step.isLocationStep) {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">Step ${stepIndex + 1} of ${steps.length}</div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <button type="button" class="location-detect-btn" id="detect-location-btn">
+                                    <i class="fa-solid fa-location-arrow"></i> Auto-Detect My Location
+                                </button>
+                                <div class="location-status" id="location-status"></div>
+                                
+                                <div style="margin-top:16px;">
+                                    <input type="text" class="cinematic-input" id="step-country" placeholder="Country" value="${formData.country}">
+                                    <div class="input-error-message" id="error-country"></div>
+                                </div>
+                                <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                    <div>
+                                        <input type="text" class="cinematic-input" id="step-state" placeholder="State" value="${formData.state_province}">
+                                    </div>
+                                    <div>
+                                        <input type="text" class="cinematic-input" id="step-city" placeholder="City" value="${formData.city}">
+                                        <div class="input-error-message" id="error-city"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="nav-buttons">
+                                    <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                        <i class="fa-solid fa-arrow-left"></i> Back
+                                    </button>
+                                    <button class="btn-next" onclick="validateAndNext(${stepIndex})">
+                                        Continue <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    } else if (step.isAddressStep) {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">Step ${stepIndex + 1} of ${steps.length}</div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <div style="margin-bottom:12px;">
+                                    <input type="text" class="cinematic-input" id="step-postal" placeholder="Postal Code" value="${formData.postal_code}">
+                                </div>
+                                <div style="margin-bottom:12px;">
+                                    <input type="text" class="cinematic-input" id="step-street" placeholder="Street Address (Line 1)" value="${formData.street_address}">
+                                    <div class="input-error-message" id="error-street"></div>
+                                </div>
+                                <div style="margin-bottom:12px;">
+                                    <input type="text" class="cinematic-input" id="step-apartment" placeholder="Apartment / House No. (Line 2)" value="${formData.apartment_house}">
+                                </div>
+                                
+                                <div class="nav-buttons">
+                                    <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                        <i class="fa-solid fa-arrow-left"></i> Back
+                                    </button>
+                                    <button class="btn-next" onclick="validateAndNext(${stepIndex})">
+                                        Continue <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    } else if (step.isTermsStep) {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">Step ${stepIndex + 1} of ${steps.length}</div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="step-terms" ${formData.terms ? 'checked' : ''}>
+                                    <label for="step-terms">I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a></label>
+                                </div>
+                                <div class="input-error-message" id="error-terms"></div>
+                                
+                                <div class="nav-buttons">
+                                    <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                        <i class="fa-solid fa-arrow-left"></i> Back
+                                    </button>
+                                    <button class="btn-next" id="submit-btn" onclick="submitSignup()">
+                                        <i class="fa-solid fa-user-plus"></i> Create Account
+                                    </button>
+                                </div>
+                            </div>`;
+                    } else {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">Step ${stepIndex + 1} of ${steps.length}</div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <div>
+                                    <input type="${step.inputType}" class="cinematic-input" id="step-input" 
+                                           placeholder="${step.placeholder}" 
+                                           value="${formData[step.field] || ''}"
+                                           autocomplete="${step.autocomplete}"
+                                           autofocus>
+                                    <div class="input-error-message" id="error-${step.id}"></div>
+                                </div>
+                                
+                                <div class="nav-buttons">
+                                    ${stepIndex > 0 ? `
+                                        <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                            <i class="fa-solid fa-arrow-left"></i> Back
+                                        </button>
+                                    ` : '<div></div>'}
+                                    <button class="btn-next" onclick="validateAndNext(${stepIndex})">
+                                        ${stepIndex === steps.length - 1 ? 'Create Account' : 'Continue'} 
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    }
+                    
+                    stepContent.innerHTML = html;
+                    
+                    // Focus input after render
+                    setTimeout(() => {
+                        const input = document.getElementById('step-input');
+                        if (input) input.focus();
+                    }, 100);
+                    
+                    // Attach location detection
+                    if (step.isLocationStep) {
+                        setTimeout(attachLocationDetection, 200);
+                    }
+                    
+                    // Attach enter key
+                    setTimeout(attachEnterKey, 200);
+                    
+                    isAnimating = false;
+                }
+
+                // Attach Enter Key
+                function attachEnterKey() {
+                    const input = document.getElementById('step-input');
+                    if (input) {
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                validateAndNext(currentStep);
+                            }
+                        });
+                    }
+                }
+
+                // Attach Location Detection
+                function attachLocationDetection() {
+                    const detectBtn = document.getElementById('detect-location-btn');
+                    const locationStatus = document.getElementById('location-status');
+                    
+                    if (detectBtn) {
+                        detectBtn.addEventListener('click', async () => {
+                            if (!navigator.geolocation) {
+                                showToast('Location not supported', 'error');
+                                return;
+                            }
+                            
+                            detectBtn.disabled = true;
+                            detectBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
+                            locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location...';
+                            locationStatus.style.color = '#007aff';
+                            
+                            try {
+                                const position = await new Promise((resolve, reject) => {
+                                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                        enableHighAccuracy: true,
+                                        timeout: 15000,
+                                        maximumAge: 0
+                                    });
+                                });
+                                
+                                const { latitude, longitude } = position.coords;
+                                locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address...';
+                                
+                                const response = await fetch(
+                                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
+                                    { headers: { 'User-Agent': 'JAYENWARE_SignUp/1.0' } }
+                                );
+                                
+                                if (!response.ok) throw new Error('Failed to fetch');
+                                
+                                const data = await response.json();
+                                const address = data.address || {};
+                                
+                                document.getElementById('step-country').value = address.country || 'Bangladesh';
+                                document.getElementById('step-state').value = address.state || '';
+                                document.getElementById('step-city').value = address.city || address.town || '';
+                                
+                                locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected!';
+                                locationStatus.style.color = '#059669';
+                                showToast('Address auto-filled!', 'success');
+                                
+                            } catch (error) {
+                                locationStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Could not detect. Fill manually.';
+                                locationStatus.style.color = '#dc2626';
+                            } finally {
+                                detectBtn.disabled = false;
+                                detectBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect My Location';
+                            }
+                        });
+                    }
+                }
+
+                // Validate and Navigate
+                window.validateAndNext = function(stepIndex) {
+                    const step = steps[stepIndex];
+                    let isValid = true;
+                    
+                    if (step.isLocationStep) {
+                        const country = document.getElementById('step-country')?.value.trim();
+                        const city = document.getElementById('step-city')?.value.trim();
+                        
+                        if (!country) {
+                            showError('error-country', 'Country is required');
+                            isValid = false;
+                        }
+                        if (!city) {
+                            showError('error-city', 'City is required');
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            formData.country = country;
+                            formData.state_province = document.getElementById('step-state')?.value.trim() || '';
+                            formData.city = city;
+                        }
+                    } else if (step.isAddressStep) {
+                        const street = document.getElementById('step-street')?.value.trim();
+                        
+                        if (!street) {
+                            showError('error-street', 'Street address is required');
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            formData.postal_code = document.getElementById('step-postal')?.value.trim() || '';
+                            formData.street_address = street;
+                            formData.apartment_house = document.getElementById('step-apartment')?.value.trim() || '';
+                        }
+                    } else if (!step.isTermsStep) {
+                        const input = document.getElementById('step-input');
+                        const value = input?.value || '';
+                        const error = step.validation(value);
+                        
+                        if (error) {
+                            showError(`error-${step.id}`, error);
+                            if (input) {
+                                input.classList.add('error');
+                                setTimeout(() => input.classList.remove('error'), 500);
+                            }
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            formData[step.field] = value;
+                        }
+                    }
+                    
+                    if (isValid && stepIndex < steps.length - 1) {
+                        navigateStep(stepIndex + 1);
                     }
                 };
 
-                // Error handling
-                function clearErrors() {
-                    Object.values(errorElements).forEach(el => {
-                        if (el) {
-                            el.style.display = 'none';
-                            el.textContent = '';
-                        }
-                    });
-                    document.querySelectorAll('.input-error').forEach(el => {
-                        el.classList.remove('input-error');
-                    });
+                function showError(elementId, message) {
+                    const el = document.getElementById(elementId);
+                    if (el) {
+                        el.textContent = message;
+                        el.classList.add('visible');
+                        setTimeout(() => el.classList.remove('visible'), 3000);
+                    }
                 }
 
-                function showFieldError(inputEl, errorEl, message) {
-                    if (!inputEl || !errorEl) return;
-                    inputEl.classList.add('input-error');
-                    errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
-                    errorEl.style.display = 'flex';
-                }
+                // Navigate Steps
+                window.navigateStep = function(targetStep) {
+                    if (isAnimating || targetStep < 0 || targetStep >= steps.length) return;
+                    if (targetStep === currentStep) return;
+                    
+                    const direction = targetStep > currentStep ? 'forward' : 'backward';
+                    currentStep = targetStep;
+                    renderStep(currentStep, direction);
+                };
 
-                // Validation
-                function isValidEmail(email) {
-                    return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
-                }
-
-                function isValidPhone(phone) {
-                    const cleaned = phone.replace(/[^\d+]/g, '');
-                    return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned);
-                }
-
-                // Location Detection
-                async function detectUserLocation() {
-                    if (!navigator.geolocation) {
-                        showToast('Your browser does not support location detection', 'error');
+                // Submit Signup
+                window.submitSignup = async function() {
+                    const termsChecked = document.getElementById('step-terms')?.checked;
+                    
+                    if (!termsChecked) {
+                        showError('error-terms', 'Please agree to the Terms & Privacy Policy');
                         return;
                     }
-
-                    detectLocationBtn.disabled = true;
-                    detectLocationBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
-                    locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location permission...';
-                    locationStatus.style.color = '#007aff';
-
+                    
+                    formData.terms = true;
+                    
+                    const submitBtn = document.getElementById('submit-btn');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<span class="loading-dots"><span></span><span></span><span></span></span> Creating...';
+                    }
+                    
                     try {
-                        const position = await new Promise((resolve, reject) => {
-                            navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                enableHighAccuracy: true,
-                                timeout: 15000,
-                                maximumAge: 0
-                            });
-                        });
-
-                        const { latitude, longitude } = position.coords;
-                        locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address...';
-                        
-                        const response = await fetch(
-                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
-                            { headers: { 'User-Agent': 'JAYENWARE_SignUp/1.0' } }
-                        );
-
-                        if (!response.ok) throw new Error('Failed to fetch address');
-
-                        const data = await response.json();
-                        const address = data.address || {};
-                        
-                        // Fill form fields
-                        countryInput.value = address.country || 'Bangladesh';
-                        stateInput.value = address.state || '';
-                        cityInput.value = address.city || address.town || address.state_district || '';
-                        postalInput.value = address.postcode || '';
-                        streetInput.value = address.road || address.street || '';
-                        
-                        // Mark as location-filled
-                        [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
-                            if (el && el.value) el.classList.add('location-filled');
+                        const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                email: formData.email,
+                                password: formData.password,
+                                name: formData.name,
+                                phone: formData.phone.replace(/[-\s()]/g, ''),
+                                country: formData.country,
+                                state_province: formData.state_province,
+                                city: formData.city,
+                                postal_code: formData.postal_code,
+                                street_address: formData.street_address,
+                                apartment_house: formData.apartment_house
+                            })
                         });
                         
-                        locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected successfully!';
-                        locationStatus.style.color = '#059669';
-                        showToast('Location applied successfully!', 'success');
-
-                    } catch (error) {
-                        let errorMessage = 'Could not detect location. Please fill manually.';
-                        if (error.code === 1) errorMessage = 'Location permission denied.';
-                        else if (error.code === 2) errorMessage = 'Location unavailable.';
-                        else if (error.code === 3) errorMessage = 'Location request timed out.';
+                        const result = await response.json();
                         
-                        locationStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${errorMessage}`;
-                        locationStatus.style.color = '#dc2626';
-                        showToast(errorMessage, 'error');
-                    } finally {
-                        detectLocationBtn.disabled = false;
-                        detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
+                        if (!response.ok) {
+                            throw new Error(result.error || 'Registration failed. Please try again.');
+                        }
+                        
+                        // Show success
+                        document.getElementById('success-message').textContent = 
+                            `Welcome, ${formData.name.split(' ')[0]}! Your account has been created. Redirecting you to your dashboard...`;
+                        successOverlay.classList.add('show');
+                        
+                        // Trigger confetti-like effect
+                        createCelebrationParticles();
                         
                         setTimeout(() => {
-                            locationStatus.innerHTML = '';
-                            locationStatus.style.color = '#86868b';
-                        }, 5000);
+                            window.location.href = '/account';
+                        }, 2500);
+                        
+                    } catch (err) {
+                        console.error('Signup error:', err);
+                        showToast(err.message || 'Network error. Please try again.', 'error');
+                        
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+                        }
+                    }
+                };
+
+                // Celebration Particles
+                function createCelebrationParticles() {
+                    const colors = ['#007aff', '#059669', '#c9a96e', '#dc2626', '#f59e0b', '#8b5cf6'];
+                    const card = document.getElementById('auth-card');
+                    const rect = card.getBoundingClientRect();
+                    
+                    for (let i = 0; i < 30; i++) {
+                        const particle = document.createElement('div');
+                        particle.style.cssText = `
+                            position: fixed;
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                            background: ${colors[Math.floor(Math.random() * colors.length)]};
+                            left: ${rect.left + rect.width / 2}px;
+                            top: ${rect.top + rect.height / 2}px;
+                            pointer-events: none;
+                            z-index: 9999;
+                            animation: particleBurst ${0.8 + Math.random() * 0.6}s ease-out forwards;
+                            animation-delay: ${Math.random() * 0.2}s;
+                        `;
+                        document.body.appendChild(particle);
+                        
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = 100 + Math.random() * 200;
+                        const dx = Math.cos(angle) * distance;
+                        const dy = Math.sin(angle) * distance;
+                        
+                        particle.animate([
+                            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                            { transform: `translate(${dx}px, ${dy}px) scale(0)`, opacity: 0 }
+                        ], {
+                            duration: 800 + Math.random() * 600,
+                            delay: Math.random() * 200,
+                            easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+                            fill: 'forwards'
+                        });
+                        
+                        setTimeout(() => particle.remove(), 1500);
                     }
                 }
 
-                // Event Listeners
-                if (detectLocationBtn) {
-                    detectLocationBtn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        await detectUserLocation();
-                    });
-                }
-
-                // Phone formatting
-                if (phoneInput) {
-                    phoneInput.addEventListener('input', function() {
-                        let value = this.value.replace(/[^\d+]/g, '');
-                        if (!value.startsWith('+')) {
-                            if (value.length > 11) value = value.slice(0, 11);
-                            if (value.length >= 4 && !value.includes('-')) {
-                                value = value.slice(0, 3) + '-' + value.slice(3);
-                            }
-                            if (value.length >= 9 && value.split('-').length === 2) {
-                                const parts = value.split('-');
-                                if (parts[1].length > 5) {
-                                    value = parts[0] + '-' + parts[1].slice(0, 5) + '-' + parts[1].slice(5);
-                                }
-                            }
-                        }
-                        this.value = value;
-                    });
-                }
-
-                // Form Submission
-                if (signupForm) {
-                    signupForm.addEventListener('submit', async (e) => {
-                        e.preventDefault();
-                        clearErrors();
-                        
-                        const name = nameInput ? nameInput.value.trim() : '';
-                        const email = emailInput ? emailInput.value.trim() : '';
-                        const phone = phoneInput ? phoneInput.value.trim() : '';
-                        const password = passwordInput ? passwordInput.value : '';
-                        const country = countryInput ? countryInput.value.trim() : '';
-                        const state_province = stateInput ? stateInput.value.trim() : '';
-                        const city = cityInput ? cityInput.value.trim() : '';
-                        const postal_code = postalInput ? postalInput.value.trim() : '';
-                        const street_address = streetInput ? streetInput.value.trim() : '';
-                        const apartment_house = apartmentInput ? apartmentInput.value.trim() : '';
-                        const terms = termsCheckbox ? termsCheckbox.checked : false;
-                        
-                        let hasError = false;
-                        
-                        if (!name || name.length < 3) {
-                            showFieldError(nameInput, errorElements.name, 'Full name is required (min 3 characters)');
-                            hasError = true;
-                        }
-                        
-                        if (!email) {
-                            showFieldError(emailInput, errorElements.email, 'Email address is required');
-                            hasError = true;
-                        } else if (!isValidEmail(email)) {
-                            showFieldError(emailInput, errorElements.email, 'Please enter a valid email address');
-                            hasError = true;
-                        }
-                        
-                        if (!phone) {
-                            showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
-                            hasError = true;
-                        } else if (!isValidPhone(phone)) {
-                            showFieldError(phoneInput, errorElements.phone, 'Enter valid phone (01XXXXXXXXX)');
-                            hasError = true;
-                        }
-                        
-                        if (!password || password.length < 8) {
-                            showFieldError(passwordInput, errorElements.password, 'Password must be at least 8 characters');
-                            hasError = true;
-                        }
-                        
-                        if (!country) {
-                            showFieldError(countryInput, errorElements.country, 'Country is required');
-                            hasError = true;
-                        }
-                        
-                        if (!city) {
-                            showFieldError(cityInput, errorElements.city, 'City is required');
-                            hasError = true;
-                        }
-                        
-                        if (!street_address) {
-                            showFieldError(streetInput, errorElements.street, 'Street address is required');
-                            hasError = true;
-                        }
-                        
-                        if (!terms) {
-                            errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms & Privacy Policy';
-                            errorElements.terms.style.display = 'flex';
-                            hasError = true;
-                        }
-                        
-                        if (hasError) {
-                            const firstError = document.querySelector('.input-error');
-                            if (firstError) firstError.focus();
-                            return;
-                        }
-                        
-                        // Submit
-                        submitButton.disabled = true;
-                        submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
-                        
-                        try {
-                            const response = await fetch(`${API_BASE}/api/auth/signup`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    email,
-                                    password,
-                                    name,
-                                    phone: phone.replace(/[-\s()]/g, ''),
-                                    country,
-                                    state_province,
-                                    city,
-                                    postal_code,
-                                    street_address,
-                                    apartment_house
-                                })
-                            });
-                            
-                            const result = await response.json();
-                            
-                            if (!response.ok) {
-                                throw new Error(result.error || 'Registration failed');
-                            }
-                            
-                            showToast('Account created successfully! Redirecting...', 'success');
-                            
-                            setTimeout(() => {
-                                window.location.href = '/account';
-                            }, 2000);
-                            
-                        } catch (err) {
-                            console.error('Signup error:', err);
-                            showToast(err.message || 'Network error. Please try again.', 'error');
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
-                        }
-                    });
-                }
-
+                // Initialize first step
+                renderStep(0);
+                
                 // Close toast on outside click
                 document.addEventListener('click', (e) => {
                     if (toast && toast.classList.contains('show') && !toast.contains(e.target)) {
@@ -1129,9 +1184,18 @@
                     }
                 });
 
-                console.log('✅ Signup form fully initialized');
+                console.log('🎬 Cinematic flow ready!');
             }
         })();
     </script>
+
+    <style>
+        @keyframes particleBurst {
+            to {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
 </body>
 </html>
