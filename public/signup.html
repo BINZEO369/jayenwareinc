@@ -19,10 +19,12 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
     <script src="/fonts.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -53,17 +55,113 @@
             --soft: #f5f5f7;
             --blue: #007aff;
             --gold: #c9a96e;
+            --liquid-1: #667eea;
+            --liquid-2: #764ba2;
+            --liquid-3: #f093fb;
+            --liquid-4: #4facfe;
+            --liquid-5: #00f2fe;
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            background-color: #ffffff;
-            color: #1d1d1f;
+            background: #0a0a0b;
+            color: #ffffff;
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: #0a0a0b;
+        }
+        
+        .bg-animated .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: floatOrb 20s ease-in-out infinite;
+        }
+        
+        .bg-animated .orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: var(--liquid-1);
+            top: -200px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        
+        .bg-animated .orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: var(--liquid-2);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -7s;
+        }
+        
+        .bg-animated .orb:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: var(--liquid-3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+        
+        .bg-animated .orb:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: var(--liquid-4);
+            top: 30%;
+            right: 20%;
+            animation-delay: -3s;
+        }
+        
+        .bg-animated .orb:nth-child(5) {
+            width: 450px;
+            height: 450px;
+            background: var(--liquid-5);
+            bottom: 20%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, -50px) scale(1.1); }
+            50% { transform: translate(-50px, 100px) scale(0.9); }
+            75% { transform: translate(-100px, -30px) scale(1.05); }
+        }
+
+        /* Grid overlay */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
         }
 
         main {
@@ -72,535 +170,1289 @@
             align-items: center;
             justify-content: center;
             padding: 100px 16px 48px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (min-width: 640px) { 
+            main { padding: 120px 24px 64px; } 
+        }
+        
+        @media (min-width: 1024px) { 
+            main { padding: 140px 32px 80px; } 
         }
 
-        .auth-card {
-            background: #ffffff;
+        /* Cinematic Container */
+        .cinematic-container {
             width: 100%;
             max-width: 520px;
-            border-radius: 28px;
-            padding: 40px 32px;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03), 0 10px 50px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        /* Liquid Progress Bar */
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 40px;
+            padding: 0 8px;
+        }
+        
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
             position: relative;
             overflow: hidden;
         }
-
-        /* Cinematic Step Transition */
-        .step-container {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--liquid-4), var(--liquid-5), var(--liquid-1));
+            background-size: 200% 100%;
+            animation: liquidFlow 2s linear infinite;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .progress-step.completed::after {
+            transform: scaleX(1);
+        }
+        
+        .progress-step.active::after {
+            transform: scaleX(1);
+            animation: liquidFlow 1s linear infinite, pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes liquidFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(79,172,254,0.5); }
+            50% { opacity: 0.6; box-shadow: 0 0 20px rgba(79,172,254,0.8); }
         }
 
-        .step-container.active {
-            display: block;
+        /* Auth Card - Glass Morphism */
+        .auth-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 28px;
+            padding: 44px 32px;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+            overflow: hidden;
+            min-height: 440px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            pointer-events: none;
+        }
+        
+        @media (min-width: 640px) {
+            .auth-card { 
+                padding: 52px 40px; 
+                border-radius: 32px;
+                min-height: 480px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .auth-card { 
+                padding: 60px 48px; 
+                border-radius: 36px;
+                min-height: 520px;
+            }
+        }
+
+        /* Step Container */
+        .step-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: stepEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes stepEnter {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+                filter: blur(10px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* Step Counter with Glow */
+        .step-counter {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-counter .dot-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--liquid-4);
+            box-shadow: 0 0 12px rgba(79,172,254,0.6);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(79,172,254,0.4); }
+            50% { box-shadow: 0 0 20px rgba(79,172,254,0.8); }
+        }
+
+        /* Step Question */
+        .step-question {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @media (min-width: 640px) {
+            .step-question { font-size: 36px; }
+        }
+
+        .step-subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 36px;
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.2px;
+        }
+
+        /* Liquid Input */
+        .cinematic-input {
+            width: 100%;
+            padding: 18px 0;
+            border: none;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            font-size: 20px;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            outline: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+        
+        .cinematic-input:focus {
+            border-bottom-color: var(--liquid-4);
+            box-shadow: 0 4px 20px -8px rgba(79,172,254,0.3);
+        }
+        
+        .cinematic-input.error {
+            border-bottom-color: #ff4757;
+            animation: liquidShake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
+        
+        @keyframes liquidShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 90% { transform: translateX(-2px); }
+            20%, 80% { transform: translateX(4px); }
+            30%, 50%, 70% { transform: translateX(-6px); }
+            40%, 60% { transform: translateX(6px); }
+        }
+        
+        .cinematic-input::placeholder {
+            color: rgba(255,255,255,0.2);
+            font-weight: 300;
+        }
+
+        /* Floating Label */
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .floating-label {
+            position: absolute;
+            left: 0;
+            top: -24px;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .input-error-message {
+            font-size: 12px;
+            color: #ff4757;
+            margin-top: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .input-error-message.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Cinema Text Heading */
-        .cinema-question {
-            font-family: 'Manrope', sans-serif;
-            font-weight: 700;
-            font-size: 24px;
-            letter-spacing: -0.5px;
-            color: #1d1d1f;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        /* Progress Bar */
-        .progress-bar-container {
-            width: 100%;
-            height: 4px;
-            background: #f5f5f7;
-            border-radius: 2px;
-            margin-bottom: 32px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 10%;
-            background: #007aff;
-            transition: width 0.4s ease;
-        }
-
-        /* Floating Input Styling */
-        .input-group {
-            position: relative;
-            margin-bottom: 8px;
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 40px;
         }
         
-        .input-group i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #86868b;
-            font-size: 16px;
-            transition: color 0.2s;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 16px 16px 16px 48px;
-            border: 1.5px solid #e5e5ea;
-            border-radius: 14px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.2.5s ease;
-            background: #fafafa;
-        }
-
-        .input-group input:focus {
-            border-color: #007aff;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(0,122,255,0.08);
-        }
-
-        .input-error {
-            border-color: #dc2626 !important;
-            box-shadow: 0 0 0 4px rgba(220,38,38,0.06) !important;
-        }
-
-        .error-message {
-            font-size: 12px;
-            color: #dc2626;
-            margin-top: 6px;
-            font-weight: 500;
-            display: none;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Flow Control Navigation */
-        .flow-buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 28px;
-            gap: 12px;
-        }
-
-        .btn-next, .btn-submit {
-            flex-grow: 1;
+        .btn-back {
             padding: 14px 24px;
-            background: #1d1d1f;
-            color: white;
-            border-radius: 12px;
-            font-weight: 600;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
             font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            color: rgba(255,255,255,0.6);
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-
-        .btn-next:hover, .btn-submit:hover {
-            background: #333336;
-            transform: translateY(-1px);
-        }
-
-        .btn-back {
-            padding: 14px 20px;
-            background: #f5f5f7;
-            color: #1d1d1f;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
+        
         .btn-back:hover {
-            background: #e5e5ea;
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.2);
+            color: #ffffff;
+            transform: translateX(-2px);
+        }
+        
+        .btn-next {
+            flex: 1;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--liquid-1), var(--liquid-2));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(102,126,234,0.3);
+        }
+        
+        .btn-next::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            pointer-events: none;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(102,126,234,0.4);
+        }
+        
+        .btn-next:active {
+            transform: scale(0.96);
+            transition: all 0.1s ease;
+        }
+        
+        .btn-next:disabled {
+            background: rgba(255,255,255,0.1);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        /* Toast UI */
-        #toast {
-            position: fixed;
-            top: 32px;
-            right: 32px;
-            z-index: 9999;
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        #toast.show { transform: translateX(0); }
-
-        .location-badge {
+        /* Location Button */
+        .location-detect-btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 10px 16px;
-            background: rgba(0,122,255,0.05);
-            color: #007aff;
-            border-radius: 20px;
-            font-size: 12px;
+            gap: 10px;
+            padding: 14px 22px;
+            background: rgba(255,255,255,0.03);
+            color: var(--liquid-4);
+            border: 1px solid rgba(79,172,254,0.2);
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 16px;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-        .location-badge:hover { background: rgba(0,122,255,0.1); }
+        
+        .location-detect-btn:hover {
+            background: rgba(79,172,254,0.1);
+            border-color: rgba(79,172,254,0.4);
+            box-shadow: 0 0 24px rgba(79,172,254,0.15);
+        }
+        
+        .location-detect-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .location-status {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-top: 12px;
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: var(--liquid-4);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .checkbox-wrapper label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+            cursor: pointer;
+        }
+        
+        .checkbox-wrapper a {
+            color: var(--liquid-4);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .checkbox-wrapper a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10,10,11,0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 28px;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .success-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .success-ring {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 28px;
+        }
+        
+        .success-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--liquid-4), var(--liquid-5), var(--liquid-1), var(--liquid-4));
+            animation: rotateRing 2s linear infinite;
+        }
+        
+        .success-ring::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 50%;
+            background: #0a0a0b;
+        }
+        
+        @keyframes rotateRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-icon-inner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            font-size: 40px;
+            color: var(--liquid-4);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes popIn {
+            from { transform: scale(0) rotate(-180deg); opacity: 0; }
+            to { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        .success-title {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+        
+        .success-message {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            max-width: 320px;
+            line-height: 1.7;
+        }
+
+        /* Liquid Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+        
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            top: 80px;
+            right: 16px;
+            z-index: 9999;
+            transform: translateX(calc(100% + 32px));
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: calc(100vw - 32px);
+            pointer-events: none;
+        }
+        
+        #toast.show { 
+            transform: translateX(0); 
+            pointer-events: auto;
+        }
+        
+        #toast .toast-inner {
+            background: rgba(30,30,35,0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        #toast .toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .toast-success { background: rgba(5,150,105,0.15); color: #059669; }
+        .toast-error { background: rgba(220,38,38,0.15); color: #ff4757; }
+        
+        #toast .toast-text {
+            font-size: 13px;
+            font-weight: 600;
+            flex-grow: 1;
+            line-height: 1.4;
+            color: #ffffff;
+        }
+        
+        #toast .toast-close {
+            color: rgba(255,255,255,0.3);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            flex-shrink: 0;
+            padding: 6px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        #toast .toast-close:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Loading dots */
+        .loading-dots {
+            display: inline-flex;
+            gap: 5px;
+        }
+        
+        .loading-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: white;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Particle burst */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            animation: particleFly 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+        
+        @keyframes particleFly {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
     </style>
 </head>
-<body>
+<body class="antialiased">
+
+    <!-- Animated Background -->
+    <div class="bg-animated">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+    <div class="grid-overlay"></div>
 
     <div id="dynamic-header"></div>
 
     <main>
-        <div class="auth-card">
-            
-            <!-- Progress Flow Indicator -->
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" id="flow-progress"></div>
+        <div class="cinematic-container">
+            <!-- Liquid Progress Bar -->
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-step active" data-step="0"></div>
+                <div class="progress-step" data-step="1"></div>
+                <div class="progress-step" data-step="2"></div>
+                <div class="progress-step" data-step="3"></div>
+                <div class="progress-step" data-step="4"></div>
+                <div class="progress-step" data-step="5"></div>
+                <div class="progress-step" data-step="6"></div>
             </div>
 
-            <form id="signup-form" autocomplete="on" novalidate>
+            <!-- Glass Card -->
+            <div class="auth-card" id="auth-card">
+                <div id="step-content"></div>
                 
-                <!-- STEP 1: Name -->
-                <div class="step-container active" data-step="1">
-                    <h2 class="cinema-question">What is your full name?</h2>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fa-solid fa-user"></i>
-                            <input type="text" id="signup-name" name="name" placeholder="First and last name" required autocomplete="name">
+                <!-- Success Overlay -->
+                <div class="success-overlay" id="success-overlay">
+                    <div class="success-ring">
+                        <div class="success-icon-inner">
+                            <i class="fa-solid fa-check"></i>
                         </div>
-                        <div class="error-message" id="name-error"></div>
                     </div>
+                    <h2 class="success-title">Welcome to JAYENWARE</h2>
+                    <p class="success-message" id="success-message">Your account has been created. Redirecting you to your dashboard...</p>
                 </div>
-
-                <!-- STEP 2: Email -->
-                <div class="step-container" data-step="2">
-                    <h2 class="cinema-question">What's your email address?</h2>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fa-solid fa-envelope"></i>
-                            <input type="email" id="signup-email" name="email" placeholder="name@example.com" required autocomplete="email">
-                        </div>
-                        <div class="error-message" id="email-error"></div>
-                    </div>
-                </div>
-
-                <!-- STEP 3: Phone -->
-                <div class="step-container" data-step="3">
-                    <h2 class="cinema-question">Can we get your phone number?</h2>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fa-solid fa-phone"></i>
-                            <input type="tel" id="signup-phone" name="phone" placeholder="01XXXXXXXXX" required autocomplete="tel-national">
-                        </div>
-                        <div class="error-message" id="phone-error"></div>
-                    </div>
-                </div>
-
-                <!-- STEP 4: Password -->
-                <div class="step-container" data-step="4">
-                    <h2 class="cinema-question">Choose a secure password</h2>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fa-solid fa-lock"></i>
-                            <input type="password" id="signup-password" name="password" placeholder="At least 8 characters" required autocomplete="new-password">
-                        </div>
-                        <div class="error-message" id="password-error"></div>
-                    </div>
-                </div>
-
-                <!-- STEP 5: Address -->
-                <div class="step-container" data-step="5">
-                    <h2 class="cinema-question">Where should we deliver your orders?</h2>
-                    
-                    <button type="button" class="location-badge" id="detect-location-btn">
-                        <i class="fa-solid fa-location-arrow"></i> Auto-Detect My Location
-                    </button>
-                    <div id="location-status" class="text-xs text-slate-400 mb-2"></div>
-
-                    <div class="grid grid-cols-1 gap-3">
-                        <div class="input-group">
-                            <i class="fa-solid fa-globe"></i>
-                            <input type="text" id="signup-country" name="country" placeholder="Country" value="Bangladesh" required>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="signup-state" class="p-3 border rounded-xl text-sm outline-none" name="state_province" placeholder="State/Province">
-                            <input type="text" id="signup-city" class="p-3 border rounded-xl text-sm outline-none" name="city" placeholder="City" required>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="signup-postal" class="p-3 border rounded-xl text-sm outline-none" name="postal_code" placeholder="Postal Code">
-                            <input type="text" id="signup-street" class="p-3 border rounded-xl text-sm outline-none" name="street_address" placeholder="Street Address" required>
-                        </div>
-                        <input type="text" id="signup-apartment" class="p-3 border rounded-xl text-sm outline-none" name="apartment_house" placeholder="Apartment / House No. (Optional)">
-                    </div>
-                    <div class="error-message" id="address-error"></div>
-
-                    <div class="flex items-start gap-2 mt-4 text-xs text-neutral-500">
-                        <input type="checkbox" id="terms-agree" class="mt-0.5 accent-blue-600" required>
-                        <label for="terms-agree">I agree to the <a href="/privacy-policy" class="text-blue-600 font-semibold">Privacy Policy</a> & <a href="/terms-and-conditions" class="text-blue-600 font-semibold">Terms</a></label>
-                    </div>
-                    <div class="error-message" id="terms-error"></div>
-                </div>
-
-                <!-- Action Controllers -->
-                <div class="flow-buttons">
-                    <button type="button" class="btn-back" id="btn-back" style="display: none;">Back</button>
-                    <button type="button" class="btn-next" id="btn-next">Next <i class="fa-solid fa-arrow-right text-xs"></i></button>
-                    <button type="submit" class="btn-submit" id="submit-button" style="display: none;">Create Account</button>
-                </div>
-            </form>
-
-            <div class="text-center mt-6 text-sm text-neutral-500">
-                Already have an account? <a href="/login" class="text-blue-600 font-semibold hover:underline">Sign In</a>
             </div>
         </div>
     </main>
 
     <div id="dynamic-footer"></div>
 
-    <!-- Toast Component -->
-    <div id="toast" class="bg-white border p-4 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm">
-        <div id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center"></div>
-        <span id="toast-text" class="text-sm font-medium text-neutral-800"></span>
+    <!-- Toast -->
+    <div id="toast" role="alert" aria-live="polite">
+        <div class="toast-inner">
+            <div class="toast-icon" id="toast-icon"></div>
+            <span class="toast-text" id="toast-text"></span>
+            <button class="toast-close" onclick="hideToast()" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
     </div>
 
     <script src="/components.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let currentStep = 1;
-            const totalSteps = 5;
-
-            // Elements
-            const steps = document.querySelectorAll('.step-container');
-            const btnNext = document.getElementById('btn-next');
-            const btnBack = document.getElementById('btn-back');
-            const btnSubmit = document.getElementById('submit-button');
-            const progressBar = document.getElementById('flow-progress');
-            const signupForm = document.getElementById('signup-form');
-
-            // Inputs
-            const nameInput = document.getElementById('signup-name');
-            const emailInput = document.getElementById('signup-email');
-            const phoneInput = document.getElementById('signup-phone');
-            const passwordInput = document.getElementById('signup-password');
-            const countryInput = document.getElementById('signup-country');
-            const cityInput = document.getElementById('signup-city');
-            const streetInput = document.getElementById('signup-street');
-            const termsCheckbox = document.getElementById('terms-agree');
-
-            // Flow Engine
-            function updateFlow() {
-                // Progress Bar
-                progressBar.style.width = `${(currentStep / totalSteps) * 100}%`;
-
-                // Handle Step Visibilities
-                steps.forEach(step => {
-                    step.classList.remove('active');
-                    if(parseInt(step.dataset.step) === currentStep) {
-                        step.classList.add('active');
-                        // Auto focus input inside current step
-                        const input = step.querySelector('input');
-                        if(input) input.focus();
+        (function() {
+            document.addEventListener('DOMContentLoaded', () => {
+                if (window.JAYENWARE_FONTS) {
+                    const root = document.documentElement;
+                    const vars = window.JAYENWARE_FONTS.cssVariables;
+                    for (const [key, value] of Object.entries(vars)) {
+                        root.style.setProperty(key, value);
                     }
-                });
-
-                // Toggle Navigation Buttons
-                btnBack.style.display = currentStep > 1 ? 'block' : 'none';
-                if (currentStep === totalSteps) {
-                    btnNext.style.display = 'none';
-                    btnSubmit.style.display = 'flex';
-                } else {
-                    btnNext.style.display = 'flex';
-                    btnSubmit.style.display = 'none';
-                }
-            }
-
-            // Client Validation Per Step
-            function validateStep(step) {
-                clearErrors();
-                if (step === 1) {
-                    if (!nameInput.value.trim() || nameInput.value.trim().length < 3) {
-                        showFieldError(nameInput, document.getElementById('name-error'), 'Please enter your full name (min 3 characters)');
-                        return false;
-                    }
-                }
-                if (step === 2) {
-                    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-                    if (!emailRegex.test(emailInput.value.trim())) {
-                        showFieldError(emailInput, document.getElementById('email-error'), 'Enter a valid email address');
-                        return false;
-                    }
-                }
-                if (step === 3) {
-                    const cleanPhone = phoneInput.value.replace(/[^\d+]/g, '');
-                    if (!/^\+?88?01[3-9]\d{8}$/.test(cleanPhone)) {
-                        showFieldError(phoneInput, document.getElementById('phone-error'), 'Enter a valid phone number (01XXXXXXXXX)');
-                        return false;
-                    }
-                }
-                if (step === 4) {
-                    if (passwordInput.value.length < 8) {
-                        showFieldError(passwordInput, document.getElementById('password-error'), 'Password must be at least 8 characters');
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            // Click Handlers
-            btnNext.addEventListener('click', () => {
-                if(validateStep(currentStep)) {
-                    currentStep++;
-                    updateFlow();
                 }
             });
 
-            btnBack.addEventListener('click', () => {
-                currentStep--;
-                updateFlow();
+            window.addEventListener('load', () => {
+                setTimeout(initLiquidSignup, 400);
             });
 
-            // Enter key mapping to Next
-            signupForm.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && currentStep < totalSteps) {
-                    e.preventDefault();
-                    btnNext.click();
-                }
-            });
-
-            function showFieldError(inputEl, errorEl, message) {
-                inputEl.classList.add('input-error');
-                errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
-                errorEl.style.display = 'flex';
-                inputEl.focus();
-            }
-
-            function clearErrors() {
-                document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-                document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
-            }
-
-            // Location Service
-            document.getElementById('detect-location-btn').addEventListener('click', async () => {
-                const status = document.getElementById('location-status');
-                status.innerHTML = "Detecting your accurate coordinates...";
+            function initLiquidSignup() {
+                console.log('💧 Liquid Cinematic Signup Initialized');
                 
-                if (!navigator.geolocation) {
-                    status.innerHTML = "Geolocation not supported.";
-                    return;
-                }
+                let currentStep = 0;
+                let isAnimating = false;
+                
+                const formData = {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    country: 'Bangladesh',
+                    state_province: '',
+                    city: '',
+                    postal_code: '',
+                    street_address: '',
+                    apartment_house: '',
+                    terms: false
+                };
 
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&addressdetails=1`);
-                        const data = await res.json();
-                        const addr = data.address || {};
-                        
-                        countryInput.value = addr.country || 'Bangladesh';
-                        document.getElementById('signup-state').value = addr.state || '';
-                        cityInput.value = addr.city || addr.town || '';
-                        document.getElementById('signup-postal').value = addr.postcode || '';
-                        streetInput.value = addr.road || '';
-                        status.innerHTML = "<span class='text-emerald-600'>✓ Success! Location synced.</span>";
-                    } catch {
-                        status.innerHTML = "Failed to translate location details.";
+                const stepContent = document.getElementById('step-content');
+                const progressBar = document.getElementById('progress-bar');
+                const successOverlay = document.getElementById('success-overlay');
+                const authCard = document.getElementById('auth-card');
+                const toast = document.getElementById('toast');
+                const toastIcon = document.getElementById('toast-icon');
+                const toastText = document.getElementById('toast-text');
+                
+                const API_BASE = window.location.origin;
+                let toastTimeout;
+
+                const steps = [
+                    {
+                        id: 'name',
+                        question: "What's your name?",
+                        subtitle: "Let's begin your journey with us.",
+                        icon: 'fa-user-astronaut',
+                        inputType: 'text',
+                        placeholder: 'Your full name...',
+                        autocomplete: 'name',
+                        field: 'name',
+                        validation: (val) => val.trim().length >= 3 ? null : 'Name must be at least 3 characters'
+                    },
+                    {
+                        id: 'email',
+                        question: "Your email address?",
+                        subtitle: "We'll keep you updated on exclusive drops.",
+                        icon: 'fa-envelope-open-text',
+                        inputType: 'email',
+                        placeholder: 'you@example.com',
+                        autocomplete: 'email',
+                        field: 'email',
+                        validation: (val) => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(val) ? null : 'Please enter a valid email'
+                    },
+                    {
+                        id: 'phone',
+                        question: "Phone number?",
+                        subtitle: "For delivery updates and account security.",
+                        icon: 'fa-mobile-screen',
+                        inputType: 'tel',
+                        placeholder: '01XXXXXXXXX',
+                        autocomplete: 'tel-national',
+                        field: 'phone',
+                        validation: (val) => {
+                            const cleaned = val.replace(/[^\d+]/g, '');
+                            return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned) ? null : 'Enter valid BD number';
+                        }
+                    },
+                    {
+                        id: 'password',
+                        question: "Create a password",
+                        subtitle: "Make it strong and memorable.",
+                        icon: 'fa-fingerprint',
+                        inputType: 'password',
+                        placeholder: 'Minimum 8 characters...',
+                        autocomplete: 'new-password',
+                        field: 'password',
+                        validation: (val) => val.length >= 8 ? null : 'Password must be at least 8 characters'
+                    },
+                    {
+                        id: 'location',
+                        question: "Where are you based?",
+                        subtitle: "We'll auto-detect your delivery location.",
+                        icon: 'fa-location-crosshairs',
+                        isLocationStep: true
+                    },
+                    {
+                        id: 'address',
+                        question: "Delivery address",
+                        subtitle: "Help us reach your doorstep.",
+                        icon: 'fa-truck-fast',
+                        isAddressStep: true
+                    },
+                    {
+                        id: 'terms',
+                        question: "Almost done!",
+                        subtitle: "Just one last step to unlock your account.",
+                        icon: 'fa-rocket',
+                        isTermsStep: true
                     }
-                }, () => {
-                    status.innerHTML = "Permission denied or timeout.";
-                });
-            });
+                ];
 
-            // Final API Submission & Database Error Routing
-            signupForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                clearErrors();
-
-                if (!countryInput.value || !cityInput.value || !streetInput.value) {
-                    showFieldError(cityInput, document.getElementById('address-error'), 'Please fill out required address details');
-                    return;
+                function showToast(text, type = 'success') {
+                    if (!toast || !toastIcon || !toastText) return;
+                    toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
+                    toastIcon.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+                    toastText.innerText = text;
+                    toast.classList.add('show');
+                    clearTimeout(toastTimeout);
+                    toastTimeout = setTimeout(() => { if (toast) toast.classList.remove('show'); }, 4000);
                 }
 
-                if (!termsCheckbox.checked) {
-                    document.getElementById('terms-error').style.display = 'flex';
-                    document.getElementById('terms-error').innerText = 'You must accept the terms.';
-                    return;
-                }
+                window.hideToast = function() {
+                    if (toast) { toast.classList.remove('show'); clearTimeout(toastTimeout); }
+                };
 
-                btnSubmit.disabled = true;
-                btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Communicating with Database...';
-
-                try {
-                    const response = await fetch(`${window.location.origin}/api/auth/signup`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: emailInput.value.trim(),
-                            password: passwordInput.value,
-                            name: nameInput.value.trim(),
-                            phone: phoneInput.value.replace(/[-\s()]/g, ''),
-                            country: countryInput.value,
-                            state_province: document.getElementById('signup-state').value,
-                            city: cityInput.value,
-                            postal_code: document.getElementById('signup-postal').value,
-                            street_address: streetInput.value,
-                            apartment_house: document.getElementById('signup-apartment').value
-                        })
+                function updateProgress(step) {
+                    const steps = progressBar.querySelectorAll('.progress-step');
+                    steps.forEach((s, i) => {
+                        s.classList.remove('completed', 'active');
+                        if (i < step) s.classList.add('completed');
+                        if (i === step) s.classList.add('active');
                     });
+                }
 
-                    const result = await response.json();
+                function addRippleEffect(e, element) {
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple';
+                    const rect = element.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                    element.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                }
 
-                    if (!response.ok) {
-                        throw { message: result.error || 'Server rejected request', field: result.field };
-                    }
-
-                    // Database Success Screen & Toast
-                    showToast('🎉 Account authorized successfully! Welcome aboard.', 'success');
-                    setTimeout(() => { window.location.href = '/account'; }, 2000);
-
-                } catch (err) {
-                    console.error(err);
-                    showToast(err.message, 'error');
+                function renderStep(stepIndex) {
+                    if (isAnimating) return;
+                    isAnimating = true;
                     
-                    // Route DB Error to specific field and jump to that step
-                    if (err.field) {
-                        if (err.field === 'email') { currentStep = 2; updateFlow(); showFieldError(emailInput, document.getElementById('email-error'), err.message); }
-                        else if (err.field === 'phone') { currentStep = 3; updateFlow(); showFieldError(phoneInput, document.getElementById('phone-error'), err.message); }
-                        else if (err.field === 'name') { currentStep = 1; updateFlow(); showFieldError(nameInput, document.getElementById('name-error'), err.message); }
+                    const step = steps[stepIndex];
+                    updateProgress(stepIndex);
+                    
+                    let html = '';
+                    
+                    if (step.isLocationStep) {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">
+                                    <span class="dot-indicator"></span> Step ${stepIndex + 1} of ${steps.length}
+                                </div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <button type="button" class="location-detect-btn" id="detect-location-btn">
+                                    <i class="fa-solid fa-satellite"></i> Auto-Detect My Location
+                                </button>
+                                <div class="location-status" id="location-status"></div>
+                                
+                                <div style="margin-top:16px;">
+                                    <div class="input-wrapper">
+                                        <span class="floating-label">Country</span>
+                                        <input type="text" class="cinematic-input" id="step-country" value="${formData.country}">
+                                    </div>
+                                    <div class="input-error-message" id="error-country"></div>
+                                </div>
+                                <div style="margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                                    <div>
+                                        <div class="input-wrapper">
+                                            <span class="floating-label">State</span>
+                                            <input type="text" class="cinematic-input" id="step-state" value="${formData.state_province}">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="input-wrapper">
+                                            <span class="floating-label">City</span>
+                                            <input type="text" class="cinematic-input" id="step-city" value="${formData.city}">
+                                        </div>
+                                        <div class="input-error-message" id="error-city"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="nav-buttons">
+                                    <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                        <i class="fa-solid fa-arrow-left"></i> Back
+                                    </button>
+                                    <button class="btn-next" onclick="validateAndNext(${stepIndex})">
+                                        Continue <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    } else if (step.isAddressStep) {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">
+                                    <span class="dot-indicator"></span> Step ${stepIndex + 1} of ${steps.length}
+                                </div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <div style="margin-bottom:16px;">
+                                    <div class="input-wrapper">
+                                        <span class="floating-label">Postal Code</span>
+                                        <input type="text" class="cinematic-input" id="step-postal" value="${formData.postal_code}">
+                                    </div>
+                                </div>
+                                <div style="margin-bottom:16px;">
+                                    <div class="input-wrapper">
+                                        <span class="floating-label">Street Address</span>
+                                        <input type="text" class="cinematic-input" id="step-street" value="${formData.street_address}">
+                                    </div>
+                                    <div class="input-error-message" id="error-street"></div>
+                                </div>
+                                <div style="margin-bottom:16px;">
+                                    <div class="input-wrapper">
+                                        <span class="floating-label">Apartment / House No.</span>
+                                        <input type="text" class="cinematic-input" id="step-apartment" value="${formData.apartment_house}">
+                                    </div>
+                                </div>
+                                
+                                <div class="nav-buttons">
+                                    <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                        <i class="fa-solid fa-arrow-left"></i> Back
+                                    </button>
+                                    <button class="btn-next" onclick="validateAndNext(${stepIndex})">
+                                        Continue <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    } else if (step.isTermsStep) {
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">
+                                    <span class="dot-indicator"></span> Step ${stepIndex + 1} of ${steps.length}
+                                </div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="step-terms" ${formData.terms ? 'checked' : ''}>
+                                    <label for="step-terms">I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a></label>
+                                </div>
+                                <div class="input-error-message" id="error-terms"></div>
+                                
+                                <div class="nav-buttons">
+                                    <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                        <i class="fa-solid fa-arrow-left"></i> Back
+                                    </button>
+                                    <button class="btn-next" id="submit-btn" onclick="submitSignup()">
+                                        <i class="fa-solid fa-rocket"></i> Launch Account
+                                    </button>
+                                </div>
+                            </div>`;
                     } else {
-                        // General fallback mapping if field isn't specified but email exists in text
-                        if(err.message.toLowerCase().includes('email')) {
-                            currentStep = 2; updateFlow(); showFieldError(emailInput, document.getElementById('email-error'), err.message);
-                        } else if(err.message.toLowerCase().includes('phone')) {
-                            currentStep = 3; updateFlow(); showFieldError(phoneInput, document.getElementById('phone-error'), err.message);
+                        html = `
+                            <div class="step-container" id="step-${stepIndex}">
+                                <div class="step-counter">
+                                    <span class="dot-indicator"></span> Step ${stepIndex + 1} of ${steps.length}
+                                </div>
+                                <h2 class="step-question">${step.question}</h2>
+                                <p class="step-subtitle">${step.subtitle}</p>
+                                
+                                <div class="input-wrapper">
+                                    <span class="floating-label">${step.placeholder}</span>
+                                    <input type="${step.inputType}" class="cinematic-input" id="step-input" 
+                                           placeholder="${step.placeholder}"
+                                           value="${formData[step.field] || ''}"
+                                           autocomplete="${step.autocomplete}"
+                                           autofocus>
+                                    <div class="input-error-message" id="error-${step.id}"></div>
+                                </div>
+                                
+                                <div class="nav-buttons">
+                                    ${stepIndex > 0 ? `
+                                        <button class="btn-back" onclick="navigateStep(${stepIndex - 1})">
+                                            <i class="fa-solid fa-arrow-left"></i> Back
+                                        </button>
+                                    ` : '<div></div>'}
+                                    <button class="btn-next" onclick="validateAndNext(${stepIndex})">
+                                        Continue <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    }
+                    
+                    stepContent.innerHTML = html;
+                    
+                    // Add ripple to buttons
+                    setTimeout(() => {
+                        document.querySelectorAll('.btn-next, .btn-back').forEach(btn => {
+                            btn.addEventListener('click', (e) => addRippleEffect(e, btn));
+                        });
+                    }, 100);
+                    
+                    // Focus input
+                    setTimeout(() => {
+                        const input = document.getElementById('step-input');
+                        if (input) input.focus();
+                    }, 200);
+                    
+                    // Attach location detection
+                    if (step.isLocationStep) {
+                        setTimeout(attachLocationDetection, 300);
+                    }
+                    
+                    // Attach enter key
+                    setTimeout(attachEnterKey, 300);
+                    
+                    isAnimating = false;
+                }
+
+                function attachEnterKey() {
+                    const input = document.getElementById('step-input');
+                    if (input) {
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                validateAndNext(currentStep);
+                            }
+                        });
+                    }
+                }
+
+                function attachLocationDetection() {
+                    const detectBtn = document.getElementById('detect-location-btn');
+                    const locationStatus = document.getElementById('location-status');
+                    
+                    if (detectBtn) {
+                        detectBtn.addEventListener('click', async (e) => {
+                            addRippleEffect(e, detectBtn);
+                            
+                            if (!navigator.geolocation) {
+                                showToast('Location not supported', 'error');
+                                return;
+                            }
+                            
+                            detectBtn.disabled = true;
+                            detectBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning...';
+                            locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting to satellites...';
+                            locationStatus.style.color = 'var(--liquid-4)';
+                            
+                            try {
+                                const position = await new Promise((resolve, reject) => {
+                                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                        enableHighAccuracy: true,
+                                        timeout: 15000,
+                                        maximumAge: 0
+                                    });
+                                });
+                                
+                                const { latitude, longitude } = position.coords;
+                                locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Resolving address...';
+                                
+                                const response = await fetch(
+                                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
+                                    { headers: { 'User-Agent': 'JAYENWARE_SignUp/1.0' } }
+                                );
+                                
+                                if (!response.ok) throw new Error('Failed to fetch');
+                                
+                                const data = await response.json();
+                                const address = data.address || {};
+                                
+                                document.getElementById('step-country').value = address.country || 'Bangladesh';
+                                document.getElementById('step-state').value = address.state || '';
+                                document.getElementById('step-city').value = address.city || address.town || '';
+                                
+                                locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location locked!';
+                                locationStatus.style.color = '#059669';
+                                showToast('Coordinates acquired!', 'success');
+                                
+                            } catch (error) {
+                                locationStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Signal lost. Enter manually.';
+                                locationStatus.style.color = '#ff4757';
+                            } finally {
+                                detectBtn.disabled = false;
+                                detectBtn.innerHTML = '<i class="fa-solid fa-satellite"></i> Auto-Detect My Location';
+                            }
+                        });
+                    }
+                }
+
+                window.validateAndNext = function(stepIndex) {
+                    const step = steps[stepIndex];
+                    let isValid = true;
+                    
+                    if (step.isLocationStep) {
+                        const country = document.getElementById('step-country')?.value.trim();
+                        const city = document.getElementById('step-city')?.value.trim();
+                        
+                        if (!country) {
+                            showError('error-country', 'Country is required');
+                            isValid = false;
+                        }
+                        if (!city) {
+                            showError('error-city', 'City is required');
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            formData.country = country;
+                            formData.state_province = document.getElementById('step-state')?.value.trim() || '';
+                            formData.city = city;
+                        }
+                    } else if (step.isAddressStep) {
+                        const street = document.getElementById('step-street')?.value.trim();
+                        
+                        if (!street) {
+                            showError('error-street', 'Street address is required');
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            formData.postal_code = document.getElementById('step-postal')?.value.trim() || '';
+                            formData.street_address = street;
+                            formData.apartment_house = document.getElementById('step-apartment')?.value.trim() || '';
+                        }
+                    } else if (!step.isTermsStep) {
+                        const input = document.getElementById('step-input');
+                        const value = input?.value || '';
+                        const error = step.validation(value);
+                        
+                        if (error) {
+                            showError(`error-${step.id}`, error);
+                            if (input) {
+                                input.classList.add('error');
+                                setTimeout(() => input.classList.remove('error'), 600);
+                            }
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            formData[step.field] = value;
                         }
                     }
+                    
+                    if (isValid && stepIndex < steps.length - 1) {
+                        navigateStep(stepIndex + 1);
+                    }
+                };
 
-                    btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = 'Create Account';
+                function showError(elementId, message) {
+                    const el = document.getElementById(elementId);
+                    if (el) {
+                        el.textContent = message;
+                        el.classList.add('visible');
+                        setTimeout(() => el.classList.remove('visible'), 3500);
+                    }
                 }
-            });
 
-            function showToast(text, type) {
-                const toast = document.getElementById('toast');
-                const tIcon = document.getElementById('toast-icon');
-                const tText = document.getElementById('toast-text');
+                window.navigateStep = function(targetStep) {
+                    if (isAnimating || targetStep < 0 || targetStep >= steps.length) return;
+                    if (targetStep === currentStep) return;
+                    
+                    currentStep = targetStep;
+                    renderStep(currentStep);
+                };
 
-                tText.innerText = text;
-                if(type === 'success') {
-                    tIcon.className = "w-8 h-8 rounded-full flex items-center justify-center bg-emerald-100 text-emerald-600";
-                    tIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
-                } else {
-                    tIcon.className = "w-8 h-8 rounded-full flex items-center justify-center bg-rose-100 text-rose-600";
-                    tIcon.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
+                window.submitSignup = async function() {
+                    const termsChecked = document.getElementById('step-terms')?.checked;
+                    
+                    if (!termsChecked) {
+                        showError('error-terms', 'Please agree to continue');
+                        return;
+                    }
+                    
+                    formData.terms = true;
+                    
+                    const submitBtn = document.getElementById('submit-btn');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<span class="loading-dots"><span></span><span></span><span></span></span> Launching...';
+                    }
+                    
+                    try {
+                        const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                email: formData.email,
+                                password: formData.password,
+                                name: formData.name,
+                                phone: formData.phone.replace(/[-\s()]/g, ''),
+                                country: formData.country,
+                                state_province: formData.state_province,
+                                city: formData.city,
+                                postal_code: formData.postal_code,
+                                street_address: formData.street_address,
+                                apartment_house: formData.apartment_house
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (!response.ok) {
+                            throw new Error(result.error || 'Registration failed');
+                        }
+                        
+                        // Success!
+                        document.getElementById('success-message').textContent = 
+                            `Welcome aboard, ${formData.name.split(' ')[0]}! Your account is ready. Redirecting you now...`;
+                        successOverlay.classList.add('show');
+                        
+                        createParticleBurst();
+                        
+                        setTimeout(() => {
+                            window.location.href = '/account';
+                        }, 2800);
+                        
+                    } catch (err) {
+                        console.error('Signup error:', err);
+                        showToast(err.message || 'Something went wrong. Try again.', 'error');
+                        
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Launch Account';
+                        }
+                    }
+                };
+
+                function createParticleBurst() {
+                    const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#ffffff'];
+                    const card = authCard;
+                    const rect = card.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    for (let i = 0; i < 50; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        const size = 4 + Math.random() * 12;
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = 80 + Math.random() * 250;
+                        const tx = Math.cos(angle) * distance;
+                        const ty = Math.sin(angle) * distance;
+                        
+                        particle.style.cssText = `
+                            width: ${size}px;
+                            height: ${size}px;
+                            background: ${colors[Math.floor(Math.random() * colors.length)]};
+                            left: ${centerX}px;
+                            top: ${centerY}px;
+                            --tx: ${tx}px;
+                            --ty: ${ty}px;
+                            animation-delay: ${Math.random() * 0.3}s;
+                            box-shadow: 0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]};
+                        `;
+                        
+                        document.body.appendChild(particle);
+                        setTimeout(() => particle.remove(), 1500);
+                    }
                 }
+
+                // Initialize
+                renderStep(0);
                 
-                toast.classList.add('show');
-                setTimeout(() => { toast.classList.remove('show'); }, 4000);
+                document.addEventListener('click', (e) => {
+                    if (toast && toast.classList.contains('show') && !toast.contains(e.target)) {
+                        window.hideToast();
+                    }
+                });
+
+                console.log('💧 Liquid flow ready!');
             }
-        });
+        })();
     </script>
 </body>
 </html>
