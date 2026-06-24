@@ -11,11 +11,14 @@
     
     <link rel="icon" type="image/png" sizes="32x32" href="https://www.jayenware.shop/logo.png">
     
+    <!-- Dynamic Font Loading from fonts.js -->
+    <script src="/js/fonts.js"></script>
+    
+    <!-- Preconnect for Google Fonts (will be loaded dynamically) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -53,7 +56,7 @@
         body {
             background-color: var(--soft-bg);
             color: var(--primary);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
@@ -62,87 +65,13 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+        /* Dynamic Header Styles - Applied when header loads */
+        #jayenware-header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 50;
-        }
-        
-        .glass-nav .nav-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 16px;
-            height: 56px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        @media (min-width: 640px) {
-            .glass-nav .nav-inner { height: 64px; padding: 0 24px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .glass-nav .nav-inner { height: 80px; padding: 0 32px; }
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--primary);
-            transition: opacity var(--transition-fast);
-        }
-        
-        .brand-logo:hover { opacity: 0.8; }
-        
-        .brand-logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-sm);
-        }
-        
-        .brand-logo span {
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            font-size: 18px;
-        }
-        
-        @media (min-width: 640px) {
-            .brand-logo img { width: 36px; height: 36px; }
-            .brand-logo span { font-size: 20px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .brand-logo img { width: 40px; height: 40px; }
-            .brand-logo span { font-size: 22px; }
-        }
-
-        .nav-home-link {
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            transition: all var(--transition-fast);
-        }
-        
-        .nav-home-link:hover {
-            background: rgba(0,0,0,0.05);
-            color: var(--accent);
         }
 
         main {
@@ -198,21 +127,22 @@
         }
         
         .auth-card .logo-area h1 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
+            font-family: var(--font-heading);
+            font-weight: 800;
             font-size: 22px;
             color: var(--primary);
         }
         
         .auth-card .logo-area p {
-            font-size: 12px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             color: var(--text-muted);
             margin-top: 6px;
         }
         
         @media (min-width: 640px) {
             .auth-card .logo-area h1 { font-size: 26px; }
-            .auth-card .logo-area p { font-size: 13px; }
+            .auth-card .logo-area p { font-size: var(--text-sm); }
         }
 
         .tab-buttons {
@@ -226,10 +156,11 @@
             flex: 1;
             text-align: center;
             padding: 14px 8px;
-            font-size: 13px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: var(--tracking-wider);
             text-decoration: none;
             border-bottom: 3px solid transparent;
             transition: all var(--transition-fast);
@@ -237,7 +168,7 @@
         }
         
         @media (min-width: 640px) {
-            .tab-buttons a { font-size: 14px; padding: 16px 12px; }
+            .tab-buttons a { font-size: var(--text-sm); padding: 16px 12px; }
         }
         
         .tab-buttons a.active {
@@ -254,11 +185,12 @@
         .tab-buttons a i { margin-right: 6px; }
 
         .section-title {
+            font-family: var(--font-subtitle);
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-light);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: var(--tracking-wide);
             margin: 20px 0 12px;
             padding-top: 16px;
             border-top: 1px solid #f0f0f0;
@@ -295,11 +227,11 @@
             color: white;
             border: none;
             border-radius: var(--radius-sm);
+            font-family: var(--font-body);
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all var(--transition-fast);
-            font-family: 'Inter', sans-serif;
             white-space: nowrap;
         }
         
@@ -315,6 +247,7 @@
         }
         
         .location-status {
+            font-family: var(--font-body);
             font-size: 10px;
             color: var(--text-muted);
             margin-top: 4px;
@@ -365,8 +298,8 @@
             padding: 14px 14px 14px 44px;
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
             background: #fafafa;
             outline: none;
             transition: all var(--transition-fast);
@@ -377,7 +310,7 @@
             .input-group input,
             .input-group textarea,
             .input-group select {
-                font-size: 15px;
+                font-size: var(--text-base);
                 padding: 15px 15px 15px 46px;
             }
         }
@@ -439,6 +372,7 @@
         }
         
         .error-message {
+            font-family: var(--font-body);
             font-size: 11px;
             color: var(--error);
             margin-top: 6px;
@@ -457,12 +391,12 @@
             color: var(--white);
             border: none;
             border-radius: var(--radius-md);
+            font-family: var(--font-body);
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: var(--tracking-wider);
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -504,10 +438,11 @@
             text-align: center;
             margin: 24px 0;
             color: #ccc;
+            font-family: var(--font-body);
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: var(--tracking-wide);
             position: relative;
         }
         
@@ -528,7 +463,8 @@
             display: block;
             text-align: center;
             margin-top: 18px;
-            font-size: 12px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 600;
@@ -552,10 +488,11 @@
         }
         
         .benefits h4 {
+            font-family: var(--font-subtitle);
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: var(--tracking-wide);
             color: var(--accent);
             margin-bottom: 12px;
             display: flex;
@@ -571,6 +508,7 @@
         }
         
         .benefits ul li {
+            font-family: var(--font-body);
             font-size: 12px;
             color: var(--text-light);
             display: flex;
@@ -594,7 +532,8 @@
             align-items: flex-start;
             gap: 10px;
             margin-top: 16px;
-            font-size: 12px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             color: var(--text-light);
             font-weight: 500;
             line-height: 1.4;
@@ -663,7 +602,8 @@
         .toast-error { background: #fef2f2; color: var(--error); }
         
         #toast .toast-text {
-            font-size: 13px;
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
             font-weight: 600;
             flex-grow: 1;
             line-height: 1.4;
@@ -722,10 +662,11 @@
         
         .loader-overlay .loader-text {
             margin-top: 18px;
-            font-weight: 900;
+            font-family: var(--font-heading);
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            font-size: 12px;
+            letter-spacing: var(--tracking-widest);
+            font-size: var(--text-xs);
             color: rgba(26,26,26,0.5);
         }
 
@@ -767,15 +708,16 @@
         }
         
         .location-modal h3 {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-heading);
             font-size: 18px;
-            font-weight: 900;
+            font-weight: 800;
             margin-bottom: 8px;
             color: var(--primary);
         }
         
         .location-modal p {
-            font-size: 12px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             color: var(--text-light);
             margin-bottom: 16px;
         }
@@ -792,7 +734,8 @@
             display: flex;
             justify-content: space-between;
             padding: 6px 0;
-            font-size: 12px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             border-bottom: 1px solid #f1f5f9;
         }
         
@@ -823,13 +766,13 @@
             flex: 1;
             padding: 12px;
             border-radius: var(--radius-md);
-            font-size: 12px;
+            font-family: var(--font-body);
+            font-size: var(--text-xs);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: var(--tracking-wide);
             cursor: pointer;
             transition: all var(--transition-fast);
-            font-family: 'Inter', sans-serif;
             border: none;
         }
         
@@ -853,20 +796,22 @@
             color: var(--primary);
         }
 
-        .auth-footer {
+        /* Dynamic Footer Styles */
+        #jayenware-footer {
             text-align: center;
             padding: 18px;
+            font-family: var(--font-body);
             font-size: 11px;
             color: #bbb;
         }
         
-        .auth-footer a {
+        #jayenware-footer a {
             color: var(--accent);
             text-decoration: none;
             font-weight: 700;
         }
         
-        .auth-footer a:hover {
+        #jayenware-footer a:hover {
             color: var(--primary);
             text-decoration: underline;
         }
@@ -880,6 +825,7 @@
             padding: 8px 16px;
             border-radius: var(--radius-sm);
             z-index: 100;
+            font-family: var(--font-body);
             font-weight: 600;
             text-decoration: none;
             transition: top 0.2s;
@@ -905,7 +851,7 @@
             padding: 12px 16px;
             border-radius: var(--radius-md);
             font-family: 'Courier New', monospace;
-            font-size: 13px;
+            font-size: var(--text-sm);
             font-weight: 700;
             text-align: center;
             letter-spacing: 2px;
@@ -934,18 +880,8 @@
         <p class="loader-text">JAYENWARE</p>
     </div>
 
-    <!-- Navigation -->
-    <nav class="glass-nav" role="navigation">
-        <div class="nav-inner">
-            <a href="/" class="brand-logo" aria-label="JAYENWARE Home">
-                <img src="https://www.jayenware.shop/logo.png" alt="JAYENWARE Logo" width="40" height="40" loading="eager">
-                <span>JAYENWARE</span>
-            </a>
-            <a href="/" class="nav-home-link">
-                <i class="fa-solid fa-house" aria-hidden="true"></i> Home
-            </a>
-        </div>
-    </nav>
+    <!-- Dynamic Header Container -->
+    <div id="jayenware-header"></div>
 
     <!-- Main Content -->
     <main id="main-content">
@@ -1118,6 +1054,9 @@
         </div>
     </main>
 
+    <!-- Dynamic Footer Container -->
+    <div id="jayenware-footer"></div>
+
     <!-- Location Confirmation Modal -->
     <div class="location-modal-overlay" id="location-modal-overlay">
         <div class="location-modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
@@ -1156,11 +1095,6 @@
         </div>
     </div>
 
-    <footer class="auth-footer">
-        <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener">BINZEO</a></p>
-        <p>&copy; 2025 JAYENWARE. All rights reserved.</p>
-    </footer>
-
     <div id="toast" role="alert" aria-live="polite">
         <div class="toast-inner">
             <div class="toast-icon" id="toast-icon"></div>
@@ -1169,7 +1103,34 @@
         </div>
     </div>
 
+    <!-- Dynamic Components Loader -->
+    <script src="/js/components.js"></script>
+    
     <script>
+        // ============================================================
+        // DYNAMIC FONT LOADER
+        // Loads Google Fonts based on JAYENWARE_FONTS configuration
+        // ============================================================
+        (function() {
+            if (typeof JAYENWARE_FONTS !== 'undefined' && JAYENWARE_FONTS.googleFontsURL) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = JAYENWARE_FONTS.googleFontsURL;
+                link.media = 'print';
+                link.onload = function() {
+                    this.media = 'all';
+                    console.log('✅ Google Fonts loaded dynamically');
+                };
+                document.head.appendChild(link);
+            } else {
+                console.warn('⚠️ JAYENWARE_FONTS not found, using fallback fonts');
+            }
+        })();
+
+        // ============================================================
+        // MAIN SIGNUP SCRIPT
+        // ============================================================
+        
         // DOM Elements
         const toast = document.getElementById('toast');
         const toastIcon = document.getElementById('toast-icon');
@@ -1233,10 +1194,10 @@
             toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
-        function hideToast() {
+        window.hideToast = function() {
             toast.classList.remove('show');
             clearTimeout(toastTimeout);
-        }
+        };
 
         function showLoader(ms = 1500) {
             loader.classList.remove('hidden');
@@ -1606,12 +1567,15 @@
 
         document.addEventListener('click', (e) => {
             if (toast.classList.contains('show') && !toast.contains(e.target)) {
-                hideToast();
+                window.hideToast();
             }
         });
 
+        // Initialize page
         checkSession();
-        console.log('Professional Signup page ready');
+        console.log('✅ JAYENWARE Signup Page Ready');
+        console.log('  🔤 Fonts:', JAYENWARE_FONTS?.families?.heading || 'fallback');
+        console.log('  🧩 Components: Dynamic Header & Footer');
     </script>
 </body>
 </html>
