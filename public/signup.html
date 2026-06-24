@@ -69,7 +69,6 @@
             overflow-x: hidden;
         }
 
-        /* Reduced motion support */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -115,11 +114,11 @@
         }
         
         .progress-step.done {
-            background: var(--blue);
+            background: var(--primary);
         }
         
         .progress-step.current {
-            background: var(--blue);
+            background: var(--primary);
             width: 40px;
         }
 
@@ -162,7 +161,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Icon Circle */
+        /* Icon Circle - All Black */
         .icon-circle {
             width: 52px;
             height: 52px;
@@ -173,13 +172,9 @@
             margin-bottom: 20px;
             font-size: 22px;
             transition: all 0.3s ease;
+            background: #f5f5f7;
+            color: var(--primary);
         }
-        
-        .icon-circle.blue { background: #e8f2ff; color: var(--blue); }
-        .icon-circle.green { background: #ecfdf5; color: var(--success); }
-        .icon-circle.gold { background: #fdf8f0; color: var(--gold); }
-        .icon-circle.purple { background: #f3f0ff; color: #7c3aed; }
-        .icon-circle.rose { background: #fff1f2; color: #e11d48; }
         
         @media (min-width: 640px) {
             .icon-circle { width: 56px; height: 56px; font-size: 24px; }
@@ -235,8 +230,8 @@
         .form-input:hover { border-color: #c5c5cc; }
         
         .form-input:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 4px rgba(0,122,255,0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(29,29,31,0.06);
         }
         
         .form-input.has-error {
@@ -351,13 +346,13 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             font-size: 13px;
             font-weight: 500;
-            color: var(--blue);
+            color: var(--primary);
             margin-bottom: 16px;
             transition: all 0.2s ease;
             -webkit-tap-highlight-color: transparent;
         }
         
-        .locate-btn:hover { background: #ebebed; border-color: var(--blue); }
+        .locate-btn:hover { background: #ebebed; border-color: #c5c5cc; }
         .locate-btn:active { transform: scale(0.98); }
         .locate-btn.is-loading { opacity: 0.7; pointer-events: none; }
 
@@ -377,7 +372,7 @@
         
         .agree-box input[type="checkbox"] {
             margin-top: 1px;
-            accent-color: var(--blue);
+            accent-color: var(--primary);
             width: 18px;
             height: 18px;
             cursor: pointer;
@@ -396,12 +391,13 @@
         }
         
         .agree-box a {
-            color: var(--blue);
+            color: var(--primary);
             font-weight: 600;
-            text-decoration: none;
+            text-decoration: underline;
+            text-underline-offset: 2px;
         }
         
-        .agree-box a:hover { text-decoration: underline; }
+        .agree-box a:hover { color: #000; }
 
         /* Success Overlay */
         .success-overlay {
@@ -431,7 +427,7 @@
             width: 72px;
             height: 72px;
             border-radius: 50%;
-            background: #ecfdf5;
+            background: #f5f5f7;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -440,7 +436,7 @@
         
         .success-check i {
             font-size: 32px;
-            color: var(--success);
+            color: var(--primary);
         }
         
         @media (min-width: 640px) {
@@ -507,10 +503,14 @@
             justify-content: center;
             font-size: 14px;
             flex-shrink: 0;
+            background: #f5f5f7;
+            color: var(--primary);
         }
         
-        .toast-icon-wrap.success { background: #ecfdf5; color: var(--success); }
-        .toast-icon-wrap.error { background: #fef2f2; color: var(--error); }
+        .toast-icon-wrap.error {
+            background: #fef2f2;
+            color: var(--error);
+        }
         
         #toast .toast-msg {
             font-size: 12px;
@@ -602,7 +602,9 @@
     <!-- Toast -->
     <div id="toast" role="alert" aria-live="polite">
         <div class="toast-box">
-            <div class="toast-icon-wrap" id="toast-icon-wrap"></div>
+            <div class="toast-icon-wrap" id="toast-icon-wrap">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
             <span class="toast-msg" id="toast-msg"></span>
             <button class="toast-close" onclick="hideToast()" aria-label="Close">
                 <i class="fa-solid fa-xmark"></i>
@@ -642,6 +644,12 @@
                 const toast = $('toast');
                 const API = window.location.origin;
 
+                // Blocked email domains
+                const blockedDomains = [
+                    'jabiyen.com', 'jabiyen.shop', 'jabiyen.io', 'jabiyen.me',
+                    'binzeo.com', 'binzeo.shop', 'binzeo.io', 'binzeo.me'
+                ];
+
                 let toastTimer;
 
                 // Toast
@@ -650,8 +658,14 @@
                     const text = $('toast-msg');
                     if (!icon || !text) return;
                     
-                    icon.className = 'toast-icon-wrap ' + type;
-                    icon.innerHTML = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation"></i>';
+                    if (type === 'error') {
+                        icon.className = 'toast-icon-wrap error';
+                        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+                    } else {
+                        icon.className = 'toast-icon-wrap';
+                        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                    }
+                    
                     text.textContent = msg;
                     toast.classList.add('show');
                     clearTimeout(toastTimer);
@@ -672,11 +686,26 @@
                     });
                 }
 
+                // Email validation with blocked domains check
+                function validateEmail(email) {
+                    // Basic format check
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        return 'Please enter a valid email address';
+                    }
+                    
+                    // Extract domain and check against blocked list
+                    const domain = email.split('@')[1]?.toLowerCase();
+                    if (blockedDomains.includes(domain)) {
+                        return `Email domain "@${domain}" is not allowed. Please use your personal or business email.`;
+                    }
+                    
+                    return null; // Valid
+                }
+
                 // Steps config
                 const steps = [
                     {
                         icon: 'fa-solid fa-user',
-                        iconClass: 'blue',
                         question: "What's your name?",
                         desc: "We'll use this to personalize your experience.",
                         field: 'name', type: 'text', placeholder: 'Your full name',
@@ -686,28 +715,40 @@
                     },
                     {
                         icon: 'fa-solid fa-envelope',
-                        iconClass: 'blue',
                         question: "What's your email?",
                         desc: "For order updates and account security.",
                         field: 'email', type: 'email', placeholder: 'you@example.com',
                         autocomplete: 'email',
-                        check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Enter a valid email address',
-                        hint: 'We never share your email'
+                        check: v => validateEmail(v),
+                        hint: 'Use your personal or business email'
                     },
                     {
                         icon: 'fa-solid fa-phone',
-                        iconClass: 'green',
                         question: "Your phone number?",
-                        desc: "For delivery coordination and recovery.",
-                        field: 'phone', type: 'tel', placeholder: '01XXXXXXXXX',
+                        desc: "For delivery coordination and account recovery.",
+                        field: 'phone', type: 'tel', placeholder: '+8801XXXXXXXXX',
                         autocomplete: 'tel-national',
-                        check: v => { const c = v.replace(/[^\d+]/g, ''); return /^\+?88?01[3-9]\d{8}$/.test(c) ? null : 'Enter valid BD number'; },
-                        hint: 'Bangladesh numbers',
+                        check: v => {
+                            const cleaned = v.replace(/[^\d+]/g, '');
+                            // International format: must start with + followed by country code
+                            if (!cleaned.startsWith('+')) {
+                                return 'Please include country code (e.g., +880 for Bangladesh, +1 for USA)';
+                            }
+                            // Minimum: + and at least 10 digits
+                            if (cleaned.length < 11) {
+                                return 'Phone number is too short';
+                            }
+                            // Maximum: + and up to 15 digits (international standard)
+                            if (cleaned.length > 16) {
+                                return 'Phone number is too long';
+                            }
+                            return null;
+                        },
+                        hint: 'Include country code (+880, +1, +44, etc.)',
                         format: true
                     },
                     {
                         icon: 'fa-solid fa-lock',
-                        iconClass: 'purple',
                         question: "Create a password",
                         desc: "Use 8+ characters for a strong password.",
                         field: 'password', type: 'password', placeholder: 'Minimum 8 characters',
@@ -717,21 +758,18 @@
                     },
                     {
                         icon: 'fa-solid fa-location-dot',
-                        iconClass: 'rose',
                         question: "Where are you located?",
                         desc: "Auto-detect or enter your location manually.",
                         isLocation: true
                     },
                     {
                         icon: 'fa-solid fa-house',
-                        iconClass: 'gold',
                         question: "Your delivery address",
                         desc: "For smooth and accurate deliveries.",
                         isAddress: true
                     },
                     {
-                        icon: 'fa-solid fa-shield-check',
-                        iconClass: 'green',
+                        icon: 'fa-solid fa-shield-halved',
                         question: "Almost there!",
                         desc: "Review and accept our terms to finish.",
                         isTerms: true
@@ -750,7 +788,7 @@
                     if (s.isLocation) {
                         html = `
                             <div class="step-view">
-                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <div class="icon-circle"><i class="${s.icon}"></i></div>
                                 <h2 class="step-heading">${s.question}</h2>
                                 <p class="step-desc">${s.desc}</p>
                                 
@@ -763,7 +801,7 @@
                                     <input type="text" class="form-input" id="loc-country" placeholder="Country" value="${data.country}">
                                 </div>
                                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-state" placeholder="State" value="${data.state_province}">
+                                    <input type="text" class="form-input" id="loc-state" placeholder="State / Province" value="${data.state_province}">
                                     <input type="text" class="form-input" id="loc-city" placeholder="City" value="${data.city}">
                                 </div>
                                 <div class="input-feedback" id="loc-error"></div>
@@ -776,18 +814,18 @@
                     } else if (s.isAddress) {
                         html = `
                             <div class="step-view">
-                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <div class="icon-circle"><i class="${s.icon}"></i></div>
                                 <h2 class="step-heading">${s.question}</h2>
                                 <p class="step-desc">${s.desc}</p>
                                 
                                 <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal code" value="${data.postal_code}">
+                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal / ZIP code" value="${data.postal_code}">
                                 </div>
                                 <div style="margin-bottom:10px;">
                                     <input type="text" class="form-input" id="addr-street" placeholder="Street address" value="${data.street_address}">
                                 </div>
                                 <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment / House no." value="${data.apartment_house}">
+                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment, suite, unit (optional)" value="${data.apartment_house}">
                                 </div>
                                 <div class="input-feedback" id="addr-error"></div>
                                 
@@ -799,7 +837,7 @@
                     } else if (s.isTerms) {
                         html = `
                             <div class="step-view">
-                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <div class="icon-circle"><i class="${s.icon}"></i></div>
                                 <h2 class="step-heading">${s.question}</h2>
                                 <p class="step-desc">${s.desc}</p>
                                 
@@ -821,7 +859,7 @@
                     } else {
                         html = `
                             <div class="step-view">
-                                <div class="icon-circle ${s.iconClass}"><i class="${s.icon}"></i></div>
+                                <div class="icon-circle"><i class="${s.icon}"></i></div>
                                 <h2 class="step-heading">${s.question}</h2>
                                 <p class="step-desc">${s.desc}</p>
                                 
@@ -860,7 +898,17 @@
                     if (s.format && mainInp) {
                         mainInp.addEventListener('input', function() {
                             let v = this.value.replace(/[^\d+]/g, '');
-                            if (!v.startsWith('+') && v.length > 3 && !v.includes('-')) v = v.slice(0,3) + '-' + v.slice(3);
+                            // Keep the + prefix
+                            if (v.startsWith('+')) {
+                                const rest = v.slice(1);
+                                if (rest.length > 15) v = '+' + rest.slice(0, 15);
+                            } else {
+                                // Auto-add + if number starts with country code pattern
+                                if (v.length >= 10 && !v.startsWith('+')) {
+                                    v = '+' + v;
+                                }
+                                if (v.length > 16) v = v.slice(0, 16);
+                            }
                             this.value = v;
                         });
                     }
@@ -941,7 +989,7 @@
 
                 // Detect location
                 async function detectLocation() {
-                    if (!navigator.geolocation) { notify('Location not supported', 'error'); return; }
+                    if (!navigator.geolocation) { notify('Location not supported on this device', 'error'); return; }
                     
                     const btn = document.getElementById('locate-btn');
                     const status = document.getElementById('locate-status');
@@ -1040,7 +1088,7 @@
                 };
 
                 function spawnConfetti() {
-                    const colors = ['#007aff', '#059669', '#c9a96e', '#f59e0b', '#7c3aed', '#e11d48'];
+                    const colors = ['#1d1d1f', '#86868b', '#c9a96e', '#f59e0b', '#7c3aed', '#e11d48'];
                     const card = document.getElementById('auth-card');
                     const rect = card.getBoundingClientRect();
                     const cx = rect.left + rect.width / 2;
