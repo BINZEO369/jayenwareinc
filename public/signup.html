@@ -1,25 +1,31 @@
 <!DOCTYPE html>
-<html lang="en-BD" class="scroll-smooth">
+<html lang="bn-BD" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sign Up | JAYENWARE Official Store</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Sign Up | JAYENWARE</title>
     
     <meta name="description" content="Create your JAYENWARE account. Join for exclusive deals, faster checkout, and premium lifestyle shopping.">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#ffffff">
     
-    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
+    <link rel="canonical" href="https://www.jayenware.shop/signup" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Dynamic Font System -->
+    <script src="/fonts.js"></script>
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,236 +33,186 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        heading: ["'Manrope'", 'sans-serif'],
-                        subtitle: ["'Sora'", 'sans-serif'],
-                        body: ["'Inter'", 'sans-serif'],
-                    },
                     colors: {
-                        primary: '#1a1a1a',
-                        accent: '#c9a96e',
-                        soft: '#f8f6f3',
+                        primary: '#1d1d1f',
+                        accent: '#86868b',
+                        soft: '#f5f5f7',
+                        blue: '#007aff',
+                        gold: '#c9a96e',
+                        error: '#dc2626',
+                        success: '#059669'
+                    },
+                    fontFamily: {
+                        sans: ["'Inter', 'sans-serif'"],
+                        serif: ["'Manrope', 'sans-serif'"],
+                        mono: ["'Sora', 'sans-serif'"]
                     }
                 }
             }
         }
     </script>
-    
+
     <style>
+        :root {
+            --primary: #1d1d1f;
+            --accent: #86868b;
+            --soft: #f5f5f7;
+            --blue: #007aff;
+            --gold: #c9a96e;
+        }
+        
         * {
             -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
         
         body {
-            background-color: #f8f6f3;
-            color: #1a1a1a;
+            background-color: #ffffff;
+            color: #1d1d1f;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Navigation Styles */
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-        }
-        
-        .nav-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 16px;
-            height: 56px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        @media (min-width: 640px) {
-            .nav-inner { height: 64px; padding: 0 24px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .nav-inner { height: 80px; padding: 0 32px; }
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #1a1a1a;
-            transition: opacity 0.2s;
-        }
-        
-        .brand-logo:hover { opacity: 0.8; }
-        
-        .brand-logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-        }
-        
-        .brand-logo span {
-            font-family: 'Manrope', sans-serif;
-            font-weight: 800;
-            font-size: 18px;
-        }
-        
-        @media (min-width: 640px) {
-            .brand-logo img { width: 36px; height: 36px; }
-            .brand-logo span { font-size: 20px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .brand-logo img { width: 40px; height: 40px; }
-            .brand-logo span { font-size: 22px; }
-        }
-
-        /* Main Content */
         main {
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 80px 16px 40px;
+            padding: 100px 16px 48px;
             width: 100%;
         }
         
         @media (min-width: 640px) { 
-            main { padding: 100px 24px 60px; } 
+            main { padding: 120px 24px 64px; } 
         }
         
         @media (min-width: 1024px) { 
-            main { padding: 120px 32px 80px; } 
+            main { padding: 140px 32px 80px; } 
         }
 
+        /* Auth Card - Apple-style Design */
         .auth-card {
-            background: white;
+            background: #ffffff;
             width: 100%;
-            max-width: 520px;
-            border-radius: 32px;
-            padding: 28px 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-            max-height: 85vh;
-            max-height: 85dvh;
-            overflow-y: auto;
+            max-width: 480px;
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.04);
         }
         
         @media (min-width: 640px) {
-            .auth-card { padding: 40px 36px; }
+            .auth-card { 
+                padding: 40px 32px; 
+                border-radius: 28px;
+            }
         }
         
         @media (min-width: 1024px) {
-            .auth-card { padding: 48px 44px; }
+            .auth-card { 
+                padding: 48px 40px; 
+                border-radius: 32px;
+            }
         }
-
-        .auth-card::-webkit-scrollbar { width: 5px; }
-        .auth-card::-webkit-scrollbar-track { background: transparent; margin: 8px 0; }
-        .auth-card::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 10px; }
 
         /* Logo Area */
         .logo-area {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         
         .logo-area img {
-            width: 56px;
-            height: 56px;
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
-            margin-bottom: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            margin: 0 auto 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
         
         @media (min-width: 640px) {
-            .logo-area img { width: 64px; height: 64px; }
+            .logo-area img { width: 56px; height: 56px; }
         }
         
         .logo-area h1 {
             font-family: 'Manrope', sans-serif;
             font-weight: 800;
-            font-size: 22px;
+            font-size: 24px;
+            letter-spacing: -0.3px;
             margin-bottom: 4px;
+            color: #1d1d1f;
         }
         
         .logo-area p {
-            font-size: 12px;
-            color: #999;
+            font-size: 13px;
+            color: #86868b;
+            font-weight: 400;
         }
         
         @media (min-width: 640px) {
-            .logo-area h1 { font-size: 26px; }
-            .logo-area p { font-size: 13px; }
+            .logo-area h1 { font-size: 28px; }
+            .logo-area p { font-size: 14px; }
         }
 
         /* Tab Buttons */
         .tab-buttons {
             display: flex;
             gap: 0;
-            border-bottom: 2px solid #f0f0f0;
-            margin-bottom: 22px;
+            background: #f5f5f7;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 24px;
         }
         
         .tab-buttons a {
             flex: 1;
             text-align: center;
-            padding: 14px 8px;
-            font-size: 13px;
+            padding: 10px 8px;
+            font-size: 12px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.3px;
             text-decoration: none;
-            border-bottom: 3px solid transparent;
+            border-radius: 8px;
             transition: all 0.2s ease;
-            color: #bbb;
+            color: #86868b;
             font-family: 'Inter', sans-serif;
         }
         
         @media (min-width: 640px) {
-            .tab-buttons a { font-size: 14px; padding: 16px 12px; }
+            .tab-buttons a { font-size: 13px; padding: 11px 12px; }
         }
         
         .tab-buttons a.active {
-            color: #1a1a1a;
-            border-bottom-color: #1a1a1a;
+            background: #ffffff;
+            color: #1d1d1f;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
             font-weight: 700;
         }
         
         .tab-buttons a.inactive:hover {
-            color: #1a1a1a;
-            border-bottom-color: #ccc;
+            color: #1d1d1f;
         }
-        
-        .tab-buttons a i { margin-right: 6px; }
 
         /* Section Title */
         .section-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
-            color: #666;
+            color: #86868b;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 20px 0 12px;
+            letter-spacing: 0.8px;
+            margin: 24px 0 12px;
             padding-top: 16px;
             border-top: 1px solid #f0f0f0;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Manrope', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         .section-title:first-of-type {
@@ -266,14 +222,14 @@
         }
         
         @media (min-width: 640px) {
-            .section-title { font-size: 12px; }
+            .section-title { font-size: 11px; }
         }
 
         /* Form Groups */
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 14px; }
         
         @media (min-width: 640px) {
-            .form-group { margin-bottom: 18px; }
+            .form-group { margin-bottom: 16px; }
         }
         
         .input-group { position: relative; }
@@ -283,8 +239,8 @@
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #bbb;
-            font-size: 15px;
+            color: #86868b;
+            font-size: 14px;
             transition: color 0.2s ease;
             pointer-events: none;
             z-index: 1;
@@ -292,22 +248,22 @@
         
         .input-group input:focus ~ i,
         .input-group textarea:focus ~ i {
-            color: #c9a96e;
+            color: #007aff;
         }
         
         .input-group input,
         .input-group textarea,
         .input-group select {
             width: 100%;
-            padding: 14px 14px 14px 44px;
-            border: 1.5px solid #e5e5e5;
-            border-radius: 12px;
+            padding: 12px 14px 12px 40px;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 10px;
             font-size: 14px;
             font-family: 'Inter', sans-serif;
-            background: #fafafa;
+            background: #ffffff;
             outline: none;
             transition: all 0.2s ease;
-            color: #1a1a1a;
+            color: #1d1d1f;
         }
         
         @media (min-width: 640px) {
@@ -315,27 +271,26 @@
             .input-group textarea,
             .input-group select {
                 font-size: 15px;
-                padding: 15px 15px 15px 46px;
+                padding: 13px 14px 13px 42px;
             }
         }
         
         .input-group input:focus,
         .input-group textarea:focus,
         .input-group select:focus {
-            border-color: #c9a96e;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(201,169,110,0.08);
+            border-color: #007aff;
+            box-shadow: 0 0 0 4px rgba(0,122,255,0.06);
         }
         
         .input-group input::placeholder,
         .input-group textarea::placeholder {
-            color: #c0c0c0;
+            color: #c0c0c5;
             font-weight: 400;
         }
 
         .input-error {
             border-color: #dc2626 !important;
-            background: #fef2f2 !important;
+            box-shadow: 0 0 0 4px rgba(220,38,38,0.06) !important;
         }
         
         .error-message {
@@ -355,79 +310,121 @@
             gap: 12px;
         }
         
-        @media (max-width: 500px) {
+        @media (max-width: 480px) {
             .input-row {
                 grid-template-columns: 1fr;
                 gap: 0;
             }
         }
 
-        /* Buttons */
+        /* Location Detection */
+        .location-detect-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #f5f5f7;
+            color: #007aff;
+            border: 1px solid #e5e5ea;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 8px;
+        }
+        
+        .location-detect-btn:hover {
+            background: #ebebed;
+            border-color: #007aff;
+        }
+        
+        .location-detect-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .location-status {
+            font-size: 11px;
+            color: #86868b;
+            margin-bottom: 12px;
+            min-height: 18px;
+            transition: color 0.2s ease;
+        }
+        
+        .location-filled {
+            border-color: #059669 !important;
+        }
+
+        /* Buttons - Apple Style */
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: #1a1a1a;
-            color: white;
+            padding: 14px;
+            background: #1d1d1f;
+            color: #ffffff;
             border: none;
             border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.2s ease;
-            margin-top: 22px;
+            margin-top: 20px;
         }
         
         @media (min-width: 640px) {
-            .submit-btn { font-size: 13px; padding: 16px; margin-top: 26px; }
+            .submit-btn { font-size: 14px; padding: 15px; margin-top: 24px; }
         }
         
         .submit-btn:hover {
-            background: #c9a96e;
-            box-shadow: 0 10px 28px rgba(201,169,110,0.35);
+            background: #333;
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
         }
         
         .submit-btn:disabled {
-            background: #ccc;
+            background: #d1d1d6;
             cursor: not-allowed;
-            box-shadow: none;
             transform: none;
+            box-shadow: none;
         }
 
         .outline-btn {
             background: transparent !important;
-            color: #1a1a1a !important;
-            border: 2px solid #1a1a1a !important;
+            color: #1d1d1f !important;
+            border: 1.5px solid #d1d1d6 !important;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .outline-btn:hover {
-            border-color: #c9a96e !important;
-            color: #c9a96e !important;
-            background: transparent !important;
-            box-shadow: none !important;
+            border-color: #1d1d1f !important;
+            background: #fafafa !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .divider {
             text-align: center;
-            margin: 24px 0;
-            color: #ccc;
+            margin: 20px 0;
+            color: #86868b;
             font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 500;
             position: relative;
+            font-family: 'Inter', sans-serif;
         }
         
         .divider::before,
@@ -436,8 +433,8 @@
             position: absolute;
             top: 50%;
             width: 30%;
-            height: 1.5px;
-            background: #e5e5e5;
+            height: 1px;
+            background: #e5e5ea;
         }
         
         .divider::before { left: 0; }
@@ -447,9 +444,8 @@
         .benefits {
             margin-top: 24px;
             padding: 16px;
-            background: #fafafa;
-            border-radius: 16px;
-            border: 1px solid #f0f0f0;
+            background: #f5f5f7;
+            border-radius: 12px;
         }
         
         @media (min-width: 640px) {
@@ -460,13 +456,13 @@
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: #c9a96e;
+            letter-spacing: 0.8px;
+            color: #86868b;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Manrope', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         .benefits ul {
@@ -478,7 +474,7 @@
         
         .benefits ul li {
             font-size: 12px;
-            color: #666;
+            color: #1d1d1f;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -491,7 +487,7 @@
         
         .benefits ul li i {
             color: #059669;
-            font-size: 12px;
+            font-size: 11px;
             flex-shrink: 0;
         }
 
@@ -502,68 +498,78 @@
             gap: 10px;
             margin-top: 16px;
             font-size: 12px;
-            color: #666;
+            color: #86868b;
             font-weight: 500;
-            line-height: 1.4;
+            line-height: 1.5;
         }
         
         .terms-check input[type="checkbox"] {
             margin-top: 2px;
-            accent-color: #1a1a1a;
-            width: 18px;
-            height: 18px;
+            accent-color: #007aff;
+            width: 16px;
+            height: 16px;
             flex-shrink: 0;
             cursor: pointer;
         }
         
         .terms-check a {
-            color: #c9a96e;
-            font-weight: 700;
+            color: #007aff;
+            font-weight: 600;
             text-decoration: none;
         }
         
         .terms-check a:hover {
-            color: #1a1a1a;
             text-decoration: underline;
         }
 
-        /* Toast */
+        /* Toast Notification */
         #toast {
             position: fixed;
             top: 80px;
-            right: 20px;
+            right: 16px;
             z-index: 9999;
-            transform: translateX(calc(100% + 40px));
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: calc(100vw - 40px);
+            transform: translateX(calc(100% + 32px));
+            transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+            max-width: calc(100vw - 32px);
+            pointer-events: none;
         }
         
-        #toast.show { transform: translateX(0); }
+        @media (min-width: 640px) {
+            #toast { top: 96px; right: 24px; }
+        }
+        
+        #toast.show { 
+            transform: translateX(0); 
+            pointer-events: auto;
+        }
         
         #toast .toast-inner {
-            background: white;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            border-radius: 16px;
-            padding: 14px 16px;
+            background: #ffffff;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            border-radius: 14px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            min-width: 300px;
-            border: 1px solid #f0f0f0;
+            gap: 10px;
+            min-width: 280px;
+            border: 1px solid rgba(0,0,0,0.06);
         }
         
         @media (max-width: 480px) {
-            #toast .toast-inner { min-width: auto; padding: 12px 14px; }
+            #toast .toast-inner { 
+                min-width: auto; 
+                padding: 10px 14px; 
+            }
         }
         
         #toast .toast-icon {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             flex-shrink: 0;
         }
         
@@ -571,18 +577,19 @@
         .toast-error { background: #fef2f2; color: #dc2626; }
         
         #toast .toast-text {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             flex-grow: 1;
             line-height: 1.4;
+            color: #1d1d1f;
         }
         
         #toast .toast-close {
-            color: #ccc;
+            color: #86868b;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             flex-shrink: 0;
             padding: 4px;
             border-radius: 50%;
@@ -590,71 +597,8 @@
         }
         
         #toast .toast-close:hover {
-            color: #1a1a1a;
+            color: #1d1d1f;
             background: rgba(0,0,0,0.05);
-        }
-
-        /* Location Detection */
-        .location-section { margin-bottom: 16px; }
-        
-        .location-detect-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .location-detect-btn:hover {
-            background: #2563eb;
-            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
-        }
-        
-        .location-detect-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        
-        .location-status {
-            font-size: 10px;
-            color: #999;
-            margin-top: 4px;
-            min-height: 18px;
-        }
-        
-        .location-filled {
-            border-color: #059669 !important;
-            background: #f0fdf4 !important;
-        }
-
-        /* Footer */
-        .auth-footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 11px;
-            color: #999;
-            background: #f8f6f3;
-            margin-top: auto;
-        }
-        
-        .auth-footer a {
-            color: #c9a96e;
-            text-decoration: none;
-            font-weight: 700;
-        }
-        
-        .auth-footer a:hover {
-            color: #1a1a1a;
-            text-decoration: underline;
         }
 
         .sr-only {
@@ -670,35 +614,26 @@
         }
     </style>
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="glass-nav">
-        <div class="nav-inner">
-            <a href="/" class="brand-logo">
-                <img src="/logo.png" alt="JAYENWARE Logo" width="40" height="40" loading="eager">
-                <span>JAYENWARE</span>
-            </a>
-            <a href="/" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary hover:text-accent transition no-underline px-3 py-2 rounded-lg hover:bg-black/5">
-                <i class="fa-solid fa-house text-xs"></i> Home
-            </a>
-        </div>
-    </nav>
+<body class="antialiased">
+
+    <!-- Dynamic Header from components.js -->
+    <div id="dynamic-header"></div>
 
     <!-- Main Content -->
     <main>
         <div class="auth-card">
             <div class="logo-area">
-                <img src="/logo.png" alt="JAYENWARE Logo" width="64" height="64" loading="eager">
+                <img src="/logo.png" alt="JAYENWARE Logo" width="56" height="56" loading="eager">
                 <h1>Create Account</h1>
                 <p>Join JAYENWARE for exclusive deals</p>
             </div>
 
             <div class="tab-buttons">
                 <a href="/login" class="inactive">
-                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                    <i class="fa-solid fa-right-to-bracket text-xs"></i> Login
                 </a>
                 <a href="#" class="active" onclick="return false;">
-                    <i class="fa-solid fa-user-plus"></i> Sign Up
+                    <i class="fa-solid fa-user-plus text-xs"></i> Sign Up
                 </a>
             </div>
 
@@ -713,7 +648,7 @@
                     <label for="signup-name" class="sr-only">Full Name</label>
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" id="signup-name" name="name" placeholder="Full Name *" required autocomplete="name">
+                        <input type="text" id="signup-name" name="name" placeholder="Full Name" required autocomplete="name">
                     </div>
                     <div class="error-message" id="name-error"></div>
                 </div>
@@ -722,7 +657,7 @@
                     <label for="signup-email" class="sr-only">Email Address</label>
                     <div class="input-group">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="signup-email" name="email" placeholder="Email Address *" required autocomplete="email">
+                        <input type="email" id="signup-email" name="email" placeholder="Email Address" required autocomplete="email">
                     </div>
                     <div class="error-message" id="email-error"></div>
                 </div>
@@ -731,7 +666,7 @@
                     <label for="signup-phone" class="sr-only">Phone Number</label>
                     <div class="input-group">
                         <i class="fa-solid fa-phone"></i>
-                        <input type="tel" id="signup-phone" name="phone" placeholder="Phone Number (01XXXXXXXXX) *" required autocomplete="tel-national">
+                        <input type="tel" id="signup-phone" name="phone" placeholder="Phone Number (01XXXXXXXXX)" required autocomplete="tel-national">
                     </div>
                     <div class="error-message" id="phone-error"></div>
                 </div>
@@ -740,7 +675,7 @@
                     <label for="signup-password" class="sr-only">Password</label>
                     <div class="input-group">
                         <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="signup-password" name="password" placeholder="Password (min 8 characters) *" required autocomplete="new-password" minlength="8">
+                        <input type="password" id="signup-password" name="password" placeholder="Password (min 8 characters)" required autocomplete="new-password" minlength="8">
                     </div>
                     <div class="error-message" id="password-error"></div>
                 </div>
@@ -749,18 +684,16 @@
                     <i class="fa-solid fa-map-location-dot"></i> Delivery Address
                 </h3>
 
-                <div class="location-section">
-                    <button type="button" class="location-detect-btn" id="detect-location-btn">
-                        <i class="fa-solid fa-location-arrow"></i> Auto-Detect Location
-                    </button>
-                    <div class="location-status" id="location-status"></div>
-                </div>
+                <button type="button" class="location-detect-btn" id="detect-location-btn">
+                    <i class="fa-solid fa-location-arrow"></i> Auto-Detect Location
+                </button>
+                <div class="location-status" id="location-status"></div>
 
                 <div class="form-group">
                     <label for="signup-country" class="sr-only">Country</label>
                     <div class="input-group">
                         <i class="fa-solid fa-globe"></i>
-                        <input type="text" id="signup-country" name="country" placeholder="Country *" value="Bangladesh" required autocomplete="country-name">
+                        <input type="text" id="signup-country" name="country" placeholder="Country" value="Bangladesh" required autocomplete="country-name">
                     </div>
                     <div class="error-message" id="country-error"></div>
                 </div>
@@ -778,7 +711,7 @@
                         <label for="signup-city" class="sr-only">City</label>
                         <div class="input-group">
                             <i class="fa-solid fa-city"></i>
-                            <input type="text" id="signup-city" name="city" placeholder="City *" required autocomplete="address-level2">
+                            <input type="text" id="signup-city" name="city" placeholder="City" required autocomplete="address-level2">
                         </div>
                         <div class="error-message" id="city-error"></div>
                     </div>
@@ -797,7 +730,7 @@
                     <label for="signup-street" class="sr-only">Street Address</label>
                     <div class="input-group">
                         <i class="fa-solid fa-road"></i>
-                        <input type="text" id="signup-street" name="street_address" placeholder="Street Address (Line 1) *" required autocomplete="street-address">
+                        <input type="text" id="signup-street" name="street_address" placeholder="Street Address (Line 1)" required autocomplete="street-address">
                     </div>
                     <div class="error-message" id="street-error"></div>
                 </div>
@@ -813,7 +746,7 @@
 
                 <div class="terms-check">
                     <input type="checkbox" id="terms-agree" name="terms" required>
-                    <label for="terms-agree">I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and <a href="/terms" target="_blank">Terms of Service</a></label>
+                    <label for="terms-agree">I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a></label>
                 </div>
                 <div class="error-message" id="terms-error"></div>
 
@@ -832,20 +765,17 @@
                 <h4><i class="fa-solid fa-gift"></i> Member Benefits</h4>
                 <ul>
                     <li><i class="fa-solid fa-check"></i> Faster checkout experience</li>
-                    <li><i class="fa-solid fa-check"></i> Order tracking &amp; history</li>
+                    <li><i class="fa-solid fa-check"></i> Order tracking & history</li>
                     <li><i class="fa-solid fa-check"></i> Exclusive member discounts</li>
-                    <li><i class="fa-solid fa-check"></i> Wishlist &amp; save for later</li>
+                    <li><i class="fa-solid fa-check"></i> Wishlist & save for later</li>
                     <li><i class="fa-solid fa-check"></i> Early access to new collections</li>
                 </ul>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="auth-footer">
-        <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener">BINZEO</a></p>
-        <p>&copy; 2025 JAYENWARE. All rights reserved.</p>
-    </footer>
+    <!-- Dynamic Footer from components.js -->
+    <div id="dynamic-footer"></div>
 
     <!-- Toast Notification -->
     <div id="toast" role="alert" aria-live="polite">
@@ -858,329 +788,350 @@
         </div>
     </div>
 
+    <!-- Components JS - Dynamic Header & Footer -->
+    <script src="/components.js"></script>
+
     <script>
-        // Initialize everything when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ JAYENWARE Signup Page Loaded Successfully');
-            
-            // DOM Elements
-            const toast = document.getElementById('toast');
-            const toastIcon = document.getElementById('toast-icon');
-            const toastText = document.getElementById('toast-text');
-            const signupForm = document.getElementById('signup-form');
-            const submitButton = document.getElementById('submit-button');
-            
-            // Input fields
-            const nameInput = document.getElementById('signup-name');
-            const emailInput = document.getElementById('signup-email');
-            const phoneInput = document.getElementById('signup-phone');
-            const passwordInput = document.getElementById('signup-password');
-            const countryInput = document.getElementById('signup-country');
-            const stateInput = document.getElementById('signup-state');
-            const cityInput = document.getElementById('signup-city');
-            const postalInput = document.getElementById('signup-postal');
-            const streetInput = document.getElementById('signup-street');
-            const apartmentInput = document.getElementById('signup-apartment');
-            const termsCheckbox = document.getElementById('terms-agree');
-            
-            // Error elements
-            const errorElements = {
-                name: document.getElementById('name-error'),
-                email: document.getElementById('email-error'),
-                phone: document.getElementById('phone-error'),
-                password: document.getElementById('password-error'),
-                country: document.getElementById('country-error'),
-                state: document.getElementById('state-error'),
-                city: document.getElementById('city-error'),
-                postal: document.getElementById('postal-error'),
-                street: document.getElementById('street-error'),
-                apartment: document.getElementById('apartment-error'),
-                terms: document.getElementById('terms-error')
-            };
-            
-            // Location elements
-            const detectLocationBtn = document.getElementById('detect-location-btn');
-            const locationStatus = document.getElementById('location-status');
-            
-            let toastTimeout;
-            const API_BASE = window.location.origin;
-
-            // Toast Functions
-            function showToast(text, type = 'success') {
-                if (!toast || !toastIcon || !toastText) return;
-                
-                toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
-                toastIcon.innerHTML = type === 'success' ? 
-                    '<i class="fa-solid fa-check"></i>' : 
-                    '<i class="fa-solid fa-exclamation"></i>';
-                toastText.innerText = text;
-                toast.classList.add('show');
-                
-                clearTimeout(toastTimeout);
-                toastTimeout = setTimeout(() => {
-                    if (toast) toast.classList.remove('show');
-                }, 3500);
-            }
-
-            window.hideToast = function() {
-                if (toast) {
-                    toast.classList.remove('show');
-                    clearTimeout(toastTimeout);
-                }
-            };
-
-            // Error handling
-            function clearErrors() {
-                Object.values(errorElements).forEach(el => {
-                    if (el) {
-                        el.style.display = 'none';
-                        el.textContent = '';
+        (function() {
+            // Apply font CSS variables
+            document.addEventListener('DOMContentLoaded', () => {
+                if (window.JAYENWARE_FONTS) {
+                    const root = document.documentElement;
+                    const vars = window.JAYENWARE_FONTS.cssVariables;
+                    for (const [key, value] of Object.entries(vars)) {
+                        root.style.setProperty(key, value);
                     }
-                });
-                document.querySelectorAll('.input-error').forEach(el => {
-                    el.classList.remove('input-error');
-                });
-            }
-
-            function showFieldError(inputEl, errorEl, message) {
-                if (!inputEl || !errorEl) return;
-                inputEl.classList.add('input-error');
-                errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
-                errorEl.style.display = 'flex';
-            }
-
-            // Validation
-            function isValidEmail(email) {
-                return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
-            }
-
-            function isValidPhone(phone) {
-                const cleaned = phone.replace(/[^\d+]/g, '');
-                return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned);
-            }
-
-            // Location Detection
-            async function detectUserLocation() {
-                if (!navigator.geolocation) {
-                    showToast('Your browser does not support location detection', 'error');
-                    return;
-                }
-
-                detectLocationBtn.disabled = true;
-                detectLocationBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
-                locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location permission...';
-                locationStatus.style.color = '#3b82f6';
-
-                try {
-                    const position = await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, {
-                            enableHighAccuracy: true,
-                            timeout: 15000,
-                            maximumAge: 0
-                        });
-                    });
-
-                    const { latitude, longitude } = position.coords;
-                    locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address...';
-                    
-                    const response = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
-                        { headers: { 'User-Agent': 'JAYENWARE_SignUp/1.0' } }
-                    );
-
-                    if (!response.ok) throw new Error('Failed to fetch address');
-
-                    const data = await response.json();
-                    const address = data.address || {};
-                    
-                    // Fill form fields
-                    countryInput.value = address.country || 'Bangladesh';
-                    stateInput.value = address.state || '';
-                    cityInput.value = address.city || address.town || address.state_district || '';
-                    postalInput.value = address.postcode || '';
-                    streetInput.value = address.road || address.street || '';
-                    
-                    // Mark as location-filled
-                    [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
-                        if (el && el.value) el.classList.add('location-filled');
-                    });
-                    
-                    locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected successfully!';
-                    locationStatus.style.color = '#059669';
-                    showToast('Location applied successfully!', 'success');
-
-                } catch (error) {
-                    let errorMessage = 'Could not detect location. Please fill manually.';
-                    if (error.code === 1) errorMessage = 'Location permission denied.';
-                    else if (error.code === 2) errorMessage = 'Location unavailable.';
-                    else if (error.code === 3) errorMessage = 'Location request timed out.';
-                    
-                    locationStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${errorMessage}`;
-                    locationStatus.style.color = '#dc2626';
-                    showToast(errorMessage, 'error');
-                } finally {
-                    detectLocationBtn.disabled = false;
-                    detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
-                    
-                    setTimeout(() => {
-                        locationStatus.innerHTML = '';
-                    }, 5000);
-                }
-            }
-
-            // Event Listeners
-            if (detectLocationBtn) {
-                detectLocationBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    await detectUserLocation();
-                });
-            }
-
-            // Phone formatting
-            if (phoneInput) {
-                phoneInput.addEventListener('input', function() {
-                    let value = this.value.replace(/[^\d+]/g, '');
-                    if (!value.startsWith('+')) {
-                        if (value.length > 11) value = value.slice(0, 11);
-                        if (value.length >= 4 && !value.includes('-')) {
-                            value = value.slice(0, 3) + '-' + value.slice(3);
-                        }
-                        if (value.length >= 9 && value.split('-').length === 2) {
-                            const parts = value.split('-');
-                            if (parts[1].length > 5) {
-                                value = parts[0] + '-' + parts[1].slice(0, 5) + '-' + parts[1].slice(5);
-                            }
-                        }
-                    }
-                    this.value = value;
-                });
-            }
-
-            // Form Submission
-            if (signupForm) {
-                signupForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    clearErrors();
-                    
-                    const name = nameInput ? nameInput.value.trim() : '';
-                    const email = emailInput ? emailInput.value.trim() : '';
-                    const phone = phoneInput ? phoneInput.value.trim() : '';
-                    const password = passwordInput ? passwordInput.value : '';
-                    const country = countryInput ? countryInput.value.trim() : '';
-                    const state_province = stateInput ? stateInput.value.trim() : '';
-                    const city = cityInput ? cityInput.value.trim() : '';
-                    const postal_code = postalInput ? postalInput.value.trim() : '';
-                    const street_address = streetInput ? streetInput.value.trim() : '';
-                    const apartment_house = apartmentInput ? apartmentInput.value.trim() : '';
-                    const terms = termsCheckbox ? termsCheckbox.checked : false;
-                    
-                    let hasError = false;
-                    
-                    if (!name || name.length < 3) {
-                        showFieldError(nameInput, errorElements.name, 'Full name is required (min 3 characters)');
-                        hasError = true;
-                    }
-                    
-                    if (!email) {
-                        showFieldError(emailInput, errorElements.email, 'Email address is required');
-                        hasError = true;
-                    } else if (!isValidEmail(email)) {
-                        showFieldError(emailInput, errorElements.email, 'Please enter a valid email address');
-                        hasError = true;
-                    }
-                    
-                    if (!phone) {
-                        showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
-                        hasError = true;
-                    } else if (!isValidPhone(phone)) {
-                        showFieldError(phoneInput, errorElements.phone, 'Enter valid phone (01XXXXXXXXX)');
-                        hasError = true;
-                    }
-                    
-                    if (!password || password.length < 8) {
-                        showFieldError(passwordInput, errorElements.password, 'Password must be at least 8 characters');
-                        hasError = true;
-                    }
-                    
-                    if (!country) {
-                        showFieldError(countryInput, errorElements.country, 'Country is required');
-                        hasError = true;
-                    }
-                    
-                    if (!city) {
-                        showFieldError(cityInput, errorElements.city, 'City is required');
-                        hasError = true;
-                    }
-                    
-                    if (!street_address) {
-                        showFieldError(streetInput, errorElements.street, 'Street address is required');
-                        hasError = true;
-                    }
-                    
-                    if (!terms) {
-                        errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms & Privacy Policy';
-                        errorElements.terms.style.display = 'flex';
-                        hasError = true;
-                    }
-                    
-                    if (hasError) {
-                        const firstError = document.querySelector('.input-error');
-                        if (firstError) firstError.focus();
-                        return;
-                    }
-                    
-                    // Submit
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
-                    
-                    try {
-                        const response = await fetch(`${API_BASE}/api/auth/signup`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email,
-                                password,
-                                name,
-                                phone: phone.replace(/[-\s()]/g, ''),
-                                country,
-                                state_province,
-                                city,
-                                postal_code,
-                                street_address,
-                                apartment_house
-                            })
-                        });
-                        
-                        const result = await response.json();
-                        
-                        if (!response.ok) {
-                            throw new Error(result.error || 'Registration failed');
-                        }
-                        
-                        showToast('Account created successfully! Redirecting...', 'success');
-                        
-                        setTimeout(() => {
-                            window.location.href = '/account';
-                        }, 2000);
-                        
-                    } catch (err) {
-                        console.error('Signup error:', err);
-                        showToast(err.message || 'Network error. Please try again.', 'error');
-                        submitButton.disabled = false;
-                        submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
-                    }
-                });
-            }
-
-            // Close toast on outside click
-            document.addEventListener('click', (e) => {
-                if (toast && toast.classList.contains('show') && !toast.contains(e.target)) {
-                    window.hideToast();
                 }
             });
 
-            console.log('✅ Signup form fully initialized and ready');
-        });
+            // Initialize signup functionality
+            window.addEventListener('load', () => {
+                setTimeout(initSignupPage, 200);
+            });
+
+            function initSignupPage() {
+                console.log('✅ JAYENWARE Signup Page Initialized');
+                
+                // DOM Elements
+                const toast = document.getElementById('toast');
+                const toastIcon = document.getElementById('toast-icon');
+                const toastText = document.getElementById('toast-text');
+                const signupForm = document.getElementById('signup-form');
+                const submitButton = document.getElementById('submit-button');
+                
+                // Input fields
+                const nameInput = document.getElementById('signup-name');
+                const emailInput = document.getElementById('signup-email');
+                const phoneInput = document.getElementById('signup-phone');
+                const passwordInput = document.getElementById('signup-password');
+                const countryInput = document.getElementById('signup-country');
+                const stateInput = document.getElementById('signup-state');
+                const cityInput = document.getElementById('signup-city');
+                const postalInput = document.getElementById('signup-postal');
+                const streetInput = document.getElementById('signup-street');
+                const apartmentInput = document.getElementById('signup-apartment');
+                const termsCheckbox = document.getElementById('terms-agree');
+                
+                // Error elements
+                const errorElements = {
+                    name: document.getElementById('name-error'),
+                    email: document.getElementById('email-error'),
+                    phone: document.getElementById('phone-error'),
+                    password: document.getElementById('password-error'),
+                    country: document.getElementById('country-error'),
+                    state: document.getElementById('state-error'),
+                    city: document.getElementById('city-error'),
+                    postal: document.getElementById('postal-error'),
+                    street: document.getElementById('street-error'),
+                    apartment: document.getElementById('apartment-error'),
+                    terms: document.getElementById('terms-error')
+                };
+                
+                // Location elements
+                const detectLocationBtn = document.getElementById('detect-location-btn');
+                const locationStatus = document.getElementById('location-status');
+                
+                let toastTimeout;
+                const API_BASE = window.location.origin;
+
+                // Toast Functions
+                function showToast(text, type = 'success') {
+                    if (!toast || !toastIcon || !toastText) return;
+                    
+                    toastIcon.className = 'toast-icon ' + (type === 'success' ? 'toast-success' : 'toast-error');
+                    toastIcon.innerHTML = type === 'success' ? 
+                        '<i class="fa-solid fa-check"></i>' : 
+                        '<i class="fa-solid fa-exclamation"></i>';
+                    toastText.innerText = text;
+                    toast.classList.add('show');
+                    
+                    clearTimeout(toastTimeout);
+                    toastTimeout = setTimeout(() => {
+                        if (toast) toast.classList.remove('show');
+                    }, 3500);
+                }
+
+                window.hideToast = function() {
+                    if (toast) {
+                        toast.classList.remove('show');
+                        clearTimeout(toastTimeout);
+                    }
+                };
+
+                // Error handling
+                function clearErrors() {
+                    Object.values(errorElements).forEach(el => {
+                        if (el) {
+                            el.style.display = 'none';
+                            el.textContent = '';
+                        }
+                    });
+                    document.querySelectorAll('.input-error').forEach(el => {
+                        el.classList.remove('input-error');
+                    });
+                }
+
+                function showFieldError(inputEl, errorEl, message) {
+                    if (!inputEl || !errorEl) return;
+                    inputEl.classList.add('input-error');
+                    errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+                    errorEl.style.display = 'flex';
+                }
+
+                // Validation
+                function isValidEmail(email) {
+                    return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+                }
+
+                function isValidPhone(phone) {
+                    const cleaned = phone.replace(/[^\d+]/g, '');
+                    return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned);
+                }
+
+                // Location Detection
+                async function detectUserLocation() {
+                    if (!navigator.geolocation) {
+                        showToast('Your browser does not support location detection', 'error');
+                        return;
+                    }
+
+                    detectLocationBtn.disabled = true;
+                    detectLocationBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
+                    locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location permission...';
+                    locationStatus.style.color = '#007aff';
+
+                    try {
+                        const position = await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                enableHighAccuracy: true,
+                                timeout: 15000,
+                                maximumAge: 0
+                            });
+                        });
+
+                        const { latitude, longitude } = position.coords;
+                        locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address...';
+                        
+                        const response = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=en`,
+                            { headers: { 'User-Agent': 'JAYENWARE_SignUp/1.0' } }
+                        );
+
+                        if (!response.ok) throw new Error('Failed to fetch address');
+
+                        const data = await response.json();
+                        const address = data.address || {};
+                        
+                        // Fill form fields
+                        countryInput.value = address.country || 'Bangladesh';
+                        stateInput.value = address.state || '';
+                        cityInput.value = address.city || address.town || address.state_district || '';
+                        postalInput.value = address.postcode || '';
+                        streetInput.value = address.road || address.street || '';
+                        
+                        // Mark as location-filled
+                        [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
+                            if (el && el.value) el.classList.add('location-filled');
+                        });
+                        
+                        locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected successfully!';
+                        locationStatus.style.color = '#059669';
+                        showToast('Location applied successfully!', 'success');
+
+                    } catch (error) {
+                        let errorMessage = 'Could not detect location. Please fill manually.';
+                        if (error.code === 1) errorMessage = 'Location permission denied.';
+                        else if (error.code === 2) errorMessage = 'Location unavailable.';
+                        else if (error.code === 3) errorMessage = 'Location request timed out.';
+                        
+                        locationStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${errorMessage}`;
+                        locationStatus.style.color = '#dc2626';
+                        showToast(errorMessage, 'error');
+                    } finally {
+                        detectLocationBtn.disabled = false;
+                        detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
+                        
+                        setTimeout(() => {
+                            locationStatus.innerHTML = '';
+                            locationStatus.style.color = '#86868b';
+                        }, 5000);
+                    }
+                }
+
+                // Event Listeners
+                if (detectLocationBtn) {
+                    detectLocationBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await detectUserLocation();
+                    });
+                }
+
+                // Phone formatting
+                if (phoneInput) {
+                    phoneInput.addEventListener('input', function() {
+                        let value = this.value.replace(/[^\d+]/g, '');
+                        if (!value.startsWith('+')) {
+                            if (value.length > 11) value = value.slice(0, 11);
+                            if (value.length >= 4 && !value.includes('-')) {
+                                value = value.slice(0, 3) + '-' + value.slice(3);
+                            }
+                            if (value.length >= 9 && value.split('-').length === 2) {
+                                const parts = value.split('-');
+                                if (parts[1].length > 5) {
+                                    value = parts[0] + '-' + parts[1].slice(0, 5) + '-' + parts[1].slice(5);
+                                }
+                            }
+                        }
+                        this.value = value;
+                    });
+                }
+
+                // Form Submission
+                if (signupForm) {
+                    signupForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        clearErrors();
+                        
+                        const name = nameInput ? nameInput.value.trim() : '';
+                        const email = emailInput ? emailInput.value.trim() : '';
+                        const phone = phoneInput ? phoneInput.value.trim() : '';
+                        const password = passwordInput ? passwordInput.value : '';
+                        const country = countryInput ? countryInput.value.trim() : '';
+                        const state_province = stateInput ? stateInput.value.trim() : '';
+                        const city = cityInput ? cityInput.value.trim() : '';
+                        const postal_code = postalInput ? postalInput.value.trim() : '';
+                        const street_address = streetInput ? streetInput.value.trim() : '';
+                        const apartment_house = apartmentInput ? apartmentInput.value.trim() : '';
+                        const terms = termsCheckbox ? termsCheckbox.checked : false;
+                        
+                        let hasError = false;
+                        
+                        if (!name || name.length < 3) {
+                            showFieldError(nameInput, errorElements.name, 'Full name is required (min 3 characters)');
+                            hasError = true;
+                        }
+                        
+                        if (!email) {
+                            showFieldError(emailInput, errorElements.email, 'Email address is required');
+                            hasError = true;
+                        } else if (!isValidEmail(email)) {
+                            showFieldError(emailInput, errorElements.email, 'Please enter a valid email address');
+                            hasError = true;
+                        }
+                        
+                        if (!phone) {
+                            showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
+                            hasError = true;
+                        } else if (!isValidPhone(phone)) {
+                            showFieldError(phoneInput, errorElements.phone, 'Enter valid phone (01XXXXXXXXX)');
+                            hasError = true;
+                        }
+                        
+                        if (!password || password.length < 8) {
+                            showFieldError(passwordInput, errorElements.password, 'Password must be at least 8 characters');
+                            hasError = true;
+                        }
+                        
+                        if (!country) {
+                            showFieldError(countryInput, errorElements.country, 'Country is required');
+                            hasError = true;
+                        }
+                        
+                        if (!city) {
+                            showFieldError(cityInput, errorElements.city, 'City is required');
+                            hasError = true;
+                        }
+                        
+                        if (!street_address) {
+                            showFieldError(streetInput, errorElements.street, 'Street address is required');
+                            hasError = true;
+                        }
+                        
+                        if (!terms) {
+                            errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms & Privacy Policy';
+                            errorElements.terms.style.display = 'flex';
+                            hasError = true;
+                        }
+                        
+                        if (hasError) {
+                            const firstError = document.querySelector('.input-error');
+                            if (firstError) firstError.focus();
+                            return;
+                        }
+                        
+                        // Submit
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+                        
+                        try {
+                            const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    email,
+                                    password,
+                                    name,
+                                    phone: phone.replace(/[-\s()]/g, ''),
+                                    country,
+                                    state_province,
+                                    city,
+                                    postal_code,
+                                    street_address,
+                                    apartment_house
+                                })
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (!response.ok) {
+                                throw new Error(result.error || 'Registration failed');
+                            }
+                            
+                            showToast('Account created successfully! Redirecting...', 'success');
+                            
+                            setTimeout(() => {
+                                window.location.href = '/account';
+                            }, 2000);
+                            
+                        } catch (err) {
+                            console.error('Signup error:', err);
+                            showToast(err.message || 'Network error. Please try again.', 'error');
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+                        }
+                    });
+                }
+
+                // Close toast on outside click
+                document.addEventListener('click', (e) => {
+                    if (toast && toast.classList.contains('show') && !toast.contains(e.target)) {
+                        window.hideToast();
+                    }
+                });
+
+                console.log('✅ Signup form fully initialized');
+            }
+        })();
     </script>
 </body>
 </html>
