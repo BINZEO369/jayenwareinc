@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-BD" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sign Up | JAYENWARE Official Store</title>
     
-    <meta name="description" content="Create your JAYENWARE account. Join for exclusive deals, faster checkout, and premium lifestyle shopping.">
+    <meta name="description" content="Create your JAYENWARE account. Get your unique JBYN-OneID for exclusive deals, faster checkout, and premium lifestyle shopping.">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1a1a1a">
     
@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -84,13 +84,8 @@
             align-items: center;
         }
         
-        @media (min-width: 640px) {
-            .glass-nav .nav-inner { height: 64px; padding: 0 24px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .glass-nav .nav-inner { height: 80px; padding: 0 32px; }
-        }
+        @media (min-width: 640px) { .glass-nav .nav-inner { height: 64px; padding: 0 24px; } }
+        @media (min-width: 1024px) { .glass-nav .nav-inner { height: 80px; padding: 0 32px; } }
 
         .brand-logo {
             display: flex;
@@ -140,10 +135,7 @@
             transition: all var(--transition-fast);
         }
         
-        .nav-home-link:hover {
-            background: rgba(0,0,0,0.05);
-            color: var(--accent);
-        }
+        .nav-home-link:hover { background: rgba(0,0,0,0.05); color: var(--accent); }
 
         main {
             flex-grow: 1;
@@ -168,13 +160,8 @@
             overflow-y: auto;
         }
         
-        @media (min-width: 640px) {
-            .auth-card { padding: 40px 36px; max-height: 85vh; }
-        }
-        
-        @media (min-width: 1024px) {
-            .auth-card { padding: 48px 44px; }
-        }
+        @media (min-width: 640px) { .auth-card { padding: 40px 36px; max-height: 85vh; } }
+        @media (min-width: 1024px) { .auth-card { padding: 48px 44px; } }
 
         .auth-card::-webkit-scrollbar { width: 5px; }
         .auth-card::-webkit-scrollbar-track { background: transparent; margin: 8px 0; }
@@ -193,9 +180,7 @@
             box-shadow: var(--shadow-sm);
         }
         
-        @media (min-width: 640px) {
-            .auth-card .logo-area img { width: 64px; height: 64px; }
-        }
+        @media (min-width: 640px) { .auth-card .logo-area img { width: 64px; height: 64px; } }
         
         .auth-card .logo-area h1 {
             font-family: 'Playfair Display', serif;
@@ -236,21 +221,10 @@
             color: #bbb;
         }
         
-        @media (min-width: 640px) {
-            .tab-buttons a { font-size: 14px; padding: 16px 12px; }
-        }
+        @media (min-width: 640px) { .tab-buttons a { font-size: 14px; padding: 16px 12px; } }
         
-        .tab-buttons a.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-            font-weight: 700;
-        }
-        
-        .tab-buttons a.inactive:hover {
-            color: var(--primary);
-            border-bottom-color: #ccc;
-        }
-        
+        .tab-buttons a.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+        .tab-buttons a.inactive:hover { color: var(--primary); border-bottom-color: #ccc; }
         .tab-buttons a i { margin-right: 6px; }
 
         .section-title {
@@ -267,15 +241,8 @@
             gap: 8px;
         }
         
-        .section-title:first-of-type {
-            margin-top: 0;
-            padding-top: 0;
-            border-top: none;
-        }
-        
-        @media (min-width: 640px) {
-            .section-title { font-size: 12px; }
-        }
+        .section-title:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+        @media (min-width: 640px) { .section-title { font-size: 12px; } }
 
         .location-section { margin-bottom: 16px; }
         
@@ -303,16 +270,8 @@
             white-space: nowrap;
         }
         
-        .location-detect-btn:hover {
-            background: #2563eb;
-            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
-        }
-        
-        .location-detect-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+        .location-detect-btn:hover { background: #2563eb; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .location-detect-btn:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
         
         .location-status {
             font-size: 10px;
@@ -335,10 +294,7 @@
         }
 
         .form-group { margin-bottom: 16px; }
-        
-        @media (min-width: 640px) {
-            .form-group { margin-bottom: 18px; }
-        }
+        @media (min-width: 640px) { .form-group { margin-bottom: 18px; } }
         
         .input-group { position: relative; }
         
@@ -354,9 +310,7 @@
         }
         
         .input-group input:focus ~ i,
-        .input-group textarea:focus ~ i {
-            color: var(--accent);
-        }
+        .input-group textarea:focus ~ i { color: var(--accent); }
         
         .input-group input,
         .input-group textarea,
@@ -376,10 +330,7 @@
         @media (min-width: 640px) {
             .input-group input,
             .input-group textarea,
-            .input-group select {
-                font-size: 15px;
-                padding: 15px 15px 15px 46px;
-            }
+            .input-group select { font-size: 15px; padding: 15px 15px 15px 46px; }
         }
         
         .input-group input:focus,
@@ -391,52 +342,20 @@
         }
         
         .input-group input::placeholder,
-        .input-group textarea::placeholder {
-            color: #c0c0c0;
-            font-weight: 400;
-        }
+        .input-group textarea::placeholder { color: #c0c0c0; font-weight: 400; }
         
-        .input-group textarea {
-            padding: 14px 14px 14px 44px;
-            resize: vertical;
-            min-height: 70px;
-        }
-        
-        @media (min-width: 640px) {
-            .input-group textarea {
-                padding: 15px 15px 15px 46px;
-                min-height: 80px;
-            }
-        }
+        .input-group textarea { padding: 14px 14px 14px 44px; resize: vertical; min-height: 70px; }
+        @media (min-width: 640px) { .input-group textarea { padding: 15px 15px 15px 46px; min-height: 80px; } }
 
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        
-        .input-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-        }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         
         @media (max-width: 500px) {
-            .input-row,
-            .input-row-3 {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            .input-row .form-group,
-            .input-row-3 .form-group {
-                margin-bottom: 16px;
-            }
+            .input-row, .input-row-3 { grid-template-columns: 1fr; gap: 0; }
+            .input-row .form-group, .input-row-3 .form-group { margin-bottom: 16px; }
         }
 
-        .input-error {
-            border-color: var(--error) !important;
-            background: #fef2f2 !important;
-        }
+        .input-error { border-color: var(--error) !important; background: #fef2f2 !important; }
         
         .error-message {
             font-size: 11px;
@@ -471,22 +390,10 @@
             margin-top: 22px;
         }
         
-        @media (min-width: 640px) {
-            .submit-btn { font-size: 13px; padding: 16px; margin-top: 26px; }
-        }
+        @media (min-width: 640px) { .submit-btn { font-size: 13px; padding: 16px; margin-top: 26px; } }
         
-        .submit-btn:hover {
-            background: var(--accent);
-            box-shadow: 0 10px 28px rgba(201,169,110,0.35);
-            transform: translateY(-1px);
-        }
-        
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
+        .submit-btn:hover { background: var(--accent); box-shadow: 0 10px 28px rgba(201,169,110,0.35); transform: translateY(-1px); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
 
         .outline-btn {
             background: transparent !important;
@@ -494,11 +401,7 @@
             border: 2px solid var(--primary) !important;
         }
         
-        .outline-btn:hover {
-            border-color: var(--accent) !important;
-            color: var(--accent) !important;
-            background: transparent !important;
-        }
+        .outline-btn:hover { border-color: var(--accent) !important; color: var(--accent) !important; background: transparent !important; }
 
         .divider {
             text-align: center;
@@ -511,8 +414,7 @@
             position: relative;
         }
         
-        .divider::before,
-        .divider::after {
+        .divider::before, .divider::after {
             content: '';
             position: absolute;
             top: 50%;
@@ -547,9 +449,7 @@
             border: 1px solid #f0f0f0;
         }
         
-        @media (min-width: 640px) {
-            .benefits { margin-top: 28px; padding: 20px; }
-        }
+        @media (min-width: 640px) { .benefits { margin-top: 28px; padding: 20px; } }
         
         .benefits h4 {
             font-size: 11px;
@@ -563,12 +463,7 @@
             gap: 8px;
         }
         
-        .benefits ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .benefits ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
         
         .benefits ul li {
             font-size: 12px;
@@ -579,15 +474,8 @@
             font-weight: 500;
         }
         
-        @media (min-width: 640px) {
-            .benefits ul li { font-size: 13px; gap: 10px; }
-        }
-        
-        .benefits ul li i {
-            color: var(--success);
-            font-size: 12px;
-            flex-shrink: 0;
-        }
+        @media (min-width: 640px) { .benefits ul li { font-size: 13px; gap: 10px; } }
+        .benefits ul li i { color: var(--success); font-size: 12px; flex-shrink: 0; }
 
         .terms-check {
             display: flex;
@@ -609,15 +497,66 @@
             cursor: pointer;
         }
         
-        .terms-check a {
-            color: var(--accent);
-            font-weight: 700;
-            text-decoration: none;
+        .terms-check a { color: var(--accent); font-weight: 700; text-decoration: none; }
+        .terms-check a:hover { color: var(--primary); text-decoration: underline; }
+
+        /* ============================================ */
+        /* JBYN-OneID Passkey Preview - Enhanced */
+        /* ============================================ */
+        .oneid-preview {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid var(--accent);
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+            display: none;
+            animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .terms-check a:hover {
-            color: var(--primary);
-            text-decoration: underline;
+        .oneid-preview.show { display: block; }
+        
+        .oneid-preview .oneid-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .oneid-preview .oneid-value {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            user-select: all;
+            word-break: break-all;
+        }
+        
+        .oneid-preview .oneid-info {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        @media (min-width: 640px) {
+            .oneid-preview .oneid-value { font-size: 18px; }
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #toast {
@@ -644,9 +583,7 @@
             border: 1px solid #f0f0f0;
         }
         
-        @media (max-width: 480px) {
-            #toast .toast-inner { min-width: auto; padding: 12px 14px; }
-        }
+        @media (max-width: 480px) { #toast .toast-inner { min-width: auto; padding: 12px 14px; } }
         
         #toast .toast-icon {
             width: 36px;
@@ -662,12 +599,7 @@
         .toast-success { background: #ecfdf5; color: var(--success); }
         .toast-error { background: #fef2f2; color: var(--error); }
         
-        #toast .toast-text {
-            font-size: 13px;
-            font-weight: 600;
-            flex-grow: 1;
-            line-height: 1.4;
-        }
+        #toast .toast-text { font-size: 13px; font-weight: 600; flex-grow: 1; line-height: 1.4; }
         
         #toast .toast-close {
             color: #ccc;
@@ -681,10 +613,7 @@
             transition: all var(--transition-fast);
         }
         
-        #toast .toast-close:hover {
-            color: var(--primary);
-            background: rgba(0,0,0,0.05);
-        }
+        #toast .toast-close:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
 
         .loader-overlay {
             position: fixed;
@@ -702,10 +631,7 @@
             pointer-events: all;
         }
         
-        .loader-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .loader-overlay.hidden { opacity: 0; pointer-events: none; }
         
         .loader-overlay .spinner {
             width: 48px;
@@ -716,9 +642,7 @@
             animation: spin 0.7s linear infinite;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         .loader-overlay .loader-text {
             margin-top: 18px;
@@ -744,10 +668,7 @@
             transition: opacity 0.3s ease;
         }
         
-        .location-modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
+        .location-modal-overlay.active { opacity: 1; pointer-events: all; }
         
         .location-modal {
             background: var(--white);
@@ -762,9 +683,7 @@
             overflow-y: auto;
         }
         
-        .location-modal-overlay.active .location-modal {
-            transform: translateY(0);
-        }
+        .location-modal-overlay.active .location-modal { transform: translateY(0); }
         
         .location-modal h3 {
             font-family: 'Playfair Display', serif;
@@ -774,11 +693,7 @@
             color: var(--primary);
         }
         
-        .location-modal p {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-bottom: 16px;
-        }
+        .location-modal p { font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
         
         .location-modal .location-preview {
             background: #f8fafc;
@@ -796,9 +711,7 @@
             border-bottom: 1px solid #f1f5f9;
         }
         
-        .location-modal .location-preview .preview-item:last-child {
-            border-bottom: none;
-        }
+        .location-modal .location-preview .preview-item:last-child { border-bottom: none; }
         
         .location-modal .location-preview .preview-label {
             font-weight: 600;
@@ -814,10 +727,7 @@
             margin-left: 8px;
         }
         
-        .location-modal .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
+        .location-modal .modal-actions { display: flex; gap: 10px; }
         
         .location-modal .modal-btn {
             flex: 1;
@@ -833,25 +743,10 @@
             border: none;
         }
         
-        .modal-btn.confirm-btn {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .modal-btn.confirm-btn:hover {
-            background: var(--accent);
-        }
-        
-        .modal-btn.cancel-btn {
-            background: transparent;
-            color: var(--text-light);
-            border: 1.5px solid var(--border);
-        }
-        
-        .modal-btn.cancel-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
+        .modal-btn.confirm-btn { background: var(--primary); color: white; }
+        .modal-btn.confirm-btn:hover { background: var(--accent); }
+        .modal-btn.cancel-btn { background: transparent; color: var(--text-light); border: 1.5px solid var(--border); }
+        .modal-btn.cancel-btn:hover { border-color: var(--primary); color: var(--primary); }
 
         .auth-footer {
             text-align: center;
@@ -860,16 +755,8 @@
             color: #bbb;
         }
         
-        .auth-footer a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 700;
-        }
-        
-        .auth-footer a:hover {
-            color: var(--primary);
-            text-decoration: underline;
-        }
+        .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+        .auth-footer a:hover { color: var(--primary); text-decoration: underline; }
 
         .skip-link {
             position: absolute;
@@ -897,30 +784,6 @@
             clip: rect(0,0,0,0);
             white-space: nowrap;
             border: 0;
-        }
-
-        .passkey-preview {
-            background: linear-gradient(135deg, #1a1a1a, #333);
-            color: var(--accent);
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 2px;
-            margin-top: 12px;
-            display: none;
-        }
-        
-        .passkey-preview.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -953,7 +816,7 @@
             <div class="logo-area">
                 <img src="https://www.jayenware.shop/logo.png" alt="JAYENWARE Logo" width="64" height="64" loading="eager">
                 <h1 id="signup-heading">Create Account</h1>
-                <p>Join JAYENWARE for exclusive deals</p>
+                <p>Join JAYENWARE &amp; get your unique JBYN-OneID</p>
             </div>
 
             <div class="tab-buttons" role="tablist">
@@ -977,7 +840,7 @@
                     <label for="signup-name" class="sr-only">Full Name</label>
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" id="signup-name" name="name" placeholder="Full Name *" required autocomplete="name">
+                        <input type="text" id="signup-name" name="name" placeholder="Full Name *" required autocomplete="name" minlength="3">
                     </div>
                     <div class="error-message" id="name-error" style="display:none;"></div>
                 </div>
@@ -995,7 +858,7 @@
                     <label for="signup-phone" class="sr-only">Phone Number</label>
                     <div class="input-group">
                         <i class="fa-solid fa-phone"></i>
-                        <input type="tel" id="signup-phone" name="phone" placeholder="Phone Number (01XXXXXXXXX) *" required autocomplete="tel-national">
+                        <input type="tel" id="signup-phone" name="phone" placeholder="Phone (+8801XXXXXXXXX) *" required autocomplete="tel-national">
                     </div>
                     <div class="error-message" id="phone-error" style="display:none;"></div>
                 </div>
@@ -1027,7 +890,7 @@
                     <label for="signup-country" class="sr-only">Country</label>
                     <div class="input-group">
                         <i class="fa-solid fa-globe"></i>
-                        <input type="text" id="signup-country" name="country" placeholder="Country *" value="Bangladesh" required autocomplete="country-name">
+                        <input type="text" id="signup-country" name="country" placeholder="Country *" required autocomplete="country-name">
                     </div>
                     <div class="error-message" id="country-error" style="display:none;"></div>
                 </div>
@@ -1039,7 +902,6 @@
                             <i class="fa-solid fa-flag"></i>
                             <input type="text" id="signup-state" name="state_province" placeholder="State / Province" autocomplete="address-level1">
                         </div>
-                        <div class="error-message" id="state-error" style="display:none;"></div>
                     </div>
                     <div class="form-group">
                         <label for="signup-city" class="sr-only">City</label>
@@ -1047,7 +909,6 @@
                             <i class="fa-solid fa-city"></i>
                             <input type="text" id="signup-city" name="city" placeholder="City *" required autocomplete="address-level2">
                         </div>
-                        <div class="error-message" id="city-error" style="display:none;"></div>
                     </div>
                 </div>
 
@@ -1057,7 +918,6 @@
                         <i class="fa-solid fa-mailbox"></i>
                         <input type="text" id="signup-postal" name="postal_code" placeholder="Postal Code (ZIP)" autocomplete="postal-code">
                     </div>
-                    <div class="error-message" id="postal-error" style="display:none;"></div>
                 </div>
 
                 <div class="form-group">
@@ -1075,7 +935,6 @@
                         <i class="fa-solid fa-building"></i>
                         <input type="text" id="signup-apartment" name="apartment_house" placeholder="Apartment / House No. (Line 2)" autocomplete="address-line2">
                     </div>
-                    <div class="error-message" id="apartment-error" style="display:none;"></div>
                 </div>
 
                 <!-- Terms & Conditions -->
@@ -1085,9 +944,15 @@
                 </div>
                 <div class="error-message" id="terms-error" style="display:none;"></div>
 
-                <!-- JBYN Passkey Preview -->
-                <div class="passkey-preview" id="passkey-preview">
-                    <i class="fa-solid fa-key"></i> Your JBYN Passkey: <span id="passkey-text"></span>
+                <!-- JBYN-OneID Preview -->
+                <div class="oneid-preview" id="oneid-preview">
+                    <div class="oneid-label">
+                        <i class="fa-solid fa-key"></i> Your JBYN-OneID
+                    </div>
+                    <span class="oneid-value" id="oneid-value">---</span>
+                    <div class="oneid-info">
+                        <i class="fa-solid fa-shield-halved"></i> This is your unique identifier. Keep it safe.
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submit-button">
@@ -1104,6 +969,7 @@
             <div class="benefits">
                 <h4><i class="fa-solid fa-gift"></i> Member Benefits</h4>
                 <ul>
+                    <li><i class="fa-solid fa-check"></i> Unique JBYN-OneID for secure identification</li>
                     <li><i class="fa-solid fa-check"></i> Faster checkout experience</li>
                     <li><i class="fa-solid fa-check"></i> Order tracking &amp; history</li>
                     <li><i class="fa-solid fa-check"></i> Exclusive member discounts</li>
@@ -1170,7 +1036,9 @@
     </div>
 
     <script>
+        // ============================================
         // DOM Elements
+        // ============================================
         const toast = document.getElementById('toast');
         const toastIcon = document.getElementById('toast-icon');
         const toastText = document.getElementById('toast-text');
@@ -1201,8 +1069,10 @@
         const previewFull = document.getElementById('preview-full');
         const modalConfirm = document.getElementById('modal-confirm');
         const modalCancel = document.getElementById('modal-cancel');
-        const passkeyPreview = document.getElementById('passkey-preview');
-        const passkeyText = document.getElementById('passkey-text');
+        
+        // JBYN-OneID elements
+        const oneidPreview = document.getElementById('oneid-preview');
+        const oneidValue = document.getElementById('oneid-value');
         
         const errorElements = {
             name: document.getElementById('name-error'),
@@ -1210,18 +1080,16 @@
             phone: document.getElementById('phone-error'),
             password: document.getElementById('password-error'),
             country: document.getElementById('country-error'),
-            state: document.getElementById('state-error'),
-            city: document.getElementById('city-error'),
-            postal: document.getElementById('postal-error'),
             street: document.getElementById('street-error'),
-            apartment: document.getElementById('apartment-error'),
             terms: document.getElementById('terms-error')
         };
 
         let detectedLocationData = null;
         const API_BASE = window.location.origin;
 
+        // ============================================
         // Toast Functions
+        // ============================================
         let toastTimeout;
 
         function showToast(text, type = 'success') {
@@ -1230,7 +1098,7 @@
             toastText.innerText = text;
             toast.classList.add('show');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
         function hideToast() {
@@ -1248,6 +1116,9 @@
             });
         }
 
+        // ============================================
+        // Error Handling
+        // ============================================
         function clearErrors() {
             Object.values(errorElements).forEach(el => {
                 el.style.display = 'none';
@@ -1262,18 +1133,61 @@
             errorEl.style.display = 'flex';
         }
 
+        // ============================================
+        // Validation Functions (SQL Compatible)
+        // ============================================
         function isValidEmail(email) {
-            return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+            // RFC 5322 standard (SQL: ^[^\s@]+@[^\s@]+\.[^\s@]+$)
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
         }
 
         function isValidPhone(phone) {
+            // E.164 format: +[1-9]\d{6,14} (SQL CHECK constraint)
             const cleaned = phone.replace(/[^\d+]/g, '');
-            return /^\+?88?01[3-9]\d{8}$/.test(cleaned) || /^\+\d{10,15}$/.test(cleaned);
+            return /^\+[1-9]\d{6,14}$/.test(cleaned);
         }
 
+        function formatPhoneToE164(phone) {
+            // SQL trigger expects E.164 format
+            let cleaned = phone.replace(/[^\d+]/g, '');
+            
+            // Bangladesh local format: 01XXXXXXXXX → +8801XXXXXXXXX
+            if (/^01[3-9]\d{8}$/.test(cleaned)) {
+                return '+880' + cleaned.substring(1);
+            }
+            
+            // If 8801XXXXXXXXX → +8801XXXXXXXXX
+            if (/^880[1-9]\d{8,}$/.test(cleaned)) {
+                return '+' + cleaned;
+            }
+            
+            // Already E.164
+            if (/^\+[1-9]\d{6,14}$/.test(cleaned)) {
+                return cleaned;
+            }
+            
+            return cleaned;
+        }
+
+        function buildFullAddress(data) {
+            const parts = [
+                data.apartment_house,
+                data.street_address,
+                data.city,
+                data.state_province,
+                data.postal_code,
+                data.country || 'Bangladesh'
+            ].filter(part => part && part.trim() !== '');
+            
+            return parts.join(', ') || 'Address not provided';
+        }
+
+        // ============================================
+        // Location Functions
+        // ============================================
         function markLocationFilled() {
             [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(el => {
-                el.classList.add('location-filled');
+                if (el.value.trim()) el.classList.add('location-filled');
             });
         }
 
@@ -1283,21 +1197,21 @@
             });
         }
 
-        function buildFullAddress(addressData) {
+        function buildFullAddressFromNominatim(address) {
             const parts = [];
-            if (addressData.house_number) parts.push(addressData.house_number);
-            if (addressData.building) parts.push(addressData.building);
-            if (addressData.road) parts.push(addressData.road);
-            if (addressData.street) parts.push(addressData.street);
-            if (addressData.neighbourhood) parts.push(addressData.neighbourhood);
-            if (addressData.suburb) parts.push(addressData.suburb);
-            if (addressData.village) parts.push(addressData.village);
-            if (addressData.town) parts.push(addressData.town);
-            if (addressData.city) parts.push(addressData.city);
-            if (addressData.state_district) parts.push(addressData.state_district);
-            if (addressData.state) parts.push(addressData.state);
-            if (addressData.postcode) parts.push('Postal: ' + addressData.postcode);
-            if (addressData.country) parts.push(addressData.country);
+            if (address.house_number) parts.push(address.house_number);
+            if (address.building) parts.push(address.building);
+            if (address.road) parts.push(address.road);
+            if (address.street) parts.push(address.street);
+            if (address.neighbourhood) parts.push(address.neighbourhood);
+            if (address.suburb) parts.push(address.suburb);
+            if (address.village) parts.push(address.village);
+            if (address.town) parts.push(address.town);
+            if (address.city) parts.push(address.city);
+            if (address.state_district) parts.push(address.state_district);
+            if (address.state) parts.push(address.state);
+            if (address.postcode) parts.push('Postal: ' + address.postcode);
+            if (address.country) parts.push(address.country);
             
             const uniqueParts = [...new Set(parts)];
             return uniqueParts.join(', ') || 'Address detected via GPS';
@@ -1320,11 +1234,17 @@
 
         function applyLocationToForm(locationData) {
             const addr = locationData.fullData;
-            countryInput.value = addr.country || 'Bangladesh';
+            countryInput.value = addr.country || '';
             stateInput.value = addr.state || '';
             cityInput.value = addr.city || addr.town || addr.state_district || '';
             postalInput.value = addr.postcode || '';
             streetInput.value = addr.road || addr.street || '';
+            
+            // Set phone placeholder with country code
+            const countryCode = addr.country_code ? '+' + addr.country_code : '';
+            if (countryCode && !phoneInput.value) {
+                phoneInput.placeholder = `Phone (${countryCode}XXXXXXXXX) *`;
+            }
             
             markLocationFilled();
             locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location set successfully';
@@ -1376,7 +1296,7 @@
                 const data = await response.json();
                 const address = data.address || {};
                 
-                let finalAddress = buildFullAddress(address);
+                let finalAddress = buildFullAddressFromNominatim(address);
                 if (!finalAddress || finalAddress.length < 10) {
                     finalAddress = data.display_name || `GPS: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
                 }
@@ -1384,7 +1304,7 @@
                 finalAddress = finalAddress.replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim();
                 
                 const locationData = {
-                    country: address.country || 'Bangladesh',
+                    country: address.country || '',
                     state: address.state || '',
                     city: address.city || address.town || address.state_district || '',
                     postal: address.postcode || '',
@@ -1418,7 +1338,9 @@
             }
         }
 
+        // ============================================
         // Event Listeners
+        // ============================================
         detectLocationBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             await detectUserLocation();
@@ -1438,7 +1360,7 @@
             enableManualEdit();
             if (detectedLocationData) {
                 const addr = detectedLocationData.fullData;
-                countryInput.value = addr.country || 'Bangladesh';
+                countryInput.value = addr.country || '';
                 stateInput.value = addr.state || '';
                 cityInput.value = addr.city || '';
                 postalInput.value = addr.postcode || '';
@@ -1453,6 +1375,18 @@
             }
         });
 
+        // Phone input formatter
+        phoneInput.addEventListener('input', function() {
+            let value = this.value.replace(/[^\d+]/g, '');
+            if (value.length > 0 && !value.startsWith('+') && !value.startsWith('0')) {
+                value = '+' + value;
+            }
+            this.value = value;
+        });
+
+        // ============================================
+        // Session Check
+        // ============================================
         async function checkSession() {
             try {
                 const response = await fetch(`${API_BASE}/api/auth/user`);
@@ -1466,7 +1400,9 @@
             loader.classList.add('hidden');
         }
 
-        // Handle Sign-Up with Professional Fields
+        // ============================================
+        // Sign-Up Form Handler (SQL Compatible)
+        // ============================================
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             clearErrors();
@@ -1485,11 +1421,13 @@
             
             let hasError = false;
             
+            // Name validation (SQL: char_length >= 3)
             if (!name || name.length < 3) {
                 showFieldError(nameInput, errorElements.name, 'Full name is required (minimum 3 characters)');
                 hasError = true;
             }
             
+            // Email validation (SQL: RFC 5322 + max 254 chars)
             if (!email) {
                 showFieldError(emailInput, errorElements.email, 'Email address is required');
                 hasError = true;
@@ -1498,14 +1436,17 @@
                 hasError = true;
             }
             
+            // Phone validation (SQL: E.164 format ^\+[1-9]\d{6,14}$)
             if (!phone) {
                 showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
                 hasError = true;
-            } else if (!isValidPhone(phone)) {
-                showFieldError(phoneInput, errorElements.phone, 'Enter valid phone (01XXXXXXXXX or +8801XXXXXXXXX)');
+            } else if (!isValidPhone(formatPhoneToE164(phone))) {
+                showFieldError(phoneInput, errorElements.phone, 
+                    'Use E.164 format: +[country code][number] (e.g., +8801XXXXXXXXX)');
                 hasError = true;
             }
             
+            // Password validation
             if (!password) {
                 showFieldError(passwordInput, errorElements.password, 'Password is required');
                 hasError = true;
@@ -1514,21 +1455,38 @@
                 hasError = true;
             }
             
+            // Country validation (SQL: NOT NULL with city check)
             if (!country) {
                 showFieldError(countryInput, errorElements.country, 'Country is required');
                 hasError = true;
             }
             
+            // City validation
             if (!city) {
-                showFieldError(cityInput, errorElements.city, 'City is required');
+                showFieldError(cityInput, { style: {}, innerHTML: '' }, 'City is required');
+                const cityError = document.getElementById('city-error') || errorElements.country;
+                cityError.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> City is required';
+                cityError.style.display = 'flex';
+                cityInput.classList.add('input-error');
                 hasError = true;
             }
             
+            // Street address validation
             if (!street_address) {
                 showFieldError(streetInput, errorElements.street, 'Street address is required');
                 hasError = true;
             }
             
+            // Full address validation (SQL: char_length >= 10)
+            const fullAddress = buildFullAddress({
+                apartment_house, street_address, city, state_province, postal_code, country
+            });
+            if (fullAddress.length < 10) {
+                showFieldError(streetInput, errorElements.street, 'Please provide complete address (minimum 10 characters)');
+                hasError = true;
+            }
+            
+            // Terms validation
             if (!terms) {
                 errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms & Privacy Policy';
                 errorElements.terms.style.display = 'flex';
@@ -1541,9 +1499,12 @@
                 return;
             }
             
+            // Format phone to E.164
+            const formattedPhone = formatPhoneToE164(phone);
+            
+            // Disable submit button
             submitButton.disabled = true;
             submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
-            await showLoader(2000);
             
             try {
                 const response = await fetch(`${API_BASE}/api/auth/signup`, {
@@ -1553,13 +1514,14 @@
                         email,
                         password,
                         name,
-                        phone: phone.replace(/[-\s()]/g, ''),
+                        phone: formattedPhone,
                         country,
-                        state_province,
+                        state_province: state_province || null,
                         city,
-                        postal_code,
+                        postal_code: postal_code || null,
                         street_address,
-                        apartment_house
+                        apartment_house: apartment_house || null,
+                        full_address: fullAddress
                     })
                 });
                 
@@ -1572,18 +1534,23 @@
                     return;
                 }
                 
-                // Show passkey if available
-                if (result.passkey) {
-                    passkeyText.textContent = result.passkey;
-                    passkeyPreview.classList.add('show');
-                    showToast('Account created! Your JBYN Passkey is ready.', 'success');
+                // Show JBYN-OneID
+                if (result.jbyn_oneid) {
+                    oneidValue.textContent = result.jbyn_oneid;
+                    oneidPreview.classList.add('show');
+                    showToast('Account created! Your JBYN-OneID is ready.', 'success');
+                } else if (result.user?.user_metadata?.jbyn_oneid) {
+                    oneidValue.textContent = result.user.user_metadata.jbyn_oneid;
+                    oneidPreview.classList.add('show');
+                    showToast('Account created successfully!', 'success');
                 } else {
                     showToast('Account created successfully! Please verify your email.', 'success');
                 }
                 
+                // Redirect after showing OneID
                 setTimeout(() => {
                     window.location.href = '/account';
-                }, 2500);
+                }, 3000);
                 
             } catch (err) {
                 console.error('Signup error:', err);
@@ -1593,25 +1560,16 @@
             }
         });
 
-        // Phone formatting
-        phoneInput.addEventListener('input', function() {
-            let value = this.value.replace(/[^\d+]/g, '');
-            if (!value.startsWith('+')) {
-                if (value.length > 11) value = value.slice(0, 11);
-                if (value.length >= 4) value = value.slice(0, 3) + '-' + value.slice(3);
-                if (value.length >= 9) value = value.slice(0, 8) + '-' + value.slice(8);
-            }
-            this.value = value;
-        });
-
+        // Close toast on outside click
         document.addEventListener('click', (e) => {
             if (toast.classList.contains('show') && !toast.contains(e.target)) {
                 hideToast();
             }
         });
 
+        // Initialize
         checkSession();
-        console.log('Professional Signup page ready');
+        console.log('JAYENWARE Signup - SQL Compatible Ready');
     </script>
 </body>
 </html>
