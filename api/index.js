@@ -1,1133 +1,1555 @@
-<!DOCTYPE html>
-<html lang="bn-BD" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Join JAYENWARE | Create Your Account</title>
-    
-    <meta name="description" content="Create your JAYENWARE account. Join for exclusive deals, faster checkout, and premium lifestyle shopping.">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#ffffff">
-    
-    <link rel="canonical" href="https://www.jayenware.shop/signup" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+// ============================================
+// server.js - Complete API Server
+// JBYN-OneID Global Profile System
+// Supabase Integrated | Production Ready
+// Notification System Added
+// ============================================
 
-    <script src="/fonts.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+const express = require('express');
+const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
+
+const app = express();
+
+// ============================================
+// SUPABASE CONFIGURATION
+// ============================================
+const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============================================
+// MIDDLEWARE
+// ============================================
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+// Create slug from string
+function createSlug(text) {
+    return text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+// Build full address from components
+function buildFullAddress(data) {
+    const parts = [
+        data.apartment_house,
+        data.street_address,
+        data.city,
+        data.state_province,
+        data.postal_code,
+        data.country
+    ].filter(Boolean);
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1d1d1f',
-                        accent: '#86868b',
-                        soft: '#f5f5f7',
-                        blue: '#007aff',
-                        gold: '#c9a96e',
-                        error: '#dc2626',
-                        success: '#059669'
-                    }
+    return parts.join(', ') || 'Address not provided';
+}
+
+// Format product with category/subcategory names
+function formatProduct(product) {
+    if (!product) return null;
+    return {
+        ...product,
+        category: product.categories?.name || null,
+        subcategory: product.subcategories?.name || null
+    };
+}
+
+function formatProducts(products) {
+    if (!products) return [];
+    return products.map(formatProduct);
+}
+
+// Format phone number (direct number format)
+function formatPhoneNumber(phone) {
+    if (!phone || phone === 'N/A') return phone;
+    
+    // Remove all non-digit characters
+    let cleaned = phone.replace(/[^\d]/g, '');
+    
+    return cleaned;
+}
+
+// Validate phone format (6-15 digits)
+function isValidPhone(phone) {
+    return phone === 'N/A' || /^[0-9]{6,15}$/.test(phone);
+}
+
+// Validate JBYN-OneID format
+function isValidOneID(oneid) {
+    return /^JBYN-OneID-[A-Z0-9]{12}$/.test(oneid);
+}
+
+// Get authenticated user helper
+async function getAuthenticatedUser(req) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return { user: null, error: 'No authorization token provided' };
+    }
+    
+    const token = authHeader.split(' ')[1];
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    
+    return { user, error };
+}
+
+// ============================================
+// AUTHENTICATION API ROUTES
+// ============================================
+
+// SIGNUP - Professional Signup with full address
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { 
+            email, 
+            password, 
+            name, 
+            phone,
+            country,
+            state_province,
+            city,
+            postal_code,
+            street_address,
+            apartment_house
+        } = req.body;
+
+        // Basic validation
+        if (!email || !password) {
+            return res.status(400).json({ 
+                error: 'Email and password are required' 
+            });
+        }
+
+        if (!name || name.trim().length < 3) {
+            return res.status(400).json({
+                error: 'Full name is required (minimum 3 characters)'
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters' 
+            });
+        }
+
+        // Phone formatting and validation
+        const formattedPhone = formatPhoneNumber(phone);
+        if (phone && !isValidPhone(formattedPhone)) {
+            return res.status(400).json({
+                error: 'Invalid phone format. Enter 6-15 digits without country code'
+            });
+        }
+
+        // Build complete address
+        const fullAddress = buildFullAddress({
+            apartment_house: apartment_house || '',
+            street_address: street_address || '',
+            city: city || '',
+            state_province: state_province || '',
+            postal_code: postal_code || '',
+            country: country || ''
+        });
+
+        if (!fullAddress || fullAddress.length < 10) {
+            return res.status(400).json({
+                error: 'Please provide complete address details (minimum 10 characters)'
+            });
+        }
+
+        // Supabase signup with user_metadata
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: name.trim(),
+                    phone: formattedPhone || 'N/A',
+                    country: country || null,
+                    state_province: state_province || null,
+                    city: city || null,
+                    postal_code: postal_code || null,
+                    street_address: street_address || null,
+                    apartment_house: apartment_house || null,
+                    full_address: fullAddress
                 }
             }
-        }
-    </script>
+        });
 
-    <style>
-        :root {
-            --primary: #1d1d1f;
-            --accent: #86868b;
-            --soft: #f5f5f7;
-            --blue: #007aff;
-            --gold: #c9a96e;
-        }
-        
-        *, *::before, *::after {
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            background: #f5f5f7;
-            color: var(--primary);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
+        if (error) {
+            if (error.message.includes('already registered')) {
+                return res.status(400).json({ 
+                    error: 'This email is already registered. Please login instead.' 
+                });
+            }
+            return res.status(400).json({ error: error.message });
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+        // Get generated OneID and notifications from profile
+        let oneid = null;
+        let notifications = [];
+        if (data.user) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('jbyn_oneid')
+                .eq('id', data.user.id)
+                .single();
+            
+            oneid = profile?.jbyn_oneid || null;
+
+            // Get notifications
+            const { data: userNotifications } = await supabase
+                .from('profile_notifications')
+                .select('*')
+                .eq('user_id', data.user.id)
+                .eq('is_read', false)
+                .order('created_at', { ascending: false })
+                .limit(5);
+            
+            notifications = userNotifications || [];
+        }
+
+        res.status(201).json({
+            message: 'Registration successful! Please check your email for verification.',
+            user: data.user,
+            session: data.session,
+            jbyn_oneid: oneid,
+            notifications: notifications
+        });
+
+    } catch (err) {
+        console.error('Signup error:', err);
+        res.status(500).json({ error: 'Registration failed. Please try again.' });
+    }
+});
+
+// LOGIN
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ 
+                error: 'Email and password are required' 
+            });
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            if (error.message.includes('Invalid login credentials')) {
+                return res.status(401).json({ 
+                    error: 'Invalid email or password' 
+                });
+            }
+            if (error.message.includes('Email not confirmed')) {
+                return res.status(401).json({ 
+                    error: 'Please verify your email before logging in' 
+                });
+            }
+            return res.status(401).json({ error: error.message });
+        }
+
+        // Fetch complete profile data
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
+
+        // Get unread notifications
+        const { data: notifications } = await supabase
+            .from('profile_notifications')
+            .select('*')
+            .eq('user_id', data.user.id)
+            .eq('is_read', false)
+            .order('created_at', { ascending: false })
+            .limit(10);
+
+        // Get unread notification count
+        const { count: unreadCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', data.user.id)
+            .eq('is_read', false);
+
+        res.json({
+            message: 'Login successful!',
+            user: data.user,
+            session: data.session,
+            profile: profile || null,
+            notifications: notifications || [],
+            unread_notifications_count: unreadCount || 0
+        });
+
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).json({ error: 'Login failed. Please try again.' });
+    }
+});
+
+// LOGOUT
+app.post('/api/auth/logout', async (req, res) => {
+    try {
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({ message: 'Logged out successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Logout failed' });
+    }
+});
+
+// GET CURRENT USER SESSION
+app.get('/api/auth/user', async (req, res) => {
+    try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if (error || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        // Complete profile fetch
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        if (profileError) {
+            return res.status(500).json({ error: profileError.message });
+        }
+
+        res.json({
+            user,
+            profile: profile || null
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get user data' });
+    }
+});
+
+// UPDATE PROFILE
+app.put('/api/auth/profile', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { 
+            name, 
+            phone, 
+            country,
+            state_province,
+            city,
+            postal_code,
+            street_address,
+            apartment_house,
+            avatar_url
+        } = req.body;
+
+        // Validate name
+        if (name && name.trim().length < 3) {
+            return res.status(400).json({ error: 'Name must be at least 3 characters' });
+        }
+
+        // Validate phone format
+        if (phone) {
+            const formattedPhone = formatPhoneNumber(phone);
+            if (!isValidPhone(formattedPhone)) {
+                return res.status(400).json({ error: 'Invalid phone format. Enter 6-15 digits' });
             }
         }
 
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 88px 16px 40px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-        }
-        
-        @media (min-width: 640px) { main { padding: 104px 24px 56px; } }
-        @media (min-width: 1024px) { main { padding: 120px 32px 72px; } }
+        // Build update data
+        const updateData = {};
+        if (name) updateData.name = name.trim();
+        if (phone) updateData.phone = formatPhoneNumber(phone);
+        if (country !== undefined) updateData.country = country;
+        if (state_province !== undefined) updateData.state_province = state_province;
+        if (city !== undefined) updateData.city = city;
+        if (postal_code !== undefined) updateData.postal_code = postal_code;
+        if (street_address !== undefined) updateData.street_address = street_address;
+        if (apartment_house !== undefined) updateData.apartment_house = apartment_house;
+        if (avatar_url) updateData.avatar_url = avatar_url;
 
-        .container-signup {
-            width: 100%;
-            max-width: 500px;
-        }
+        const { data, error } = await supabase
+            .from('profiles')
+            .update(updateData)
+            .eq('id', user.id)
+            .select()
+            .single();
 
-        /* Progress Steps */
-        .progress-steps {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 32px;
-        }
-        
-        .progress-step {
-            width: 32px;
-            height: 4px;
-            border-radius: 2px;
-            background: #d1d1d6;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .progress-step.done {
-            background: var(--primary);
-        }
-        
-        .progress-step.current {
-            background: var(--primary);
-            width: 40px;
+        if (error) {
+            return res.status(500).json({ error: error.message });
         }
 
-        /* Card */
-        .auth-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 36px 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            transition: box-shadow 0.3s ease;
-        }
+        // Get updated notifications
+        const { data: notifications } = await supabase
+            .from('profile_notifications')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('is_read', false)
+            .order('created_at', { ascending: false })
+            .limit(5);
+
+        res.json({
+            message: 'Profile updated successfully',
+            profile: data,
+            notifications: notifications || []
+        });
+
+    } catch (err) {
+        console.error('Profile update error:', err);
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+// GET JBYN PASSKEY (OneID)
+app.get('/api/auth/passkey', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
         
-        @media (min-width: 640px) {
-            .auth-card { padding: 44px 32px; border-radius: 24px; min-height: 440px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .auth-card { padding: 52px 40px; border-radius: 28px; min-height: 480px; }
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        .step-inner {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('jbyn_oneid')
+            .eq('id', user.id)
+            .single();
+
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
         }
 
-        .step-view {
-            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        res.json({
+            jbyn_oneid: profile.jbyn_oneid
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to retrieve OneID' });
+    }
+});
+
+// FORGOT PASSWORD
+app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
         }
 
-        /* Icon Circle - All Black */
-        .icon-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 22px;
-            transition: all 0.3s ease;
-            background: #f5f5f7;
-            color: var(--primary);
-        }
-        
-        @media (min-width: 640px) {
-            .icon-circle { width: 56px; height: 56px; font-size: 24px; }
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
+        });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
         }
 
-        /* Typography */
-        .step-heading {
-            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-            font-weight: 700;
-            font-size: 22px;
-            line-height: 1.25;
-            margin-bottom: 6px;
-            color: var(--primary);
-            letter-spacing: -0.2px;
-        }
-        
-        @media (min-width: 640px) {
-            .step-heading { font-size: 26px; }
-        }
-        
-        .step-desc {
-            font-size: 13px;
-            color: var(--accent);
-            margin-bottom: 28px;
-            line-height: 1.55;
-        }
-        
-        @media (min-width: 640px) {
-            .step-desc { font-size: 14px; margin-bottom: 32px; }
+        res.json({ 
+            message: 'Password reset link sent to your email' 
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to send reset email' });
+    }
+});
+
+// RESET PASSWORD
+app.put('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        if (!password || password.length < 6) {
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters' 
+            });
         }
 
-        /* Input */
-        .input-wrap {
-            position: relative;
-            margin-bottom: 4px;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 15px 16px;
-            border: 1.5px solid #e0e0e5;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #ffffff;
-            outline: none;
-            transition: all 0.2s ease;
-            color: var(--primary);
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        
-        .form-input:hover { border-color: #c5c5cc; }
-        
-        .form-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(29,29,31,0.06);
-        }
-        
-        .form-input.has-error {
-            border-color: var(--error);
-            box-shadow: 0 0 0 4px rgba(220,38,38,0.06);
-        }
-        
-        .form-input.is-valid {
-            border-color: var(--success);
+        const { error } = await supabase.auth.updateUser({
+            password: password
+        });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
         }
 
-        @media (min-width: 640px) {
-            .form-input { padding: 16px; font-size: 16px; }
+        res.json({ message: 'Password updated successfully' });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update password' });
+    }
+});
+
+// DELETE ACCOUNT (Soft Delete)
+app.post('/api/auth/delete-account', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        .input-feedback {
-            font-size: 12px;
-            min-height: 20px;
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-        }
-        
-        .input-feedback.error { color: var(--error); }
-        .input-feedback.success { color: var(--success); }
-        .input-feedback.hint { color: var(--accent); }
+        const { reason } = req.body;
 
-        /* Buttons */
-        .btn-row {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-            padding-top: 28px;
-            align-items: center;
-        }
-        
-        .btn-back {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #f5f5f7;
-            border: 1.5px solid #e0e0e5;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 15px;
-            flex-shrink: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .btn-back:hover {
-            background: #ebebed;
-            border-color: #c5c5cc;
-            color: var(--primary);
-        }
-        
-        .btn-back:active { transform: scale(0.96); }
-        
-        .btn-primary {
-            flex: 1;
-            padding: 15px 24px;
-            background: var(--primary);
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            letter-spacing: 0.1px;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .btn-primary:hover {
-            background: #333;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        }
-        
-        .btn-primary:active { transform: scale(0.98); }
-        
-        .btn-primary:disabled {
-            background: #c5c5cc;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        
-        @media (min-width: 640px) {
-            .btn-back { width: 48px; height: 48px; }
-            .btn-primary { padding: 16px 28px; font-size: 15px; }
-        }
-
-        /* Location Button */
-        .locate-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 13px 16px;
-            background: #f5f5f7;
-            border: 1.5px solid #e0e0e5;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--primary);
-            margin-bottom: 16px;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .locate-btn:hover { background: #ebebed; border-color: #c5c5cc; }
-        .locate-btn:active { transform: scale(0.98); }
-        .locate-btn.is-loading { opacity: 0.7; pointer-events: none; }
-
-        /* Agreement */
-        .agree-box {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 14px 16px;
-            background: #f5f5f7;
-            border-radius: 12px;
-            border: 1.5px solid #e0e0e5;
-            transition: all 0.2s ease;
-        }
-        
-        .agree-box:hover { border-color: #c5c5cc; }
-        
-        .agree-box input[type="checkbox"] {
-            margin-top: 1px;
-            accent-color: var(--primary);
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        
-        .agree-box label {
-            font-size: 12px;
-            color: var(--accent);
-            line-height: 1.6;
-            cursor: pointer;
-        }
-        
-        @media (min-width: 640px) {
-            .agree-box label { font-size: 13px; }
-        }
-        
-        .agree-box a {
-            color: var(--primary);
-            font-weight: 600;
-            text-decoration: underline;
-            text-underline-offset: 2px;
-        }
-        
-        .agree-box a:hover { color: #000; }
-
-        /* Success Overlay */
-        .success-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: inherit;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-            padding: 32px;
-        }
-        
-        .success-overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        .success-check {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: #f5f5f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
-        }
-        
-        @keyframes checkPop {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        
-        .success-check i {
-            font-size: 32px;
-            color: var(--primary);
-        }
-        
-        @media (min-width: 640px) {
-            .success-check { width: 80px; height: 80px; }
-            .success-check i { font-size: 36px; }
-        }
-        
-        .success-heading {
-            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-            font-weight: 700;
-            font-size: 20px;
-            margin-bottom: 6px;
-            text-align: center;
-            animation: fadeSlideIn 0.5s ease 0.4s both;
-        }
-        
-        .success-text {
-            font-size: 13px;
-            color: var(--accent);
-            text-align: center;
-            max-width: 280px;
-            line-height: 1.6;
-            animation: fadeSlideIn 0.5s ease 0.6s both;
-        }
-        
-        @media (min-width: 640px) {
-            .success-heading { font-size: 22px; }
-            .success-text { font-size: 14px; }
-        }
-
-        /* Toast */
-        #toast {
-            position: fixed;
-            top: 76px;
-            right: 12px;
-            z-index: 9999;
-            transform: translateX(calc(100% + 24px));
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: calc(100vw - 24px);
-        }
-        
-        @media (min-width: 640px) {
-            #toast { top: 88px; right: 20px; }
-        }
-        
-        #toast.show { transform: translateX(0); }
-        
-        #toast .toast-box {
-            background: #ffffff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-radius: 14px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 260px;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        #toast .toast-icon-wrap {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            background: #f5f5f7;
-            color: var(--primary);
-        }
-        
-        .toast-icon-wrap.error {
-            background: #fef2f2;
-            color: var(--error);
-        }
-        
-        #toast .toast-msg {
-            font-size: 12px;
-            font-weight: 600;
-            flex: 1;
-            line-height: 1.4;
-        }
-        
-        #toast .toast-close {
-            color: var(--accent);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 4px;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-        }
-        
-        #toast .toast-close:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
-
-        /* Particles */
-        .confetti {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            animation: confettiFall 1s ease-out forwards;
-        }
-        
-        @keyframes confettiFall {
-            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
-        }
-
-        .visually-hidden {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        @media (max-width: 380px) {
-            .auth-card { padding: 28px 18px; min-height: 360px; }
-            .step-heading { font-size: 20px; }
-            .form-input { padding: 13px 14px; font-size: 14px; }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="dynamic-header"></div>
-
-    <main>
-        <div class="container-signup">
-            <!-- Progress -->
-            <div class="progress-steps" id="progress-steps">
-                <div class="progress-step current"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-            </div>
-
-            <!-- Card -->
-            <div class="auth-card" id="auth-card">
-                <div class="step-inner" id="step-inner"></div>
-                
-                <!-- Success -->
-                <div class="success-overlay" id="success-overlay">
-                    <div class="success-check">
-                        <i class="fa-solid fa-check"></i>
-                    </div>
-                    <h2 class="success-heading">Account Created!</h2>
-                    <p class="success-text" id="success-msg">Taking you to your dashboard...</p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="dynamic-footer"></div>
-
-    <!-- Toast -->
-    <div id="toast" role="alert" aria-live="polite">
-        <div class="toast-box">
-            <div class="toast-icon-wrap" id="toast-icon-wrap">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <span class="toast-msg" id="toast-msg"></span>
-            <button class="toast-close" onclick="hideToast()" aria-label="Close">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    </div>
-
-    <script src="/components.js"></script>
-
-    <script>
-        (() => {
-            document.addEventListener('DOMContentLoaded', () => {
-                if (window.JAYENWARE_FONTS) {
-                    const r = document.documentElement;
-                    Object.entries(window.JAYENWARE_FONTS.cssVariables).forEach(([k, v]) => r.style.setProperty(k, v));
-                }
+        const { data, error } = await supabase
+            .rpc('soft_delete_user', {
+                p_user_id: user.id,
+                p_reason: reason || 'User requested deletion'
             });
 
-            window.addEventListener('load', () => setTimeout(boot, 200));
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
 
-            function boot() {
-                let step = 0;
-                let busy = false;
+        // Sign out after soft delete
+        await supabase.auth.signOut();
 
-                const data = {
-                    name: '', email: '', phone: '', password: '',
-                    country: 'Bangladesh', state_province: '', city: '',
-                    postal_code: '', street_address: '', apartment_house: '',
-                    terms: false
-                };
+        res.json({
+            message: 'Account deletion requested. Your account will be permanently deleted after 30 days.',
+            success: data
+        });
 
-                const $ = (id) => document.getElementById(id);
-                const progressBar = $('progress-steps');
-                const stepInner = $('step-inner');
-                const successOverlay = $('success-overlay');
-                const toast = $('toast');
-                const API = window.location.origin;
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete account' });
+    }
+});
 
-                // Blocked email domains
-                const blockedDomains = [
-                    'jabiyen.com', 'jabiyen.shop', 'jabiyen.io', 'jabiyen.me',
-                    'binzeo.com', 'binzeo.shop', 'binzeo.io', 'binzeo.me'
-                ];
+// ============================================
+// NOTIFICATION API ROUTES
+// ============================================
 
-                let toastTimer;
+// Get all user notifications (paginated)
+app.get('/api/notifications', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
-                function notify(msg, type = 'success') {
-                    const icon = $('toast-icon-wrap');
-                    const text = $('toast-msg');
-                    if (!icon || !text) return;
-                    
-                    if (type === 'error') {
-                        icon.className = 'toast-icon-wrap error';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
-                    } else {
-                        icon.className = 'toast-icon-wrap';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-                    }
-                    
-                    text.textContent = msg;
-                    toast.classList.add('show');
-                    clearTimeout(toastTimer);
-                    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
-                }
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const offset = (page - 1) * limit;
+        const filter = req.query.filter || 'all'; // all, unread, read
+        const type = req.query.type || 'all'; // all, success, error, warning, info
 
-                window.hideToast = () => {
-                    toast.classList.remove('show');
-                    clearTimeout(toastTimer);
-                };
+        let query = supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact' })
+            .eq('user_id', user.id);
 
-                function setProgress(n) {
-                    progressBar.querySelectorAll('.progress-step').forEach((el, i) => {
-                        el.classList.remove('done', 'current');
-                        if (i < n) el.classList.add('done');
-                        if (i === n) el.classList.add('current');
-                    });
-                }
+        // Apply filters
+        if (filter === 'unread') {
+            query = query.eq('is_read', false);
+        } else if (filter === 'read') {
+            query = query.eq('is_read', true);
+        }
 
-                function validateEmail(email) {
-                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                        return 'Please enter a valid email address';
-                    }
-                    
-                    const domain = email.split('@')[1]?.toLowerCase();
-                    if (blockedDomains.includes(domain)) {
-                        return `Email domain "@${domain}" is not allowed. Please use your personal or business email.`;
-                    }
-                    
-                    return null;
-                }
+        if (type !== 'all') {
+            query = query.eq('notification_type', type);
+        }
 
-                const steps = [
-                    {
-                        icon: 'fa-solid fa-user',
-                        question: "What's your name?",
-                        desc: "We'll use this to personalize your experience.",
-                        field: 'name', type: 'text', placeholder: 'Your full name',
-                        autocomplete: 'name',
-                        check: v => v.trim().length >= 3 ? null : 'Name must be at least 3 characters',
-                        hint: 'First and last name'
-                    },
-                    {
-                        icon: 'fa-solid fa-envelope',
-                        question: "What's your email?",
-                        desc: "For order updates and account security.",
-                        field: 'email', type: 'email', placeholder: 'you@example.com',
-                        autocomplete: 'email',
-                        check: v => validateEmail(v),
-                        hint: 'Use your personal or business email'
-                    },
-                    {
-                        icon: 'fa-solid fa-phone',
-                        question: "Your phone number?",
-                        desc: "For delivery coordination and account recovery.",
-                        field: 'phone', type: 'tel', placeholder: '+8801XXXXXXXXX',
-                        autocomplete: 'tel-national',
-                        check: v => {
-                            const cleaned = v.replace(/[^\d+]/g, '');
-                            if (!cleaned.startsWith('+')) {
-                                return 'Please include country code (e.g., +880 for Bangladesh, +1 for USA)';
-                            }
-                            if (cleaned.length < 11) return 'Phone number is too short';
-                            if (cleaned.length > 16) return 'Phone number is too long';
-                            return null;
-                        },
-                        hint: 'Include country code (+880, +1, +44, etc.)',
-                        format: true
-                    },
-                    {
-                        icon: 'fa-solid fa-lock',
-                        question: "Create a password",
-                        desc: "Use 8+ characters for a strong password.",
-                        field: 'password', type: 'password', placeholder: 'Minimum 8 characters',
-                        autocomplete: 'new-password',
-                        check: v => v.length >= 8 ? null : 'At least 8 characters required',
-                        hint: 'Keep it safe'
-                    },
-                    {
-                        icon: 'fa-solid fa-location-dot',
-                        question: "Where are you located?",
-                        desc: "Auto-detect or enter your location manually.",
-                        isLocation: true
-                    },
-                    {
-                        icon: 'fa-solid fa-house',
-                        question: "Your delivery address",
-                        desc: "For smooth and accurate deliveries.",
-                        isAddress: true
-                    },
-                    {
-                        icon: 'fa-solid fa-shield-halved',
-                        question: "Almost there!",
-                        desc: "Review and accept our terms to finish.",
-                        isTerms: true
-                    }
-                ];
+        const { data, error, count } = await query
+            .order('created_at', { ascending: false })
+            .range(offset, offset + limit - 1);
 
-                function render(n) {
-                    if (busy) return;
-                    busy = true;
-                    
-                    const s = steps[n];
-                    setProgress(n);
-                    
-                    let html = '';
-                    
-                    if (s.isLocation) {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <button type="button" class="locate-btn" id="locate-btn">
-                                    <i class="fa-solid fa-location-crosshairs"></i> Detect my location
-                                </button>
-                                <div class="input-feedback hint" id="locate-status"></div>
-                                
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-country" placeholder="Country" value="${data.country}">
-                                </div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-state" placeholder="State / Province" value="${data.state_province}">
-                                    <input type="text" class="form-input" id="loc-city" placeholder="City" value="${data.city}">
-                                </div>
-                                <div class="input-feedback" id="loc-error"></div>
-                                
-                                <div class="btn-row">
-                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <button class="btn-primary" onclick="checkLocation()">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                            </div>`;
-                    } else if (s.isAddress) {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal / ZIP code" value="${data.postal_code}">
-                                </div>
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-street" placeholder="Street address" value="${data.street_address}">
-                                </div>
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment, suite, unit (optional)" value="${data.apartment_house}">
-                                </div>
-                                <div class="input-feedback" id="addr-error"></div>
-                                
-                                <div class="btn-row">
-                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <button class="btn-primary" onclick="checkAddress()">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                            </div>`;
-                    } else if (s.isTerms) {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <div class="agree-box">
-                                    <input type="checkbox" id="terms-check" ${data.terms ? 'checked' : ''}>
-                                    <label for="terms-check">
-                                        I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a>
-                                    </label>
-                                </div>
-                                <div class="input-feedback" id="terms-error" style="margin-top:8px;"></div>
-                                
-                                <div class="btn-row">
-                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <button class="btn-primary" id="submit-btn" onclick="submit()">
-                                        <i class="fa-solid fa-user-check"></i> Create Account
-                                    </button>
-                                </div>
-                            </div>`;
-                    } else {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <div class="input-wrap">
-                                    <input type="${s.type}" class="form-input" id="main-input" 
-                                           placeholder="${s.placeholder}" 
-                                           value="${data[s.field] || ''}"
-                                           autocomplete="${s.autocomplete}"
-                                           autofocus>
-                                </div>
-                                <div class="input-feedback hint" id="field-hint">${s.hint}</div>
-                                <div class="input-feedback" id="field-error"></div>
-                                
-                                <div class="btn-row">
-                                    ${n > 0 ? `<button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>` : '<div></div>'}
-                                    <button class="btn-primary" onclick="checkField()">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                            </div>`;
-                    }
-                    
-                    stepInner.innerHTML = html;
-                    
-                    setTimeout(() => {
-                        const inp = document.getElementById('main-input');
-                        if (inp) inp.focus();
-                    }, 100);
-                    
-                    const mainInp = document.getElementById('main-input');
-                    if (mainInp) {
-                        mainInp.addEventListener('keydown', e => { if (e.key === 'Enter') checkField(); });
-                    }
-                    
-                    if (s.format && mainInp) {
-                        mainInp.addEventListener('input', function() {
-                            let v = this.value.replace(/[^\d+]/g, '');
-                            if (v.startsWith('+')) {
-                                const rest = v.slice(1);
-                                if (rest.length > 15) v = '+' + rest.slice(0, 15);
-                            } else {
-                                if (v.length >= 10 && !v.startsWith('+')) v = '+' + v;
-                                if (v.length > 16) v = v.slice(0, 16);
-                            }
-                            this.value = v;
-                        });
-                    }
-                    
-                    if (s.isLocation) {
-                        setTimeout(() => {
-                            document.getElementById('locate-btn')?.addEventListener('click', detectLocation);
-                        }, 150);
-                    }
-                    
-                    busy = false;
-                }
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
 
-                window.checkField = function() {
-                    const s = steps[step];
-                    const inp = document.getElementById('main-input');
-                    const val = inp?.value || '';
-                    const err = s.check(val);
-                    const errEl = document.getElementById('field-error');
-                    const hintEl = document.getElementById('field-hint');
-                    
-                    if (err) {
-                        if (inp) { inp.classList.add('has-error'); setTimeout(() => inp.classList.remove('has-error'), 600); }
-                        if (errEl) { errEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${err}`; errEl.className = 'input-feedback error'; }
-                        if (hintEl) hintEl.style.display = 'none';
-                        return;
-                    }
-                    
-                    if (inp) inp.classList.add('is-valid');
-                    data[s.field] = val;
-                    if (errEl) errEl.className = 'input-feedback';
-                    if (hintEl) hintEl.style.display = 'block';
-                    
-                    setTimeout(() => { if (inp) inp.classList.remove('is-valid'); go(step + 1); }, 250);
-                };
+        // Get unread count
+        const { count: unreadCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('is_read', false);
 
-                window.checkLocation = function() {
-                    const country = document.getElementById('loc-country')?.value.trim();
-                    const city = document.getElementById('loc-city')?.value.trim();
-                    const errEl = document.getElementById('loc-error');
-                    
-                    if (!country || !city) {
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Country and city are required'; errEl.className = 'input-feedback error'; }
-                        return;
-                    }
-                    
-                    data.country = country;
-                    data.state_province = document.getElementById('loc-state')?.value.trim() || '';
-                    data.city = city;
-                    if (errEl) errEl.className = 'input-feedback';
-                    go(step + 1);
-                };
-
-                window.checkAddress = function() {
-                    const street = document.getElementById('addr-street')?.value.trim();
-                    const errEl = document.getElementById('addr-error');
-                    
-                    if (!street) {
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Street address is required'; errEl.className = 'input-feedback error'; }
-                        return;
-                    }
-                    
-                    data.postal_code = document.getElementById('addr-postal')?.value.trim() || '';
-                    data.street_address = street;
-                    data.apartment_house = document.getElementById('addr-apt')?.value.trim() || '';
-                    if (errEl) errEl.className = 'input-feedback';
-                    go(step + 1);
-                };
-
-                window.go = function(target) {
-                    if (busy || target < 0 || target >= steps.length || target === step) return;
-                    step = target;
-                    render(step);
-                };
-
-                async function detectLocation() {
-                    if (!navigator.geolocation) { notify('Location not supported on this device', 'error'); return; }
-                    
-                    const btn = document.getElementById('locate-btn');
-                    const status = document.getElementById('locate-status');
-                    
-                    btn.classList.add('is-loading');
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
-                    if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Accessing GPS...';
-                    
-                    try {
-                        const pos = await new Promise((res, rej) => {
-                            navigator.geolocation.getCurrentPosition(res, rej, {
-                                enableHighAccuracy: true, timeout: 12000, maximumAge: 0
-                            });
-                        });
-                        
-                        if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Looking up address...';
-                        
-                        const resp = await fetch(
-                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&addressdetails=1&accept-language=en`,
-                            { headers: { 'User-Agent': 'JAYENWARE/1.0' } }
-                        );
-                        
-                        if (!resp.ok) throw new Error('API error');
-                        
-                        const d = await resp.json();
-                        const addr = d.address || {};
-                        
-                        document.getElementById('loc-country').value = addr.country || 'Bangladesh';
-                        document.getElementById('loc-state').value = addr.state || '';
-                        document.getElementById('loc-city').value = addr.city || addr.town || '';
-                        
-                        if (status) {
-                            status.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected and filled';
-                            status.className = 'input-feedback success';
-                        }
-                        
-                        notify('Location found!', 'success');
-                        
-                    } catch {
-                        if (status) {
-                            status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Unable to detect. Please fill manually.';
-                            status.className = 'input-feedback error';
-                        }
-                    } finally {
-                        btn.classList.remove('is-loading');
-                        btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Detect my location';
-                    }
-                }
-
-                // SUBMIT - Creates account and redirects to /account
-                window.submit = async function() {
-                    const checked = document.getElementById('terms-check')?.checked;
-                    
-                    if (!checked) {
-                        const errEl = document.getElementById('terms-error');
-                        if (errEl) { 
-                            errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue'; 
-                            errEl.className = 'input-feedback error'; 
-                        }
-                        return;
-                    }
-                    
-                    data.terms = true;
-                    
-                    const btn = document.getElementById('submit-btn');
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
-                    
-                    try {
-                        const resp = await fetch(`${API}/api/auth/signup`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email: data.email,
-                                password: data.password,
-                                name: data.name,
-                                phone: data.phone.replace(/[-\s()]/g, ''),
-                                country: data.country,
-                                state_province: data.state_province,
-                                city: data.city,
-                                postal_code: data.postal_code,
-                                street_address: data.street_address,
-                                apartment_house: data.apartment_house
-                            })
-                        });
-                        
-                        const result = await resp.json();
-                        
-                        if (!resp.ok) {
-                            throw new Error(result.error || 'Registration failed');
-                        }
-                        
-                        // Success - Show animation then redirect
-                        $('success-msg').textContent = `Welcome, ${data.name.split(' ')[0]}! Taking you to your dashboard...`;
-                        successOverlay.classList.add('visible');
-                        
-                        // Spawn celebration particles
-                        spawnConfetti();
-                        
-                        // Redirect to /account after short delay
-                        setTimeout(() => {
-                            window.location.href = '/account';
-                        }, 1500);
-                        
-                    } catch (err) {
-                        console.error('Signup error:', err);
-                        notify(err.message || 'Something went wrong. Please try again.', 'error');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
-                    }
-                };
-
-                function spawnConfetti() {
-                    const colors = ['#1d1d1f', '#86868b', '#c9a96e', '#f59e0b', '#7c3aed', '#e11d48'];
-                    const card = $('auth-card');
-                    const rect = card.getBoundingClientRect();
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    
-                    for (let i = 0; i < 50; i++) {
-                        const el = document.createElement('div');
-                        const angle = Math.random() * Math.PI * 2;
-                        const dist = 60 + Math.random() * 220;
-                        const x = Math.cos(angle) * dist;
-                        const y = Math.sin(angle) * dist;
-                        const size = 4 + Math.random() * 8;
-                        const color = colors[Math.floor(Math.random() * colors.length)];
-                        
-                        el.className = 'confetti';
-                        el.style.cssText = `
-                            left:${cx}px;top:${cy}px;
-                            width:${size}px;height:${size}px;
-                            border-radius:${Math.random() > 0.5 ? '50%' : '3px'};
-                            background:${color};
-                            --x:${x}px;--y:${y}px;
-                            --r:${Math.random() * 720 - 360}deg;
-                            animation-delay:${Math.random() * 0.3}s;
-                        `;
-                        
-                        document.body.appendChild(el);
-                        setTimeout(() => el.remove(), 1400);
-                    }
-                }
-
-                // Close toast on outside click
-                document.addEventListener('click', e => {
-                    if (toast.classList.contains('show') && !toast.contains(e.target)) {
-                        window.hideToast();
-                    }
-                });
-
-                // Initialize first step
-                render(0);
+        res.json({
+            notifications: data || [],
+            total: count || 0,
+            page: page,
+            limit: limit,
+            totalPages: Math.ceil((count || 0) / limit),
+            unreadCount: unreadCount || 0,
+            filters: {
+                filter: filter,
+                type: type
             }
-        })();
-    </script>
-</body>
-</html>
+        });
+
+    } catch (err) {
+        console.error('Get notifications error:', err);
+        res.status(500).json({ error: 'Failed to fetch notifications' });
+    }
+});
+
+// Get unread notifications only
+app.get('/api/notifications/unread', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { data, error } = await supabase
+            .from('profile_notifications')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('is_read', false)
+            .order('created_at', { ascending: false })
+            .limit(10);
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        // Get total unread count
+        const { count: unreadCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('is_read', false);
+
+        res.json({
+            notifications: data || [],
+            unreadCount: unreadCount || 0
+        });
+
+    } catch (err) {
+        console.error('Get unread notifications error:', err);
+        res.status(500).json({ error: 'Failed to fetch unread notifications' });
+    }
+});
+
+// Get notification count
+app.get('/api/notifications/count', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { count: totalCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+
+        const { count: unreadCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('is_read', false);
+
+        const { count: successCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('notification_type', 'success');
+
+        const { count: errorCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('notification_type', 'error');
+
+        const { count: warningCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('notification_type', 'warning');
+
+        const { count: infoCount } = await supabase
+            .from('profile_notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('notification_type', 'info');
+
+        res.json({
+            total: totalCount || 0,
+            unread: unreadCount || 0,
+            success: successCount || 0,
+            error: errorCount || 0,
+            warning: warningCount || 0,
+            info: infoCount || 0
+        });
+
+    } catch (err) {
+        console.error('Get notification count error:', err);
+        res.status(500).json({ error: 'Failed to fetch notification count' });
+    }
+});
+
+// Mark single notification as read
+app.put('/api/notifications/:id/read', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const notificationId = parseInt(req.params.id);
+
+        const { data, error } = await supabase
+            .from('profile_notifications')
+            .update({ is_read: true })
+            .eq('id', notificationId)
+            .eq('user_id', user.id)
+            .select()
+            .single();
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        if (!data) {
+            return res.status(404).json({ error: 'Notification not found' });
+        }
+
+        res.json({
+            message: 'Notification marked as read',
+            notification: data
+        });
+
+    } catch (err) {
+        console.error('Mark notification read error:', err);
+        res.status(500).json({ error: 'Failed to mark notification as read' });
+    }
+});
+
+// Mark all notifications as read
+app.put('/api/notifications/read-all', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { error } = await supabase
+            .from('profile_notifications')
+            .update({ is_read: true })
+            .eq('user_id', user.id)
+            .eq('is_read', false);
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({
+            message: 'All notifications marked as read',
+            success: true
+        });
+
+    } catch (err) {
+        console.error('Mark all notifications read error:', err);
+        res.status(500).json({ error: 'Failed to mark all notifications as read' });
+    }
+});
+
+// Delete single notification
+app.delete('/api/notifications/:id', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const notificationId = parseInt(req.params.id);
+
+        const { error } = await supabase
+            .from('profile_notifications')
+            .delete()
+            .eq('id', notificationId)
+            .eq('user_id', user.id);
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({
+            message: 'Notification deleted successfully',
+            success: true
+        });
+
+    } catch (err) {
+        console.error('Delete notification error:', err);
+        res.status(500).json({ error: 'Failed to delete notification' });
+    }
+});
+
+// Delete all notifications
+app.delete('/api/notifications', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const filter = req.query.filter || 'all'; // all, read
+
+        let query = supabase
+            .from('profile_notifications')
+            .delete()
+            .eq('user_id', user.id);
+
+        if (filter === 'read') {
+            query = query.eq('is_read', true);
+        }
+
+        const { error } = await query;
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({
+            message: filter === 'all' ? 'All notifications deleted' : 'All read notifications deleted',
+            success: true
+        });
+
+    } catch (err) {
+        console.error('Delete all notifications error:', err);
+        res.status(500).json({ error: 'Failed to delete notifications' });
+    }
+});
+
+// ============================================
+// OneID LOOKUP & SEARCH API
+// ============================================
+
+// Search user by OneID (Privacy-safe - limited info)
+app.get('/api/oneid/search/:oneid', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { oneid } = req.params;
+
+        if (!isValidOneID(oneid)) {
+            return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
+        }
+
+        const { data, error } = await supabase
+            .rpc('search_user_by_oneid', {
+                lookup_oneid: oneid
+            });
+
+        if (error) {
+            return res.status(404).json({ error: error.message });
+        }
+
+        res.json(data?.[0] || null);
+
+    } catch (err) {
+        res.status(500).json({ error: 'Search failed' });
+    }
+});
+
+// Lookup user by OneID (Respects privacy settings)
+app.get('/api/oneid/lookup/:oneid', async (req, res) => {
+    try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { oneid } = req.params;
+
+        if (!isValidOneID(oneid)) {
+            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
+        }
+
+        const { data, error } = await supabase
+            .rpc('lookup_user_by_oneid', {
+                lookup_oneid: oneid
+            });
+
+        if (error) {
+            return res.status(404).json({ error: error.message });
+        }
+
+        res.json(data?.[0] || null);
+
+    } catch (err) {
+        res.status(500).json({ error: 'Lookup failed' });
+    }
+});
+
+// Check if OneID exists
+app.get('/api/oneid/exists/:oneid', async (req, res) => {
+    try {
+        const { oneid } = req.params;
+
+        if (!isValidOneID(oneid)) {
+            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
+        }
+
+        const { data, error } = await supabase
+            .rpc('profile_exists', {
+                lookup_oneid: oneid
+            });
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({ exists: data });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Check failed' });
+    }
+});
+
+// ============================================
+// PRODUCTS API (Categories, Subcategories with Slug)
+// ============================================
+
+// Get all products
+app.get('/api/products', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(formatProducts(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product by slug
+app.get('/api/product/:slug', async (req, res) => {
+    try {
+        const slug = req.params.slug;
+        const { data, error } = await supabase
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.status(404).json({ error: 'Product not found' });
+        
+        res.json(formatProduct(product));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all categories (with slugs)
+app.get('/api/categories', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const categoriesWithSlugs = data.map(cat => ({
+            ...cat,
+            slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
+        }));
+        
+        res.json(categoriesWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get category by slug
+app.get('/api/categories/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const category = data.find(cat => {
+            const dbSlug = cat.slug || createSlug(cat.name);
+            return dbSlug.replace(/^category\//, '') === slug;
+        });
+        
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+        
+        res.json({
+            ...category,
+            slug: category.slug ? category.slug.replace(/^category\//, '') : createSlug(category.name)
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get products by category slug
+app.get('/api/categories/:slug/products', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data: categories } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true);
+        
+        const category = categories.find(cat => {
+            const dbSlug = cat.slug || createSlug(cat.name);
+            return dbSlug.replace(/^category\//, '') === slug;
+        });
+        
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+        
+        const { data, error } = await supabase
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .eq('category_id', category.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(formatProducts(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all subcategories
+app.get('/api/subcategories', async (req, res) => {
+    try {
+        const { category_slug } = req.query;
+        
+        let query = supabase
+            .from('subcategories')
+            .select('*, categories(name, id, slug)')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (category_slug) {
+            const { data: categories } = await supabase
+                .from('categories')
+                .select('id, slug')
+                .eq('is_active', true);
+            
+            const category = categories.find(cat => {
+                const dbSlug = cat.slug || createSlug(cat.name);
+                return dbSlug.replace(/^category\//, '') === category_slug;
+            });
+            
+            if (category) {
+                query = query.eq('category_id', category.id);
+            } else {
+                return res.status(404).json({ error: 'Category not found' });
+            }
+        }
+        
+        const { data, error } = await query;
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const subcategoriesWithSlugs = data.map(sub => ({
+            ...sub,
+            slug: sub.slug ? sub.slug.replace(/^category\/[^/]+\//, '') : createSlug(sub.name),
+            category_slug: sub.categories ? createSlug(sub.categories.name) : ''
+        }));
+        
+        res.json(subcategoriesWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get subcategory by slug
+app.get('/api/subcategories/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        const { category_slug } = req.query;
+        
+        const { data, error } = await supabase
+            .from('subcategories')
+            .select('*, categories(name, id, slug)')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        let subcategory = data.find(sub => {
+            const dbSlug = sub.slug || createSlug(sub.name);
+            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
+        });
+        
+        if (category_slug && subcategory) {
+            const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
+            const cleanCatSlug = catSlug.replace(/^category\//, '');
+            if (cleanCatSlug !== category_slug) {
+                subcategory = null;
+            }
+        }
+        
+        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
+        
+        res.json({
+            ...subcategory,
+            slug: subcategory.slug ? subcategory.slug.replace(/^category\/[^/]+\//, '') : createSlug(subcategory.name),
+            category_slug: subcategory.categories ? createSlug(subcategory.categories.name) : ''
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get products by subcategory slug
+app.get('/api/subcategories/:slug/products', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data: subcategories } = await supabase
+            .from('subcategories')
+            .select('*')
+            .eq('is_active', true);
+        
+        const subcategory = subcategories.find(sub => {
+            const dbSlug = sub.slug || createSlug(sub.name);
+            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
+        });
+        
+        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
+        
+        const { data, error } = await supabase
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .eq('subcategory_id', subcategory.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(formatProducts(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// MENU API
+// ============================================
+
+// Get menu hierarchy
+app.get('/api/menu', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const buildMenuTree = (items, parentId = null) => {
+            return items
+                .filter(item => item.parent_id === parentId)
+                .map(item => ({
+                    ...item,
+                    slug: createSlug(item.title),
+                    category_slug: item.categories ? createSlug(item.categories.name) : null,
+                    subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
+                    children: buildMenuTree(items, item.id)
+                }));
+        };
+        
+        res.json(buildMenuTree(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get flat menu items
+app.get('/api/menu-items', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItemsWithSlugs = data.map(item => ({
+            ...item,
+            slug: createSlug(item.title),
+            category_slug: item.categories ? createSlug(item.categories.name) : null,
+            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
+        }));
+        
+        res.json(menuItemsWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get menu item by slug
+app.get('/api/menu-items/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItem = data.find(item => createSlug(item.title) === slug);
+        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
+        
+        res.json({
+            ...menuItem,
+            slug: createSlug(menuItem.title),
+            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
+            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// HERO SLIDES & VIDEOS API
+// ============================================
+
+// Get hero slides
+app.get('/api/hero', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero')
+            .select('*')
+            .order('created_at', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get hero videos
+app.get('/api/hero-videos', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_videos')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get hero secondary items
+app.get('/api/hero-secondary', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// NEWS API
+// ============================================
+app.get('/api/news', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('news')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// PRODUCT DETAILS API (Colors, Variants, Reviews, Videos, Banners)
+// ============================================
+
+// Get product colors
+app.get('/api/product-colors', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_colors')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product variants
+app.get('/api/product-variants', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_variants')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product reviews
+app.get('/api/product-reviews', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_reviews')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Submit product review
+app.post('/api/submit-review', async (req, res) => {
+    try {
+        const { product_id, user_name, rating, review_text } = req.body;
+        
+        if (!product_id || !rating || !review_text) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const { data, error } = await supabase
+            .from('product_reviews')
+            .insert([{
+                product_id,
+                user_name: user_name || 'Guest User',
+                rating: parseInt(rating),
+                review_text
+            }]);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json({ success: true, data });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product videos
+app.get('/api/product-videos', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_videos')
+            .select('*')
+            .eq('product_id', product.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product banners
+app.get('/api/product-banners', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_banners')
+            .select('*')
+            .eq('product_id', product.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get color sizes
+app.get('/api/color-sizes', async (req, res) => {
+    try {
+        const ids = req.query.ids;
+        if (!ids) return res.json([]);
+        
+        const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        if (!idArray.length) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('color_sizes')
+            .select('*')
+            .in('color_id', idArray)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// PAGE ROUTES
+// ============================================
+
+// Auth pages
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'signup.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
+});
+
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'profile.html'));
+});
+
+app.get('/account', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'account.html'));
+});
+
+// Notifications page
+app.get('/notifications', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'notifications.html'));
+});
+
+// Category page (with subcategory support)
+app.get('/category/:slug*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
+});
+
+// ============================================
+// SPA FALLBACK (Must be last)
+// ============================================
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
+module.exports = app;
