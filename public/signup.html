@@ -468,9 +468,255 @@
             animation: fadeSlideIn 0.5s ease 0.6s both;
         }
         
+        .success-oneid {
+            font-family: 'Manrope', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            background: #f5f5f7;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin-top: 12px;
+            animation: fadeSlideIn 0.5s ease 0.7s both;
+            letter-spacing: 0.5px;
+        }
+        
         @media (min-width: 640px) {
             .success-heading { font-size: 22px; }
             .success-text { font-size: 14px; }
+            .success-oneid { font-size: 14px; padding: 10px 16px; }
+        }
+
+        /* Notification Center */
+        .notification-center {
+            position: fixed;
+            top: 88px;
+            right: 16px;
+            z-index: 9990;
+            width: 340px;
+            max-width: calc(100vw - 32px);
+            max-height: 480px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(calc(100% + 32px));
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .notification-center.open {
+            transform: translateX(0);
+        }
+        
+        .notification-center-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f3;
+            flex-shrink: 0;
+        }
+        
+        .notification-center-header h3 {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .notification-center-header .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .notification-center-header .actions button {
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: var(--blue);
+            cursor: pointer;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .notification-center-header .actions button:hover {
+            background: #f0f0f3;
+        }
+        
+        .notification-list {
+            overflow-y: auto;
+            flex: 1;
+            padding: 8px;
+        }
+        
+        .notification-item {
+            display: flex;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+        
+        .notification-item:hover {
+            background: #f9f9fb;
+        }
+        
+        .notification-item.unread {
+            background: #f5f5ff;
+            border-color: #e8e8ff;
+        }
+        
+        .notification-item .notif-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        
+        .notification-item .notif-icon.success {
+            background: #ecfdf5;
+            color: #059669;
+        }
+        
+        .notification-item .notif-icon.error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .notification-item .notif-icon.warning {
+            background: #fffbeb;
+            color: #d97706;
+        }
+        
+        .notification-item .notif-icon.info {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .notification-item .notif-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .notification-item .notif-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 2px;
+            color: var(--primary);
+        }
+        
+        .notification-item .notif-message {
+            font-size: 12px;
+            color: var(--accent);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .notification-item .notif-time {
+            font-size: 11px;
+            color: #c5c5cc;
+            margin-top: 4px;
+        }
+        
+        .notification-item .notif-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        
+        .notification-item .notif-actions button {
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .notification-item .notif-actions button:hover {
+            color: var(--primary);
+            background: rgba(0,0,0,0.05);
+        }
+        
+        .notification-empty {
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--accent);
+        }
+        
+        .notification-empty i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.3;
+        }
+        
+        .notification-empty p {
+            font-size: 13px;
+        }
+
+        /* Notification Bell Button */
+        .notif-bell {
+            position: fixed;
+            top: 88px;
+            right: 16px;
+            z-index: 9989;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #e0e0e5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .notif-bell:hover {
+            border-color: #c5c5cc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .notif-bell .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            background: var(--error);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            pointer-events: none;
+        }
+        
+        .notif-bell .badge:empty {
+            display: none;
         }
 
         /* Toast */
@@ -565,6 +811,22 @@
             border: 0;
         }
 
+        /* Backdrop for notification center */
+        .notif-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.15);
+            z-index: 9988;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .notif-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         @media (max-width: 380px) {
             .auth-card { padding: 28px 18px; min-height: 360px; }
             .step-heading { font-size: 20px; }
@@ -575,6 +837,31 @@
 <body>
 
     <div id="dynamic-header"></div>
+
+    <!-- Notification Bell -->
+    <button class="notif-bell" id="notif-bell" onclick="toggleNotificationCenter()" style="opacity:0;pointer-events:none;">
+        <i class="fa-regular fa-bell"></i>
+        <span class="badge" id="notif-badge"></span>
+    </button>
+
+    <!-- Notification Backdrop -->
+    <div class="notif-backdrop" id="notif-backdrop" onclick="closeNotificationCenter()"></div>
+
+    <!-- Notification Center -->
+    <div class="notification-center" id="notification-center">
+        <div class="notification-center-header">
+            <h3>Notifications</h3>
+            <div class="actions">
+                <button onclick="markAllRead()">Mark all read</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notification-list">
+            <div class="notification-empty">
+                <i class="fa-regular fa-bell"></i>
+                <p>No notifications yet</p>
+            </div>
+        </div>
+    </div>
 
     <main>
         <div class="container-signup">
@@ -600,6 +887,7 @@
                     </div>
                     <h2 class="success-heading">Account Created!</h2>
                     <p class="success-text" id="success-msg">Taking you to your dashboard...</p>
+                    <div class="success-oneid" id="success-oneid" style="display:none;"></div>
                 </div>
             </div>
         </div>
@@ -639,7 +927,7 @@
 
                 const data = {
                     name: '', email: '', phone: '', password: '',
-                    country: 'Bangladesh', state_province: '', city: '',
+                    country: '', state_province: '', city: '',
                     postal_code: '', street_address: '', apartment_house: '',
                     terms: false
                 };
@@ -649,6 +937,11 @@
                 const stepInner = $('step-inner');
                 const successOverlay = $('success-overlay');
                 const toast = $('toast');
+                const notifBell = $('notif-bell');
+                const notifBadge = $('notif-badge');
+                const notifCenter = $('notification-center');
+                const notifBackdrop = $('notif-backdrop');
+                const notifList = $('notification-list');
                 const API = window.location.origin;
 
                 // Blocked email domains
@@ -658,6 +951,8 @@
                 ];
 
                 let toastTimer;
+                let allNotifications = [];
+                let unreadCount = 0;
 
                 function notify(msg, type = 'success') {
                     const icon = $('toast-icon-wrap');
@@ -704,6 +999,152 @@
                     return null;
                 }
 
+                // ============================================
+                // NOTIFICATION FUNCTIONS
+                // ============================================
+
+                async function fetchNotifications() {
+                    try {
+                        const resp = await fetch(`${API}/api/notifications/unread`);
+                        if (!resp.ok) return;
+                        
+                        const result = await resp.json();
+                        allNotifications = result.notifications || [];
+                        unreadCount = result.unreadCount || 0;
+                        
+                        updateNotificationUI();
+                    } catch (err) {
+                        console.error('Fetch notifications error:', err);
+                    }
+                }
+
+                function updateNotificationUI() {
+                    // Update bell badge
+                    if (unreadCount > 0) {
+                        notifBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                        notifBell.style.opacity = '1';
+                        notifBell.style.pointerEvents = 'auto';
+                    } else {
+                        notifBadge.textContent = '';
+                        notifBell.style.opacity = '0.7';
+                    }
+                    
+                    // Render notification list
+                    renderNotificationList();
+                }
+
+                function renderNotificationList() {
+                    if (allNotifications.length === 0) {
+                        notifList.innerHTML = `
+                            <div class="notification-empty">
+                                <i class="fa-regular fa-bell"></i>
+                                <p>No notifications yet</p>
+                            </div>`;
+                        return;
+                    }
+                    
+                    const typeIcons = {
+                        success: 'fa-circle-check',
+                        error: 'fa-circle-exclamation',
+                        warning: 'fa-triangle-exclamation',
+                        info: 'fa-circle-info'
+                    };
+                    
+                    notifList.innerHTML = allNotifications.map(n => `
+                        <div class="notification-item ${n.is_read ? '' : 'unread'}" onclick="markRead(${n.id}, event)">
+                            <div class="notif-icon ${n.notification_type}">
+                                <i class="fa-solid ${typeIcons[n.notification_type] || 'fa-bell'}"></i>
+                            </div>
+                            <div class="notif-content">
+                                <div class="notif-title">${n.title}</div>
+                                <div class="notif-message">${n.message}</div>
+                                <div class="notif-time">${formatTimeAgo(n.created_at)}</div>
+                            </div>
+                            <div class="notif-actions" onclick="event.stopPropagation()">
+                                <button onclick="deleteNotification(${n.id})" title="Delete">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                function formatTimeAgo(dateStr) {
+                    const now = new Date();
+                    const date = new Date(dateStr);
+                    const diff = Math.floor((now - date) / 1000);
+                    
+                    if (diff < 60) return 'Just now';
+                    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+                    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+                    if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+                    return date.toLocaleDateString();
+                }
+
+                window.toggleNotificationCenter = function() {
+                    const isOpen = notifCenter.classList.contains('open');
+                    if (isOpen) {
+                        closeNotificationCenter();
+                    } else {
+                        openNotificationCenter();
+                    }
+                };
+
+                function openNotificationCenter() {
+                    notifCenter.classList.add('open');
+                    notifBackdrop.classList.add('open');
+                    fetchNotifications();
+                }
+
+                window.closeNotificationCenter = function() {
+                    notifCenter.classList.remove('open');
+                    notifBackdrop.classList.remove('open');
+                };
+
+                window.markRead = async function(id, event) {
+                    try {
+                        const resp = await fetch(`${API}/api/notifications/${id}/read`, {
+                            method: 'PUT'
+                        });
+                        if (resp.ok) {
+                            await fetchNotifications();
+                        }
+                    } catch (err) {
+                        console.error('Mark read error:', err);
+                    }
+                };
+
+                window.markAllRead = async function() {
+                    try {
+                        const resp = await fetch(`${API}/api/notifications/read-all`, {
+                            method: 'PUT'
+                        });
+                        if (resp.ok) {
+                            await fetchNotifications();
+                            notify('All notifications marked as read', 'success');
+                        }
+                    } catch (err) {
+                        console.error('Mark all read error:', err);
+                    }
+                };
+
+                window.deleteNotification = async function(id) {
+                    try {
+                        const resp = await fetch(`${API}/api/notifications/${id}`, {
+                            method: 'DELETE'
+                        });
+                        if (resp.ok) {
+                            await fetchNotifications();
+                        }
+                    } catch (err) {
+                        console.error('Delete notification error:', err);
+                    }
+                };
+
+                // ============================================
+                // STEP DEFINITIONS
+                // ============================================
+
                 const steps = [
                     {
                         icon: 'fa-solid fa-user',
@@ -727,18 +1168,15 @@
                         icon: 'fa-solid fa-phone',
                         question: "Your phone number?",
                         desc: "For delivery coordination and account recovery.",
-                        field: 'phone', type: 'tel', placeholder: '+8801XXXXXXXXX',
+                        field: 'phone', type: 'tel', placeholder: '017XXXXXXXX',
                         autocomplete: 'tel-national',
                         check: v => {
-                            const cleaned = v.replace(/[^\d+]/g, '');
-                            if (!cleaned.startsWith('+')) {
-                                return 'Please include country code (e.g., +880 for Bangladesh, +1 for USA)';
-                            }
-                            if (cleaned.length < 11) return 'Phone number is too short';
-                            if (cleaned.length > 16) return 'Phone number is too long';
+                            const cleaned = v.replace(/[^\d]/g, '');
+                            if (cleaned.length < 6) return 'Phone number is too short (minimum 6 digits)';
+                            if (cleaned.length > 15) return 'Phone number is too long (maximum 15 digits)';
                             return null;
                         },
-                        hint: 'Include country code (+880, +1, +44, etc.)',
+                        hint: 'Enter phone number without country code (6-15 digits)',
                         format: true
                     },
                     {
@@ -888,14 +1326,8 @@
                     
                     if (s.format && mainInp) {
                         mainInp.addEventListener('input', function() {
-                            let v = this.value.replace(/[^\d+]/g, '');
-                            if (v.startsWith('+')) {
-                                const rest = v.slice(1);
-                                if (rest.length > 15) v = '+' + rest.slice(0, 15);
-                            } else {
-                                if (v.length >= 10 && !v.startsWith('+')) v = '+' + v;
-                                if (v.length > 16) v = v.slice(0, 16);
-                            }
+                            let v = this.value.replace(/[^\d]/g, '');
+                            if (v.length > 15) v = v.slice(0, 15);
                             this.value = v;
                         });
                     }
@@ -1000,7 +1432,7 @@
                         const d = await resp.json();
                         const addr = d.address || {};
                         
-                        document.getElementById('loc-country').value = addr.country || 'Bangladesh';
+                        document.getElementById('loc-country').value = addr.country || '';
                         document.getElementById('loc-state').value = addr.state || '';
                         document.getElementById('loc-city').value = addr.city || addr.town || '';
                         
@@ -1022,7 +1454,7 @@
                     }
                 }
 
-                // SUBMIT - Creates account and redirects to /account
+                // SUBMIT - Creates account with notification handling
                 window.submit = async function() {
                     const checked = document.getElementById('terms-check')?.checked;
                     
@@ -1049,7 +1481,7 @@
                                 email: data.email,
                                 password: data.password,
                                 name: data.name,
-                                phone: data.phone.replace(/[-\s()]/g, ''),
+                                phone: data.phone.replace(/[^\d]/g, ''),
                                 country: data.country,
                                 state_province: data.state_province,
                                 city: data.city,
@@ -1065,12 +1497,31 @@
                             throw new Error(result.error || 'Registration failed');
                         }
                         
-                        // Success - Show animation then redirect
-                        $('success-msg').textContent = `Welcome, ${data.name.split(' ')[0]}! Taking you to your dashboard...`;
+                        // Success - Show animation with OneID
+                        const firstName = data.name.split(' ')[0];
+                        $('success-msg').textContent = `Welcome, ${firstName}! Taking you to your dashboard...`;
+                        
+                        // Show OneID if available
+                        if (result.jbyn_oneid) {
+                            const oneidEl = $('success-oneid');
+                            oneidEl.textContent = result.jbyn_oneid;
+                            oneidEl.style.display = 'block';
+                        }
+                        
                         successOverlay.classList.add('visible');
+                        
+                        // Handle server notifications
+                        if (result.notifications && result.notifications.length > 0) {
+                            allNotifications = result.notifications;
+                            unreadCount = result.notifications.filter(n => !n.is_read).length;
+                            updateNotificationUI();
+                        }
                         
                         // Spawn celebration particles
                         spawnConfetti();
+                        
+                        // Fetch latest notifications before redirect
+                        await fetchNotifications();
                         
                         // Redirect to /account after short delay
                         setTimeout(() => {
@@ -1123,6 +1574,12 @@
                         window.hideToast();
                     }
                 });
+
+                // Initialize notification system
+                fetchNotifications();
+                
+                // Poll notifications every 30 seconds
+                setInterval(fetchNotifications, 30000);
 
                 // Initialize first step
                 render(0);
