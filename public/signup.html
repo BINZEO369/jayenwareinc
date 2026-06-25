@@ -432,6 +432,12 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 24px;
+            animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
+        }
+        
+        @keyframes checkPop {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         
         .success-check i {
@@ -450,6 +456,7 @@
             font-size: 20px;
             margin-bottom: 6px;
             text-align: center;
+            animation: fadeSlideIn 0.5s ease 0.4s both;
         }
         
         .success-text {
@@ -458,6 +465,7 @@
             text-align: center;
             max-width: 280px;
             line-height: 1.6;
+            animation: fadeSlideIn 0.5s ease 0.6s both;
         }
         
         @media (min-width: 640px) {
@@ -590,8 +598,8 @@
                     <div class="success-check">
                         <i class="fa-solid fa-check"></i>
                     </div>
-                    <h2 class="success-heading">Account Created</h2>
-                    <p class="success-text" id="success-msg">Welcome aboard! Redirecting you now...</p>
+                    <h2 class="success-heading">Account Created!</h2>
+                    <p class="success-text" id="success-msg">Taking you to your dashboard...</p>
                 </div>
             </div>
         </div>
@@ -616,7 +624,6 @@
 
     <script>
         (() => {
-            // Font variables
             document.addEventListener('DOMContentLoaded', () => {
                 if (window.JAYENWARE_FONTS) {
                     const r = document.documentElement;
@@ -652,7 +659,6 @@
 
                 let toastTimer;
 
-                // Toast
                 function notify(msg, type = 'success') {
                     const icon = $('toast-icon-wrap');
                     const text = $('toast-msg');
@@ -677,7 +683,6 @@
                     clearTimeout(toastTimer);
                 };
 
-                // Progress
                 function setProgress(n) {
                     progressBar.querySelectorAll('.progress-step').forEach((el, i) => {
                         el.classList.remove('done', 'current');
@@ -686,23 +691,19 @@
                     });
                 }
 
-                // Email validation with blocked domains check
                 function validateEmail(email) {
-                    // Basic format check
                     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                         return 'Please enter a valid email address';
                     }
                     
-                    // Extract domain and check against blocked list
                     const domain = email.split('@')[1]?.toLowerCase();
                     if (blockedDomains.includes(domain)) {
                         return `Email domain "@${domain}" is not allowed. Please use your personal or business email.`;
                     }
                     
-                    return null; // Valid
+                    return null;
                 }
 
-                // Steps config
                 const steps = [
                     {
                         icon: 'fa-solid fa-user',
@@ -730,18 +731,11 @@
                         autocomplete: 'tel-national',
                         check: v => {
                             const cleaned = v.replace(/[^\d+]/g, '');
-                            // International format: must start with + followed by country code
                             if (!cleaned.startsWith('+')) {
                                 return 'Please include country code (e.g., +880 for Bangladesh, +1 for USA)';
                             }
-                            // Minimum: + and at least 10 digits
-                            if (cleaned.length < 11) {
-                                return 'Phone number is too short';
-                            }
-                            // Maximum: + and up to 15 digits (international standard)
-                            if (cleaned.length > 16) {
-                                return 'Phone number is too long';
-                            }
+                            if (cleaned.length < 11) return 'Phone number is too short';
+                            if (cleaned.length > 16) return 'Phone number is too long';
                             return null;
                         },
                         hint: 'Include country code (+880, +1, +44, etc.)',
@@ -882,38 +876,30 @@
                     
                     stepInner.innerHTML = html;
                     
-                    // Focus
                     setTimeout(() => {
                         const inp = document.getElementById('main-input');
                         if (inp) inp.focus();
                     }, 100);
                     
-                    // Enter key
                     const mainInp = document.getElementById('main-input');
                     if (mainInp) {
                         mainInp.addEventListener('keydown', e => { if (e.key === 'Enter') checkField(); });
                     }
                     
-                    // Phone format
                     if (s.format && mainInp) {
                         mainInp.addEventListener('input', function() {
                             let v = this.value.replace(/[^\d+]/g, '');
-                            // Keep the + prefix
                             if (v.startsWith('+')) {
                                 const rest = v.slice(1);
                                 if (rest.length > 15) v = '+' + rest.slice(0, 15);
                             } else {
-                                // Auto-add + if number starts with country code pattern
-                                if (v.length >= 10 && !v.startsWith('+')) {
-                                    v = '+' + v;
-                                }
+                                if (v.length >= 10 && !v.startsWith('+')) v = '+' + v;
                                 if (v.length > 16) v = v.slice(0, 16);
                             }
                             this.value = v;
                         });
                     }
                     
-                    // Location
                     if (s.isLocation) {
                         setTimeout(() => {
                             document.getElementById('locate-btn')?.addEventListener('click', detectLocation);
@@ -923,7 +909,6 @@
                     busy = false;
                 }
 
-                // Field validation
                 window.checkField = function() {
                     const s = steps[step];
                     const inp = document.getElementById('main-input');
@@ -980,14 +965,12 @@
                     go(step + 1);
                 };
 
-                // Navigate
                 window.go = function(target) {
                     if (busy || target < 0 || target >= steps.length || target === step) return;
                     step = target;
                     render(step);
                 };
 
-                // Detect location
                 async function detectLocation() {
                     if (!navigator.geolocation) { notify('Location not supported on this device', 'error'); return; }
                     
@@ -1039,13 +1022,16 @@
                     }
                 }
 
-                // Submit
+                // SUBMIT - Creates account and redirects to /account
                 window.submit = async function() {
                     const checked = document.getElementById('terms-check')?.checked;
                     
                     if (!checked) {
                         const errEl = document.getElementById('terms-error');
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue'; errEl.className = 'input-feedback error'; }
+                        if (errEl) { 
+                            errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue'; 
+                            errEl.className = 'input-feedback error'; 
+                        }
                         return;
                     }
                     
@@ -1053,35 +1039,47 @@
                     
                     const btn = document.getElementById('submit-btn');
                     btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
                     
                     try {
                         const resp = await fetch(`${API}/api/auth/signup`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                email: data.email, password: data.password, name: data.name,
+                                email: data.email,
+                                password: data.password,
+                                name: data.name,
                                 phone: data.phone.replace(/[-\s()]/g, ''),
-                                country: data.country, state_province: data.state_province,
-                                city: data.city, postal_code: data.postal_code,
-                                street_address: data.street_address, apartment_house: data.apartment_house
+                                country: data.country,
+                                state_province: data.state_province,
+                                city: data.city,
+                                postal_code: data.postal_code,
+                                street_address: data.street_address,
+                                apartment_house: data.apartment_house
                             })
                         });
                         
                         const result = await resp.json();
-                        if (!resp.ok) throw new Error(result.error || 'Registration failed');
                         
-                        // Success
-                        $('success-msg').textContent = `Welcome, ${data.name.split(' ')[0]}! Redirecting to your account...`;
+                        if (!resp.ok) {
+                            throw new Error(result.error || 'Registration failed');
+                        }
+                        
+                        // Success - Show animation then redirect
+                        $('success-msg').textContent = `Welcome, ${data.name.split(' ')[0]}! Taking you to your dashboard...`;
                         successOverlay.classList.add('visible');
                         
-                        // Confetti
+                        // Spawn celebration particles
                         spawnConfetti();
                         
-                        setTimeout(() => { window.location.href = '/account'; }, 2200);
+                        // Redirect to /account after short delay
+                        setTimeout(() => {
+                            window.location.href = '/account';
+                        }, 1500);
                         
                     } catch (err) {
-                        notify(err.message || 'Something went wrong', 'error');
+                        console.error('Signup error:', err);
+                        notify(err.message || 'Something went wrong. Please try again.', 'error');
                         btn.disabled = false;
                         btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
                     }
@@ -1089,39 +1087,44 @@
 
                 function spawnConfetti() {
                     const colors = ['#1d1d1f', '#86868b', '#c9a96e', '#f59e0b', '#7c3aed', '#e11d48'];
-                    const card = document.getElementById('auth-card');
+                    const card = $('auth-card');
                     const rect = card.getBoundingClientRect();
                     const cx = rect.left + rect.width / 2;
                     const cy = rect.top + rect.height / 2;
                     
-                    for (let i = 0; i < 40; i++) {
+                    for (let i = 0; i < 50; i++) {
                         const el = document.createElement('div');
                         const angle = Math.random() * Math.PI * 2;
-                        const dist = 60 + Math.random() * 200;
+                        const dist = 60 + Math.random() * 220;
                         const x = Math.cos(angle) * dist;
                         const y = Math.sin(angle) * dist;
-                        const size = 4 + Math.random() * 7;
+                        const size = 4 + Math.random() * 8;
                         const color = colors[Math.floor(Math.random() * colors.length)];
                         
                         el.className = 'confetti';
                         el.style.cssText = `
-                            left:${cx}px;top:${cy}px;width:${size}px;height:${size}px;
-                            border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
-                            background:${color};--x:${x}px;--y:${y}px;--r:${Math.random()*720-360}deg;
-                            animation-delay:${Math.random()*0.2}s;
+                            left:${cx}px;top:${cy}px;
+                            width:${size}px;height:${size}px;
+                            border-radius:${Math.random() > 0.5 ? '50%' : '3px'};
+                            background:${color};
+                            --x:${x}px;--y:${y}px;
+                            --r:${Math.random() * 720 - 360}deg;
+                            animation-delay:${Math.random() * 0.3}s;
                         `;
                         
                         document.body.appendChild(el);
-                        setTimeout(() => el.remove(), 1200);
+                        setTimeout(() => el.remove(), 1400);
                     }
                 }
 
-                // Close toast
+                // Close toast on outside click
                 document.addEventListener('click', e => {
-                    if (toast.classList.contains('show') && !toast.contains(e.target)) window.hideToast();
+                    if (toast.classList.contains('show') && !toast.contains(e.target)) {
+                        window.hideToast();
+                    }
                 });
 
-                // Init
+                // Initialize first step
                 render(0);
             }
         })();
