@@ -1,55 +1,49 @@
 <!DOCTYPE html>
-<html lang="bn-BD" class="scroll-smooth">
+<html lang="en-BD" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Join JAYENWARE | Create Your Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign Up | JAYENWARE Official Store</title>
     
     <meta name="description" content="Create your JAYENWARE account. Join for exclusive deals, faster checkout, and premium lifestyle shopping.">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#1a1a1a">
     
-    <link rel="canonical" href="https://www.jayenware.shop/signup" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.jayenware.shop/logo.png">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-
-    <script src="/fonts.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1d1d1f',
-                        accent: '#86868b',
-                        soft: '#f5f5f7',
-                        blue: '#007aff',
-                        gold: '#c9a96e',
-                        error: '#dc2626',
-                        success: '#059669'
-                    }
-                }
-            }
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root {
-            --primary: #1d1d1f;
-            --accent: #86868b;
-            --soft: #f5f5f7;
-            --blue: #007aff;
-            --gold: #c9a96e;
+            --primary: #1a1a1a;
+            --accent: #c9a96e;
+            --soft-bg: #f8f6f3;
+            --error: #dc2626;
+            --success: #059669;
+            --info: #3b82f6;
+            --warning: #f59e0b;
+            --border: #e5e5e5;
+            --text-muted: #999;
+            --text-light: #666;
+            --white: #ffffff;
+            --shadow-sm: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-md: 0 20px 60px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --transition-fast: 0.2s ease;
+            --transition-base: 0.3s ease;
         }
         
-        *, *::before, *::after {
+        * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
             margin: 0;
@@ -57,229 +51,391 @@
         }
         
         body {
-            background: #f5f5f7;
+            background-color: var(--soft-bg);
             color: var(--primary);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
         }
+        
+        .glass-nav .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+            height: 56px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @media (min-width: 640px) { .glass-nav .nav-inner { height: 64px; padding: 0 24px; } }
+        @media (min-width: 1024px) { .glass-nav .nav-inner { height: 80px; padding: 0 32px; } }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary);
+            transition: opacity var(--transition-fast);
+        }
+        
+        .brand-logo:hover { opacity: 0.8; }
+        .brand-logo img { width: 32px; height: 32px; border-radius: var(--radius-sm); }
+        .brand-logo span { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 18px; }
+        
+        @media (min-width: 640px) { .brand-logo img { width: 36px; height: 36px; } .brand-logo span { font-size: 20px; } }
+        @media (min-width: 1024px) { .brand-logo img { width: 40px; height: 40px; } .brand-logo span { font-size: 22px; } }
+
+        .nav-home-link {
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .nav-home-link:hover { background: rgba(0,0,0,0.05); color: var(--accent); }
 
         main {
-            flex: 1;
+            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 88px 16px 40px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
+            padding: 80px 16px 40px;
         }
         
-        @media (min-width: 640px) { main { padding: 104px 24px 56px; } }
-        @media (min-width: 1024px) { main { padding: 120px 32px 72px; } }
+        @media (min-width: 640px) { main { padding: 100px 24px 60px; } }
+        @media (min-width: 1024px) { main { padding: 120px 32px 80px; } }
 
-        .container-signup {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        /* Progress Steps */
-        .progress-steps {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 32px;
-        }
-        
-        .progress-step {
-            width: 32px;
-            height: 4px;
-            border-radius: 2px;
-            background: #d1d1d6;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .progress-step.done { background: var(--primary); }
-        .progress-step.current { background: var(--primary); width: 40px; }
-
-        /* Card */
         .auth-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 36px 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.05);
+            background: var(--white);
+            width: 100%;
+            max-width: 520px;
+            border-radius: var(--radius-2xl);
+            padding: 28px 20px;
+            box-shadow: var(--shadow-md);
+            max-height: 90vh;
+            max-height: 90dvh;
+            overflow-y: auto;
             position: relative;
-            overflow: hidden;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            transition: box-shadow 0.3s ease;
         }
         
-        @media (min-width: 640px) { .auth-card { padding: 44px 32px; border-radius: 24px; min-height: 440px; } }
-        @media (min-width: 1024px) { .auth-card { padding: 52px 40px; border-radius: 28px; min-height: 480px; } }
+        @media (min-width: 640px) { .auth-card { padding: 40px 36px; max-height: 85vh; } }
+        @media (min-width: 1024px) { .auth-card { padding: 48px 44px; } }
 
-        .step-inner { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .auth-card::-webkit-scrollbar { width: 5px; }
+        .auth-card::-webkit-scrollbar-track { background: transparent; margin: 8px 0; }
+        .auth-card::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 10px; }
 
-        .step-view { animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .auth-card .logo-area {
+            text-align: center;
+            margin-bottom: 24px;
+        }
         
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        .auth-card .logo-area img {
+            width: 56px; height: 56px;
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        @media (min-width: 640px) { .auth-card .logo-area img { width: 64px; height: 64px; } }
+        
+        .auth-card .logo-area h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900; font-size: 22px;
+            color: var(--primary);
+        }
+        
+        .auth-card .logo-area p { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+        @media (min-width: 640px) { .auth-card .logo-area h1 { font-size: 26px; } .auth-card .logo-area p { font-size: 13px; } }
+
+        .tab-buttons {
+            display: flex; gap: 0;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 22px;
+        }
+        
+        .tab-buttons a {
+            flex: 1; text-align: center;
+            padding: 14px 8px; font-size: 13px;
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.8px; text-decoration: none;
+            border-bottom: 3px solid transparent;
+            transition: all var(--transition-fast);
+            color: #bbb;
+        }
+        
+        @media (min-width: 640px) { .tab-buttons a { font-size: 14px; padding: 16px 12px; } }
+        
+        .tab-buttons a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .tab-buttons a.inactive:hover { color: var(--primary); border-bottom-color: #ccc; }
+        .tab-buttons a i { margin-right: 6px; }
+
+        .section-title {
+            font-size: 11px; font-weight: 700;
+            color: var(--text-light); text-transform: uppercase;
+            letter-spacing: 1px; margin: 20px 0 12px;
+            padding-top: 16px; border-top: 1px solid #f0f0f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        
+        .section-title:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+        @media (min-width: 640px) { .section-title { font-size: 12px; } }
+
+        .location-section { margin-bottom: 16px; }
+        
+        .location-header {
+            display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 8px;
+        }
+        
+        .location-detect-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 14px; background: var(--info);
+            color: white; border: none;
+            border-radius: var(--radius-sm); font-size: 11px;
+            font-weight: 600; cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: 'Inter', sans-serif; white-space: nowrap;
+        }
+        
+        .location-detect-btn:hover { background: #2563eb; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .location-detect-btn:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
+        
+        .location-status {
+            font-size: 10px; color: var(--text-muted);
+            margin-top: 4px; display: flex;
+            align-items: center; gap: 4px; min-height: 18px;
+        }
+        
+        .location-status.success { color: var(--success); }
+        .location-status.error { color: var(--error); }
+        .location-status.loading { color: var(--info); }
+
+        .input-group input.location-filled,
+        .input-group textarea.location-filled {
+            border-color: var(--success) !important;
+            background: #f0fdf4 !important;
         }
 
-        /* Icon Circle */
-        .icon-circle {
-            width: 52px; height: 52px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px; font-size: 22px;
-            transition: all 0.3s ease;
-            background: #f5f5f7; color: var(--primary);
+        .form-group { margin-bottom: 16px; }
+        @media (min-width: 640px) { .form-group { margin-bottom: 18px; } }
+        
+        .input-group { position: relative; }
+        
+        .input-group i {
+            position: absolute; left: 14px;
+            top: 50%; transform: translateY(-50%);
+            color: #bbb; font-size: 15px;
+            transition: color var(--transition-fast); pointer-events: none;
         }
         
-        @media (min-width: 640px) { .icon-circle { width: 56px; height: 56px; font-size: 24px; } }
+        .input-group input:focus ~ i,
+        .input-group textarea:focus ~ i { color: var(--accent); }
+        
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%; padding: 14px 14px 14px 44px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md); font-size: 14px;
+            font-family: 'Inter', sans-serif; background: #fafafa;
+            outline: none; transition: all var(--transition-fast);
+            color: var(--primary);
+        }
+        
+        @media (min-width: 640px) {
+            .input-group input, .input-group textarea, .input-group select {
+                font-size: 15px; padding: 15px 15px 15px 46px;
+            }
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            border-color: var(--accent); background: var(--white);
+            box-shadow: 0 0 0 4px rgba(201,169,110,0.08);
+        }
+        
+        .input-group input::placeholder,
+        .input-group textarea::placeholder { color: #c0c0c0; font-weight: 400; }
+        
+        .input-group textarea {
+            padding: 14px 14px 14px 44px;
+            resize: vertical; min-height: 70px;
+        }
+        
+        @media (min-width: 640px) { .input-group textarea { padding: 15px 15px 15px 46px; min-height: 80px; } }
 
-        /* Typography */
-        .step-heading {
-            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-            font-weight: 700; font-size: 22px; line-height: 1.25;
-            margin-bottom: 6px; color: var(--primary); letter-spacing: -0.2px;
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        
+        @media (max-width: 500px) {
+            .input-row, .input-row-3 { grid-template-columns: 1fr; gap: 0; }
+            .input-row .form-group, .input-row-3 .form-group { margin-bottom: 16px; }
         }
-        
-        @media (min-width: 640px) { .step-heading { font-size: 26px; } }
-        
-        .step-desc { font-size: 13px; color: var(--accent); margin-bottom: 28px; line-height: 1.55; }
-        @media (min-width: 640px) { .step-desc { font-size: 14px; margin-bottom: 32px; } }
 
-        /* Input */
-        .input-wrap { position: relative; margin-bottom: 4px; }
+        .input-error { border-color: var(--error) !important; background: #fef2f2 !important; }
         
-        .form-input {
-            width: 100%; padding: 15px 16px;
-            border: 1.5px solid #e0e0e5; border-radius: 12px;
-            font-size: 15px; font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #ffffff; outline: none;
-            transition: all 0.2s ease; color: var(--primary);
-            -webkit-appearance: none; appearance: none;
+        .error-message {
+            font-size: 11px; color: var(--error);
+            margin-top: 6px; font-weight: 500;
+            display: flex; align-items: center; gap: 4px;
         }
         
-        .form-input:hover { border-color: #c5c5cc; }
-        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(29,29,31,0.06); }
-        .form-input.has-error { border-color: var(--error); box-shadow: 0 0 0 4px rgba(220,38,38,0.06); }
-        .form-input.is-valid { border-color: var(--success); }
+        .error-message i { font-size: 10px; }
 
-        @media (min-width: 640px) { .form-input { padding: 16px; font-size: 16px; } }
+        .submit-btn {
+            width: 100%; padding: 15px;
+            background: var(--primary); color: var(--white);
+            border: none; border-radius: var(--radius-md);
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            display: flex; align-items: center;
+            justify-content: center; gap: 10px;
+            transition: all var(--transition-fast); margin-top: 22px;
+        }
+        
+        @media (min-width: 640px) { .submit-btn { font-size: 13px; padding: 16px; margin-top: 26px; } }
+        
+        .submit-btn:hover {
+            background: var(--accent);
+            box-shadow: 0 10px 28px rgba(201,169,110,0.35);
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
 
-        .input-feedback {
-            font-size: 12px; min-height: 20px; margin-top: 6px;
-            display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;
+        .outline-btn {
+            background: transparent !important;
+            color: var(--primary) !important;
+            border: 2px solid var(--primary) !important;
         }
         
-        .input-feedback.error { color: var(--error); }
-        .input-feedback.success { color: var(--success); }
-        .input-feedback.hint { color: var(--accent); }
+        .outline-btn:hover {
+            border-color: var(--accent) !important;
+            color: var(--accent) !important;
+            background: transparent !important;
+        }
 
-        /* Buttons */
-        .btn-row { display: flex; gap: 10px; margin-top: auto; padding-top: 28px; align-items: center; }
-        
-        .btn-back {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: #f5f5f7; border: 1.5px solid #e0e0e5;
-            cursor: pointer; transition: all 0.2s ease;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--accent); font-size: 15px; flex-shrink: 0;
-            -webkit-tap-highlight-color: transparent;
+        .divider {
+            text-align: center; margin: 24px 0;
+            color: #ccc; font-size: 11px;
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; position: relative;
         }
         
-        .btn-back:hover { background: #ebebed; border-color: #c5c5cc; color: var(--primary); }
-        .btn-back:active { transform: scale(0.96); }
-        
-        .btn-primary {
-            flex: 1; padding: 15px 24px;
-            background: var(--primary); color: #ffffff;
-            border: none; border-radius: 12px;
-            font-size: 14px; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            letter-spacing: 0.1px; transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
+        .divider::before, .divider::after {
+            content: ''; position: absolute;
+            top: 50%; width: 30%; height: 1.5px;
+            background: #e5e5e5;
         }
         
-        .btn-primary:hover { background: #333; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:disabled { background: #c5c5cc; cursor: not-allowed; box-shadow: none; }
-        
-        @media (min-width: 640px) { .btn-back { width: 48px; height: 48px; } .btn-primary { padding: 16px 28px; font-size: 15px; } }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
 
-        /* Location Button */
-        .locate-btn {
-            display: flex; align-items: center; gap: 10px;
-            padding: 13px 16px; background: #f5f5f7;
-            border: 1.5px solid #e0e0e5; border-radius: 12px;
-            cursor: pointer; font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            font-size: 13px; font-weight: 500; color: var(--primary);
-            margin-bottom: 16px; transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
+        .home-link {
+            display: block; text-align: center;
+            margin-top: 18px; font-size: 12px;
+            color: var(--text-muted); text-decoration: none;
+            font-weight: 600; transition: color var(--transition-fast);
+            padding: 8px;
         }
         
-        .locate-btn:hover { background: #ebebed; border-color: #c5c5cc; }
-        .locate-btn:active { transform: scale(0.98); }
-        .locate-btn.is-loading { opacity: 0.7; pointer-events: none; }
+        .home-link:hover { color: var(--primary); }
+        .home-link i { margin-right: 5px; }
 
-        /* Agreement */
-        .agree-box {
-            display: flex; align-items: flex-start; gap: 12px;
-            padding: 14px 16px; background: #f5f5f7;
-            border-radius: 12px; border: 1.5px solid #e0e0e5;
-            transition: all 0.2s ease;
+        .benefits {
+            margin-top: 24px; padding: 16px;
+            background: #fafafa; border-radius: var(--radius-lg);
+            border: 1px solid #f0f0f0;
         }
         
-        .agree-box:hover { border-color: #c5c5cc; }
+        @media (min-width: 640px) { .benefits { margin-top: 28px; padding: 20px; } }
         
-        .agree-box input[type="checkbox"] {
-            margin-top: 1px; accent-color: var(--primary);
-            width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;
+        .benefits h4 {
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            color: var(--accent); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
         }
         
-        .agree-box label { font-size: 12px; color: var(--accent); line-height: 1.6; cursor: pointer; }
-        @media (min-width: 640px) { .agree-box label { font-size: 13px; } }
+        .benefits ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
         
-        .agree-box a { color: var(--primary); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
-        .agree-box a:hover { color: #000; }
+        .benefits ul li {
+            font-size: 12px; color: var(--text-light);
+            display: flex; align-items: center; gap: 8px; font-weight: 500;
+        }
+        
+        @media (min-width: 640px) { .benefits ul li { font-size: 13px; gap: 10px; } }
+        .benefits ul li i { color: var(--success); font-size: 12px; flex-shrink: 0; }
+
+        .terms-check {
+            display: flex; align-items: flex-start; gap: 10px;
+            margin-top: 16px; font-size: 12px;
+            color: var(--text-light); font-weight: 500; line-height: 1.4;
+        }
+        
+        .terms-check input[type="checkbox"] {
+            margin-top: 2px; accent-color: var(--primary);
+            width: 18px; height: 18px; flex-shrink: 0; cursor: pointer;
+        }
+        
+        .terms-check a { color: var(--accent); font-weight: 700; text-decoration: none; }
+        .terms-check a:hover { color: var(--primary); text-decoration: underline; }
 
         /* Success Overlay */
         .success-overlay {
             position: absolute; inset: 0;
             background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: flex-start; border-radius: inherit;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-2xl);
             z-index: 10; opacity: 0; pointer-events: none;
-            transition: opacity 0.5s ease; padding: 32px 20px;
-            overflow-y: auto; max-height: 100%;
+            transition: opacity 0.5s ease;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start;
+            padding: 40px 20px; overflow-y: auto;
         }
         
         .success-overlay.visible { opacity: 1; pointer-events: auto; }
         
         .success-check {
             width: 72px; height: 72px; border-radius: 50%;
-            background: #f5f5f7; display: flex; align-items: center;
-            justify-content: center; margin-bottom: 20px; flex-shrink: 0;
+            background: #f5f5f7; display: flex;
+            align-items: center; justify-content: center;
+            margin-bottom: 20px; flex-shrink: 0;
             animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
         }
         
@@ -289,18 +445,23 @@
         }
         
         .success-check i { font-size: 32px; color: var(--primary); }
-        @media (min-width: 640px) { .success-check { width: 80px; height: 80px; } .success-check i { font-size: 36px; } }
         
         .success-heading {
-            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-            font-weight: 700; font-size: 20px; margin-bottom: 6px;
-            text-align: center; flex-shrink: 0;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900; font-size: 20px;
+            margin-bottom: 6px; text-align: center; flex-shrink: 0;
             animation: fadeSlideIn 0.5s ease 0.4s both;
         }
         
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .success-text {
-            font-size: 13px; color: var(--accent); text-align: center;
-            max-width: 280px; line-height: 1.6; flex-shrink: 0;
+            font-size: 13px; color: var(--text-light);
+            text-align: center; max-width: 280px;
+            line-height: 1.6; flex-shrink: 0;
             animation: fadeSlideIn 0.5s ease 0.6s both;
         }
 
@@ -314,9 +475,9 @@
             border: 1.5px solid #e0e0e5;
         }
         
-        .oneid-badge i { color: var(--gold); }
+        .oneid-badge i { color: var(--accent); }
 
-        /* Notification Preview */
+        /* Notification Cards in Success */
         .notification-preview {
             width: 100%; max-width: 320px; margin-top: 16px;
             animation: fadeSlideIn 0.5s ease 0.8s both;
@@ -329,695 +490,755 @@
             margin-bottom: 8px; font-size: 12px; line-height: 1.5;
         }
         
-        .notif-item.warning { border-left-color: #f59e0b; background: #fffbeb; }
-        .notif-item.info { border-left-color: var(--blue); background: #eff6ff; }
+        .notif-item.warning { border-left-color: var(--warning); background: #fffbeb; }
+        .notif-item.info { border-left-color: var(--info); background: #eff6ff; }
         .notif-item.error { border-left-color: var(--error); background: #fef2f2; }
         
         .notif-item i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
         .notif-item .notif-content { flex: 1; min-width: 0; }
         .notif-item .notif-title { font-weight: 600; margin-bottom: 2px; font-size: 13px; }
         .notif-item .notif-message { color: #555; font-size: 11px; line-height: 1.5; }
-        .notif-item .notif-time { font-size: 10px; color: var(--accent); margin-top: 4px; }
-        .no-notifications { text-align: center; color: var(--accent); font-size: 12px; padding: 10px; }
-
-        @media (min-width: 640px) {
-            .success-heading { font-size: 22px; }
-            .success-text { font-size: 14px; }
-            .oneid-badge { font-size: 14px; }
-        }
+        .notif-item .notif-time { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
 
         /* Toast */
         #toast {
-            position: fixed; top: 76px; right: 12px; z-index: 9999;
-            transform: translateX(calc(100% + 24px));
+            position: fixed; top: 20px; right: 20px;
+            z-index: 9999; transform: translateX(calc(100% + 40px));
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: calc(100vw - 24px);
+            max-width: calc(100vw - 40px);
         }
         
-        @media (min-width: 640px) { #toast { top: 88px; right: 20px; } }
         #toast.show { transform: translateX(0); }
         
-        #toast .toast-box {
-            background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-radius: 14px; padding: 12px 16px;
-            display: flex; align-items: center; gap: 10px;
-            min-width: 260px; border: 1px solid rgba(0,0,0,0.05);
+        #toast .toast-inner {
+            background: var(--white); box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-lg); padding: 14px 16px;
+            display: flex; align-items: center; gap: 12px;
+            min-width: 300px; border: 1px solid #f0f0f0;
         }
         
-        #toast .toast-icon-wrap {
-            width: 32px; height: 32px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px; flex-shrink: 0;
-            background: #f5f5f7; color: var(--primary);
+        @media (max-width: 480px) { #toast .toast-inner { min-width: auto; padding: 12px 14px; } }
+        
+        #toast .toast-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center;
+            justify-content: center; font-size: 16px; flex-shrink: 0;
         }
         
-        .toast-icon-wrap.error { background: #fef2f2; color: var(--error); }
-        .toast-icon-wrap.warning { background: #fffbeb; color: #f59e0b; }
+        .toast-success { background: #ecfdf5; color: var(--success); }
+        .toast-error { background: #fef2f2; color: var(--error); }
+        .toast-warning { background: #fffbeb; color: var(--warning); }
         
-        #toast .toast-msg { font-size: 12px; font-weight: 600; flex: 1; line-height: 1.4; }
+        #toast .toast-text { font-size: 13px; font-weight: 600; flex-grow: 1; line-height: 1.4; }
         
         #toast .toast-close {
-            color: var(--accent); background: none; border: none;
-            cursor: pointer; font-size: 13px; padding: 4px;
-            border-radius: 50%; transition: all 0.2s ease;
+            color: #ccc; background: none; border: none;
+            cursor: pointer; font-size: 16px; flex-shrink: 0;
+            padding: 4px; border-radius: 50%;
+            transition: all var(--transition-fast);
         }
         
         #toast .toast-close:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
 
-        /* Particles */
-        .confetti {
-            position: fixed; pointer-events: none; z-index: 9998;
-            animation: confettiFall 1s ease-out forwards;
+        .loader-overlay {
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9998; display: flex;
+            align-items: center; justify-content: center;
+            flex-direction: column; opacity: 1;
+            transition: opacity 0.4s ease; pointer-events: all;
         }
         
-        @keyframes confettiFall {
-            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
+        .loader-overlay.hidden { opacity: 0; pointer-events: none; }
+        
+        .loader-overlay .spinner {
+            width: 48px; height: 48px;
+            border: 3px solid #e5e5e5;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loader-overlay .loader-text {
+            margin-top: 18px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 4px;
+            font-size: 12px; color: rgba(26,26,26,0.5);
         }
 
-        @media (max-width: 380px) {
-            .auth-card { padding: 28px 18px; min-height: 360px; }
-            .step-heading { font-size: 20px; }
-            .form-input { padding: 13px 14px; font-size: 14px; }
+        .auth-footer {
+            text-align: center; padding: 18px;
+            font-size: 11px; color: #bbb;
+        }
+        
+        .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+        .auth-footer a:hover { color: var(--primary); text-decoration: underline; }
+
+        .skip-link {
+            position: absolute; top: -100px; left: 16px;
+            background: var(--primary); color: white;
+            padding: 8px 16px; border-radius: var(--radius-sm);
+            z-index: 100; font-weight: 600;
+            text-decoration: none; transition: top 0.2s;
+        }
+        
+        .skip-link:focus { top: 16px; }
+
+        .sr-only {
+            position: absolute; width: 1px; height: 1px;
+            padding: 0; margin: -1px; overflow: hidden;
+            clip: rect(0,0,0,0); white-space: nowrap; border: 0;
         }
     </style>
 </head>
 <body>
 
-    <div id="dynamic-header"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <main>
-        <div class="container-signup">
-            <div class="progress-steps" id="progress-steps">
-                <div class="progress-step current"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
+    <!-- Loader -->
+    <div class="loader-overlay" id="global-loader">
+        <div class="spinner" role="status" aria-label="Loading"></div>
+        <p class="loader-text">JAYENWARE</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="glass-nav" role="navigation">
+        <div class="nav-inner">
+            <a href="/" class="brand-logo" aria-label="JAYENWARE Home">
+                <img src="https://www.jayenware.shop/logo.png" alt="JAYENWARE Logo" width="40" height="40" loading="eager">
+                <span>JAYENWARE</span>
+            </a>
+            <a href="/" class="nav-home-link">
+                <i class="fa-solid fa-house" aria-hidden="true"></i> Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <div class="auth-card" role="form" aria-labelledby="signup-heading">
+            <div class="logo-area">
+                <img src="https://www.jayenware.shop/logo.png" alt="JAYENWARE Logo" width="64" height="64" loading="eager">
+                <h1 id="signup-heading">Create Account</h1>
+                <p>Join JAYENWARE for exclusive deals</p>
             </div>
 
-            <div class="auth-card" id="auth-card">
-                <div class="step-inner" id="step-inner"></div>
+            <div class="tab-buttons" role="tablist">
+                <a href="/login" class="inactive" role="tab" aria-selected="false">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </a>
+                <a href="javascript:void(0)" class="active" role="tab" aria-selected="true">
+                    <i class="fa-solid fa-user-plus"></i> Sign Up
+                </a>
+            </div>
+
+            <!-- Sign-Up Form -->
+            <form id="signup-form" autocomplete="on" novalidate>
                 
-                <div class="success-overlay" id="success-overlay">
-                    <div class="success-check"><i class="fa-solid fa-check"></i></div>
-                    <h2 class="success-heading" id="success-heading">Account Created!</h2>
-                    <p class="success-text" id="success-msg">Taking you to your dashboard...</p>
-                    <div class="oneid-badge" id="oneid-badge" style="display:none;">
-                        <i class="fa-solid fa-id-card"></i>
-                        <span id="oneid-text"></span>
+                <h3 class="section-title"><i class="fa-solid fa-user-circle"></i> Personal Information</h3>
+
+                <div class="form-group">
+                    <label for="signup-name" class="sr-only">Full Name</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="signup-name" name="name" placeholder="Full Name *" required autocomplete="name">
                     </div>
-                    <div class="notification-preview" id="notification-preview"></div>
+                    <div class="error-message" id="name-error" style="display:none;"></div>
                 </div>
+
+                <div class="form-group">
+                    <label for="signup-email" class="sr-only">Email Address</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="signup-email" name="email" placeholder="Email Address *" required autocomplete="email">
+                    </div>
+                    <div class="error-message" id="email-error" style="display:none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-phone" class="sr-only">Phone Number</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="signup-phone" name="phone" placeholder="Phone Number (01XXXXXXXXX) *" required autocomplete="tel-national">
+                    </div>
+                    <div class="error-message" id="phone-error" style="display:none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-password" class="sr-only">Password</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="signup-password" name="password" placeholder="Password (min 8 characters) *" required autocomplete="new-password" minlength="8">
+                    </div>
+                    <div class="error-message" id="password-error" style="display:none;"></div>
+                </div>
+
+                <h3 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Delivery Address</h3>
+
+                <div class="location-section">
+                    <div class="location-header">
+                        <button type="button" class="location-detect-btn" id="detect-location-btn" title="Auto-detect your location">
+                            <i class="fa-solid fa-location-arrow"></i> Auto-Detect Location
+                        </button>
+                    </div>
+                    <div class="location-status" id="location-status"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-country" class="sr-only">Country</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-globe"></i>
+                        <input type="text" id="signup-country" name="country" placeholder="Country *" value="Bangladesh" required autocomplete="country-name">
+                    </div>
+                    <div class="error-message" id="country-error" style="display:none;"></div>
+                </div>
+
+                <div class="input-row">
+                    <div class="form-group">
+                        <label for="signup-state" class="sr-only">State / Province</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-flag"></i>
+                            <input type="text" id="signup-state" name="state_province" placeholder="State / Province" autocomplete="address-level1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-city" class="sr-only">City</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-city"></i>
+                            <input type="text" id="signup-city" name="city" placeholder="City *" required autocomplete="address-level2">
+                        </div>
+                        <div class="error-message" id="city-error" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-postal" class="sr-only">Postal Code</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-mailbox"></i>
+                        <input type="text" id="signup-postal" name="postal_code" placeholder="Postal Code (ZIP)" autocomplete="postal-code">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-street" class="sr-only">Street Address</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-road"></i>
+                        <input type="text" id="signup-street" name="street_address" placeholder="Street Address (Line 1) *" required autocomplete="street-address">
+                    </div>
+                    <div class="error-message" id="street-error" style="display:none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-apartment" class="sr-only">Apartment / House No.</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-building"></i>
+                        <input type="text" id="signup-apartment" name="apartment_house" placeholder="Apartment / House No. (Line 2)" autocomplete="address-line2">
+                    </div>
+                </div>
+
+                <div class="terms-check">
+                    <input type="checkbox" id="terms-agree" name="terms" required>
+                    <label for="terms-agree">I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and <a href="/terms" target="_blank">Terms of Service</a></label>
+                </div>
+                <div class="error-message" id="terms-error" style="display:none;"></div>
+
+                <button type="submit" class="submit-btn" id="submit-button">
+                    <i class="fa-solid fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <!-- Success Overlay -->
+            <div class="success-overlay" id="success-overlay">
+                <div class="success-check"><i class="fa-solid fa-check"></i></div>
+                <h2 class="success-heading" id="success-heading">Account Created!</h2>
+                <p class="success-text" id="success-msg">Taking you to your dashboard...</p>
+                <div class="oneid-badge" id="oneid-badge" style="display:none;">
+                    <i class="fa-solid fa-key"></i>
+                    <span id="oneid-text"></span>
+                </div>
+                <div class="notification-preview" id="notification-preview"></div>
             </div>
+
+            <div class="divider">Already have an account?</div>
+
+            <a href="/login" class="submit-btn outline-btn">
+                <i class="fa-solid fa-right-to-bracket"></i> Sign In Instead
+            </a>
+
+            <div class="benefits">
+                <h4><i class="fa-solid fa-gift"></i> Member Benefits</h4>
+                <ul>
+                    <li><i class="fa-solid fa-check"></i> Faster checkout experience</li>
+                    <li><i class="fa-solid fa-check"></i> Order tracking &amp; history</li>
+                    <li><i class="fa-solid fa-check"></i> Exclusive member discounts</li>
+                    <li><i class="fa-solid fa-check"></i> Wishlist &amp; save for later</li>
+                    <li><i class="fa-solid fa-check"></i> Early access to new collections</li>
+                </ul>
+            </div>
+
+            <a href="/" class="home-link"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
         </div>
     </main>
 
-    <div id="dynamic-footer"></div>
+    <footer class="auth-footer">
+        <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener">BINZEO</a></p>
+        <p>&copy; 2025 JAYENWARE. All rights reserved.</p>
+    </footer>
 
     <div id="toast" role="alert" aria-live="polite">
-        <div class="toast-box">
-            <div class="toast-icon-wrap" id="toast-icon-wrap">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <span class="toast-msg" id="toast-msg"></span>
-            <button class="toast-close" onclick="hideToast()" aria-label="Close">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+        <div class="toast-inner">
+            <div class="toast-icon" id="toast-icon"></div>
+            <span class="toast-text" id="toast-text"></span>
+            <button class="toast-close" onclick="hideToast()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
         </div>
     </div>
 
-    <script src="/components.js"></script>
-
     <script>
-        (() => {
-            document.addEventListener('DOMContentLoaded', () => {
-                if (window.JAYENWARE_FONTS) {
-                    const r = document.documentElement;
-                    Object.entries(window.JAYENWARE_FONTS.cssVariables).forEach(([k, v]) => r.style.setProperty(k, v));
-                }
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toast-icon');
+        const toastText = document.getElementById('toast-text');
+        const loader = document.getElementById('global-loader');
+        const signupForm = document.getElementById('signup-form');
+        const submitButton = document.getElementById('submit-button');
+        const successOverlay = document.getElementById('success-overlay');
+        
+        const nameInput = document.getElementById('signup-name');
+        const emailInput = document.getElementById('signup-email');
+        const phoneInput = document.getElementById('signup-phone');
+        const passwordInput = document.getElementById('signup-password');
+        const countryInput = document.getElementById('signup-country');
+        const stateInput = document.getElementById('signup-state');
+        const cityInput = document.getElementById('signup-city');
+        const postalInput = document.getElementById('signup-postal');
+        const streetInput = document.getElementById('signup-street');
+        const apartmentInput = document.getElementById('signup-apartment');
+        const termsCheckbox = document.getElementById('terms-agree');
+        
+        const detectLocationBtn = document.getElementById('detect-location-btn');
+        const locationStatus = document.getElementById('location-status');
+        
+        const errorElements = {
+            name: document.getElementById('name-error'),
+            email: document.getElementById('email-error'),
+            phone: document.getElementById('phone-error'),
+            password: document.getElementById('password-error'),
+            country: document.getElementById('country-error'),
+            city: document.getElementById('city-error'),
+            street: document.getElementById('street-error'),
+            terms: document.getElementById('terms-error')
+        };
+
+        let detectedLocationData = null;
+        const API_BASE = window.location.origin;
+
+        // Toast Functions
+        let toastTimeout;
+
+        function showToast(text, type) {
+            type = type || 'success';
+            toastIcon.className = 'toast-icon ' + (type === 'error' ? 'toast-error' : type === 'warning' ? 'toast-warning' : 'toast-success');
+            if (type === 'error') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+            } else if (type === 'warning') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            } else {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            }
+            toastText.innerText = text;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        function hideToast() {
+            toast.classList.remove('show');
+            clearTimeout(toastTimeout);
+        }
+
+        function showLoader(ms) {
+            ms = ms || 1500;
+            loader.classList.remove('hidden');
+            return new Promise(function(resolve) {
+                setTimeout(function() {
+                    loader.classList.add('hidden');
+                    setTimeout(resolve, 400);
+                }, ms);
             });
+        }
 
-            window.addEventListener('load', () => setTimeout(boot, 200));
+        function clearErrors() {
+            Object.values(errorElements).forEach(function(el) {
+                if (el) { el.style.display = 'none'; el.textContent = ''; }
+            });
+            document.querySelectorAll('.input-error').forEach(function(el) { el.classList.remove('input-error'); });
+        }
 
-            function boot() {
-                let step = 0;
-                let busy = false;
+        function showFieldError(inputEl, errorEl, message) {
+            if (!inputEl || !errorEl) return;
+            inputEl.classList.add('input-error');
+            errorEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + message;
+            errorEl.style.display = 'flex';
+        }
 
-                const data = {
-                    name: '', email: '', phone: '', password: '',
-                    country: '', state_province: '', city: '',
-                    postal_code: '', street_address: '', apartment_house: '',
-                    terms: false
-                };
+        function isValidEmail(email) {
+            return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+        }
 
-                const $ = (id) => document.getElementById(id);
-                const progressBar = $('progress-steps');
-                const stepInner = $('step-inner');
-                const successOverlay = $('success-overlay');
-                const toast = $('toast');
-                const API = window.location.origin;
+        function markLocationFilled() {
+            [countryInput, stateInput, cityInput, postalInput, streetInput].forEach(function(el) {
+                if (el) el.classList.add('location-filled');
+            });
+        }
 
-                const blockedDomains = [
-                    'jabiyen.com', 'jabiyen.shop', 'jabiyen.io', 'jabiyen.me',
-                    'binzeo.com', 'binzeo.shop', 'binzeo.io', 'binzeo.me'
-                ];
+        function buildFullAddress(addressData) {
+            var parts = [];
+            if (addressData.road) parts.push(addressData.road);
+            if (addressData.street) parts.push(addressData.street);
+            if (addressData.suburb) parts.push(addressData.suburb);
+            if (addressData.city) parts.push(addressData.city);
+            if (addressData.town) parts.push(addressData.town);
+            if (addressData.state) parts.push(addressData.state);
+            if (addressData.postcode) parts.push('Postal: ' + addressData.postcode);
+            if (addressData.country) parts.push(addressData.country);
+            var uniqueParts = [];
+            parts.forEach(function(p) { if (uniqueParts.indexOf(p) === -1) uniqueParts.push(p); });
+            return uniqueParts.join(', ') || 'Address detected via GPS';
+        }
 
-                let toastTimer;
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-                function notify(msg, type) {
-                    type = type || 'success';
-                    const icon = $('toast-icon-wrap');
-                    const text = $('toast-msg');
-                    if (!icon || !text) return;
-                    
-                    if (type === 'error') {
-                        icon.className = 'toast-icon-wrap error';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
-                    } else if (type === 'warning') {
-                        icon.className = 'toast-icon-wrap warning';
-                        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                    } else {
-                        icon.className = 'toast-icon-wrap';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-                    }
-                    
-                    text.textContent = msg;
-                    toast.classList.add('show');
-                    clearTimeout(toastTimer);
-                    toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+        function renderNotifications(notifications) {
+            var container = document.getElementById('notification-preview');
+            if (!container) return;
+            
+            if (!notifications || !Array.isArray(notifications) || notifications.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < notifications.length; i++) {
+                var n = notifications[i];
+                if (!n || typeof n !== 'object') continue;
+                
+                var type = n.notification_type || 'info';
+                var title = n.title || 'Notification';
+                var message = n.message || '';
+                var createdAt = n.created_at || new Date().toISOString();
+                
+                var iconClass, typeClass, iconColor;
+                if (type === 'success') {
+                    iconClass = 'fa-solid fa-circle-check';
+                    typeClass = '';
+                    iconColor = '#059669';
+                } else if (type === 'error') {
+                    iconClass = 'fa-solid fa-circle-exclamation';
+                    typeClass = 'error';
+                    iconColor = '#dc2626';
+                } else if (type === 'warning') {
+                    iconClass = 'fa-solid fa-triangle-exclamation';
+                    typeClass = 'warning';
+                    iconColor = '#f59e0b';
+                } else {
+                    iconClass = 'fa-solid fa-circle-info';
+                    typeClass = 'info';
+                    iconColor = '#3b82f6';
                 }
+                
+                var timeStr = '';
+                try {
+                    var time = new Date(createdAt);
+                    if (!isNaN(time.getTime())) {
+                        timeStr = time.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, month: 'short', day: 'numeric' });
+                    }
+                } catch(e) {}
+                
+                html += '<div class="notif-item ' + typeClass + '">' +
+                    '<i class="' + iconClass + '" style="color:' + iconColor + '"></i>' +
+                    '<div class="notif-content">' +
+                        '<div class="notif-title">' + escapeHtml(title) + '</div>' +
+                        '<div class="notif-message">' + escapeHtml(message) + '</div>' +
+                        (timeStr ? '<div class="notif-time">' + timeStr + '</div>' : '') +
+                    '</div>' +
+                '</div>';
+            }
+            
+            container.innerHTML = html || '';
+        }
 
-                window.hideToast = function() {
-                    toast.classList.remove('show');
-                    clearTimeout(toastTimer);
-                };
+        async function detectUserLocation() {
+            if (!navigator.geolocation) {
+                showToast('Your browser does not support location detection', 'error');
+                return null;
+            }
 
-                function setProgress(n) {
-                    progressBar.querySelectorAll('.progress-step').forEach((el, i) => {
-                        el.classList.remove('done', 'current');
-                        if (i < n) el.classList.add('done');
-                        if (i === n) el.classList.add('current');
+            detectLocationBtn.disabled = true;
+            detectLocationBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
+            locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Requesting location permission...';
+            locationStatus.className = 'location-status loading';
+
+            try {
+                var position = await new Promise(function(resolve, reject) {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true, timeout: 15000, maximumAge: 0
                     });
-                }
-
-                function validateEmail(email) {
-                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                        return 'Please enter a valid email address';
-                    }
-                    const domain = email.split('@')[1]?.toLowerCase();
-                    if (blockedDomains.includes(domain)) {
-                        return 'Email domain "@' + domain + '" is not allowed. Please use your personal or business email.';
-                    }
-                    return null;
-                }
-
-                const steps = [
-                    {
-                        icon: 'fa-solid fa-user',
-                        question: "What's your name?",
-                        desc: "We'll use this to personalize your experience.",
-                        field: 'name', type: 'text', placeholder: 'Your full name',
-                        autocomplete: 'name',
-                        check: function(v) { return v.trim().length >= 3 ? null : 'Name must be at least 3 characters'; },
-                        hint: 'First and last name'
-                    },
-                    {
-                        icon: 'fa-solid fa-envelope',
-                        question: "What's your email?",
-                        desc: "For order updates and account security.",
-                        field: 'email', type: 'email', placeholder: 'you@example.com',
-                        autocomplete: 'email',
-                        check: validateEmail,
-                        hint: 'Use your personal or business email'
-                    },
-                    {
-                        icon: 'fa-solid fa-phone',
-                        question: "Your phone number?",
-                        desc: "For delivery coordination and account recovery.",
-                        field: 'phone', type: 'tel', placeholder: '01XXXXXXXXX',
-                        autocomplete: 'tel-national',
-                        check: function(v) {
-                            var cleaned = v.replace(/[^\d]/g, '');
-                            if (cleaned.length < 6) return 'Phone number is too short (minimum 6 digits)';
-                            if (cleaned.length > 15) return 'Phone number is too long (maximum 15 digits)';
-                            return null;
-                        },
-                        hint: 'Enter phone number without country code',
-                        format: true
-                    },
-                    {
-                        icon: 'fa-solid fa-lock',
-                        question: "Create a password",
-                        desc: "Use 8+ characters for a strong password.",
-                        field: 'password', type: 'password', placeholder: 'Minimum 8 characters',
-                        autocomplete: 'new-password',
-                        check: function(v) { return v.length >= 8 ? null : 'At least 8 characters required'; },
-                        hint: 'Keep it safe'
-                    },
-                    {
-                        icon: 'fa-solid fa-location-dot',
-                        question: "Where are you located?",
-                        desc: "Auto-detect or enter your location manually.",
-                        isLocation: true
-                    },
-                    {
-                        icon: 'fa-solid fa-house',
-                        question: "Your delivery address",
-                        desc: "For smooth and accurate deliveries.",
-                        isAddress: true
-                    },
-                    {
-                        icon: 'fa-solid fa-shield-halved',
-                        question: "Almost there!",
-                        desc: "Review and accept our terms to finish.",
-                        isTerms: true
-                    }
-                ];
-
-                function render(n) {
-                    if (busy) return;
-                    busy = true;
-                    
-                    var s = steps[n];
-                    setProgress(n);
-                    
-                    var html = '';
-                    
-                    if (s.isLocation) {
-                        html = '<div class="step-view">' +
-                            '<div class="icon-circle"><i class="' + s.icon + '"></i></div>' +
-                            '<h2 class="step-heading">' + s.question + '</h2>' +
-                            '<p class="step-desc">' + s.desc + '</p>' +
-                            '<button type="button" class="locate-btn" id="locate-btn">' +
-                                '<i class="fa-solid fa-location-crosshairs"></i> Detect my location' +
-                            '</button>' +
-                            '<div class="input-feedback hint" id="locate-status"></div>' +
-                            '<div style="margin-bottom:10px;">' +
-                                '<input type="text" class="form-input" id="loc-country" placeholder="Country" value="' + (data.country || '') + '">' +
-                            '</div>' +
-                            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
-                                '<input type="text" class="form-input" id="loc-state" placeholder="State / Province" value="' + (data.state_province || '') + '">' +
-                                '<input type="text" class="form-input" id="loc-city" placeholder="City" value="' + (data.city || '') + '">' +
-                            '</div>' +
-                            '<div class="input-feedback" id="loc-error"></div>' +
-                            '<div class="btn-row">' +
-                                '<button class="btn-back" onclick="go(' + (n - 1) + ')"><i class="fa-solid fa-arrow-left"></i></button>' +
-                                '<button class="btn-primary" onclick="checkLocation()">Continue <i class="fa-solid fa-arrow-right"></i></button>' +
-                            '</div>' +
-                        '</div>';
-                    } else if (s.isAddress) {
-                        html = '<div class="step-view">' +
-                            '<div class="icon-circle"><i class="' + s.icon + '"></i></div>' +
-                            '<h2 class="step-heading">' + s.question + '</h2>' +
-                            '<p class="step-desc">' + s.desc + '</p>' +
-                            '<div style="margin-bottom:10px;">' +
-                                '<input type="text" class="form-input" id="addr-postal" placeholder="Postal / ZIP code" value="' + (data.postal_code || '') + '">' +
-                            '</div>' +
-                            '<div style="margin-bottom:10px;">' +
-                                '<input type="text" class="form-input" id="addr-street" placeholder="Street address" value="' + (data.street_address || '') + '">' +
-                            '</div>' +
-                            '<div style="margin-bottom:10px;">' +
-                                '<input type="text" class="form-input" id="addr-apt" placeholder="Apartment, suite, unit (optional)" value="' + (data.apartment_house || '') + '">' +
-                            '</div>' +
-                            '<div class="input-feedback" id="addr-error"></div>' +
-                            '<div class="btn-row">' +
-                                '<button class="btn-back" onclick="go(' + (n - 1) + ')"><i class="fa-solid fa-arrow-left"></i></button>' +
-                                '<button class="btn-primary" onclick="checkAddress()">Continue <i class="fa-solid fa-arrow-right"></i></button>' +
-                            '</div>' +
-                        '</div>';
-                    } else if (s.isTerms) {
-                        html = '<div class="step-view">' +
-                            '<div class="icon-circle"><i class="' + s.icon + '"></i></div>' +
-                            '<h2 class="step-heading">' + s.question + '</h2>' +
-                            '<p class="step-desc">' + s.desc + '</p>' +
-                            '<div class="agree-box">' +
-                                '<input type="checkbox" id="terms-check"' + (data.terms ? ' checked' : '') + '>' +
-                                '<label for="terms-check">I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a></label>' +
-                            '</div>' +
-                            '<div class="input-feedback" id="terms-error" style="margin-top:8px;"></div>' +
-                            '<div class="btn-row">' +
-                                '<button class="btn-back" onclick="go(' + (n - 1) + ')"><i class="fa-solid fa-arrow-left"></i></button>' +
-                                '<button class="btn-primary" id="submit-btn" onclick="submit()"><i class="fa-solid fa-user-check"></i> Create Account</button>' +
-                            '</div>' +
-                        '</div>';
-                    } else {
-                        html = '<div class="step-view">' +
-                            '<div class="icon-circle"><i class="' + s.icon + '"></i></div>' +
-                            '<h2 class="step-heading">' + s.question + '</h2>' +
-                            '<p class="step-desc">' + s.desc + '</p>' +
-                            '<div class="input-wrap">' +
-                                '<input type="' + s.type + '" class="form-input" id="main-input" placeholder="' + s.placeholder + '" value="' + (data[s.field] || '') + '" autocomplete="' + s.autocomplete + '" autofocus>' +
-                            '</div>' +
-                            '<div class="input-feedback hint" id="field-hint">' + s.hint + '</div>' +
-                            '<div class="input-feedback" id="field-error"></div>' +
-                            '<div class="btn-row">' +
-                                (n > 0 ? '<button class="btn-back" onclick="go(' + (n - 1) + ')"><i class="fa-solid fa-arrow-left"></i></button>' : '<div></div>') +
-                                '<button class="btn-primary" onclick="checkField()">Continue <i class="fa-solid fa-arrow-right"></i></button>' +
-                            '</div>' +
-                        '</div>';
-                    }
-                    
-                    stepInner.innerHTML = html;
-                    
-                    setTimeout(function() {
-                        var inp = document.getElementById('main-input');
-                        if (inp) inp.focus();
-                    }, 100);
-                    
-                    var mainInp = document.getElementById('main-input');
-                    if (mainInp) {
-                        mainInp.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkField(); });
-                    }
-                    
-                    if (s.format && mainInp) {
-                        mainInp.addEventListener('input', function() {
-                            var v = this.value.replace(/[^\d]/g, '');
-                            if (v.length > 15) v = v.slice(0, 15);
-                            this.value = v;
-                        });
-                    }
-                    
-                    if (s.isLocation) {
-                        setTimeout(function() {
-                            var btn = document.getElementById('locate-btn');
-                            if (btn) btn.addEventListener('click', detectLocation);
-                        }, 150);
-                    }
-                    
-                    busy = false;
-                }
-
-                window.checkField = function() {
-                    var s = steps[step];
-                    var inp = document.getElementById('main-input');
-                    var val = inp ? inp.value : '';
-                    var err = s.check(val);
-                    var errEl = document.getElementById('field-error');
-                    var hintEl = document.getElementById('field-hint');
-                    
-                    if (err) {
-                        if (inp) { inp.classList.add('has-error'); setTimeout(function() { inp.classList.remove('has-error'); }, 600); }
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + err; errEl.className = 'input-feedback error'; }
-                        if (hintEl) hintEl.style.display = 'none';
-                        return;
-                    }
-                    
-                    if (inp) inp.classList.add('is-valid');
-                    data[s.field] = val;
-                    if (errEl) errEl.className = 'input-feedback';
-                    if (hintEl) hintEl.style.display = 'block';
-                    
-                    setTimeout(function() { if (inp) inp.classList.remove('is-valid'); go(step + 1); }, 250);
-                };
-
-                window.checkLocation = function() {
-                    var country = document.getElementById('loc-country');
-                    var city = document.getElementById('loc-city');
-                    var countryVal = country ? country.value.trim() : '';
-                    var cityVal = city ? city.value.trim() : '';
-                    var errEl = document.getElementById('loc-error');
-                    
-                    if (!countryVal || !cityVal) {
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Country and city are required'; errEl.className = 'input-feedback error'; }
-                        return;
-                    }
-                    
-                    data.country = countryVal;
-                    data.state_province = (document.getElementById('loc-state') ? document.getElementById('loc-state').value.trim() : '') || '';
-                    data.city = cityVal;
-                    if (errEl) errEl.className = 'input-feedback';
-                    go(step + 1);
-                };
-
-                window.checkAddress = function() {
-                    var street = document.getElementById('addr-street');
-                    var streetVal = street ? street.value.trim() : '';
-                    var errEl = document.getElementById('addr-error');
-                    
-                    if (!streetVal) {
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Street address is required'; errEl.className = 'input-feedback error'; }
-                        return;
-                    }
-                    
-                    data.postal_code = (document.getElementById('addr-postal') ? document.getElementById('addr-postal').value.trim() : '') || '';
-                    data.street_address = streetVal;
-                    data.apartment_house = (document.getElementById('addr-apt') ? document.getElementById('addr-apt').value.trim() : '') || '';
-                    if (errEl) errEl.className = 'input-feedback';
-                    go(step + 1);
-                };
-
-                window.go = function(target) {
-                    if (busy || target < 0 || target >= steps.length || target === step) return;
-                    step = target;
-                    render(step);
-                };
-
-                function detectLocation() {
-                    if (!navigator.geolocation) { notify('Location not supported on this device', 'error'); return; }
-                    
-                    var btn = document.getElementById('locate-btn');
-                    var status = document.getElementById('locate-status');
-                    if (!btn) return;
-                    
-                    btn.classList.add('is-loading');
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
-                    if (status) { status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Accessing GPS...'; }
-                    
-                    navigator.geolocation.getCurrentPosition(
-                        function(pos) {
-                            if (status) { status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Looking up address...'; }
-                            
-                            fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + pos.coords.latitude + '&lon=' + pos.coords.longitude + '&addressdetails=1&accept-language=en', {
-                                headers: { 'User-Agent': 'JAYENWARE/1.0' }
-                            })
-                            .then(function(resp) { return resp.json(); })
-                            .then(function(d) {
-                                var addr = d.address || {};
-                                var countryEl = document.getElementById('loc-country');
-                                var stateEl = document.getElementById('loc-state');
-                                var cityEl = document.getElementById('loc-city');
-                                if (countryEl) countryEl.value = addr.country || '';
-                                if (stateEl) stateEl.value = addr.state || '';
-                                if (cityEl) cityEl.value = addr.city || addr.town || '';
-                                
-                                if (status) {
-                                    status.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected and filled';
-                                    status.className = 'input-feedback success';
-                                }
-                                notify('Location found!', 'success');
-                            })
-                            .catch(function() {
-                                if (status) {
-                                    status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Unable to detect. Please fill manually.';
-                                    status.className = 'input-feedback error';
-                                }
-                            })
-                            .finally(function() {
-                                btn.classList.remove('is-loading');
-                                btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Detect my location';
-                            });
-                        },
-                        function() {
-                            if (status) {
-                                status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Location access denied. Please fill manually.';
-                                status.className = 'input-feedback error';
-                            }
-                            btn.classList.remove('is-loading');
-                            btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Detect my location';
-                        },
-                        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
-                    );
-                }
-
-                function escapeHtml(text) {
-                    if (!text) return '';
-                    var div = document.createElement('div');
-                    div.textContent = text;
-                    return div.innerHTML;
-                }
-
-                function renderNotifications(notifications) {
-                    var container = $('notification-preview');
-                    if (!container) return;
-                    
-                    if (!notifications || !Array.isArray(notifications) || notifications.length === 0) {
-                        container.innerHTML = '';
-                        return;
-                    }
-                    
-                    var html = '';
-                    for (var i = 0; i < notifications.length; i++) {
-                        var n = notifications[i];
-                        if (!n || typeof n !== 'object') continue;
-                        
-                        var type = n.notification_type || 'info';
-                        var title = n.title || 'Notification';
-                        var message = n.message || '';
-                        var createdAt = n.created_at || new Date().toISOString();
-                        
-                        var iconClass, typeClass, iconColor;
-                        if (type === 'success') {
-                            iconClass = 'fa-solid fa-circle-check';
-                            typeClass = '';
-                            iconColor = '#059669';
-                        } else if (type === 'error') {
-                            iconClass = 'fa-solid fa-circle-exclamation';
-                            typeClass = 'error';
-                            iconColor = '#dc2626';
-                        } else if (type === 'warning') {
-                            iconClass = 'fa-solid fa-triangle-exclamation';
-                            typeClass = 'warning';
-                            iconColor = '#f59e0b';
-                        } else {
-                            iconClass = 'fa-solid fa-circle-info';
-                            typeClass = 'info';
-                            iconColor = '#007aff';
-                        }
-                        
-                        var timeStr = '';
-                        try {
-                            var time = new Date(createdAt);
-                            if (!isNaN(time.getTime())) {
-                                timeStr = time.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, month: 'short', day: 'numeric' });
-                            }
-                        } catch(e) {}
-                        
-                        html += '<div class="notif-item ' + typeClass + '">' +
-                            '<i class="' + iconClass + '" style="color:' + iconColor + '"></i>' +
-                            '<div class="notif-content">' +
-                                '<div class="notif-title">' + escapeHtml(title) + '</div>' +
-                                '<div class="notif-message">' + escapeHtml(message) + '</div>' +
-                                (timeStr ? '<div class="notif-time">' + timeStr + '</div>' : '') +
-                            '</div>' +
-                        '</div>';
-                    }
-                    
-                    container.innerHTML = html || '';
-                }
-
-                window.submit = function() {
-                    var termsCheck = document.getElementById('terms-check');
-                    var checked = termsCheck ? termsCheck.checked : false;
-                    
-                    if (!checked) {
-                        var errEl = document.getElementById('terms-error');
-                        if (errEl) { 
-                            errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue'; 
-                            errEl.className = 'input-feedback error'; 
-                        }
-                        return;
-                    }
-                    
-                    data.terms = true;
-                    
-                    var btn = document.getElementById('submit-btn');
-                    if (!btn) return;
-                    
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
-                    
-                    var phoneCleaned = (data.phone || '').replace(/[-\s()]/g, '');
-                    
-                    console.log('Submitting signup:', { email: data.email, name: data.name, phone: phoneCleaned });
-                    
-                    fetch(API + '/api/auth/signup', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: data.email,
-                            password: data.password,
-                            name: data.name,
-                            phone: phoneCleaned,
-                            country: data.country || null,
-                            state_province: data.state_province || null,
-                            city: data.city || null,
-                            postal_code: data.postal_code || null,
-                            street_address: data.street_address || null,
-                            apartment_house: data.apartment_house || null
-                        })
-                    })
-                    .then(function(resp) { return resp.json(); })
-                    .then(function(result) {
-                        console.log('Signup response:', result);
-                        
-                        if (result.error) {
-                            throw new Error(result.error);
-                        }
-                        
-                        if (result.jbyn_oneid) {
-                            var badge = $('oneid-badge');
-                            var text = $('oneid-text');
-                            if (badge && text) {
-                                text.textContent = result.jbyn_oneid;
-                                badge.style.display = 'inline-flex';
-                            }
-                        }
-                        
-                        var heading = $('success-heading');
-                        var msg = $('success-msg');
-                        if (heading) heading.textContent = 'Welcome, ' + (data.name.split(' ')[0] || 'User') + '!';
-                        if (msg) msg.textContent = 'Your account has been created. Redirecting to dashboard...';
-                        
-                        if (result.notifications && Array.isArray(result.notifications) && result.notifications.length > 0) {
-                            renderNotifications(result.notifications);
-                        }
-                        
-                        successOverlay.classList.add('visible');
-                        spawnConfetti();
-                        notify('Account created successfully! Welcome aboard.', 'success');
-                        
-                        setTimeout(function() {
-                            window.location.href = '/account';
-                        }, 3000);
-                    })
-                    .catch(function(err) {
-                        console.error('Signup error:', err.message || err);
-                        notify(err.message || 'Something went wrong. Please try again.', 'error');
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
-                        }
-                    });
-                };
-
-                function spawnConfetti() {
-                    var colors = ['#1d1d1f', '#86868b', '#c9a96e', '#f59e0b', '#7c3aed', '#e11d48'];
-                    var card = $('auth-card');
-                    if (!card) return;
-                    
-                    var rect = card.getBoundingClientRect();
-                    var cx = rect.left + rect.width / 2;
-                    var cy = rect.top + rect.height / 2;
-                    
-                    for (var i = 0; i < 50; i++) {
-                        var el = document.createElement('div');
-                        var angle = Math.random() * Math.PI * 2;
-                        var dist = 60 + Math.random() * 220;
-                        var x = Math.cos(angle) * dist;
-                        var y = Math.sin(angle) * dist;
-                        var size = 4 + Math.random() * 8;
-                        var color = colors[Math.floor(Math.random() * colors.length)];
-                        
-                        el.className = 'confetti';
-                        el.style.cssText = 'left:' + cx + 'px;top:' + cy + 'px;width:' + size + 'px;height:' + size + 'px;border-radius:' + (Math.random() > 0.5 ? '50%' : '3px') + ';background:' + color + ';--x:' + x + 'px;--y:' + y + 'px;--r:' + (Math.random() * 720 - 360) + 'deg;animation-delay:' + (Math.random() * 0.3) + 's;';
-                        
-                        document.body.appendChild(el);
-                        setTimeout(function() { el.remove(); }, 1400);
-                    }
-                }
-
-                document.addEventListener('click', function(e) {
-                    if (toast.classList.contains('show') && !toast.contains(e.target)) {
-                        window.hideToast();
-                    }
                 });
 
-                render(0);
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                locationStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching address details...';
+                
+                var response = await fetch(
+                    'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&addressdetails=1&accept-language=en',
+                    { headers: { 'User-Agent': 'JAYENWARE_Store_SignUp/1.0' } }
+                );
+
+                if (!response.ok) throw new Error('Failed to fetch address');
+
+                var data = await response.json();
+                var address = data.address || {};
+                var finalAddress = buildFullAddress(address);
+                
+                if (!finalAddress || finalAddress.length < 10) {
+                    finalAddress = data.display_name || 'GPS: ' + lat.toFixed(4) + ', ' + lon.toFixed(4);
+                }
+                
+                finalAddress = finalAddress.replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim();
+                
+                detectedLocationData = {
+                    country: address.country || 'Bangladesh',
+                    state: address.state || '',
+                    city: address.city || address.town || '',
+                    postal: address.postcode || '',
+                    road: address.road || address.street || '',
+                    address: finalAddress,
+                    fullData: address
+                };
+
+                // Auto-apply location
+                countryInput.value = detectedLocationData.country;
+                stateInput.value = detectedLocationData.state;
+                cityInput.value = detectedLocationData.city;
+                postalInput.value = detectedLocationData.postal;
+                streetInput.value = detectedLocationData.road || '';
+                markLocationFilled();
+                
+                locationStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected &amp; filled';
+                locationStatus.className = 'location-status success';
+                showToast('Location detected successfully!', 'success');
+                
+                detectLocationBtn.disabled = false;
+                detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
+                
+                return detectedLocationData;
+
+            } catch (error) {
+                var errorMessage = 'Could not detect location.';
+                if (error.code === 1) errorMessage = 'Location permission denied.';
+                else if (error.code === 2) errorMessage = 'Location unavailable.';
+                else if (error.code === 3) errorMessage = 'Location request timed out.';
+                
+                showToast(errorMessage, 'error');
+                locationStatus.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Enter address manually';
+                locationStatus.className = 'location-status error';
+                detectLocationBtn.disabled = false;
+                detectLocationBtn.innerHTML = '<i class="fa-solid fa-location-arrow"></i> Auto-Detect Location';
+                return null;
             }
-        })();
+        }
+
+        detectLocationBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            detectUserLocation();
+        });
+
+        async function checkSession() {
+            try {
+                var response = await fetch(API_BASE + '/api/auth/user');
+                if (response.ok) {
+                    window.location.href = '/account';
+                    return;
+                }
+            } catch (e) {
+                console.warn('Session check failed:', e.message);
+            }
+            loader.classList.add('hidden');
+        }
+
+        // Handle Sign-Up
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors();
+            
+            var name = nameInput.value.trim();
+            var email = emailInput.value.trim();
+            var phone = phoneInput.value.trim();
+            var password = passwordInput.value;
+            var country = countryInput.value.trim();
+            var state_province = stateInput.value.trim();
+            var city = cityInput.value.trim();
+            var postal_code = postalInput.value.trim();
+            var street_address = streetInput.value.trim();
+            var apartment_house = apartmentInput.value.trim();
+            var terms = termsCheckbox.checked;
+            
+            var hasError = false;
+            
+            if (!name || name.length < 3) {
+                showFieldError(nameInput, errorElements.name, 'Full name is required (minimum 3 characters)');
+                hasError = true;
+            }
+            
+            if (!email) {
+                showFieldError(emailInput, errorElements.email, 'Email address is required');
+                hasError = true;
+            } else if (!isValidEmail(email)) {
+                showFieldError(emailInput, errorElements.email, 'Please enter a valid email address');
+                hasError = true;
+            }
+            
+            if (!phone) {
+                showFieldError(phoneInput, errorElements.phone, 'Phone number is required');
+                hasError = true;
+            }
+            
+            if (!password) {
+                showFieldError(passwordInput, errorElements.password, 'Password is required');
+                hasError = true;
+            } else if (password.length < 8) {
+                showFieldError(passwordInput, errorElements.password, 'Password must be at least 8 characters');
+                hasError = true;
+            }
+            
+            if (!country) {
+                showFieldError(countryInput, errorElements.country, 'Country is required');
+                hasError = true;
+            }
+            
+            if (!city) {
+                showFieldError(cityInput, errorElements.city, 'City is required');
+                hasError = true;
+            }
+            
+            if (!street_address) {
+                showFieldError(streetInput, errorElements.street, 'Street address is required');
+                hasError = true;
+            }
+            
+            if (!terms) {
+                errorElements.terms.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to Terms &amp; Privacy Policy';
+                errorElements.terms.style.display = 'flex';
+                hasError = true;
+            }
+            
+            if (hasError) {
+                var firstError = document.querySelector('.input-error');
+                if (firstError) firstError.focus();
+                return;
+            }
+            
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+            
+            var phoneCleaned = phone.replace(/[-\s()]/g, '');
+            
+            console.log('Submitting signup:', { email: email, name: name, phone: phoneCleaned });
+            
+            fetch(API_BASE + '/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    name: name,
+                    phone: phoneCleaned,
+                    country: country,
+                    state_province: state_province,
+                    city: city,
+                    postal_code: postal_code,
+                    street_address: street_address,
+                    apartment_house: apartment_house
+                })
+            })
+            .then(function(resp) { return resp.json(); })
+            .then(function(result) {
+                console.log('Signup response:', result);
+                
+                if (result.error) {
+                    showToast(result.error, 'error');
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+                    return;
+                }
+                
+                // Show OneID if available
+                if (result.jbyn_oneid) {
+                    var badge = document.getElementById('oneid-badge');
+                    var text = document.getElementById('oneid-text');
+                    if (badge && text) {
+                        text.textContent = result.jbyn_oneid;
+                        badge.style.display = 'inline-flex';
+                    }
+                }
+                
+                // Update success heading
+                var heading = document.getElementById('success-heading');
+                if (heading) heading.textContent = 'Welcome, ' + (name.split(' ')[0] || 'User') + '!';
+                
+                // Render notifications
+                if (result.notifications && Array.isArray(result.notifications) && result.notifications.length > 0) {
+                    renderNotifications(result.notifications);
+                } else {
+                    // Fallback default notification
+                    var defaultNotif = [{
+                        notification_type: 'success',
+                        title: 'Welcome! Profile Created Successfully',
+                        message: 'Hello ' + name + ', your profile has been created successfully.' + (result.jbyn_oneid ? ' Your JBYN-OneID is: ' + result.jbyn_oneid : ''),
+                        created_at: new Date().toISOString()
+                    }];
+                    renderNotifications(defaultNotif);
+                }
+                
+                // Show success overlay
+                successOverlay.classList.add('visible');
+                showToast('Account created successfully!', 'success');
+                
+                // Redirect after delay
+                setTimeout(function() {
+                    window.location.href = '/account';
+                }, 3000);
+            })
+            .catch(function(err) {
+                console.error('Signup error:', err.message || err);
+                showToast(err.message || 'Network error. Please try again.', 'error');
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+            });
+        });
+
+        // Phone formatting
+        phoneInput.addEventListener('input', function() {
+            var value = this.value.replace(/[^\d]/g, '');
+            if (value.length > 15) value = value.slice(0, 15);
+            this.value = value;
+        });
+
+        document.addEventListener('click', function(e) {
+            if (toast.classList.contains('show') && !toast.contains(e.target)) {
+                hideToast();
+            }
+        });
+
+        checkSession();
+        console.log('Professional Signup page ready with notifications');
     </script>
 </body>
 </html>
