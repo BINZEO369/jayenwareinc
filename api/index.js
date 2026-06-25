@@ -16,8 +16,10 @@ const app = express();
 // ============================================
 const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
+const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDAzNjk2OCwiZXhwIjoyMDk1NjEyOTY4fQ.Eh6CdjVYOHiWLqZSBUNPXfndoksbM3NoZQSHT5PNsZQ";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 // ============================================
 // MIDDLEWARE
@@ -232,9 +234,9 @@ app.post('/api/auth/signup', async (req, res) => {
         let profileData = null;
 
         if (signUpData.user) {
-            // Retry profile fetch (up to 3 times with delay)
+            // Retry profile fetch (up to 3 times with delay) - USING supabaseAdmin
             for (let attempt = 0; attempt < 3; attempt++) {
-                const { data: profile } = await supabase
+                const { data: profile } = await supabaseAdmin
                     .from('profiles')
                     .select('jbyn_oneid, is_verified, name, email')
                     .eq('id', signUpData.user.id)
@@ -251,9 +253,9 @@ app.post('/api/auth/signup', async (req, res) => {
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
 
-            // Get notifications if profile exists
+            // Get notifications if profile exists - USING supabaseAdmin
             if (profileData) {
-                const { data: userNotifications } = await supabase
+                const { data: userNotifications } = await supabaseAdmin
                     .from('profile_notifications')
                     .select('*')
                     .eq('user_id', signUpData.user.id)
@@ -266,8 +268,8 @@ app.post('/api/auth/signup', async (req, res) => {
             } else {
                 console.warn('Profile not found after retries, checking error logs...');
                 
-                // Check error logs
-                const { data: errorLogs } = await supabase
+                // Check error logs - USING supabaseAdmin
+                const { data: errorLogs } = await supabaseAdmin
                     .from('profile_creation_errors')
                     .select('*')
                     .eq('user_id', signUpData.user.id)
@@ -342,15 +344,15 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: error.message });
         }
 
-        // Fetch complete profile data
-        const { data: profile, error: profileError } = await supabase
+        // Fetch complete profile data - USING supabaseAdmin
+        const { data: profile, error: profileError } = await supabaseAdmin
             .from('profiles')
             .select('*')
             .eq('id', data.user.id)
             .single();
 
-        // Get unread notifications
-        const { data: notifications } = await supabase
+        // Get unread notifications - USING supabaseAdmin
+        const { data: notifications } = await supabaseAdmin
             .from('profile_notifications')
             .select('*')
             .eq('user_id', data.user.id)
@@ -358,8 +360,8 @@ app.post('/api/auth/login', async (req, res) => {
             .order('created_at', { ascending: false })
             .limit(10);
 
-        // Get unread notification count
-        const { count: unreadCount } = await supabase
+        // Get unread notification count - USING supabaseAdmin
+        const { count: unreadCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', data.user.id)
@@ -404,8 +406,8 @@ app.get('/api/auth/user', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        // Complete profile fetch
-        const { data: profile, error: profileError } = await supabase
+        // Complete profile fetch - USING supabaseAdmin
+        const { data: profile, error: profileError } = await supabaseAdmin
             .from('profiles')
             .select('*')
             .eq('id', user.id)
@@ -482,8 +484,8 @@ app.put('/api/auth/profile', async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
-        // Get updated notifications
-        const { data: notifications } = await supabase
+        // Get updated notifications - USING supabaseAdmin
+        const { data: notifications } = await supabaseAdmin
             .from('profile_notifications')
             .select('*')
             .eq('user_id', user.id)
@@ -512,7 +514,7 @@ app.get('/api/auth/passkey', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { data: profile } = await supabase
+        const { data: profile } = await supabaseAdmin
             .from('profiles')
             .select('jbyn_oneid')
             .eq('id', user.id)
@@ -636,7 +638,7 @@ app.get('/api/notifications', async (req, res) => {
         const filter = req.query.filter || 'all';
         const type = req.query.type || 'all';
 
-        let query = supabase
+        let query = supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact' })
             .eq('user_id', user.id);
@@ -659,7 +661,7 @@ app.get('/api/notifications', async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
-        const { count: unreadCount } = await supabase
+        const { count: unreadCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
@@ -690,7 +692,7 @@ app.get('/api/notifications/unread', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .from('profile_notifications')
             .select('*')
             .eq('user_id', user.id)
@@ -702,7 +704,7 @@ app.get('/api/notifications/unread', async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
-        const { count: unreadCount } = await supabase
+        const { count: unreadCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
@@ -728,36 +730,36 @@ app.get('/api/notifications/count', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { count: totalCount } = await supabase
+        const { count: totalCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id);
 
-        const { count: unreadCount } = await supabase
+        const { count: unreadCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
             .eq('is_read', false);
 
-        const { count: successCount } = await supabase
+        const { count: successCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
             .eq('notification_type', 'success');
 
-        const { count: errorCount } = await supabase
+        const { count: errorCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
             .eq('notification_type', 'error');
 
-        const { count: warningCount } = await supabase
+        const { count: warningCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
             .eq('notification_type', 'warning');
 
-        const { count: infoCount } = await supabase
+        const { count: infoCount } = await supabaseAdmin
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id)
@@ -789,7 +791,7 @@ app.put('/api/notifications/:id/read', async (req, res) => {
 
         const notificationId = parseInt(req.params.id);
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .from('profile_notifications')
             .update({ is_read: true })
             .eq('id', notificationId)
@@ -825,7 +827,7 @@ app.put('/api/notifications/read-all', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { error } = await supabase
+        const { error } = await supabaseAdmin
             .from('profile_notifications')
             .update({ is_read: true })
             .eq('user_id', user.id)
@@ -857,7 +859,7 @@ app.delete('/api/notifications/:id', async (req, res) => {
 
         const notificationId = parseInt(req.params.id);
 
-        const { error } = await supabase
+        const { error } = await supabaseAdmin
             .from('profile_notifications')
             .delete()
             .eq('id', notificationId)
@@ -889,7 +891,7 @@ app.delete('/api/notifications', async (req, res) => {
 
         const filter = req.query.filter || 'all';
 
-        let query = supabase
+        let query = supabaseAdmin
             .from('profile_notifications')
             .delete()
             .eq('user_id', user.id);
@@ -934,7 +936,7 @@ app.get('/api/oneid/search/:oneid', async (req, res) => {
             return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
         }
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .rpc('search_user_by_oneid', {
                 lookup_oneid: oneid
             });
@@ -965,7 +967,7 @@ app.get('/api/oneid/lookup/:oneid', async (req, res) => {
             return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
         }
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .rpc('lookup_user_by_oneid', {
                 lookup_oneid: oneid
             });
@@ -990,7 +992,7 @@ app.get('/api/oneid/exists/:oneid', async (req, res) => {
             return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
         }
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .rpc('profile_exists', {
                 lookup_oneid: oneid
             });
