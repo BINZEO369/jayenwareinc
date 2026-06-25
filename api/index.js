@@ -2,7 +2,7 @@
 // server.js - Complete API Server
 // JBYN-OneID Global Profile System
 // Supabase Integrated | Production Ready
-// Notification System Added
+// Enhanced Error Handling & Notifications
 // ============================================
 
 const express = require('express');
@@ -101,6 +101,16 @@ async function getAuthenticatedUser(req) {
     return { user, error };
 }
 
+// Helper function to extract meaningful error message
+function extractErrorMessage(err) {
+    if (typeof err === 'string') return err;
+    if (err.message) return err.message;
+    if (err.details) return err.details;
+    if (err.hint) return err.hint;
+    if (err.error_description) return err.error_description;
+    return 'An unexpected error occurred';
+}
+
 // ============================================
 // AUTHENTICATION API ROUTES
 // ============================================
@@ -121,22 +131,27 @@ app.post('/api/auth/signup', async (req, res) => {
             apartment_house
         } = req.body;
 
+        console.log('Signup request received:', { email, name, hasPhone: !!phone, country });
+
         // Basic validation
         if (!email || !password) {
             return res.status(400).json({ 
-                error: 'Email and password are required' 
+                error: 'Email and password are required',
+                field: !email ? 'email' : 'password'
             });
         }
 
         if (!name || name.trim().length < 3) {
             return res.status(400).json({
-                error: 'Full name is required (minimum 3 characters)'
+                error: 'Full name is required (minimum 3 characters)',
+                field: 'name'
             });
         }
 
         if (password.length < 6) {
             return res.status(400).json({ 
-                error: 'Password must be at least 6 characters' 
+                error: 'Password must be at least 6 characters',
+                field: 'password'
             });
         }
 
@@ -144,7 +159,8 @@ app.post('/api/auth/signup', async (req, res) => {
         const formattedPhone = formatPhoneNumber(phone);
         if (phone && !isValidPhone(formattedPhone)) {
             return res.status(400).json({
-                error: 'Invalid phone format. Enter 6-15 digits without country code'
+                error: 'Invalid phone format. Enter 6-15 digits without country code',
+                field: 'phone'
             });
         }
 
@@ -160,73 +176,139 @@ app.post('/api/auth/signup', async (req, res) => {
 
         if (!fullAddress || fullAddress.length < 10) {
             return res.status(400).json({
-                error: 'Please provide complete address details (minimum 10 characters)'
+                error: 'Please provide complete address details (minimum 10 characters)',
+                field: 'address'
             });
         }
 
+        // Prepare user metadata
+        const userMetadata = {
+            full_name: name.trim(),
+            phone: formattedPhone || 'N/A',
+            country: country || null,
+            state_province: state_province || null,
+            city: city || null,
+            postal_code: postal_code || null,
+            street_address: street_address || null,
+            apartment_house: apartment_house || null,
+            full_address: fullAddress
+        };
+
+        console.log('Attempting Supabase signup with metadata:', userMetadata);
+
         // Supabase signup with user_metadata
-        const { data, error } = await supabase.auth.signUp({
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
             email,
             password,
             options: {
-                data: {
-                    full_name: name.trim(),
-                    phone: formattedPhone || 'N/A',
-                    country: country || null,
-                    state_province: state_province || null,
-                    city: city || null,
-                    postal_code: postal_code || null,
-                    street_address: street_address || null,
-                    apartment_house: apartment_house || null,
-                    full_address: fullAddress
-                }
+                data: userMetadata
             }
         });
 
-        if (error) {
-            if (error.message.includes('already registered')) {
+        if (signUpError) {
+            console.error('Supabase signup error:', signUpError);
+            
+            if (signUpError.message && signUpError.message.includes('already registered')) {
                 return res.status(400).json({ 
-                    error: 'This email is already registered. Please login instead.' 
+                    error: 'This email is already registered. Please login instead.',
+                    code: 'EMAIL_EXISTS'
                 });
             }
-            return res.status(400).json({ error: error.message });
+            
+            return res.status(400).json({ 
+                error: extractErrorMessage(signUpError),
+                code: signUpError.code || 'SIGNUP_FAILED'
+            });
         }
+
+        console.log('Supabase signup successful, user ID:', signUpData.user?.id);
+
+        // Wait briefly for database trigger to complete
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Get generated OneID and notifications from profile
         let oneid = null;
         let notifications = [];
-        if (data.user) {
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('jbyn_oneid')
-                .eq('id', data.user.id)
-                .single();
-            
-            oneid = profile?.jbyn_oneid || null;
+        let profileData = null;
 
-            // Get notifications
-            const { data: userNotifications } = await supabase
-                .from('profile_notifications')
-                .select('*')
-                .eq('user_id', data.user.id)
-                .eq('is_read', false)
-                .order('created_at', { ascending: false })
-                .limit(5);
-            
-            notifications = userNotifications || [];
+        if (signUpData.user) {
+            // Retry profile fetch (up to 3 times with delay)
+            for (let attempt = 0; attempt < 3; attempt++) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('jbyn_oneid, is_verified, name, email')
+                    .eq('id', signUpData.user.id)
+                    .single();
+                
+                if (profile) {
+                    profileData = profile;
+                    oneid = profile.jbyn_oneid || null;
+                    console.log('Profile found on attempt', attempt + 1, ':', oneid);
+                    break;
+                }
+                
+                console.log('Profile not found, retrying... attempt', attempt + 1);
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            // Get notifications if profile exists
+            if (profileData) {
+                const { data: userNotifications } = await supabase
+                    .from('profile_notifications')
+                    .select('*')
+                    .eq('user_id', signUpData.user.id)
+                    .eq('is_read', false)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                
+                notifications = userNotifications || [];
+                console.log('Notifications fetched:', notifications.length);
+            } else {
+                console.warn('Profile not found after retries, checking error logs...');
+                
+                // Check error logs
+                const { data: errorLogs } = await supabase
+                    .from('profile_creation_errors')
+                    .select('*')
+                    .eq('user_id', signUpData.user.id)
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+                
+                if (errorLogs && errorLogs.length > 0) {
+                    console.error('Profile creation error found:', errorLogs[0].error_message);
+                    return res.status(500).json({
+                        error: 'Profile creation failed: ' + errorLogs[0].error_message,
+                        code: 'PROFILE_CREATION_FAILED'
+                    });
+                }
+            }
         }
 
         res.status(201).json({
             message: 'Registration successful! Please check your email for verification.',
-            user: data.user,
-            session: data.session,
+            user: signUpData.user,
+            session: signUpData.session,
             jbyn_oneid: oneid,
+            profile: profileData,
             notifications: notifications
         });
 
     } catch (err) {
-        console.error('Signup error:', err);
-        res.status(500).json({ error: 'Registration failed. Please try again.' });
+        console.error('Signup error details:', {
+            message: err.message,
+            stack: err.stack?.split('\n').slice(0, 3).join('\n'),
+            code: err.code,
+            details: err.details,
+            hint: err.hint
+        });
+        
+        const errorMessage = extractErrorMessage(err);
+        
+        res.status(500).json({ 
+            error: errorMessage,
+            code: err.code || 'SERVER_ERROR',
+            timestamp: new Date().toISOString()
+        });
     }
 });
 
@@ -261,7 +343,7 @@ app.post('/api/auth/login', async (req, res) => {
         }
 
         // Fetch complete profile data
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', data.user.id)
@@ -551,15 +633,14 @@ app.get('/api/notifications', async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
         const offset = (page - 1) * limit;
-        const filter = req.query.filter || 'all'; // all, unread, read
-        const type = req.query.type || 'all'; // all, success, error, warning, info
+        const filter = req.query.filter || 'all';
+        const type = req.query.type || 'all';
 
         let query = supabase
             .from('profile_notifications')
             .select('*', { count: 'exact' })
             .eq('user_id', user.id);
 
-        // Apply filters
         if (filter === 'unread') {
             query = query.eq('is_read', false);
         } else if (filter === 'read') {
@@ -578,7 +659,6 @@ app.get('/api/notifications', async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
-        // Get unread count
         const { count: unreadCount } = await supabase
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
@@ -592,10 +672,7 @@ app.get('/api/notifications', async (req, res) => {
             limit: limit,
             totalPages: Math.ceil((count || 0) / limit),
             unreadCount: unreadCount || 0,
-            filters: {
-                filter: filter,
-                type: type
-            }
+            filters: { filter, type }
         });
 
     } catch (err) {
@@ -625,7 +702,6 @@ app.get('/api/notifications/unread', async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
-        // Get total unread count
         const { count: unreadCount } = await supabase
             .from('profile_notifications')
             .select('*', { count: 'exact', head: true })
@@ -811,7 +887,7 @@ app.delete('/api/notifications', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const filter = req.query.filter || 'all'; // all, read
+        const filter = req.query.filter || 'all';
 
         let query = supabase
             .from('profile_notifications')
