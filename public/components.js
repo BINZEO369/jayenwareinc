@@ -1,7 +1,8 @@
-// ============================================
-// components.js - Shared Header, Footer & Common Functions
-// Version: 4.0 (Dynamic Font System Integration + Database Driven)
-// ============================================
+// ============================================================================
+// components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
+// Version: 5.3 (Ultimate Edge-to-Edge Desktop Fix - Complete)
+// Brand: JAYENWARE (Premium Apparel)
+// ============================================================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
@@ -10,17 +11,15 @@ let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
 
-// ============================================
+// ============================================================================
 // FONT CONFIGURATION LOADER
-// ============================================
+// ============================================================================
 function loadFontsConfiguration() {
     if (!window.JAYENWARE_FONTS) {
         const script = document.createElement('script');
         script.src = '/fonts.js';
         script.async = false;
-        script.onload = () => {
-            applyFontVariables();
-        };
+        script.onload = () => { applyFontVariables(); };
         document.head.appendChild(script);
     } else {
         applyFontVariables();
@@ -30,449 +29,298 @@ function loadFontsConfiguration() {
 function applyFontVariables() {
     const fonts = window.JAYENWARE_FONTS;
     if (!fonts) return;
-    
     const root = document.documentElement;
     const vars = fonts.cssVariables;
     for (const [key, value] of Object.entries(vars)) {
         root.style.setProperty(key, value);
     }
-    
-    // Override component-specific variables
-    root.style.setProperty('--font-heading', fonts.families.heading);
-    root.style.setProperty('--font-subtitle', fonts.families.subtitle);
-    root.style.setProperty('--font-body', fonts.families.body);
-    root.style.setProperty('--font-accent', fonts.families.body);
+    root.style.setProperty('--font-heading', fonts.families.heading || 'Manrope, sans-serif');
+    root.style.setProperty('--font-subtitle', fonts.families.subtitle || 'Sora, sans-serif');
+    root.style.setProperty('--font-body', fonts.families.body || 'Inter, sans-serif');
 }
 
-// ============================================
-// SHARED CSS STYLES (Dynamic Font System)
-// ============================================
+// ============================================================================
+// SHARED CSS STYLES (Ultra Liquid Glass & Monochrome Design)
+// ============================================================================
 function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
         :root {
-            --primary: #1d1d1f;
-            --accent: #000000;
-            --soft: #f5f5f7;
-            --blue: #007aff;
+            --primary: #000000;
+            --accent: #ffffff;
+            
+            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
+            --glass-white: rgba(255, 255, 255, 0.45);
+            --glass-white-thick: rgba(255, 255, 255, 0.7);
+            --glass-black: rgba(0, 0, 0, 0.6);
+            --glass-black-thick: rgba(0, 0, 0, 0.82);
+            
+            /* লিকুইড গ্লাস বর্ডার সিস্টেম */
+            --glass-border-light: rgba(255, 255, 255, 0.55);
+            --glass-border-dark: rgba(0, 0, 0, 0.06);
+            --glass-border-inline: rgba(255, 255, 255, 0.15);
+            
+            /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
+            --glass-blur: blur(40px) saturate(250%);
+        }
+        
+        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো এবং হোয়াইট স্পেস টোটাল ভ্যানিশ */
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important; 
+            padding: 0 !important;
+            box-sizing: border-box;
+        }
+        
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
         
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
-        /* Heading Styles - Uses --font-heading (Manrope) */
-        .text-heading-hero { 
-            font-family: var(--font-heading); 
-            font-size: clamp(2.5rem, 6vw, 4.5rem); 
-            line-height: 1.05; 
-            font-weight: 800; 
-            letter-spacing: -0.02em;
-        }
-        .text-heading-xl { 
-            font-family: var(--font-heading); 
-            font-size: clamp(2rem, 5vw, 3.5rem); 
-            line-height: 1.1; 
-            font-weight: 700; 
-            letter-spacing: -0.015em;
-        }
-        .text-heading-lg { 
-            font-family: var(--font-heading); 
-            font-size: clamp(1.5rem, 4vw, 2.5rem); 
-            line-height: 1.15; 
-            font-weight: 700; 
-            letter-spacing: -0.01em;
-        }
-        .text-heading-md { 
-            font-family: var(--font-heading); 
-            font-size: clamp(1.25rem, 3vw, 2rem); 
-            line-height: 1.2; 
-            font-weight: 600; 
-        }
-        .text-heading-sm { 
-            font-family: var(--font-heading); 
-            font-size: clamp(1rem, 2.5vw, 1.5rem); 
-            line-height: 1.25; 
-            font-weight: 600; 
-        }
+        .text-heading-hero { font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
+        .text-heading-xl { font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: var(--primary); }
+        .text-heading-lg { font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.5rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; color: var(--primary); }
+        .text-heading-md { font-family: var(--font-heading); font-size: clamp(1.25rem, 3vw, 2rem); line-height: 1.2; font-weight: 600; color: var(--primary); }
+        .text-heading-sm { font-family: var(--font-heading); font-size: clamp(1rem, 2.5vw, 1.5rem); line-height: 1.25; font-weight: 600; color: var(--primary); }
         
-        /* Subtitle Styles - Uses --font-subtitle (Sora) */
-        .text-subtitle-xl {
-            font-family: var(--font-subtitle);
-            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-            line-height: 1.3;
-            font-weight: 600;
-            letter-spacing: -0.005em;
-        }
-        .text-subtitle-lg { 
-            font-family: var(--font-subtitle); 
-            font-size: clamp(1.125rem, 2vw, 1.25rem); 
-            line-height: 1.4; 
-            font-weight: 500; 
-        }
-        .text-subtitle-md { 
-            font-family: var(--font-subtitle); 
-            font-size: clamp(1rem, 1.5vw, 1.125rem); 
-            line-height: 1.4; 
-            font-weight: 500; 
-        }
-        .text-subtitle-sm { 
-            font-family: var(--font-subtitle); 
-            font-size: 0.875rem; 
-            line-height: 1.5; 
-            font-weight: 500; 
-        }
+        .text-subtitle-xl { font-family: var(--font-subtitle); font-size: clamp(1.25rem, 2.5vw, 1.75rem); line-height: 1.3; font-weight: 600; color: var(--primary); }
+        .text-subtitle-lg { font-family: var(--font-subtitle); font-size: clamp(1.125rem, 2vw, 1.25rem); line-height: 1.4; font-weight: 500; color: var(--primary); }
+        .text-subtitle-md { font-family: var(--font-subtitle); font-size: clamp(1rem, 1.5vw, 1.125rem); line-height: 1.4; font-weight: 500; color: var(--primary); }
+        .text-subtitle-sm { font-family: var(--font-subtitle); font-size: 0.875rem; line-height: 1.5; font-weight: 500; color: var(--primary); }
         
-        /* Body/Description Styles - Uses --font-body (Inter) */
-        .text-body-xl { 
-            font-family: var(--font-body); 
-            font-size: 1.25rem; 
-            line-height: 1.7; 
-            font-weight: 400; 
-        }
-        .text-body-lg { 
-            font-family: var(--font-body); 
-            font-size: 1.125rem; 
-            line-height: 1.65; 
-            font-weight: 400; 
-        }
-        .text-body-md { 
-            font-family: var(--font-body); 
-            font-size: 1rem; 
-            line-height: 1.6; 
-            font-weight: 400; 
-        }
-        .text-body-sm { 
-            font-family: var(--font-body); 
-            font-size: 0.875rem; 
-            line-height: 1.55; 
-            font-weight: 400; 
-        }
-        .text-body-xs { 
-            font-family: var(--font-body); 
-            font-size: 0.75rem; 
-            line-height: 1.5; 
-            font-weight: 400; 
-        }
+        .text-body-xl { font-family: var(--font-body); font-size: 1.25rem; line-height: 1.7; font-weight: 400; color: #1c1c1e; }
+        .text-body-lg { font-family: var(--font-body); font-size: 1.125rem; line-height: 1.65; font-weight: 400; color: #1c1c1e; }
+        .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
+        .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
-        /* Accent/Small Text Styles */
-        .text-caption { 
-            font-family: var(--font-accent); 
-            font-size: 0.75rem; 
-            line-height: 1.4; 
-            font-weight: 500; 
-            letter-spacing: 0.01em;
-        }
-        .text-overline { 
-            font-family: var(--font-accent); 
-            font-size: 0.625rem; 
-            line-height: 1.4; 
-            font-weight: 600; 
-            letter-spacing: 0.1em; 
-            text-transform: uppercase; 
-        }
-        .text-label {
-            font-family: var(--font-accent);
-            font-size: 0.6875rem;
-            line-height: 1.4;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-        
-        /* ==================== NAVIGATION STYLES ==================== */
+        /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
+        /* ABSOLUTE FIX: সম্পূর্ণ প্রস্থে হেডার দেখানোর জন্য */
         .glass-nav {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(50px) saturate(180%);
-            -webkit-backdrop-filter: blur(50px) saturate(180%);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
+            position: fixed;
+            top: 0; 
+            left: 0 !important; 
+            right: 0 !important;
+            width: 100% !important; 
+            background: var(--glass-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border-light);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 50;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         
-        /* Desktop Nav Links - Uses heading font for main items */
-        .nav-link {
-            position: relative;
-            font-family: var(--font-heading);
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 8px 0;
-            transition: color 0.3s ease;
-            color: #1d1d1f;
-            text-decoration: none;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 1.5px;
-            background: #1d1d1f;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after { width: 100%; }
-        
-        /* Desktop Dropdown */
-        .desktop-dropdown {
-            position: relative;
-        }
-        .desktop-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(8px);
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            min-width: 240px;
-            max-width: 320px;
-            padding: 8px 0;
-            z-index: 100;
-        }
-        .desktop-dropdown:hover .desktop-dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
+        /* হেডারের অভ্যন্তরীণ কন্টেইনার - সম্পূর্ণ প্রস্থে */
+        .glass-nav > div {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
         }
         
-        /* Dropdown Items - Uses subtitle font */
-        .desktop-dropdown-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            font-family: var(--font-subtitle);
-            font-size: 12px;
-            font-weight: 500;
-            color: #1d1d1f;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            letter-spacing: 0.02em;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .desktop-dropdown-item:hover {
-            background: #f5f5f7;
-            color: #007aff;
-        }
-        .desktop-dropdown-item.has-children {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-        }
-        .desktop-sub-dropdown {
-            position: absolute;
-            left: 100%;
-            top: 0;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            min-width: 220px;
-            max-width: 300px;
-            padding: 8px 0;
-        }
-        .desktop-dropdown-item.has-children:hover .desktop-sub-dropdown {
-            opacity: 1;
-            visibility: visible;
+        /* ডেস্কটপের জন্য অ্যাডজাস্টমেন্ট */
+        @media (min-width: 1024px) {
+            .glass-nav > div {
+                padding-left: 40px !important;
+                padding-right: 40px !important;
+            }
         }
         
-        /* Mobile Menu */
-        .mobile-menu-overlay {
+        body { 
+            padding-top: 0 !important;
+            font-family: var(--font-body);
+            background-color: #ffffff;
+            color: var(--primary);
+        }
+        
+        /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
+        .side-menu-overlay {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 199; opacity: 0; visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
-        .mobile-menu-drawer {
-            position: fixed; top: 0; left: 0;
-            width: 85%; max-width: 380px;
+        .side-menu-overlay.active { opacity: 1; visibility: visible; }
+        
+        .side-menu-drawer {
+            position: fixed; top: 0; right: 0;
+            width: 100%; max-width: 440px;
             height: 100vh; height: 100dvh;
-            background: white; z-index: 200;
-            transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--glass-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-left: 1px solid var(--glass-border-light);
+            z-index: 200;
+            transform: translateX(105%); 
+            visibility: hidden; 
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column;
+            box-shadow: -20px 0 60px rgba(0,0,0,0.03);
+        }
+        .side-menu-drawer.open { 
+            transform: translateX(0); 
+            visibility: visible;
+        }
+        
+        .side-menu-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 32px; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .side-menu-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
+        }
+        
+        /* Drawer Navigation Elements */
+        .menu-node-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            font-family: var(--font-heading);
+            font-size: 15px; font-weight: 700; letter-spacing: 0.03em;
+            color: var(--primary); text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .menu-node-item:hover { padding-left: 10px; opacity: 0.7; }
+        
+        .menu-node-submenu {
+            display: none;
+            padding-left: 18px;
+            border-left: 1.5px solid var(--primary);
+            margin: 4px 0 8px 4px;
+        }
+        .menu-node-submenu.open { display: block; }
+        
+        .menu-node-sub-item {
+            display: block;
+            padding: 12px 14px;
+            font-family: var(--font-subtitle);
+            font-size: 13px; font-weight: 600;
+            color: #3a3a3c; text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .menu-node-sub-item:hover { color: var(--primary); padding-left: 4px; }
+        
+        .side-drawer-footer {
+            padding: 32px; border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
+        }
+        
+        /* ==================== CART DRAWER (Dynamic Liquid Black Glass) ==================== */
+        #cart-drawer {
+            position: fixed; top: 0; right: 0;
+            width: 100%; max-width: 440px;
+            height: 100vh; height: 100dvh;
+            background: var(--glass-black-thick) !important;
+            backdrop-filter: var(--glass-blur) !important;
+            -webkit-backdrop-filter: var(--glass-blur) !important;
+            border-left: 1px solid var(--glass-border-inline);
+            z-index: 210;
+            transform: translateX(105%) !important;
+            visibility: hidden;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important, visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            will-change: transform;
+            color: var(--accent) !important;
             display: flex; flex-direction: column;
         }
-        .mobile-menu-drawer.open { transform: translateX(0); }
-        .mobile-menu-drawer .mobile-menu-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 20px; border-bottom: 1px solid #f0f0f0;
-            background: white; flex-shrink: 0;
+        #cart-drawer.open { 
+            transform: translateX(0) !important; 
+            visibility: visible !important;
         }
-        .mobile-menu-drawer .mobile-menu-header span {
-            font-family: var(--font-heading);
-            font-weight: 800;
+        #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
+        #cart-drawer .bg-soft {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .mobile-menu-drawer .mobile-menu-scroll {
-            flex: 1; overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 12px 20px;
+        #cart-items > div {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
         }
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         
-        /* Mobile Menu Items - Uses heading font */
-        .mobile-menu-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 0; border-bottom: 1px solid #f5f5f5;
-            font-family: var(--font-heading);
-            font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
-            cursor: pointer; color: #1d1d1f; text-decoration: none;
-            transition: color 0.2s ease;
+        /* ==================== TOAST NOTIFICATION ==================== */
+        #toast > div {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: var(--glass-blur) !important;
+            -webkit-backdrop-filter: var(--glass-blur) !important;
+            border: 1px solid var(--glass-border-light) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important;
+            border-radius: 24px !important;
+            color: var(--primary) !important;
         }
-        .mobile-menu-item i.fa-chevron-right { 
-            font-size: 11px; color: #c0c0c0; transition: transform 0.3s ease; 
-        }
-        .mobile-menu-item.expanded i.fa-chevron-right { 
-            transform: rotate(90deg); 
-        }
-        .mobile-submenu {
-            display: none;
-            padding-left: 16px;
-            border-left: 2px solid #f0f0f0;
-            margin: 4px 0 4px 8px;
-        }
-        .mobile-submenu.open { display: block; }
+        #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
-        /* Mobile Sub Items - Uses subtitle font */
-        .mobile-sub-item {
-            display: block;
-            padding: 11px 12px;
-            font-family: var(--font-subtitle);
-            font-size: 13px;
-            color: #86868b;
-            text-decoration: none;
-            transition: color 0.2s ease;
-            font-weight: 500;
-            cursor: pointer;
+        /* ==================== FULLY DYNAMIC FOOTER ==================== */
+        #main-footer { 
+            background: #000000; 
+            color: #8e8e93; 
+            border-top: 1px solid #1c1c1e;
+            width: 100% !important;
+            position: relative;
+            clear: both;
         }
-        .mobile-sub-item:hover { color: #007aff; }
-        .mobile-sub-item::before {
-            content: '•';
-            margin-right: 8px;
-            color: #007aff;
-        }
-        .mobile-sub-item.has-children {
-            font-weight: 600;
-            color: #1d1d1f;
-        }
-        .mobile-footer {
-            padding: 20px; border-top: 1px solid #f0f0f0;
-            background: #f5f5f7; flex-shrink: 0;
-        }
-        .mobile-footer a {
-            font-family: var(--font-body);
-            font-weight: 600;
-        }
+        #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
+        #main-footer a:hover { opacity: 0.5; }
         
-        /* ==================== CART DRAWER ==================== */
-        #cart-drawer {
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
-            transform: translateX(100%);
-        }
-        #cart-drawer.open { transform: translateX(0) !important; }
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
-        
-        /* ==================== TOAST ==================== */
-        #toast {
-            position: fixed; top: 16px; right: 16px; z-index: 9999;
-            transform: translateX(120%);
-            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-            max-width: calc(100vw - 32px);
-        }
-        #toast p {
-            font-family: var(--font-body);
-            font-weight: 600;
-        }
-        
-        /* ==================== FOOTER ==================== */
-        #main-footer {
-            font-family: var(--font-body);
-        }
-        #main-footer h4 {
-            font-family: var(--font-heading);
-            font-weight: 800;
-        }
-        #main-footer h5 {
-            font-family: var(--font-subtitle);
-            font-weight: 600;
-        }
-        #main-footer ul li a {
-            font-family: var(--font-body);
-            font-weight: 400;
-        }
-        
-        /* ==================== GLOBAL ==================== */
-        body { 
-            padding-top: 56px; 
-            font-family: var(--font-body);
-        }
-        @media (min-width: 640px) { body { padding-top: 64px; } }
-        @media (min-width: 1024px) { body { padding-top: 80px; } }
-        
-        /* ==================== BUTTON STYLES ==================== */
         .btn-primary {
-            font-family: var(--font-body);
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            background: var(--primary) !important; color: var(--accent) !important; border-radius: 14px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
-        .btn-secondary {
-            font-family: var(--font-subtitle);
-            font-weight: 500;
+        .btn-primary:hover { background: #1c1c1e !important; transform: translateY(-1px); }
+        
+        #wish-count, #cart-count {
+            background: var(--primary) !important; color: var(--accent) !important;
+            font-size: 9px !important; font-weight: 700; border: 1px solid var(--glass-border-light);
         }
         
-        /* ==================== PRODUCT CARD TYPOGRAPHY ==================== */
-        .product-card-title {
-            font-family: var(--font-subtitle);
-            font-weight: 500;
+        .desktop-menu-trigger {
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-heading); font-size: 11px; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 10px 18px; border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .product-card-price {
-            font-family: var(--font-body);
-            font-weight: 600;
-        }
-        .product-card-category {
-            font-family: var(--font-accent);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .desktop-menu-trigger:hover {
+            background: var(--primary); color: var(--accent);
+            border-color: var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
 }
 
-// ============================================
-// SLUG HELPER
-// ============================================
+// ============================================================================
+// DATA CONTROLLER & UTILITIES
+// ============================================================================
 function createSlug(text) {
     if (!text) return '';
-    return text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
+    return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
 }
 
-// ============================================
-// API HELPERS: Fetch data from server
-// ============================================
 async function fetchMenuItems() {
     try {
         const response = await fetch('/api/menu-items');
-        if (!response.ok) throw new Error('Failed to fetch menu items');
-        const data = await response.json();
-        allMenuItems = data;
-        return data;
+        if (!response.ok) throw new Error('Failed to fetch menu pipeline');
+        allMenuItems = await response.json();
+        return allMenuItems;
     } catch (error) {
-        console.error('Error fetching menu items:', error);
-        allMenuItems = [];
+        console.error('Menu infrastructure error:', error);
         return [];
     }
 }
@@ -481,251 +329,95 @@ async function fetchCategories() {
     try {
         const response = await fetch('/api/categories');
         if (!response.ok) throw new Error('Failed to fetch categories');
-        const data = await response.json();
-        allCategories = data;
-        return data;
+        allCategories = await response.json();
+        return allCategories;
     } catch (error) {
-        console.error('Error fetching categories:', error);
-        allCategories = [];
+        console.error('Category framework error:', error);
         return [];
     }
 }
 
-async function fetchSubcategories(categorySlug = null) {
+async function fetchSubcategories() {
     try {
-        let url = '/api/subcategories';
-        if (categorySlug) {
-            url += `?category_slug=${categorySlug}`;
-        }
-        const response = await fetch(url);
+        const response = await fetch('/api/subcategories');
         if (!response.ok) throw new Error('Failed to fetch subcategories');
-        const data = await response.json();
-        
-        if (!categorySlug) {
-            allSubcategories = data;
-        }
-        return data;
+        allSubcategories = await response.json();
+        return allSubcategories;
     } catch (error) {
-        console.error('Error fetching subcategories:', error);
+        console.error('Subcategory architecture error:', error);
         return [];
     }
 }
 
-// ============================================
-// BUILD MENU TREE FROM FLAT DATA
-// ============================================
 function buildMenuTree(items, parentId = null) {
     return items
-        .filter(item => {
-            const itemParentId = item.parent_id || null;
-            const targetParentId = parentId || null;
-            return itemParentId === targetParentId;
-        })
+        .filter(item => (item.parent_id || null) === (parentId || null))
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
-        .map(item => ({
-            ...item,
-            children: buildMenuTree(items, item.id)
-        }));
+        .map(item => ({ ...item, children: buildMenuTree(items, item.id) }));
 }
 
-// ============================================
-// GET LINK URL FOR MENU ITEM
-// ============================================
 function getMenuLinkUrl(item) {
-    if (item.link && item.link.trim() !== '') {
-        return item.link;
-    }
-    
+    if (item.link && item.link.trim() !== '') return item.link;
     const slug = item.slug || '';
-    
     switch (item.menu_type) {
-        case 'home':
-            return '/';
-        case 'products':
-            return '/products';
-        case 'category':
-            if (item.category_slug && item.subcategory_slug) {
-                return `/category/${item.category_slug}/${item.subcategory_slug}`;
-            }
-            return item.category_slug ? `/category/${item.category_slug}` : '#';
-        case 'subcategory':
-            if (item.category_slug && item.subcategory_slug) {
-                return `/category/${item.category_slug}/${item.subcategory_slug}`;
-            }
-            return item.subcategory_slug ? `/subcategory/${item.subcategory_slug}` : '#';
-        case 'page':
-            return slug ? `/${slug}` : '#';
-        case 'custom':
-            return item.link || '#';
-        case 'contact':
-            return '/contact';
-        case 'about':
-            return '/about';
-        case 'journal':
-            return '/journal';
-        default:
-            return slug ? `/${slug}` : '#';
+        case 'home': return '/';
+        case 'products': return '/products';
+        case 'category': return item.category_slug ? `/category/${item.category_slug}` : '#';
+        case 'subcategory': return (item.category_slug && item.subcategory_slug) ? `/category/${item.category_slug}/${item.subcategory_slug}` : '#';
+        case 'contact': return '/contact';
+        case 'about': return '/about';
+        case 'journal': return '/journal';
+        default: return slug ? `/${slug}` : '#';
     }
 }
 
-// ============================================
-// GET CATEGORY/SUBCATEGORY URL
-// ============================================
-function getCategoryUrl(category, subcategory = null) {
-    const catSlug = category.slug || createSlug(category.name);
-    if (subcategory) {
-        const subSlug = subcategory.slug || createSlug(subcategory.name);
-        return `/category/${catSlug}/${subSlug}`;
-    }
-    return `/category/${catSlug}`;
-}
-
-// ============================================
-// RENDER DESKTOP NAVIGATION
-// ============================================
-function renderDesktopNav(rootItems) {
+// ============================================================================
+// RENDER UNIFIED DRAWER ENGINE
+// ============================================================================
+function renderUnifiedDrawerMenu(rootItems) {
     let html = '';
-    
-    rootItems.forEach(item => {
-        const hasChildren = item.children && item.children.length > 0;
-        const linkUrl = getMenuLinkUrl(item);
-        
-        if (hasChildren) {
-            html += `
-            <div class="desktop-dropdown">
-                <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
-                    ${item.title || item.name || ''}
-                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
-                </a>
-                <div class="desktop-dropdown-menu">
-                    ${renderDesktopDropdownChildren(item)}
-                </div>
-            </div>`;
-        } else {
-            html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
-        }
-    });
-    
-    return html;
-}
-
-function renderDesktopDropdownChildren(item) {
-    if (item.menu_type === 'category' && item.show_categories_from_db) {
-        return renderCategoriesDropdown();
-    }
-    
-    if (item.children && item.children.length > 0) {
-        let html = '';
-        item.children.forEach(child => {
-            const hasGrandChildren = child.children && child.children.length > 0;
-            const linkUrl = getMenuLinkUrl(child);
-            
-            if (hasGrandChildren) {
-                html += `
-                <div style="position:relative;">
-                    <a href="${linkUrl}" class="desktop-dropdown-item has-children">
-                        ${child.title || child.name || ''}
-                        <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
-                    </a>
-                    <div class="desktop-sub-dropdown">
-                        ${child.children.map(gc => `
-                            <a href="${getMenuLinkUrl(gc)}" class="desktop-dropdown-item">${gc.title || gc.name || ''}</a>
-                        `).join('')}
-                    </div>
-                </div>`;
-            } else {
-                html += `<a href="${linkUrl}" class="desktop-dropdown-item">${child.title || child.name || ''}</a>`;
-            }
-        });
-        return html;
-    }
-    
-    return renderCategoriesDropdown();
-}
-
-function renderCategoriesDropdown() {
-    if (!allCategories || allCategories.length === 0) {
-        return '<div class="desktop-dropdown-item" style="color:#86868b; font-family: var(--font-subtitle);">No categories found</div>';
-    }
-    
-    let html = '';
-    allCategories.forEach(cat => {
-        const catSlug = cat.slug || createSlug(cat.name);
-        const catUrl = `/category/${catSlug}`;
-        const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
-        
-        if (subcategories.length > 0) {
-            html += `
-            <div style="position:relative;">
-                <a href="${catUrl}" class="desktop-dropdown-item has-children">
-                    ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
-                </a>
-                <div class="desktop-sub-dropdown">
-                    ${subcategories.map(sub => {
-                        const subSlug = sub.slug || createSlug(sub.name);
-                        const subUrl = `/category/${catSlug}/${subSlug}`;
-                        return `<a href="${subUrl}" class="desktop-dropdown-item">${sub.name}</a>`;
-                    }).join('')}
-                </div>
-            </div>`;
-        } else {
-            html += `<a href="${catUrl}" class="desktop-dropdown-item">${cat.name}</a>`;
-        }
-    });
-    
-    return html;
-}
-
-// ============================================
-// RENDER MOBILE NAVIGATION
-// ============================================
-function renderMobileNav(rootItems) {
-    let html = '';
-    
     rootItems.forEach((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
-        const uniqueId = `mobile-sub-${index}-${Date.now()}`;
+        const uniqueId = `drawer-node-${index}-${Date.now()}`;
         
         if (hasChildren) {
             html += `
             <div>
-                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                    <i class="fa-solid fa-chevron-right"></i>
+                <div class="menu-node-item" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
+                    <span><i class="fa-solid fa-folder-open mr-3 opacity-30" style="font-size:11px;"></i> ${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-down opacity-40" style="font-size:9px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}">
-                    ${renderMobileSubItems(item, uniqueId)}
+                <div class="menu-node-submenu" id="${uniqueId}">
+                    ${renderDrawerSubItems(item, uniqueId)}
                 </div>
             </div>`;
         } else {
-            let icon = 'fa-circle';
+            let icon = 'fa-circle-notch';
             switch (item.menu_type) {
                 case 'home': icon = 'fa-house'; break;
                 case 'products': icon = 'fa-bag-shopping'; break;
                 case 'contact': icon = 'fa-envelope'; break;
                 case 'about': icon = 'fa-circle-info'; break;
                 case 'journal': icon = 'fa-newspaper'; break;
-                case 'page': icon = 'fa-file'; break;
-                default: icon = 'fa-circle'; break;
             }
             html += `
-            <a href="${linkUrl}" class="mobile-menu-item no-underline">
-                <span><i class="fa-solid ${icon} mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+            <a href="${linkUrl}" class="menu-node-item no-underline">
+                <span><i class="fa-solid ${icon} mr-3 opacity-30" style="font-size:11px;"></i> ${item.title || item.name || ''}</span>
+                <i class="fa-solid fa-arrow-right-long opacity-20" style="font-size:11px;"></i>
             </a>`;
         }
     });
-    
     return html;
 }
 
-function renderMobileSubItems(item, parentId) {
+// ============================================================================
+// DRAWER INNER LOGICS
+// ============================================================================
+function renderDrawerSubItems(item, parentId) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
-        return renderMobileCategoriesSubmenu(parentId);
+        return renderDatabaseCategoriesToDrawer(parentId);
     }
-    
     if (item.children && item.children.length > 0) {
         let html = '';
         item.children.forEach((child, idx) => {
@@ -736,31 +428,27 @@ function renderMobileSubItems(item, parentId) {
             if (hasGrandChildren) {
                 html += `
                 <div>
-                    <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                        ${child.title || child.name || ''}
-                        <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                    <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
+                        <span>${child.title || child.name || ''}</span>
+                        <i class="fa-solid fa-chevron-down opacity-40" style="font-size:8px;"></i>
                     </div>
-                    <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
-                        ${child.children.map(gc => `
-                            <a href="${getMenuLinkUrl(gc)}" class="mobile-sub-item">${gc.title || gc.name || ''}</a>
-                        `).join('')}
+                    <div class="menu-node-submenu" id="${uniqueId}">
+                        ${child.children.map(gc => `<a href="${getMenuLinkUrl(gc)}" class="menu-node-sub-item">${gc.title || gc.name || ''}</a>`).join('')}
                     </div>
                 </div>`;
             } else {
-                html += `<a href="${linkUrl}" class="mobile-sub-item">${child.title || child.name || ''}</a>`;
+                html += `<a href="${linkUrl}" class="menu-node-sub-item">${child.title || child.name || ''}</a>`;
             }
         });
         return html;
     }
-    
-    return renderMobileCategoriesSubmenu(parentId);
+    return renderDatabaseCategoriesToDrawer(parentId);
 }
 
-function renderMobileCategoriesSubmenu(parentId) {
+function renderDatabaseCategoriesToDrawer(parentId) {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-sub-item" style="color:#86868b; font-family: var(--font-subtitle);">No categories</div>';
+        return '<div class="menu-node-sub-item opacity-40">No configuration found</div>';
     }
-    
     let html = '';
     allCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
@@ -771,30 +459,28 @@ function renderMobileCategoriesSubmenu(parentId) {
         if (subcategories.length > 0) {
             html += `
             <div>
-                <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold text-black" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
+                    <span>${cat.name}</span>
+                    <i class="fa-solid fa-chevron-down opacity-40" style="font-size:8px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
-                    <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600; font-family: var(--font-heading);">All ${cat.name}</a>
+                <div class="menu-node-submenu" id="${uniqueId}">
+                    <a href="${catUrl}" class="menu-node-sub-item font-black underline decoration-black/10">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
-                        const subUrl = `/category/${catSlug}/${subSlug}`;
-                        return `<a href="${subUrl}" class="mobile-sub-item">${sub.name}</a>`;
+                        return `<a href="/category/${catSlug}/${subSlug}" class="menu-node-sub-item">${sub.name}</a>`;
                     }).join('')}
                 </div>
             </div>`;
         } else {
-            html += `<a href="${catUrl}" class="mobile-sub-item">${cat.name}</a>`;
+            html += `<a href="${catUrl}" class="menu-node-sub-item">${cat.name}</a>`;
         }
     });
-    
     return html;
 }
 
-// ============================================
-// HEADER COMPONENT
-// ============================================
+// ============================================================================
+// HEADER SYSTEM (Liquid Translucent Engine)
+// ============================================================================
 async function renderHeader() {
     const [menuItems, categories, subcategories] = await Promise.all([
         fetchMenuItems(),
@@ -804,120 +490,113 @@ async function renderHeader() {
     
     allCategories = categories;
     allSubcategories = subcategories;
-    
     const menuTree = buildMenuTree(menuItems);
-    const rootItems = menuTree;
     
     const headerHTML = `
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu-drawer" id="mobileMenuDrawer">
-        <div class="mobile-menu-header">
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
+    <div class="side-menu-drawer" id="sideMenuDrawer">
+        <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
-                <span class="font-black text-lg" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <img src="/logo.png" class="w-9 h-9 rounded-xl border border-white/20 shadow-sm" alt="Logo">
+                <span class="font-black text-base tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2" aria-label="Close menu">
+            <button onclick="closeSideMenu()" class="text-xl text-neutral-400 hover:text-black transition p-2" aria-label="Close menu">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div class="mobile-menu-scroll" id="mobileMenuContent">
-            ${renderMobileNav(rootItems)}
+        <div class="side-menu-scroll" id="sideMenuContent">
+            ${renderUnifiedDrawerMenu(menuTree)}
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter">
-            <a href="/login" class="block w-full py-3 bg-primary text-white rounded-xl text-center font-bold uppercase tracking-wider text-xs no-underline" style="font-family: var(--font-body);">Sign In</a>
+        <div class="side-drawer-footer">
+            <a href="/login" class="block w-full py-4 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
         </div>
     </div>
-    <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline" aria-label="JAYENWARE Home">
-                <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
-                <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+    
+    <nav class="glass-nav" id="main-nav">
+        <div class="h-16 lg:h-20 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
+                <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
+                <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <div class="hidden lg:flex items-center gap-0" id="desktopNavLinks">
-                ${renderDesktopNav(rootItems)}
-            </div>
-            <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
-                <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
-                    <i class="fa-regular fa-heart text-lg lg:text-xl"></i>
-                    <span id="wish-count" class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
+            
+            <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-50">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                    <span id="wish-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Shopping Cart">
-                    <i class="fa-solid fa-bag-shopping text-lg lg:text-xl"></i>
-                    <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-primary text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
+                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-50">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                <div id="auth-nav-area" class="hidden lg:block">
-                    <a href="/login" class="px-5 py-2.5 bg-primary text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-blue transition-all no-underline inline-block" style="font-family: var(--font-body);">Sign In</a>
-                </div>
-                <button onclick="openMobileMenu()" class="lg:hidden text-xl p-1.5 text-primary hover:text-blue transition" aria-label="Menu">
-                    <i class="fa-solid fa-bars"></i>
+                
+                <button onclick="openSideMenu()" class="desktop-menu-trigger">
+                    <i class="fa-solid fa-bars-staggered text-sm"></i>
+                    <span>Menu</span>
                 </button>
             </div>
         </div>
     </nav>
-    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
-        <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
-            <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter" style="font-family: var(--font-heading);">Shopping Bag</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1">
+    
+    <div id="cart-drawer" class="shadow-2xl">
+        <div class="p-6 border-b flex justify-between items-center bg-soft">
+            <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg transition p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4 custom-scroll"></div>
-        <div class="p-4 sm:p-6 border-t bg-soft">
-            <div class="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 text-[10px] sm:text-xs" style="font-family: var(--font-body);">
-                <div class="flex justify-between text-gray-500"><span>Subtotal</span><span id="cart-subtotal">৳ 0.00</span></div>
-                <div class="flex justify-between border-t pt-2 sm:pt-3">
-                    <span class="font-bold uppercase">Total</span>
-                    <span id="cart-total" class="text-lg sm:text-xl font-black">৳ 0.00</span>
+        <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4 custom-scroll"></div>
+        <div class="p-6 border-t bg-soft">
+            <div class="space-y-2 mb-6 text-[11px] uppercase tracking-wider">
+                <div class="flex justify-between opacity-50"><span>Subtotal Ledger</span><span id="cart-subtotal">৳ 0.00</span></div>
+                <div class="flex justify-between border-t border-white/10 pt-4">
+                    <span class="font-bold">Total Valuation</span>
+                    <span id="cart-total" class="text-base font-black">৳ 0.00</span>
                 </div>
             </div>
-            <a href="/checkout" class="w-full py-3 sm:py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue transition shadow-lg no-underline text-center block" style="font-family: var(--font-body);">Checkout</a>
+            <a href="/checkout" class="w-full py-4 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[11px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg">Execute Checkout</a>
         </div>
     </div>
     `;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 }
 
-// ============================================
-// FOOTER COMPONENT
-// ============================================
+// ============================================================================
+// FOOTER & TOAST CORE SYSTEMS
+// ============================================================================
 function renderFooter() {
     const footerHTML = `
-    <footer class="bg-primary text-gray-400 pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 sm:mb-12">
+    <footer class="pt-16 pb-8" id="main-footer">
+        <div class="w-full px-6 lg:px-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
-                    <h4>JAYENWARE</h4>
-                    <p class="text-[10px] sm:text-xs leading-relaxed mb-4" style="font-family: var(--font-body);">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition">BINZEO</a>.</p>
-                    <div class="flex gap-3 text-base sm:text-lg">
-                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-youtube"></i></a>
+                    <h4 class="text-sm font-bold tracking-widest mb-4">JAYENWARE</h4>
+                    <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
+                    <div class="flex gap-4 text-base">
+                        <a href="#" class="hover:opacity-50"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="hover:opacity-50"><i class="fa-brands fa-instagram"></i></a>
                     </div>
                 </div>
                 <div>
-                    <h5>Quick Links</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
-                        <li><a href="/about" class="hover:text-white transition no-underline">About</a></li>
-                        <li><a href="/shipping" class="hover:text-white transition no-underline">Shipping</a></li>
-                        <li><a href="/returns" class="hover:text-white transition no-underline">Returns</a></li>
-                        <li><a href="/contact" class="hover:text-white transition no-underline">Contact</a></li>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
+                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                        <li><a href="/about" class="no-underline">About Corporate</a></li>
+                        <li><a href="/contact" class="no-underline">Contact Portal</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5>Legal</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
-                        <li><a href="/privacy-policy" class="hover:text-white transition no-underline">Privacy Policy</a></li>
-                        <li><a href="/terms-and-conditions" class="hover:text-white transition no-underline">Terms & Conditions</a></li>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
+                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                        <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5>Contact</h5>
-                    <p class="text-[9px] text-gray-500" style="font-family: var(--font-body);"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
+                    <p class="text-[11px] opacity-60">binzeo369@outlook.com</p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-[9px] sm:text-[10px] uppercase tracking-wider text-gray-500" style="font-family: var(--font-body);">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition no-underline">BINZEO</a></p>
-                <p class="text-[8px] sm:text-[9px]" style="font-family: var(--font-body);">&copy; <span id="display-year"></span> JAYENWARE. All rights reserved.</p>
+            <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
+                <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
+                <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JAYENWARE Engine.</p>
             </div>
         </div>
     </footer>
@@ -925,41 +604,28 @@ function renderFooter() {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 }
 
-// ============================================
-// TOAST NOTIFICATION
-// ============================================
 function showToast(text, type = 'success') {
     let toast = document.getElementById('toast');
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'toast';
+        toast.className = 'fixed bottom-5 right-5 z-[100] transition-transform duration-300 translate-x-[120%]';
         toast.innerHTML = `
-            <div class="bg-white shadow-2xl rounded-2xl p-3 flex items-center gap-3 min-w-[260px] border border-gray-100">
-                <span id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"></span>
-                <p id="toast-text" class="text-xs font-bold flex-grow" style="font-family: var(--font-body);"></p>
-                <button onclick="hideToast()" class="text-gray-300 hover:text-gray-600 shrink-0"><i class="fa-solid fa-xmark"></i></button>
+            <div class="shadow-xl p-4 flex items-center gap-3.5 min-w-[280px]">
+                <span id="toast-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0"></span>
+                <p id="toast-text" class="text-xs font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
+                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
         `;
         document.body.appendChild(toast);
     }
-    const toastText = document.getElementById('toast-text');
-    const toastIcon = document.getElementById('toast-icon');
-    if (toastText) toastText.innerText = text;
-    if (toastIcon) {
-        if (type === 'success') {
-            toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-green-100 text-green-600 shrink-0';
-            toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
-        } else if (type === 'error') {
-            toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-red-100 text-red-600 shrink-0';
-            toastIcon.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        } else {
-            toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-blue-100 text-blue-600 shrink-0';
-            toastIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
-        }
-    }
+    document.getElementById('toast-text').innerText = text;
+    const iconEl = document.getElementById('toast-icon');
+    iconEl.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
+    
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
+    toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3200);
 }
 
 function hideToast() {
@@ -967,9 +633,27 @@ function hideToast() {
     if (toast) toast.style.transform = 'translateX(120%)';
 }
 
-// ============================================
-// CART FUNCTIONS
-// ============================================
+// ============================================================================
+// SIDE DRAWER CONTROLLER LOGIC
+// ============================================================================
+function openSideMenu() {
+    const drawer = document.getElementById('sideMenuDrawer');
+    drawer.classList.add('open');
+    document.getElementById('sideMenuOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSideMenu() {
+    const drawer = document.getElementById('sideMenuDrawer');
+    drawer.classList.remove('open');
+    document.getElementById('sideMenuOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+    document.querySelectorAll('.menu-node-submenu.open').forEach(sub => sub.classList.remove('open'));
+}
+
+// ============================================================================
+// CART CONTROLLER & STORAGE BINDING
+// ============================================================================
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
     if (drawer) {
@@ -979,24 +663,15 @@ function toggleCart() {
 }
 
 function addToCart(productId, productData) {
-    if (!productData) { showToast('Product data missing', 'error'); return; }
-    if (productData.stock <= 0) return showToast('Out of stock', 'error');
-    
+    if (!productData) return;
     const existingIndex = cart.findIndex(item => item.product_id === productData.id);
     if (existingIndex > -1) {
         cart[existingIndex].quantity += 1;
     } else {
-        cart.push({
-            id: Date.now(),
-            product_id: productData.id,
-            title: productData.title,
-            price: productData.price,
-            img: productData.img,
-            quantity: 1
-        });
+        cart.push({ id: Date.now(), product_id: productData.id, title: productData.title, price: productData.price, img: productData.img, quantity: 1 });
     }
     saveCart();
-    showToast('Added to Bag! 🎉', 'success');
+    showToast('Manifested in Shopping Bag! 🎉', 'success');
 }
 
 function removeFromCart(idx) {
@@ -1015,8 +690,9 @@ function renderCartItems() {
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
     if (!container) return;
+    
     if (!cart.length) {
-        container.innerHTML = '<p class="text-center text-gray-400 py-10 text-sm" style="font-family: var(--font-body);">Your bag is empty</p>';
+        container.innerHTML = '<p class="text-center opacity-40 py-12 text-xs tracking-wider uppercase">Bag Configuration Void</p>';
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         return;
@@ -1025,18 +701,16 @@ function renderCartItems() {
     container.innerHTML = cart.map((item, idx) => {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
-        return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
-            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
+        return `<div class="flex gap-4 p-4 items-center">
+            <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl shrink-0 border border-white/10" alt="${item.title}">
             <div class="flex-grow min-w-0">
-                <h4 class="text-xs sm:text-sm font-bold truncate" style="font-family: var(--font-subtitle);">${item.title}</h4>
-                <div class="flex items-center gap-2 mt-1">
-                    <p class="text-xs sm:text-sm font-black" style="font-family: var(--font-body);">৳${itemTotal.toFixed(2)}</p>
-                    <span class="text-[10px] text-gray-400" style="font-family: var(--font-body);">Qty: ${item.quantity || 1}</span>
+                <h4 class="text-xs font-bold truncate tracking-wide">${item.title}</h4>
+                <div class="flex items-center gap-3 mt-1">
+                    <p class="text-xs font-black">৳${itemTotal.toFixed(2)}</p>
+                    <span class="text-[10px] opacity-40">Qty: ${item.quantity || 1}</span>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
-                <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
-            </button>
+            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0"><i class="fa-solid fa-trash-can text-xs"></i></button>
         </div>`;
     }).join('');
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
@@ -1050,107 +724,37 @@ function updateCounts() {
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
-// ============================================
-// WISHLIST FUNCTIONS
-// ============================================
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
-        showToast('Removed from Wishlist', 'info');
+        showToast('Purged from Registry', 'info');
     } else {
         wishlist.push(id);
-        showToast('Added to Wishlist ❤️', 'success');
+        showToast('Saved to Vault Collection ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
 }
 
-// ============================================
-// MOBILE MENU FUNCTIONS
-// ============================================
-function openMobileMenu() {
-    const drawer = document.getElementById('mobileMenuDrawer');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    if (drawer) drawer.classList.add('open');
-    if (overlay) overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeMobileMenu() {
-    const drawer = document.getElementById('mobileMenuDrawer');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    if (drawer) drawer.classList.remove('open');
-    if (overlay) overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    document.querySelectorAll('.mobile-submenu.open').forEach(sub => sub.classList.remove('open'));
-    document.querySelectorAll('.mobile-menu-item.expanded').forEach(item => item.classList.remove('expanded'));
-}
-
-function toggleMobileSubmenu(submenuId, element) {
+function toggleDrawerSubmenu(submenuId, element) {
     const submenu = document.getElementById(submenuId);
     if (!submenu) return;
-    
     const isOpen = submenu.classList.contains('open');
-    
-    const parentContainer = submenu.parentElement.parentElement;
-    if (parentContainer) {
-        parentContainer.querySelectorAll('.mobile-submenu.open').forEach(sub => {
-            if (sub.id !== submenuId) sub.classList.remove('open');
-        });
-        parentContainer.querySelectorAll('.mobile-menu-item.expanded').forEach(item => {
-            if (item !== element) item.classList.remove('expanded');
-        });
-    }
-    
     if (isOpen) {
         submenu.classList.remove('open');
-        if (element) element.classList.remove('expanded');
     } else {
         submenu.classList.add('open');
-        if (element) element.classList.add('expanded');
     }
 }
 
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
-function getProductSlug(product) {
-    if (!product || !product.title) return '';
-    return product.title.toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 80);
-}
+// ============================================================================
+// APIS & INITIALIZATION
+// ============================================================================
+window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlist = toggleWishlist;
+window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromCart = removeFromCart;
+window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
+window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
 
-// ============================================
-// GLOBAL EXPOSURE
-// ============================================
-window.showToast = showToast;
-window.hideToast = hideToast;
-window.toggleWishlist = toggleWishlist;
-window.addToCart = addToCart;
-window.toggleCart = toggleCart;
-window.removeFromCart = removeFromCart;
-window.openMobileMenu = openMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-window.toggleMobileSubmenu = toggleMobileSubmenu;
-window.getProductSlug = getProductSlug;
-window.saveCart = saveCart;
-window.renderCartItems = renderCartItems;
-window.updateCounts = updateCounts;
-window.createSlug = createSlug;
-window.getCategoryUrl = getCategoryUrl;
-window.cart = cart;
-window.wishlist = wishlist;
-window.allMenuItems = allMenuItems;
-window.allCategories = allCategories;
-window.allSubcategories = allSubcategories;
-
-// ============================================
-// INITIALIZATION
-// ============================================
 async function initSharedComponents() {
     loadFontsConfiguration();
     injectSharedStyles();
@@ -1161,12 +765,8 @@ async function initSharedComponents() {
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
 
-// Auto-initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSharedComponents);
 } else {
-    setTimeout(initSharedComponents, 100);
+    setTimeout(initSharedComponents, 60);
 }
-
-
-
