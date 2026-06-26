@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.0 (Dynamic Width Fix & Total Right Edge Bleed/Black Line Rectification)
+// Version: 5.1 (100% Edge-to-Edge Dynamic Width Header & Right Gap Eradication)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -95,10 +95,14 @@ function injectSharedStyles() {
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
         /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
+        /* CRITICAL FIX: উচ্ছেদ করা হলো উইডথ গ্যাপ, হেডার এখন ১০০% স্ক্রিন লকড */
         .glass-nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            width: 100%;
+            top: 0; 
+            left: 0 !important; 
+            right: 0 !important;
+            width: 100vw !important; /* ভিউপোর্ট উইডথ স্ট্রিক্টলি লক করা হলো */
+            max-width: 100vw !important;
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
@@ -106,6 +110,8 @@ function injectSharedStyles() {
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 50;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         
         /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
@@ -128,8 +134,8 @@ function injectSharedStyles() {
             -webkit-backdrop-filter: var(--glass-blur);
             border-left: 1px solid var(--glass-border-light);
             z-index: 200;
-            transform: translateX(105%); /* বর্ডার ট্র্যাকিং এড়াতে সম্পূর্ণ অফ-স্ক্রিন পুশ */
-            visibility: hidden; /* বন্ধ থাকলে কোনো কালো শ্যাডো বা বর্ডার রিপ্রেজেন্ট করবে না */
+            transform: translateX(105%); 
+            visibility: hidden; 
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
             box-shadow: -20px 0 60px rgba(0,0,0,0.03);
@@ -389,6 +395,9 @@ function renderUnifiedDrawerMenu(rootItems) {
     return html;
 }
 
+// ============================================================================
+// DRAWER INNER LOGICS
+// ============================================================================
 function renderDrawerSubItems(item, parentId) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderDatabaseCategoriesToDrawer(parentId);
@@ -467,6 +476,8 @@ async function renderHeader() {
     allSubcategories = subcategories;
     const menuTree = buildMenuTree(menuItems);
     
+    // CRITICAL FIX: কন্টেইনার উইডথ 'max-w-7xl' কে পরিবর্তন করে 'w-full px-6 lg:px-12' করা হয়েছে 
+    // যাতে ডেক্সটপ স্ক্রিনে এটি একদম দুই প্রান্তে ফ্ল্যাশ হয়ে লেগে থাকে।
     const headerHTML = `
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
@@ -488,7 +499,7 @@ async function renderHeader() {
     </div>
     
     <nav class="glass-nav" id="main-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-20 flex justify-between items-center">
+        <div class="w-full px-6 lg:px-12 h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
                 <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
