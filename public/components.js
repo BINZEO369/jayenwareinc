@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 4.8 (Apple Ultra-Liquid Glass Layout with Unified Desktop/Mobile Side Drawer)
+// Version: 4.9 (Fixed Extra Right Border/Scroll - Unified Premium Side Drawer)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -64,6 +64,12 @@ function injectSharedStyles() {
             --glass-blur: blur(40px) saturate(250%);
         }
         
+        /* FIX: ডানপাশের এক্সট্রা স্ক্রলবার এবং কালো ওভারফ্লো লাইন রিমুভাল */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100%25;
+        }
+        
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
         .text-heading-hero { font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
         .text-heading-xl { font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: var(--primary); }
@@ -104,14 +110,14 @@ function injectSharedStyles() {
         
         .side-menu-drawer {
             position: fixed; top: 0; right: 0;
-            width: 100%; max-width: 440px; /* ডেক্সটপে রাজকীয় লুকের জন্য রিসাইজড */
+            width: 100%; max-width: 440px;
             height: 100vh; height: 100dvh;
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-left: 1px solid var(--glass-border-light);
             z-index: 200;
-            transform: translateX(100%);
+            transform: translateX(101%); /* FIX: স্লাইড অফ-স্ক্রিনে ১% বাড়তি পুশ করা হয়েছে যাতে কোনো বর্ডার লাইন না উঁকি দেয় */
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
             box-shadow: -20px 0 60px rgba(0,0,0,0.05);
@@ -173,8 +179,10 @@ function injectSharedStyles() {
             border-left: 1px solid var(--glass-border-inline);
             transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform;
+            transform: translateX(101%); /* FIX: অফ-পজিশনে ১% এক্সট্রা শিফট */
             color: var(--accent) !important;
         }
+        #cart-drawer.open { transform: translateX(0) !important; }
         #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
         #cart-drawer .bg-soft {
             background: rgba(255, 255, 255, 0.06) !important;
@@ -226,7 +234,6 @@ function injectSharedStyles() {
             font-size: 9px !important; font-weight: 700; border: 1px solid var(--glass-border-light);
         }
         
-        /* প্রিমিয়াম ডেক্সটপ ট্রিগার বাটন স্টাইলিং */
         .desktop-menu-trigger {
             display: flex; align-items: center; gap: 10px;
             font-family: var(--font-heading); font-size: 11px; font-weight: 800;
@@ -430,6 +437,7 @@ async function renderHeader() {
     const menuTree = buildMenuTree(menuItems);
     
     const headerHTML = `
+    <!-- UNIFIED SIDE GLASS DRAWER -->
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
@@ -449,6 +457,7 @@ async function renderHeader() {
         </div>
     </div>
     
+    <!-- MINIMALIST LIQUID GLASS TOP NAV BAR -->
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
@@ -466,6 +475,7 @@ async function renderHeader() {
                     <span id="cart-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
+                <!-- UNIFIED PREMIUM MENU TRIGGER BUTTON -->
                 <button onclick="openSideMenu()" class="desktop-menu-trigger">
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                     <span>Menu</span>
@@ -474,7 +484,8 @@ async function renderHeader() {
         </div>
     </nav>
     
-    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col" style="transform: translateX(101%);">
         <div class="p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
             <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg transition p-1">
@@ -627,6 +638,9 @@ function removeFromCart(idx) {
     renderCartItems();
 }
 
+// ============================================================================
+// SYNCHRONIZATION AND RENDER BINDINGS
+// ============================================================================
 function saveCart() {
     localStorage.setItem('jayen_cart', JSON.stringify(cart));
     updateCounts();
@@ -677,7 +691,7 @@ function toggleWishlist(id) {
         showToast('Purged from Registry', 'info');
     } else {
         wishlist.push(id);
-        showToast('Saved to Vault Collection ❤', 'success');
+        showToast('Saved to Vault Collection ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
