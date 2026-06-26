@@ -52,7 +52,7 @@ function injectSharedStyles() {
     <style id="shared-components-style">
         :root {
             --primary: #1d1d1f;
-            --accent: #86868b;
+            --accent: #000000;
             --soft: #f5f5f7;
             --blue: #007aff;
         }
