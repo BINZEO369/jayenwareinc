@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 4.5 (Apple Liquid Glass System + Full Monochrome Integration)
+// Version: 4.8 (Apple Ultra-Liquid Glass Layout with Unified Desktop/Mobile Side Drawer)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -19,9 +19,7 @@ function loadFontsConfiguration() {
         const script = document.createElement('script');
         script.src = '/fonts.js';
         script.async = false;
-        script.onload = () => {
-            applyFontVariables();
-        };
+        script.onload = () => { applyFontVariables(); };
         document.head.appendChild(script);
     } else {
         applyFontVariables();
@@ -31,18 +29,14 @@ function loadFontsConfiguration() {
 function applyFontVariables() {
     const fonts = window.JAYENWARE_FONTS;
     if (!fonts) return;
-    
     const root = document.documentElement;
     const vars = fonts.cssVariables;
     for (const [key, value] of Object.entries(vars)) {
         root.style.setProperty(key, value);
     }
-    
-    // Core font override
     root.style.setProperty('--font-heading', fonts.families.heading || 'Manrope, sans-serif');
     root.style.setProperty('--font-subtitle', fonts.families.subtitle || 'Sora, sans-serif');
     root.style.setProperty('--font-body', fonts.families.body || 'Inter, sans-serif');
-    root.style.setProperty('--font-accent', fonts.families.body || 'Inter, sans-serif');
 }
 
 // ============================================================================
@@ -52,23 +46,22 @@ function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
         :root {
-            /* পিওর ব্ল্যাক ও হোয়াইটের লাক্সারি ভেরিয়েবল */
             --primary: #000000;
             --accent: #ffffff;
             
-            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড */
-            --glass-white: rgba(255, 255, 255, 0.55);
-            --glass-white-thick: rgba(255, 255, 255, 0.75);
-            --glass-black: rgba(0, 0, 0, 0.65);
+            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
+            --glass-white: rgba(255, 255, 255, 0.45);
+            --glass-white-thick: rgba(255, 255, 255, 0.7);
+            --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
             
-            /* প্রিমিয়াম ৩ডি কাঁচের বর্ডার রিফ্লেকশন */
-            --glass-border-light: rgba(255, 255, 255, 0.45);
-            --glass-border-dark: rgba(0, 0, 0, 0.08);
+            /* লিকুইড গ্লাস বর্ডার সিস্টেম */
+            --glass-border-light: rgba(255, 255, 255, 0.55);
+            --glass-border-dark: rgba(0, 0, 0, 0.06);
             --glass-border-inline: rgba(255, 255, 255, 0.15);
             
-            /* অ্যাপল স্ট্যান্ডার্ড আল্ট্রা-স্যাচুরেশন ব্লার ফিল্টার */
-            --glass-blur: blur(40px) saturate(240%);
+            /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
+            --glass-blur: blur(40px) saturate(250%);
         }
         
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
@@ -87,176 +80,89 @@ function injectSharedStyles() {
         .text-body-lg { font-family: var(--font-body); font-size: 1.125rem; line-height: 1.65; font-weight: 400; color: #1c1c1e; }
         .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
-        .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #3a3a3c; }
         
-        .text-caption { font-family: var(--font-accent); font-size: 0.75rem; line-height: 1.4; font-weight: 500; color: var(--primary); }
-        .text-overline { font-family: var(--font-accent); font-size: 0.625rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
-        
-        /* ==================== LIQUID GLASS NAVIGATION ==================== */
+        /* ==================== LIQUID GLASS NAVIGATION HEADER ==================== */
         .glass-nav {
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--glass-border-light);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        .nav-link {
-            position: relative;
-            font-family: var(--font-heading);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 8px 0;
-            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            color: var(--primary);
-            text-decoration: none;
-        }
-        .nav-link:hover { opacity: 0.5; }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 50%;
-            width: 0; height: 2px;
-            background: var(--primary);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateX(-50%);
-        }
-        .nav-link:hover::after { width: 100%; }
-        
-        /* Desktop Menu (Liquid White Glass) */
-        .desktop-dropdown { position: relative; }
-        .desktop-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(15px);
-            background: var(--glass-white-thick);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border-light);
-            border-radius: 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            min-width: 260px;
-            padding: 12px 0;
-            z-index: 100;
-        }
-        .desktop-dropdown:hover .desktop-dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(5px);
-        }
-        
-        .desktop-dropdown-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 24px;
-            font-family: var(--font-subtitle);
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary);
-            text-decoration: none;
-            transition: all 0.25s ease;
-            letter-spacing: 0.02em;
-        }
-        .desktop-dropdown-item:hover {
-            background: rgba(0, 0, 0, 0.04);
-            padding-left: 28px;
-            color: var(--primary);
-        }
-        
-        .desktop-sub-dropdown {
-            position: absolute;
-            left: 100%;
-            top: -12px;
-            background: var(--glass-white-thick);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border-light);
-            border-radius: 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            min-width: 240px;
-            padding: 12px 0;
-            transform: translateX(12px);
-        }
-        .desktop-dropdown-item.has-children:hover .desktop-sub-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-        }
-        
-        /* ==================== MOBILE DRAWER (Transparent Glass) ==================== */
-        .mobile-menu-overlay {
+        /* ==================== UNIFIED GLASS SIDE DRAWER (Desktop & Mobile) ==================== */
+        .side-menu-overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 199; opacity: 0; visibility: hidden;
-            transition: all 0.4s ease;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+        .side-menu-overlay.active { opacity: 1; visibility: visible; }
         
-        .mobile-menu-drawer {
-            position: fixed; top: 0; left: 0;
-            width: 86%; max-width: 380px;
+        .side-menu-drawer {
+            position: fixed; top: 0; right: 0;
+            width: 100%; max-width: 440px; /* ডেক্সটপে রাজকীয় লুকের জন্য রিসাইজড */
             height: 100vh; height: 100dvh;
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            border-right: 1px solid var(--glass-border-light);
+            border-left: 1px solid var(--glass-border-light);
             z-index: 200;
-            transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
+            box-shadow: -20px 0 60px rgba(0,0,0,0.05);
         }
-        .mobile-menu-drawer.open { transform: translateX(0); }
+        .side-menu-drawer.open { transform: translateX(0); }
         
-        .mobile-menu-drawer .mobile-menu-header {
+        .side-menu-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 24px; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 24px 32px; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
         
-        .mobile-menu-item {
+        .side-menu-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
+        }
+        
+        /* Drawer Navigation Elements */
+        .menu-node-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            padding: 18px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             font-family: var(--font-heading);
-            font-size: 14px; font-weight: 700; letter-spacing: 0.03em;
+            font-size: 15px; font-weight: 700; letter-spacing: 0.03em;
             color: var(--primary); text-decoration: none;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .mobile-menu-item:hover { padding-left: 6px; }
+        .menu-node-item:hover { padding-left: 10px; opacity: 0.7; }
         
-        .mobile-submenu {
+        .menu-node-submenu {
             display: none;
-            padding-left: 14px;
-            border-left: 2px solid var(--primary);
-            margin: 4px 0 6px 6px;
+            padding-left: 18px;
+            border-left: 1.5px solid var(--primary);
+            margin: 4px 0 8px 4px;
         }
-        .mobile-submenu.open { display: block; }
+        .menu-node-submenu.open { display: block; }
         
-        .mobile-sub-item {
+        .menu-node-sub-item {
             display: block;
-            padding: 11px 12px;
+            padding: 12px 14px;
             font-family: var(--font-subtitle);
             font-size: 13px; font-weight: 600;
             color: #3a3a3c; text-decoration: none;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
         }
-        .mobile-sub-item:hover { color: var(--primary); }
+        .menu-node-sub-item:hover { color: var(--primary); padding-left: 4px; }
         
-        .mobile-footer {
-            padding: 24px; border-top: 1px solid rgba(0, 0, 0, 0.06);
-            background: rgba(255, 255, 255, 0.3); flex-shrink: 0;
+        .side-drawer-footer {
+            padding: 32px; border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
         }
         
         /* ==================== CART DRAWER (Liquid Black Glass) ==================== */
@@ -269,82 +175,70 @@ function injectSharedStyles() {
             will-change: transform;
             color: var(--accent) !important;
         }
-        #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div {
-            color: var(--accent);
-        }
+        #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
         #cart-drawer .bg-soft {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         #cart-items > div {
-            background: rgba(255, 255, 255, 0.06) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px);
             border-radius: 20px;
         }
         .custom-scroll::-webkit-scrollbar { width: 3px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         
         /* ==================== TOAST NOTIFICATION (Liquid Clean) ==================== */
         #toast > div {
-            background: rgba(255, 255, 255, 0.82) !important;
+            background: rgba(255, 255, 255, 0.85) !important;
             backdrop-filter: var(--glass-blur) !important;
             -webkit-backdrop-filter: var(--glass-blur) !important;
             border: 1px solid var(--glass-border-light) !important;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.18) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important;
             border-radius: 24px !important;
             color: var(--primary) !important;
         }
-        #toast-icon {
-            background: var(--primary) !important;
-            color: var(--accent) !important;
-        }
+        #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
-        /* ==================== FOOTER (Pure Monochrome) ==================== */
-        #main-footer {
-            background: #000000;
-            color: #8e8e93;
-            border-top: 1px solid #1c1c1e;
-        }
-        #main-footer h4, #main-footer h5, #main-footer a {
-            color: var(--accent) !important;
-            transition: opacity 0.25s ease;
-        }
+        /* ==================== FOOTER & INTERFACES ==================== */
+        #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; }
+        #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
         
-        /* ==================== GLOBAL & MONO BUTTONS ==================== */
         body { 
-            padding-top: 56px; 
+            padding-top: 64px; 
             font-family: var(--font-body);
             background-color: #ffffff;
             color: var(--primary);
         }
-        @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
         
         .btn-primary {
-            font-family: var(--font-body);
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            background: var(--primary) !important;
-            color: var(--accent) !important;
-            border-radius: 14px !important;
-            border: 1px solid transparent;
+            font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            background: var(--primary) !important; color: var(--accent) !important; border-radius: 14px !important;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
-        .btn-primary:hover {
-            background: #1c1c1e !important;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
+        .btn-primary:hover { background: #1c1c1e !important; transform: translateY(-1px); }
         
         #wish-count, #cart-count {
-            background: var(--primary) !important;
-            color: var(--accent) !important;
-            font-size: 9px !important;
-            font-weight: 700;
-            border: 1px solid var(--glass-border-light);
+            background: var(--primary) !important; color: var(--accent) !important;
+            font-size: 9px !important; font-weight: 700; border: 1px solid var(--glass-border-light);
+        }
+        
+        /* প্রিমিয়াম ডেক্সটপ ট্রিগার বাটন স্টাইলিং */
+        .desktop-menu-trigger {
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-heading); font-size: 11px; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 10px 18px; border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .desktop-menu-trigger:hover {
+            background: var(--primary); color: var(--accent);
+            border-color: var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
     </style>
     `;
@@ -352,16 +246,11 @@ function injectSharedStyles() {
 }
 
 // ============================================================================
-// CORE DATA INTERFACES & UTILITIES
+// DATA CONTROLLER & UTILITIES
 // ============================================================================
 function createSlug(text) {
     if (!text) return '';
-    return text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
+    return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
 }
 
 async function fetchMenuItems() {
@@ -371,8 +260,7 @@ async function fetchMenuItems() {
         allMenuItems = await response.json();
         return allMenuItems;
     } catch (error) {
-        console.error('Menu dynamic architecture error:', error);
-        allMenuItems = [];
+        console.error('Menu infrastructure error:', error);
         return [];
     }
 }
@@ -384,23 +272,19 @@ async function fetchCategories() {
         allCategories = await response.json();
         return allCategories;
     } catch (error) {
-        console.error('Category framework loading error:', error);
-        allCategories = [];
+        console.error('Category framework error:', error);
         return [];
     }
 }
 
-async function fetchSubcategories(categorySlug = null) {
+async function fetchSubcategories() {
     try {
-        let url = '/api/subcategories';
-        if (categorySlug) url += `?category_slug=${categorySlug}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch structural subcategories');
-        const data = await response.json();
-        if (!categorySlug) allSubcategories = data;
-        return data;
+        const response = await fetch('/api/subcategories');
+        if (!response.ok) throw new Error('Failed to fetch subcategories');
+        allSubcategories = await response.json();
+        return allSubcategories;
     } catch (error) {
-        console.error('Subcategory architecture routing error:', error);
+        console.error('Subcategory architecture error:', error);
         return [];
     }
 }
@@ -409,31 +293,17 @@ function buildMenuTree(items, parentId = null) {
     return items
         .filter(item => (item.parent_id || null) === (parentId || null))
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
-        .map(item => ({
-            ...item,
-            children: buildMenuTree(items, item.id)
-        }));
+        .map(item => ({ ...item, children: buildMenuTree(items, item.id) }));
 }
 
 function getMenuLinkUrl(item) {
     if (item.link && item.link.trim() !== '') return item.link;
     const slug = item.slug || '';
-    
     switch (item.menu_type) {
         case 'home': return '/';
         case 'products': return '/products';
-        case 'category':
-            if (item.category_slug && item.subcategory_slug) {
-                return `/category/${item.category_slug}/${item.subcategory_slug}`;
-            }
-            return item.category_slug ? `/category/${item.category_slug}` : '#';
-        case 'subcategory':
-            if (item.category_slug && item.subcategory_slug) {
-                return `/category/${item.category_slug}/${item.subcategory_slug}`;
-            }
-            return item.subcategory_slug ? `/subcategory/${item.subcategory_slug}` : '#';
-        case 'page': return slug ? `/${slug}` : '#';
-        case 'custom': return item.link || '#';
+        case 'category': return item.category_slug ? `/category/${item.category_slug}` : '#';
+        case 'subcategory': return (item.category_slug && item.subcategory_slug) ? `/category/${item.category_slug}/${item.subcategory_slug}` : '#';
         case 'contact': return '/contact';
         case 'about': return '/about';
         case 'journal': return '/journal';
@@ -441,146 +311,49 @@ function getMenuLinkUrl(item) {
     }
 }
 
-function getCategoryUrl(category, subcategory = null) {
-    const catSlug = category.slug || createSlug(category.name);
-    if (subcategory) {
-        const subSlug = subcategory.slug || createSlug(subcategory.name);
-        return `/category/${catSlug}/${subSlug}`;
-    }
-    return `/category/${catSlug}`;
-}
-
 // ============================================================================
-// DYNAMIC NAVIGATION ENGINE (REDUX/RENDER)
+// RENDER UNIFIED DRAWER ENGINE (Universal Responsive Architecture)
 // ============================================================================
-function renderDesktopNav(rootItems) {
-    let html = '';
-    rootItems.forEach(item => {
-        const hasChildren = item.children && item.children.length > 0;
-        const linkUrl = getMenuLinkUrl(item);
-        
-        if (hasChildren) {
-            html += `
-            <div class="desktop-dropdown">
-                <a href="${linkUrl}" class="nav-link px-5 flex items-center gap-1.5">
-                    <span>${item.title || item.name || ''}</span>
-                    <i class="fa-solid fa-chevron-down opacity-60" style="font-size:7px;"></i>
-                </a>
-                <div class="desktop-dropdown-menu">
-                    ${renderDesktopDropdownChildren(item)}
-                </div>
-            </div>`;
-        } else {
-            html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
-        }
-    });
-    return html;
-}
-
-function renderDesktopDropdownChildren(item) {
-    if (item.menu_type === 'category' && item.show_categories_from_db) {
-        return renderCategoriesDropdown();
-    }
-    if (item.children && item.children.length > 0) {
-        let html = '';
-        item.children.forEach(child => {
-            const hasGrandChildren = child.children && child.children.length > 0;
-            const linkUrl = getMenuLinkUrl(child);
-            
-            if (hasGrandChildren) {
-                html += `
-                <div style="position:relative;">
-                    <a href="${linkUrl}" class="desktop-dropdown-item has-children">
-                        <span>${child.title || child.name || ''}</span>
-                        <i class="fa-solid fa-chevron-right" style="font-size:8px;"></i>
-                    </a>
-                    <div class="desktop-sub-dropdown">
-                        ${child.children.map(gc => `
-                            <a href="${getMenuLinkUrl(gc)}" class="desktop-dropdown-item">${gc.title || gc.name || ''}</a>
-                        `).join('')}
-                    </div>
-                </div>`;
-            } else {
-                html += `<a href="${linkUrl}" class="desktop-dropdown-item">${child.title || child.name || ''}</a>`;
-            }
-        });
-        return html;
-    }
-    return renderCategoriesDropdown();
-}
-
-function renderCategoriesDropdown() {
-    if (!allCategories || allCategories.length === 0) {
-        return '<div class="desktop-dropdown-item opacity-50">No categories found</div>';
-    }
-    let html = '';
-    allCategories.forEach(cat => {
-        const catSlug = cat.slug || createSlug(cat.name);
-        const catUrl = `/category/${catSlug}`;
-        const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
-        
-        if (subcategories.length > 0) {
-            html += `
-            <div style="position:relative;">
-                <a href="${catUrl}" class="desktop-dropdown-item has-children">
-                    <span>${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size:8px;"></i>
-                </a>
-                <div class="desktop-sub-dropdown">
-                    ${subcategories.map(sub => {
-                        const subSlug = sub.slug || createSlug(sub.name);
-                        return `<a href="/category/${catSlug}/${subSlug}" class="desktop-dropdown-item">${sub.name}</a>`;
-                    }).join('')}
-                </div>
-            </div>`;
-        } else {
-            html += `<a href="${catUrl}" class="desktop-dropdown-item">${cat.name}</a>`;
-        }
-    });
-    return html;
-}
-
-function renderMobileNav(rootItems) {
+function renderUnifiedDrawerMenu(rootItems) {
     let html = '';
     rootItems.forEach((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
-        const uniqueId = `mobile-sub-${index}-${Date.now()}`;
+        const uniqueId = `drawer-node-${index}-${Date.now()}`;
         
         if (hasChildren) {
             html += `
             <div>
-                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)">
+                <div class="menu-node-item" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span><i class="fa-solid fa-folder-open mr-3 opacity-30" style="font-size:11px;"></i> ${item.title || item.name || ''}</span>
-                    <i class="fa-solid fa-chevron-right opacity-40" style="font-size:10px;"></i>
+                    <i class="fa-solid fa-chevron-down opacity-40" style="font-size:9px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}">
-                    ${renderMobileSubItems(item, uniqueId)}
+                <div class="menu-node-submenu" id="${uniqueId}">
+                    ${renderDrawerSubItems(item, uniqueId)}
                 </div>
             </div>`;
         } else {
-            let icon = 'fa-circle';
+            let icon = 'fa-circle-notch';
             switch (item.menu_type) {
                 case 'home': icon = 'fa-house'; break;
                 case 'products': icon = 'fa-bag-shopping'; break;
                 case 'contact': icon = 'fa-envelope'; break;
                 case 'about': icon = 'fa-circle-info'; break;
                 case 'journal': icon = 'fa-newspaper'; break;
-                case 'page': icon = 'fa-file'; break;
             }
             html += `
-            <a href="${linkUrl}" class="mobile-menu-item no-underline">
+            <a href="${linkUrl}" class="menu-node-item no-underline">
                 <span><i class="fa-solid ${icon} mr-3 opacity-30" style="font-size:11px;"></i> ${item.title || item.name || ''}</span>
-                <i class="fa-solid fa-chevron-right opacity-30" style="font-size:10px;"></i>
+                <i class="fa-solid fa-arrow-right-long opacity-20" style="font-size:11px;"></i>
             </a>`;
         }
     });
     return html;
 }
 
-function renderMobileSubItems(item, parentId) {
+function renderDrawerSubItems(item, parentId) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
-        return renderMobileCategoriesSubmenu(parentId);
+        return renderDatabaseCategoriesToDrawer(parentId);
     }
     if (item.children && item.children.length > 0) {
         let html = '';
@@ -592,28 +365,26 @@ function renderMobileSubItems(item, parentId) {
             if (hasGrandChildren) {
                 html += `
                 <div>
-                    <div class="mobile-sub-item has-children flex justify-between items-center" onclick="toggleMobileSubmenu('${uniqueId}', this)">
+                    <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                         <span>${child.title || child.name || ''}</span>
-                        <i class="fa-solid fa-chevron-right opacity-40" style="font-size:9px;"></i>
+                        <i class="fa-solid fa-chevron-down opacity-40" style="font-size:8px;"></i>
                     </div>
-                    <div class="mobile-submenu" id="${uniqueId}" style="border-left-width: 1px; border-left-color: rgba(0,0,0,0.15);">
-                        ${child.children.map(gc => `
-                            <a href="${getMenuLinkUrl(gc)}" class="mobile-sub-item">${gc.title || gc.name || ''}</a>
-                        `).join('')}
+                    <div class="menu-node-submenu" id="${uniqueId}">
+                        ${child.children.map(gc => `<a href="${getMenuLinkUrl(gc)}" class="menu-node-sub-item">${gc.title || gc.name || ''}</a>`).join('')}
                     </div>
                 </div>`;
             } else {
-                html += `<a href="${linkUrl}" class="mobile-sub-item">${child.title || child.name || ''}</a>`;
+                html += `<a href="${linkUrl}" class="menu-node-sub-item">${child.title || child.name || ''}</a>`;
             }
         });
         return html;
     }
-    return renderMobileCategoriesSubmenu(parentId);
+    return renderDatabaseCategoriesToDrawer(parentId);
 }
 
-function renderMobileCategoriesSubmenu(parentId) {
+function renderDatabaseCategoriesToDrawer(parentId) {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-sub-item opacity-50">No categories distributed</div>';
+        return '<div class="menu-node-sub-item opacity-40">No configuration found</div>';
     }
     let html = '';
     allCategories.forEach((cat, idx) => {
@@ -625,27 +396,27 @@ function renderMobileCategoriesSubmenu(parentId) {
         if (subcategories.length > 0) {
             html += `
             <div>
-                <div class="mobile-sub-item has-children flex justify-between items-center" onclick="toggleMobileSubmenu('${uniqueId}', this)">
+                <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold text-black" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${cat.name}</span>
-                    <i class="fa-solid fa-chevron-right opacity-40" style="font-size:9px;"></i>
+                    <i class="fa-solid fa-chevron-down opacity-40" style="font-size:8px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}" style="border-left-width: 1px; border-left-color: rgba(0,0,0,0.15);">
-                    <a href="${catUrl}" class="mobile-sub-item font-bold" style="letter-spacing:0.02em;">All ${cat.name}</a>
+                <div class="menu-node-submenu" id="${uniqueId}">
+                    <a href="${catUrl}" class="menu-node-sub-item font-black underline decoration-black/10">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
-                        return `<a href="/category/${catSlug}/${subSlug}" class="mobile-sub-item">${sub.name}</a>`;
+                        return `<a href="/category/${catSlug}/${subSlug}" class="menu-node-sub-item">${sub.name}</a>`;
                     }).join('')}
                 </div>
             </div>`;
         } else {
-            html += `<a href="${catUrl}" class="mobile-sub-item">${cat.name}</a>`;
+            html += `<a href="${catUrl}" class="menu-node-sub-item">${cat.name}</a>`;
         }
     });
     return html;
 }
 
 // ============================================================================
-// HEADER SYSTEM (Liquid Translucent Engine)
+// HEADER SYSTEM (Liquid Translucent Engine - A to Z Navigation)
 // ============================================================================
 async function renderHeader() {
     const [menuItems, categories, subcategories] = await Promise.all([
@@ -656,74 +427,70 @@ async function renderHeader() {
     
     allCategories = categories;
     allSubcategories = subcategories;
-    
     const menuTree = buildMenuTree(menuItems);
     
     const headerHTML = `
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu-drawer" id="mobileMenuDrawer">
-        <div class="mobile-menu-header">
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
+    <div class="side-menu-drawer" id="sideMenuDrawer">
+        <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
                 <img src="/logo.png" class="w-9 h-9 rounded-xl border border-white/20 shadow-sm" alt="Logo">
-                <span class="font-black text-base tracking-wider" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <span class="font-black text-base tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-xl text-gray-500 hover:text-black transition p-2" aria-label="Close layout">
+            <button onclick="closeSideMenu()" class="text-xl text-neutral-400 hover:text-black transition p-2" aria-label="Close menu">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div class="mobile-menu-scroll px-5 py-3" id="mobileMenuContent">
-            ${renderMobileNav(menuTree)}
+        <div class="side-menu-scroll" id="sideMenuContent">
+            ${renderUnifiedDrawerMenu(menuTree)}
         </div>
-        <div class="mobile-footer" id="mobileMenuFooter">
-            <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] no-underline">Account Access</a>
+        <div class="side-drawer-footer">
+            <a href="/login" class="block w-full py-4 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
         </div>
     </div>
     
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline">
-                <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo" width="40" height="40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-20 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
+                <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <div class="hidden lg:flex items-center gap-0" id="desktopNavLinks">
-                ${renderDesktopNav(menuTree)}
-            </div>
-            <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
-                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-60">
+            
+            <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-50">
                     <i class="fa-regular fa-heart text-lg"></i>
                     <span id="wish-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-60">
+                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-50">
                     <i class="fa-solid fa-bag-shopping text-lg"></i>
                     <span id="cart-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                <div id="auth-nav-area" class="hidden lg:block">
-                    <a href="/login" class="px-5 py-2.5 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all no-underline inline-block">Sign In</a>
-                </div>
-                <button onclick="openMobileMenu()" class="lg:hidden text-lg p-2 text-black transition hover:opacity-60">
-                    <i class="fa-solid fa-bars"></i>
+                
+                <button onclick="openSideMenu()" class="desktop-menu-trigger">
+                    <i class="fa-solid fa-bars-staggered text-sm"></i>
+                    <span>Menu</span>
                 </button>
             </div>
         </div>
     </nav>
     
     <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
-        <div class="p-5 border-b flex justify-between items-center bg-soft">
-            <h2 class="text-sm font-black uppercase tracking-widest">Shopping Bag Layout</h2>
+        <div class="p-6 border-b flex justify-between items-center bg-soft">
+            <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
             <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg transition p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto p-5 space-y-4 custom-scroll"></div>
-        <div class="p-5 border-t bg-soft">
-            <div class="space-y-2 mb-5 text-[11px] uppercase tracking-wider">
-                <div class="flex justify-between opacity-60"><span>Subtotal Architecture</span><span id="cart-subtotal">৳ 0.00</span></div>
-                <div class="flex justify-between border-t border-white/10 pt-3">
+        <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4 custom-scroll"></div>
+        <div class="p-6 border-t bg-soft">
+            <div class="space-y-2 mb-6 text-[11px] uppercase tracking-wider">
+                <div class="flex justify-between opacity-50"><span>Subtotal Ledger</span><span id="cart-subtotal">৳ 0.00</span></div>
+                <div class="flex justify-between border-t border-white/10 pt-4">
                     <span class="font-bold">Total Valuation</span>
                     <span id="cart-total" class="text-base font-black">৳ 0.00</span>
                 </div>
             </div>
-            <a href="/checkout" class="w-full py-4 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[11px] transition shadow-lg no-underline text-center block hover:bg-neutral-100">Proceed to Checkout</a>
+            <a href="/checkout" class="w-full py-4 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[11px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg">Execute Checkout</a>
         </div>
     </div>
     `;
@@ -731,28 +498,25 @@ async function renderHeader() {
 }
 
 // ============================================================================
-// FOOTER SYSTEM (Pure Minimalist Infrastructure)
+// FOOTER & TOAST CORE SYSTEMS
 // ============================================================================
 function renderFooter() {
     const footerHTML = `
     <footer class="pt-16 pb-8" id="main-footer">
-        <div class="max-w-7xl mx-auto px-4sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
                     <h4 class="text-sm font-bold tracking-widest mb-4">JAYENWARE</h4>
-                    <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. A tactical subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline decoration-white/20 text-white">BINZEO</a>.</p>
+                    <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
                     <div class="flex gap-4 text-base">
-                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-50"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-50"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-50"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="hover:opacity-50"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="hover:opacity-50"><i class="fa-brands fa-instagram"></i></a>
                     </div>
                 </div>
                 <div>
                     <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
                     <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
                         <li><a href="/about" class="no-underline">About Corporate</a></li>
-                        <li><a href="/shipping" class="no-underline">Shipping Diagnostics</a></li>
-                        <li><a href="/returns" class="no-underline">Returns Execution</a></li>
                         <li><a href="/contact" class="no-underline">Contact Portal</a></li>
                     </ul>
                 </div>
@@ -760,17 +524,16 @@ function renderFooter() {
                     <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
                     <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
                         <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
-                        <li><a href="/terms-and-conditions" class="no-underline">Terms Framework</a></li>
                     </ul>
                 </div>
                 <div>
                     <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
-                    <p class="text-[11px] opacity-60"><i class="fa-regular fa-envelope mr-1"></i> binzeo369@outlook.com</p>
+                    <p class="text-[11px] opacity-60">binzeo369@outlook.com</p>
                 </div>
             </div>
             <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
                 <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
-                <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JAYENWARE Engine. All parameters reserved.</p>
+                <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JAYENWARE Engine.</p>
             </div>
         </div>
     </footer>
@@ -778,16 +541,14 @@ function renderFooter() {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 }
 
-// ============================================================================
-// TOAST INTERFACE ARCHITECTURE
-// ============================================================================
 function showToast(text, type = 'success') {
     let toast = document.getElementById('toast');
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'toast';
+        toast.className = 'fixed bottom-5 right-5 z-[100] transition-transform duration-300 translate-x-[120%]';
         toast.innerHTML = `
-            <div class="shadow-2xl p-4 flex items-center gap-3.5 min-w-[280px]">
+            <div class="shadow-xl p-4 flex items-center gap-3.5 min-w-[280px]">
                 <span id="toast-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0"></span>
                 <p id="toast-text" class="text-xs font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
                 <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0 transition"><i class="fa-solid fa-xmark"></i></button>
@@ -795,19 +556,10 @@ function showToast(text, type = 'success') {
         `;
         document.body.appendChild(toast);
     }
-    const toastText = document.getElementById('toast-text');
-    const toastIcon = document.getElementById('toast-icon');
-    if (toastText) toastText.innerText = text;
-    if (toastIcon) {
-        toastIcon.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0';
-        if (type === 'success') {
-            toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
-        } else if (type === 'error') {
-            toastIcon.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        } else {
-            toastIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
-        }
-    }
+    document.getElementById('toast-text').innerText = text;
+    const iconEl = document.getElementById('toast-icon');
+    iconEl.innerHTML = type === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
+    
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3200);
@@ -819,7 +571,35 @@ function hideToast() {
 }
 
 // ============================================================================
-// CART CONTROLLER & DATA BINDING
+// SIDE DRAWER CONTROLLER LOGIC
+// ============================================================================
+function openSideMenu() {
+    document.getElementById('sideMenuDrawer').classList.add('open');
+    document.getElementById('sideMenuOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSideMenu() {
+    document.getElementById('sideMenuDrawer').classList.remove('open');
+    document.getElementById('sideMenuOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+    document.querySelectorAll('.menu-node-submenu.open').forEach(sub => sub.classList.remove('open'));
+}
+
+function toggleDrawerSubmenu(submenuId, element) {
+    const submenu = document.getElementById(submenuId);
+    if (!submenu) return;
+    const isOpen = submenu.classList.contains('open');
+    
+    if (isOpen) {
+        submenu.classList.remove('open');
+    } else {
+        submenu.classList.add('open');
+    }
+}
+
+// ============================================================================
+// CART CONTROLLER & STORAGE BINDING
 // ============================================================================
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
@@ -830,21 +610,12 @@ function toggleCart() {
 }
 
 function addToCart(productId, productData) {
-    if (!productData) { showToast('Execution failed: Product configuration missing', 'error'); return; }
-    if (productData.stock <= 0) return showToast('Inventory allocation depleted', 'error');
-    
+    if (!productData) return;
     const existingIndex = cart.findIndex(item => item.product_id === productData.id);
     if (existingIndex > -1) {
         cart[existingIndex].quantity += 1;
     } else {
-        cart.push({
-            id: Date.now(),
-            product_id: productData.id,
-            title: productData.title,
-            price: productData.price,
-            img: productData.img,
-            quantity: 1
-        });
+        cart.push({ id: Date.now(), product_id: productData.id, title: productData.title, price: productData.price, img: productData.img, quantity: 1 });
     }
     saveCart();
     showToast('Manifested in Shopping Bag! 🎉', 'success');
@@ -878,17 +649,15 @@ function renderCartItems() {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
         return `<div class="flex gap-4 p-4 items-center">
-            <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl shrink-0 bg-neutral-900 border border-white/10" alt="${item.title}">
+            <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl shrink-0 border border-white/10" alt="${item.title}">
             <div class="flex-grow min-w-0">
                 <h4 class="text-xs font-bold truncate tracking-wide">${item.title}</h4>
                 <div class="flex items-center gap-3 mt-1">
                     <p class="text-xs font-black">৳${itemTotal.toFixed(2)}</p>
-                    <span class="text-[10px] opacity-50 tracking-wider">Allocation: ${item.quantity || 1}</span>
+                    <span class="text-[10px] opacity-40">Qty: ${item.quantity || 1}</span>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0">
-                <i class="fa-solid fa-trash-can text-xs"></i>
-            </button>
+            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0"><i class="fa-solid fa-trash-can text-xs"></i></button>
         </div>`;
     }).join('');
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
@@ -902,105 +671,26 @@ function updateCounts() {
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
-// ============================================================================
-// WISHLIST CORE LOGIC
-// ============================================================================
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
         showToast('Purged from Registry', 'info');
     } else {
         wishlist.push(id);
-        showToast('Saved to Vault Collection ❤️', 'success');
+        showToast('Saved to Vault Collection ❤', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
 }
 
 // ============================================================================
-// MOBILE EXPANSION CONTROLLER
+// APIS & INITIALIZATION
 // ============================================================================
-function openMobileMenu() {
-    const drawer = document.getElementById('mobileMenuDrawer');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    if (drawer) drawer.classList.add('open');
-    if (overlay) overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
+window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlist = toggleWishlist;
+window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromCart = removeFromCart;
+window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
+window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
 
-function closeMobileMenu() {
-    const drawer = document.getElementById('mobileMenuDrawer');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    if (drawer) drawer.classList.remove('open');
-    if (overlay) overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    document.querySelectorAll('.mobile-submenu.open').forEach(sub => sub.classList.remove('open'));
-    document.querySelectorAll('.mobile-menu-item.expanded').forEach(item => item.classList.remove('expanded'));
-}
-
-function toggleMobileSubmenu(submenuId, element) {
-    const submenu = document.getElementById(submenuId);
-    if (!submenu) return;
-    
-    const isOpen = submenu.classList.contains('open');
-    const parentContainer = submenu.parentElement.parentElement;
-    if (parentContainer) {
-        parentContainer.querySelectorAll('.mobile-submenu.open').forEach(sub => {
-            if (sub.id !== submenuId) sub.classList.remove('open');
-        });
-        parentContainer.querySelectorAll('.mobile-menu-item.expanded').forEach(item => {
-            if (item !== element) item.classList.remove('expanded');
-        });
-    }
-    
-    if (isOpen) {
-        submenu.classList.remove('open');
-        if (element) element.classList.remove('expanded');
-    } else {
-        submenu.classList.add('open');
-        if (element) element.classList.add('expanded');
-    }
-}
-
-function getProductSlug(product) {
-    if (!product || !product.title) return '';
-    return product.title.toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 80);
-}
-
-// ============================================================================
-// WINDOWS TARGET BINDING API
-// ============================================================================
-window.showToast = showToast;
-window.hideToast = hideToast;
-window.toggleWishlist = toggleWishlist;
-window.addToCart = addToCart;
-window.toggleCart = toggleCart;
-window.removeFromCart = removeFromCart;
-window.openMobileMenu = openMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-window.toggleMobileSubmenu = toggleMobileSubmenu;
-window.getProductSlug = getProductSlug;
-window.saveCart = saveCart;
-window.renderCartItems = renderCartItems;
-window.updateCounts = updateCounts;
-window.createSlug = createSlug;
-window.getCategoryUrl = getCategoryUrl;
-
-// Expose state pipelines
-window.cart = cart;
-window.wishlist = wishlist;
-window.allMenuItems = allMenuItems;
-window.allCategories = allCategories;
-window.allSubcategories = allSubcategories;
-
-// ============================================================================
-// SYSTEM ARCHITECTURE INITIALIZATION
-// ============================================================================
 async function initSharedComponents() {
     loadFontsConfiguration();
     injectSharedStyles();
