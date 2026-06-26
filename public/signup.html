@@ -17,32 +17,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
-    <script src="/fonts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1d1d1f',
-                        accent: '#86868b',
-                        soft: '#f5f5f7',
-                        blue: '#007aff',
-                        gold: '#c9a96e',
-                        error: '#dc2626',
-                        success: '#059669'
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         :root {
@@ -51,6 +30,8 @@
             --soft: #f5f5f7;
             --blue: #007aff;
             --gold: #c9a96e;
+            --error: #dc2626;
+            --success: #059669;
         }
         
         *, *::before, *::after {
@@ -221,6 +202,7 @@
             color: var(--primary);
             -webkit-appearance: none;
             appearance: none;
+            display: block;
         }
         
         .form-input:hover { border-color: #c5c5cc; }
@@ -565,28 +547,33 @@
         const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
         
-        const supabase = window.supabase?.createClient 
-            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
-            : null;
-
-        if (!supabase) {
-            console.error('Supabase SDK not loaded');
-            alert('Unable to initialize. Please refresh the page.');
+        // Wait for SDK to load
+        let supabase = null;
+        
+        function initSupabase() {
+            if (window.supabase && window.supabase.createClient) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('✅ Supabase initialized');
+                return true;
+            }
+            return false;
         }
 
         (() => {
-            document.addEventListener('DOMContentLoaded', () => {
-                if (window.JAYENWARE_FONTS) {
-                    const r = document.documentElement;
-                    Object.entries(window.JAYENWARE_FONTS.cssVariables).forEach(([k, v]) => r.style.setProperty(k, v));
+            window.addEventListener('load', () => {
+                // Try to initialize Supabase
+                if (!initSupabase()) {
+                    // Retry after delay
+                    setTimeout(() => {
+                        if (!initSupabase()) {
+                            console.error('❌ Supabase SDK failed to load');
+                        }
+                    }, 1000);
                 }
+                setTimeout(boot, 300);
             });
 
-            window.addEventListener('load', () => setTimeout(boot, 200));
-
             function boot() {
-                if (!supabase) return;
-
                 let step = 0;
                 let busy = false;
 
@@ -746,11 +733,11 @@
                                 <div class="input-feedback hint" id="locate-status"></div>
                                 
                                 <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-country" placeholder="Country" value="${data.country}">
+                                    <input type="text" class="form-input" id="loc-country" placeholder="Country" value="${data.country || 'Bangladesh'}">
                                 </div>
                                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-state" placeholder="State / Province" value="${data.state_province}">
-                                    <input type="text" class="form-input" id="loc-city" placeholder="City" value="${data.city}">
+                                    <input type="text" class="form-input" id="loc-state" placeholder="State / Province" value="${data.state_province || ''}">
+                                    <input type="text" class="form-input" id="loc-city" placeholder="City" value="${data.city || ''}">
                                 </div>
                                 <div class="input-feedback" id="loc-error"></div>
                                 
@@ -767,13 +754,13 @@
                                 <p class="step-desc">${s.desc}</p>
                                 
                                 <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal / ZIP code" value="${data.postal_code}">
+                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal / ZIP code" value="${data.postal_code || ''}">
                                 </div>
                                 <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-street" placeholder="Street address" value="${data.street_address}">
+                                    <input type="text" class="form-input" id="addr-street" placeholder="Street address" value="${data.street_address || ''}">
                                 </div>
                                 <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment, suite, unit (optional)" value="${data.apartment_house}">
+                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment, suite, unit (optional)" value="${data.apartment_house || ''}">
                                 </div>
                                 <div class="input-feedback" id="addr-error"></div>
                                 
@@ -964,10 +951,17 @@
 
                 // ============================================
                 // SUBMIT - Direct Supabase Signup
-                // Uses supabase.auth.signUp() directly
-                // No API endpoints needed
                 // ============================================
                 window.submit = async function() {
+                    if (!supabase) {
+                        notify('System initializing... Please wait a moment and try again.', 'warning');
+                        // Retry initialization
+                        if (initSupabase()) {
+                            notify('System ready! Please try again.', 'success');
+                        }
+                        return;
+                    }
+                    
                     const checked = document.getElementById('terms-check')?.checked;
                     
                     if (!checked) {
@@ -991,9 +985,6 @@
                     try {
                         if (loadingText) loadingText.textContent = 'Creating your account...';
                         
-                        // ============================================
-                        // DIRECT SUPABASE SIGNUP (No API Endpoint)
-                        // ============================================
                         const { data: authData, error: signupError } = await supabase.auth.signUp({
                             email: data.email,
                             password: data.password,
@@ -1017,8 +1008,6 @@
                             
                             if (signupError.message.includes('already registered')) {
                                 notify('This email is already registered. Please login instead.', 'error');
-                            } else if (signupError.message.includes('Email')) {
-                                notify(signupError.message, 'error');
                             } else {
                                 notify('Registration failed: ' + signupError.message, 'error');
                             }
@@ -1036,12 +1025,9 @@
                             return;
                         }
                         
-                        // ============================================
-                        // SUCCESS - Get OneID from profiles table
-                        // ============================================
                         if (loadingText) loadingText.textContent = 'Setting up your profile...';
                         
-                        // Wait for database trigger to create profile
+                        // Wait for database trigger
                         await new Promise(resolve => setTimeout(resolve, 2000));
                         
                         const { data: profile } = await supabase
@@ -1052,16 +1038,14 @@
                         
                         const oneid = profile?.jbyn_oneid;
                         
-                        // Show success with OneID
                         if (oneid) {
-                            notify(`🎉 Welcome! Your JBYN-OneID: ${oneid}`, 'success');
+                            notify(`Welcome! Your JBYN-OneID: ${oneid}`, 'success');
                         } else {
-                            notify('Account created successfully! Check your email to verify.', 'success');
+                            notify('Account created! Check your email to verify.', 'success');
                         }
                         
-                        if (loadingText) loadingText.textContent = 'Redirecting to your account...';
+                        if (loadingText) loadingText.textContent = 'Redirecting...';
                         
-                        // Redirect after showing message
                         setTimeout(() => {
                             window.location.href = '/account';
                         }, 3000);
@@ -1075,14 +1059,13 @@
                     }
                 };
 
-                // Close toast on outside click
                 document.addEventListener('click', e => {
                     if (toast.classList.contains('show') && !toast.contains(e.target)) {
                         window.hideToast();
                     }
                 });
 
-                // Initialize first step
+                // Start rendering
                 render(0);
             }
         })();
