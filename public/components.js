@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.1 (100% Edge-to-Edge Dynamic Width Header & Right Gap Eradication)
+// Version: 5.2 (Ultimate Edge-to-Edge Desktop Fix & Right Gap Eradication)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -64,12 +64,13 @@ function injectSharedStyles() {
             --glass-blur: blur(40px) saturate(250%);
         }
         
-        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো টোটাল ভ্যানিশ */
+        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো এবং হোয়াইট স্পেস টোটাল ভ্যানিশ */
         html, body {
             overflow-x: hidden !important;
             width: 100% !important;
             max-width: 100% !important;
-            margin: 0; padding: 0;
+            margin: 0 !important; 
+            padding: 0 !important;
             box-sizing: border-box;
         }
         
@@ -95,14 +96,13 @@ function injectSharedStyles() {
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
         /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
-        /* CRITICAL FIX: উচ্ছেদ করা হলো উইডথ গ্যাপ, হেডার এখন ১০০% স্ক্রিন লকড */
+        /* ABSOLUTE FIX: 100% বা 100vw এর সংঘর্ষ এড়াতে left: 0 এবং right: 0 এর সাহায্যে ফুল-উইডথ স্ট্রেচ নিশ্চিত করা হলো */
         .glass-nav {
             position: fixed;
             top: 0; 
             left: 0 !important; 
             right: 0 !important;
-            width: 100vw !important; /* ভিউপোর্ট উইডথ স্ট্রিক্টলি লক করা হলো */
-            max-width: 100vw !important;
+            width: 100% !important; 
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
@@ -476,8 +476,7 @@ async function renderHeader() {
     allSubcategories = subcategories;
     const menuTree = buildMenuTree(menuItems);
     
-    // CRITICAL FIX: কন্টেইনার উইডথ 'max-w-7xl' কে পরিবর্তন করে 'w-full px-6 lg:px-12' করা হয়েছে 
-    // যাতে ডেক্সটপ স্ক্রিনে এটি একদম দুই প্রান্তে ফ্ল্যাশ হয়ে লেগে থাকে।
+    // ULTIMATE CONFIGURATION: কন্টেইনার ক্লাস থেকে Tailwind এর max-w স্লাইসগুলো মুছে 'w-full block px-6 lg:px-12' সেট করা হয়েছে।
     const headerHTML = `
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
@@ -499,7 +498,7 @@ async function renderHeader() {
     </div>
     
     <nav class="glass-nav" id="main-nav">
-        <div class="w-full px-6 lg:px-12 h-16 lg:h-20 flex justify-between items-center">
+        <div class="w-full px-6 lg:px-12 h-16 lg:h-20 flex justify-between items-center m-0 p-0">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
                 <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
@@ -552,7 +551,7 @@ async function renderHeader() {
 function renderFooter() {
     const footerHTML = `
     <footer class="pt-16 pb-8" id="main-footer">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-6 lg:px-12">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
                     <h4 class="text-sm font-bold tracking-widest mb-4">JAYENWARE</h4>
