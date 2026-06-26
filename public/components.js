@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.0 (Ultra-Dynamic Desktop Viewport Optimization - Anti-Glitch Line)
+// Version: 5.0 (Dynamic Width Fix & Total Right Edge Bleed/Black Line Rectification)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -45,11 +45,6 @@ function applyFontVariables() {
 function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
-        /* DYNAMIC BOX MODEL RESET - ডানপাশের বর্ডার পিক্সেল গ্লিচ দূর করার জন্য */
-        *, *::before, *::after {
-            box-sizing: border-box !important;
-        }
-
         :root {
             --primary: #000000;
             --accent: #ffffff;
@@ -69,27 +64,18 @@ function injectSharedStyles() {
             --glass-blur: blur(40px) saturate(250%);
         }
         
-        /* DYNAMIC VIEWPORT LOCK - ডেক্সটপ স্ক্রিন ফ্লুইড রাখার জন্য ফিক্স */
-        html {
-            width: 100%25;
-            max-width: 100%25;
+        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো টোটাল ভ্যানিশ */
+        html, body {
             overflow-x: hidden !important;
-            margin: 0;
-            padding: 0;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0; padding: 0;
+            box-sizing: border-box;
         }
         
-        body { 
-            width: 100%25;
-            max-width: 100%25;
-            overflow-x: hidden !important;
-            margin: 0;
-            padding: 0;
-            padding-top: 64px; 
-            font-family: var(--font-body);
-            background-color: #ffffff;
-            color: var(--primary);
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
-        @media (min-width: 1024px) { body { padding-top: 80px; } }
         
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
         .text-heading-hero { font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
@@ -108,20 +94,21 @@ function injectSharedStyles() {
         .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
-        /* ==================== LIQUID GLASS NAVIGATION HEADER ==================== */
+        /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
         .glass-nav {
-            left: 0;
-            right: 0;
-            width: 100%25;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            width: 100%;
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--glass-border-light);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 50;
         }
         
-        /* ==================== UNIFIED GLASS SIDE DRAWER ==================== */
+        /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
         .side-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.25);
@@ -134,19 +121,23 @@ function injectSharedStyles() {
         
         .side-menu-drawer {
             position: fixed; top: 0; right: 0;
-            width: 100%25; max-width: 440px;
+            width: 100%; max-width: 440px;
             height: 100vh; height: 100dvh;
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-left: 1px solid var(--glass-border-light);
             z-index: 200;
-            transform: translateX(105%25); /* ১০০% এর জায়গায় ১০৫% অফসেট নিশ্চিত করে যে ডেক্সটপে কোনো কালো বর্ডার দেখা যাবে না */
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(105%); /* বর্ডার ট্র্যাকিং এড়াতে সম্পূর্ণ অফ-স্ক্রিন পুশ */
+            visibility: hidden; /* বন্ধ থাকলে কোনো কালো শ্যাডো বা বর্ডার রিপ্রেজেন্ট করবে না */
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
-            box-shadow: -20px 0 60px rgba(0,0,0,0.05);
+            box-shadow: -20px 0 60px rgba(0,0,0,0.03);
         }
-        .side-menu-drawer.open { transform: translateX(0) !important; }
+        .side-menu-drawer.open { 
+            transform: translateX(0); 
+            visibility: visible;
+        }
         
         .side-menu-header {
             display: flex; justify-content: space-between; align-items: center;
@@ -195,18 +186,27 @@ function injectSharedStyles() {
             background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
         }
         
-        /* ==================== CART DRAWER (Liquid Black Glass) ==================== */
+        /* ==================== CART DRAWER (Dynamic Liquid Black Glass) ==================== */
         #cart-drawer {
+            position: fixed; top: 0; right: 0;
+            width: 100%; max-width: 440px;
+            height: 100vh; height: 100dvh;
             background: var(--glass-black-thick) !important;
             backdrop-filter: var(--glass-blur) !important;
             -webkit-backdrop-filter: var(--glass-blur) !important;
             border-left: 1px solid var(--glass-border-inline);
-            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            z-index: 210;
+            transform: translateX(105%) !important;
+            visibility: hidden;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important, visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform;
-            transform: translateX(105%25) !important; /* সম্পূর্ণ অফ-ভিউ ট্র্যাকিং */
             color: var(--accent) !important;
+            display: flex; flex-direction: column;
         }
-        #cart-drawer.open { transform: translateX(0) !important; }
+        #cart-drawer.open { 
+            transform: translateX(0) !important; 
+            visibility: visible !important;
+        }
         #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
         #cart-drawer .bg-soft {
             background: rgba(255, 255, 255, 0.06) !important;
@@ -233,17 +233,25 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
-        /* ==================== DYNAMIC FOOTER EDGE ADJUSTMENT ==================== */
+        /* ==================== FULLY DYNAMIC FOOTER ==================== */
         #main-footer { 
             background: #000000; 
             color: #8e8e93; 
             border-top: 1px solid #1c1c1e;
-            width: 100%25;
-            max-width: 100%25;
-            margin: 0;
+            width: 100% !important;
+            position: relative;
+            clear: both;
         }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
+        
+        body { 
+            padding-top: 64px; 
+            font-family: var(--font-body);
+            background-color: #ffffff;
+            color: var(--primary);
+        }
+        @media (min-width: 1024px) { body { padding-top: 80px; } }
         
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -342,7 +350,7 @@ function getMenuLinkUrl(item) {
 }
 
 // ============================================================================
-// RENDER UNIFIED DRAWER ENGINE (Universal Responsive Architecture)
+// RENDER UNIFIED DRAWER ENGINE
 // ============================================================================
 function renderUnifiedDrawerMenu(rootItems) {
     let html = '';
@@ -446,7 +454,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 }
 
 // ============================================================================
-// HEADER SYSTEM (Liquid Translucent Engine - A to Z Navigation)
+// HEADER SYSTEM (Liquid Translucent Engine)
 // ============================================================================
 async function renderHeader() {
     const [menuItems, categories, subcategories] = await Promise.all([
@@ -479,7 +487,7 @@ async function renderHeader() {
         </div>
     </div>
     
-    <nav class="glass-nav fixed top-0 z-50" id="main-nav">
+    <nav class="glass-nav" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
                 <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
@@ -504,7 +512,7 @@ async function renderHeader() {
         </div>
     </nav>
     
-    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col">
+    <div id="cart-drawer" class="shadow-2xl">
         <div class="p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
             <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg transition p-1">
@@ -604,28 +612,18 @@ function hideToast() {
 // SIDE DRAWER CONTROLLER LOGIC
 // ============================================================================
 function openSideMenu() {
-    document.getElementById('sideMenuDrawer').classList.add('open');
+    const drawer = document.getElementById('sideMenuDrawer');
+    drawer.classList.add('open');
     document.getElementById('sideMenuOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeSideMenu() {
-    document.getElementById('sideMenuDrawer').classList.remove('open');
+    const drawer = document.getElementById('sideMenuDrawer');
+    drawer.classList.remove('open');
     document.getElementById('sideMenuOverlay').classList.remove('active');
     document.body.style.overflow = '';
     document.querySelectorAll('.menu-node-submenu.open').forEach(sub => sub.classList.remove('open'));
-}
-
-function toggleDrawerSubmenu(submenuId, element) {
-    const submenu = document.getElementById(submenuId);
-    if (!submenu) return;
-    const isOpen = submenu.classList.contains('open');
-    
-    if (isOpen) {
-        submenu.classList.remove('open');
-    } else {
-        submenu.classList.add('open');
-    }
 }
 
 // ============================================================================
@@ -711,6 +709,17 @@ function toggleWishlist(id) {
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
+}
+
+function toggleDrawerSubmenu(submenuId, element) {
+    const submenu = document.getElementById(submenuId);
+    if (!submenu) return;
+    const isOpen = submenu.classList.contains('open');
+    if (isOpen) {
+        submenu.classList.remove('open');
+    } else {
+        submenu.classList.add('open');
+    }
 }
 
 // ============================================================================
