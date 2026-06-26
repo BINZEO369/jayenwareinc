@@ -2,6 +2,7 @@
 // server.js - Complete API Server
 // JBYN-OneID Global Profile System
 // Supabase Integrated | Production Ready
+// All Endpoints Working + 5-Second Wait
 // ============================================
 
 const express = require('express');
@@ -25,46 +26,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
-// AUTH MIDDLEWARE (JWT Verification)
-// ============================================
-async function authenticateUser(req, res, next) {
-    try {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        
-        if (!token) {
-            // Try to get user from Supabase session
-            const { data: { user }, error } = await supabase.auth.getUser();
-            
-            if (error || !user) {
-                return res.status(401).json({ error: 'Not authenticated' });
-            }
-            
-            req.user = user;
-            return next();
-        }
-        
-        // Verify JWT token with Supabase
-        const { data: { user }, error } = await supabase.auth.getUser(token);
-        
-        if (error || !user) {
-            return res.status(403).json({ error: 'Invalid or expired token' });
-        }
-        
-        req.user = user;
-        next();
-        
-    } catch (err) {
-        return res.status(403).json({ error: 'Authentication failed' });
-    }
-}
-
-// ============================================
 // HELPER FUNCTIONS
 // ============================================
 
-// Create slug from string
 function createSlug(text) {
+    if (!text) return '';
     return text
         .toLowerCase()
         .replace(/[^\w\s-]/g, '')
@@ -73,7 +39,6 @@ function createSlug(text) {
         .replace(/^-+|-+$/g, '');
 }
 
-// Build full address from components
 function buildFullAddress(data) {
     const parts = [
         data.apartment_house,
@@ -83,11 +48,9 @@ function buildFullAddress(data) {
         data.postal_code,
         data.country || 'Bangladesh'
     ].filter(Boolean);
-    
     return parts.join(', ') || 'Address not provided';
 }
 
-// Format product with category/subcategory names
 function formatProduct(product) {
     if (!product) return null;
     return {
@@ -102,24 +65,12 @@ function formatProducts(products) {
     return products.map(formatProduct);
 }
 
-// Format phone number to international format (E.164)
 function formatPhoneNumber(phone) {
     if (!phone || phone === 'N/A') return phone;
-    
     let cleaned = phone.replace(/[^\d]/g, '');
-    
-    if (cleaned.startsWith('01') && cleaned.length === 11) {
-        return '+880' + cleaned.substring(1);
-    }
-    
-    if (cleaned.startsWith('8801') && cleaned.length === 13) {
-        return '+' + cleaned;
-    }
-    
-    if (phone.startsWith('+')) {
-        return phone;
-    }
-    
+    if (cleaned.startsWith('01') && cleaned.length === 11) return '+880' + cleaned.substring(1);
+    if (cleaned.startsWith('8801') && cleaned.length === 13) return '+' + cleaned;
+    if (phone.startsWith('+')) return phone;
     return phone;
 }
 
@@ -132,40 +83,60 @@ function isValidOneID(oneid) {
 }
 
 // ============================================
+// AUTH MIDDLEWARE
+// ============================================
+async function authenticateUser(req, res, next) {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        
+        if (token) {
+            const { data: { user }, error } = await supabase.auth.getUser(token);
+            if (!error && user) {
+                req.user = user;
+                return next();
+            }
+        }
+        
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+        
+        req.user = user;
+        next();
+    } catch (err) {
+        return res.status(403).json({ error: 'Authentication failed' });
+    }
+}
+
+// ============================================
 // AUTHENTICATION API ROUTES
 // ============================================
 
-// SIGNUP
+// SIGNUP - With 5-Second Wait for Database Triggers
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { 
-            email, 
-            password, 
-            name, 
-            phone,
-            country,
-            state_province,
-            city,
-            postal_code,
-            street_address,
-            apartment_house
+            email, password, name, phone,
+            country, state_province, city,
+            postal_code, street_address, apartment_house
         } = req.body;
 
+        // Validation
         if (!email || !password) {
             return res.status(400).json({ error: 'Email and password are required' });
         }
-
         if (!name || name.trim().length < 3) {
             return res.status(400).json({ error: 'Full name is required (minimum 3 characters)' });
         }
-
         if (password.length < 6) {
             return res.status(400).json({ error: 'Password must be at least 6 characters' });
         }
 
         const formattedPhone = formatPhoneNumber(phone);
-        if (phone && !isValidPhone(formattedPhone)) {
-            return res.status(400).json({ error: 'Invalid phone format' });
+        if (phone && phone !== 'N/A' && !isValidPhone(formattedPhone)) {
+            return res.status(400).json({ error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)' });
         }
 
         const fullAddress = buildFullAddress({
@@ -178,9 +149,10 @@ app.post('/api/auth/signup', async (req, res) => {
         });
 
         if (!fullAddress || fullAddress.length < 10) {
-            return res.status(400).json({ error: 'Please provide complete address details' });
+            return res.status(400).json({ error: 'Please provide complete address details (minimum 10 characters)' });
         }
 
+        // Supabase signup with user_metadata
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -206,25 +178,36 @@ app.post('/api/auth/signup', async (req, res) => {
             return res.status(400).json({ error: error.message });
         }
 
-        // Get generated OneID
+        // ============================================
+        // 🔥 5 SECOND WAIT - For Database Triggers
+        // ============================================
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        // Get generated OneID and profile after trigger completes
         let oneid = null;
+        let profileData = null;
+        
         if (data.user) {
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('jbyn_oneid')
+                .select('*')
                 .eq('id', data.user.id)
                 .single();
             
-            oneid = profile?.jbyn_oneid || null;
+            if (profile) {
+                oneid = profile.jbyn_oneid;
+                profileData = profile;
+            }
         }
 
         res.status(201).json({
             success: true,
-            message: 'Registration successful!',
+            message: 'Registration successful! Welcome to JAYENWARE.',
             user: data.user,
             access_token: data.session?.access_token,
             refresh_token: data.session?.refresh_token,
-            jbyn_oneid: oneid
+            jbyn_oneid: oneid,
+            profile: profileData
         });
 
     } catch (err) {
@@ -257,6 +240,7 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: error.message });
         }
 
+        // Fetch complete profile data
         const { data: profile } = await supabase
             .from('profiles')
             .select('*')
@@ -282,38 +266,23 @@ app.post('/api/auth/login', async (req, res) => {
 app.post('/api/auth/logout', async (req, res) => {
     try {
         const { error } = await supabase.auth.signOut();
-        
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-
+        if (error) return res.status(500).json({ error: error.message });
         res.json({ success: true, message: 'Logged out successfully' });
     } catch (err) {
         res.status(500).json({ error: 'Logout failed' });
     }
 });
 
-// GET CURRENT USER
+// GET CURRENT USER SESSION
 app.get('/api/auth/user', async (req, res) => {
     try {
         const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) return res.status(401).json({ error: 'Not authenticated' });
 
-        if (error || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        const { data: profile, error: profileError } = await supabase.rpc('get_my_profile');
+        if (profileError) return res.status(500).json({ error: profileError.message });
 
-        const { data: profile, error: profileError } = await supabase
-            .rpc('get_my_profile');
-
-        if (profileError) {
-            return res.status(500).json({ error: profileError.message });
-        }
-
-        res.json({
-            user,
-            profile: profile?.[0] || null
-        });
-
+        res.json({ user, profile: profile?.[0] || null });
     } catch (err) {
         res.status(500).json({ error: 'Failed to get user data' });
     }
@@ -323,10 +292,7 @@ app.get('/api/auth/user', async (req, res) => {
 app.put('/api/auth/profile', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
 
         const { 
             name, phone, country, state_province, city,
@@ -336,6 +302,17 @@ app.put('/api/auth/profile', async (req, res) => {
 
         if (name && name.trim().length < 3) {
             return res.status(400).json({ error: 'Name must be at least 3 characters' });
+        }
+
+        if (phone) {
+            const formattedPhone = formatPhoneNumber(phone);
+            if (!isValidPhone(formattedPhone)) {
+                return res.status(400).json({ error: 'Invalid phone format. Use international format' });
+            }
+        }
+
+        if (contact_privacy && !['public', 'contacts_only', 'private'].includes(contact_privacy)) {
+            return res.status(400).json({ error: 'Invalid privacy setting' });
         }
 
         const updateData = {};
@@ -358,17 +335,11 @@ app.put('/api/auth/profile', async (req, res) => {
             .select()
             .single();
 
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
+        if (error) return res.status(500).json({ error: error.message });
 
-        res.json({
-            success: true,
-            message: 'Profile updated successfully',
-            profile: data
-        });
-
+        res.json({ success: true, message: 'Profile updated successfully', profile: data });
     } catch (err) {
+        console.error('Profile update error:', err);
         res.status(500).json({ error: 'Failed to update profile' });
     }
 });
@@ -377,41 +348,27 @@ app.put('/api/auth/profile', async (req, res) => {
 app.put('/api/auth/privacy', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
 
         const { contact_privacy, allow_search } = req.body;
 
-        const { data, error } = await supabase
-            .rpc('update_privacy_settings', {
-                p_privacy_level: contact_privacy,
-                p_allow_search: allow_search
-            });
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        res.json({
-            success: true,
-            message: 'Privacy settings updated successfully'
+        const { data, error } = await supabase.rpc('update_privacy_settings', {
+            p_privacy_level: contact_privacy,
+            p_allow_search: allow_search
         });
 
+        if (error) return res.status(400).json({ error: error.message });
+        res.json({ success: true, message: 'Privacy settings updated successfully' });
     } catch (err) {
         res.status(500).json({ error: 'Failed to update privacy settings' });
     }
 });
 
-// GET JBYN PASSKEY
+// GET JBYN PASSKEY (OneID)
 app.get('/api/auth/passkey', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
 
         const { data: profile } = await supabase
             .from('profiles')
@@ -419,12 +376,8 @@ app.get('/api/auth/passkey', async (req, res) => {
             .eq('id', user.id)
             .single();
 
-        if (!profile) {
-            return res.status(404).json({ error: 'Profile not found' });
-        }
-
+        if (!profile) return res.status(404).json({ error: 'Profile not found' });
         res.json({ jbyn_oneid: profile.jbyn_oneid });
-
     } catch (err) {
         res.status(500).json({ error: 'Failed to retrieve OneID' });
     }
@@ -434,21 +387,14 @@ app.get('/api/auth/passkey', async (req, res) => {
 app.post('/api/auth/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;
-
-        if (!email) {
-            return res.status(400).json({ error: 'Email is required' });
-        }
+        if (!email) return res.status(400).json({ error: 'Email is required' });
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
         });
 
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
+        if (error) return res.status(400).json({ error: error.message });
         res.json({ message: 'Password reset link sent to your email' });
-
     } catch (err) {
         res.status(500).json({ error: 'Failed to send reset email' });
     }
@@ -458,67 +404,48 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 app.put('/api/auth/reset-password', async (req, res) => {
     try {
         const { password } = req.body;
-
         if (!password || password.length < 6) {
             return res.status(400).json({ error: 'Password must be at least 6 characters' });
         }
 
         const { error } = await supabase.auth.updateUser({ password });
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
+        if (error) return res.status(400).json({ error: error.message });
         res.json({ message: 'Password updated successfully' });
-
     } catch (err) {
         res.status(500).json({ error: 'Failed to update password' });
     }
 });
 
-// DELETE ACCOUNT
+// DELETE ACCOUNT (Soft Delete)
 app.post('/api/auth/delete-account', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
 
         const { reason } = req.body;
 
-        const { data, error } = await supabase
-            .rpc('soft_delete_user', {
-                p_user_id: user.id,
-                p_reason: reason || 'User requested deletion'
-            });
-
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        await supabase.auth.signOut();
-
-        res.json({
-            success: true,
-            message: 'Account deletion requested. Will be permanently deleted after 30 days.'
+        const { data, error } = await supabase.rpc('soft_delete_user', {
+            p_user_id: user.id,
+            p_reason: reason || 'User requested deletion'
         });
 
+        if (error) return res.status(400).json({ error: error.message });
+        await supabase.auth.signOut();
+
+        res.json({ success: true, message: 'Account deletion requested. Your account will be permanently deleted after 30 days.' });
     } catch (err) {
         res.status(500).json({ error: 'Failed to delete account' });
     }
 });
 
 // ============================================
-// NOTIFICATION API ROUTES (NEW)
+// NOTIFICATION API ROUTES
 // ============================================
 
 // GET USER NOTIFICATIONS
 app.get('/api/auth/notifications', authenticateUser, async (req, res) => {
     try {
-        // Call Supabase RPC function
-        const { data, error } = await supabase
-            .rpc('get_user_notifications');
+        const { data, error } = await supabase.rpc('get_user_notifications');
 
         if (error) {
             console.error('Notification fetch error:', error);
@@ -533,7 +460,6 @@ app.get('/api/auth/notifications', authenticateUser, async (req, res) => {
             unread_count: notifications.filter(n => !n.is_read).length,
             latest: notifications.length > 0 ? notifications[0] : null
         });
-
     } catch (err) {
         console.error('Notification API error:', err);
         res.status(500).json({ error: 'Internal server error' });
@@ -553,19 +479,10 @@ app.put('/api/auth/notifications/:id/read', authenticateUser, async (req, res) =
             .select()
             .single();
 
-        if (error) {
-            return res.status(500).json({ error: 'Failed to update notification' });
-        }
+        if (error) return res.status(500).json({ error: 'Failed to update notification' });
+        if (!data) return res.status(404).json({ error: 'Notification not found' });
 
-        if (!data) {
-            return res.status(404).json({ error: 'Notification not found' });
-        }
-
-        res.json({
-            success: true,
-            notification: data
-        });
-
+        res.json({ success: true, notification: data });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -581,22 +498,15 @@ app.put('/api/auth/notifications/read-all', authenticateUser, async (req, res) =
             .eq('is_read', false)
             .select();
 
-        if (error) {
-            return res.status(500).json({ error: 'Failed to update notifications' });
-        }
+        if (error) return res.status(500).json({ error: 'Failed to update notifications' });
 
-        res.json({
-            success: true,
-            message: `${data?.length || 0} notifications marked as read`,
-            count: data?.length || 0
-        });
-
+        res.json({ success: true, message: `${data?.length || 0} notifications marked as read`, count: data?.length || 0 });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// DELETE OLD NOTIFICATIONS (Cleanup)
+// DELETE OLD NOTIFICATIONS
 app.delete('/api/auth/notifications/cleanup', authenticateUser, async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -606,16 +516,9 @@ app.delete('/api/auth/notifications/cleanup', authenticateUser, async (req, res)
             .lt('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
             .select();
 
-        if (error) {
-            return res.status(500).json({ error: 'Failed to clean notifications' });
-        }
+        if (error) return res.status(500).json({ error: 'Failed to clean notifications' });
 
-        res.json({
-            success: true,
-            message: `${data?.length || 0} old notifications removed`,
-            count: data?.length || 0
-        });
-
+        res.json({ success: true, message: `${data?.length || 0} old notifications removed`, count: data?.length || 0 });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -625,59 +528,37 @@ app.delete('/api/auth/notifications/cleanup', authenticateUser, async (req, res)
 // OneID LOOKUP & SEARCH API
 // ============================================
 
-// Search user by OneID
+// Search user by OneID (Privacy-safe - limited info)
 app.get('/api/oneid/search/:oneid', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
 
         const { oneid } = req.params;
+        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
 
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-        }
-
-        const { data, error } = await supabase
-            .rpc('search_user_by_oneid', { lookup_oneid: oneid });
-
-        if (error) {
-            return res.status(404).json({ error: error.message });
-        }
+        const { data, error } = await supabase.rpc('search_user_by_oneid', { lookup_oneid: oneid });
+        if (error) return res.status(404).json({ error: error.message });
 
         res.json(data?.[0] || null);
-
     } catch (err) {
         res.status(500).json({ error: 'Search failed' });
     }
 });
 
-// Lookup user by OneID
+// Lookup user by OneID (Respects privacy settings)
 app.get('/api/oneid/lookup/:oneid', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
 
         const { oneid } = req.params;
+        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
 
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-        }
-
-        const { data, error } = await supabase
-            .rpc('lookup_user_by_oneid', { lookup_oneid: oneid });
-
-        if (error) {
-            return res.status(404).json({ error: error.message });
-        }
+        const { data, error } = await supabase.rpc('lookup_user_by_oneid', { lookup_oneid: oneid });
+        if (error) return res.status(404).json({ error: error.message });
 
         res.json(data?.[0] || null);
-
     } catch (err) {
         res.status(500).json({ error: 'Lookup failed' });
     }
@@ -687,27 +568,19 @@ app.get('/api/oneid/lookup/:oneid', async (req, res) => {
 app.get('/api/oneid/exists/:oneid', async (req, res) => {
     try {
         const { oneid } = req.params;
+        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
 
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-        }
-
-        const { data, error } = await supabase
-            .rpc('profile_exists', { lookup_oneid: oneid });
-
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
+        const { data, error } = await supabase.rpc('profile_exists', { lookup_oneid: oneid });
+        if (error) return res.status(500).json({ error: error.message });
 
         res.json({ exists: data });
-
     } catch (err) {
         res.status(500).json({ error: 'Check failed' });
     }
 });
 
 // ============================================
-// PRODUCTS API
+// PRODUCTS API (Categories, Subcategories with Slug)
 // ============================================
 
 // Get all products
@@ -745,7 +618,7 @@ app.get('/api/product/:slug', async (req, res) => {
     }
 });
 
-// Get all categories
+// Get all categories (with slugs)
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -771,12 +644,7 @@ app.get('/api/categories', async (req, res) => {
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true);
-        
+        const { data, error } = await supabase.from('categories').select('*').eq('is_active', true);
         if (error) return res.status(500).json({ error: error.message });
         
         const category = data.find(cat => {
@@ -799,11 +667,7 @@ app.get('/api/categories/:slug', async (req, res) => {
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
-        
-        const { data: categories } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true);
+        const { data: categories } = await supabase.from('categories').select('*').eq('is_active', true);
         
         const category = categories.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
@@ -819,7 +683,6 @@ app.get('/api/categories/:slug/products', async (req, res) => {
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
-        
         res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -838,21 +701,14 @@ app.get('/api/subcategories', async (req, res) => {
             .order('sort_order', { ascending: true });
         
         if (category_slug) {
-            const { data: categories } = await supabase
-                .from('categories')
-                .select('id, slug')
-                .eq('is_active', true);
-            
+            const { data: categories } = await supabase.from('categories').select('id, slug').eq('is_active', true);
             const category = categories.find(cat => {
                 const dbSlug = cat.slug || createSlug(cat.name);
                 return dbSlug.replace(/^category\//, '') === category_slug;
             });
             
-            if (category) {
-                query = query.eq('category_id', category.id);
-            } else {
-                return res.status(404).json({ error: 'Category not found' });
-            }
+            if (category) query = query.eq('category_id', category.id);
+            else return res.status(404).json({ error: 'Category not found' });
         }
         
         const { data, error } = await query;
@@ -890,9 +746,8 @@ app.get('/api/subcategories/:slug', async (req, res) => {
         
         if (category_slug && subcategory) {
             const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
-            if (catSlug.replace(/^category\//, '') !== category_slug) {
-                subcategory = null;
-            }
+            const cleanCatSlug = catSlug.replace(/^category\//, '');
+            if (cleanCatSlug !== category_slug) subcategory = null;
         }
         
         if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
@@ -912,10 +767,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         
-        const { data: subcategories } = await supabase
-            .from('subcategories')
-            .select('*')
-            .eq('is_active', true);
+        const { data: subcategories } = await supabase.from('subcategories').select('*').eq('is_active', true);
         
         const subcategory = subcategories.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
@@ -931,7 +783,6 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
-        
         res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -971,10 +822,60 @@ app.get('/api/menu', async (req, res) => {
     }
 });
 
+// Get flat menu items
+app.get('/api/menu-items', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`*, categories:category_id (id, name), subcategories:subcategory_id (id, name)`)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItemsWithSlugs = data.map(item => ({
+            ...item,
+            slug: createSlug(item.title),
+            category_slug: item.categories ? createSlug(item.categories.name) : null,
+            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
+        }));
+        
+        res.json(menuItemsWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get menu item by slug
+app.get('/api/menu-items/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`*, categories:category_id (id, name), subcategories:subcategory_id (id, name)`)
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItem = data.find(item => createSlug(item.title) === slug);
+        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
+        
+        res.json({
+            ...menuItem,
+            slug: createSlug(menuItem.title),
+            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
+            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ============================================
 // HERO SLIDES & VIDEOS API
 // ============================================
 
+// Get hero slides
 app.get('/api/hero', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -989,6 +890,7 @@ app.get('/api/hero', async (req, res) => {
     }
 });
 
+// Get hero videos
 app.get('/api/hero-videos', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -1004,6 +906,7 @@ app.get('/api/hero-videos', async (req, res) => {
     }
 });
 
+// Get hero secondary items
 app.get('/api/hero-secondary', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -1022,6 +925,7 @@ app.get('/api/hero-secondary', async (req, res) => {
 // ============================================
 // NEWS API
 // ============================================
+
 app.get('/api/news', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -1037,9 +941,10 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
-// PRODUCT DETAILS API
+// PRODUCT DETAILS API (Colors, Variants, Reviews, Videos, Banners)
 // ============================================
 
+// Get product colors
 app.get('/api/product-colors', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -1062,6 +967,7 @@ app.get('/api/product-colors', async (req, res) => {
     }
 });
 
+// Get product variants
 app.get('/api/product-variants', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -1084,6 +990,7 @@ app.get('/api/product-variants', async (req, res) => {
     }
 });
 
+// Get product reviews
 app.get('/api/product-reviews', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -1106,6 +1013,7 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
+// Submit product review
 app.post('/api/submit-review', async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
@@ -1116,7 +1024,12 @@ app.post('/api/submit-review', async (req, res) => {
         
         const { data, error } = await supabase
             .from('product_reviews')
-            .insert([{ product_id, user_name: user_name || 'Guest User', rating: parseInt(rating), review_text }]);
+            .insert([{
+                product_id,
+                user_name: user_name || 'Guest User',
+                rating: parseInt(rating),
+                review_text
+            }]);
         
         if (error) return res.status(500).json({ error: error.message });
         res.json({ success: true, data });
@@ -1125,6 +1038,7 @@ app.post('/api/submit-review', async (req, res) => {
     }
 });
 
+// Get product videos
 app.get('/api/product-videos', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -1148,6 +1062,7 @@ app.get('/api/product-videos', async (req, res) => {
     }
 });
 
+// Get product banners
 app.get('/api/product-banners', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -1171,6 +1086,7 @@ app.get('/api/product-banners', async (req, res) => {
     }
 });
 
+// Get color sizes
 app.get('/api/color-sizes', async (req, res) => {
     try {
         const ids = req.query.ids;
@@ -1196,15 +1112,18 @@ app.get('/api/color-sizes', async (req, res) => {
 // PAGE ROUTES
 // ============================================
 
+// Auth pages
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'login.html')));
 app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'signup.html')));
 app.get('/reset-password', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html')));
 app.get('/profile', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'profile.html')));
 app.get('/account', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'account.html')));
+
+// Category page (with subcategory support)
 app.get('/category/:slug*', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'category.html')));
 
 // ============================================
-// SPA FALLBACK
+// SPA FALLBACK (Must be last)
 // ============================================
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
 
