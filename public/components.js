@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.2 (Ultimate Edge-to-Edge Desktop Fix & Right Gap Eradication)
+// Version: 5.3 (Ultimate Edge-to-Edge Desktop Fix - Complete)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -96,7 +96,7 @@ function injectSharedStyles() {
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
         /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
-        /* ABSOLUTE FIX: 100% বা 100vw এর সংঘর্ষ এড়াতে left: 0 এবং right: 0 এর সাহায্যে ফুল-উইডথ স্ট্রেচ নিশ্চিত করা হলো */
+        /* ABSOLUTE FIX: সম্পূর্ণ প্রস্থে হেডার দেখানোর জন্য */
         .glass-nav {
             position: fixed;
             top: 0; 
@@ -112,6 +112,30 @@ function injectSharedStyles() {
             z-index: 50;
             margin: 0 !important;
             padding: 0 !important;
+        }
+        
+        /* হেডারের অভ্যন্তরীণ কন্টেইনার - সম্পূর্ণ প্রস্থে */
+        .glass-nav > div {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+        
+        /* ডেস্কটপের জন্য অ্যাডজাস্টমেন্ট */
+        @media (min-width: 1024px) {
+            .glass-nav > div {
+                padding-left: 40px !important;
+                padding-right: 40px !important;
+            }
+        }
+        
+        body { 
+            padding-top: 0 !important;
+            font-family: var(--font-body);
+            background-color: #ffffff;
+            color: var(--primary);
         }
         
         /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
@@ -250,14 +274,6 @@ function injectSharedStyles() {
         }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
-        
-        body { 
-            padding-top: 64px; 
-            font-family: var(--font-body);
-            background-color: #ffffff;
-            color: var(--primary);
-        }
-        @media (min-width: 1024px) { body { padding-top: 80px; } }
         
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -476,7 +492,6 @@ async function renderHeader() {
     allSubcategories = subcategories;
     const menuTree = buildMenuTree(menuItems);
     
-    // ULTIMATE CONFIGURATION: কন্টেইনার ক্লাস থেকে Tailwind এর max-w স্লাইসগুলো মুছে 'w-full block px-6 lg:px-12' সেট করা হয়েছে।
     const headerHTML = `
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
@@ -498,7 +513,7 @@ async function renderHeader() {
     </div>
     
     <nav class="glass-nav" id="main-nav">
-        <div class="w-full px-6 lg:px-12 h-16 lg:h-20 flex justify-between items-center m-0 p-0">
+        <div class="h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
                 <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
