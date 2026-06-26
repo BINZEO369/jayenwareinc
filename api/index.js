@@ -2,8 +2,7 @@
 // server.js - Complete API Server
 // JBYN-OneID Global Profile System
 // Supabase Integrated | Production Ready
-// All Endpoints Working + 5-Second Wait
-// SQL Compliant Version
+// All Endpoints Working | SQL Schema Compatible
 // ============================================
 
 const express = require('express');
@@ -30,6 +29,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // HELPER FUNCTIONS
 // ============================================
 
+// Create slug from string
 function createSlug(text) {
     if (!text) return '';
     return text
@@ -40,6 +40,7 @@ function createSlug(text) {
         .replace(/^-+|-+$/g, '');
 }
 
+// Build full address from components
 function buildFullAddress(data) {
     const parts = [
         data.apartment_house,
@@ -47,49 +48,13 @@ function buildFullAddress(data) {
         data.city,
         data.state_province,
         data.postal_code,
-        data.country
+        data.country || 'Bangladesh'
     ].filter(Boolean);
-    return parts.join(', ') || null;
+    
+    return parts.join(', ') || 'Address not provided';
 }
 
-function formatPhoneNumber(phone) {
-    if (!phone || phone === 'N/A') return phone;
-    
-    // Remove all non-digit characters
-    let cleaned = phone.replace(/[^\d]/g, '');
-    
-    // If starts with +880 or 880, remove country code
-    if (cleaned.startsWith('880')) {
-        cleaned = cleaned.substring(3);
-    }
-    
-    // If starts with 01 and is 11 digits, return as is
-    if (cleaned.startsWith('01') && cleaned.length === 11) {
-        return cleaned;
-    }
-    
-    // If 11 digits and doesn't start with 01, add 0 prefix
-    if (cleaned.length === 11 && !cleaned.startsWith('01')) {
-        return '0' + cleaned;
-    }
-    
-    // If between 6-15 digits, return as is
-    if (cleaned.length >= 6 && cleaned.length <= 15) {
-        return cleaned;
-    }
-    
-    // Fallback - return original
-    return phone;
-}
-
-function isValidPhone(phone) {
-    return phone === 'N/A' || /^[0-9]{6,15}$/.test(phone);
-}
-
-function isValidOneID(oneid) {
-    return /^JBYN-OneID-[A-Z0-9]{12}$/.test(oneid);
-}
-
+// Format product with category/subcategory names
 function formatProduct(product) {
     if (!product) return null;
     return {
@@ -104,79 +69,105 @@ function formatProducts(products) {
     return products.map(formatProduct);
 }
 
-// ============================================
-// AUTH MIDDLEWARE
-// ============================================
-async function authenticateUser(req, res, next) {
-    try {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        
-        if (token) {
-            const { data: { user }, error } = await supabase.auth.getUser(token);
-            if (!error && user) {
-                req.user = user;
-                return next();
-            }
-        }
-        
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
-        
-        req.user = user;
-        next();
-    } catch (err) {
-        return res.status(403).json({ error: 'Authentication failed' });
+// Format phone number to international format (E.164)
+function formatPhoneNumber(phone) {
+    if (!phone || phone === 'N/A') return phone;
+    
+    // Remove all non-digit characters
+    let cleaned = phone.replace(/[^\d]/g, '');
+    
+    // Bangladesh format: 01XXXXXXXXX -> +8801XXXXXXXXX
+    if (cleaned.startsWith('01') && cleaned.length === 11) {
+        return '+880' + cleaned.substring(1);
     }
+    
+    // Already has country code but missing +
+    if (cleaned.startsWith('8801') && cleaned.length === 13) {
+        return '+' + cleaned;
+    }
+    
+    // Return as is if already properly formatted
+    if (phone.startsWith('+')) {
+        return phone;
+    }
+    
+    return phone;
+}
+
+// Validate E.164 phone format
+function isValidPhone(phone) {
+    return phone === 'N/A' || /^\+[1-9]\d{6,14}$/.test(phone);
+}
+
+// Validate JBYN-OneID format
+function isValidOneID(oneid) {
+    return /^JBYN-OneID-[A-Z0-9]{12}$/.test(oneid);
 }
 
 // ============================================
 // AUTHENTICATION API ROUTES
 // ============================================
 
-// SIGNUP - With 5-Second Wait for Database Triggers
+// SIGNUP - Professional Signup with full address
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { 
-            email, password, name, phone,
-            country, state_province, city,
-            postal_code, street_address, apartment_house
+            email, 
+            password, 
+            name, 
+            phone,
+            country,
+            state_province,
+            city,
+            postal_code,
+            street_address,
+            apartment_house
         } = req.body;
 
-        // Validation
+        // Basic validation
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+            return res.status(400).json({ 
+                error: 'Email and password are required' 
+            });
         }
+
         if (!name || name.trim().length < 3) {
-            return res.status(400).json({ error: 'Full name is required (minimum 3 characters)' });
+            return res.status(400).json({
+                error: 'Full name is required (minimum 3 characters)'
+            });
         }
+
         if (password.length < 6) {
-            return res.status(400).json({ error: 'Password must be at least 6 characters' });
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters' 
+            });
         }
 
-        // Format phone according to SQL constraints (6-15 digits, no country code)
+        // Phone formatting and validation
         const formattedPhone = formatPhoneNumber(phone);
-        if (phone && phone !== 'N/A' && !isValidPhone(formattedPhone)) {
-            return res.status(400).json({ error: 'Invalid phone format. Enter 6-15 digits without country code (e.g., 019XXXXXXXXX)' });
+        if (phone && !isValidPhone(formattedPhone)) {
+            return res.status(400).json({
+                error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)'
+            });
         }
 
-        // Build address but don't store full_address separately (SQL doesn't have this column)
+        // Build complete address
         const fullAddress = buildFullAddress({
             apartment_house: apartment_house || '',
             street_address: street_address || '',
             city: city || '',
             state_province: state_province || '',
             postal_code: postal_code || '',
-            country: country || null
+            country: country || 'Bangladesh'
         });
 
         if (!fullAddress || fullAddress.length < 10) {
-            return res.status(400).json({ error: 'Please provide complete address details (minimum 10 characters)' });
+            return res.status(400).json({
+                error: 'Please provide complete address details (minimum 10 characters)'
+            });
         }
 
-        // Supabase signup with user_metadata (SQL compliant - no full_address)
+        // Supabase signup with user_metadata
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -184,53 +175,43 @@ app.post('/api/auth/signup', async (req, res) => {
                 data: {
                     full_name: name.trim(),
                     phone: formattedPhone || 'N/A',
-                    country: country || null,
+                    country: country || 'Bangladesh',
                     state_province: state_province || null,
                     city: city || null,
                     postal_code: postal_code || null,
                     street_address: street_address || null,
-                    apartment_house: apartment_house || null
+                    apartment_house: apartment_house || null,
+                    full_address: fullAddress
                 }
             }
         });
 
         if (error) {
             if (error.message.includes('already registered')) {
-                return res.status(400).json({ error: 'This email is already registered. Please login instead.' });
+                return res.status(400).json({ 
+                    error: 'This email is already registered. Please login instead.' 
+                });
             }
             return res.status(400).json({ error: error.message });
         }
 
-        // ============================================
-        // 🔥 5 SECOND WAIT - For Database Triggers
-        // ============================================
-        await new Promise(resolve => setTimeout(resolve, 5000));
-
-        // Get generated OneID and profile after trigger completes
+        // Get generated OneID from profile
         let oneid = null;
-        let profileData = null;
-        
         if (data.user) {
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('*')
+                .select('jbyn_oneid')
                 .eq('id', data.user.id)
                 .single();
             
-            if (profile) {
-                oneid = profile.jbyn_oneid;
-                profileData = profile;
-            }
+            oneid = profile?.jbyn_oneid || null;
         }
 
         res.status(201).json({
-            success: true,
-            message: 'Registration successful! Welcome to JAYENWARE.',
+            message: 'Registration successful! Please check your email for verification.',
             user: data.user,
-            access_token: data.session?.access_token,
-            refresh_token: data.session?.refresh_token,
-            jbyn_oneid: oneid,
-            profile: profileData
+            session: data.session,
+            jbyn_oneid: oneid
         });
 
     } catch (err) {
@@ -245,7 +226,9 @@ app.post('/api/auth/login', async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+            return res.status(400).json({ 
+                error: 'Email and password are required' 
+            });
         }
 
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -255,10 +238,14 @@ app.post('/api/auth/login', async (req, res) => {
 
         if (error) {
             if (error.message.includes('Invalid login credentials')) {
-                return res.status(401).json({ error: 'Invalid email or password' });
+                return res.status(401).json({ 
+                    error: 'Invalid email or password' 
+                });
             }
             if (error.message.includes('Email not confirmed')) {
-                return res.status(401).json({ error: 'Please verify your email before logging in' });
+                return res.status(401).json({ 
+                    error: 'Please verify your email before logging in' 
+                });
             }
             return res.status(401).json({ error: error.message });
         }
@@ -271,11 +258,9 @@ app.post('/api/auth/login', async (req, res) => {
             .single();
 
         res.json({
-            success: true,
             message: 'Login successful!',
             user: data.user,
-            access_token: data.session?.access_token,
-            refresh_token: data.session?.refresh_token,
+            session: data.session,
             profile: profile || null
         });
 
@@ -289,98 +274,105 @@ app.post('/api/auth/login', async (req, res) => {
 app.post('/api/auth/logout', async (req, res) => {
     try {
         const { error } = await supabase.auth.signOut();
-        if (error) return res.status(500).json({ error: error.message });
-        res.json({ success: true, message: 'Logged out successfully' });
+        
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({ message: 'Logged out successfully' });
     } catch (err) {
         res.status(500).json({ error: 'Logout failed' });
     }
 });
 
-// GET CURRENT USER SESSION
+// GET CURRENT USER SESSION (UPDATED - Uses get_current_user_profile RPC)
 app.get('/api/auth/user', async (req, res) => {
     try {
         const { data: { user }, error } = await supabase.auth.getUser();
-        if (error || !user) return res.status(401).json({ error: 'Not authenticated' });
 
-        // Direct query instead of RPC (RPC function doesn't exist in SQL)
-        const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
+        if (error || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
-        if (profileError && profileError.code !== 'PGRST116') {
+        // Use get_current_user_profile function
+        const { data: profileData, error: profileError } = await supabase
+            .rpc('get_current_user_profile');
+
+        if (profileError) {
             return res.status(500).json({ error: profileError.message });
         }
 
-        res.json({ user, profile: profile || null });
+        const profile = profileData?.success ? profileData.data : null;
+
+        res.json({
+            user,
+            profile: profile
+        });
+
     } catch (err) {
         res.status(500).json({ error: 'Failed to get user data' });
     }
 });
 
-// UPDATE PROFILE
+// UPDATE PROFILE (UPDATED - Uses upsert_user_profile RPC)
 app.put('/api/auth/profile', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
         const { 
-            name, phone, country, state_province, city,
-            postal_code, street_address, apartment_house,
-            avatar_url
+            name, 
+            phone, 
+            country,
+            state_province,
+            city,
+            postal_code,
+            street_address,
+            apartment_house
         } = req.body;
 
+        // Validate name if provided
         if (name && name.trim().length < 3) {
             return res.status(400).json({ error: 'Name must be at least 3 characters' });
         }
 
-        if (phone) {
-            const formattedPhone = formatPhoneNumber(phone);
-            if (!isValidPhone(formattedPhone)) {
-                return res.status(400).json({ error: 'Invalid phone format. Enter 6-15 digits without country code' });
-            }
+        // Use upsert_user_profile function
+        const { data, error } = await supabase
+            .rpc('upsert_user_profile', {
+                p_name: name,
+                p_phone: phone || null,
+                p_country: country || null,
+                p_state_province: state_province || null,
+                p_city: city || null,
+                p_postal_code: postal_code || null,
+                p_street_address: street_address || null,
+                p_apartment_house: apartment_house || null
+            });
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
         }
 
-        const updateData = {};
-        if (name) updateData.name = name.trim();
-        if (phone) updateData.phone = formatPhoneNumber(phone);
-        if (country !== undefined) updateData.country = country || null;
-        if (state_province !== undefined) updateData.state_province = state_province;
-        if (city !== undefined) updateData.city = city;
-        if (postal_code !== undefined) updateData.postal_code = postal_code;
-        if (street_address !== undefined) updateData.street_address = street_address;
-        if (apartment_house !== undefined) updateData.apartment_house = apartment_house;
-        if (avatar_url) updateData.avatar_url = avatar_url;
+        if (!data.success) {
+            return res.status(400).json({ 
+                error: data.error, 
+                field: data.field,
+                code: data.code 
+            });
+        }
 
-        const { data, error } = await supabase
-            .from('profiles')
-            .update(updateData)
-            .eq('id', user.id)
-            .select()
-            .single();
+        res.json({
+            message: data.message,
+            action: data.action,
+            oneid: data.oneid
+        });
 
-        if (error) return res.status(500).json({ error: error.message });
-
-        res.json({ success: true, message: 'Profile updated successfully', profile: data });
     } catch (err) {
         console.error('Profile update error:', err);
         res.status(500).json({ error: 'Failed to update profile' });
-    }
-});
-
-// UPDATE PRIVACY SETTINGS - Disabled (SQL doesn't have these columns)
-app.put('/api/auth/privacy', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        // Privacy settings not available in SQL schema
-        res.status(501).json({ 
-            error: 'Privacy settings feature is not available in the current database schema. Please contact support.' 
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to update privacy settings' });
     }
 });
 
@@ -388,7 +380,10 @@ app.put('/api/auth/privacy', async (req, res) => {
 app.get('/api/auth/passkey', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
         const { data: profile } = await supabase
             .from('profiles')
@@ -396,8 +391,14 @@ app.get('/api/auth/passkey', async (req, res) => {
             .eq('id', user.id)
             .single();
 
-        if (!profile) return res.status(404).json({ error: 'Profile not found' });
-        res.json({ jbyn_oneid: profile.jbyn_oneid });
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        res.json({
+            jbyn_oneid: profile.jbyn_oneid
+        });
+
     } catch (err) {
         res.status(500).json({ error: 'Failed to retrieve OneID' });
     }
@@ -407,14 +408,23 @@ app.get('/api/auth/passkey', async (req, res) => {
 app.post('/api/auth/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;
-        if (!email) return res.status(400).json({ error: 'Email is required' });
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
         });
 
-        if (error) return res.status(400).json({ error: error.message });
-        res.json({ message: 'Password reset link sent to your email' });
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.json({ 
+            message: 'Password reset link sent to your email' 
+        });
+
     } catch (err) {
         res.status(500).json({ error: 'Failed to send reset email' });
     }
@@ -424,135 +434,56 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 app.put('/api/auth/reset-password', async (req, res) => {
     try {
         const { password } = req.body;
+
         if (!password || password.length < 6) {
-            return res.status(400).json({ error: 'Password must be at least 6 characters' });
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters' 
+            });
         }
 
-        const { error } = await supabase.auth.updateUser({ password });
-        if (error) return res.status(400).json({ error: error.message });
+        const { error } = await supabase.auth.updateUser({
+            password: password
+        });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
         res.json({ message: 'Password updated successfully' });
+
     } catch (err) {
         res.status(500).json({ error: 'Failed to update password' });
     }
 });
 
-// DELETE ACCOUNT (Soft Delete)
+// DELETE ACCOUNT (UPDATED - Direct profiles delete)
 app.post('/api/auth/delete-account', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
-        const { reason } = req.body;
-
-        // Direct delete from profiles (SQL has audit trigger)
-        const { error: deleteError } = await supabase
+        // Delete profile
+        const { error: profileError } = await supabase
             .from('profiles')
             .delete()
             .eq('id', user.id);
 
-        if (deleteError) return res.status(400).json({ error: deleteError.message });
-
-        // Sign out user
-        await supabase.auth.signOut();
-
-        res.json({ 
-            success: true, 
-            message: 'Account deletion requested. Your account will be permanently deleted after 30 days.' 
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to delete account' });
-    }
-});
-
-// ============================================
-// NOTIFICATION API ROUTES
-// ============================================
-
-// GET USER NOTIFICATIONS
-app.get('/api/auth/notifications', authenticateUser, async (req, res) => {
-    try {
-        // Direct query instead of RPC
-        const { data, error } = await supabase
-            .from('profile_notifications')
-            .select('*')
-            .eq('user_id', req.user.id)
-            .order('created_at', { ascending: false })
-            .limit(50);
-
-        if (error) {
-            console.error('Notification fetch error:', error);
-            return res.status(500).json({ error: 'Failed to fetch notifications' });
+        if (profileError) {
+            return res.status(400).json({ error: profileError.message });
         }
 
-        const notifications = data || [];
-        
+        // Sign out after delete
+        await supabase.auth.signOut();
+
         res.json({
-            success: true,
-            notifications: notifications,
-            unread_count: notifications.filter(n => !n.is_read).length,
-            latest: notifications.length > 0 ? notifications[0] : null
+            message: 'Account deleted successfully'
         });
+
     } catch (err) {
-        console.error('Notification API error:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// MARK SINGLE NOTIFICATION AS READ
-app.put('/api/auth/notifications/:id/read', authenticateUser, async (req, res) => {
-    try {
-        const notificationId = parseInt(req.params.id);
-
-        const { data, error } = await supabase
-            .from('profile_notifications')
-            .update({ is_read: true })
-            .eq('id', notificationId)
-            .eq('user_id', req.user.id)
-            .select()
-            .single();
-
-        if (error) return res.status(500).json({ error: 'Failed to update notification' });
-        if (!data) return res.status(404).json({ error: 'Notification not found' });
-
-        res.json({ success: true, notification: data });
-    } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// MARK ALL NOTIFICATIONS AS READ
-app.put('/api/auth/notifications/read-all', authenticateUser, async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('profile_notifications')
-            .update({ is_read: true })
-            .eq('user_id', req.user.id)
-            .eq('is_read', false)
-            .select();
-
-        if (error) return res.status(500).json({ error: 'Failed to update notifications' });
-
-        res.json({ success: true, message: `${data?.length || 0} notifications marked as read`, count: data?.length || 0 });
-    } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// DELETE OLD NOTIFICATIONS
-app.delete('/api/auth/notifications/cleanup', authenticateUser, async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('profile_notifications')
-            .delete()
-            .eq('user_id', req.user.id)
-            .lt('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-            .select();
-
-        if (error) return res.status(500).json({ error: 'Failed to clean notifications' });
-
-        res.json({ success: true, message: `${data?.length || 0} old notifications removed`, count: data?.length || 0 });
-    } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Failed to delete account' });
     }
 });
 
@@ -560,72 +491,92 @@ app.delete('/api/auth/notifications/cleanup', authenticateUser, async (req, res)
 // OneID LOOKUP & SEARCH API
 // ============================================
 
-// Search user by OneID
+// Search user by OneID (Privacy-safe - limited info)
 app.get('/api/oneid/search/:oneid', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
         const { oneid } = req.params;
-        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
 
-        // Direct query instead of RPC
+        if (!isValidOneID(oneid)) {
+            return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
+        }
+
+        // Search by OneID with limited info
         const { data, error } = await supabase
             .from('profiles')
-            .select('id, name, email, phone, country, city, state_province, jbyn_oneid')
+            .select('name, jbyn_oneid, country, city, is_verified')
             .eq('jbyn_oneid', oneid)
-            .limit(1);
+            .single();
 
-        if (error) return res.status(500).json({ error: error.message });
-        if (!data || data.length === 0) return res.status(404).json({ error: 'User not found' });
+        if (error) {
+            return res.status(404).json({ error: 'User not found with this OneID' });
+        }
 
-        res.json(data[0]);
+        res.json(data);
+
     } catch (err) {
         res.status(500).json({ error: 'Search failed' });
     }
 });
 
-// Lookup user by OneID
+// Lookup user by OneID (Full details if authorized)
 app.get('/api/oneid/lookup/:oneid', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
+        
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
 
         const { oneid } = req.params;
-        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
 
-        // Direct query instead of RPC
+        if (!isValidOneID(oneid)) {
+            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
+        }
+
+        // Use lookup_user_by_oneid function
         const { data, error } = await supabase
-            .from('profiles')
-            .select('id, name, email, phone, country, city')
-            .eq('jbyn_oneid', oneid)
-            .limit(1);
+            .rpc('lookup_user_by_oneid', {
+                lookup_oneid: oneid
+            });
 
-        if (error) return res.status(500).json({ error: error.message });
-        if (!data || data.length === 0) return res.status(404).json({ error: 'User not found' });
+        if (error) {
+            return res.status(404).json({ error: error.message });
+        }
 
-        res.json(data[0]);
+        res.json(data?.[0] || null);
+
     } catch (err) {
         res.status(500).json({ error: 'Lookup failed' });
     }
 });
 
-// Check if OneID exists
+// Check if OneID exists (UPDATED - Direct table check)
 app.get('/api/oneid/exists/:oneid', async (req, res) => {
     try {
         const { oneid } = req.params;
-        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
 
-        // Direct query instead of RPC
+        if (!isValidOneID(oneid)) {
+            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
+        }
+
         const { data, error } = await supabase
             .from('profiles')
-            .select('jbyn_oneid')
+            .select('id')
             .eq('jbyn_oneid', oneid)
-            .limit(1);
+            .single();
 
-        if (error) return res.status(500).json({ error: error.message });
+        if (error && error.code !== 'PGRST116') {
+            return res.status(500).json({ error: error.message });
+        }
 
-        res.json({ exists: data && data.length > 0 });
+        res.json({ exists: !!data });
+
     } catch (err) {
         res.status(500).json({ error: 'Check failed' });
     }
@@ -640,7 +591,11 @@ app.get('/api/products', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('products')
-            .select(`*, categories:category_id (name), subcategories:subcategory_id (name)`)
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
@@ -656,7 +611,11 @@ app.get('/api/product/:slug', async (req, res) => {
         const slug = req.params.slug;
         const { data, error } = await supabase
             .from('products')
-            .select(`*, categories:category_id (name), subcategories:subcategory_id (name)`)
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
@@ -696,7 +655,12 @@ app.get('/api/categories', async (req, res) => {
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        const { data, error } = await supabase.from('categories').select('*').eq('is_active', true);
+        
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true);
+        
         if (error) return res.status(500).json({ error: error.message });
         
         const category = data.find(cat => {
@@ -719,7 +683,11 @@ app.get('/api/categories/:slug', async (req, res) => {
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
-        const { data: categories } = await supabase.from('categories').select('*').eq('is_active', true);
+        
+        const { data: categories } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true);
         
         const category = categories.find(cat => {
             const dbSlug = cat.slug || createSlug(cat.name);
@@ -730,11 +698,16 @@ app.get('/api/categories/:slug/products', async (req, res) => {
         
         const { data, error } = await supabase
             .from('products')
-            .select(`*, categories:category_id (name), subcategories:subcategory_id (name)`)
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .eq('category_id', category.id)
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
+        
         res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -753,14 +726,21 @@ app.get('/api/subcategories', async (req, res) => {
             .order('sort_order', { ascending: true });
         
         if (category_slug) {
-            const { data: categories } = await supabase.from('categories').select('id, slug').eq('is_active', true);
+            const { data: categories } = await supabase
+                .from('categories')
+                .select('id, slug')
+                .eq('is_active', true);
+            
             const category = categories.find(cat => {
                 const dbSlug = cat.slug || createSlug(cat.name);
                 return dbSlug.replace(/^category\//, '') === category_slug;
             });
             
-            if (category) query = query.eq('category_id', category.id);
-            else return res.status(404).json({ error: 'Category not found' });
+            if (category) {
+                query = query.eq('category_id', category.id);
+            } else {
+                return res.status(404).json({ error: 'Category not found' });
+            }
         }
         
         const { data, error } = await query;
@@ -799,7 +779,9 @@ app.get('/api/subcategories/:slug', async (req, res) => {
         if (category_slug && subcategory) {
             const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
             const cleanCatSlug = catSlug.replace(/^category\//, '');
-            if (cleanCatSlug !== category_slug) subcategory = null;
+            if (cleanCatSlug !== category_slug) {
+                subcategory = null;
+            }
         }
         
         if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
@@ -819,7 +801,10 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         
-        const { data: subcategories } = await supabase.from('subcategories').select('*').eq('is_active', true);
+        const { data: subcategories } = await supabase
+            .from('subcategories')
+            .select('*')
+            .eq('is_active', true);
         
         const subcategory = subcategories.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
@@ -830,11 +815,16 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
         
         const { data, error } = await supabase
             .from('products')
-            .select(`*, categories:category_id (name), subcategories:subcategory_id (name)`)
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .eq('subcategory_id', subcategory.id)
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
+        
         res.json(formatProducts(data));
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -850,7 +840,11 @@ app.get('/api/menu', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('menu_items')
-            .select(`*, categories:category_id (id, name), subcategories:subcategory_id (id, name)`)
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
@@ -879,7 +873,11 @@ app.get('/api/menu-items', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('menu_items')
-            .select(`*, categories:category_id (id, name), subcategories:subcategory_id (id, name)`)
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
@@ -902,9 +900,14 @@ app.get('/api/menu-items', async (req, res) => {
 app.get('/api/menu-items/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
+        
         const { data, error } = await supabase
             .from('menu_items')
-            .select(`*, categories:category_id (id, name), subcategories:subcategory_id (id, name)`)
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
             .eq('is_active', true);
         
         if (error) return res.status(500).json({ error: error.message });
@@ -977,7 +980,6 @@ app.get('/api/hero-secondary', async (req, res) => {
 // ============================================
 // NEWS API
 // ============================================
-
 app.get('/api/news', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -1165,18 +1167,36 @@ app.get('/api/color-sizes', async (req, res) => {
 // ============================================
 
 // Auth pages
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'login.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'signup.html')));
-app.get('/reset-password', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html')));
-app.get('/profile', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'profile.html')));
-app.get('/account', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'account.html')));
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'signup.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
+});
+
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'profile.html'));
+});
+
+app.get('/account', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'account.html'));
+});
 
 // Category page (with subcategory support)
-app.get('/category/:slug*', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'category.html')));
+app.get('/category/:slug*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
+});
 
 // ============================================
 // SPA FALLBACK (Must be last)
 // ============================================
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
 
 module.exports = app;
