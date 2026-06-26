@@ -1,6 +1,6 @@
 // ============================================
 // components.js - Shared Header, Footer & Common Functions
-// Version: 4.0 (Dynamic Font System Integration + Database Driven)
+// Version: 4.5 (Apple Liquid Glass System - Monochrome Monochrome)
 // ============================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
@@ -45,402 +45,320 @@ function applyFontVariables() {
 }
 
 // ============================================
-// SHARED CSS STYLES (Dynamic Font System)
+// SHARED CSS STYLES (Apple Liquid Glass System - Monochrome)
 // ============================================
 function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
         :root {
-            --primary: #1d1d1f;
-            --accent: #000000;
-            --soft: #f5f5f7;
-            --blue: #007aff;
+            /* পিওর ব্ল্যাক ও হোয়াইটের আল্ট্রা-মডার্ন গ্লাস ভেরিয়েবল */
+            --primary: #000000;
+            --accent: #ffffff;
+            
+            /* লিকুইড কাঁচের ফ্রস্টেড ইফেক্ট (White Glass & Black Glass) */
+            --glass-white: rgba(255, 255, 255, 0.65);
+            --glass-black: rgba(0, 0, 0, 0.75);
+            
+            /* কাঁচের নিখুঁত বর্ডার রিফ্লেকশন */
+            --glass-border-light: rgba(255, 255, 255, 0.35);
+            --glass-border-dark: rgba(0, 0, 0, 0.12);
+            
+            /* অ্যাপল স্ট্যান্ডার্ড হাই-স্যাচুরেশন ব্লার ফিল্টার */
+            --glass-blur: blur(40px) saturate(220%);
         }
         
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
-        /* Heading Styles - Uses --font-heading (Manrope) */
         .text-heading-hero { 
             font-family: var(--font-heading); 
             font-size: clamp(2.5rem, 6vw, 4.5rem); 
             line-height: 1.05; 
             font-weight: 800; 
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            color: var(--primary);
         }
         .text-heading-xl { 
             font-family: var(--font-heading); 
             font-size: clamp(2rem, 5vw, 3.5rem); 
             line-height: 1.1; 
             font-weight: 700; 
-            letter-spacing: -0.015em;
+            letter-spacing: -0.02em;
+            color: var(--primary);
         }
         .text-heading-lg { 
             font-family: var(--font-heading); 
             font-size: clamp(1.5rem, 4vw, 2.5rem); 
             line-height: 1.15; 
             font-weight: 700; 
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
+            color: var(--primary);
         }
-        .text-heading-md { 
-            font-family: var(--font-heading); 
-            font-size: clamp(1.25rem, 3vw, 2rem); 
-            line-height: 1.2; 
-            font-weight: 600; 
-        }
-        .text-heading-sm { 
-            font-family: var(--font-heading); 
-            font-size: clamp(1rem, 2.5vw, 1.5rem); 
-            line-height: 1.25; 
-            font-weight: 600; 
-        }
+        .text-heading-md { font-family: var(--font-heading); font-size: clamp(1.25rem, 3vw, 2rem); line-height: 1.2; font-weight: 600; color: var(--primary); }
+        .text-heading-sm { font-family: var(--font-heading); font-size: clamp(1rem, 2.5vw, 1.5rem); line-height: 1.25; font-weight: 600; color: var(--primary); }
         
-        /* Subtitle Styles - Uses --font-subtitle (Sora) */
-        .text-subtitle-xl {
-            font-family: var(--font-subtitle);
-            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-            line-height: 1.3;
-            font-weight: 600;
-            letter-spacing: -0.005em;
-        }
-        .text-subtitle-lg { 
-            font-family: var(--font-subtitle); 
-            font-size: clamp(1.125rem, 2vw, 1.25rem); 
-            line-height: 1.4; 
-            font-weight: 500; 
-        }
-        .text-subtitle-md { 
-            font-family: var(--font-subtitle); 
-            font-size: clamp(1rem, 1.5vw, 1.125rem); 
-            line-height: 1.4; 
-            font-weight: 500; 
-        }
-        .text-subtitle-sm { 
-            font-family: var(--font-subtitle); 
-            font-size: 0.875rem; 
-            line-height: 1.5; 
-            font-weight: 500; 
-        }
+        .text-subtitle-xl { font-family: var(--font-subtitle); font-size: clamp(1.25rem, 2.5vw, 1.75rem); line-height: 1.3; font-weight: 600; color: var(--primary); }
+        .text-subtitle-lg { font-family: var(--font-subtitle); font-size: clamp(1.125rem, 2vw, 1.25rem); line-height: 1.4; font-weight: 500; color: var(--primary); }
+        .text-subtitle-md { font-family: var(--font-subtitle); font-size: clamp(1rem, 1.5vw, 1.125rem); line-height: 1.4; font-weight: 500; color: var(--primary); }
+        .text-subtitle-sm { font-family: var(--font-subtitle); font-size: 0.875rem; line-height: 1.5; font-weight: 500; color: var(--primary); }
         
-        /* Body/Description Styles - Uses --font-body (Inter) */
-        .text-body-xl { 
-            font-family: var(--font-body); 
-            font-size: 1.25rem; 
-            line-height: 1.7; 
-            font-weight: 400; 
-        }
-        .text-body-lg { 
-            font-family: var(--font-body); 
-            font-size: 1.125rem; 
-            line-height: 1.65; 
-            font-weight: 400; 
-        }
-        .text-body-md { 
-            font-family: var(--font-body); 
-            font-size: 1rem; 
-            line-height: 1.6; 
-            font-weight: 400; 
-        }
-        .text-body-sm { 
-            font-family: var(--font-body); 
-            font-size: 0.875rem; 
-            line-height: 1.55; 
-            font-weight: 400; 
-        }
-        .text-body-xs { 
-            font-family: var(--font-body); 
-            font-size: 0.75rem; 
-            line-height: 1.5; 
-            font-weight: 400; 
-        }
+        .text-body-xl { font-family: var(--font-body); font-size: 1.25rem; line-height: 1.7; font-weight: 400; color: #1c1c1e; }
+        .text-body-lg { font-family: var(--font-body); font-size: 1.125rem; line-height: 1.65; font-weight: 400; color: #1c1c1e; }
+        .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
+        .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
+        .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #3a3a3c; }
         
-        /* Accent/Small Text Styles */
-        .text-caption { 
-            font-family: var(--font-accent); 
-            font-size: 0.75rem; 
-            line-height: 1.4; 
-            font-weight: 500; 
-            letter-spacing: 0.01em;
-        }
-        .text-overline { 
-            font-family: var(--font-accent); 
-            font-size: 0.625rem; 
-            line-height: 1.4; 
-            font-weight: 600; 
-            letter-spacing: 0.1em; 
-            text-transform: uppercase; 
-        }
-        .text-label {
-            font-family: var(--font-accent);
-            font-size: 0.6875rem;
-            line-height: 1.4;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
+        .text-caption { font-family: var(--font-accent); font-size: 0.75rem; line-height: 1.4; font-weight: 500; color: var(--primary); }
+        .text-overline { font-family: var(--font-accent); font-size: 0.625rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+        .text-label { font-family: var(--font-accent); font-size: 0.6875rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary); }
         
-        /* ==================== NAVIGATION STYLES ==================== */
+        /* ==================== NAVIGATION STYLES (Liquid Glass) ==================== */
         .glass-nav {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(50px) saturate(180%);
-            -webkit-backdrop-filter: blur(50px) saturate(180%);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
+            background: var(--glass-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border-light);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* Desktop Nav Links - Uses heading font for main items */
         .nav-link {
             position: relative;
             font-family: var(--font-heading);
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             padding: 8px 0;
-            transition: color 0.3s ease;
-            color: #1d1d1f;
+            transition: opacity 0.3s ease;
+            color: var(--primary);
             text-decoration: none;
         }
+        .nav-link:hover { opacity: 0.6; }
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 1.5px;
-            background: #1d1d1f;
-            transition: width 0.3s ease;
+            bottom: 0; left: 50%;
+            width: 0; height: 2px;
+            background: var(--primary);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-50%);
         }
         .nav-link:hover::after { width: 100%; }
         
-        /* Desktop Dropdown */
-        .desktop-dropdown {
-            position: relative;
-        }
+        /* Desktop Dropdown (Liquid White Glass) */
+        .desktop-dropdown { position: relative; }
         .desktop-dropdown-menu {
             position: absolute;
             top: 100%;
             left: 50%;
-            transform: translateX(-50%) translateY(8px);
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            transform: translateX(-50%) translateY(15px);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 20px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            min-width: 240px;
-            max-width: 320px;
-            padding: 8px 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            min-width: 260px;
+            padding: 10px 0;
             z-index: 100;
         }
         .desktop-dropdown:hover .desktop-dropdown-menu {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(5px);
         }
         
-        /* Dropdown Items - Uses subtitle font */
         .desktop-dropdown-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-family: var(--font-subtitle);
-            font-size: 12px;
-            font-weight: 500;
-            color: #1d1d1f;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
             text-decoration: none;
             transition: all 0.2s ease;
             letter-spacing: 0.02em;
-            white-space: nowrap;
-            cursor: pointer;
         }
         .desktop-dropdown-item:hover {
-            background: #f5f5f7;
-            color: #007aff;
+            background: rgba(0, 0, 0, 0.05);
+            padding-left: 28px;
         }
-        .desktop-dropdown-item.has-children {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-        }
+        
         .desktop-sub-dropdown {
             position: absolute;
             left: 100%;
-            top: 0;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            top: -10px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 20px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
-            min-width: 220px;
-            max-width: 300px;
-            padding: 8px 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            min-width: 240px;
+            padding: 10px 0;
+            transform: translateX(10px);
         }
         .desktop-dropdown-item.has-children:hover .desktop-sub-dropdown {
             opacity: 1;
             visibility: visible;
+            transform: translateX(0);
         }
         
-        /* Mobile Menu */
+        /* ==================== MOBILE MENU (Premium Glass Drawer) ==================== */
         .mobile-menu-overlay {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 199; opacity: 0; visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
         .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+        
         .mobile-menu-drawer {
             position: fixed; top: 0; left: 0;
-            width: 85%; max-width: 380px;
+            width: 88%; max-width: 380px;
             height: 100vh; height: 100dvh;
-            background: white; z-index: 200;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border-light);
+            z-index: 200;
             transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
         }
         .mobile-menu-drawer.open { transform: translateX(0); }
+        
         .mobile-menu-drawer .mobile-menu-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 20px; border-bottom: 1px solid #f0f0f0;
-            background: white; flex-shrink: 0;
-        }
-        .mobile-menu-drawer .mobile-menu-header span {
-            font-family: var(--font-heading);
-            font-weight: 800;
-        }
-        .mobile-menu-drawer .mobile-menu-scroll {
-            flex: 1; overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 12px 20px;
+            padding: 20px 24px; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: transparent;
         }
         
-        /* Mobile Menu Items - Uses heading font */
         .mobile-menu-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 0; border-bottom: 1px solid #f5f5f5;
+            padding: 16px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             font-family: var(--font-heading);
-            font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
-            cursor: pointer; color: #1d1d1f; text-decoration: none;
-            transition: color 0.2s ease;
+            font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+            color: var(--primary); text-decoration: none;
+            transition: all 0.3s ease;
         }
-        .mobile-menu-item i.fa-chevron-right { 
-            font-size: 11px; color: #c0c0c0; transition: transform 0.3s ease; 
-        }
-        .mobile-menu-item.expanded i.fa-chevron-right { 
-            transform: rotate(90deg); 
-        }
+        .mobile-menu-item:hover { padding-left: 8px; }
+        
         .mobile-submenu {
             display: none;
             padding-left: 16px;
-            border-left: 2px solid #f0f0f0;
-            margin: 4px 0 4px 8px;
+            border-left: 1.5px solid var(--primary);
+            margin: 6px 0 6px 6px;
         }
         .mobile-submenu.open { display: block; }
         
-        /* Mobile Sub Items - Uses subtitle font */
         .mobile-sub-item {
             display: block;
-            padding: 11px 12px;
+            padding: 12px 14px;
             font-family: var(--font-subtitle);
-            font-size: 13px;
-            color: #86868b;
-            text-decoration: none;
+            font-size: 13px; font-weight: 600;
+            color: #48484a; text-decoration: none;
             transition: color 0.2s ease;
-            font-weight: 500;
-            cursor: pointer;
         }
-        .mobile-sub-item:hover { color: #007aff; }
-        .mobile-sub-item::before {
-            content: '•';
-            margin-right: 8px;
-            color: #007aff;
-        }
-        .mobile-sub-item.has-children {
-            font-weight: 600;
-            color: #1d1d1f;
-        }
+        .mobile-sub-item:hover { color: var(--primary); }
+        
         .mobile-footer {
-            padding: 20px; border-top: 1px solid #f0f0f0;
-            background: #f5f5f7; flex-shrink: 0;
-        }
-        .mobile-footer a {
-            font-family: var(--font-body);
-            font-weight: 600;
+            padding: 24px; border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.4); flex-shrink: 0;
         }
         
-        /* ==================== CART DRAWER ==================== */
+        /* ==================== CART DRAWER (Liquid Black Glass) ==================== */
         #cart-drawer {
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.75) !important;
+            backdrop-filter: var(--glass-blur) !important;
+            -webkit-backdrop-filter: var(--glass-blur) !important;
+            border-left: 1px solid var(--glass-border-light);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform;
-            transform: translateX(100%);
+            color: var(--accent) !important;
         }
-        #cart-drawer.open { transform: translateX(0) !important; }
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 10px; }
+        #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4 {
+            color: var(--accent) !important;
+        }
+        #cart-drawer .bg-soft {
+            background: rgba(255, 255, 255, 0.07) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #cart-items > div {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); }
         
-        /* ==================== TOAST ==================== */
-        #toast {
-            position: fixed; top: 16px; right: 16px; z-index: 9999;
-            transform: translateX(120%);
-            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-            max-width: calc(100vw - 32px);
+        /* ==================== TOAST NOTIFICATION (Liquid Minimal) ==================== */
+        #toast > div {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: var(--glass-blur) !important;
+            -webkit-backdrop-filter: var(--glass-blur) !important;
+            border: 1px solid var(--glass-border-light) !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2) !important;
+            border-radius: 24px !important;
+            color: var(--primary) !important;
         }
-        #toast p {
-            font-family: var(--font-body);
-            font-weight: 600;
+        #toast-icon {
+            background: var(--primary) !important;
+            color: var(--accent) !important;
         }
         
-        /* ==================== FOOTER ==================== */
+        /* ==================== FOOTER (Pure Dark Minimal) ==================== */
         #main-footer {
-            font-family: var(--font-body);
+            background: #000000;
+            color: #8e8e93;
+            border-top: 1px solid #1c1c1e;
         }
-        #main-footer h4 {
-            font-family: var(--font-heading);
-            font-weight: 800;
+        #main-footer h4, #main-footer h5, #main-footer a {
+            color: var(--accent) !important;
+            transition: opacity 0.2s ease;
         }
-        #main-footer h5 {
-            font-family: var(--font-subtitle);
-            font-weight: 600;
-        }
-        #main-footer ul li a {
-            font-family: var(--font-body);
-            font-weight: 400;
-        }
+        #main-footer a:hover { opacity: 0.6; }
         
-        /* ==================== GLOBAL ==================== */
+        /* ==================== GLOBAL & BUTTONS ==================== */
         body { 
             padding-top: 56px; 
             font-family: var(--font-body);
+            background-color: #ffffff;
         }
         @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
         
-        /* ==================== BUTTON STYLES ==================== */
+        /* Monochrome Solid UI Buttons */
         .btn-primary {
             font-family: var(--font-body);
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.05em;
             text-transform: uppercase;
+            background: var(--primary) !important;
+            color: var(--accent) !important;
+            border-radius: 14px !important;
+            transition: all 0.3s ease !important;
         }
-        .btn-secondary {
-            font-family: var(--font-subtitle);
-            font-weight: 500;
+        .btn-primary:hover {
+            background: #232323 !important;
+            transform: translateY(-1px);
         }
         
-        /* ==================== PRODUCT CARD TYPOGRAPHY ==================== */
-        .product-card-title {
-            font-family: var(--font-subtitle);
-            font-weight: 500;
-        }
-        .product-card-price {
-            font-family: var(--font-body);
-            font-weight: 600;
-        }
-        .product-card-category {
-            font-family: var(--font-accent);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        /* ==================== COUNTER BADGES ==================== */
+        #wish-count, #cart-count {
+            background: var(--primary) !important;
+            color: var(--accent) !important;
+            font-size: 9px !important;
+            border: 1px solid var(--glass-border-light);
         }
     </style>
     `;
@@ -645,7 +563,7 @@ function renderDesktopDropdownChildren(item) {
 
 function renderCategoriesDropdown() {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="desktop-dropdown-item" style="color:#86868b; font-family: var(--font-subtitle);">No categories found</div>';
+        return '<div class="desktop-dropdown-item" style="color:#8e8e93; font-family: var(--font-subtitle);">No categories found</div>';
     }
     
     let html = '';
@@ -692,8 +610,8 @@ function renderMobileNav(rootItems) {
             html += `
             <div>
                 <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    <span><i class="fa-solid fa-folder mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                    <i class="fa-solid fa-chevron-right"></i>
+                    <span><i class="fa-solid fa-folder mr-3 text-gray-400" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#000000;"></i>
                 </div>
                 <div class="mobile-submenu" id="${uniqueId}">
                     ${renderMobileSubItems(item, uniqueId)}
@@ -712,8 +630,8 @@ function renderMobileNav(rootItems) {
             }
             html += `
             <a href="${linkUrl}" class="mobile-menu-item no-underline">
-                <span><i class="fa-solid ${icon} mr-3 text-gray-300" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#c0c0c0;"></i>
+                <span><i class="fa-solid ${icon} mr-3 text-gray-400" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#000000;"></i>
             </a>`;
         }
     });
@@ -738,9 +656,9 @@ function renderMobileSubItems(item, parentId) {
                 <div>
                     <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
                         ${child.title || child.name || ''}
-                        <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                        <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;color:#000000;"></i>
                     </div>
-                    <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
+                    <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#000000;">
                         ${child.children.map(gc => `
                             <a href="${getMenuLinkUrl(gc)}" class="mobile-sub-item">${gc.title || gc.name || ''}</a>
                         `).join('')}
@@ -758,7 +676,7 @@ function renderMobileSubItems(item, parentId) {
 
 function renderMobileCategoriesSubmenu(parentId) {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-sub-item" style="color:#86868b; font-family: var(--font-subtitle);">No categories</div>';
+        return '<div class="mobile-sub-item" style="color:#8e8e93; font-family: var(--font-subtitle);">No categories</div>';
     }
     
     let html = '';
@@ -773,10 +691,10 @@ function renderMobileCategoriesSubmenu(parentId) {
             <div>
                 <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
                     ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;"></i>
+                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;color:#000000;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#e0e0e0;">
-                    <a href="${catUrl}" class="mobile-sub-item" style="font-weight:600; font-family: var(--font-heading);">All ${cat.name}</a>
+                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#000000;">
+                    <a href="${catUrl}" class="mobile-sub-item" style="font-weight:700; font-family: var(--font-heading); color:#000000;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
                         const subUrl = `/category/${catSlug}/${subSlug}`;
@@ -816,7 +734,7 @@ async function renderHeader() {
                 <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
                 <span class="font-black text-lg" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-2xl text-gray-400 hover:text-primary transition p-2" aria-label="Close menu">
+            <button onclick="closeMobileMenu()" class="text-2xl text-gray-500 hover:text-black transition p-2" aria-label="Close menu">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -824,7 +742,7 @@ async function renderHeader() {
             ${renderMobileNav(rootItems)}
         </div>
         <div class="mobile-footer" id="mobileMenuFooter">
-            <a href="/login" class="block w-full py-3 bg-primary text-white rounded-xl text-center font-bold uppercase tracking-wider text-xs no-underline" style="font-family: var(--font-body);">Sign In</a>
+            <a href="/login" class="block w-full py-3 bg-black text-white rounded-xl text-center font-bold uppercase tracking-wider text-xs no-underline" style="font-family: var(--font-body);">Sign In</a>
         </div>
     </div>
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
@@ -837,40 +755,40 @@ async function renderHeader() {
                 ${renderDesktopNav(rootItems)}
             </div>
             <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
-                <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Wishlist">
+                <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:opacity-60 transition" aria-label="Wishlist">
                     <i class="fa-regular fa-heart text-lg lg:text-xl"></i>
-                    <span id="wish-count" class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
+                    <span id="wish-count" class="absolute -top-0.5 -right-0.5 text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
                 </a>
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-1.5 no-underline text-primary hover:text-blue transition" aria-label="Shopping Cart">
+                <a href="/cart" onclick="toggleCart();return false;" class="relative p-1.5 no-underline text-primary hover:opacity-60 transition" aria-label="Shopping Cart">
                     <i class="fa-solid fa-bag-shopping text-lg lg:text-xl"></i>
-                    <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-primary text-white text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
+                    <span id="cart-count" class="absolute -top-0.5 -right-0.5 text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
                 </a>
                 <div id="auth-nav-area" class="hidden lg:block">
-                    <a href="/login" class="px-5 py-2.5 bg-primary text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-blue transition-all no-underline inline-block" style="font-family: var(--font-body);">Sign In</a>
+                    <a href="/login" class="px-5 py-2.5 bg-black text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:opacity-80 transition-all no-underline inline-block" style="font-family: var(--font-body);">Sign In</a>
                 </div>
-                <button onclick="openMobileMenu()" class="lg:hidden text-xl p-1.5 text-primary hover:text-blue transition" aria-label="Menu">
+                <button onclick="openMobileMenu()" class="lg:hidden text-xl p-1.5 text-primary hover:opacity-60 transition" aria-label="Menu">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
     </nav>
-    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full bg-white z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
+    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
         <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter" style="font-family: var(--font-heading);">Shopping Bag</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-primary text-lg sm:text-xl transition p-1">
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg sm:text-xl transition p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div id="cart-items" class="flex-grow overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4 custom-scroll"></div>
         <div class="p-4 sm:p-6 border-t bg-soft">
             <div class="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 text-[10px] sm:text-xs" style="font-family: var(--font-body);">
-                <div class="flex justify-between text-gray-500"><span>Subtotal</span><span id="cart-subtotal">৳ 0.00</span></div>
-                <div class="flex justify-between border-t pt-2 sm:pt-3">
+                <div class="flex justify-between text-gray-400"><span>Subtotal</span><span id="cart-subtotal">৳ 0.00</span></div>
+                <div class="flex justify-between border-t border-gray-700 pt-2 sm:pt-3">
                     <span class="font-bold uppercase">Total</span>
                     <span id="cart-total" class="text-lg sm:text-xl font-black">৳ 0.00</span>
                 </div>
             </div>
-            <a href="/checkout" class="w-full py-3 sm:py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue transition shadow-lg no-underline text-center block" style="font-family: var(--font-body);">Checkout</a>
+            <a href="/checkout" class="w-full py-3 sm:py-4 bg-white text-black rounded-2xl font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-gray-200 transition shadow-lg no-underline text-center block" style="font-family: var(--font-body);">Checkout</a>
         </div>
     </div>
     `;
@@ -882,42 +800,42 @@ async function renderHeader() {
 // ============================================
 function renderFooter() {
     const footerHTML = `
-    <footer class="bg-primary text-gray-400 pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer">
+    <footer class="pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 sm:mb-12">
                 <div class="col-span-2 md:col-span-1">
                     <h4>JAYENWARE</h4>
-                    <p class="text-[10px] sm:text-xs leading-relaxed mb-4" style="font-family: var(--font-body);">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition">BINZEO</a>.</p>
+                    <p class="text-[10px] sm:text-xs leading-relaxed mb-4" style="font-family: var(--font-body); color: #8e8e93;">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-white font-bold hover:opacity-60 transition">BINZEO</a>.</p>
                     <div class="flex gap-3 text-base sm:text-lg">
-                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:text-blue transition"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition"><i class="fa-brands fa-youtube"></i></a>
                     </div>
                 </div>
                 <div>
                     <h5>Quick Links</h5>
                     <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
-                        <li><a href="/about" class="hover:text-white transition no-underline">About</a></li>
-                        <li><a href="/shipping" class="hover:text-white transition no-underline">Shipping</a></li>
-                        <li><a href="/returns" class="hover:text-white transition no-underline">Returns</a></li>
-                        <li><a href="/contact" class="hover:text-white transition no-underline">Contact</a></li>
+                        <li><a href="/about" class="hover:opacity-60 transition no-underline">About</a></li>
+                        <li><a href="/shipping" class="hover:opacity-60 transition no-underline">Shipping</a></li>
+                        <li><a href="/returns" class="hover:opacity-60 transition no-underline">Returns</a></li>
+                        <li><a href="/contact" class="hover:opacity-60 transition no-underline">Contact</a></li>
                     </ul>
                 </div>
                 <div>
                     <h5>Legal</h5>
                     <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
-                        <li><a href="/privacy-policy" class="hover:text-white transition no-underline">Privacy Policy</a></li>
-                        <li><a href="/terms-and-conditions" class="hover:text-white transition no-underline">Terms & Conditions</a></li>
+                        <li><a href="/privacy-policy" class="hover:opacity-60 transition no-underline">Privacy Policy</a></li>
+                        <li><a href="/terms-and-conditions" class="hover:opacity-60 transition no-underline">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 <div>
                     <h5>Contact</h5>
-                    <p class="text-[9px] text-gray-500" style="font-family: var(--font-body);"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
+                    <p class="text-[9px]" style="font-family: var(--font-body); color: #8e8e93;"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-[9px] sm:text-[10px] uppercase tracking-wider text-gray-500" style="font-family: var(--font-body);">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-blue font-bold hover:text-white transition no-underline">BINZEO</a></p>
-                <p class="text-[8px] sm:text-[9px]" style="font-family: var(--font-body);">&copy; <span id="display-year"></span> JAYENWARE. All rights reserved.</p>
+            <div class="border-t border-gray-900 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[9px] sm:text-[10px] uppercase tracking-wider" style="font-family: var(--font-body); color: #48484a;">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-white font-bold hover:opacity-60 transition no-underline">BINZEO</a></p>
+                <p class="text-[8px] sm:text-[9px]" style="font-family: var(--font-body); color: #48484a;">&copy; <span id="display-year"></span> JAYENWARE. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -934,10 +852,10 @@ function showToast(text, type = 'success') {
         toast = document.createElement('div');
         toast.id = 'toast';
         toast.innerHTML = `
-            <div class="bg-white shadow-2xl rounded-2xl p-3 flex items-center gap-3 min-w-[260px] border border-gray-100">
+            <div class="shadow-2xl p-3 flex items-center gap-3 min-w-[260px]">
                 <span id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"></span>
                 <p id="toast-text" class="text-xs font-bold flex-grow" style="font-family: var(--font-body);"></p>
-                <button onclick="hideToast()" class="text-gray-300 hover:text-gray-600 shrink-0"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0"><i class="fa-solid fa-xmark"></i></button>
             </div>
         `;
         document.body.appendChild(toast);
@@ -947,24 +865,16 @@ function showToast(text, type = 'success') {
     if (toastText) toastText.innerText = text;
     if (toastIcon) {
         if (type === 'success') {
-            toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-green-100 text-green-600 shrink-0';
             toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
         } else if (type === 'error') {
-            toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-red-100 text-red-600 shrink-0';
             toastIcon.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
         } else {
-            toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm bg-blue-100 text-blue-600 shrink-0';
             toastIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
         }
     }
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
-}
-
-function hideToast() {
-    const toast = document.getElementById('toast');
-    if (toast) toast.style.transform = 'translateX(120%)';
 }
 
 // ============================================
@@ -1025,16 +935,16 @@ function renderCartItems() {
     container.innerHTML = cart.map((item, idx) => {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
-        return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-soft rounded-2xl">
+        return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl">
             <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
             <div class="flex-grow min-w-0">
-                <h4 class="text-xs sm:text-sm font-bold truncate" style="font-family: var(--font-subtitle);">${item.title}</h4>
+                <h4 class="text-xs sm:text-sm font-bold truncate" style="font-family: var(--font-subtitle); color: #ffffff;">${item.title}</h4>
                 <div class="flex items-center gap-2 mt-1">
-                    <p class="text-xs sm:text-sm font-black" style="font-family: var(--font-body);">৳${itemTotal.toFixed(2)}</p>
+                    <p class="text-xs sm:text-sm font-black" style="font-family: var(--font-body); color: #ffffff;">৳${itemTotal.toFixed(2)}</p>
                     <span class="text-[10px] text-gray-400" style="font-family: var(--font-body);">Qty: ${item.quantity || 1}</span>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600 p-1.5 shrink-0">
+            <button onclick="removeFromCart(${idx})" class="text-gray-400 hover:text-white p-1.5 shrink-0">
                 <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
             </button>
         </div>`;
@@ -1110,6 +1020,11 @@ function toggleMobileSubmenu(submenuId, element) {
         submenu.classList.add('open');
         if (element) element.classList.add('expanded');
     }
+}
+
+function hideToast() {
+    const toast = document.getElementById('toast');
+    if (toast) toast.style.transform = 'translateX(120%)';
 }
 
 // ============================================
