@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 4.9 (Fixed Extra Right Border/Scroll - Unified Premium Side Drawer)
+// Version: 5.0 (Dynamic Width & Layout Refinement - Auto-Responsive Resolution)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -40,7 +40,7 @@ function applyFontVariables() {
 }
 
 // ============================================================================
-// SHARED CSS STYLES (Ultra Liquid Glass & Monochrome Design)
+// SHARED CSS STYLES (Ultra Liquid Glass & Dynamic Layout Structure)
 // ============================================================================
 function injectSharedStyles() {
     const styles = `
@@ -64,10 +64,18 @@ function injectSharedStyles() {
             --glass-blur: blur(40px) saturate(250%);
         }
         
-        /* FIX: ডানপাশের এক্সট্রা স্ক্রলবার এবং কালো ওভারফ্লো লাইন রিমুভাল */
+        /* DYNAMIC LAYOUT REPAIR: ওভারফ্লো ফিক্স এবং ডায়নামিক প্রস্থ */
         html, body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            min-width: 100%;
             overflow-x: hidden !important;
-            max-width: 100%25;
+            box-sizing: border-box;
+        }
+        
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
         
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
@@ -89,6 +97,12 @@ function injectSharedStyles() {
         
         /* ==================== LIQUID GLASS NAVIGATION HEADER ==================== */
         .glass-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100% !important;
+            z-index: 50;
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
@@ -117,7 +131,7 @@ function injectSharedStyles() {
             -webkit-backdrop-filter: var(--glass-blur);
             border-left: 1px solid var(--glass-border-light);
             z-index: 200;
-            transform: translateX(101%); /* FIX: স্লাইড অফ-স্ক্রিনে ১% বাড়তি পুশ করা হয়েছে যাতে কোনো বর্ডার লাইন না উঁকি দেয় */
+            transform: translateX(100%);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
             box-shadow: -20px 0 60px rgba(0,0,0,0.05);
@@ -173,14 +187,18 @@ function injectSharedStyles() {
         
         /* ==================== CART DRAWER (Liquid Black Glass) ==================== */
         #cart-drawer {
+            position: fixed; top: 0; right: 0;
+            width: 100%; max-width: 440px; h-full; z-[60];
             background: var(--glass-black-thick) !important;
             backdrop-filter: var(--glass-blur) !important;
             -webkit-backdrop-filter: var(--glass-blur) !important;
             border-left: 1px solid var(--glass-border-inline);
             transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform;
-            transform: translateX(101%); /* FIX: অফ-পজিশনে ১% এক্সট্রা শিফট */
+            transform: translateX(100%) !important;
             color: var(--accent) !important;
+            display: flex; flex-direction: column;
+            box-shadow: -20px 0 60px rgba(0,0,0,0.2);
         }
         #cart-drawer.open { transform: translateX(0) !important; }
         #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
@@ -209,8 +227,15 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
-        /* ==================== FOOTER & INTERFACES ==================== */
-        #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; }
+        /* ==================== FOOTER DYNAMIC RESPONSIVE STRUCT ==================== */
+        #main-footer { 
+            background: #000000; 
+            color: #8e8e93; 
+            border-top: 1px solid #1c1c1e;
+            width: 100% !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
         
@@ -437,7 +462,6 @@ async function renderHeader() {
     const menuTree = buildMenuTree(menuItems);
     
     const headerHTML = `
-    <!-- UNIFIED SIDE GLASS DRAWER -->
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
@@ -457,8 +481,7 @@ async function renderHeader() {
         </div>
     </div>
     
-    <!-- MINIMALIST LIQUID GLASS TOP NAV BAR -->
-    <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
+    <nav class="glass-nav" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
                 <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
@@ -475,7 +498,6 @@ async function renderHeader() {
                     <span id="cart-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
-                <!-- UNIFIED PREMIUM MENU TRIGGER BUTTON -->
                 <button onclick="openSideMenu()" class="desktop-menu-trigger">
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                     <span>Menu</span>
@@ -484,8 +506,7 @@ async function renderHeader() {
         </div>
     </nav>
     
-    <!-- CART DRAWER -->
-    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col" style="transform: translateX(101%);">
+    <div id="cart-drawer" class="shadow-2xl">
         <div class="p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
             <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg transition p-1">
@@ -638,9 +659,6 @@ function removeFromCart(idx) {
     renderCartItems();
 }
 
-// ============================================================================
-// SYNCHRONIZATION AND RENDER BINDINGS
-// ============================================================================
 function saveCart() {
     localStorage.setItem('jayen_cart', JSON.stringify(cart));
     updateCounts();
