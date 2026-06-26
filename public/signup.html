@@ -20,10 +20,11 @@
     <script src="/fonts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
         tailwind.config = {
@@ -108,8 +109,14 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .progress-step.done { background: var(--primary); }
-        .progress-step.current { background: var(--primary); width: 40px; }
+        .progress-step.done {
+            background: var(--primary);
+        }
+        
+        .progress-step.current {
+            background: var(--primary);
+            width: 40px;
+        }
 
         /* Card */
         .auth-card {
@@ -126,8 +133,13 @@
             transition: box-shadow 0.3s ease;
         }
         
-        @media (min-width: 640px) { .auth-card { padding: 44px 32px; border-radius: 24px; min-height: 440px; } }
-        @media (min-width: 1024px) { .auth-card { padding: 52px 40px; border-radius: 28px; min-height: 480px; } }
+        @media (min-width: 640px) {
+            .auth-card { padding: 44px 32px; border-radius: 24px; min-height: 440px; }
+        }
+        
+        @media (min-width: 1024px) {
+            .auth-card { padding: 52px 40px; border-radius: 28px; min-height: 480px; }
+        }
 
         .step-inner {
             flex: 1;
@@ -160,7 +172,9 @@
             color: var(--primary);
         }
         
-        @media (min-width: 640px) { .icon-circle { width: 56px; height: 56px; font-size: 24px; } }
+        @media (min-width: 640px) {
+            .icon-circle { width: 56px; height: 56px; font-size: 24px; }
+        }
 
         /* Typography */
         .step-heading {
@@ -173,7 +187,9 @@
             letter-spacing: -0.2px;
         }
         
-        @media (min-width: 640px) { .step-heading { font-size: 26px; } }
+        @media (min-width: 640px) {
+            .step-heading { font-size: 26px; }
+        }
         
         .step-desc {
             font-size: 13px;
@@ -182,10 +198,15 @@
             line-height: 1.55;
         }
         
-        @media (min-width: 640px) { .step-desc { font-size: 14px; margin-bottom: 32px; } }
+        @media (min-width: 640px) {
+            .step-desc { font-size: 14px; margin-bottom: 32px; }
+        }
 
         /* Input */
-        .input-wrap { position: relative; margin-bottom: 4px; }
+        .input-wrap {
+            position: relative;
+            margin-bottom: 4px;
+        }
         
         .form-input {
             width: 100%;
@@ -203,11 +224,24 @@
         }
         
         .form-input:hover { border-color: #c5c5cc; }
-        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(29,29,31,0.06); }
-        .form-input.has-error { border-color: var(--error); box-shadow: 0 0 0 4px rgba(220,38,38,0.06); }
-        .form-input.is-valid { border-color: var(--success); }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(29,29,31,0.06);
+        }
+        
+        .form-input.has-error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 4px rgba(220,38,38,0.06);
+        }
+        
+        .form-input.is-valid {
+            border-color: var(--success);
+        }
 
-        @media (min-width: 640px) { .form-input { padding: 16px; font-size: 16px; } }
+        @media (min-width: 640px) {
+            .form-input { padding: 16px; font-size: 16px; }
+        }
 
         .input-feedback {
             font-size: 12px;
@@ -249,7 +283,12 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        .btn-back:hover { background: #ebebed; border-color: #c5c5cc; color: var(--primary); }
+        .btn-back:hover {
+            background: #ebebed;
+            border-color: #c5c5cc;
+            color: var(--primary);
+        }
+        
         .btn-back:active { transform: scale(0.96); }
         
         .btn-primary {
@@ -272,11 +311,23 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        .btn-primary:hover { background: #333; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:disabled { background: #c5c5cc; cursor: not-allowed; box-shadow: none; }
+        .btn-primary:hover {
+            background: #333;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
         
-        @media (min-width: 640px) { .btn-back { width: 48px; height: 48px; } .btn-primary { padding: 16px 28px; font-size: 15px; } }
+        .btn-primary:active { transform: scale(0.98); }
+        
+        .btn-primary:disabled {
+            background: #c5c5cc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        @media (min-width: 640px) {
+            .btn-back { width: 48px; height: 48px; }
+            .btn-primary { padding: 16px 28px; font-size: 15px; }
+        }
 
         /* Location Button */
         .locate-btn {
@@ -324,9 +375,24 @@
             flex-shrink: 0;
         }
         
-        .agree-box label { font-size: 12px; color: var(--accent); line-height: 1.6; cursor: pointer; }
-        @media (min-width: 640px) { .agree-box label { font-size: 13px; } }
-        .agree-box a { color: var(--primary); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+        .agree-box label {
+            font-size: 12px;
+            color: var(--accent);
+            line-height: 1.6;
+            cursor: pointer;
+        }
+        
+        @media (min-width: 640px) {
+            .agree-box label { font-size: 13px; }
+        }
+        
+        .agree-box a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        
         .agree-box a:hover { color: #000; }
 
         /* Loading Overlay */
@@ -347,7 +413,10 @@
             transition: opacity 0.3s ease;
         }
         
-        .loading-overlay.visible { opacity: 1; pointer-events: auto; }
+        .loading-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
         
         .loading-spinner {
             width: 48px;
@@ -359,8 +428,15 @@
             margin-bottom: 16px;
         }
         
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { font-size: 14px; color: var(--accent); font-weight: 500; }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 500;
+        }
 
         /* Toast */
         #toast {
@@ -373,7 +449,10 @@
             max-width: calc(100vw - 24px);
         }
         
-        @media (min-width: 640px) { #toast { top: 88px; right: 20px; } }
+        @media (min-width: 640px) {
+            #toast { top: 88px; right: 20px; }
+        }
+        
         #toast.show { transform: translateX(0); }
         
         #toast .toast-box {
@@ -405,7 +484,13 @@
         .toast-icon-wrap.warning { background: #fffbeb; color: #f59e0b; }
         .toast-icon-wrap.info { background: #eff6ff; color: #3b82f6; }
         
-        #toast .toast-msg { font-size: 12px; font-weight: 600; flex: 1; line-height: 1.4; }
+        #toast .toast-msg {
+            font-size: 12px;
+            font-weight: 600;
+            flex: 1;
+            line-height: 1.4;
+        }
+        
         #toast .toast-close {
             color: var(--accent);
             background: none;
@@ -475,11 +560,19 @@
 
     <script>
         // ============================================
-        // SUPABASE DIRECT CLIENT (No API Endpoints)
+        // SUPABASE DIRECT INITIALIZATION
         // ============================================
         const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        const supabase = window.supabase?.createClient 
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
+            : null;
+
+        if (!supabase) {
+            console.error('Supabase SDK not loaded');
+            alert('Unable to initialize. Please refresh the page.');
+        }
 
         (() => {
             document.addEventListener('DOMContentLoaded', () => {
@@ -492,6 +585,8 @@
             window.addEventListener('load', () => setTimeout(boot, 200));
 
             function boot() {
+                if (!supabase) return;
+
                 let step = 0;
                 let busy = false;
 
@@ -508,7 +603,6 @@
                 const loadingOverlay = $('loading-overlay');
                 const toast = $('toast');
 
-                // Blocked email domains
                 const blockedDomains = [
                     'jabiyen.com', 'jabiyen.shop', 'jabiyen.io', 'jabiyen.me',
                     'binzeo.com', 'binzeo.shop', 'binzeo.io', 'binzeo.me'
@@ -869,7 +963,9 @@
                 }
 
                 // ============================================
-                // DIRECT SUPABASE SIGNUP (No API Endpoints)
+                // SUBMIT - Direct Supabase Signup
+                // Uses supabase.auth.signUp() directly
+                // No API endpoints needed
                 // ============================================
                 window.submit = async function() {
                     const checked = document.getElementById('terms-check')?.checked;
@@ -893,24 +989,24 @@
                     const loadingText = loadingOverlay.querySelector('.loading-text');
                     
                     try {
-                        // ============================================
-                        // STEP 1: DIRECT SUPABASE SIGNUP
-                        // ============================================
                         if (loadingText) loadingText.textContent = 'Creating your account...';
                         
+                        // ============================================
+                        // DIRECT SUPABASE SIGNUP (No API Endpoint)
+                        // ============================================
                         const { data: authData, error: signupError } = await supabase.auth.signUp({
                             email: data.email,
                             password: data.password,
                             options: {
                                 data: {
-                                    full_name: data.name,
-                                    phone: data.phone,
-                                    country: data.country,
-                                    state_province: data.state_province,
-                                    city: data.city,
-                                    postal_code: data.postal_code,
-                                    street_address: data.street_address,
-                                    apartment_house: data.apartment_house,
+                                    full_name: data.name.trim(),
+                                    phone: data.phone.trim() || 'N/A',
+                                    country: data.country || 'Bangladesh',
+                                    state_province: data.state_province || null,
+                                    city: data.city || null,
+                                    postal_code: data.postal_code || null,
+                                    street_address: data.street_address || null,
+                                    apartment_house: data.apartment_house || null,
                                     full_address: [data.apartment_house, data.street_address, data.city, data.state_province, data.postal_code, data.country].filter(Boolean).join(', ')
                                 }
                             }
@@ -918,59 +1014,54 @@
                         
                         if (signupError) {
                             loadingOverlay.classList.remove('visible');
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
                             
                             if (signupError.message.includes('already registered')) {
                                 notify('This email is already registered. Please login instead.', 'error');
-                            } else {
+                            } else if (signupError.message.includes('Email')) {
                                 notify(signupError.message, 'error');
+                            } else {
+                                notify('Registration failed: ' + signupError.message, 'error');
                             }
+                            
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
+                            return;
+                        }
+                        
+                        if (!authData?.user) {
+                            loadingOverlay.classList.remove('visible');
+                            notify('Registration failed. No user data returned.', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
                             return;
                         }
                         
                         // ============================================
-                        // STEP 2: WAIT FOR DATABASE TRIGGER
+                        // SUCCESS - Get OneID from profiles table
                         // ============================================
                         if (loadingText) loadingText.textContent = 'Setting up your profile...';
                         
-                        // Wait for handle_new_user trigger to create profile
-                        let oneid = null;
-                        let retries = 0;
-                        const maxRetries = 10;
+                        // Wait for database trigger to create profile
+                        await new Promise(resolve => setTimeout(resolve, 2000));
                         
-                        while (retries < maxRetries) {
-                            await new Promise(resolve => setTimeout(resolve, 800));
-                            
-                            const { data: profile } = await supabase
-                                .from('profiles')
-                                .select('jbyn_oneid')
-                                .eq('id', authData.user.id)
-                                .single();
-                            
-                            if (profile?.jbyn_oneid) {
-                                oneid = profile.jbyn_oneid;
-                                break;
-                            }
-                            retries++;
-                        }
+                        const { data: profile } = await supabase
+                            .from('profiles')
+                            .select('jbyn_oneid')
+                            .eq('id', authData.user.id)
+                            .single();
                         
-                        // ============================================
-                        // STEP 3: SUCCESS FEEDBACK
-                        // ============================================
-                        loadingOverlay.classList.remove('visible');
+                        const oneid = profile?.jbyn_oneid;
                         
+                        // Show success with OneID
                         if (oneid) {
-                            notify(`✅ Account created! Your JBYN-OneID: ${oneid}`, 'success');
-                            console.log('🔑 JBYN-OneID:', oneid);
+                            notify(`🎉 Welcome! Your JBYN-OneID: ${oneid}`, 'success');
                         } else {
-                            notify('✅ Account created successfully! Please check your email to verify.', 'success');
+                            notify('Account created successfully! Check your email to verify.', 'success');
                         }
                         
-                        // Redirect after delay
                         if (loadingText) loadingText.textContent = 'Redirecting to your account...';
-                        loadingOverlay.classList.add('visible');
                         
+                        // Redirect after showing message
                         setTimeout(() => {
                             window.location.href = '/account';
                         }, 3000);
