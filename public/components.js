@@ -1,7 +1,8 @@
-// ============================================
-// components.js - Shared Header, Footer & Common Functions
-// Version: 4.5 (Apple Liquid Glass System - Monochrome Monochrome)
-// ============================================
+// ============================================================================
+// components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
+// Version: 4.5 (Apple Liquid Glass System + Full Monochrome Integration)
+// Brand: JAYENWARE (Premium Apparel)
+// ============================================================================
 
 let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
@@ -10,9 +11,9 @@ let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
 
-// ============================================
+// ============================================================================
 // FONT CONFIGURATION LOADER
-// ============================================
+// ============================================================================
 function loadFontsConfiguration() {
     if (!window.JAYENWARE_FONTS) {
         const script = document.createElement('script');
@@ -37,61 +38,43 @@ function applyFontVariables() {
         root.style.setProperty(key, value);
     }
     
-    // Override component-specific variables
-    root.style.setProperty('--font-heading', fonts.families.heading);
-    root.style.setProperty('--font-subtitle', fonts.families.subtitle);
-    root.style.setProperty('--font-body', fonts.families.body);
-    root.style.setProperty('--font-accent', fonts.families.body);
+    // Core font override
+    root.style.setProperty('--font-heading', fonts.families.heading || 'Manrope, sans-serif');
+    root.style.setProperty('--font-subtitle', fonts.families.subtitle || 'Sora, sans-serif');
+    root.style.setProperty('--font-body', fonts.families.body || 'Inter, sans-serif');
+    root.style.setProperty('--font-accent', fonts.families.body || 'Inter, sans-serif');
 }
 
-// ============================================
-// SHARED CSS STYLES (Apple Liquid Glass System - Monochrome)
-// ============================================
+// ============================================================================
+// SHARED CSS STYLES (Ultra Liquid Glass & Monochrome Design)
+// ============================================================================
 function injectSharedStyles() {
     const styles = `
     <style id="shared-components-style">
         :root {
-            /* পিওর ব্ল্যাক ও হোয়াইটের আল্ট্রা-মডার্ন গ্লাস ভেরিয়েবল */
+            /* পিওর ব্ল্যাক ও হোয়াইটের লাক্সারি ভেরিয়েবল */
             --primary: #000000;
             --accent: #ffffff;
             
-            /* লিকুইড কাঁচের ফ্রস্টেড ইফেক্ট (White Glass & Black Glass) */
-            --glass-white: rgba(255, 255, 255, 0.65);
-            --glass-black: rgba(0, 0, 0, 0.75);
+            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড */
+            --glass-white: rgba(255, 255, 255, 0.55);
+            --glass-white-thick: rgba(255, 255, 255, 0.75);
+            --glass-black: rgba(0, 0, 0, 0.65);
+            --glass-black-thick: rgba(0, 0, 0, 0.82);
             
-            /* কাঁচের নিখুঁত বর্ডার রিফ্লেকশন */
-            --glass-border-light: rgba(255, 255, 255, 0.35);
-            --glass-border-dark: rgba(0, 0, 0, 0.12);
+            /* প্রিমিয়াম ৩ডি কাঁচের বর্ডার রিফ্লেকশন */
+            --glass-border-light: rgba(255, 255, 255, 0.45);
+            --glass-border-dark: rgba(0, 0, 0, 0.08);
+            --glass-border-inline: rgba(255, 255, 255, 0.15);
             
-            /* অ্যাপল স্ট্যান্ডার্ড হাই-স্যাচুরেশন ব্লার ফিল্টার */
-            --glass-blur: blur(40px) saturate(220%);
+            /* অ্যাপল স্ট্যান্ডার্ড আল্ট্রা-স্যাচুরেশন ব্লার ফিল্টার */
+            --glass-blur: blur(40px) saturate(240%);
         }
         
         /* ==================== TYPOGRAPHY SYSTEM ==================== */
-        .text-heading-hero { 
-            font-family: var(--font-heading); 
-            font-size: clamp(2.5rem, 6vw, 4.5rem); 
-            line-height: 1.05; 
-            font-weight: 800; 
-            letter-spacing: -0.03em;
-            color: var(--primary);
-        }
-        .text-heading-xl { 
-            font-family: var(--font-heading); 
-            font-size: clamp(2rem, 5vw, 3.5rem); 
-            line-height: 1.1; 
-            font-weight: 700; 
-            letter-spacing: -0.02em;
-            color: var(--primary);
-        }
-        .text-heading-lg { 
-            font-family: var(--font-heading); 
-            font-size: clamp(1.5rem, 4vw, 2.5rem); 
-            line-height: 1.15; 
-            font-weight: 700; 
-            letter-spacing: -0.015em;
-            color: var(--primary);
-        }
+        .text-heading-hero { font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
+        .text-heading-xl { font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: var(--primary); }
+        .text-heading-lg { font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.5rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; color: var(--primary); }
         .text-heading-md { font-family: var(--font-heading); font-size: clamp(1.25rem, 3vw, 2rem); line-height: 1.2; font-weight: 600; color: var(--primary); }
         .text-heading-sm { font-family: var(--font-heading); font-size: clamp(1rem, 2.5vw, 1.5rem); line-height: 1.25; font-weight: 600; color: var(--primary); }
         
@@ -108,31 +91,30 @@ function injectSharedStyles() {
         
         .text-caption { font-family: var(--font-accent); font-size: 0.75rem; line-height: 1.4; font-weight: 500; color: var(--primary); }
         .text-overline { font-family: var(--font-accent); font-size: 0.625rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
-        .text-label { font-family: var(--font-accent); font-size: 0.6875rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary); }
         
-        /* ==================== NAVIGATION STYLES (Liquid Glass) ==================== */
+        /* ==================== LIQUID GLASS NAVIGATION ==================== */
         .glass-nav {
             background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--glass-border-light);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .nav-link {
             position: relative;
             font-family: var(--font-heading);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             padding: 8px 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             color: var(--primary);
             text-decoration: none;
         }
-        .nav-link:hover { opacity: 0.6; }
+        .nav-link:hover { opacity: 0.5; }
         .nav-link::after {
             content: '';
             position: absolute;
@@ -144,24 +126,24 @@ function injectSharedStyles() {
         }
         .nav-link:hover::after { width: 100%; }
         
-        /* Desktop Dropdown (Liquid White Glass) */
+        /* Desktop Menu (Liquid White Glass) */
         .desktop-dropdown { position: relative; }
         .desktop-dropdown-menu {
             position: absolute;
             top: 100%;
             left: 50%;
             transform: translateX(-50%) translateY(15px);
-            background: rgba(255, 255, 255, 0.75);
+            background: var(--glass-white-thick);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border-light);
             border-radius: 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             min-width: 260px;
-            padding: 10px 0;
+            padding: 12px 0;
             z-index: 100;
         }
         .desktop-dropdown:hover .desktop-dropdown-menu {
@@ -180,30 +162,31 @@ function injectSharedStyles() {
             font-weight: 600;
             color: var(--primary);
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             letter-spacing: 0.02em;
         }
         .desktop-dropdown-item:hover {
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.04);
             padding-left: 28px;
+            color: var(--primary);
         }
         
         .desktop-sub-dropdown {
             position: absolute;
             left: 100%;
-            top: -10px;
-            background: rgba(255, 255, 255, 0.8);
+            top: -12px;
+            background: var(--glass-white-thick);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border-light);
             border-radius: 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             min-width: 240px;
-            padding: 10px 0;
-            transform: translateX(10px);
+            padding: 12px 0;
+            transform: translateX(12px);
         }
         .desktop-dropdown-item.has-children:hover .desktop-sub-dropdown {
             opacity: 1;
@@ -211,12 +194,12 @@ function injectSharedStyles() {
             transform: translateX(0);
         }
         
-        /* ==================== MOBILE MENU (Premium Glass Drawer) ==================== */
+        /* ==================== MOBILE DRAWER (Transparent Glass) ==================== */
         .mobile-menu-overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 199; opacity: 0; visibility: hidden;
             transition: all 0.4s ease;
         }
@@ -224,9 +207,9 @@ function injectSharedStyles() {
         
         .mobile-menu-drawer {
             position: fixed; top: 0; left: 0;
-            width: 88%; max-width: 380px;
+            width: 86%; max-width: 380px;
             height: 100vh; height: 100dvh;
-            background: rgba(255, 255, 255, 0.75);
+            background: var(--glass-white);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-right: 1px solid var(--glass-border-light);
@@ -240,74 +223,75 @@ function injectSharedStyles() {
         .mobile-menu-drawer .mobile-menu-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 24px; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            background: transparent;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         }
         
         .mobile-menu-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             font-family: var(--font-heading);
-            font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+            font-size: 14px; font-weight: 700; letter-spacing: 0.03em;
             color: var(--primary); text-decoration: none;
             transition: all 0.3s ease;
         }
-        .mobile-menu-item:hover { padding-left: 8px; }
+        .mobile-menu-item:hover { padding-left: 6px; }
         
         .mobile-submenu {
             display: none;
-            padding-left: 16px;
-            border-left: 1.5px solid var(--primary);
-            margin: 6px 0 6px 6px;
+            padding-left: 14px;
+            border-left: 2px solid var(--primary);
+            margin: 4px 0 6px 6px;
         }
         .mobile-submenu.open { display: block; }
         
         .mobile-sub-item {
             display: block;
-            padding: 12px 14px;
+            padding: 11px 12px;
             font-family: var(--font-subtitle);
             font-size: 13px; font-weight: 600;
-            color: #48484a; text-decoration: none;
+            color: #3a3a3c; text-decoration: none;
             transition: color 0.2s ease;
         }
         .mobile-sub-item:hover { color: var(--primary); }
         
         .mobile-footer {
-            padding: 24px; border-top: 1px solid rgba(0, 0, 0, 0.05);
-            background: rgba(255, 255, 255, 0.4); flex-shrink: 0;
+            padding: 24px; border-top: 1px solid rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.3); flex-shrink: 0;
         }
         
         /* ==================== CART DRAWER (Liquid Black Glass) ==================== */
         #cart-drawer {
-            background: rgba(0, 0, 0, 0.75) !important;
+            background: var(--glass-black-thick) !important;
             backdrop-filter: var(--glass-blur) !important;
             -webkit-backdrop-filter: var(--glass-blur) !important;
-            border-left: 1px solid var(--glass-border-light);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            border-left: 1px solid var(--glass-border-inline);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform;
             color: var(--accent) !important;
         }
-        #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4 {
-            color: var(--accent) !important;
+        #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div {
+            color: var(--accent);
         }
         #cart-drawer .bg-soft {
-            background: rgba(255, 255, 255, 0.07) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         }
         #cart-items > div {
-            background: rgba(255, 255, 255, 0.08) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
         }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); }
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 10px; }
         
-        /* ==================== TOAST NOTIFICATION (Liquid Minimal) ==================== */
+        /* ==================== TOAST NOTIFICATION (Liquid Clean) ==================== */
         #toast > div {
-            background: rgba(255, 255, 255, 0.8) !important;
+            background: rgba(255, 255, 255, 0.82) !important;
             backdrop-filter: var(--glass-blur) !important;
             -webkit-backdrop-filter: var(--glass-blur) !important;
             border: 1px solid var(--glass-border-light) !important;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.18) !important;
             border-radius: 24px !important;
             color: var(--primary) !important;
         }
@@ -316,7 +300,7 @@ function injectSharedStyles() {
             color: var(--accent) !important;
         }
         
-        /* ==================== FOOTER (Pure Dark Minimal) ==================== */
+        /* ==================== FOOTER (Pure Monochrome) ==================== */
         #main-footer {
             background: #000000;
             color: #8e8e93;
@@ -324,40 +308,42 @@ function injectSharedStyles() {
         }
         #main-footer h4, #main-footer h5, #main-footer a {
             color: var(--accent) !important;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.25s ease;
         }
-        #main-footer a:hover { opacity: 0.6; }
+        #main-footer a:hover { opacity: 0.5; }
         
-        /* ==================== GLOBAL & BUTTONS ==================== */
+        /* ==================== GLOBAL & MONO BUTTONS ==================== */
         body { 
             padding-top: 56px; 
             font-family: var(--font-body);
             background-color: #ffffff;
+            color: var(--primary);
         }
         @media (min-width: 640px) { body { padding-top: 64px; } }
         @media (min-width: 1024px) { body { padding-top: 80px; } }
         
-        /* Monochrome Solid UI Buttons */
         .btn-primary {
             font-family: var(--font-body);
             font-weight: 700;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             background: var(--primary) !important;
             color: var(--accent) !important;
             border-radius: 14px !important;
-            transition: all 0.3s ease !important;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .btn-primary:hover {
-            background: #232323 !important;
+            background: #1c1c1e !important;
             transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
-        /* ==================== COUNTER BADGES ==================== */
         #wish-count, #cart-count {
             background: var(--primary) !important;
             color: var(--accent) !important;
             font-size: 9px !important;
+            font-weight: 700;
             border: 1px solid var(--glass-border-light);
         }
     </style>
@@ -365,9 +351,9 @@ function injectSharedStyles() {
     document.head.insertAdjacentHTML('beforeend', styles);
 }
 
-// ============================================
-// SLUG HELPER
-// ============================================
+// ============================================================================
+// CORE DATA INTERFACES & UTILITIES
+// ============================================================================
 function createSlug(text) {
     if (!text) return '';
     return text
@@ -378,18 +364,14 @@ function createSlug(text) {
         .replace(/^-+|-+$/g, '');
 }
 
-// ============================================
-// API HELPERS: Fetch data from server
-// ============================================
 async function fetchMenuItems() {
     try {
         const response = await fetch('/api/menu-items');
-        if (!response.ok) throw new Error('Failed to fetch menu items');
-        const data = await response.json();
-        allMenuItems = data;
-        return data;
+        if (!response.ok) throw new Error('Failed to fetch menu pipeline');
+        allMenuItems = await response.json();
+        return allMenuItems;
     } catch (error) {
-        console.error('Error fetching menu items:', error);
+        console.error('Menu dynamic architecture error:', error);
         allMenuItems = [];
         return [];
     }
@@ -399,11 +381,10 @@ async function fetchCategories() {
     try {
         const response = await fetch('/api/categories');
         if (!response.ok) throw new Error('Failed to fetch categories');
-        const data = await response.json();
-        allCategories = data;
-        return data;
+        allCategories = await response.json();
+        return allCategories;
     } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Category framework loading error:', error);
         allCategories = [];
         return [];
     }
@@ -412,33 +393,21 @@ async function fetchCategories() {
 async function fetchSubcategories(categorySlug = null) {
     try {
         let url = '/api/subcategories';
-        if (categorySlug) {
-            url += `?category_slug=${categorySlug}`;
-        }
+        if (categorySlug) url += `?category_slug=${categorySlug}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch subcategories');
+        if (!response.ok) throw new Error('Failed to fetch structural subcategories');
         const data = await response.json();
-        
-        if (!categorySlug) {
-            allSubcategories = data;
-        }
+        if (!categorySlug) allSubcategories = data;
         return data;
     } catch (error) {
-        console.error('Error fetching subcategories:', error);
+        console.error('Subcategory architecture routing error:', error);
         return [];
     }
 }
 
-// ============================================
-// BUILD MENU TREE FROM FLAT DATA
-// ============================================
 function buildMenuTree(items, parentId = null) {
     return items
-        .filter(item => {
-            const itemParentId = item.parent_id || null;
-            const targetParentId = parentId || null;
-            return itemParentId === targetParentId;
-        })
+        .filter(item => (item.parent_id || null) === (parentId || null))
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
         .map(item => ({
             ...item,
@@ -446,21 +415,13 @@ function buildMenuTree(items, parentId = null) {
         }));
 }
 
-// ============================================
-// GET LINK URL FOR MENU ITEM
-// ============================================
 function getMenuLinkUrl(item) {
-    if (item.link && item.link.trim() !== '') {
-        return item.link;
-    }
-    
+    if (item.link && item.link.trim() !== '') return item.link;
     const slug = item.slug || '';
     
     switch (item.menu_type) {
-        case 'home':
-            return '/';
-        case 'products':
-            return '/products';
+        case 'home': return '/';
+        case 'products': return '/products';
         case 'category':
             if (item.category_slug && item.subcategory_slug) {
                 return `/category/${item.category_slug}/${item.subcategory_slug}`;
@@ -471,24 +432,15 @@ function getMenuLinkUrl(item) {
                 return `/category/${item.category_slug}/${item.subcategory_slug}`;
             }
             return item.subcategory_slug ? `/subcategory/${item.subcategory_slug}` : '#';
-        case 'page':
-            return slug ? `/${slug}` : '#';
-        case 'custom':
-            return item.link || '#';
-        case 'contact':
-            return '/contact';
-        case 'about':
-            return '/about';
-        case 'journal':
-            return '/journal';
-        default:
-            return slug ? `/${slug}` : '#';
+        case 'page': return slug ? `/${slug}` : '#';
+        case 'custom': return item.link || '#';
+        case 'contact': return '/contact';
+        case 'about': return '/about';
+        case 'journal': return '/journal';
+        default: return slug ? `/${slug}` : '#';
     }
 }
 
-// ============================================
-// GET CATEGORY/SUBCATEGORY URL
-// ============================================
 function getCategoryUrl(category, subcategory = null) {
     const catSlug = category.slug || createSlug(category.name);
     if (subcategory) {
@@ -498,12 +450,11 @@ function getCategoryUrl(category, subcategory = null) {
     return `/category/${catSlug}`;
 }
 
-// ============================================
-// RENDER DESKTOP NAVIGATION
-// ============================================
+// ============================================================================
+// DYNAMIC NAVIGATION ENGINE (REDUX/RENDER)
+// ============================================================================
 function renderDesktopNav(rootItems) {
     let html = '';
-    
     rootItems.forEach(item => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
@@ -511,9 +462,9 @@ function renderDesktopNav(rootItems) {
         if (hasChildren) {
             html += `
             <div class="desktop-dropdown">
-                <a href="${linkUrl}" class="nav-link px-5" style="display:inline-flex;align-items:center;gap:4px;">
-                    ${item.title || item.name || ''}
-                    <i class="fa-solid fa-chevron-down" style="font-size:8px;"></i>
+                <a href="${linkUrl}" class="nav-link px-5 flex items-center gap-1.5">
+                    <span>${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-down opacity-60" style="font-size:7px;"></i>
                 </a>
                 <div class="desktop-dropdown-menu">
                     ${renderDesktopDropdownChildren(item)}
@@ -523,7 +474,6 @@ function renderDesktopNav(rootItems) {
             html += `<a href="${linkUrl}" class="nav-link px-5">${item.title || item.name || ''}</a>`;
         }
     });
-    
     return html;
 }
 
@@ -531,7 +481,6 @@ function renderDesktopDropdownChildren(item) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderCategoriesDropdown();
     }
-    
     if (item.children && item.children.length > 0) {
         let html = '';
         item.children.forEach(child => {
@@ -542,8 +491,8 @@ function renderDesktopDropdownChildren(item) {
                 html += `
                 <div style="position:relative;">
                     <a href="${linkUrl}" class="desktop-dropdown-item has-children">
-                        ${child.title || child.name || ''}
-                        <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+                        <span>${child.title || child.name || ''}</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size:8px;"></i>
                     </a>
                     <div class="desktop-sub-dropdown">
                         ${child.children.map(gc => `
@@ -557,15 +506,13 @@ function renderDesktopDropdownChildren(item) {
         });
         return html;
     }
-    
     return renderCategoriesDropdown();
 }
 
 function renderCategoriesDropdown() {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="desktop-dropdown-item" style="color:#8e8e93; font-family: var(--font-subtitle);">No categories found</div>';
+        return '<div class="desktop-dropdown-item opacity-50">No categories found</div>';
     }
-    
     let html = '';
     allCategories.forEach(cat => {
         const catSlug = cat.slug || createSlug(cat.name);
@@ -576,14 +523,13 @@ function renderCategoriesDropdown() {
             html += `
             <div style="position:relative;">
                 <a href="${catUrl}" class="desktop-dropdown-item has-children">
-                    ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+                    <span>${cat.name}</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size:8px;"></i>
                 </a>
                 <div class="desktop-sub-dropdown">
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
-                        const subUrl = `/category/${catSlug}/${subSlug}`;
-                        return `<a href="${subUrl}" class="desktop-dropdown-item">${sub.name}</a>`;
+                        return `<a href="/category/${catSlug}/${subSlug}" class="desktop-dropdown-item">${sub.name}</a>`;
                     }).join('')}
                 </div>
             </div>`;
@@ -591,16 +537,11 @@ function renderCategoriesDropdown() {
             html += `<a href="${catUrl}" class="desktop-dropdown-item">${cat.name}</a>`;
         }
     });
-    
     return html;
 }
 
-// ============================================
-// RENDER MOBILE NAVIGATION
-// ============================================
 function renderMobileNav(rootItems) {
     let html = '';
-    
     rootItems.forEach((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
@@ -609,9 +550,9 @@ function renderMobileNav(rootItems) {
         if (hasChildren) {
             html += `
             <div>
-                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    <span><i class="fa-solid fa-folder mr-3 text-gray-400" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#000000;"></i>
+                <div class="mobile-menu-item" onclick="toggleMobileSubmenu('${uniqueId}', this)">
+                    <span><i class="fa-solid fa-folder-open mr-3 opacity-30" style="font-size:11px;"></i> ${item.title || item.name || ''}</span>
+                    <i class="fa-solid fa-chevron-right opacity-40" style="font-size:10px;"></i>
                 </div>
                 <div class="mobile-submenu" id="${uniqueId}">
                     ${renderMobileSubItems(item, uniqueId)}
@@ -626,16 +567,14 @@ function renderMobileNav(rootItems) {
                 case 'about': icon = 'fa-circle-info'; break;
                 case 'journal': icon = 'fa-newspaper'; break;
                 case 'page': icon = 'fa-file'; break;
-                default: icon = 'fa-circle'; break;
             }
             html += `
             <a href="${linkUrl}" class="mobile-menu-item no-underline">
-                <span><i class="fa-solid ${icon} mr-3 text-gray-400" style="font-size:12px;"></i> ${item.title || item.name || ''}</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:#000000;"></i>
+                <span><i class="fa-solid ${icon} mr-3 opacity-30" style="font-size:11px;"></i> ${item.title || item.name || ''}</span>
+                <i class="fa-solid fa-chevron-right opacity-30" style="font-size:10px;"></i>
             </a>`;
         }
     });
-    
     return html;
 }
 
@@ -643,7 +582,6 @@ function renderMobileSubItems(item, parentId) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderMobileCategoriesSubmenu(parentId);
     }
-    
     if (item.children && item.children.length > 0) {
         let html = '';
         item.children.forEach((child, idx) => {
@@ -654,11 +592,11 @@ function renderMobileSubItems(item, parentId) {
             if (hasGrandChildren) {
                 html += `
                 <div>
-                    <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                        ${child.title || child.name || ''}
-                        <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;color:#000000;"></i>
+                    <div class="mobile-sub-item has-children flex justify-between items-center" onclick="toggleMobileSubmenu('${uniqueId}', this)">
+                        <span>${child.title || child.name || ''}</span>
+                        <i class="fa-solid fa-chevron-right opacity-40" style="font-size:9px;"></i>
                     </div>
-                    <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#000000;">
+                    <div class="mobile-submenu" id="${uniqueId}" style="border-left-width: 1px; border-left-color: rgba(0,0,0,0.15);">
                         ${child.children.map(gc => `
                             <a href="${getMenuLinkUrl(gc)}" class="mobile-sub-item">${gc.title || gc.name || ''}</a>
                         `).join('')}
@@ -670,15 +608,13 @@ function renderMobileSubItems(item, parentId) {
         });
         return html;
     }
-    
     return renderMobileCategoriesSubmenu(parentId);
 }
 
 function renderMobileCategoriesSubmenu(parentId) {
     if (!allCategories || allCategories.length === 0) {
-        return '<div class="mobile-sub-item" style="color:#8e8e93; font-family: var(--font-subtitle);">No categories</div>';
+        return '<div class="mobile-sub-item opacity-50">No categories distributed</div>';
     }
-    
     let html = '';
     allCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
@@ -689,16 +625,15 @@ function renderMobileCategoriesSubmenu(parentId) {
         if (subcategories.length > 0) {
             html += `
             <div>
-                <div class="mobile-sub-item has-children" onclick="toggleMobileSubmenu('${uniqueId}', this)" style="cursor:pointer;">
-                    ${cat.name}
-                    <i class="fa-solid fa-chevron-right" style="font-size:10px;margin-left:6px;color:#000000;"></i>
+                <div class="mobile-sub-item has-children flex justify-between items-center" onclick="toggleMobileSubmenu('${uniqueId}', this)">
+                    <span>${cat.name}</span>
+                    <i class="fa-solid fa-chevron-right opacity-40" style="font-size:9px;"></i>
                 </div>
-                <div class="mobile-submenu" id="${uniqueId}" style="padding-left:12px;border-left-color:#000000;">
-                    <a href="${catUrl}" class="mobile-sub-item" style="font-weight:700; font-family: var(--font-heading); color:#000000;">All ${cat.name}</a>
+                <div class="mobile-submenu" id="${uniqueId}" style="border-left-width: 1px; border-left-color: rgba(0,0,0,0.15);">
+                    <a href="${catUrl}" class="mobile-sub-item font-bold" style="letter-spacing:0.02em;">All ${cat.name}</a>
                     ${subcategories.map(sub => {
                         const subSlug = sub.slug || createSlug(sub.name);
-                        const subUrl = `/category/${catSlug}/${subSlug}`;
-                        return `<a href="${subUrl}" class="mobile-sub-item">${sub.name}</a>`;
+                        return `<a href="/category/${catSlug}/${subSlug}" class="mobile-sub-item">${sub.name}</a>`;
                     }).join('')}
                 </div>
             </div>`;
@@ -706,13 +641,12 @@ function renderMobileCategoriesSubmenu(parentId) {
             html += `<a href="${catUrl}" class="mobile-sub-item">${cat.name}</a>`;
         }
     });
-    
     return html;
 }
 
-// ============================================
-// HEADER COMPONENT
-// ============================================
+// ============================================================================
+// HEADER SYSTEM (Liquid Translucent Engine)
+// ============================================================================
 async function renderHeader() {
     const [menuItems, categories, subcategories] = await Promise.all([
         fetchMenuItems(),
@@ -724,118 +658,119 @@ async function renderHeader() {
     allSubcategories = subcategories;
     
     const menuTree = buildMenuTree(menuItems);
-    const rootItems = menuTree;
     
     const headerHTML = `
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
     <div class="mobile-menu-drawer" id="mobileMenuDrawer">
         <div class="mobile-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-9 h-9 rounded-lg" alt="Logo">
-                <span class="font-black text-lg" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <img src="/logo.png" class="w-9 h-9 rounded-xl border border-white/20 shadow-sm" alt="Logo">
+                <span class="font-black text-base tracking-wider" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <button onclick="closeMobileMenu()" class="text-2xl text-gray-500 hover:text-black transition p-2" aria-label="Close menu">
+            <button onclick="closeMobileMenu()" class="text-xl text-gray-500 hover:text-black transition p-2" aria-label="Close layout">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div class="mobile-menu-scroll" id="mobileMenuContent">
-            ${renderMobileNav(rootItems)}
+        <div class="mobile-menu-scroll px-5 py-3" id="mobileMenuContent">
+            ${renderMobileNav(menuTree)}
         </div>
         <div class="mobile-footer" id="mobileMenuFooter">
-            <a href="/login" class="block w-full py-3 bg-black text-white rounded-xl text-center font-bold uppercase tracking-wider text-xs no-underline" style="font-family: var(--font-body);">Sign In</a>
+            <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] no-underline">Account Access</a>
         </div>
     </div>
+    
     <nav class="glass-nav fixed w-full top-0 z-50" id="main-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline" aria-label="JAYENWARE Home">
-                <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg" alt="JAYENWARE Logo" loading="eager" width="40" height="40">
-                <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+            <a href="/" class="flex items-center gap-2 sm:gap-3 shrink-0 no-underline">
+                <img src="/logo.png" class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo" width="40" height="40">
+                <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
             <div class="hidden lg:flex items-center gap-0" id="desktopNavLinks">
-                ${renderDesktopNav(rootItems)}
+                ${renderDesktopNav(menuTree)}
             </div>
             <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
-                <a href="/wishlist" class="relative p-1.5 no-underline text-primary hover:opacity-60 transition" aria-label="Wishlist">
-                    <i class="fa-regular fa-heart text-lg lg:text-xl"></i>
-                    <span id="wish-count" class="absolute -top-0.5 -right-0.5 text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
+                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-60">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                    <span id="wish-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-1.5 no-underline text-primary hover:opacity-60 transition" aria-label="Shopping Cart">
-                    <i class="fa-solid fa-bag-shopping text-lg lg:text-xl"></i>
-                    <span id="cart-count" class="absolute -top-0.5 -right-0.5 text-[8px] sm:text-[9px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center font-bold" style="font-family: var(--font-body);">0</span>
+                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-60">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-count" class="absolute top-0.5 right-0.5 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 <div id="auth-nav-area" class="hidden lg:block">
-                    <a href="/login" class="px-5 py-2.5 bg-black text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:opacity-80 transition-all no-underline inline-block" style="font-family: var(--font-body);">Sign In</a>
+                    <a href="/login" class="px-5 py-2.5 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all no-underline inline-block">Sign In</a>
                 </div>
-                <button onclick="openMobileMenu()" class="lg:hidden text-xl p-1.5 text-primary hover:opacity-60 transition" aria-label="Menu">
+                <button onclick="openMobileMenu()" class="lg:hidden text-lg p-2 text-black transition hover:opacity-60">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
     </nav>
+    
     <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-sm sm:max-w-md h-full z-[60] shadow-2xl flex flex-col" style="transform: translateX(100%);">
-        <div class="p-4 sm:p-6 border-b flex justify-between items-center bg-soft">
-            <h2 class="text-base sm:text-lg font-black uppercase tracking-tighter" style="font-family: var(--font-heading);">Shopping Bag</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg sm:text-xl transition p-1">
+        <div class="p-5 border-b flex justify-between items-center bg-soft">
+            <h2 class="text-sm font-black uppercase tracking-widest">Shopping Bag Layout</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg transition p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4 custom-scroll"></div>
-        <div class="p-4 sm:p-6 border-t bg-soft">
-            <div class="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 text-[10px] sm:text-xs" style="font-family: var(--font-body);">
-                <div class="flex justify-between text-gray-400"><span>Subtotal</span><span id="cart-subtotal">৳ 0.00</span></div>
-                <div class="flex justify-between border-t border-gray-700 pt-2 sm:pt-3">
-                    <span class="font-bold uppercase">Total</span>
-                    <span id="cart-total" class="text-lg sm:text-xl font-black">৳ 0.00</span>
+        <div id="cart-items" class="flex-grow overflow-y-auto p-5 space-y-4 custom-scroll"></div>
+        <div class="p-5 border-t bg-soft">
+            <div class="space-y-2 mb-5 text-[11px] uppercase tracking-wider">
+                <div class="flex justify-between opacity-60"><span>Subtotal Architecture</span><span id="cart-subtotal">৳ 0.00</span></div>
+                <div class="flex justify-between border-t border-white/10 pt-3">
+                    <span class="font-bold">Total Valuation</span>
+                    <span id="cart-total" class="text-base font-black">৳ 0.00</span>
                 </div>
             </div>
-            <a href="/checkout" class="w-full py-3 sm:py-4 bg-white text-black rounded-2xl font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-gray-200 transition shadow-lg no-underline text-center block" style="font-family: var(--font-body);">Checkout</a>
+            <a href="/checkout" class="w-full py-4 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[11px] transition shadow-lg no-underline text-center block hover:bg-neutral-100">Proceed to Checkout</a>
         </div>
     </div>
     `;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 }
 
-// ============================================
-// FOOTER COMPONENT
-// ============================================
+// ============================================================================
+// FOOTER SYSTEM (Pure Minimalist Infrastructure)
+// ============================================================================
 function renderFooter() {
     const footerHTML = `
-    <footer class="pt-12 sm:pt-16 pb-6 sm:pb-8" id="main-footer">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 sm:mb-12">
+    <footer class="pt-16 pb-8" id="main-footer">
+        <div class="max-w-7xl mx-auto px-4sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
-                    <h4>JAYENWARE</h4>
-                    <p class="text-[10px] sm:text-xs leading-relaxed mb-4" style="font-family: var(--font-body); color: #8e8e93;">Premium lifestyle products designed for modern living. A subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-white font-bold hover:opacity-60 transition">BINZEO</a>.</p>
-                    <div class="flex gap-3 text-base sm:text-lg">
-                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-60 transition"><i class="fa-brands fa-youtube"></i></a>
+                    <h4 class="text-sm font-bold tracking-widest mb-4">JAYENWARE</h4>
+                    <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. A tactical subsidiary of <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline decoration-white/20 text-white">BINZEO</a>.</p>
+                    <div class="flex gap-4 text-base">
+                        <a href="https://www.facebook.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-50"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-50"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://youtube.com/@jayenware" target="_blank" rel="noopener noreferrer" class="hover:opacity-50"><i class="fa-brands fa-youtube"></i></a>
                     </div>
                 </div>
                 <div>
-                    <h5>Quick Links</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
-                        <li><a href="/about" class="hover:opacity-60 transition no-underline">About</a></li>
-                        <li><a href="/shipping" class="hover:opacity-60 transition no-underline">Shipping</a></li>
-                        <li><a href="/returns" class="hover:opacity-60 transition no-underline">Returns</a></li>
-                        <li><a href="/contact" class="hover:opacity-60 transition no-underline">Contact</a></li>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
+                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                        <li><a href="/about" class="no-underline">About Corporate</a></li>
+                        <li><a href="/shipping" class="no-underline">Shipping Diagnostics</a></li>
+                        <li><a href="/returns" class="no-underline">Returns Execution</a></li>
+                        <li><a href="/contact" class="no-underline">Contact Portal</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5>Legal</h5>
-                    <ul class="space-y-2 text-[10px] sm:text-xs list-none p-0">
-                        <li><a href="/privacy-policy" class="hover:opacity-60 transition no-underline">Privacy Policy</a></li>
-                        <li><a href="/terms-and-conditions" class="hover:opacity-60 transition no-underline">Terms & Conditions</a></li>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
+                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                        <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
+                        <li><a href="/terms-and-conditions" class="no-underline">Terms Framework</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5>Contact</h5>
-                    <p class="text-[9px]" style="font-family: var(--font-body); color: #8e8e93;"><i class="fa-regular fa-envelope"></i> binzeo369@outlook.com</p>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
+                    <p class="text-[11px] opacity-60"><i class="fa-regular fa-envelope mr-1"></i> binzeo369@outlook.com</p>
                 </div>
             </div>
-            <div class="border-t border-gray-900 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-[9px] sm:text-[10px] uppercase tracking-wider" style="font-family: var(--font-body); color: #48484a;">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-white font-bold hover:opacity-60 transition no-underline">BINZEO</a></p>
-                <p class="text-[8px] sm:text-[9px]" style="font-family: var(--font-body); color: #48484a;">&copy; <span id="display-year"></span> JAYENWARE. All rights reserved.</p>
+            <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
+                <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
+                <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JAYENWARE Engine. All parameters reserved.</p>
             </div>
         </div>
     </footer>
@@ -843,19 +778,19 @@ function renderFooter() {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 }
 
-// ============================================
-// TOAST NOTIFICATION
-// ============================================
+// ============================================================================
+// TOAST INTERFACE ARCHITECTURE
+// ============================================================================
 function showToast(text, type = 'success') {
     let toast = document.getElementById('toast');
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'toast';
         toast.innerHTML = `
-            <div class="shadow-2xl p-3 flex items-center gap-3 min-w-[260px]">
-                <span id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"></span>
-                <p id="toast-text" class="text-xs font-bold flex-grow" style="font-family: var(--font-body);"></p>
-                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0"><i class="fa-solid fa-xmark"></i></button>
+            <div class="shadow-2xl p-4 flex items-center gap-3.5 min-w-[280px]">
+                <span id="toast-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0"></span>
+                <p id="toast-text" class="text-xs font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
+                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
         `;
         document.body.appendChild(toast);
@@ -864,6 +799,7 @@ function showToast(text, type = 'success') {
     const toastIcon = document.getElementById('toast-icon');
     if (toastText) toastText.innerText = text;
     if (toastIcon) {
+        toastIcon.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0';
         if (type === 'success') {
             toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
         } else if (type === 'error') {
@@ -874,12 +810,17 @@ function showToast(text, type = 'success') {
     }
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
+    toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3200);
 }
 
-// ============================================
-// CART FUNCTIONS
-// ============================================
+function hideToast() {
+    const toast = document.getElementById('toast');
+    if (toast) toast.style.transform = 'translateX(120%)';
+}
+
+// ============================================================================
+// CART CONTROLLER & DATA BINDING
+// ============================================================================
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
     if (drawer) {
@@ -889,8 +830,8 @@ function toggleCart() {
 }
 
 function addToCart(productId, productData) {
-    if (!productData) { showToast('Product data missing', 'error'); return; }
-    if (productData.stock <= 0) return showToast('Out of stock', 'error');
+    if (!productData) { showToast('Execution failed: Product configuration missing', 'error'); return; }
+    if (productData.stock <= 0) return showToast('Inventory allocation depleted', 'error');
     
     const existingIndex = cart.findIndex(item => item.product_id === productData.id);
     if (existingIndex > -1) {
@@ -906,7 +847,7 @@ function addToCart(productId, productData) {
         });
     }
     saveCart();
-    showToast('Added to Bag! 🎉', 'success');
+    showToast('Manifested in Shopping Bag! 🎉', 'success');
 }
 
 function removeFromCart(idx) {
@@ -925,8 +866,9 @@ function renderCartItems() {
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
     if (!container) return;
+    
     if (!cart.length) {
-        container.innerHTML = '<p class="text-center text-gray-400 py-10 text-sm" style="font-family: var(--font-body);">Your bag is empty</p>';
+        container.innerHTML = '<p class="text-center opacity-40 py-12 text-xs tracking-wider uppercase">Bag Configuration Void</p>';
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         return;
@@ -935,17 +877,17 @@ function renderCartItems() {
     container.innerHTML = cart.map((item, idx) => {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
-        return `<div class="flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl">
-            <img src="${item.img}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shrink-0" alt="${item.title}">
+        return `<div class="flex gap-4 p-4 items-center">
+            <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl shrink-0 bg-neutral-900 border border-white/10" alt="${item.title}">
             <div class="flex-grow min-w-0">
-                <h4 class="text-xs sm:text-sm font-bold truncate" style="font-family: var(--font-subtitle); color: #ffffff;">${item.title}</h4>
-                <div class="flex items-center gap-2 mt-1">
-                    <p class="text-xs sm:text-sm font-black" style="font-family: var(--font-body); color: #ffffff;">৳${itemTotal.toFixed(2)}</p>
-                    <span class="text-[10px] text-gray-400" style="font-family: var(--font-body);">Qty: ${item.quantity || 1}</span>
+                <h4 class="text-xs font-bold truncate tracking-wide">${item.title}</h4>
+                <div class="flex items-center gap-3 mt-1">
+                    <p class="text-xs font-black">৳${itemTotal.toFixed(2)}</p>
+                    <span class="text-[10px] opacity-50 tracking-wider">Allocation: ${item.quantity || 1}</span>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-gray-400 hover:text-white p-1.5 shrink-0">
-                <i class="fa-solid fa-trash text-xs sm:text-sm"></i>
+            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0">
+                <i class="fa-solid fa-trash-can text-xs"></i>
             </button>
         </div>`;
     }).join('');
@@ -960,24 +902,24 @@ function updateCounts() {
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
-// ============================================
-// WISHLIST FUNCTIONS
-// ============================================
+// ============================================================================
+// WISHLIST CORE LOGIC
+// ============================================================================
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
-        showToast('Removed from Wishlist', 'info');
+        showToast('Purged from Registry', 'info');
     } else {
         wishlist.push(id);
-        showToast('Added to Wishlist ❤️', 'success');
+        showToast('Saved to Vault Collection ❤️', 'success');
     }
     localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
     updateCounts();
 }
 
-// ============================================
-// MOBILE MENU FUNCTIONS
-// ============================================
+// ============================================================================
+// MOBILE EXPANSION CONTROLLER
+// ============================================================================
 function openMobileMenu() {
     const drawer = document.getElementById('mobileMenuDrawer');
     const overlay = document.getElementById('mobileMenuOverlay');
@@ -1002,7 +944,6 @@ function toggleMobileSubmenu(submenuId, element) {
     if (!submenu) return;
     
     const isOpen = submenu.classList.contains('open');
-    
     const parentContainer = submenu.parentElement.parentElement;
     if (parentContainer) {
         parentContainer.querySelectorAll('.mobile-submenu.open').forEach(sub => {
@@ -1022,14 +963,6 @@ function toggleMobileSubmenu(submenuId, element) {
     }
 }
 
-function hideToast() {
-    const toast = document.getElementById('toast');
-    if (toast) toast.style.transform = 'translateX(120%)';
-}
-
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
 function getProductSlug(product) {
     if (!product || !product.title) return '';
     return product.title.toLowerCase()
@@ -1039,9 +972,9 @@ function getProductSlug(product) {
         .substring(0, 80);
 }
 
-// ============================================
-// GLOBAL EXPOSURE
-// ============================================
+// ============================================================================
+// WINDOWS TARGET BINDING API
+// ============================================================================
 window.showToast = showToast;
 window.hideToast = hideToast;
 window.toggleWishlist = toggleWishlist;
@@ -1057,15 +990,17 @@ window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
 window.createSlug = createSlug;
 window.getCategoryUrl = getCategoryUrl;
+
+// Expose state pipelines
 window.cart = cart;
 window.wishlist = wishlist;
 window.allMenuItems = allMenuItems;
 window.allCategories = allCategories;
 window.allSubcategories = allSubcategories;
 
-// ============================================
-// INITIALIZATION
-// ============================================
+// ============================================================================
+// SYSTEM ARCHITECTURE INITIALIZATION
+// ============================================================================
 async function initSharedComponents() {
     loadFontsConfiguration();
     injectSharedStyles();
@@ -1076,9 +1011,8 @@ async function initSharedComponents() {
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
 
-// Auto-initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSharedComponents);
 } else {
-    setTimeout(initSharedComponents, 100);
+    setTimeout(initSharedComponents, 60);
 }
