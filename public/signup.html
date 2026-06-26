@@ -486,6 +486,11 @@
             color: #f59e0b;
         }
         
+        .toast-icon-wrap.info {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+        
         #toast .toast-msg {
             font-size: 12px;
             font-weight: 600;
@@ -597,6 +602,9 @@
 
                 let toastTimer;
 
+                // ============================================
+                // NOTIFICATION TOAST SYSTEM
+                // ============================================
                 function notify(msg, type = 'success') {
                     const icon = $('toast-icon-wrap');
                     const text = $('toast-msg');
@@ -608,6 +616,9 @@
                     } else if (type === 'warning') {
                         icon.className = 'toast-icon-wrap warning';
                         icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                    } else if (type === 'info') {
+                        icon.className = 'toast-icon-wrap info';
+                        icon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
                     } else {
                         icon.className = 'toast-icon-wrap';
                         icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
@@ -616,7 +627,7 @@
                     text.textContent = msg;
                     toast.classList.add('show');
                     clearTimeout(toastTimer);
-                    toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+                    toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
                 }
 
                 window.hideToast = () => {
@@ -671,7 +682,6 @@
                         field: 'phone', type: 'tel', placeholder: '01712345678',
                         autocomplete: 'tel-national',
                         check: v => {
-                            // No validation - accept any input
                             if (!v.trim()) return 'Please enter your phone number';
                             return null;
                         },
@@ -945,7 +955,8 @@
                 }
 
                 // ============================================
-                // SUBMIT - Creates account and redirects
+                // SUBMIT - Creates Account + Fetches Notifications
+                // Server waits 5s internally for DB triggers
                 // ============================================
                 window.submit = async function() {
                     const checked = document.getElementById('terms-check')?.checked;
@@ -965,10 +976,17 @@
                     btn.disabled = true;
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
                     
-                    // Show loading overlay
+                    // Show loading overlay with progress text
                     loadingOverlay.classList.add('visible');
+                    const loadingText = loadingOverlay.querySelector('.loading-text');
                     
                     try {
+                        // Update loading text
+                        if (loadingText) loadingText.textContent = 'Validating your information...';
+                        
+                        // Step 1: Signup API call
+                        // Server internally waits 5 seconds for database triggers
+                        // Profile + Notifications are fully ready when response returns
                         const resp = await fetch(`${API}/api/auth/signup`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -976,7 +994,7 @@
                                 email: data.email,
                                 password: data.password,
                                 name: data.name,
-                                phone: data.phone, // Direct phone number, no formatting
+                                phone: data.phone,
                                 country: data.country,
                                 state_province: data.state_province,
                                 city: data.city,
@@ -988,25 +1006,97 @@
                         
                         const result = await resp.json();
                         
-                        // Any response {} - immediately redirect to /account
-                        if (resp.ok) {
-                            notify('Account created successfully! Redirecting...', 'success');
+                        if (resp.ok && result.success) {
+                            
+                            // ============================================
+                            // Step 2: Show JBYN-OneID immediately
+                            // ============================================
+                            if (loadingText) loadingText.textContent = 'Setting up your account...';
+                            
+                            if (result.jbyn_oneid) {
+                                notify(`Welcome! Your JBYN-OneID: ${result.jbyn_oneid}`, 'success');
+                            } else {
+                                notify('Account created successfully!', 'success');
+                            }
+                            
+                            // ============================================
+                            // Step 3: Fetch database notifications
+                            // ============================================
+                            if (result.access_token) {
+                                if (loadingText) loadingText.textContent = 'Fetching your notifications...';
+                                
+                                try {
+                                    // Short delay to ensure session is active
+                                    await new Promise(resolve => setTimeout(resolve, 800));
+                                    
+                                    const notifResp = await fetch('/api/auth/notifications');
+                                    const notifData = await notifResp.json();
+                                    
+                                    if (notifData.success && notifData.latest) {
+                                        const latest = notifData.latest;
+                                        
+                                        // Show database notification with delay for sequence
+                                        setTimeout(() => {
+                                            if (latest.notification_type === 'error') {
+                                                notify(latest.message, 'error');
+                                            } else if (latest.notification_type === 'warning') {
+                                                notify(latest.message, 'warning');
+                                            } else if (latest.notification_type === 'info') {
+                                                notify(latest.message, 'info');
+                                            } else {
+                                                notify(latest.message, 'success');
+                                            }
+                                        }, 2000);
+                                        
+                                        // Show unread count if multiple notifications
+                                        if (notifData.unread_count > 1) {
+                                            setTimeout(() => {
+                                                notify(`You have ${notifData.unread_count} new notifications in your account`, 'info');
+                                            }, 3500);
+                                        }
+                                    } else {
+                                        // Fallback if no notifications found
+                                        setTimeout(() => {
+                                            if (result.jbyn_oneid) {
+                                                notify(`Your account is ready! JBYN-OneID: ${result.jbyn_oneid}`, 'success');
+                                            }
+                                        }, 1500);
+                                    }
+                                } catch (notifErr) {
+                                    console.error('Notification fetch error:', notifErr);
+                                    // Silent fail - profile already created
+                                }
+                            } else {
+                                // Fallback when no token (should not happen)
+                                setTimeout(() => {
+                                    notify('Account created! Redirecting to your dashboard...', 'success');
+                                }, 1500);
+                            }
+                            
+                            // ============================================
+                            // Step 4: Update loading text & redirect
+                            // ============================================
+                            if (loadingText) loadingText.textContent = 'Redirecting to your account...';
+                            
+                            // Redirect after all messages shown (total ~5s from response)
+                            setTimeout(() => {
+                                window.location.href = '/account';
+                            }, 5000);
+                            
                         } else {
-                            notify(result.error || 'Registration failed', 'error');
+                            // Error response from server
                             loadingOverlay.classList.remove('visible');
+                            const errorMsg = result.error || 'Registration failed. Please try again.';
+                            notify(errorMsg, 'error');
                             btn.disabled = false;
                             btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
-                            return;
                         }
                         
-                        // Redirect immediately to /account
-                        setTimeout(() => {
-                            window.location.href = '/account';
-                        }, 500);
-                        
                     } catch (err) {
-                        notify('Something went wrong. Please try again.', 'error');
+                        // Network or unexpected error
+                        console.error('Signup error:', err);
                         loadingOverlay.classList.remove('visible');
+                        notify('Something went wrong. Please check your connection and try again.', 'error');
                         btn.disabled = false;
                         btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
                     }
