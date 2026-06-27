@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.5 (Burberry Luxury Edition - Scroll-Responsive Glassmorphism Engine)
+// Version: 5.6 (Burberry Luxury Edition - Scroll-Responsive & Top Bar Integrated)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -50,8 +50,8 @@ function injectSharedStyles() {
             --accent: #ffffff;
             
             /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
-            --glass-white: rgba(255, 255, 255, 0.10);
-            --glass-white-thick: rgba(255, 255, 255, 0.5);
+            --glass-white: rgba(255, 255, 255, 0.15);
+            --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
             
@@ -95,10 +95,32 @@ function injectSharedStyles() {
         .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
+        /* ==================== TOP ANNOUNCEMENT BAR ==================== */
+        .top-announcement-bar {
+            background: #000000 !important;
+            color: #ffffff !important;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100% !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 51;
+            padding: 0 16px;
+            text-align: center;
+        }
+
         /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
         .glass-nav {
             position: fixed;
-            top: 0; 
+            top: 34px; /* টপ অ্যানাউন্সমেন্ট বারের ঠিক নিচে প্লেস করার জন্য */
             left: 0 !important; 
             right: 0 !important;
             width: 100% !important; 
@@ -112,14 +134,16 @@ function injectSharedStyles() {
             transition: background 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
                         backdrop-filter 0.5s ease, 
                         border-color 0.5s ease, 
-                        box-shadow 0.5s ease;
+                        box-shadow 0.5s ease,
+                        top 0.4s ease; /* স্ক্রলিং ট্রানজিশনের জন্য */
             z-index: 50;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* স্ক্রল হওয়ার পর প্রিমিয়াম সলিড হোয়াইট + ফ্রস্টেড লুক */
+        /* স্ক্রল হওয়ার পর প্রিমিয়াম সলিড হোয়াইট + ফ্রস্টেড লুক এবং একবারে টপে চলে যাওয়া */
         .glass-nav.nav-scrolled {
+            top: 0 !important; /* স্ক্রল করলে এটি একদম স্ক্রিনের মাথায় আটকে যাবে */
             background: rgba(255, 255, 255, 0.85) !important;
             backdrop-filter: blur(30px) saturate(190%);
             -webkit-backdrop-filter: blur(30px) saturate(190%);
@@ -513,6 +537,10 @@ async function renderHeader() {
     const menuTree = buildMenuTree(menuItems);
     
     const headerHTML = `
+    <div class="top-announcement-bar" id="top-announcement-bar">
+        <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
+    </div>
+
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
@@ -540,7 +568,6 @@ async function renderHeader() {
             </a>
             
             <div class="flex items-center shrink-0">
-                <!-- উইশলিস্ট কাস্টম হার্ট আইকন -->
                 <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -548,7 +575,6 @@ async function renderHeader() {
                     <span id="wish-count" class="absolute text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
-                <!-- শপিং কাস্টম ব্যাগ আইকন -->
                 <a href="/cart" onclick="toggleCart();return false;" class="header-icon-btn" aria-label="Cart">
                     <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
@@ -557,7 +583,6 @@ async function renderHeader() {
                     <span id="cart-count" class="absolute text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
-                <!-- কাস্টম মিনিমালিস্ট বার্গার মেনু আইকন -->
                 <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu">
                     <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -602,8 +627,7 @@ function renderFooter() {
                     <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
                     <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
                     <div class="flex gap-4 text-base">
-                        <!-- কাস্টম সোশ্যাল আইকন ট্র্যাকার লিংক এখানে বসানো যাবে -->
-                    </div>
+                        </div>
                 </div>
                 <div>
                     <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
@@ -714,6 +738,9 @@ function saveCart() {
     updateCounts();
 }
 
+// ============================================================================
+// RENDERING & INTERFACE MANAGEMENT
+// ============================================================================
 function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
