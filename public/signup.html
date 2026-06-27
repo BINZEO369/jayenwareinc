@@ -1,1074 +1,1383 @@
 <!DOCTYPE html>
-<html lang="bn-BD" class="scroll-smooth">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Join JAYENWARE | Create Your Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBYN-OneID - সাইনআপ ও প্রোফাইল</title>
     
-    <meta name="description" content="Create your JAYENWARE account. Join for exclusive deals, faster checkout, and premium lifestyle shopping.">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#ffffff">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <link rel="canonical" href="https://www.jayenware.shop/signup" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
-    <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
-        :root {
-            --primary: #1d1d1f;
-            --accent: #86868b;
-            --soft: #f5f5f7;
-            --blue: #007aff;
-            --gold: #c9a96e;
-            --error: #dc2626;
-            --success: #059669;
-        }
-        
-        *, *::before, *::after {
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        
+
         body {
-            background: #f5f5f7;
-            color: var(--primary);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            min-height: 100dvh;
             display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 88px 16px 40px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-        }
-        
-        @media (min-width: 640px) { main { padding: 104px 24px 56px; } }
-        @media (min-width: 1024px) { main { padding: 120px 32px 72px; } }
-
-        .container-signup {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        /* Progress Steps */
-        .progress-steps {
-            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 32px;
-        }
-        
-        .progress-step {
-            width: 32px;
-            height: 4px;
-            border-radius: 2px;
-            background: #d1d1d6;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .progress-step.done {
-            background: var(--primary);
-        }
-        
-        .progress-step.current {
-            background: var(--primary);
-            width: 40px;
+            padding: 20px;
         }
 
-        /* Card */
-        .auth-card {
-            background: #ffffff;
+        .container {
+            background: white;
             border-radius: 20px;
-            padding: 36px 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
             position: relative;
             overflow: hidden;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            transition: box-shadow 0.3s ease;
-        }
-        
-        @media (min-width: 640px) {
-            .auth-card { padding: 44px 32px; border-radius: 24px; min-height: 440px; }
-        }
-        
-        @media (min-width: 1024px) {
-            .auth-card { padding: 52px 40px; border-radius: 28px; min-height: 480px; }
         }
 
-        .step-inner {
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 300% 100%;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #f0f0f0;
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #666;
         }
 
-        .step-view {
-            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
         }
-        
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(12px); }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-container {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Icon Circle */
-        .icon-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .form-group {
             margin-bottom: 20px;
-            font-size: 22px;
-            transition: all 0.3s ease;
-            background: #f5f5f7;
-            color: var(--primary);
-        }
-        
-        @media (min-width: 640px) {
-            .icon-circle { width: 56px; height: 56px; font-size: 24px; }
         }
 
-        /* Typography */
-        .step-heading {
-            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-            font-weight: 700;
-            font-size: 22px;
-            line-height: 1.25;
-            margin-bottom: 6px;
-            color: var(--primary);
-            letter-spacing: -0.2px;
-        }
-        
-        @media (min-width: 640px) {
-            .step-heading { font-size: 26px; }
-        }
-        
-        .step-desc {
+        .form-group label {
+            display: block;
             font-size: 13px;
-            color: var(--accent);
-            margin-bottom: 28px;
-            line-height: 1.55;
-        }
-        
-        @media (min-width: 640px) {
-            .step-desc { font-size: 14px; margin-bottom: 32px; }
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
         }
 
-        /* Input */
-        .input-wrap {
-            position: relative;
-            margin-bottom: 4px;
+        .form-group label .required {
+            color: #e74c3c;
+            margin-left: 2px;
         }
-        
-        .form-input {
+
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 15px 16px;
-            border: 1.5px solid #e0e0e5;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #ffffff;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
-            transition: all 0.2s ease;
-            color: var(--primary);
-            -webkit-appearance: none;
-            appearance: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .form-group .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group .error-message.show {
             display: block;
         }
-        
-        .form-input:hover { border-color: #c5c5cc; }
-        
-        .form-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(29,29,31,0.06);
-        }
-        
-        .form-input.has-error {
-            border-color: var(--error);
-            box-shadow: 0 0 0 4px rgba(220,38,38,0.06);
-        }
-        
-        .form-input.is-valid {
-            border-color: var(--success);
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
-        @media (min-width: 640px) {
-            .form-input { padding: 16px; font-size: 16px; }
-        }
-
-        .input-feedback {
-            font-size: 12px;
-            min-height: 20px;
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-        }
-        
-        .input-feedback.error { color: var(--error); }
-        .input-feedback.success { color: var(--success); }
-        .input-feedback.hint { color: var(--accent); }
-
-        /* Buttons */
-        .btn-row {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-            padding-top: 28px;
-            align-items: center;
-        }
-        
-        .btn-back {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #f5f5f7;
-            border: 1.5px solid #e0e0e5;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 15px;
-            flex-shrink: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .btn-back:hover {
-            background: #ebebed;
-            border-color: #c5c5cc;
-            color: var(--primary);
-        }
-        
-        .btn-back:active { transform: scale(0.96); }
-        
-        .btn-primary {
-            flex: 1;
-            padding: 15px 24px;
-            background: var(--primary);
-            color: #ffffff;
+        .btn {
+            width: 100%;
+            padding: 14px;
             border: none;
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            letter-spacing: 0.1px;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .btn-primary:hover {
-            background: #333;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
-        
-        .btn-primary:active { transform: scale(0.98); }
-        
-        .btn-primary:disabled {
-            background: #c5c5cc;
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
             cursor: not-allowed;
-            box-shadow: none;
-        }
-        
-        @media (min-width: 640px) {
-            .btn-back { width: 48px; height: 48px; }
-            .btn-primary { padding: 16px 28px; font-size: 15px; }
+            transform: none;
         }
 
-        /* Location Button */
-        .locate-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 13px 16px;
-            background: #f5f5f7;
-            border: 1.5px solid #e0e0e5;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--primary);
-            margin-bottom: 16px;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .locate-btn:hover { background: #ebebed; border-color: #c5c5cc; }
-        .locate-btn:active { transform: scale(0.98); }
-        .locate-btn.is-loading { opacity: 0.7; pointer-events: none; }
-
-        /* Agreement */
-        .agree-box {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 14px 16px;
-            background: #f5f5f7;
-            border-radius: 12px;
-            border: 1.5px solid #e0e0e5;
-            transition: all 0.2s ease;
-        }
-        
-        .agree-box:hover { border-color: #c5c5cc; }
-        
-        .agree-box input[type="checkbox"] {
-            margin-top: 1px;
-            accent-color: var(--primary);
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        
-        .agree-box label {
-            font-size: 12px;
-            color: var(--accent);
-            line-height: 1.6;
-            cursor: pointer;
-        }
-        
-        @media (min-width: 640px) {
-            .agree-box label { font-size: 13px; }
-        }
-        
-        .agree-box a {
-            color: var(--primary);
-            font-weight: 600;
-            text-decoration: underline;
-            text-underline-offset: 2px;
-        }
-        
-        .agree-box a:hover { color: #000; }
-
-        /* Loading Overlay */
-        .loading-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: inherit;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        
-        .loading-overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid #e0e0e5;
-            border-top-color: var(--primary);
+        .btn .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin-bottom: 16px;
+            margin: 0 auto;
         }
-        
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        .btn.loading .btn-text {
+            display: none;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        .loading-text {
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             font-size: 14px;
-            color: var(--accent);
-            font-weight: 500;
+            display: none;
         }
 
-        /* Toast */
-        #toast {
-            position: fixed;
-            top: 76px;
-            right: 12px;
-            z-index: 9999;
-            transform: translateX(calc(100% + 24px));
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: calc(100vw - 24px);
+        .alert.show {
+            display: block;
         }
-        
-        @media (min-width: 640px) {
-            #toast { top: 88px; right: 20px; }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
-        
-        #toast.show { transform: translateX(0); }
-        
-        #toast .toast-box {
-            background: #ffffff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-radius: 14px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 260px;
-            border: 1px solid rgba(0,0,0,0.05);
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
-        
-        #toast .toast-icon-wrap {
-            width: 32px;
-            height: 32px;
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .profile-section {
+            display: none;
+        }
+
+        .profile-section.active {
+            display: block;
+        }
+
+        .profile-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            background: #f5f5f7;
-            color: var(--primary);
+            margin: 0 auto 15px;
+            font-size: 32px;
+            color: white;
+            font-weight: 700;
         }
-        
-        .toast-icon-wrap.error { background: #fef2f2; color: var(--error); }
-        .toast-icon-wrap.warning { background: #fffbeb; color: #f59e0b; }
-        .toast-icon-wrap.info { background: #eff6ff; color: #3b82f6; }
-        
-        #toast .toast-msg {
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .profile-email {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .profile-oneid {
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            flex: 1;
-            line-height: 1.4;
+            color: #667eea;
+            display: inline-block;
+            margin-top: 8px;
+            font-family: monospace;
+            letter-spacing: 1px;
         }
-        
-        #toast .toast-close {
-            color: var(--accent);
+
+        .profile-details {
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-item .label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .detail-item .value {
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .profile-actions .btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+            width: auto;
+        }
+
+        .edit-mode .form-group input {
+            background: white;
+            border-color: #667eea;
+        }
+
+        .edit-mode .form-group input:disabled {
+            background: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .brand h1 {
+                font-size: 22px;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle input {
+            padding-right: 45px;
+        }
+
+        .password-toggle .toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: none;
+            color: #999;
             cursor: pointer;
-            font-size: 13px;
-            padding: 4px;
-            border-radius: 50%;
-            transition: all 0.2s ease;
+            font-size: 18px;
+            padding: 5px;
         }
-        
-        #toast .toast-close:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
 
-        @media (max-width: 380px) {
-            .auth-card { padding: 28px 18px; min-height: 360px; }
-            .step-heading { font-size: 20px; }
-            .form-input { padding: 13px 14px; font-size: 14px; }
+        .password-toggle .toggle-btn:hover {
+            color: #667eea;
+        }
+
+        .select-country {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
         }
     </style>
 </head>
 <body>
+    <div class="container" id="app">
+        <!-- Brand -->
+        <div class="brand">
+            <h1>JBYN-OneID</h1>
+            <p>Global Profile System</p>
+        </div>
 
-    <div id="dynamic-header"></div>
+        <!-- Alert -->
+        <div class="alert" id="alert"></div>
 
-    <main>
-        <div class="container-signup">
-            <!-- Progress -->
-            <div class="progress-steps" id="progress-steps">
-                <div class="progress-step current"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
+        <!-- Tabs -->
+        <div class="tabs" id="tabs">
+            <button class="tab active" data-tab="signup">সাইনআপ</button>
+            <button class="tab" data-tab="login">লগইন</button>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="form-container active" id="signupForm">
+            <form id="signupFormElement" autocomplete="off">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>প্রথম নাম <span class="required">*</span></label>
+                        <input type="text" id="firstName" placeholder="জন" required>
+                        <div class="error-message" id="firstNameError">প্রথম নাম কমপক্ষে ২ অক্ষর হতে হবে</div>
+                    </div>
+                    <div class="form-group">
+                        <label>শেষ নাম <span class="required">*</span></label>
+                        <input type="text" id="lastName" placeholder="ডো" required>
+                        <div class="error-message" id="lastNameError">শেষ নাম কমপক্ষে ২ অক্ষর হতে হবে</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ইমেইল <span class="required">*</span></label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                    <div class="error-message" id="signupEmailError">সঠিক ইমেইল দিন</div>
+                </div>
+
+                <div class="form-group">
+                    <label>ফোন নম্বর</label>
+                    <input type="tel" id="signupPhone" placeholder="+8801712345678">
+                    <div class="error-message" id="signupPhoneError">সঠিক ফোন ফরম্যাট দিন (যেমন: +8801712345678)</div>
+                </div>
+
+                <div class="form-group">
+                    <label>দেশ <span class="required">*</span></label>
+                    <select id="signupCountry" class="select-country" required>
+                        <option value="">দেশ নির্বাচন করুন</option>
+                        <option value="বাংলাদেশ">বাংলাদেশ</option>
+                        <option value="ভারত">ভারত</option>
+                        <option value="পাকিস্তান">পাকিস্তান</option>
+                        <option value="যুক্তরাষ্ট্র">যুক্তরাষ্ট্র</option>
+                        <option value="যুক্তরাজ্য">যুক্তরাজ্য</option>
+                        <option value="কানাডা">কানাডা</option>
+                        <option value="অস্ট্রেলিয়া">অস্ট্রেলিয়া</option>
+                        <option value="জার্মানি">জার্মানি</option>
+                        <option value="ফ্রান্স">ফ্রান্স</option>
+                        <option value="ইতালি">ইতালি</option>
+                        <option value="স্পেন">স্পেন</option>
+                        <option value="জাপান">জাপান</option>
+                        <option value="চীন">চীন</option>
+                        <option value="সিঙ্গাপুর">সিঙ্গাপুর</option>
+                        <option value="মালয়েশিয়া">মালয়েশিয়া</option>
+                        <option value="সৌদি আরব">সৌদি আরব</option>
+                        <option value="সংযুক্ত আরব আমিরাত">সংযুক্ত আরব আমিরাত</option>
+                        <option value="অন্যান্য">অন্যান্য</option>
+                    </select>
+                    <div class="error-message" id="signupCountryError">দেশ নির্বাচন করুন</div>
+                </div>
+
+                <div class="form-group password-toggle">
+                    <label>পাসওয়ার্ড <span class="required">*</span></label>
+                    <input type="password" id="signupPassword" placeholder="কমপক্ষে ৬ অক্ষর" required minlength="6">
+                    <button type="button" class="toggle-btn" onclick="togglePassword('signupPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="error-message" id="signupPasswordError">পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে</div>
+                </div>
+
+                <button type="submit" class="btn" id="signupBtn">
+                    <span class="btn-text">সাইনআপ করুন</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-container" id="loginForm">
+            <form id="loginFormElement" autocomplete="off">
+                <div class="form-group">
+                    <label>ইমেইল <span class="required">*</span></label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                    <div class="error-message" id="loginEmailError">সঠিক ইমেইল দিন</div>
+                </div>
+
+                <div class="form-group password-toggle">
+                    <label>পাসওয়ার্ড <span class="required">*</span></label>
+                    <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড" required>
+                    <button type="button" class="toggle-btn" onclick="togglePassword('loginPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="error-message" id="loginPasswordError">পাসওয়ার্ড প্রয়োজন</div>
+                </div>
+
+                <button type="submit" class="btn" id="loginBtn">
+                    <span class="btn-text">লগইন করুন</span>
+                    <span class="spinner"></span>
+                </button>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="#" onclick="showForgotPassword(); return false;" style="color: #667eea; text-decoration: none; font-size: 14px;">
+                        <i class="fas fa-key"></i> পাসওয়ার্ড ভুলে গেছেন?
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div class="form-container hidden" id="forgotPasswordForm">
+            <div style="margin-bottom: 20px;">
+                <button class="tab" onclick="showLogin()" style="background: none; border: none; color: #667eea; cursor: pointer; font-size: 14px;">
+                    <i class="fas fa-arrow-left"></i> লগইনে ফিরে যান
+                </button>
+            </div>
+            <form id="forgotPasswordFormElement">
+                <div class="form-group">
+                    <label>ইমেইল <span class="required">*</span></label>
+                    <input type="email" id="forgotEmail" placeholder="you@example.com" required>
+                    <div class="error-message" id="forgotEmailError">সঠিক ইমেইল দিন</div>
+                </div>
+                <button type="submit" class="btn" id="forgotBtn">
+                    <span class="btn-text">রিসেট লিংক পাঠান</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="profile-section" id="profileSection">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">JD</div>
+                <div class="profile-name" id="profileName">জন ডো</div>
+                <div class="profile-email" id="profileEmail">john@example.com</div>
+                <div class="profile-oneid" id="profileOneid">JBYN-OneID-XXXX</div>
             </div>
 
-            <!-- Card -->
-            <div class="auth-card" id="auth-card">
-                <div class="step-inner" id="step-inner"></div>
-                
-                <!-- Loading Overlay -->
-                <div class="loading-overlay" id="loading-overlay">
-                    <div class="loading-spinner"></div>
-                    <p class="loading-text">Creating your account...</p>
+            <div class="profile-details" id="profileDetails">
+                <div class="detail-item">
+                    <span class="label">প্রথম নাম</span>
+                    <span class="value" id="detailFirstName">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">শেষ নাম</span>
+                    <span class="value" id="detailLastName">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">ইমেইল</span>
+                    <span class="value" id="detailEmail">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">ফোন</span>
+                    <span class="value" id="detailPhone">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">দেশ</span>
+                    <span class="value" id="detailCountry">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">একাউন্ট তৈরি</span>
+                    <span class="value" id="detailCreated">-</span>
                 </div>
             </div>
-        </div>
-    </main>
 
-    <div id="dynamic-footer"></div>
-
-    <!-- Toast -->
-    <div id="toast" role="alert" aria-live="polite">
-        <div class="toast-box">
-            <div class="toast-icon-wrap" id="toast-icon-wrap">
-                <i class="fa-solid fa-circle-check"></i>
+            <!-- Edit Profile Form -->
+            <div class="hidden" id="editProfileForm">
+                <h3 style="margin: 20px 0 15px; font-size: 18px; color: #333;">
+                    <i class="fas fa-edit"></i> প্রোফাইল সম্পাদনা
+                </h3>
+                <form id="editProfileFormElement">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>প্রথম নাম <span class="required">*</span></label>
+                            <input type="text" id="editFirstName" required>
+                            <div class="error-message" id="editFirstNameError">প্রথম নাম কমপক্ষে ২ অক্ষর</div>
+                        </div>
+                        <div class="form-group">
+                            <label>শেষ নাম <span class="required">*</span></label>
+                            <input type="text" id="editLastName" required>
+                            <div class="error-message" id="editLastNameError">শেষ নাম কমপক্ষে ২ অক্ষর</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ফোন</label>
+                        <input type="tel" id="editPhone" placeholder="+8801712345678">
+                        <div class="error-message" id="editPhoneError">সঠিক ফোন ফরম্যাট দিন</div>
+                    </div>
+                    <div class="form-group">
+                        <label>দেশ <span class="required">*</span></label>
+                        <select id="editCountry" class="select-country" required>
+                            <option value="">দেশ নির্বাচন করুন</option>
+                            <option value="বাংলাদেশ">বাংলাদেশ</option>
+                            <option value="ভারত">ভারত</option>
+                            <option value="পাকিস্তান">পাকিস্তান</option>
+                            <option value="যুক্তরাষ্ট্র">যুক্তরাষ্ট্র</option>
+                            <option value="যুক্তরাজ্য">যুক্তরাজ্য</option>
+                            <option value="কানাডা">কানাডা</option>
+                            <option value="অস্ট্রেলিয়া">অস্ট্রেলিয়া</option>
+                            <option value="জার্মানি">জার্মানি</option>
+                            <option value="ফ্রান্স">ফ্রান্স</option>
+                            <option value="ইতালি">ইতালি</option>
+                            <option value="স্পেন">স্পেন</option>
+                            <option value="জাপান">জাপান</option>
+                            <option value="চীন">চীন</option>
+                            <option value="সিঙ্গাপুর">সিঙ্গাপুর</option>
+                            <option value="মালয়েশিয়া">মালয়েশিয়া</option>
+                            <option value="সৌদি আরব">সৌদি আরব</option>
+                            <option value="সংযুক্ত আরব আমিরাত">সংযুক্ত আরব আমিরাত</option>
+                            <option value="অন্যান্য">অন্যান্য</option>
+                        </select>
+                        <div class="error-message" id="editCountryError">দেশ নির্বাচন করুন</div>
+                    </div>
+                    <div class="profile-actions">
+                        <button type="submit" class="btn btn-success btn-sm" id="updateProfileBtn">
+                            <span class="btn-text"><i class="fas fa-save"></i> আপডেট করুন</span>
+                            <span class="spinner"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="cancelEdit()">
+                            <i class="fas fa-times"></i> বাতিল করুন
+                        </button>
+                    </div>
+                </form>
             </div>
-            <span class="toast-msg" id="toast-msg"></span>
-            <button class="toast-close" onclick="hideToast()" aria-label="Close">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+
+            <div class="profile-actions">
+                <button class="btn btn-outline btn-sm" onclick="enableEdit()">
+                    <i class="fas fa-edit"></i> প্রোফাইল এডিট
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteAccount()">
+                    <i class="fas fa-trash"></i> একাউন্ট ডিলিট
+                </button>
+                <button class="btn btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> লগআউট
+                </button>
+            </div>
         </div>
     </div>
 
-    <script src="/components.js"></script>
-
     <script>
         // ============================================
-        // SUPABASE DIRECT INITIALIZATION
+        // API CONFIGURATION
         // ============================================
-        const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
-        
-        // Wait for SDK to load
-        let supabase = null;
-        
-        function initSupabase() {
-            if (window.supabase && window.supabase.createClient) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                console.log('✅ Supabase initialized');
-                return true;
-            }
-            return false;
+        const API_BASE = '/api';
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const tabs = document.querySelectorAll('.tab');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        const profileSection = document.getElementById('profileSection');
+        const alertElement = document.getElementById('alert');
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function showAlert(message, type = 'info') {
+            alertElement.textContent = message;
+            alertElement.className = `alert show ${type}`;
+            setTimeout(() => {
+                alertElement.className = 'alert';
+            }, 5000);
         }
 
-        (() => {
-            window.addEventListener('load', () => {
-                // Try to initialize Supabase
-                if (!initSupabase()) {
-                    // Retry after delay
-                    setTimeout(() => {
-                        if (!initSupabase()) {
-                            console.error('❌ Supabase SDK failed to load');
-                        }
-                    }, 1000);
-                }
-                setTimeout(boot, 300);
+        function clearAlerts() {
+            alertElement.className = 'alert';
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function getInitials(firstName, lastName) {
+            return (firstName?.charAt(0) || '') + (lastName?.charAt(0) || '');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('bn-BD', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
             });
+        }
 
-            function boot() {
-                let step = 0;
-                let busy = false;
+        // ============================================
+        // TAB MANAGEMENT
+        // ============================================
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
 
-                const data = {
-                    name: '', email: '', phone: '', password: '',
-                    country: 'Bangladesh', state_province: '', city: '',
-                    postal_code: '', street_address: '', apartment_house: '',
-                    terms: false
-                };
+                const tabName = this.dataset.tab;
+                signupForm.classList.remove('active');
+                loginForm.classList.remove('active');
+                forgotPasswordForm.classList.add('hidden');
+                profileSection.classList.remove('active');
 
-                const $ = (id) => document.getElementById(id);
-                const progressBar = $('progress-steps');
-                const stepInner = $('step-inner');
-                const loadingOverlay = $('loading-overlay');
-                const toast = $('toast');
-
-                const blockedDomains = [
-                    'jabiyen.com', 'jabiyen.shop', 'jabiyen.io', 'jabiyen.me',
-                    'binzeo.com', 'binzeo.shop', 'binzeo.io', 'binzeo.me'
-                ];
-
-                let toastTimer;
-
-                // ============================================
-                // NOTIFICATION TOAST SYSTEM
-                // ============================================
-                function notify(msg, type = 'success') {
-                    const icon = $('toast-icon-wrap');
-                    const text = $('toast-msg');
-                    if (!icon || !text) return;
-                    
-                    if (type === 'error') {
-                        icon.className = 'toast-icon-wrap error';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
-                    } else if (type === 'warning') {
-                        icon.className = 'toast-icon-wrap warning';
-                        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                    } else if (type === 'info') {
-                        icon.className = 'toast-icon-wrap info';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
-                    } else {
-                        icon.className = 'toast-icon-wrap';
-                        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-                    }
-                    
-                    text.textContent = msg;
-                    toast.classList.add('show');
-                    clearTimeout(toastTimer);
-                    toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+                if (tabName === 'signup') {
+                    signupForm.classList.add('active');
+                } else if (tabName === 'login') {
+                    loginForm.classList.add('active');
                 }
 
-                window.hideToast = () => {
-                    toast.classList.remove('show');
-                    clearTimeout(toastTimer);
-                };
+                clearAlerts();
+            });
+        });
 
-                function setProgress(n) {
-                    progressBar.querySelectorAll('.progress-step').forEach((el, i) => {
-                        el.classList.remove('done', 'current');
-                        if (i < n) el.classList.add('done');
-                        if (i === n) el.classList.add('current');
-                    });
-                }
+        function showLogin() {
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector('[data-tab="login"]').classList.add('active');
+            signupForm.classList.remove('active');
+            loginForm.classList.add('active');
+            forgotPasswordForm.classList.add('hidden');
+            profileSection.classList.remove('active');
+            clearAlerts();
+        }
 
-                function validateEmail(email) {
-                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                        return 'Please enter a valid email address';
-                    }
-                    
-                    const domain = email.split('@')[1]?.toLowerCase();
-                    if (blockedDomains.includes(domain)) {
-                        return `Email domain "@${domain}" is not allowed. Please use your personal or business email.`;
-                    }
-                    
-                    return null;
-                }
+        function showForgotPassword() {
+            signupForm.classList.remove('active');
+            loginForm.classList.remove('active');
+            forgotPasswordForm.classList.remove('hidden');
+            profileSection.classList.remove('active');
+            clearAlerts();
+        }
 
-                const steps = [
-                    {
-                        icon: 'fa-solid fa-user',
-                        question: "What's your name?",
-                        desc: "We'll use this to personalize your experience.",
-                        field: 'name', type: 'text', placeholder: 'Your full name',
-                        autocomplete: 'name',
-                        check: v => v.trim().length >= 3 ? null : 'Name must be at least 3 characters',
-                        hint: 'First and last name'
-                    },
-                    {
-                        icon: 'fa-solid fa-envelope',
-                        question: "What's your email?",
-                        desc: "For order updates and account security.",
-                        field: 'email', type: 'email', placeholder: 'you@example.com',
-                        autocomplete: 'email',
-                        check: v => validateEmail(v),
-                        hint: 'Use your personal or business email'
-                    },
-                    {
-                        icon: 'fa-solid fa-phone',
-                        question: "Your phone number?",
-                        desc: "For delivery coordination and account recovery.",
-                        field: 'phone', type: 'tel', placeholder: '01712345678',
-                        autocomplete: 'tel-national',
-                        check: v => {
-                            if (!v.trim()) return 'Please enter your phone number';
-                            return null;
-                        },
-                        hint: 'Enter your phone number as is'
-                    },
-                    {
-                        icon: 'fa-solid fa-lock',
-                        question: "Create a password",
-                        desc: "Use 8+ characters for a strong password.",
-                        field: 'password', type: 'password', placeholder: 'Minimum 8 characters',
-                        autocomplete: 'new-password',
-                        check: v => v.length >= 8 ? null : 'At least 8 characters required',
-                        hint: 'Keep it safe'
-                    },
-                    {
-                        icon: 'fa-solid fa-location-dot',
-                        question: "Where are you located?",
-                        desc: "Auto-detect or enter your location manually.",
-                        isLocation: true
-                    },
-                    {
-                        icon: 'fa-solid fa-house',
-                        question: "Your delivery address",
-                        desc: "For smooth and accurate deliveries.",
-                        isAddress: true
-                    },
-                    {
-                        icon: 'fa-solid fa-shield-halved',
-                        question: "Almost there!",
-                        desc: "Review and accept our terms to finish.",
-                        isTerms: true
-                    }
-                ];
+        // ============================================
+        // SIGNUP FUNCTION
+        // ============================================
+        document.getElementById('signupFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAlerts();
 
-                function render(n) {
-                    if (busy) return;
-                    busy = true;
-                    
-                    const s = steps[n];
-                    setProgress(n);
-                    
-                    let html = '';
-                    
-                    if (s.isLocation) {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <button type="button" class="locate-btn" id="locate-btn">
-                                    <i class="fa-solid fa-location-crosshairs"></i> Detect my location
-                                </button>
-                                <div class="input-feedback hint" id="locate-status"></div>
-                                
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-country" placeholder="Country" value="${data.country || 'Bangladesh'}">
-                                </div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="loc-state" placeholder="State / Province" value="${data.state_province || ''}">
-                                    <input type="text" class="form-input" id="loc-city" placeholder="City" value="${data.city || ''}">
-                                </div>
-                                <div class="input-feedback" id="loc-error"></div>
-                                
-                                <div class="btn-row">
-                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <button class="btn-primary" onclick="checkLocation()">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                            </div>`;
-                    } else if (s.isAddress) {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-postal" placeholder="Postal / ZIP code" value="${data.postal_code || ''}">
-                                </div>
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-street" placeholder="Street address" value="${data.street_address || ''}">
-                                </div>
-                                <div style="margin-bottom:10px;">
-                                    <input type="text" class="form-input" id="addr-apt" placeholder="Apartment, suite, unit (optional)" value="${data.apartment_house || ''}">
-                                </div>
-                                <div class="input-feedback" id="addr-error"></div>
-                                
-                                <div class="btn-row">
-                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <button class="btn-primary" onclick="checkAddress()">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                            </div>`;
-                    } else if (s.isTerms) {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <div class="agree-box">
-                                    <input type="checkbox" id="terms-check" ${data.terms ? 'checked' : ''}>
-                                    <label for="terms-check">
-                                        I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms of Service</a>
-                                    </label>
-                                </div>
-                                <div class="input-feedback" id="terms-error" style="margin-top:8px;"></div>
-                                
-                                <div class="btn-row">
-                                    <button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <button class="btn-primary" id="submit-btn" onclick="submit()">
-                                        <i class="fa-solid fa-user-check"></i> Create Account
-                                    </button>
-                                </div>
-                            </div>`;
-                    } else {
-                        html = `
-                            <div class="step-view">
-                                <div class="icon-circle"><i class="${s.icon}"></i></div>
-                                <h2 class="step-heading">${s.question}</h2>
-                                <p class="step-desc">${s.desc}</p>
-                                
-                                <div class="input-wrap">
-                                    <input type="${s.type}" class="form-input" id="main-input" 
-                                           placeholder="${s.placeholder}" 
-                                           value="${data[s.field] || ''}"
-                                           autocomplete="${s.autocomplete}"
-                                           autofocus>
-                                </div>
-                                <div class="input-feedback hint" id="field-hint">${s.hint}</div>
-                                <div class="input-feedback" id="field-error"></div>
-                                
-                                <div class="btn-row">
-                                    ${n > 0 ? `<button class="btn-back" onclick="go(${n - 1})"><i class="fa-solid fa-arrow-left"></i></button>` : '<div></div>'}
-                                    <button class="btn-primary" onclick="checkField()">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                            </div>`;
-                    }
-                    
-                    stepInner.innerHTML = html;
-                    
-                    setTimeout(() => {
-                        const inp = document.getElementById('main-input');
-                        if (inp) inp.focus();
-                    }, 100);
-                    
-                    const mainInp = document.getElementById('main-input');
-                    if (mainInp) {
-                        mainInp.addEventListener('keydown', e => { if (e.key === 'Enter') checkField(); });
-                    }
-                    
-                    if (s.isLocation) {
-                        setTimeout(() => {
-                            document.getElementById('locate-btn')?.addEventListener('click', detectLocation);
-                        }, 150);
-                    }
-                    
-                    busy = false;
-                }
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const country = document.getElementById('signupCountry').value;
+            const password = document.getElementById('signupPassword').value;
 
-                window.checkField = function() {
-                    const s = steps[step];
-                    const inp = document.getElementById('main-input');
-                    const val = inp?.value || '';
-                    const err = s.check(val);
-                    const errEl = document.getElementById('field-error');
-                    const hintEl = document.getElementById('field-hint');
-                    
-                    if (err) {
-                        if (inp) { inp.classList.add('has-error'); setTimeout(() => inp.classList.remove('has-error'), 600); }
-                        if (errEl) { errEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${err}`; errEl.className = 'input-feedback error'; }
-                        if (hintEl) hintEl.style.display = 'none';
-                        return;
-                    }
-                    
-                    if (inp) inp.classList.add('is-valid');
-                    data[s.field] = val;
-                    if (errEl) errEl.className = 'input-feedback';
-                    if (hintEl) hintEl.style.display = 'block';
-                    
-                    setTimeout(() => { if (inp) inp.classList.remove('is-valid'); go(step + 1); }, 250);
-                };
+            // Validation
+            let isValid = true;
 
-                window.checkLocation = function() {
-                    const country = document.getElementById('loc-country')?.value.trim();
-                    const city = document.getElementById('loc-city')?.value.trim();
-                    const errEl = document.getElementById('loc-error');
-                    
-                    if (!country || !city) {
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Country and city are required'; errEl.className = 'input-feedback error'; }
-                        return;
-                    }
-                    
-                    data.country = country;
-                    data.state_province = document.getElementById('loc-state')?.value.trim() || '';
-                    data.city = city;
-                    if (errEl) errEl.className = 'input-feedback';
-                    go(step + 1);
-                };
+            if (firstName.length < 2) {
+                document.getElementById('firstNameError').classList.add('show');
+                document.getElementById('firstName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('firstNameError').classList.remove('show');
+                document.getElementById('firstName').classList.remove('error');
+            }
 
-                window.checkAddress = function() {
-                    const street = document.getElementById('addr-street')?.value.trim();
-                    const errEl = document.getElementById('addr-error');
-                    
-                    if (!street) {
-                        if (errEl) { errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Street address is required'; errEl.className = 'input-feedback error'; }
-                        return;
-                    }
-                    
-                    data.postal_code = document.getElementById('addr-postal')?.value.trim() || '';
-                    data.street_address = street;
-                    data.apartment_house = document.getElementById('addr-apt')?.value.trim() || '';
-                    if (errEl) errEl.className = 'input-feedback';
-                    go(step + 1);
-                };
+            if (lastName.length < 2) {
+                document.getElementById('lastNameError').classList.add('show');
+                document.getElementById('lastName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('lastNameError').classList.remove('show');
+                document.getElementById('lastName').classList.remove('error');
+            }
 
-                window.go = function(target) {
-                    if (busy || target < 0 || target >= steps.length || target === step) return;
-                    step = target;
-                    render(step);
-                };
+            if (!email || !email.includes('@')) {
+                document.getElementById('signupEmailError').classList.add('show');
+                document.getElementById('signupEmail').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signupEmailError').classList.remove('show');
+                document.getElementById('signupEmail').classList.remove('error');
+            }
 
-                async function detectLocation() {
-                    if (!navigator.geolocation) { notify('Location not supported on this device', 'error'); return; }
-                    
-                    const btn = document.getElementById('locate-btn');
-                    const status = document.getElementById('locate-status');
-                    
-                    btn.classList.add('is-loading');
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
-                    if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Accessing GPS...';
-                    
-                    try {
-                        const pos = await new Promise((res, rej) => {
-                            navigator.geolocation.getCurrentPosition(res, rej, {
-                                enableHighAccuracy: true, timeout: 12000, maximumAge: 0
-                            });
-                        });
-                        
-                        if (status) status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Looking up address...';
-                        
-                        const resp = await fetch(
-                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&addressdetails=1&accept-language=en`,
-                            { headers: { 'User-Agent': 'JAYENWARE/1.0' } }
-                        );
-                        
-                        if (!resp.ok) throw new Error('API error');
-                        
-                        const d = await resp.json();
-                        const addr = d.address || {};
-                        
-                        document.getElementById('loc-country').value = addr.country || 'Bangladesh';
-                        document.getElementById('loc-state').value = addr.state || '';
-                        document.getElementById('loc-city').value = addr.city || addr.town || '';
-                        
-                        if (status) {
-                            status.innerHTML = '<i class="fa-solid fa-circle-check"></i> Location detected and filled';
-                            status.className = 'input-feedback success';
-                        }
-                        
-                        notify('Location found!', 'success');
-                        
-                    } catch {
-                        if (status) {
-                            status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Unable to detect. Please fill manually.';
-                            status.className = 'input-feedback error';
-                        }
-                    } finally {
-                        btn.classList.remove('is-loading');
-                        btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Detect my location';
-                    }
-                }
+            if (phone && !/^\+[1-9]\d{6,14}$/.test(phone)) {
+                document.getElementById('signupPhoneError').classList.add('show');
+                document.getElementById('signupPhone').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signupPhoneError').classList.remove('show');
+                document.getElementById('signupPhone').classList.remove('error');
+            }
 
-                // ============================================
-                // SUBMIT - Direct Supabase Signup
-                // ============================================
-                window.submit = async function() {
-                    if (!supabase) {
-                        notify('System initializing... Please wait a moment and try again.', 'warning');
-                        // Retry initialization
-                        if (initSupabase()) {
-                            notify('System ready! Please try again.', 'success');
-                        }
-                        return;
-                    }
-                    
-                    const checked = document.getElementById('terms-check')?.checked;
-                    
-                    if (!checked) {
-                        const errEl = document.getElementById('terms-error');
-                        if (errEl) { 
-                            errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please agree to continue'; 
-                            errEl.className = 'input-feedback error'; 
-                        }
-                        return;
-                    }
-                    
-                    data.terms = true;
-                    
-                    const btn = document.getElementById('submit-btn');
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
-                    
-                    loadingOverlay.classList.add('visible');
-                    const loadingText = loadingOverlay.querySelector('.loading-text');
-                    
-                    try {
-                        if (loadingText) loadingText.textContent = 'Creating your account...';
-                        
-                        const { data: authData, error: signupError } = await supabase.auth.signUp({
-                            email: data.email,
-                            password: data.password,
-                            options: {
-                                data: {
-                                    full_name: data.name.trim(),
-                                    phone: data.phone.trim() || 'N/A',
-                                    country: data.country || 'Bangladesh',
-                                    state_province: data.state_province || null,
-                                    city: data.city || null,
-                                    postal_code: data.postal_code || null,
-                                    street_address: data.street_address || null,
-                                    apartment_house: data.apartment_house || null,
-                                    full_address: [data.apartment_house, data.street_address, data.city, data.state_province, data.postal_code, data.country].filter(Boolean).join(', ')
-                                }
-                            }
-                        });
-                        
-                        if (signupError) {
-                            loadingOverlay.classList.remove('visible');
-                            
-                            if (signupError.message.includes('already registered')) {
-                                notify('This email is already registered. Please login instead.', 'error');
-                            } else {
-                                notify('Registration failed: ' + signupError.message, 'error');
-                            }
-                            
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
-                            return;
-                        }
-                        
-                        if (!authData?.user) {
-                            loadingOverlay.classList.remove('visible');
-                            notify('Registration failed. No user data returned.', 'error');
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
-                            return;
-                        }
-                        
-                        if (loadingText) loadingText.textContent = 'Setting up your profile...';
-                        
-                        // Wait for database trigger
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                        
-                        const { data: profile } = await supabase
-                            .from('profiles')
-                            .select('jbyn_oneid')
-                            .eq('id', authData.user.id)
-                            .single();
-                        
-                        const oneid = profile?.jbyn_oneid;
-                        
-                        if (oneid) {
-                            notify(`Welcome! Your JBYN-OneID: ${oneid}`, 'success');
-                        } else {
-                            notify('Account created! Check your email to verify.', 'success');
-                        }
-                        
-                        if (loadingText) loadingText.textContent = 'Redirecting...';
-                        
-                        setTimeout(() => {
-                            window.location.href = '/account';
-                        }, 3000);
-                        
-                    } catch (err) {
-                        console.error('Signup error:', err);
-                        loadingOverlay.classList.remove('visible');
-                        notify('Something went wrong. Please try again.', 'error');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Create Account';
-                    }
-                };
+            if (!country) {
+                document.getElementById('signupCountryError').classList.add('show');
+                document.getElementById('signupCountry').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signupCountryError').classList.remove('show');
+                document.getElementById('signupCountry').classList.remove('error');
+            }
 
-                document.addEventListener('click', e => {
-                    if (toast.classList.contains('show') && !toast.contains(e.target)) {
-                        window.hideToast();
-                    }
+            if (password.length < 6) {
+                document.getElementById('signupPasswordError').classList.add('show');
+                document.getElementById('signupPassword').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signupPasswordError').classList.remove('show');
+                document.getElementById('signupPassword').classList.remove('error');
+            }
+
+            if (!isValid) return;
+
+            // Submit
+            const btn = document.getElementById('signupBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        first_name: firstName,
+                        last_name: lastName,
+                        email: email,
+                        phone: phone || null,
+                        password: password,
+                        country: country
+                    })
                 });
 
-                // Start rendering
-                render(0);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'সাইনআপ ব্যর্থ হয়েছে');
+                }
+
+                showAlert('✅ সাইনআপ সফল! আপনার ইমেইল ভেরিফাই করুন।', 'success');
+                
+                // Show profile if user is logged in
+                if (data.user && data.session) {
+                    loadProfile();
+                } else {
+                    // Switch to login
+                    setTimeout(() => {
+                        document.getElementById('loginEmail').value = email;
+                        showLogin();
+                    }, 2000);
+                }
+
+                // Reset form
+                this.reset();
+
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
             }
-        })();
+        });
+
+        // ============================================
+        // LOGIN FUNCTION
+        // ============================================
+        document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAlerts();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            let isValid = true;
+
+            if (!email || !email.includes('@')) {
+                document.getElementById('loginEmailError').classList.add('show');
+                document.getElementById('loginEmail').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('loginEmailError').classList.remove('show');
+                document.getElementById('loginEmail').classList.remove('error');
+            }
+
+            if (!password) {
+                document.getElementById('loginPasswordError').classList.add('show');
+                document.getElementById('loginPassword').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('loginPasswordError').classList.remove('show');
+                document.getElementById('loginPassword').classList.remove('error');
+            }
+
+            if (!isValid) return;
+
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'লগইন ব্যর্থ হয়েছে');
+                }
+
+                showAlert('✅ লগইন সফল!', 'success');
+                await loadProfile();
+
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+
+        // ============================================
+        // FORGOT PASSWORD
+        // ============================================
+        document.getElementById('forgotPasswordFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAlerts();
+
+            const email = document.getElementById('forgotEmail').value.trim();
+
+            if (!email || !email.includes('@')) {
+                document.getElementById('forgotEmailError').classList.add('show');
+                document.getElementById('forgotEmail').classList.add('error');
+                return;
+            }
+
+            const btn = document.getElementById('forgotBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'রিকুয়েস্ট ব্যর্থ হয়েছে');
+                }
+
+                showAlert('✅ পাসওয়ার্ড রিসেট লিংক ইমেইলে পাঠানো হয়েছে!', 'success');
+                this.reset();
+                setTimeout(showLogin, 3000);
+
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+
+        // ============================================
+        // LOAD PROFILE
+        // ============================================
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/user`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        showLogin();
+                        return;
+                    }
+                    throw new Error('প্রোফাইল লোড করতে ব্যর্থ');
+                }
+
+                const data = await response.json();
+                const user = data.user;
+                const profile = data.profile;
+
+                if (!user) {
+                    showLogin();
+                    return;
+                }
+
+                // Show profile section
+                signupForm.classList.remove('active');
+                loginForm.classList.remove('active');
+                forgotPasswordForm.classList.add('hidden');
+                profileSection.classList.add('active');
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+                // Fill profile data
+                const firstName = profile?.first_name || user.user_metadata?.first_name || '';
+                const lastName = profile?.last_name || user.user_metadata?.last_name || '';
+                const fullName = firstName + ' ' + lastName;
+
+                document.getElementById('profileAvatar').textContent = getInitials(firstName, lastName);
+                document.getElementById('profileName').textContent = fullName.trim() || 'নাম নেই';
+                document.getElementById('profileEmail').textContent = user.email;
+
+                // Get OneID
+                try {
+                    const passkeyRes = await fetch(`${API_BASE}/auth/passkey`, {
+                        credentials: 'include'
+                    });
+                    if (passkeyRes.ok) {
+                        const passkeyData = await passkeyRes.json();
+                        document.getElementById('profileOneid').textContent = passkeyData.jbyn_oneid || 'JBYN-OneID-XXXX';
+                    }
+                } catch (e) {
+                    document.getElementById('profileOneid').textContent = 'JBYN-OneID-XXXX';
+                }
+
+                // Details
+                document.getElementById('detailFirstName').textContent = profile?.first_name || '-';
+                document.getElementById('detailLastName').textContent = profile?.last_name || '-';
+                document.getElementById('detailEmail').textContent = user.email || '-';
+                document.getElementById('detailPhone').textContent = profile?.phone || '-';
+                document.getElementById('detailCountry').textContent = profile?.country || '-';
+                document.getElementById('detailCreated').textContent = formatDate(user.created_at);
+
+                // Fill edit form
+                document.getElementById('editFirstName').value = profile?.first_name || '';
+                document.getElementById('editLastName').value = profile?.last_name || '';
+                document.getElementById('editPhone').value = profile?.phone || '';
+                document.getElementById('editCountry').value = profile?.country || '';
+
+            } catch (error) {
+                console.error('Load profile error:', error);
+                showAlert('❌ প্রোফাইল লোড করতে ব্যর্থ', 'error');
+            }
+        }
+
+        // ============================================
+        // EDIT PROFILE
+        // ============================================
+        function enableEdit() {
+            document.getElementById('profileDetails').classList.add('hidden');
+            document.getElementById('editProfileForm').classList.remove('hidden');
+            document.querySelector('.profile-actions').classList.add('hidden');
+        }
+
+        function cancelEdit() {
+            document.getElementById('profileDetails').classList.remove('hidden');
+            document.getElementById('editProfileForm').classList.add('hidden');
+            document.querySelector('.profile-actions').classList.remove('hidden');
+            clearAlerts();
+        }
+
+        document.getElementById('editProfileFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAlerts();
+
+            const firstName = document.getElementById('editFirstName').value.trim();
+            const lastName = document.getElementById('editLastName').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            const country = document.getElementById('editCountry').value;
+
+            let isValid = true;
+
+            if (firstName.length < 2) {
+                document.getElementById('editFirstNameError').classList.add('show');
+                document.getElementById('editFirstName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('editFirstNameError').classList.remove('show');
+                document.getElementById('editFirstName').classList.remove('error');
+            }
+
+            if (lastName.length < 2) {
+                document.getElementById('editLastNameError').classList.add('show');
+                document.getElementById('editLastName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('editLastNameError').classList.remove('show');
+                document.getElementById('editLastName').classList.remove('error');
+            }
+
+            if (phone && !/^\+[1-9]\d{6,14}$/.test(phone)) {
+                document.getElementById('editPhoneError').classList.add('show');
+                document.getElementById('editPhone').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('editPhoneError').classList.remove('show');
+                document.getElementById('editPhone').classList.remove('error');
+            }
+
+            if (!country) {
+                document.getElementById('editCountryError').classList.add('show');
+                document.getElementById('editCountry').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('editCountryError').classList.remove('show');
+                document.getElementById('editCountry').classList.remove('error');
+            }
+
+            if (!isValid) return;
+
+            const btn = document.getElementById('updateProfileBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/profile`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        first_name: firstName,
+                        last_name: lastName,
+                        phone: phone || null,
+                        country: country
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'প্রোফাইল আপডেট ব্যর্থ');
+                }
+
+                showAlert('✅ প্রোফাইল আপডেট সফল!', 'success');
+                cancelEdit();
+                await loadProfile();
+
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        async function logout() {
+            if (!confirm('আপনি কি লগআউট করতে চান?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('লগআউট ব্যর্থ');
+                }
+
+                showAlert('✅ লগআউট সফল!', 'success');
+                profileSection.classList.remove('active');
+                showLogin();
+
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+            }
+        }
+
+        // ============================================
+        // DELETE ACCOUNT
+        // ============================================
+        async function deleteAccount() {
+            if (!confirm('⚠️ আপনি কি নিশ্চিত? আপনার একাউন্ট permanently ডিলিট হয়ে যাবে!')) return;
+            if (!confirm('আবারও নিশ্চিত করুন: একাউন্ট ডিলিট?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/delete-account`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'একাউন্ট ডিলিট ব্যর্থ');
+                }
+
+                showAlert('✅ একাউন্ট ডিলিট সফল!', 'success');
+                profileSection.classList.remove('active');
+                showLogin();
+
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+            }
+        }
+
+        // ============================================
+        // AUTO-LOAD PROFILE ON PAGE LOAD
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if user is already logged in
+            try {
+                const response = await fetch(`${API_BASE}/auth/user`, {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user) {
+                        await loadProfile();
+                        return;
+                    }
+                }
+            } catch (e) {
+                // Not logged in, show login
+            }
+
+            // Show login by default
+            showLogin();
+        });
+
+        // ============================================
+        // INPUT VALIDATION ON CHANGE
+        // ============================================
+        // Real-time validation for signup
+        document.getElementById('firstName').addEventListener('input', function() {
+            if (this.value.length >= 2) {
+                document.getElementById('firstNameError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('lastName').addEventListener('input', function() {
+            if (this.value.length >= 2) {
+                document.getElementById('lastNameError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('signupEmail').addEventListener('input', function() {
+            if (this.value.includes('@')) {
+                document.getElementById('signupEmailError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('signupPhone').addEventListener('input', function() {
+            if (!this.value || /^\+[1-9]\d{6,14}$/.test(this.value)) {
+                document.getElementById('signupPhoneError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('signupCountry').addEventListener('change', function() {
+            if (this.value) {
+                document.getElementById('signupCountryError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('signupPassword').addEventListener('input', function() {
+            if (this.value.length >= 6) {
+                document.getElementById('signupPasswordError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        // Real-time validation for login
+        document.getElementById('loginEmail').addEventListener('input', function() {
+            if (this.value.includes('@')) {
+                document.getElementById('loginEmailError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('loginPassword').addEventListener('input', function() {
+            if (this.value) {
+                document.getElementById('loginPasswordError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        // Real-time validation for edit
+        document.getElementById('editFirstName').addEventListener('input', function() {
+            if (this.value.length >= 2) {
+                document.getElementById('editFirstNameError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('editLastName').addEventListener('input', function() {
+            if (this.value.length >= 2) {
+                document.getElementById('editLastNameError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('editPhone').addEventListener('input', function() {
+            if (!this.value || /^\+[1-9]\d{6,14}$/.test(this.value)) {
+                document.getElementById('editPhoneError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('editCountry').addEventListener('change', function() {
+            if (this.value) {
+                document.getElementById('editCountryError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
+
+        document.getElementById('forgotEmail').addEventListener('input', function() {
+            if (this.value.includes('@')) {
+                document.getElementById('forgotEmailError').classList.remove('show');
+                this.classList.remove('error');
+            }
+        });
     </script>
 </body>
 </html>
