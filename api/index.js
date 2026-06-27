@@ -40,53 +40,20 @@ function createSlug(text) {
         .replace(/^-+|-+$/g, '');
 }
 
-// Build full address from components
-function buildFullAddress(data) {
-    const parts = [
-        data.apartment_house,
-        data.street_address,
-        data.city,
-        data.state_province,
-        data.postal_code,
-        data.country || 'Bangladesh'
-    ].filter(Boolean);
-    
-    return parts.join(', ') || 'Address not provided';
-}
-
-// Format product with category/subcategory names
-function formatProduct(product) {
-    if (!product) return null;
-    return {
-        ...product,
-        category: product.categories?.name || null,
-        subcategory: product.subcategories?.name || null
-    };
-}
-
-function formatProducts(products) {
-    if (!products) return [];
-    return products.map(formatProduct);
-}
-
 // Format phone number to international format (E.164)
 function formatPhoneNumber(phone) {
     if (!phone || phone === 'N/A') return phone;
     
-    // Remove all non-digit characters
     let cleaned = phone.replace(/[^\d]/g, '');
     
-    // Bangladesh format: 01XXXXXXXXX -> +8801XXXXXXXXX
     if (cleaned.startsWith('01') && cleaned.length === 11) {
         return '+880' + cleaned.substring(1);
     }
     
-    // Already has country code but missing +
     if (cleaned.startsWith('8801') && cleaned.length === 13) {
         return '+' + cleaned;
     }
     
-    // Return as is if already properly formatted
     if (phone.startsWith('+')) {
         return phone;
     }
@@ -105,23 +72,19 @@ function isValidOneID(oneid) {
 }
 
 // ============================================
-// AUTHENTICATION API ROUTES
+// AUTHENTICATION API ROUTES (NEW - Using profiles table)
 // ============================================
 
-// SIGNUP - Professional Signup with full address
+// SIGNUP - Using first_name, last_name, email, phone, country, password
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { 
+            first_name, 
+            last_name, 
             email, 
-            password, 
-            name, 
-            phone,
-            country,
-            state_province,
-            city,
-            postal_code,
-            street_address,
-            apartment_house
+            phone, 
+            password,
+            country 
         } = req.body;
 
         // Basic validation
@@ -131,9 +94,21 @@ app.post('/api/auth/signup', async (req, res) => {
             });
         }
 
-        if (!name || name.trim().length < 3) {
+        if (!first_name || first_name.trim().length < 2) {
             return res.status(400).json({
-                error: 'Full name is required (minimum 3 characters)'
+                error: 'First name is required (minimum 2 characters)'
+            });
+        }
+
+        if (!last_name || last_name.trim().length < 2) {
+            return res.status(400).json({
+                error: 'Last name is required (minimum 2 characters)'
+            });
+        }
+
+        if (!country || country.trim().length < 2) {
+            return res.status(400).json({
+                error: 'Country is required'
             });
         }
 
@@ -143,45 +118,24 @@ app.post('/api/auth/signup', async (req, res) => {
             });
         }
 
-        // Phone formatting and validation
-        const formattedPhone = formatPhoneNumber(phone);
+        // Format phone if provided
+        const formattedPhone = phone ? formatPhoneNumber(phone) : null;
         if (phone && !isValidPhone(formattedPhone)) {
             return res.status(400).json({
                 error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)'
             });
         }
 
-        // Build complete address
-        const fullAddress = buildFullAddress({
-            apartment_house: apartment_house || '',
-            street_address: street_address || '',
-            city: city || '',
-            state_province: state_province || '',
-            postal_code: postal_code || '',
-            country: country || 'Bangladesh'
-        });
-
-        if (!fullAddress || fullAddress.length < 10) {
-            return res.status(400).json({
-                error: 'Please provide complete address details (minimum 10 characters)'
-            });
-        }
-
-        // Supabase signup with user_metadata
+        // Signup with Supabase Auth + user_metadata
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
-                    full_name: name.trim(),
-                    phone: formattedPhone || 'N/A',
-                    country: country || 'Bangladesh',
-                    state_province: state_province || null,
-                    city: city || null,
-                    postal_code: postal_code || null,
-                    street_address: street_address || null,
-                    apartment_house: apartment_house || null,
-                    full_address: fullAddress
+                    first_name: first_name.trim(),
+                    last_name: last_name.trim(),
+                    phone: formattedPhone || null,
+                    country: country.trim()
                 }
             }
         });
@@ -195,23 +149,25 @@ app.post('/api/auth/signup', async (req, res) => {
             return res.status(400).json({ error: error.message });
         }
 
-        // Get generated OneID from profile
-        let oneid = null;
+        // Get the profile (created by trigger)
+        let profile = null;
         if (data.user) {
-            const { data: profile } = await supabase
+            const { data: profileData, error: profileError } = await supabase
                 .from('profiles')
-                .select('jbyn_oneid')
+                .select('*')
                 .eq('id', data.user.id)
                 .single();
-            
-            oneid = profile?.jbyn_oneid || null;
+
+            if (!profileError) {
+                profile = profileData;
+            }
         }
 
         res.status(201).json({
             message: 'Registration successful! Please check your email for verification.',
             user: data.user,
             session: data.session,
-            jbyn_oneid: oneid
+            profile: profile
         });
 
     } catch (err) {
@@ -250,12 +206,16 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: error.message });
         }
 
-        // Fetch complete profile data
-        const { data: profile } = await supabase
+        // Fetch profile from profiles table
+        const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', data.user.id)
             .single();
+
+        if (profileError && profileError.code !== 'PGRST116') {
+            console.error('Profile fetch error:', profileError);
+        }
 
         res.json({
             message: 'Login successful!',
@@ -285,7 +245,7 @@ app.post('/api/auth/logout', async (req, res) => {
     }
 });
 
-// GET CURRENT USER SESSION (UPDATED - Uses get_current_user_profile RPC)
+// GET CURRENT USER SESSION WITH PROFILE
 app.get('/api/auth/user', async (req, res) => {
     try {
         const { data: { user }, error } = await supabase.auth.getUser();
@@ -294,19 +254,20 @@ app.get('/api/auth/user', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        // Use get_current_user_profile function
-        const { data: profileData, error: profileError } = await supabase
-            .rpc('get_current_user_profile');
+        // Get profile from profiles table
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
 
-        if (profileError) {
+        if (profileError && profileError.code !== 'PGRST116') {
             return res.status(500).json({ error: profileError.message });
         }
 
-        const profile = profileData?.success ? profileData.data : null;
-
         res.json({
             user,
-            profile: profile
+            profile: profile || null
         });
 
     } catch (err) {
@@ -314,7 +275,7 @@ app.get('/api/auth/user', async (req, res) => {
     }
 });
 
-// UPDATE PROFILE (UPDATED - Uses upsert_user_profile RPC)
+// UPDATE PROFILE - Update first_name, last_name, phone, country
 app.put('/api/auth/profile', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -324,50 +285,65 @@ app.put('/api/auth/profile', async (req, res) => {
         }
 
         const { 
-            name, 
+            first_name, 
+            last_name, 
             phone, 
-            country,
-            state_province,
-            city,
-            postal_code,
-            street_address,
-            apartment_house
+            country 
         } = req.body;
 
-        // Validate name if provided
-        if (name && name.trim().length < 3) {
-            return res.status(400).json({ error: 'Name must be at least 3 characters' });
+        // Validation
+        if (first_name && first_name.trim().length < 2) {
+            return res.status(400).json({ 
+                error: 'First name must be at least 2 characters' 
+            });
         }
 
-        // Use upsert_user_profile function
-        const { data, error } = await supabase
-            .rpc('upsert_user_profile', {
-                p_name: name,
-                p_phone: phone || null,
-                p_country: country || null,
-                p_state_province: state_province || null,
-                p_city: city || null,
-                p_postal_code: postal_code || null,
-                p_street_address: street_address || null,
-                p_apartment_house: apartment_house || null
+        if (last_name && last_name.trim().length < 2) {
+            return res.status(400).json({ 
+                error: 'Last name must be at least 2 characters' 
             });
+        }
+
+        if (country && country.trim().length < 2) {
+            return res.status(400).json({ 
+                error: 'Country must be at least 2 characters' 
+            });
+        }
+
+        // Format phone if provided
+        let formattedPhone = phone;
+        if (phone) {
+            formattedPhone = formatPhoneNumber(phone);
+            if (!isValidPhone(formattedPhone)) {
+                return res.status(400).json({
+                    error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)'
+                });
+            }
+        }
+
+        // Build update object
+        const updates = {};
+        if (first_name) updates.first_name = first_name.trim();
+        if (last_name) updates.last_name = last_name.trim();
+        if (formattedPhone) updates.phone = formattedPhone;
+        if (country) updates.country = country.trim();
+        updates.updated_at = new Date().toISOString();
+
+        // Update profile
+        const { data, error } = await supabase
+            .from('profiles')
+            .update(updates)
+            .eq('id', user.id)
+            .select()
+            .single();
 
         if (error) {
             return res.status(500).json({ error: error.message });
         }
 
-        if (!data.success) {
-            return res.status(400).json({ 
-                error: data.error, 
-                field: data.field,
-                code: data.code 
-            });
-        }
-
         res.json({
-            message: data.message,
-            action: data.action,
-            oneid: data.oneid
+            message: 'Profile updated successfully',
+            profile: data
         });
 
     } catch (err) {
@@ -376,7 +352,7 @@ app.put('/api/auth/profile', async (req, res) => {
     }
 });
 
-// GET JBYN PASSKEY (OneID)
+// GET JBYN PASSKEY (OneID) - If you add oneid column later
 app.get('/api/auth/passkey', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -385,18 +361,27 @@ app.get('/api/auth/passkey', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
             .from('profiles')
-            .select('jbyn_oneid')
+            .select('id, email, first_name, last_name')
             .eq('id', user.id)
             .single();
 
-        if (!profile) {
+        if (error) {
             return res.status(404).json({ error: 'Profile not found' });
         }
 
+        // Generate temporary OneID (email-based) - Replace with actual oneid column if exists
+        const tempOneID = `JBYN-OneID-${user.id.substring(0, 12).toUpperCase()}`;
+
         res.json({
-            jbyn_oneid: profile.jbyn_oneid
+            jbyn_oneid: tempOneID,
+            profile: {
+                id: profile.id,
+                email: profile.email,
+                first_name: profile.first_name,
+                last_name: profile.last_name
+            }
         });
 
     } catch (err) {
@@ -456,7 +441,7 @@ app.put('/api/auth/reset-password', async (req, res) => {
     }
 });
 
-// DELETE ACCOUNT (UPDATED - Direct profiles delete)
+// DELETE ACCOUNT
 app.post('/api/auth/delete-account', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -465,7 +450,7 @@ app.post('/api/auth/delete-account', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        // Delete profile
+        // Delete profile first (cascade will handle if set)
         const { error: profileError } = await supabase
             .from('profiles')
             .delete()
@@ -488,101 +473,6 @@ app.post('/api/auth/delete-account', async (req, res) => {
 });
 
 // ============================================
-// OneID LOOKUP & SEARCH API
-// ============================================
-
-// Search user by OneID (Privacy-safe - limited info)
-app.get('/api/oneid/search/:oneid', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
-
-        const { oneid } = req.params;
-
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
-        }
-
-        // Search by OneID with limited info
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('name, jbyn_oneid, country, city, is_verified')
-            .eq('jbyn_oneid', oneid)
-            .single();
-
-        if (error) {
-            return res.status(404).json({ error: 'User not found with this OneID' });
-        }
-
-        res.json(data);
-
-    } catch (err) {
-        res.status(500).json({ error: 'Search failed' });
-    }
-});
-
-// Lookup user by OneID (Full details if authorized)
-app.get('/api/oneid/lookup/:oneid', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
-
-        const { oneid } = req.params;
-
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-        }
-
-        // Use lookup_user_by_oneid function
-        const { data, error } = await supabase
-            .rpc('lookup_user_by_oneid', {
-                lookup_oneid: oneid
-            });
-
-        if (error) {
-            return res.status(404).json({ error: error.message });
-        }
-
-        res.json(data?.[0] || null);
-
-    } catch (err) {
-        res.status(500).json({ error: 'Lookup failed' });
-    }
-});
-
-// Check if OneID exists (UPDATED - Direct table check)
-app.get('/api/oneid/exists/:oneid', async (req, res) => {
-    try {
-        const { oneid } = req.params;
-
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-        }
-
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('jbyn_oneid', oneid)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            return res.status(500).json({ error: error.message });
-        }
-
-        res.json({ exists: !!data });
-
-    } catch (err) {
-        res.status(500).json({ error: 'Check failed' });
-    }
-});
-
-// ============================================
 // PRODUCTS API (Categories, Subcategories with Slug)
 // ============================================
 
@@ -599,7 +489,14 @@ app.get('/api/products', async (req, res) => {
             .order('created_at', { ascending: false });
         
         if (error) return res.status(500).json({ error: error.message });
-        res.json(formatProducts(data));
+        
+        const formattedProducts = data.map(product => ({
+            ...product,
+            category: product.categories?.name || null,
+            subcategory: product.subcategories?.name || null
+        }));
+        
+        res.json(formattedProducts);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -623,7 +520,11 @@ app.get('/api/product/:slug', async (req, res) => {
         const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
         if (!product) return res.status(404).json({ error: 'Product not found' });
         
-        res.json(formatProduct(product));
+        res.json({
+            ...product,
+            category: product.categories?.name || null,
+            subcategory: product.subcategories?.name || null
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -708,7 +609,13 @@ app.get('/api/categories/:slug/products', async (req, res) => {
         
         if (error) return res.status(500).json({ error: error.message });
         
-        res.json(formatProducts(data));
+        const formattedProducts = data.map(product => ({
+            ...product,
+            category: product.categories?.name || null,
+            subcategory: product.subcategories?.name || null
+        }));
+        
+        res.json(formattedProducts);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -825,7 +732,13 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
         
         if (error) return res.status(500).json({ error: error.message });
         
-        res.json(formatProducts(data));
+        const formattedProducts = data.map(product => ({
+            ...product,
+            category: product.categories?.name || null,
+            subcategory: product.subcategories?.name || null
+        }));
+        
+        res.json(formattedProducts);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -891,36 +804,6 @@ app.get('/api/menu-items', async (req, res) => {
         }));
         
         res.json(menuItemsWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get menu item by slug
-app.get('/api/menu-items/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select(`
-                *,
-                categories:category_id (id, name),
-                subcategories:subcategory_id (id, name)
-            `)
-            .eq('is_active', true);
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const menuItem = data.find(item => createSlug(item.title) === slug);
-        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
-        
-        res.json({
-            ...menuItem,
-            slug: createSlug(menuItem.title),
-            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
-            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
-        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
