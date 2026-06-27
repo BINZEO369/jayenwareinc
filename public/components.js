@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.6 (Burberry Luxury Edition - Scroll-Responsive & Top Bar Integrated)
+// Version: 6.0 (Luxury Edition - Smooth Announcement Bar with Close Memory)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -62,9 +62,12 @@ function injectSharedStyles() {
             
             /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
             --glass-blur: blur(25px) saturate(200%);
+            
+            /* অ্যানাউন্সমেন্ট বারের হাইট ডিফল্ট */
+            --bar-height: 36px;
         }
         
-        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো এবং হোয়াইট স্পেস টোটাল ভ্যানিশ */
+        /* DYNAMIC FIX */
         html, body {
             overflow-x: hidden !important;
             width: 100% !important;
@@ -95,7 +98,7 @@ function injectSharedStyles() {
         .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
-        /* ==================== TOP ANNOUNCEMENT BAR ==================== */
+        /* ==================== PREMIUM TOP ANNOUNCEMENT BAR ==================== */
         .top-announcement-bar {
             background: #000000 !important;
             color: #ffffff !important;
@@ -104,7 +107,7 @@ function injectSharedStyles() {
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            height: 34px;
+            height: var(--bar-height);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -112,15 +115,47 @@ function injectSharedStyles() {
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 51;
-            padding: 0 16px;
+            z-index: 60;
+            padding: 0 45px 0 16px;
             text-align: center;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                        height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* বারটি হাইড করার আল্ট্রা-স্মুথ অ্যানিমেশন ক্লাস */
+        .top-announcement-bar.bar-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            height: 0 !important;
+            pointer-events: none;
+        }
+        
+        .announcement-close-btn {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .announcement-close-btn:hover {
+            color: #ffffff;
+            transform: translateY(-50%) scale(1.1);
         }
 
         /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
         .glass-nav {
             position: fixed;
-            top: 34px; /* টপ অ্যানাউন্সমেন্ট বারের ঠিক নিচে প্লেস করার জন্য */
+            top: var(--bar-height); 
             left: 0 !important; 
             right: 0 !important;
             width: 100% !important; 
@@ -130,25 +165,30 @@ function injectSharedStyles() {
             border-bottom: 1px solid var(--glass-border-light);
             box-shadow: none;
             
-            /* আল্ট্রা-স্মুথ ট্রান্সফরমেশন অ্যানিমেশন */
-            transition: background 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
-                        backdrop-filter 0.5s ease, 
-                        border-color 0.5s ease, 
-                        box-shadow 0.5s ease,
-                        top 0.4s ease; /* স্ক্রলিং ট্রানজিশনের জন্য */
+            /* লাক্সারি স্যুইচিং অ্যানিমেশন ইফেক্ট */
+            transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        backdrop-filter 0.4s ease, 
+                        border-color 0.4s ease, 
+                        box-shadow 0.4s ease,
+                        top 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
             z-index: 50;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* স্ক্রল হওয়ার পর প্রিমিয়াম সলিড হোয়াইট + ফ্রস্টেড লুক এবং একবারে টপে চলে যাওয়া */
+        /* স্ক্রল হওয়ার পর প্রিমিয়াম সলিড হোয়াইট + ফ্রস্টেড লুক */
         .glass-nav.nav-scrolled {
-            top: 0 !important; /* স্ক্রল করলে এটি একদম স্ক্রিনের মাথায় আটকে যাবে */
+            top: 0 !important; 
             background: rgba(255, 255, 255, 0.85) !important;
             backdrop-filter: blur(30px) saturate(190%);
             -webkit-backdrop-filter: blur(30px) saturate(190%);
             border-bottom: 1px solid var(--glass-border-dark);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+        
+        /* বার রিমুভড হলে হেডার পজিশন ডিফল্ট জিরো করা */
+        body.announcement-dismissed .glass-nav:not(.nav-scrolled) {
+            top: 0 !important;
         }
         
         .glass-nav > div {
@@ -187,9 +227,7 @@ function injectSharedStyles() {
             transition: opacity 0.25s ease;
             position: relative;
         }
-        .header-icon-btn:hover {
-            opacity: 0.6;
-        }
+        .header-icon-btn:hover { opacity: 0.6; }
         
         .drawer-close-btn {
             background: none;
@@ -230,113 +268,62 @@ function injectSharedStyles() {
             display: flex; flex-direction: column;
             box-shadow: -20px 0 60px rgba(0,0,0,0.03);
         }
-        .side-menu-drawer.open { 
-            transform: translateX(0); 
-            visibility: visible;
-        }
+        .side-menu-drawer.open { transform: translateX(0); visibility: visible; }
         
         .side-menu-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 24px 32px; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 24px 32px; border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
         
-        .side-menu-scroll {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 24px 32px;
-        }
+        .side-menu-scroll { flex-grow: 1; overflow-y: auto; padding: 24px 32px; }
         
         .menu-node-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 18px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             font-family: var(--font-heading);
             font-size: 15px; font-weight: 700; letter-spacing: 0.03em;
-            color: var(--primary); text-decoration: none;
-            cursor: pointer;
+            color: var(--primary); text-decoration: none; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .menu-node-item:hover { padding-left: 10px; opacity: 0.7; }
         
-        .menu-node-submenu {
-            display: none;
-            padding-left: 18px;
-            border-left: 1.5px solid var(--primary);
-            margin: 4px 0 8px 4px;
-        }
+        .menu-node-submenu { display: none; padding-left: 18px; border-left: 1.5px solid var(--primary); margin: 4px 0 8px 4px; }
         .menu-node-submenu.open { display: block; }
         
         .menu-node-sub-item {
-            display: block;
-            padding: 12px 14px;
-            font-family: var(--font-subtitle);
-            font-size: 13px; font-weight: 600;
-            color: #3a3a3c; text-decoration: none;
-            transition: all 0.2s ease;
+            display: block; padding: 12px 14px; font-family: var(--font-subtitle); font-size: 13px; font-weight: 600;
+            color: #3a3a3c; text-decoration: none; transition: all 0.2s ease;
         }
         .menu-node-sub-item:hover { color: var(--primary); padding-left: 4px; }
         
-        .side-drawer-footer {
-            padding: 32px; border-top: 1px solid rgba(0, 0, 0, 0.05);
-            background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
-        }
+        .side-drawer-footer { padding: 32px; border-top: 1px solid rgba(0, 0, 0, 0.05); background: rgba(255, 255, 255, 0.2); flex-shrink: 0; }
         
         /* ==================== CART DRAWER ==================== */
         #cart-drawer {
-            position: fixed; top: 0; right: 0;
-            width: 100%; max-width: 440px;
-            height: 100vh; height: 100dvh;
-            background: var(--glass-black-thick) !important;
-            backdrop-filter: blur(40px) saturate(250%) !important;
-            -webkit-backdrop-filter: blur(40px) saturate(250%) !important;
-            border-left: 1px solid var(--glass-border-inline);
-            z-index: 210;
-            transform: translateX(105%) !important;
-            visibility: hidden;
+            position: fixed; top: 0; right: 0; width: 100%; max-width: 440px; height: 100vh; height: 100dvh;
+            background: var(--glass-black-thick) !important; backdrop-filter: var(--glass-blur) !important;
+            -webkit-backdrop-filter: var(--glass-blur) !important; border-left: 1px solid var(--glass-border-inline); z-index: 210;
+            transform: translateX(105%) !important; visibility: hidden;
             transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important, visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            will-change: transform;
-            color: var(--accent) !important;
-            display: flex; flex-direction: column;
+            will-change: transform; color: var(--accent) !important; display: flex; flex-direction: column;
         }
-        #cart-drawer.open { 
-            transform: translateX(0) !important; 
-            visibility: visible !important;
-        }
+        #cart-drawer.open { transform: translateX(0) !important; visibility: visible !important; }
         #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
-        #cart-drawer .bg-soft {
-            background: rgba(255, 255, 255, 0.06) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        #cart-items > div {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-        }
+        #cart-drawer .bg-soft { background: rgba(255, 255, 255, 0.06) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        #cart-items > div { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); border-radius: 20px; }
         .custom-scroll::-webkit-scrollbar { width: 3px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         
         /* ==================== TOAST NOTIFICATION ==================== */
         #toast > div {
-            background: rgba(255, 255, 255, 0.85) !important;
-            backdrop-filter: blur(40px) saturate(250%) !important;
-            -webkit-backdrop-filter: blur(40px) saturate(250%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.55) !important;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important;
-            border-radius: 24px !important;
-            color: var(--primary) !important;
+            background: rgba(255, 255, 255, 0.85) !important; backdrop-filter: blur(40px) saturate(250%) !important;
+            -webkit-backdrop-filter: blur(40px) saturate(250%) !important; border: 1px solid rgba(255, 255, 255, 0.55) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important; border-radius: 24px !important; color: var(--primary) !important;
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
         /* ==================== FULLY DYNAMIC FOOTER ==================== */
-        #main-footer { 
-            background: #000000; 
-            color: #8e8e93; 
-            border-top: 1px solid #1c1c1e;
-            width: 100% !important;
-            position: relative;
-            clear: both;
-        }
+        #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; width: 100% !important; position: relative; clear: both; }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
         
@@ -536,9 +523,21 @@ async function renderHeader() {
     allSubcategories = subcategories;
     const menuTree = buildMenuTree(menuItems);
     
+    // Check local storage configuration for hidden state
+    const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
+    if (isBarDismissed) {
+        document.body.classList.add('announcement-dismissed');
+    }
+
     const headerHTML = `
-    <div class="top-announcement-bar" id="top-announcement-bar">
+    <!-- TOP ANNOUNCEMENT BAR (স্লিম ব্ল্যাক লাইন বিজ্ঞাপন উইথ ক্লোজ টোকেন) -->
+    <div class="top-announcement-bar ${isBarDismissed ? 'bar-hidden' : ''}" id="top-announcement-bar">
         <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
+        <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
     </div>
 
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
@@ -616,6 +615,27 @@ async function renderHeader() {
 }
 
 // ============================================================================
+// ANNOUNCEMENT INTERACTIVE INTERFACE LOGIC
+// ============================================================================
+function dismissAnnouncementBar() {
+    const bar = document.getElementById('top-announcement-bar');
+    const nav = document.getElementById('main-nav');
+    
+    if (bar) {
+        bar.classList.add('bar-hidden');
+    }
+    
+    // ব্রাউজারের লোকাল স্টোরেজে টোকেন সেভ করা
+    localStorage.setItem('jabiyen_announcement_hidden', 'true');
+    document.body.classList.add('announcement-dismissed');
+    
+    // হেডারকে স্মুথলি একদম টপ জিরোতে পুশ করা যদি ইউজার স্ক্রল না করে থাকে
+    if (nav && !nav.classList.contains('nav-scrolled')) {
+        nav.style.top = '0px';
+    }
+}
+
+// ============================================================================
 // FOOTER & TOAST CORE SYSTEMS
 // ============================================================================
 function renderFooter() {
@@ -626,8 +646,6 @@ function renderFooter() {
                 <div class="col-span-2 md:col-span-1">
                     <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
                     <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
-                    <div class="flex gap-4 text-base">
-                        </div>
                 </div>
                 <div>
                     <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
@@ -810,11 +828,15 @@ function handleNavScroll() {
     const nav = document.getElementById('main-nav');
     if (!nav) return;
     
-    // ২৫ পিক্সেলের বেশি স্ক্রল করলেই স্মুথলি ফ্রস্টেড হোয়াইট ক্লাসে কনভার্ট হবে
-    if (window.scrollY > 25) {
+    const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
+    
+    if (window.scrollY > 20) {
         nav.classList.add('nav-scrolled');
+        nav.style.top = '0px';
     } else {
         nav.classList.remove('nav-scrolled');
+        // যদি বারটি অলরেডি হাইড করা থাকে, তবে স্ক্রল টপে আসলেও মেনু জিরোতেই থাকবে
+        nav.style.top = isBarDismissed ? '0px' : '36px';
     }
 }
 
@@ -825,6 +847,7 @@ window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlis
 window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromCart = removeFromCart;
 window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
 window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
+window.dismissAnnouncementBar = dismissAnnouncementBar;
 
 async function initSharedComponents() {
     loadFontsConfiguration();
@@ -835,7 +858,7 @@ async function initSharedComponents() {
     
     // স্ক্রল রিয়েল-টাইম হ্যান্ডলিং সেটআপ
     window.addEventListener('scroll', handleNavScroll);
-    handleNavScroll(); // প্রারম্ভিক পজিশন চেক
+    handleNavScroll(); 
 
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
