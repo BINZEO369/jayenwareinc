@@ -531,7 +531,7 @@ async function renderHeader() {
                 
                 <button onclick="openSideMenu()" class="desktop-menu-trigger">
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
-                    <span>Menu</span>
+                    <span></span>
                 </button>
             </div>
         </div>
