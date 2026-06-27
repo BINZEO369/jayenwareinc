@@ -50,8 +50,8 @@ function injectSharedStyles() {
             --accent: #ffffff;
             
             /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
-            --glass-white: rgba(255, 255, 255, 0.15);
-            --glass-white-thick: rgba(255, 255, 255, 0.7);
+            --glass-white: rgba(255, 255, 255, 0.10);
+            --glass-white-thick: rgba(255, 255, 255, 0.5);
             --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
             
