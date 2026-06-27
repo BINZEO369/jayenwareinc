@@ -26,56 +26,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
-// HELPER FUNCTIONS
+// AUTHENTICATION API ROUTES - CLEAN VERSION
 // ============================================
 
-// Create slug from string
-function createSlug(text) {
-    if (!text) return '';
-    return text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
-}
-
-// Format phone number to international format (E.164)
-function formatPhoneNumber(phone) {
-    if (!phone || phone === 'N/A') return phone;
-    
-    let cleaned = phone.replace(/[^\d]/g, '');
-    
-    if (cleaned.startsWith('01') && cleaned.length === 11) {
-        return '+880' + cleaned.substring(1);
-    }
-    
-    if (cleaned.startsWith('8801') && cleaned.length === 13) {
-        return '+' + cleaned;
-    }
-    
-    if (phone.startsWith('+')) {
-        return phone;
-    }
-    
-    return phone;
-}
-
-// Validate E.164 phone format
-function isValidPhone(phone) {
-    return phone === 'N/A' || /^\+[1-9]\d{6,14}$/.test(phone);
-}
-
-// Validate JBYN-OneID format
-function isValidOneID(oneid) {
-    return /^JBYN-OneID-[A-Z0-9]{12}$/.test(oneid);
-}
-
-// ============================================
-// AUTHENTICATION API ROUTES (NEW - Using profiles table)
-// ============================================
-
-// SIGNUP - Using first_name, last_name, email, phone, country, password
+// SIGNUP - Clean signup with first_name, last_name, email, phone, password, country
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { 
@@ -83,32 +37,26 @@ app.post('/api/auth/signup', async (req, res) => {
             last_name, 
             email, 
             phone, 
-            password,
+            password, 
             country 
         } = req.body;
 
-        // Basic validation
-        if (!email || !password) {
+        // Validation
+        if (!email || !password || !first_name || !last_name || !country) {
             return res.status(400).json({ 
-                error: 'Email and password are required' 
+                error: 'All fields are required: first_name, last_name, email, password, country' 
             });
         }
 
-        if (!first_name || first_name.trim().length < 2) {
+        if (first_name.trim().length < 2) {
             return res.status(400).json({
-                error: 'First name is required (minimum 2 characters)'
+                error: 'First name must be at least 2 characters'
             });
         }
 
-        if (!last_name || last_name.trim().length < 2) {
+        if (last_name.trim().length < 2) {
             return res.status(400).json({
-                error: 'Last name is required (minimum 2 characters)'
-            });
-        }
-
-        if (!country || country.trim().length < 2) {
-            return res.status(400).json({
-                error: 'Country is required'
+                error: 'Last name must be at least 2 characters'
             });
         }
 
@@ -118,15 +66,14 @@ app.post('/api/auth/signup', async (req, res) => {
             });
         }
 
-        // Format phone if provided
-        const formattedPhone = phone ? formatPhoneNumber(phone) : null;
-        if (phone && !isValidPhone(formattedPhone)) {
+        // Phone validation (optional)
+        if (phone && !/^\+?[0-9]{10,15}$/.test(phone.replace(/\s/g, ''))) {
             return res.status(400).json({
-                error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)'
+                error: 'Invalid phone format. Use international format (e.g., +8801712345678)'
             });
         }
 
-        // Signup with Supabase Auth + user_metadata
+        // Supabase signup with user_metadata
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -134,7 +81,7 @@ app.post('/api/auth/signup', async (req, res) => {
                 data: {
                     first_name: first_name.trim(),
                     last_name: last_name.trim(),
-                    phone: formattedPhone || null,
+                    phone: phone || null,
                     country: country.trim()
                 }
             }
@@ -149,23 +96,28 @@ app.post('/api/auth/signup', async (req, res) => {
             return res.status(400).json({ error: error.message });
         }
 
-        // Get the profile (created by trigger)
+        // Fetch the created profile
         let profile = null;
         if (data.user) {
-            const { data: profileData, error: profileError } = await supabase
+            const { data: profileData } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', data.user.id)
                 .single();
-
-            if (!profileError) {
-                profile = profileData;
-            }
+            
+            profile = profileData;
         }
 
         res.status(201).json({
             message: 'Registration successful! Please check your email for verification.',
-            user: data.user,
+            user: {
+                id: data.user?.id,
+                email: data.user?.email,
+                first_name: first_name.trim(),
+                last_name: last_name.trim(),
+                phone: phone || null,
+                country: country.trim()
+            },
             session: data.session,
             profile: profile
         });
@@ -206,16 +158,12 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: error.message });
         }
 
-        // Fetch profile from profiles table
-        const { data: profile, error: profileError } = await supabase
+        // Fetch complete profile data
+        const { data: profile } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', data.user.id)
             .single();
-
-        if (profileError && profileError.code !== 'PGRST116') {
-            console.error('Profile fetch error:', profileError);
-        }
 
         res.json({
             message: 'Login successful!',
@@ -245,7 +193,7 @@ app.post('/api/auth/logout', async (req, res) => {
     }
 });
 
-// GET CURRENT USER SESSION WITH PROFILE
+// GET CURRENT USER (Updated with new profile structure)
 app.get('/api/auth/user', async (req, res) => {
     try {
         const { data: { user }, error } = await supabase.auth.getUser();
@@ -254,20 +202,24 @@ app.get('/api/auth/user', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        // Get profile from profiles table
+        // Get profile
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', user.id)
             .single();
 
-        if (profileError && profileError.code !== 'PGRST116') {
+        if (profileError) {
             return res.status(500).json({ error: profileError.message });
         }
 
         res.json({
-            user,
-            profile: profile || null
+            user: {
+                id: user.id,
+                email: user.email,
+                created_at: user.created_at
+            },
+            profile: profile
         });
 
     } catch (err) {
@@ -275,7 +227,7 @@ app.get('/api/auth/user', async (req, res) => {
     }
 });
 
-// UPDATE PROFILE - Update first_name, last_name, phone, country
+// UPDATE PROFILE - Clean version with new fields
 app.put('/api/auth/profile', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -291,45 +243,39 @@ app.put('/api/auth/profile', async (req, res) => {
             country 
         } = req.body;
 
-        // Validation
-        if (first_name && first_name.trim().length < 2) {
-            return res.status(400).json({ 
-                error: 'First name must be at least 2 characters' 
-            });
-        }
-
-        if (last_name && last_name.trim().length < 2) {
-            return res.status(400).json({ 
-                error: 'Last name must be at least 2 characters' 
-            });
-        }
-
-        if (country && country.trim().length < 2) {
-            return res.status(400).json({ 
-                error: 'Country must be at least 2 characters' 
-            });
-        }
-
-        // Format phone if provided
-        let formattedPhone = phone;
-        if (phone) {
-            formattedPhone = formatPhoneNumber(phone);
-            if (!isValidPhone(formattedPhone)) {
-                return res.status(400).json({
-                    error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)'
-                });
-            }
-        }
-
         // Build update object
         const updates = {};
-        if (first_name) updates.first_name = first_name.trim();
-        if (last_name) updates.last_name = last_name.trim();
-        if (formattedPhone) updates.phone = formattedPhone;
-        if (country) updates.country = country.trim();
+        if (first_name !== undefined) {
+            if (first_name.trim().length < 2) {
+                return res.status(400).json({ error: 'First name must be at least 2 characters' });
+            }
+            updates.first_name = first_name.trim();
+        }
+        if (last_name !== undefined) {
+            if (last_name.trim().length < 2) {
+                return res.status(400).json({ error: 'Last name must be at least 2 characters' });
+            }
+            updates.last_name = last_name.trim();
+        }
+        if (phone !== undefined) {
+            if (phone && !/^\+?[0-9]{10,15}$/.test(phone.replace(/\s/g, ''))) {
+                return res.status(400).json({ error: 'Invalid phone format' });
+            }
+            updates.phone = phone || null;
+        }
+        if (country !== undefined) {
+            if (!country.trim()) {
+                return res.status(400).json({ error: 'Country is required' });
+            }
+            updates.country = country.trim();
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: 'No fields to update' });
+        }
+
         updates.updated_at = new Date().toISOString();
 
-        // Update profile
         const { data, error } = await supabase
             .from('profiles')
             .update(updates)
@@ -349,43 +295,6 @@ app.put('/api/auth/profile', async (req, res) => {
     } catch (err) {
         console.error('Profile update error:', err);
         res.status(500).json({ error: 'Failed to update profile' });
-    }
-});
-
-// GET JBYN PASSKEY (OneID) - If you add oneid column later
-app.get('/api/auth/passkey', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
-        if (userError || !user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
-
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('id, email, first_name, last_name')
-            .eq('id', user.id)
-            .single();
-
-        if (error) {
-            return res.status(404).json({ error: 'Profile not found' });
-        }
-
-        // Generate temporary OneID (email-based) - Replace with actual oneid column if exists
-        const tempOneID = `JBYN-OneID-${user.id.substring(0, 12).toUpperCase()}`;
-
-        res.json({
-            jbyn_oneid: tempOneID,
-            profile: {
-                id: profile.id,
-                email: profile.email,
-                first_name: profile.first_name,
-                last_name: profile.last_name
-            }
-        });
-
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to retrieve OneID' });
     }
 });
 
@@ -442,7 +351,7 @@ app.put('/api/auth/reset-password', async (req, res) => {
 });
 
 // DELETE ACCOUNT
-app.post('/api/auth/delete-account', async (req, res) => {
+app.delete('/api/auth/delete-account', async (req, res) => {
     try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         
@@ -450,7 +359,7 @@ app.post('/api/auth/delete-account', async (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        // Delete profile first (cascade will handle if set)
+        // Delete profile
         const { error: profileError } = await supabase
             .from('profiles')
             .delete()
@@ -473,575 +382,54 @@ app.post('/api/auth/delete-account', async (req, res) => {
 });
 
 // ============================================
-// PRODUCTS API (Categories, Subcategories with Slug)
+// USER MANAGEMENT - ADMIN ENDPOINTS
 // ============================================
 
-// Get all products
-app.get('/api/products', async (req, res) => {
+// Get all users (Admin only - requires admin check)
+app.get('/api/admin/users', async (req, res) => {
     try {
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .order('created_at', { ascending: false });
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
         
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const formattedProducts = data.map(product => ({
-            ...product,
-            category: product.categories?.name || null,
-            subcategory: product.subcategories?.name || null
-        }));
-        
-        res.json(formattedProducts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get product by slug
-app.get('/api/product/:slug', async (req, res) => {
-    try {
-        const slug = req.params.slug;
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .order('created_at', { ascending: false });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.status(404).json({ error: 'Product not found' });
-        
-        res.json({
-            ...product,
-            category: product.categories?.name || null,
-            subcategory: product.subcategories?.name || null
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get all categories (with slugs)
-app.get('/api/categories', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const categoriesWithSlugs = data.map(cat => ({
-            ...cat,
-            slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
-        }));
-        
-        res.json(categoriesWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get category by slug
-app.get('/api/categories/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true);
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const category = data.find(cat => {
-            const dbSlug = cat.slug || createSlug(cat.name);
-            return dbSlug.replace(/^category\//, '') === slug;
-        });
-        
-        if (!category) return res.status(404).json({ error: 'Category not found' });
-        
-        res.json({
-            ...category,
-            slug: category.slug ? category.slug.replace(/^category\//, '') : createSlug(category.name)
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get products by category slug
-app.get('/api/categories/:slug/products', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data: categories } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('is_active', true);
-        
-        const category = categories.find(cat => {
-            const dbSlug = cat.slug || createSlug(cat.name);
-            return dbSlug.replace(/^category\//, '') === slug;
-        });
-        
-        if (!category) return res.status(404).json({ error: 'Category not found' });
-        
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .eq('category_id', category.id)
-            .order('created_at', { ascending: false });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const formattedProducts = data.map(product => ({
-            ...product,
-            category: product.categories?.name || null,
-            subcategory: product.subcategories?.name || null
-        }));
-        
-        res.json(formattedProducts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get all subcategories
-app.get('/api/subcategories', async (req, res) => {
-    try {
-        const { category_slug } = req.query;
-        
-        let query = supabase
-            .from('subcategories')
-            .select('*, categories(name, id, slug)')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (category_slug) {
-            const { data: categories } = await supabase
-                .from('categories')
-                .select('id, slug')
-                .eq('is_active', true);
-            
-            const category = categories.find(cat => {
-                const dbSlug = cat.slug || createSlug(cat.name);
-                return dbSlug.replace(/^category\//, '') === category_slug;
-            });
-            
-            if (category) {
-                query = query.eq('category_id', category.id);
-            } else {
-                return res.status(404).json({ error: 'Category not found' });
-            }
+        if (userError || !user) {
+            return res.status(401).json({ error: 'Not authenticated' });
         }
-        
-        const { data, error } = await query;
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const subcategoriesWithSlugs = data.map(sub => ({
-            ...sub,
-            slug: sub.slug ? sub.slug.replace(/^category\/[^/]+\//, '') : createSlug(sub.name),
-            category_slug: sub.categories ? createSlug(sub.categories.name) : ''
-        }));
-        
-        res.json(subcategoriesWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
-// Get subcategory by slug
-app.get('/api/subcategories/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const { category_slug } = req.query;
-        
+        // Check if user is admin (you can add role check here)
+        // For now, we'll just return all profiles (secure this in production)
+
         const { data, error } = await supabase
-            .from('subcategories')
-            .select('*, categories(name, id, slug)')
-            .eq('is_active', true);
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        let subcategory = data.find(sub => {
-            const dbSlug = sub.slug || createSlug(sub.name);
-            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
-        });
-        
-        if (category_slug && subcategory) {
-            const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
-            const cleanCatSlug = catSlug.replace(/^category\//, '');
-            if (cleanCatSlug !== category_slug) {
-                subcategory = null;
-            }
-        }
-        
-        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
-        
-        res.json({
-            ...subcategory,
-            slug: subcategory.slug ? subcategory.slug.replace(/^category\/[^/]+\//, '') : createSlug(subcategory.name),
-            category_slug: subcategory.categories ? createSlug(subcategory.categories.name) : ''
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get products by subcategory slug
-app.get('/api/subcategories/:slug/products', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        
-        const { data: subcategories } = await supabase
-            .from('subcategories')
+            .from('profiles')
             .select('*')
-            .eq('is_active', true);
-        
-        const subcategory = subcategories.find(sub => {
-            const dbSlug = sub.slug || createSlug(sub.name);
-            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
-        });
-        
-        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
-        
-        const { data, error } = await supabase
-            .from('products')
-            .select(`
-                *,
-                categories:category_id (name),
-                subcategories:subcategory_id (name)
-            `)
-            .eq('subcategory_id', subcategory.id)
             .order('created_at', { ascending: false });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const formattedProducts = data.map(product => ({
-            ...product,
-            category: product.categories?.name || null,
-            subcategory: product.subcategories?.name || null
-        }));
-        
-        res.json(formattedProducts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
-// ============================================
-// MENU API
-// ============================================
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
 
-// Get menu hierarchy
-app.get('/api/menu', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select(`
-                *,
-                categories:category_id (id, name),
-                subcategories:subcategory_id (id, name)
-            `)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const buildMenuTree = (items, parentId = null) => {
-            return items
-                .filter(item => item.parent_id === parentId)
-                .map(item => ({
-                    ...item,
-                    slug: createSlug(item.title),
-                    category_slug: item.categories ? createSlug(item.categories.name) : null,
-                    subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
-                    children: buildMenuTree(items, item.id)
-                }));
-        };
-        
-        res.json(buildMenuTree(data));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get flat menu items
-app.get('/api/menu-items', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select(`
-                *,
-                categories:category_id (id, name),
-                subcategories:subcategory_id (id, name)
-            `)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        const menuItemsWithSlugs = data.map(item => ({
-            ...item,
-            slug: createSlug(item.title),
-            category_slug: item.categories ? createSlug(item.categories.name) : null,
-            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
-        }));
-        
-        res.json(menuItemsWithSlugs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// HERO SLIDES & VIDEOS API
-// ============================================
-
-// Get hero slides
-app.get('/api/hero', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('hero')
-            .select('*')
-            .order('created_at', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
         res.json(data);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Failed to fetch users' });
     }
 });
 
-// Get hero videos
-app.get('/api/hero-videos', async (req, res) => {
+// Get user by ID (Admin only)
+app.get('/api/admin/users/:id', async (req, res) => {
     try {
-        const { data, error } = await supabase
-            .from('hero_videos')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
+        const { id } = req.params;
         
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', id)
+            .single();
 
-// Get hero secondary items
-app.get('/api/hero-secondary', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('hero_secondary')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+        if (error) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-// ============================================
-// NEWS API
-// ============================================
-app.get('/api/news', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) return res.status(500).json({ error: error.message });
         res.json(data);
     } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
-// PRODUCT DETAILS API (Colors, Variants, Reviews, Videos, Banners)
-// ============================================
-
-// Get product colors
-app.get('/api/product-colors', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase.from('products').select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_colors')
-            .select('*')
-            .eq('product_id', product.id)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get product variants
-app.get('/api/product-variants', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase.from('products').select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_variants')
-            .select('*')
-            .eq('product_id', product.id)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get product reviews
-app.get('/api/product-reviews', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase.from('products').select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_reviews')
-            .select('*')
-            .eq('product_id', product.id)
-            .order('created_at', { ascending: false });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Submit product review
-app.post('/api/submit-review', async (req, res) => {
-    try {
-        const { product_id, user_name, rating, review_text } = req.body;
-        
-        if (!product_id || !rating || !review_text) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-        
-        const { data, error } = await supabase
-            .from('product_reviews')
-            .insert([{
-                product_id,
-                user_name: user_name || 'Guest User',
-                rating: parseInt(rating),
-                review_text
-            }]);
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json({ success: true, data });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get product videos
-app.get('/api/product-videos', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase.from('products').select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_videos')
-            .select('*')
-            .eq('product_id', product.id)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get product banners
-app.get('/api/product-banners', async (req, res) => {
-    try {
-        const slug = req.query.slug;
-        if (!slug) return res.status(400).json({ error: 'Slug required' });
-        
-        const { data: products } = await supabase.from('products').select('*');
-        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
-        if (!product) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('product_banners')
-            .select('*')
-            .eq('product_id', product.id)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get color sizes
-app.get('/api/color-sizes', async (req, res) => {
-    try {
-        const ids = req.query.ids;
-        if (!ids) return res.json([]);
-        
-        const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-        if (!idArray.length) return res.json([]);
-        
-        const { data, error } = await supabase
-            .from('color_sizes')
-            .select('*')
-            .in('color_id', idArray)
-            .order('sort_order', { ascending: true });
-        
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(data || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Failed to fetch user' });
     }
 });
 
@@ -1070,7 +458,7 @@ app.get('/account', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'account.html'));
 });
 
-// Category page (with subcategory support)
+// Category page
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
