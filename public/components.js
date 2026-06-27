@@ -1,11 +1,11 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
 // Version: 5.4 (Burberry Luxury Edition - Pure Custom SVG Icons)
-// Brand: JAYENWARE (Premium Apparel)
+// Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
-let cart = JSON.parse(localStorage.getItem('jayen_cart') || '[]');
-let wishlist = JSON.parse(localStorage.getItem('jayen_wish') || '[]');
+let cart = JSON.parse(localStorage.getItem('jabiyen_cart') || '[]');
+let wishlist = JSON.parse(localStorage.getItem('jabiyen_wish') || '[]');
 let userSession = null;
 let allMenuItems = [];
 let allCategories = [];
@@ -15,7 +15,7 @@ let allSubcategories = [];
 // FONT CONFIGURATION LOADER
 // ============================================================================
 function loadFontsConfiguration() {
-    if (!window.JAYENWARE_FONTS) {
+    if (!window.JABIYEN_FONTS) {
         const script = document.createElement('script');
         script.src = '/fonts.js';
         script.async = false;
@@ -27,7 +27,7 @@ function loadFontsConfiguration() {
 }
 
 function applyFontVariables() {
-    const fonts = window.JAYENWARE_FONTS;
+    const fonts = window.JABIYEN_FONTS;
     if (!fonts) return;
     const root = document.documentElement;
     const vars = fonts.cssVariables;
@@ -506,7 +506,7 @@ async function renderHeader() {
         <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
                 <img src="/logo.png" class="w-9 h-9 rounded-xl border border-white/20 shadow-sm" alt="Logo">
-                <span class="font-black text-base tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <span class="font-black text-lg sm:text-xl tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
             <button onclick="closeSideMenu()" class="drawer-close-btn" aria-label="Close menu">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -523,8 +523,8 @@ async function renderHeader() {
     <nav class="glass-nav" id="main-nav">
         <div class="h-16 lg:h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
-                <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
-                <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JABIYEN Logo">
+                <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
             
             <!-- আইকন কন্টেইনার: পাকার কমানো হয়েছে এবং এদের ডান পাশে সেট করা হয়েছে -->
@@ -588,7 +588,7 @@ function renderFooter() {
         <div class="w-full px-6 lg:px-12">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
-                    <h4 class="text-sm font-bold tracking-widest mb-4">JAYENWARE</h4>
+                    <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
                     <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
                     <div class="flex gap-4 text-base">
                         <!-- কাস্টম ফেসবুক এবং ইনস্টাগ্রাম আইকন ট্র্যাক বিকল্প হিসেবে এসভিজি যোগ করা যাবে -->
@@ -614,7 +614,7 @@ function renderFooter() {
             </div>
             <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
                 <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
-                <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JAYENWARE Engine.</p>
+                <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine.</p>
             </div>
         </div>
     </footer>
@@ -661,7 +661,6 @@ function openSideMenu() {
     document.body.style.overflow = 'hidden';
 }
 
-// ড্রয়ারের ভেতরের বাকি ফাংশনালিটিগুলো অপরিবর্তিত রাখা হয়েছে...
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     drawer.classList.remove('open');
@@ -699,8 +698,9 @@ function removeFromCart(idx) {
     renderCartItems();
 }
 
+// LocalStorage key also calibrated to jabiyen
 function saveCart() {
-    localStorage.setItem('jayen_cart', JSON.stringify(cart));
+    localStorage.setItem('jabiyen_cart', JSON.stringify(cart));
     updateCounts();
 }
 
@@ -751,7 +751,7 @@ function toggleWishlist(id) {
         wishlist.push(id);
         showToast('Saved to Vault Collection ❤️', 'success');
     }
-    localStorage.setItem('jayen_wish', JSON.stringify(wishlist));
+    localStorage.setItem('jabiyen_wish', JSON.stringify(wishlist));
     updateCounts();
 }
 
