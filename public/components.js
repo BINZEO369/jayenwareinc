@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.4 (Burberry Luxury Layout & Custom SVG Icons Fix)
+// Version: 5.4 (Burberry Luxury Edition - Pure Custom SVG Icons)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -10,16 +10,6 @@ let userSession = null;
 let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
-
-// ============================================================================
-// CUSTOM SVG ICONS GENERATOR (No External Icons Needed)
-// ============================================================================
-const CUSTOM_ICONS = {
-    menu: `<svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1H22" stroke="currentColor" stroke-width="1.2"/><path d="M0 7H22" stroke="currentColor" stroke-width="1.2"/><path d="M0 13H22" stroke="currentColor" stroke-width="1.2"/></svg>`,
-    wishlist: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    cart: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    close: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-};
 
 // ============================================================================
 // FONT CONFIGURATION LOADER
@@ -50,7 +40,7 @@ function applyFontVariables() {
 }
 
 // ============================================================================
-// SHARED CSS STYLES (Ultra Liquid Glass & Monochrome Design)
+// SHARED CSS STYLES (Burberry Inspired High-End Minimalist Design)
 // ============================================================================
 function injectSharedStyles() {
     const styles = `
@@ -58,16 +48,23 @@ function injectSharedStyles() {
         :root {
             --primary: #000000;
             --accent: #ffffff;
+            
+            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
             --glass-white: rgba(255, 255, 255, 0.45);
             --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
+            
+            /* লিকুইড গ্লাস বর্ডার সিস্টেম */
             --glass-border-light: rgba(255, 255, 255, 0.55);
             --glass-border-dark: rgba(0, 0, 0, 0.06);
             --glass-border-inline: rgba(255, 255, 255, 0.15);
+            
+            /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
             --glass-blur: blur(40px) saturate(250%);
         }
         
+        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো এবং হোয়াইট স্পেস টোটাল ভ্যানিশ */
         html, body {
             overflow-x: hidden !important;
             width: 100% !important;
@@ -98,7 +95,7 @@ function injectSharedStyles() {
         .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
-        /* ==================== BURBERRY LUXURY NAVIGATION HEADER ==================== */
+        /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
         .glass-nav {
             position: fixed;
             top: 0; 
@@ -116,24 +113,18 @@ function injectSharedStyles() {
             padding: 0 !important;
         }
         
-        /* Grid-based Golden Ratio Layout for Burberry Aesthetic */
-        .burberry-layout {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            height: 64px;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            width: 100% !important;
+        .glass-nav > div {
+            padding-left: 24px !important;
+            padding-right: 16px !important; /* ডানপাশে আইকনগুলোকে একদম এজ-এ পুশ করার জন্য */
             max-width: 100% !important;
+            width: 100% !important;
             margin: 0 !important;
         }
         
         @media (min-width: 1024px) {
-            .burberry-layout {
-                height: 80px;
-                padding-left: 32px !important;
-                padding-right: 32px !important;
+            .glass-nav > div {
+                padding-left: 40px !important;
+                padding-right: 28px !important;
             }
         }
         
@@ -144,7 +135,39 @@ function injectSharedStyles() {
             color: var(--primary);
         }
         
-        /* ==================== UNIFIED GLASS SIDE DRAWER ==================== */
+        /* ==================== BURBERRY STYLE MINIMALIST NAVIGATION ICONS ==================== */
+        .header-icon-btn {
+            background: none;
+            border: none;
+            padding: 6px;
+            margin: 0 2px; /* আইকনগুলোর ভেতরের স্পেসিং বা পাকার কমানো হয়েছে */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary);
+            transition: opacity 0.25s ease;
+            position: relative;
+        }
+        .header-icon-btn:hover {
+            opacity: 0.6;
+        }
+        
+        /* কাস্টম ক্লোজ বাটন স্পেসিফিকেশন */
+        .drawer-close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: currentColor;
+            transition: opacity 0.25s ease;
+        }
+        .drawer-close-btn:hover { opacity: 0.5; }
+
+        /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
         .side-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.25);
@@ -187,6 +210,7 @@ function injectSharedStyles() {
             padding: 24px 32px;
         }
         
+        /* Drawer Navigation Elements */
         .menu-node-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 18px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
@@ -221,7 +245,7 @@ function injectSharedStyles() {
             background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
         }
         
-        /* ==================== CART DRAWER ==================== */
+        /* ==================== CART DRAWER (Dynamic Liquid Black Glass) ==================== */
         #cart-drawer {
             position: fixed; top: 0; right: 0;
             width: 100%; max-width: 440px;
@@ -290,23 +314,7 @@ function injectSharedStyles() {
         #wish-count, #cart-count {
             background: var(--primary) !important; color: var(--accent) !important;
             font-size: 8px !important; font-weight: 700; border: 1px solid var(--glass-border-light);
-        }
-        
-        /* Minimal Raw Menu Button without extra frame */
-        .raw-menu-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-start;
-            background: transparent;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 8px 0;
-            transition: opacity 0.25s ease;
-            width: fit-content;
-        }
-        .raw-menu-btn:hover {
-            opacity: 0.5;
+            top: -2px !important; right: -2px !important;
         }
     </style>
     `;
@@ -394,7 +402,7 @@ function renderUnifiedDrawerMenu(rootItems) {
             <div>
                 <div class="menu-node-item" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${item.title || item.name || ''}</span>
-                    <span class="opacity-40" style="font-size:9px;">▼</span>
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <div class="menu-node-submenu" id="${uniqueId}">
                     ${renderDrawerSubItems(item, uniqueId)}
@@ -404,7 +412,7 @@ function renderUnifiedDrawerMenu(rootItems) {
             html += `
             <a href="${linkUrl}" class="menu-node-item no-underline">
                 <span>${item.title || item.name || ''}</span>
-                <span class="opacity-20" style="font-size:11px;">→</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>`;
         }
     });
@@ -430,7 +438,7 @@ function renderDrawerSubItems(item, parentId) {
                 <div>
                     <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                         <span>${child.title || child.name || ''}</span>
-                        <span class="opacity-40" style="font-size:8px;">▼</span>
+                        <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="menu-node-submenu" id="${uniqueId}">
                         ${child.children.map(gc => `<a href="${getMenuLinkUrl(gc)}" class="menu-node-sub-item">${gc.title || gc.name || ''}</a>`).join('')}
@@ -461,7 +469,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
             <div>
                 <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold text-black" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${cat.name}</span>
-                    <span class="opacity-40" style="font-size:8px;">▼</span>
+                    <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <div class="menu-node-submenu" id="${uniqueId}">
                     <a href="${catUrl}" class="menu-node-sub-item font-black underline decoration-black/10">All ${cat.name}</a>
@@ -479,7 +487,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 }
 
 // ============================================================================
-// HEADER SYSTEM (Burberry Luxury Centered & Edge-to-Edge Fluid Engine)
+// HEADER SYSTEM (Liquid Translucent Engine - Burberry Icons Optimized)
 // ============================================================================
 async function renderHeader() {
     const [menuItems, categories, subcategories] = await Promise.all([
@@ -497,11 +505,11 @@ async function renderHeader() {
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-8 h-8 rounded-xl border border-white/20 shadow-sm" alt="Logo">
-                <span class="font-black text-sm tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <img src="/logo.png" class="w-9 h-9 rounded-xl border border-white/20 shadow-sm" alt="Logo">
+                <span class="font-black text-base tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <button onclick="closeSideMenu()" class="text-neutral-400 hover:text-black transition p-2 flex items-center justify-center" aria-label="Close menu">
-                ${CUSTOM_ICONS.close}
+            <button onclick="closeSideMenu()" class="drawer-close-btn" aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
         <div class="side-menu-scroll" id="sideMenuContent">
@@ -513,43 +521,46 @@ async function renderHeader() {
     </div>
     
     <nav class="glass-nav" id="main-nav">
-        <div class="burberry-layout">
+        <div class="h-16 lg:h-20 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
+                <img src="/logo.png" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl" alt="JAYENWARE Logo">
+                <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+            </a>
             
-            <!-- FAR LEFT: Menu Trigger Only (No Frame/No Text) -->
-            <div class="flex justify-start items-center">
-                <button onclick="openSideMenu()" class="raw-menu-btn" aria-label="Open Navigation">
-                    ${CUSTOM_ICONS.menu}
+            <!-- আইকন কন্টেইনার: পাকার কমানো হয়েছে এবং এদের ডান পাশে সেট করা হয়েছে -->
+            <div class="flex items-center shrink-0">
+                <!-- উইশলিস্ট কাস্টম হার্ট আইকন -->
+                <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span id="wish-count" class="absolute text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </a>
+                
+                <!-- শপিং কাস্টম ব্যাগ আইকন -->
+                <a href="/cart" onclick="toggleCart();return false;" class="header-icon-btn" aria-label="Cart">
+                    <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                        <path d="M5 6C5 3.5 6.5 1 9.5 1C12.5 1 14 3.5 14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span id="cart-count" class="absolute text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </a>
+                
+                <!-- কাস্টম মিনিমালিস্ট বার্গার মেনু আইকন (একেবারে ডানপাশে বিদ্যমান) -->
+                <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu">
+                    <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
                 </button>
             </div>
-            
-            <!-- PERFECT CENTER: Premium Brand Title -->
-            <div class="flex justify-center items-center">
-                <a href="/" class="flex items-center gap-2.5 no-underline shrink-0">
-                    <img src="/logo.png" class="w-7 h-7 lg:w-8 lg:h-8 rounded-lg" alt="JAYENWARE Logo">
-                    <span class="text-sm sm:text-base lg:text-lg font-black tracking-[0.22em] relative top-[0.5px]" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
-                </a>
-            </div>
-            
-            <!-- FAR RIGHT: Wishlist & Cart Utilities (Denser Padding / Gap) -->
-            <div class="flex justify-end items-center gap-1.5 sm:gap-2">
-                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-40 flex items-center justify-center">
-                    ${CUSTOM_ICONS.wishlist}
-                    <span id="wish-count" class="absolute top-1 right-1 text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">0</span>
-                </a>
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-40 flex items-center justify-center">
-                    ${CUSTOM_ICONS.cart}
-                    <span id="cart-count" class="absolute top-1 right-1 text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">0</span>
-                </a>
-            </div>
-            
         </div>
     </nav>
     
     <div id="cart-drawer" class="shadow-2xl">
         <div class="p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-white transition p-1 flex items-center justify-center">
-                ${CUSTOM_ICONS.close}
+            <button onclick="toggleCart()" class="drawer-close-btn text-gray-400 hover:text-white">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
         <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4 custom-scroll"></div>
@@ -579,6 +590,9 @@ function renderFooter() {
                 <div class="col-span-2 md:col-span-1">
                     <h4 class="text-sm font-bold tracking-widest mb-4">JAYENWARE</h4>
                     <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
+                    <div class="flex gap-4 text-base">
+                        <!-- কাস্টম ফেসবুক এবং ইনস্টাগ্রাম আইকন ট্র্যাক বিকল্প হিসেবে এসভিজি যোগ করা যাবে -->
+                    </div>
                 </div>
                 <div>
                     <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
@@ -618,7 +632,7 @@ function showToast(text, type = 'success') {
             <div class="shadow-xl p-4 flex items-center gap-3.5 min-w-[280px]">
                 <span id="toast-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0"></span>
                 <p id="toast-text" class="text-xs font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
-                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0 transition flex items-center justify-center">${CUSTOM_ICONS.close}</button>
+                <button onclick="hideToast()" class="drawer-close-btn text-gray-400 hover:text-black shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             </div>
         `;
         document.body.appendChild(toast);
@@ -647,6 +661,7 @@ function openSideMenu() {
     document.body.style.overflow = 'hidden';
 }
 
+// ড্রয়ারের ভেতরের বাকি ফাংশনালিটিগুলো অপরিবর্তিত রাখা হয়েছে...
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     drawer.classList.remove('open');
@@ -714,7 +729,7 @@ function renderCartItems() {
                     <span class="text-[10px] opacity-40">Qty: ${item.quantity || 1}</span>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0">✕</button>
+            <button onclick="removeFromCart(${idx})" class="drawer-close-btn text-neutral-400 hover:text-white shrink-0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>`;
     }).join('');
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
