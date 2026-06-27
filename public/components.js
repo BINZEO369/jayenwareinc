@@ -115,7 +115,7 @@ function injectSharedStyles() {
         
         .glass-nav > div {
             padding-left: 24px !important;
-            padding-right: 16px !important; /* ডানপাশে আইকনগুলোকে একদম এজ-এ পুশ করার জন্য */
+            padding-right: 16px !important;
             max-width: 100% !important;
             width: 100% !important;
             margin: 0 !important;
@@ -140,7 +140,7 @@ function injectSharedStyles() {
             background: none;
             border: none;
             padding: 6px;
-            margin: 0 2px; /* আইকনগুলোর ভেতরের স্পেসিং বা পাকার কমানো হয়েছে */
+            margin: 0 2px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -153,7 +153,6 @@ function injectSharedStyles() {
             opacity: 0.6;
         }
         
-        /* কাস্টম ক্লোজ বাটন স্পেসিফিকেশন */
         .drawer-close-btn {
             background: none;
             border: none;
@@ -167,7 +166,7 @@ function injectSharedStyles() {
         }
         .drawer-close-btn:hover { opacity: 0.5; }
 
-        /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
+        /* ==================== UNIFIED GLASS SIDE DRAWER ==================== */
         .side-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.25);
@@ -210,7 +209,6 @@ function injectSharedStyles() {
             padding: 24px 32px;
         }
         
-        /* Drawer Navigation Elements */
         .menu-node-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 18px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.04);
@@ -245,7 +243,7 @@ function injectSharedStyles() {
             background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
         }
         
-        /* ==================== CART DRAWER (Dynamic Liquid Black Glass) ==================== */
+        /* ==================== CART DRAWER ==================== */
         #cart-drawer {
             position: fixed; top: 0; right: 0;
             width: 100%; max-width: 440px;
@@ -527,7 +525,6 @@ async function renderHeader() {
                 <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
             
-            <!-- আইকন কন্টেইনার: পাকার কমানো হয়েছে এবং এদের ডান পাশে সেট করা হয়েছে -->
             <div class="flex items-center shrink-0">
                 <!-- উইশলিস্ট কাস্টম হার্ট আইকন -->
                 <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist">
@@ -546,7 +543,7 @@ async function renderHeader() {
                     <span id="cart-count" class="absolute text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
-                <!-- কাস্টম মিনিমালিস্ট বার্গার মেনু আইকন (একেবারে ডানপাশে বিদ্যমান) -->
+                <!-- কাস্টম মিনিমালিস্ট বার্গার মেনু আইকন -->
                 <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu">
                     <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -591,7 +588,7 @@ function renderFooter() {
                     <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
                     <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
                     <div class="flex gap-4 text-base">
-                        <!-- কাস্টম ফেসবুক এবং ইনস্টাগ্রাম আইকন ট্র্যাক বিকল্প হিসেবে এসভিজি যোগ করা যাবে -->
+                        <!-- কাস্টম সোশ্যাল আইকন ট্র্যাকার লিংক এখানে বসানো যাবে -->
                     </div>
                 </div>
                 <div>
@@ -661,6 +658,7 @@ function openSideMenu() {
     document.body.style.overflow = 'hidden';
 }
 
+// ড্রয়ার ক্লজিং অ্যাকশন
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     drawer.classList.remove('open');
@@ -698,7 +696,6 @@ function removeFromCart(idx) {
     renderCartItems();
 }
 
-// LocalStorage key also calibrated to jabiyen
 function saveCart() {
     localStorage.setItem('jabiyen_cart', JSON.stringify(cart));
     updateCounts();
