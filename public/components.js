@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.4 (Burberry Luxury Edition - Pure Custom SVG Icons)
+// Version: 5.5 (Burberry Luxury Edition - Scroll-Responsive Glassmorphism Engine)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -50,18 +50,18 @@ function injectSharedStyles() {
             --accent: #ffffff;
             
             /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
-            --glass-white: rgba(255, 255, 255, 0.45);
+            --glass-white: rgba(255, 255, 255, 0.15);
             --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
             
             /* লিকুইড গ্লাস বর্ডার সিস্টেম */
-            --glass-border-light: rgba(255, 255, 255, 0.55);
+            --glass-border-light: rgba(255, 255, 255, 0.2);
             --glass-border-dark: rgba(0, 0, 0, 0.06);
             --glass-border-inline: rgba(255, 255, 255, 0.15);
             
             /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
-            --glass-blur: blur(40px) saturate(250%);
+            --glass-blur: blur(25px) saturate(200%);
         }
         
         /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো এবং হোয়াইট স্পেস টোটাল ভ্যানিশ */
@@ -106,11 +106,25 @@ function injectSharedStyles() {
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--glass-border-light);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: none;
+            
+            /* আল্ট্রা-স্মুথ ট্রান্সফরমেশন অ্যানিমেশন */
+            transition: background 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                        backdrop-filter 0.5s ease, 
+                        border-color 0.5s ease, 
+                        box-shadow 0.5s ease;
             z-index: 50;
             margin: 0 !important;
             padding: 0 !important;
+        }
+
+        /* স্ক্রল হওয়ার পর প্রিমিয়াম সলিড হোয়াইট + ফ্রস্টেড লুক */
+        .glass-nav.nav-scrolled {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(30px) saturate(190%);
+            -webkit-backdrop-filter: blur(30px) saturate(190%);
+            border-bottom: 1px solid var(--glass-border-dark);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
         
         .glass-nav > div {
@@ -181,10 +195,10 @@ function injectSharedStyles() {
             position: fixed; top: 0; right: 0;
             width: 100%; max-width: 440px;
             height: 100vh; height: 100dvh;
-            background: var(--glass-white);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-left: 1px solid var(--glass-border-light);
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(40px) saturate(250%);
+            -webkit-backdrop-filter: blur(40px) saturate(250%);
+            border-left: 1px solid rgba(255, 255, 255, 0.55);
             z-index: 200;
             transform: translateX(105%); 
             visibility: hidden; 
@@ -249,8 +263,8 @@ function injectSharedStyles() {
             width: 100%; max-width: 440px;
             height: 100vh; height: 100dvh;
             background: var(--glass-black-thick) !important;
-            backdrop-filter: var(--glass-blur) !important;
-            -webkit-backdrop-filter: var(--glass-blur) !important;
+            backdrop-filter: blur(40px) saturate(250%) !important;
+            -webkit-backdrop-filter: blur(40px) saturate(250%) !important;
             border-left: 1px solid var(--glass-border-inline);
             z-index: 210;
             transform: translateX(105%) !important;
@@ -281,9 +295,9 @@ function injectSharedStyles() {
         /* ==================== TOAST NOTIFICATION ==================== */
         #toast > div {
             background: rgba(255, 255, 255, 0.85) !important;
-            backdrop-filter: var(--glass-blur) !important;
-            -webkit-backdrop-filter: var(--glass-blur) !important;
-            border: 1px solid var(--glass-border-light) !important;
+            backdrop-filter: blur(40px) saturate(250%) !important;
+            -webkit-backdrop-filter: blur(40px) saturate(250%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.55) !important;
             box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important;
             border-radius: 24px !important;
             color: var(--primary) !important;
@@ -311,7 +325,7 @@ function injectSharedStyles() {
         
         #wish-count, #cart-count {
             background: var(--primary) !important; color: var(--accent) !important;
-            font-size: 8px !important; font-weight: 700; border: 1px solid var(--glass-border-light);
+            font-size: 8px !important; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.55);
             top: -2px !important; right: -2px !important;
         }
     </style>
@@ -658,7 +672,6 @@ function openSideMenu() {
     document.body.style.overflow = 'hidden';
 }
 
-// ড্রয়ার ক্লজিং অ্যাকশন
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     drawer.classList.remove('open');
@@ -764,6 +777,21 @@ function toggleDrawerSubmenu(submenuId, element) {
 }
 
 // ============================================================================
+// SCROLL DETECTOR FOR DYNAMIC GLASSMORPHISM NAV
+// ============================================================================
+function handleNavScroll() {
+    const nav = document.getElementById('main-nav');
+    if (!nav) return;
+    
+    // ২৫ পিক্সেলের বেশি স্ক্রল করলেই স্মুথলি ফ্রস্টেড হোয়াইট ক্লাসে কনভার্ট হবে
+    if (window.scrollY > 25) {
+        nav.classList.add('nav-scrolled');
+    } else {
+        nav.classList.remove('nav-scrolled');
+    }
+}
+
+// ============================================================================
 // APIS & INITIALIZATION
 // ============================================================================
 window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlist = toggleWishlist;
@@ -777,6 +805,11 @@ async function initSharedComponents() {
     await renderHeader();
     renderFooter();
     updateCounts();
+    
+    // স্ক্রল রিয়েল-টাইম হ্যান্ডলিং সেটআপ
+    window.addEventListener('scroll', handleNavScroll);
+    handleNavScroll(); // প্রারম্ভিক পজিশন চেক
+
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 }
