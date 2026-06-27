@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 5.4 (Burberry Luxury Minimalist Custom SVG Edit)
+// Version: 5.4 (Burberry Luxury Layout & Custom SVG Icons Fix)
 // Brand: JAYENWARE (Premium Apparel)
 // ============================================================================
 
@@ -10,6 +10,16 @@ let userSession = null;
 let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
+
+// ============================================================================
+// CUSTOM SVG ICONS GENERATOR (No External Icons Needed)
+// ============================================================================
+const CUSTOM_ICONS = {
+    menu: `<svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1H22" stroke="currentColor" stroke-width="1.2"/><path d="M0 7H22" stroke="currentColor" stroke-width="1.2"/><path d="M0 13H22" stroke="currentColor" stroke-width="1.2"/></svg>`,
+    wishlist: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    cart: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    close: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
 
 // ============================================================================
 // FONT CONFIGURATION LOADER
@@ -40,7 +50,7 @@ function applyFontVariables() {
 }
 
 // ============================================================================
-// SHARED CSS STYLES (Burberry Inspired High-End Minimalist Glass)
+// SHARED CSS STYLES (Ultra Liquid Glass & Monochrome Design)
 // ============================================================================
 function injectSharedStyles() {
     const styles = `
@@ -48,23 +58,16 @@ function injectSharedStyles() {
         :root {
             --primary: #000000;
             --accent: #ffffff;
-            
-            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
             --glass-white: rgba(255, 255, 255, 0.45);
             --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
-            
-            /* লিকুইড গ্লাস বর্ডার সিস্টেম */
             --glass-border-light: rgba(255, 255, 255, 0.55);
             --glass-border-dark: rgba(0, 0, 0, 0.06);
             --glass-border-inline: rgba(255, 255, 255, 0.15);
-            
-            /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
             --glass-blur: blur(40px) saturate(250%);
         }
         
-        /* DYNAMIC FIX: কম্পিউটার স্ক্রিনে ডানপাশের বর্ডার/লাইন ওভারফ্লো এবং হোয়াইট স্পেস টোটাল ভ্যানিশ */
         html, body {
             overflow-x: hidden !important;
             width: 100% !important;
@@ -95,7 +98,7 @@ function injectSharedStyles() {
         .text-body-md { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; font-weight: 400; color: #1c1c1e; }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         
-        /* ==================== DYNAMIC LIQUID GLASS NAVIGATION HEADER ==================== */
+        /* ==================== BURBERRY LUXURY NAVIGATION HEADER ==================== */
         .glass-nav {
             position: fixed;
             top: 0; 
@@ -113,18 +116,24 @@ function injectSharedStyles() {
             padding: 0 !important;
         }
         
-        .glass-nav > div {
-            padding-left: 24px !important;
-            padding-right: 24px !important;
-            max-width: 100% !important;
+        /* Grid-based Golden Ratio Layout for Burberry Aesthetic */
+        .burberry-layout {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            height: 64px;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
             width: 100% !important;
+            max-width: 100% !important;
             margin: 0 !important;
         }
         
         @media (min-width: 1024px) {
-            .glass-nav > div {
-                padding-left: 40px !important;
-                padding-right: 40px !important;
+            .burberry-layout {
+                height: 80px;
+                padding-left: 32px !important;
+                padding-right: 32px !important;
             }
         }
         
@@ -135,20 +144,7 @@ function injectSharedStyles() {
             color: var(--primary);
         }
         
-        /* BURBERRY-INSPIRED CUSTOM SVG SYSTEM */
-        .burberry-icon {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            stroke-width: 1.25;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: opacity 0.25s ease;
-        }
-        
-        /* ==================== UNIFIED GLASS SIDE DRAWER (Dynamic Safety Lock) ==================== */
+        /* ==================== UNIFIED GLASS SIDE DRAWER ==================== */
         .side-menu-overlay {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.25);
@@ -225,7 +221,7 @@ function injectSharedStyles() {
             background: rgba(255, 255, 255, 0.2); flex-shrink: 0;
         }
         
-        /* ==================== CART DRAWER (Dynamic Liquid Black Glass) ==================== */
+        /* ==================== CART DRAWER ==================== */
         #cart-drawer {
             position: fixed; top: 0; right: 0;
             width: 100%; max-width: 440px;
@@ -296,20 +292,21 @@ function injectSharedStyles() {
             font-size: 8px !important; font-weight: 700; border: 1px solid var(--glass-border-light);
         }
         
-        /* BURBERRY BRAND LAYOUT FIXES: আইকনগুলো বেশি বাম পাশে এবং তাদের মধ্যকার স্পেস খুব সংকীর্ণ */
-        .burberry-icon-group {
-            display: flex;
+        /* Minimal Raw Menu Button without extra frame */
+        .raw-menu-btn {
+            display: inline-flex;
             align-items: center;
-            gap: 12px; /* কমানো স্পেসিং বা আঁটসাঁট দূরত্ব */
-            margin-right: auto; /* বাম দিকে ঠেলে দেওয়ার আর্কিটেকচার */
-            padding-left: 20px;
+            justify-content: flex-start;
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px 0;
+            transition: opacity 0.25s ease;
+            width: fit-content;
         }
-        
-        @media (min-width: 768px) {
-            .burberry-icon-group {
-                gap: 16px;
-                padding-left: 45px;
-            }
+        .raw-menu-btn:hover {
+            opacity: 0.5;
         }
     </style>
     `;
@@ -397,7 +394,7 @@ function renderUnifiedDrawerMenu(rootItems) {
             <div>
                 <div class="menu-node-item" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${item.title || item.name || ''}</span>
-                    <svg class="burberry-icon w-3 h-3 opacity-40" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <span class="opacity-40" style="font-size:9px;">▼</span>
                 </div>
                 <div class="menu-node-submenu" id="${uniqueId}">
                     ${renderDrawerSubItems(item, uniqueId)}
@@ -407,7 +404,7 @@ function renderUnifiedDrawerMenu(rootItems) {
             html += `
             <a href="${linkUrl}" class="menu-node-item no-underline">
                 <span>${item.title || item.name || ''}</span>
-                <svg class="burberry-icon w-3 h-3 opacity-30" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                <span class="opacity-20" style="font-size:11px;">→</span>
             </a>`;
         }
     });
@@ -433,7 +430,7 @@ function renderDrawerSubItems(item, parentId) {
                 <div>
                     <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                         <span>${child.title || child.name || ''}</span>
-                        <svg class="burberry-icon w-2.5 h-2.5 opacity-40" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <span class="opacity-40" style="font-size:8px;">▼</span>
                     </div>
                     <div class="menu-node-submenu" id="${uniqueId}">
                         ${child.children.map(gc => `<a href="${getMenuLinkUrl(gc)}" class="menu-node-sub-item">${gc.title || gc.name || ''}</a>`).join('')}
@@ -464,7 +461,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
             <div>
                 <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold text-black" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${cat.name}</span>
-                    <svg class="burberry-icon w-2.5 h-2.5 opacity-40" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <span class="opacity-40" style="font-size:8px;">▼</span>
                 </div>
                 <div class="menu-node-submenu" id="${uniqueId}">
                     <a href="${catUrl}" class="menu-node-sub-item font-black underline decoration-black/10">All ${cat.name}</a>
@@ -482,7 +479,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 }
 
 // ============================================================================
-// HEADER SYSTEM (Liquid Translucent Engine + Burberry Layout Framework)
+// HEADER SYSTEM (Burberry Luxury Centered & Edge-to-Edge Fluid Engine)
 // ============================================================================
 async function renderHeader() {
     const [menuItems, categories, subcategories] = await Promise.all([
@@ -500,11 +497,11 @@ async function renderHeader() {
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-9 h-9 rounded-xl border border-white/20 shadow-sm" alt="Logo">
-                <span class="font-black text-base tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
+                <img src="/logo.png" class="w-8 h-8 rounded-xl border border-white/20 shadow-sm" alt="Logo">
+                <span class="font-black text-sm tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
             </a>
-            <button onclick="closeSideMenu()" class="text-xl text-neutral-400 hover:text-black transition p-2" aria-label="Close menu">
-                <svg class="burberry-icon w-5 h-5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <button onclick="closeSideMenu()" class="text-neutral-400 hover:text-black transition p-2 flex items-center justify-center" aria-label="Close menu">
+                ${CUSTOM_ICONS.close}
             </button>
         </div>
         <div class="side-menu-scroll" id="sideMenuContent">
@@ -516,43 +513,34 @@ async function renderHeader() {
     </div>
     
     <nav class="glass-nav" id="main-nav">
-        <div class="h-16 lg:h-20 flex items-center justify-between">
+        <div class="burberry-layout">
             
-            <!-- LEFT AREA: BURBERRY ALIGNED CUSTOM SVG ACTIONS -->
-            <div class="burberry-icon-group">
-                <!-- 1. CUSTOM MENUBAR SVG -->
-                <button onclick="openSideMenu()" class="p-2 text-black transition hover:opacity-50 focus:outline-none" aria-label="Menu Container">
-                    <svg class="burberry-icon" viewBox="0 0 24 24">
-                        <line x1="4" y1="6" x2="20" y2="6"></line>
-                        <line x1="4" y1="12" x2="16" y2="12"></line>
-                        <line x1="4" y1="18" x2="20" y2="18"></line>
-                    </svg>
+            <!-- FAR LEFT: Menu Trigger Only (No Frame/No Text) -->
+            <div class="flex justify-start items-center">
+                <button onclick="openSideMenu()" class="raw-menu-btn" aria-label="Open Navigation">
+                    ${CUSTOM_ICONS.menu}
                 </button>
-                
-                <!-- 2. CUSTOM WISHLIST SVG -->
-                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-50">
-                    <svg class="burberry-icon" viewBox="0 0 24 24">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                    <span id="wish-count" class="absolute top-0.5 right-0.5 text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">0</span>
-                </a>
-                
-                <!-- 3. CUSTOM SHOPPING BAG SVG -->
-                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-50">
-                    <svg class="burberry-icon" viewBox="0 0 24 24">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span id="cart-count" class="absolute top-0.5 right-0.5 text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">0</span>
+            </div>
+            
+            <!-- PERFECT CENTER: Premium Brand Title -->
+            <div class="flex justify-center items-center">
+                <a href="/" class="flex items-center gap-2.5 no-underline shrink-0">
+                    <img src="/logo.png" class="w-7 h-7 lg:w-8 lg:h-8 rounded-lg" alt="JAYENWARE Logo">
+                    <span class="text-sm sm:text-base lg:text-lg font-black tracking-[0.22em] relative top-[0.5px]" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
                 </a>
             </div>
             
-            <!-- RIGHT/CENTER AREA: BRAND LOGO SYSTEM -->
-            <a href="/" class="flex items-center gap-3 shrink-0 no-underline pr-4 sm:pr-8">
-                <img src="/logo.png" class="w-8 h-8 lg:w-9 lg:h-9 rounded-xl" alt="JAYENWARE Logo">
-                <span class="text-base sm:text-lg lg:text-xl font-black tracking-[0.18em]" style="font-family: var(--font-heading); color: var(--primary);">JAYENWARE</span>
-            </a>
+            <!-- FAR RIGHT: Wishlist & Cart Utilities (Denser Padding / Gap) -->
+            <div class="flex justify-end items-center gap-1.5 sm:gap-2">
+                <a href="/wishlist" class="relative p-2 no-underline text-black transition hover:opacity-40 flex items-center justify-center">
+                    ${CUSTOM_ICONS.wishlist}
+                    <span id="wish-count" class="absolute top-1 right-1 text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">0</span>
+                </a>
+                <a href="/cart" onclick="toggleCart();return false;" class="relative p-2 no-underline text-black transition hover:opacity-40 flex items-center justify-center">
+                    ${CUSTOM_ICONS.cart}
+                    <span id="cart-count" class="absolute top-1 right-1 text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">0</span>
+                </a>
+            </div>
             
         </div>
     </nav>
@@ -560,8 +548,8 @@ async function renderHeader() {
     <div id="cart-drawer" class="shadow-2xl">
         <div class="p-6 border-b flex justify-between items-center bg-soft">
             <h2 class="text-xs font-black uppercase tracking-widest">Shopping Vault</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-white transition p-1">
-                <svg class="burberry-icon w-5 h-5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white transition p-1 flex items-center justify-center">
+                ${CUSTOM_ICONS.close}
             </button>
         </div>
         <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4 custom-scroll"></div>
@@ -630,18 +618,14 @@ function showToast(text, type = 'success') {
             <div class="shadow-xl p-4 flex items-center gap-3.5 min-w-[280px]">
                 <span id="toast-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0"></span>
                 <p id="toast-text" class="text-xs font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
-                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0 transition">
-                    <svg class="burberry-icon w-3.5 h-3.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+                <button onclick="hideToast()" class="text-gray-400 hover:text-black shrink-0 transition flex items-center justify-center">${CUSTOM_ICONS.close}</button>
             </div>
         `;
         document.body.appendChild(toast);
     }
     document.getElementById('toast-text').innerText = text;
     const iconEl = document.getElementById('toast-icon');
-    iconEl.innerHTML = type === 'success' ? 
-        '<svg class="w-4 h-4 stroke-white fill-none stroke-[2]" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>' : 
-        '<svg class="w-4 h-4 stroke-white fill-none stroke-[2]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+    iconEl.innerHTML = type === 'success' ? '✓' : '!';
     
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
@@ -730,9 +714,7 @@ function renderCartItems() {
                     <span class="text-[10px] opacity-40">Qty: ${item.quantity || 1}</span>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0">
-                <svg class="burberry-icon w-4 h-4" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-            </button>
+            <button onclick="removeFromCart(${idx})" class="text-neutral-400 hover:text-white transition p-2 shrink-0">✕</button>
         </div>`;
     }).join('');
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
