@@ -1,232 +1,191 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JBYN-OneID - সাইনআপ ও প্রোফাইল</title>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>Sign Up - OneID System</title>
     <style>
+        /* Modern CSS Setup with Glassmorphism Variables */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            --glass-bg: rgba(30, 41, 59, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
+            color: var(--text-main);
         }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 450px;
+        /* Glassmorphism Container */
+        .signup-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             padding: 40px;
-            position: relative;
-            overflow: hidden;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-            background-size: 300% 100%;
-            animation: gradientMove 3s ease infinite;
-        }
-
-        @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .brand {
+        .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
-        .brand h1 {
-            font-size: 28px;
+        .header h1 {
+            font-size: 2rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        .brand p {
-            color: #666;
-            font-size: 14px;
-            margin-top: 5px;
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
-        .tabs {
+        /* Responsive Grid Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            background: #f0f0f0;
-            padding: 5px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input, .form-group select {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
             border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
         }
 
-        .tab {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: transparent;
-            color: #666;
+        .form-group input:focus, .form-group select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
-        .tab.active {
-            background: white;
-            color: #667eea;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-        }
-
-        .tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .form-container {
+        /* Message Notifications */
+        .message-box {
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
             display: none;
             animation: fadeIn 0.3s ease;
         }
 
-        .form-container.active {
+        .message-box.error {
             display: block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--error-color);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
+        .message-box.success {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success-color);
         }
 
-        .form-group label .required {
-            color: #e74c3c;
-            margin-left: 2px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: #fafafa;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group input.error {
-            border-color: #e74c3c;
-            background: #fff5f5;
-        }
-
-        .form-group .error-message {
-            color: #e74c3c;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .form-group .error-message.show {
-            display: block;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
+        /* High-End Premium Button */
+        .submit-btn {
+            grid-column: span 2;
+            background: var(--accent-primary);
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 12px;
+            padding: 14px;
+            color: white;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.7;
+        .submit-btn:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .btn .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
+        .footer-text {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
+            border-top-color: white;
             animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-
-        .btn.loading .spinner {
-            display: block;
-        }
-
-        .btn.loading .btn-text {
             display: none;
         }
 
@@ -234,1148 +193,160 @@
             to { transform: rotate(360deg); }
         }
 
-        .alert {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .alert.show {
-            display: block;
-        }
-
-        .alert.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .profile-section {
-            display: none;
-        }
-
-        .profile-section.active {
-            display: block;
-        }
-
-        .profile-header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #f0f0f0;
-            margin-bottom: 25px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 32px;
-            color: white;
-            font-weight: 700;
-        }
-
-        .profile-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .profile-email {
-            color: #666;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .profile-oneid {
-            background: #f0f0f0;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #667eea;
-            display: inline-block;
-            margin-top: 8px;
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-
-        .profile-details {
-            margin-top: 20px;
-        }
-
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .detail-item .label {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .detail-item .value {
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .profile-actions .btn {
-            flex: 1;
-            padding: 12px;
-            font-size: 14px;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
-        }
-
-        .btn-success {
-            background: #27ae60;
-        }
-
-        .btn-success:hover {
-            background: #229954;
-            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
-            width: auto;
-        }
-
-        .edit-mode .form-group input {
-            background: white;
-            border-color: #667eea;
-        }
-
-        .edit-mode .form-group input:disabled {
-            background: #f5f5f5;
-            border-color: #ddd;
-            cursor: not-allowed;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 25px 20px;
-            }
-
-            .form-row {
+        /* Responsive Mobile Tweak */
+        @media (max-width: 500px) {
+            .form-grid {
                 grid-template-columns: 1fr;
-                gap: 0;
             }
-
-            .brand h1 {
-                font-size: 22px;
+            .full-width, .submit-btn {
+                grid-column: span 1;
             }
-
-            .profile-actions {
-                flex-direction: column;
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .password-toggle {
-            position: relative;
-        }
-
-        .password-toggle input {
-            padding-right: 45px;
-        }
-
-        .password-toggle .toggle-btn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #999;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 5px;
-        }
-
-        .password-toggle .toggle-btn:hover {
-            color: #667eea;
-        }
-
-        .select-country {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            padding-right: 40px;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="app">
-        <!-- Brand -->
-        <div class="brand">
-            <h1>JBYN-OneID</h1>
-            <p>Global Profile System</p>
+
+    <div class="signup-container">
+        <div class="header">
+            <h1>Create Account</h1>
+            <p>Join JBYN-OneID Global Profile System</p>
         </div>
 
-        <!-- Alert -->
-        <div class="alert" id="alert"></div>
+        <div id="messageBox" class="message-box"></div>
 
-        <!-- Tabs -->
-        <div class="tabs" id="tabs">
-            <button class="tab active" data-tab="signup">সাইনআপ</button>
-            <button class="tab" data-tab="login">লগইন</button>
-        </div>
-
-        <!-- Signup Form -->
-        <div class="form-container active" id="signupForm">
-            <form id="signupFormElement" autocomplete="off">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>প্রথম নাম <span class="required">*</span></label>
-                        <input type="text" id="firstName" placeholder="জন" required>
-                        <div class="error-message" id="firstNameError">প্রথম নাম কমপক্ষে ২ অক্ষর হতে হবে</div>
-                    </div>
-                    <div class="form-group">
-                        <label>শেষ নাম <span class="required">*</span></label>
-                        <input type="text" id="lastName" placeholder="ডো" required>
-                        <div class="error-message" id="lastNameError">শেষ নাম কমপক্ষে ২ অক্ষর হতে হবে</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>ইমেইল <span class="required">*</span></label>
-                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
-                    <div class="error-message" id="signupEmailError">সঠিক ইমেইল দিন</div>
-                </div>
-
-                <div class="form-group">
-                    <label>ফোন নম্বর</label>
-                    <input type="tel" id="signupPhone" placeholder="+8801712345678">
-                    <div class="error-message" id="signupPhoneError">সঠিক ফোন ফরম্যাট দিন (যেমন: +8801712345678)</div>
-                </div>
-
-                <div class="form-group">
-                    <label>দেশ <span class="required">*</span></label>
-                    <select id="signupCountry" class="select-country" required>
-                        <option value="">দেশ নির্বাচন করুন</option>
-                        <option value="বাংলাদেশ">বাংলাদেশ</option>
-                        <option value="ভারত">ভারত</option>
-                        <option value="পাকিস্তান">পাকিস্তান</option>
-                        <option value="যুক্তরাষ্ট্র">যুক্তরাষ্ট্র</option>
-                        <option value="যুক্তরাজ্য">যুক্তরাজ্য</option>
-                        <option value="কানাডা">কানাডা</option>
-                        <option value="অস্ট্রেলিয়া">অস্ট্রেলিয়া</option>
-                        <option value="জার্মানি">জার্মানি</option>
-                        <option value="ফ্রান্স">ফ্রান্স</option>
-                        <option value="ইতালি">ইতালি</option>
-                        <option value="স্পেন">স্পেন</option>
-                        <option value="জাপান">জাপান</option>
-                        <option value="চীন">চীন</option>
-                        <option value="সিঙ্গাপুর">সিঙ্গাপুর</option>
-                        <option value="মালয়েশিয়া">মালয়েশিয়া</option>
-                        <option value="সৌদি আরব">সৌদি আরব</option>
-                        <option value="সংযুক্ত আরব আমিরাত">সংযুক্ত আরব আমিরাত</option>
-                        <option value="অন্যান্য">অন্যান্য</option>
-                    </select>
-                    <div class="error-message" id="signupCountryError">দেশ নির্বাচন করুন</div>
-                </div>
-
-                <div class="form-group password-toggle">
-                    <label>পাসওয়ার্ড <span class="required">*</span></label>
-                    <input type="password" id="signupPassword" placeholder="কমপক্ষে ৬ অক্ষর" required minlength="6">
-                    <button type="button" class="toggle-btn" onclick="togglePassword('signupPassword', this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <div class="error-message" id="signupPasswordError">পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে</div>
-                </div>
-
-                <button type="submit" class="btn" id="signupBtn">
-                    <span class="btn-text">সাইনআপ করুন</span>
-                    <span class="spinner"></span>
-                </button>
-            </form>
-        </div>
-
-        <!-- Login Form -->
-        <div class="form-container" id="loginForm">
-            <form id="loginFormElement" autocomplete="off">
-                <div class="form-group">
-                    <label>ইমেইল <span class="required">*</span></label>
-                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
-                    <div class="error-message" id="loginEmailError">সঠিক ইমেইল দিন</div>
-                </div>
-
-                <div class="form-group password-toggle">
-                    <label>পাসওয়ার্ড <span class="required">*</span></label>
-                    <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড" required>
-                    <button type="button" class="toggle-btn" onclick="togglePassword('loginPassword', this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <div class="error-message" id="loginPasswordError">পাসওয়ার্ড প্রয়োজন</div>
-                </div>
-
-                <button type="submit" class="btn" id="loginBtn">
-                    <span class="btn-text">লগইন করুন</span>
-                    <span class="spinner"></span>
-                </button>
-
-                <div style="text-align: center; margin-top: 15px;">
-                    <a href="#" onclick="showForgotPassword(); return false;" style="color: #667eea; text-decoration: none; font-size: 14px;">
-                        <i class="fas fa-key"></i> পাসওয়ার্ড ভুলে গেছেন?
-                    </a>
-                </div>
-            </form>
-        </div>
-
-        <!-- Forgot Password Form -->
-        <div class="form-container hidden" id="forgotPasswordForm">
-            <div style="margin-bottom: 20px;">
-                <button class="tab" onclick="showLogin()" style="background: none; border: none; color: #667eea; cursor: pointer; font-size: 14px;">
-                    <i class="fas fa-arrow-left"></i> লগইনে ফিরে যান
-                </button>
-            </div>
-            <form id="forgotPasswordFormElement">
-                <div class="form-group">
-                    <label>ইমেইল <span class="required">*</span></label>
-                    <input type="email" id="forgotEmail" placeholder="you@example.com" required>
-                    <div class="error-message" id="forgotEmailError">সঠিক ইমেইল দিন</div>
-                </div>
-                <button type="submit" class="btn" id="forgotBtn">
-                    <span class="btn-text">রিসেট লিংক পাঠান</span>
-                    <span class="spinner"></span>
-                </button>
-            </form>
-        </div>
-
-        <!-- Profile Section -->
-        <div class="profile-section" id="profileSection">
-            <div class="profile-header">
-                <div class="profile-avatar" id="profileAvatar">JD</div>
-                <div class="profile-name" id="profileName">জন ডো</div>
-                <div class="profile-email" id="profileEmail">john@example.com</div>
-                <div class="profile-oneid" id="profileOneid">JBYN-OneID-XXXX</div>
+        <form id="signupForm" class="form-grid">
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" required placeholder="John">
             </div>
 
-            <div class="profile-details" id="profileDetails">
-                <div class="detail-item">
-                    <span class="label">প্রথম নাম</span>
-                    <span class="value" id="detailFirstName">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">শেষ নাম</span>
-                    <span class="value" id="detailLastName">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">ইমেইল</span>
-                    <span class="value" id="detailEmail">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">ফোন</span>
-                    <span class="value" id="detailPhone">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">দেশ</span>
-                    <span class="value" id="detailCountry">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">একাউন্ট তৈরি</span>
-                    <span class="value" id="detailCreated">-</span>
-                </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" required placeholder="Doe">
             </div>
 
-            <!-- Edit Profile Form -->
-            <div class="hidden" id="editProfileForm">
-                <h3 style="margin: 20px 0 15px; font-size: 18px; color: #333;">
-                    <i class="fas fa-edit"></i> প্রোফাইল সম্পাদনা
-                </h3>
-                <form id="editProfileFormElement">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>প্রথম নাম <span class="required">*</span></label>
-                            <input type="text" id="editFirstName" required>
-                            <div class="error-message" id="editFirstNameError">প্রথম নাম কমপক্ষে ২ অক্ষর</div>
-                        </div>
-                        <div class="form-group">
-                            <label>শেষ নাম <span class="required">*</span></label>
-                            <input type="text" id="editLastName" required>
-                            <div class="error-message" id="editLastNameError">শেষ নাম কমপক্ষে ২ অক্ষর</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>ফোন</label>
-                        <input type="tel" id="editPhone" placeholder="+8801712345678">
-                        <div class="error-message" id="editPhoneError">সঠিক ফোন ফরম্যাট দিন</div>
-                    </div>
-                    <div class="form-group">
-                        <label>দেশ <span class="required">*</span></label>
-                        <select id="editCountry" class="select-country" required>
-                            <option value="">দেশ নির্বাচন করুন</option>
-                            <option value="বাংলাদেশ">বাংলাদেশ</option>
-                            <option value="ভারত">ভারত</option>
-                            <option value="পাকিস্তান">পাকিস্তান</option>
-                            <option value="যুক্তরাষ্ট্র">যুক্তরাষ্ট্র</option>
-                            <option value="যুক্তরাজ্য">যুক্তরাজ্য</option>
-                            <option value="কানাডা">কানাডা</option>
-                            <option value="অস্ট্রেলিয়া">অস্ট্রেলিয়া</option>
-                            <option value="জার্মানি">জার্মানি</option>
-                            <option value="ফ্রান্স">ফ্রান্স</option>
-                            <option value="ইতালি">ইতালি</option>
-                            <option value="স্পেন">স্পেন</option>
-                            <option value="জাপান">জাপান</option>
-                            <option value="চীন">চীন</option>
-                            <option value="সিঙ্গাপুর">সিঙ্গাপুর</option>
-                            <option value="মালয়েশিয়া">মালয়েশিয়া</option>
-                            <option value="সৌদি আরব">সৌদি আরব</option>
-                            <option value="সংযুক্ত আরব আমিরাত">সংযুক্ত আরব আমিরাত</option>
-                            <option value="অন্যান্য">অন্যান্য</option>
-                        </select>
-                        <div class="error-message" id="editCountryError">দেশ নির্বাচন করুন</div>
-                    </div>
-                    <div class="profile-actions">
-                        <button type="submit" class="btn btn-success btn-sm" id="updateProfileBtn">
-                            <span class="btn-text"><i class="fas fa-save"></i> আপডেট করুন</span>
-                            <span class="spinner"></span>
-                        </button>
-                        <button type="button" class="btn btn-outline btn-sm" onclick="cancelEdit()">
-                            <i class="fas fa-times"></i> বাতিল করুন
-                        </button>
-                    </div>
-                </form>
+            <div class="form-group full-width">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required placeholder="example@mail.com">
             </div>
 
-            <div class="profile-actions">
-                <button class="btn btn-outline btn-sm" onclick="enableEdit()">
-                    <i class="fas fa-edit"></i> প্রোফাইল এডিট
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="deleteAccount()">
-                    <i class="fas fa-trash"></i> একাউন্ট ডিলিট
-                </button>
-                <button class="btn btn-sm" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> লগআউট
-                </button>
+            <div class="form-group">
+                <label for="phone">Mobile Phone</label>
+                <input type="tel" id="phone" required placeholder="01XXXXXXXXX">
             </div>
+
+            <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" required>
+                    <option value="Bangladesh" selected>Bangladesh</option>
+                    <option value="United States">United States</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="India">India</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="address_line_1">Address Line 1</label>
+                <input type="text" id="address_line_1" required placeholder="Street address, P.O. box, company name">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="address_line_2">Address Line 2 (Optional)</label>
+                <input type="text" id="address_line_2" placeholder="Apartment, suite, unit, building, floor">
+            </div>
+
+            <div class="form-group">
+                <label for="city">City / Suburb</label>
+                <input type="text" id="city" required placeholder="Dhaka">
+            </div>
+
+            <div class="form-group">
+                <label for="postal_code">Zip / Postcode</label>
+                <input type="text" id="postal_code" required placeholder="1212">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="password">Password</label>
+                <input type="password" id="password" required minlength="6" placeholder="•••••••• (Min 6 Characters)">
+            </div>
+
+            <button type="submit" id="submitBtn" class="submit-btn">
+                <span class="spinner" id="btnSpinner"></span>
+                <span id="btnText">Sign Up Now</span>
+            </button>
+        </form>
+
+        <div class="footer-text">
+            Already have an account? <a href="/login">Log In</a>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // API CONFIGURATION
-        // ============================================
-        const API_BASE = '/api';
-
-        // ============================================
-        // DOM ELEMENTS
-        // ============================================
-        const tabs = document.querySelectorAll('.tab');
-        const signupForm = document.getElementById('signupForm');
-        const loginForm = document.getElementById('loginForm');
-        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-        const profileSection = document.getElementById('profileSection');
-        const alertElement = document.getElementById('alert');
-
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-        function showAlert(message, type = 'info') {
-            alertElement.textContent = message;
-            alertElement.className = `alert show ${type}`;
-            setTimeout(() => {
-                alertElement.className = 'alert';
-            }, 5000);
-        }
-
-        function clearAlerts() {
-            alertElement.className = 'alert';
-        }
-
-        function togglePassword(inputId, button) {
-            const input = document.getElementById(inputId);
-            const icon = button.querySelector('i');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                input.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
-        }
-
-        function getInitials(firstName, lastName) {
-            return (firstName?.charAt(0) || '') + (lastName?.charAt(0) || '');
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('bn-BD', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        // ============================================
-        // TAB MANAGEMENT
-        // ============================================
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-
-                const tabName = this.dataset.tab;
-                signupForm.classList.remove('active');
-                loginForm.classList.remove('active');
-                forgotPasswordForm.classList.add('hidden');
-                profileSection.classList.remove('active');
-
-                if (tabName === 'signup') {
-                    signupForm.classList.add('active');
-                } else if (tabName === 'login') {
-                    loginForm.classList.add('active');
-                }
-
-                clearAlerts();
-            });
-        });
-
-        function showLogin() {
-            tabs.forEach(t => t.classList.remove('active'));
-            document.querySelector('[data-tab="login"]').classList.add('active');
-            signupForm.classList.remove('active');
-            loginForm.classList.add('active');
-            forgotPasswordForm.classList.add('hidden');
-            profileSection.classList.remove('active');
-            clearAlerts();
-        }
-
-        function showForgotPassword() {
-            signupForm.classList.remove('active');
-            loginForm.classList.remove('active');
-            forgotPasswordForm.classList.remove('hidden');
-            profileSection.classList.remove('active');
-            clearAlerts();
-        }
-
-        // ============================================
-        // SIGNUP FUNCTION
-        // ============================================
-        document.getElementById('signupFormElement').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            clearAlerts();
 
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const phone = document.getElementById('signupPhone').value.trim();
-            const country = document.getElementById('signupCountry').value;
-            const password = document.getElementById('signupPassword').value;
+            // Dom elements
+            const messageBox = document.getElementById('messageBox');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const btnText = document.getElementById('btnText');
 
-            // Validation
-            let isValid = true;
+            // Reset UI States
+            messageBox.style.display = 'none';
+            messageBox.className = 'message-box';
+            submitBtn.disabled = true;
+            btnSpinner.style.display = 'block';
+            btnText.innerText = 'Creating Account...';
 
-            if (firstName.length < 2) {
-                document.getElementById('firstNameError').classList.add('show');
-                document.getElementById('firstName').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('firstNameError').classList.remove('show');
-                document.getElementById('firstName').classList.remove('error');
-            }
-
-            if (lastName.length < 2) {
-                document.getElementById('lastNameError').classList.add('show');
-                document.getElementById('lastName').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('lastNameError').classList.remove('show');
-                document.getElementById('lastName').classList.remove('error');
-            }
-
-            if (!email || !email.includes('@')) {
-                document.getElementById('signupEmailError').classList.add('show');
-                document.getElementById('signupEmail').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('signupEmailError').classList.remove('show');
-                document.getElementById('signupEmail').classList.remove('error');
-            }
-
-            if (phone && !/^\+[1-9]\d{6,14}$/.test(phone)) {
-                document.getElementById('signupPhoneError').classList.add('show');
-                document.getElementById('signupPhone').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('signupPhoneError').classList.remove('show');
-                document.getElementById('signupPhone').classList.remove('error');
-            }
-
-            if (!country) {
-                document.getElementById('signupCountryError').classList.add('show');
-                document.getElementById('signupCountry').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('signupCountryError').classList.remove('show');
-                document.getElementById('signupCountry').classList.remove('error');
-            }
-
-            if (password.length < 6) {
-                document.getElementById('signupPasswordError').classList.add('show');
-                document.getElementById('signupPassword').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('signupPasswordError').classList.remove('show');
-                document.getElementById('signupPassword').classList.remove('error');
-            }
-
-            if (!isValid) return;
-
-            // Submit
-            const btn = document.getElementById('signupBtn');
-            btn.classList.add('loading');
-            btn.disabled = true;
+            // Extract values directly mapped to Server-Side schema
+            const payload = {
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                first_name: document.getElementById('first_name').value.trim(),
+                last_name: document.getElementById('last_name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                country: document.getElementById('country').value,
+                city: document.getElementById('city').value.trim(),
+                postal_code: document.getElementById('postal_code').value.trim(),
+                address_line_1: document.getElementById('address_line_1').value.trim(),
+                address_line_2: document.getElementById('address_line_2').value.trim()
+            };
 
             try {
-                const response = await fetch(`${API_BASE}/auth/signup`, {
+                // Fetch directly hitting your Server-Side route
+                const response = await fetch('/api/auth/signup', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        first_name: firstName,
-                        last_name: lastName,
-                        email: email,
-                        phone: phone || null,
-                        password: password,
-                        country: country
-                    })
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
                 });
 
-                const data = await response.json();
+                const result = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'সাইনআপ ব্যর্থ হয়েছে');
+                    throw new Error(result.error || 'Something went wrong during signup.');
                 }
 
-                showAlert('✅ সাইনআপ সফল! আপনার ইমেইল ভেরিফাই করুন।', 'success');
-                
-                // Show profile if user is logged in
-                if (data.user && data.session) {
-                    loadProfile();
-                } else {
-                    // Switch to login
-                    setTimeout(() => {
-                        document.getElementById('loginEmail').value = email;
-                        showLogin();
-                    }, 2000);
-                }
+                // Success State Triggered
+                messageBox.classList.add('success');
+                messageBox.innerText = result.message || 'Registration successful! Verification mail sent.';
+                document.getElementById('signupForm').reset();
 
-                // Reset form
-                this.reset();
-
-            } catch (error) {
-                showAlert('❌ ' + error.message, 'error');
+            } catch (err) {
+                // Error State Triggered
+                messageBox.classList.add('error');
+                messageBox.innerText = err.message;
             } finally {
-                btn.classList.remove('loading');
-                btn.disabled = false;
-            }
-        });
-
-        // ============================================
-        // LOGIN FUNCTION
-        // ============================================
-        document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            clearAlerts();
-
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            let isValid = true;
-
-            if (!email || !email.includes('@')) {
-                document.getElementById('loginEmailError').classList.add('show');
-                document.getElementById('loginEmail').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('loginEmailError').classList.remove('show');
-                document.getElementById('loginEmail').classList.remove('error');
-            }
-
-            if (!password) {
-                document.getElementById('loginPasswordError').classList.add('show');
-                document.getElementById('loginPassword').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('loginPasswordError').classList.remove('show');
-                document.getElementById('loginPassword').classList.remove('error');
-            }
-
-            if (!isValid) return;
-
-            const btn = document.getElementById('loginBtn');
-            btn.classList.add('loading');
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'লগইন ব্যর্থ হয়েছে');
-                }
-
-                showAlert('✅ লগইন সফল!', 'success');
-                await loadProfile();
-
-            } catch (error) {
-                showAlert('❌ ' + error.message, 'error');
-            } finally {
-                btn.classList.remove('loading');
-                btn.disabled = false;
-            }
-        });
-
-        // ============================================
-        // FORGOT PASSWORD
-        // ============================================
-        document.getElementById('forgotPasswordFormElement').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            clearAlerts();
-
-            const email = document.getElementById('forgotEmail').value.trim();
-
-            if (!email || !email.includes('@')) {
-                document.getElementById('forgotEmailError').classList.add('show');
-                document.getElementById('forgotEmail').classList.add('error');
-                return;
-            }
-
-            const btn = document.getElementById('forgotBtn');
-            btn.classList.add('loading');
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(`${API_BASE}/auth/forgot-password`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'রিকুয়েস্ট ব্যর্থ হয়েছে');
-                }
-
-                showAlert('✅ পাসওয়ার্ড রিসেট লিংক ইমেইলে পাঠানো হয়েছে!', 'success');
-                this.reset();
-                setTimeout(showLogin, 3000);
-
-            } catch (error) {
-                showAlert('❌ ' + error.message, 'error');
-            } finally {
-                btn.classList.remove('loading');
-                btn.disabled = false;
-            }
-        });
-
-        // ============================================
-        // LOAD PROFILE
-        // ============================================
-        async function loadProfile() {
-            try {
-                const response = await fetch(`${API_BASE}/auth/user`, {
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        showLogin();
-                        return;
-                    }
-                    throw new Error('প্রোফাইল লোড করতে ব্যর্থ');
-                }
-
-                const data = await response.json();
-                const user = data.user;
-                const profile = data.profile;
-
-                if (!user) {
-                    showLogin();
-                    return;
-                }
-
-                // Show profile section
-                signupForm.classList.remove('active');
-                loginForm.classList.remove('active');
-                forgotPasswordForm.classList.add('hidden');
-                profileSection.classList.add('active');
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-
-                // Fill profile data
-                const firstName = profile?.first_name || user.user_metadata?.first_name || '';
-                const lastName = profile?.last_name || user.user_metadata?.last_name || '';
-                const fullName = firstName + ' ' + lastName;
-
-                document.getElementById('profileAvatar').textContent = getInitials(firstName, lastName);
-                document.getElementById('profileName').textContent = fullName.trim() || 'নাম নেই';
-                document.getElementById('profileEmail').textContent = user.email;
-
-                // Get OneID
-                try {
-                    const passkeyRes = await fetch(`${API_BASE}/auth/passkey`, {
-                        credentials: 'include'
-                    });
-                    if (passkeyRes.ok) {
-                        const passkeyData = await passkeyRes.json();
-                        document.getElementById('profileOneid').textContent = passkeyData.jbyn_oneid || 'JBYN-OneID-XXXX';
-                    }
-                } catch (e) {
-                    document.getElementById('profileOneid').textContent = 'JBYN-OneID-XXXX';
-                }
-
-                // Details
-                document.getElementById('detailFirstName').textContent = profile?.first_name || '-';
-                document.getElementById('detailLastName').textContent = profile?.last_name || '-';
-                document.getElementById('detailEmail').textContent = user.email || '-';
-                document.getElementById('detailPhone').textContent = profile?.phone || '-';
-                document.getElementById('detailCountry').textContent = profile?.country || '-';
-                document.getElementById('detailCreated').textContent = formatDate(user.created_at);
-
-                // Fill edit form
-                document.getElementById('editFirstName').value = profile?.first_name || '';
-                document.getElementById('editLastName').value = profile?.last_name || '';
-                document.getElementById('editPhone').value = profile?.phone || '';
-                document.getElementById('editCountry').value = profile?.country || '';
-
-            } catch (error) {
-                console.error('Load profile error:', error);
-                showAlert('❌ প্রোফাইল লোড করতে ব্যর্থ', 'error');
-            }
-        }
-
-        // ============================================
-        // EDIT PROFILE
-        // ============================================
-        function enableEdit() {
-            document.getElementById('profileDetails').classList.add('hidden');
-            document.getElementById('editProfileForm').classList.remove('hidden');
-            document.querySelector('.profile-actions').classList.add('hidden');
-        }
-
-        function cancelEdit() {
-            document.getElementById('profileDetails').classList.remove('hidden');
-            document.getElementById('editProfileForm').classList.add('hidden');
-            document.querySelector('.profile-actions').classList.remove('hidden');
-            clearAlerts();
-        }
-
-        document.getElementById('editProfileFormElement').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            clearAlerts();
-
-            const firstName = document.getElementById('editFirstName').value.trim();
-            const lastName = document.getElementById('editLastName').value.trim();
-            const phone = document.getElementById('editPhone').value.trim();
-            const country = document.getElementById('editCountry').value;
-
-            let isValid = true;
-
-            if (firstName.length < 2) {
-                document.getElementById('editFirstNameError').classList.add('show');
-                document.getElementById('editFirstName').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('editFirstNameError').classList.remove('show');
-                document.getElementById('editFirstName').classList.remove('error');
-            }
-
-            if (lastName.length < 2) {
-                document.getElementById('editLastNameError').classList.add('show');
-                document.getElementById('editLastName').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('editLastNameError').classList.remove('show');
-                document.getElementById('editLastName').classList.remove('error');
-            }
-
-            if (phone && !/^\+[1-9]\d{6,14}$/.test(phone)) {
-                document.getElementById('editPhoneError').classList.add('show');
-                document.getElementById('editPhone').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('editPhoneError').classList.remove('show');
-                document.getElementById('editPhone').classList.remove('error');
-            }
-
-            if (!country) {
-                document.getElementById('editCountryError').classList.add('show');
-                document.getElementById('editCountry').classList.add('error');
-                isValid = false;
-            } else {
-                document.getElementById('editCountryError').classList.remove('show');
-                document.getElementById('editCountry').classList.remove('error');
-            }
-
-            if (!isValid) return;
-
-            const btn = document.getElementById('updateProfileBtn');
-            btn.classList.add('loading');
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(`${API_BASE}/auth/profile`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        first_name: firstName,
-                        last_name: lastName,
-                        phone: phone || null,
-                        country: country
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'প্রোফাইল আপডেট ব্যর্থ');
-                }
-
-                showAlert('✅ প্রোফাইল আপডেট সফল!', 'success');
-                cancelEdit();
-                await loadProfile();
-
-            } catch (error) {
-                showAlert('❌ ' + error.message, 'error');
-            } finally {
-                btn.classList.remove('loading');
-                btn.disabled = false;
-            }
-        });
-
-        // ============================================
-        // LOGOUT
-        // ============================================
-        async function logout() {
-            if (!confirm('আপনি কি লগআউট করতে চান?')) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/auth/logout`, {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    throw new Error('লগআউট ব্যর্থ');
-                }
-
-                showAlert('✅ লগআউট সফল!', 'success');
-                profileSection.classList.remove('active');
-                showLogin();
-
-            } catch (error) {
-                showAlert('❌ ' + error.message, 'error');
-            }
-        }
-
-        // ============================================
-        // DELETE ACCOUNT
-        // ============================================
-        async function deleteAccount() {
-            if (!confirm('⚠️ আপনি কি নিশ্চিত? আপনার একাউন্ট permanently ডিলিট হয়ে যাবে!')) return;
-            if (!confirm('আবারও নিশ্চিত করুন: একাউন্ট ডিলিট?')) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/auth/delete-account`, {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    const data = await response.json();
-                    throw new Error(data.error || 'একাউন্ট ডিলিট ব্যর্থ');
-                }
-
-                showAlert('✅ একাউন্ট ডিলিট সফল!', 'success');
-                profileSection.classList.remove('active');
-                showLogin();
-
-            } catch (error) {
-                showAlert('❌ ' + error.message, 'error');
-            }
-        }
-
-        // ============================================
-        // AUTO-LOAD PROFILE ON PAGE LOAD
-        // ============================================
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Check if user is already logged in
-            try {
-                const response = await fetch(`${API_BASE}/auth/user`, {
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.user) {
-                        await loadProfile();
-                        return;
-                    }
-                }
-            } catch (e) {
-                // Not logged in, show login
-            }
-
-            // Show login by default
-            showLogin();
-        });
-
-        // ============================================
-        // INPUT VALIDATION ON CHANGE
-        // ============================================
-        // Real-time validation for signup
-        document.getElementById('firstName').addEventListener('input', function() {
-            if (this.value.length >= 2) {
-                document.getElementById('firstNameError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('lastName').addEventListener('input', function() {
-            if (this.value.length >= 2) {
-                document.getElementById('lastNameError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('signupEmail').addEventListener('input', function() {
-            if (this.value.includes('@')) {
-                document.getElementById('signupEmailError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('signupPhone').addEventListener('input', function() {
-            if (!this.value || /^\+[1-9]\d{6,14}$/.test(this.value)) {
-                document.getElementById('signupPhoneError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('signupCountry').addEventListener('change', function() {
-            if (this.value) {
-                document.getElementById('signupCountryError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('signupPassword').addEventListener('input', function() {
-            if (this.value.length >= 6) {
-                document.getElementById('signupPasswordError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        // Real-time validation for login
-        document.getElementById('loginEmail').addEventListener('input', function() {
-            if (this.value.includes('@')) {
-                document.getElementById('loginEmailError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('loginPassword').addEventListener('input', function() {
-            if (this.value) {
-                document.getElementById('loginPasswordError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        // Real-time validation for edit
-        document.getElementById('editFirstName').addEventListener('input', function() {
-            if (this.value.length >= 2) {
-                document.getElementById('editFirstNameError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('editLastName').addEventListener('input', function() {
-            if (this.value.length >= 2) {
-                document.getElementById('editLastNameError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('editPhone').addEventListener('input', function() {
-            if (!this.value || /^\+[1-9]\d{6,14}$/.test(this.value)) {
-                document.getElementById('editPhoneError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('editCountry').addEventListener('change', function() {
-            if (this.value) {
-                document.getElementById('editCountryError').classList.remove('show');
-                this.classList.remove('error');
-            }
-        });
-
-        document.getElementById('forgotEmail').addEventListener('input', function() {
-            if (this.value.includes('@')) {
-                document.getElementById('forgotEmailError').classList.remove('show');
-                this.classList.remove('error');
+                // Restore Button Interface State
+                submitBtn.disabled = false;
+                btnSpinner.style.display = 'none';
+                btnText.innerText = 'Sign Up Now';
             }
         });
     </script>
