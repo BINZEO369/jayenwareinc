@@ -1,7 +1,7 @@
 // ============================================
 // server.js - Complete API Server
 // Supabase Integrated | Production Ready
-// Auth & OneID Removed | Products & UI APIs Only
+// Auth Added | Products & UI APIs
 // ============================================
 
 const express = require('express');
@@ -53,6 +53,48 @@ function formatProducts(products) {
     if (!products) return [];
     return products.map(formatProduct);
 }
+
+
+// ============================================
+// AUTHENTICATION API (Sign Up)
+// ============================================
+
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        // ভ্যালিডেশন চেক
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: 'Name, email, and password are required' });
+        }
+
+        // Supabase Auth-এ সাইন আপ রিকোয়েস্ট
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    name: name // ইউজারের নাম মেটাডাটায় সেভ হবে
+                }
+            }
+        });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        // সাইন আপ সফল হলে রেসপন্স
+        res.status(201).json({ 
+            success: true, 
+            message: 'User registered successfully!', 
+            user: data.user 
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 // ============================================
 // PRODUCTS API (Categories, Subcategories with Slug)
