@@ -1,352 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - OneID System</title>
+    <title>সাইন আপ পেজ</title>
     <style>
-        /* Modern CSS Setup with Glassmorphism Variables */
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            --glass-bg: rgba(30, 41, 59, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --error-color: #ef4444;
-            --success-color: #10b981;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-            color: var(--text-main);
-        }
-
-        /* Glassmorphism Container */
-        .signup-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            width: 100%;
-            max-width: 650px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            margin-bottom: 8px;
-            background: linear-gradient(to right, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* Responsive Grid Form Layout */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .full-width {
-            grid-column: span 2;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-group input, .form-group select {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        /* Message Notifications */
-        .message-box {
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .message-box.error {
-            display: block;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--error-color);
-        }
-
-        .message-box.success {
-            display: block;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--success-color);
-        }
-
-        /* High-End Premium Button */
-        .submit-btn {
-            grid-column: span 2;
-            background: var(--accent-primary);
-            border: none;
-            border-radius: 12px;
-            padding: 14px;
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .footer-text a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .footer-text a:hover {
-            text-decoration: underline;
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive Mobile Tweak */
-        @media (max-width: 500px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .full-width, .submit-btn {
-                grid-column: span 1;
-            }
-        }
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
+        form { display: flex; flex-direction: column; width: 300px; gap: 10px; }
+        input { padding: 8px; }
+        button { padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="signup-container">
-        <div class="header">
-            <h1>Create Account</h1>
-            <p>Join JBYN-OneID Global Profile System</p>
-        </div>
-
-        <div id="messageBox" class="message-box"></div>
-
-        <form id="signupForm" class="form-grid">
-            <div class="form-group">
-                <label for="first_name">First Name</label>
-                <input type="text" id="first_name" required placeholder="John">
-            </div>
-
-            <div class="form-group">
-                <label for="last_name">Last Name</label>
-                <input type="text" id="last_name" required placeholder="Doe">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" required placeholder="example@mail.com">
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Mobile Phone</label>
-                <input type="tel" id="phone" required placeholder="01XXXXXXXXX">
-            </div>
-
-            <div class="form-group">
-                <label for="country">Country</label>
-                <select id="country" required>
-                    <option value="Bangladesh" selected>Bangladesh</option>
-                    <option value="United States">United States</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="India">India</option>
-                </select>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="address_line_1">Address Line 1</label>
-                <input type="text" id="address_line_1" required placeholder="Street address, P.O. box, company name">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="address_line_2">Address Line 2 (Optional)</label>
-                <input type="text" id="address_line_2" placeholder="Apartment, suite, unit, building, floor">
-            </div>
-
-            <div class="form-group">
-                <label for="city">City / Suburb</label>
-                <input type="text" id="city" required placeholder="Dhaka">
-            </div>
-
-            <div class="form-group">
-                <label for="postal_code">Zip / Postcode</label>
-                <input type="text" id="postal_code" required placeholder="1212">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="password">Password</label>
-                <input type="password" id="password" required minlength="6" placeholder="•••••••• (Min 6 Characters)">
-            </div>
-
-            <button type="submit" id="submitBtn" class="submit-btn">
-                <span class="spinner" id="btnSpinner"></span>
-                <span id="btnText">Sign Up Now</span>
-            </button>
-        </form>
-
-        <div class="footer-text">
-            Already have an account? <a href="/login">Log In</a>
-        </div>
-    </div>
+    <form id="signupForm">
+        <h2>সাইন আপ</h2>
+        <input type="text" id="name" placeholder="আপনার নাম" required>
+        <input type="email" id="email" placeholder="ইমেইল" required>
+        <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
+        <button type="submit">রেজিস্ট্রেশন করুন</button>
+        <p id="message"></p>
+    </form>
 
     <script>
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Dom elements
-            const messageBox = document.getElementById('messageBox');
-            const submitBtn = document.getElementById('submitBtn');
-            const btnSpinner = document.getElementById('btnSpinner');
-            const btnText = document.getElementById('btnText');
-
-            // Reset UI States
-            messageBox.style.display = 'none';
-            messageBox.className = 'message-box';
-            submitBtn.disabled = true;
-            btnSpinner.style.display = 'block';
-            btnText.innerText = 'Creating Account...';
-
-            // Extract values directly mapped to Server-Side schema
-            const payload = {
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-                first_name: document.getElementById('first_name').value.trim(),
-                last_name: document.getElementById('last_name').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                country: document.getElementById('country').value,
-                city: document.getElementById('city').value.trim(),
-                postal_code: document.getElementById('postal_code').value.trim(),
-                address_line_1: document.getElementById('address_line_1').value.trim(),
-                address_line_2: document.getElementById('address_line_2').value.trim()
-            };
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('message');
 
             try {
-                // Fetch directly hitting your Server-Side route
                 const response = await fetch('/api/auth/signup', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
                 });
 
                 const result = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(result.error || 'Something went wrong during signup.');
+                if (response.ok) {
+                    msg.innerText = "সফলভাবে রেজিস্ট্রেশন হয়েছে!";
+                    msg.style.color = "green";
+                } else {
+                    msg.innerText = "Error: " + result.error;
+                    msg.style.color = "red";
                 }
-
-                // Success State Triggered
-                messageBox.classList.add('success');
-                messageBox.innerText = result.message || 'Registration successful! Verification mail sent.';
-                document.getElementById('signupForm').reset();
-
             } catch (err) {
-                // Error State Triggered
-                messageBox.classList.add('error');
-                messageBox.innerText = err.message;
-            } finally {
-                // Restore Button Interface State
-                submitBtn.disabled = false;
-                btnSpinner.style.display = 'none';
-                btnText.innerText = 'Sign Up Now';
+                msg.innerText = "সার্ভার এরর!";
             }
         });
     </script>
