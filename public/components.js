@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 6.0 (Luxury Edition - Smooth Announcement Bar with Close Memory)
+// Version: 6.1 (Luxury Edition - Double Render Protected)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -10,6 +10,9 @@ let userSession = null;
 let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
+
+// ডাবল রেন্ডার প্রতিরোধ করার জন্য গ্লোবাল ফ্ল্যাগ ট্র্যাকিং
+window.JABIYEN_COMPONENTS_INITIALIZED = window.JABIYEN_COMPONENTS_INITIALIZED || false;
 
 // ============================================================================
 // FONT CONFIGURATION LOADER
@@ -43,6 +46,9 @@ function applyFontVariables() {
 // SHARED CSS STYLES (Burberry Inspired High-End Minimalist Design)
 // ============================================================================
 function injectSharedStyles() {
+    // স্টাইল যেন দুইবার ইনজেক্ট না হয়
+    if (document.getElementById("shared-components-style")) return;
+
     const styles = `
     <style id="shared-components-style">
         :root {
@@ -513,6 +519,11 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 // HEADER SYSTEM (Liquid Translucent Engine - Burberry Icons Optimized)
 // ============================================================================
 async function renderHeader() {
+    // নিরাপত্তা চেক: যদি হেডার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
+    if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) {
+        return;
+    }
+
     const [menuItems, categories, subcategories] = await Promise.all([
         fetchMenuItems(),
         fetchCategories(),
@@ -639,6 +650,9 @@ function dismissAnnouncementBar() {
 // FOOTER & TOAST CORE SYSTEMS
 // ============================================================================
 function renderFooter() {
+    // নিরাপত্তা চেক: যদি ফুটার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
+    if (document.getElementById('main-footer')) return;
+
     const footerHTML = `
     <footer class="pt-16 pb-8" id="main-footer">
         <div class="w-full px-6 lg:px-12">
@@ -709,15 +723,17 @@ function hideToast() {
 // ============================================================================
 function openSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
-    drawer.classList.add('open');
-    document.getElementById('sideMenuOverlay').classList.add('active');
+    if (drawer) drawer.classList.add('open');
+    const overlay = document.getElementById('sideMenuOverlay');
+    if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
-    drawer.classList.remove('open');
-    document.getElementById('sideMenuOverlay').classList.remove('active');
+    if (drawer) drawer.classList.remove('open');
+    const overlay = document.getElementById('sideMenuOverlay');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
     document.querySelectorAll('.menu-node-submenu.open').forEach(sub => sub.classList.remove('open'));
 }
@@ -749,11 +765,6 @@ function removeFromCart(idx) {
     cart.splice(idx, 1);
     saveCart();
     renderCartItems();
-}
-
-function saveCart() {
-    localStorage.setItem('jabiyen_cart', JSON.stringify(cart));
-    updateCounts();
 }
 
 // ============================================================================
@@ -798,6 +809,11 @@ function updateCounts() {
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
+function saveCart() {
+    localStorage.setItem('jabiyen_cart', JSON.stringify(cart));
+    updateCounts();
+}
+
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
@@ -835,7 +851,6 @@ function handleNavScroll() {
         nav.style.top = '0px';
     } else {
         nav.classList.remove('nav-scrolled');
-        // যদি বারটি অলরেডি হাইড করা থাকে, তবে স্ক্রল টপে আসলেও মেনু জিরোতেই থাকবে
         nav.style.top = isBarDismissed ? '0px' : '36px';
     }
 }
@@ -850,6 +865,10 @@ window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.upd
 window.dismissAnnouncementBar = dismissAnnouncementBar;
 
 async function initSharedComponents() {
+    // যদি অলরেডি ইনিশিয়ালাইজ হয়ে থাকে, তবে কোড এখানেই এক্সিট করবে
+    if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
+    window.JABIYEN_COMPONENTS_INITIALIZED = true;
+
     loadFontsConfiguration();
     injectSharedStyles();
     await renderHeader();
@@ -857,6 +876,7 @@ async function initSharedComponents() {
     updateCounts();
     
     // স্ক্রল রিয়েল-টাইম হ্যান্ডলিং সেটআপ
+    window.removeEventListener('scroll', handleNavScroll); // কোনো ডুপ্লিকেট লিসেনার থাকলে রিমুভ করা
     window.addEventListener('scroll', handleNavScroll);
     handleNavScroll(); 
 
