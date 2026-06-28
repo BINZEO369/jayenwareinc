@@ -1,8 +1,8 @@
 // ============================================
-// server.js - Complete API Server (Ultimate Merged Edition)
-// JBYN-OneID Global Profile System & Jayenware Core
+// server.js - Core Content & Products API Server
+// Jayenware Catalog & Media Management System
 // Supabase Integrated | Production Ready
-// All Endpoints Restored & Verified | SQL Schema Compatible
+// All Non-Auth Endpoints Kept Intact & Verified
 // ============================================
 
 const express = require('express');
@@ -40,20 +40,6 @@ function createSlug(text) {
         .replace(/^-+|-+$/g, '');
 }
 
-// Build full address from components
-function buildFullAddress(data) {
-    const parts = [
-        data.apartment_house,
-        data.street_address,
-        data.city,
-        data.state_province,
-        data.postal_code,
-        data.country || 'Bangladesh'
-    ].filter(Boolean);
-    
-    return parts.join(', ') || 'Address not provided';
-}
-
 // Format product with category/subcategory names
 function formatProduct(product) {
     if (!product) return null;
@@ -69,396 +55,11 @@ function formatProducts(products) {
     return products.map(formatProduct);
 }
 
-// Format phone number to international format (E.164)
-function formatPhoneNumber(phone) {
-    if (!phone || phone === 'N/A') return phone;
-    
-    let cleaned = phone.replace(/[^\d]/g, '');
-    
-    if (cleaned.startsWith('01') && cleaned.length === 11) {
-        return '+880' + cleaned.substring(1);
-    }
-    
-    if (cleaned.startsWith('8801') && cleaned.length === 13) {
-        return '+' + cleaned;
-    }
-    
-    if (phone.startsWith('+')) {
-        return phone;
-    }
-    
-    return phone;
-}
-
-// Validate E.164 phone format
-function isValidPhone(phone) {
-    return phone === 'N/A' || /^\+[1-9]\d{6,14}$/.test(phone);
-}
-
-// Validate JBYN-OneID format
-function isValidOneID(oneid) {
-    return /^JBYN-OneID-[A-Z0-9]{12}$/.test(oneid);
-}
-
-// ============================================
-// AUTHENTICATION API ROUTES (PRO-GRADE DATABASE SYNCED)
-// ============================================
-
-// SIGNUP - Registers to Auth and automatically triggers Postgres Profiles
-app.post('/api/auth/signup', async (req, res) => {
-    try {
-        const { 
-            email, 
-            password, 
-            name, 
-            phone,
-            country,
-            state_province,
-            city,
-            postal_code,
-            street_address,
-            apartment_house
-        } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
-        }
-        if (!name || name.trim().length < 3) {
-            return res.status(400).json({ error: 'Full name is required (minimum 3 characters)' });
-        }
-        if (password.length < 6) {
-            return res.status(400).json({ error: 'Password must be at least 6 characters' });
-        }
-
-        const formattedPhone = formatPhoneNumber(phone);
-        if (phone && !isValidPhone(formattedPhone)) {
-            return res.status(400).json({ error: 'Invalid phone format. Use international format (e.g., +8801XXXXXXXXX)' });
-        }
-
-        const fullAddress = buildFullAddress({
-            apartment_house: apartment_house || '',
-            street_address: street_address || '',
-            city: city || '',
-            state_province: state_province || '',
-            postal_code: postal_code || '',
-            country: country || 'Bangladesh'
-        });
-
-        if (!fullAddress || fullAddress.length < 10) {
-            return res.status(400).json({ error: 'Please provide complete address details (minimum 10 characters)' });
-        }
-
-        // SignUp via Supabase Auth and seed metadata
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name: name.trim(),
-                    phone: formattedPhone || 'N/A',
-                    country: country || 'Bangladesh',
-                    state_province: state_province || null,
-                    city: city || null,
-                    postal_code: postal_code || null,
-                    street_address: street_address || null,
-                    apartment_house: apartment_house || null,
-                    full_address: fullAddress
-                }
-            }
-        });
-
-        if (error) {
-            if (error.message.includes('already registered')) {
-                return res.status(400).json({ error: 'This email is already registered. Please login instead.' });
-            }
-            return res.status(400).json({ error: error.message });
-        }
-
-        let oneid = null;
-        if (data.user) {
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('jbyn_oneid')
-                .eq('id', data.user.id)
-                .single();
-            
-            oneid = profile?.jbyn_oneid || null;
-        }
-
-        res.status(201).json({
-            message: 'Registration successful! Please check your email for verification.',
-            user: data.user,
-            session: data.session,
-            jbyn_oneid: oneid
-        });
-
-    } catch (err) {
-        console.error('Signup error:', err);
-        res.status(500).json({ error: 'Registration failed. Please try again.' });
-    }
-});
-
-// LOGIN
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
-        }
-
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-        if (error) {
-            if (error.message.includes('Invalid login credentials')) {
-                return res.status(401).json({ error: 'Invalid email or password' });
-            }
-            if (error.message.includes('Email not confirmed')) {
-                return res.status(401).json({ error: 'Please verify your email before logging in' });
-            }
-            return res.status(401).json({ error: error.message });
-        }
-
-        const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', data.user.id)
-            .single();
-
-        res.json({
-            message: 'Login successful!',
-            user: data.user,
-            session: data.session,
-            profile: profile || null
-        });
-
-    } catch (err) {
-        console.error('Login error:', err);
-        res.status(500).json({ error: 'Login failed. Please try again.' });
-    }
-});
-
-// LOGOUT
-app.post('/api/auth/logout', async (req, res) => {
-    try {
-        const { error } = await supabase.auth.signOut();
-        if (error) return res.status(500).json({ error: error.message });
-        res.json({ message: 'Logged out successfully' });
-    } catch (err) {
-        res.status(500).json({ error: 'Logout failed' });
-    }
-});
-
-// GET CURRENT USER SESSION (Uses get_current_user_profile RPC)
-app.get('/api/auth/user', async (req, res) => {
-    try {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        const { data: profileData, error: profileError } = await supabase
-            .rpc('get_current_user_profile');
-
-        if (profileError) return res.status(500).json({ error: profileError.message });
-        const profile = profileData?.success ? profileData.data : null;
-
-        res.json({ user, profile });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to get user data' });
-    }
-});
-
-// UPDATE PROFILE (Uses upsert_user_profile RPC)
-app.put('/api/auth/profile', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        const { 
-            name, phone, country, state_province,
-            city, postal_code, street_address, apartment_house 
-        } = req.body;
-
-        if (name && name.trim().length < 3) {
-            return res.status(400).json({ error: 'Name must be at least 3 characters' });
-        }
-
-        const { data, error } = await supabase
-            .rpc('upsert_user_profile', {
-                p_name: name,
-                p_phone: phone || null,
-                p_country: country || null,
-                p_state_province: state_province || null,
-                p_city: city || null,
-                p_postal_code: postal_code || null,
-                p_street_address: street_address || null,
-                p_apartment_house: apartment_house || null
-            });
-
-        if (error) return res.status(500).json({ error: error.message });
-
-        if (!data.success) {
-            return res.status(400).json({ 
-                error: data.error, 
-                field: data.field,
-                code: data.code 
-            });
-        }
-
-        res.json({
-            message: data.message,
-            action: data.action,
-            oneid: data.oneid
-        });
-
-    } catch (err) {
-        console.error('Profile update error:', err);
-        res.status(500).json({ error: 'Failed to update profile' });
-    }
-});
-
-// GET JBYN PASSKEY (OneID)
-app.get('/api/auth/passkey', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        const { data: profile } = await supabase
-            .from('profiles')
-            .select('jbyn_oneid')
-            .eq('id', user.id)
-            .single();
-
-        if (!profile) return res.status(404).json({ error: 'Profile not found' });
-        res.json({ jbyn_oneid: profile.jbyn_oneid });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to retrieve OneID' });
-    }
-});
-
-// FORGOT PASSWORD
-app.post('/api/auth/forgot-password', async (req, res) => {
-    try {
-        const { email } = req.body;
-        if (!email) return res.status(400).json({ error: 'Email is required' });
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
-        });
-
-        if (error) return res.status(400).json({ error: error.message });
-        res.json({ message: 'Password reset link sent to your email' });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to send reset email' });
-    }
-});
-
-// RESET PASSWORD
-app.put('/api/auth/reset-password', async (req, res) => {
-    try {
-        const { password } = req.body;
-        if (!password || password.length < 6) {
-            return res.status(400).json({ error: 'Password must be at least 6 characters' });
-        }
-
-        const { error } = await supabase.auth.updateUser({ password: password });
-        if (error) return res.status(400).json({ error: error.message });
-
-        res.json({ message: 'Password updated successfully' });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to update password' });
-    }
-});
-
-// DELETE ACCOUNT (Removes custom profile & clears active session)
-app.post('/api/auth/delete-account', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .delete()
-            .eq('id', user.id);
-
-        if (profileError) return res.status(400).json({ error: profileError.message });
-        await supabase.auth.signOut();
-
-        res.json({ message: 'Account deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to delete account' });
-    }
-});
-
-// ============================================
-// OneID LOOKUP & SEARCH API
-// ============================================
-
-// Search user by OneID (Privacy-safe)
-app.get('/api/oneid/search/:oneid', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        const { oneid } = req.params;
-        if (!isValidOneID(oneid)) {
-            return res.status(400).json({ error: 'Invalid JBYN-OneID format. Use: JBYN-OneID-XXXXXXXXXXXX' });
-        }
-
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('name, jbyn_oneid, country, city, is_verified')
-            .eq('jbyn_oneid', oneid)
-            .single();
-
-        if (error) return res.status(404).json({ error: 'User not found with this OneID' });
-        res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: 'Search failed' });
-    }
-});
-
-// Lookup user by OneID (Full details via Authorized Database RPC)
-app.get('/api/oneid/lookup/:oneid', async (req, res) => {
-    try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) return res.status(401).json({ error: 'Not authenticated' });
-
-        const { oneid } = req.params;
-        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-
-        const { data, error } = await supabase
-            .rpc('lookup_user_by_oneid', { lookup_oneid: oneid });
-
-        if (error) return res.status(404).json({ error: error.message });
-        res.json(data?.[0] || null);
-    } catch (err) {
-        res.status(500).json({ error: 'Lookup failed' });
-    }
-});
-
-// Check if OneID exists instantly
-app.get('/api/oneid/exists/:oneid', async (req, res) => {
-    try {
-        const { oneid } = req.params;
-        if (!isValidOneID(oneid)) return res.status(400).json({ error: 'Invalid JBYN-OneID format' });
-
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('jbyn_oneid', oneid)
-            .single();
-
-        if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
-        res.json({ exists: !!data });
-    } catch (err) {
-        res.status(500).json({ error: 'Check failed' });
-    }
-});
-
 // ============================================
 // PRODUCTS API (Categories, Subcategories with Slug Engine)
 // ============================================
 
+// Get all products
 app.get('/api/products', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -473,6 +74,7 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
+// Get product by slug
 app.get('/api/product/:slug', async (req, res) => {
     try {
         const slug = req.params.slug;
@@ -491,6 +93,7 @@ app.get('/api/product/:slug', async (req, res) => {
     }
 });
 
+// Get all categories (with slugs)
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -511,6 +114,7 @@ app.get('/api/categories', async (req, res) => {
     }
 });
 
+// Get category by slug
 app.get('/api/categories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -532,6 +136,7 @@ app.get('/api/categories/:slug', async (req, res) => {
     }
 });
 
+// Get products by category slug
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -557,6 +162,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
     }
 });
 
+// Get all subcategories
 app.get('/api/subcategories', async (req, res) => {
     try {
         const { category_slug } = req.query;
@@ -582,6 +188,7 @@ app.get('/api/subcategories', async (req, res) => {
     }
 });
 
+// Get subcategory by slug
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -606,6 +213,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
     }
 });
 
+// Get products by subcategory slug
 app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -630,6 +238,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
 // NAVIGATION MENU API
 // ============================================
 
+// Get menu hierarchy tree
 app.get('/api/menu', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -657,6 +266,7 @@ app.get('/api/menu', async (req, res) => {
     }
 });
 
+// Get flat menu items list
 app.get('/api/menu-items', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -677,6 +287,7 @@ app.get('/api/menu-items', async (req, res) => {
     }
 });
 
+// Get menu item by slug
 app.get('/api/menu-items/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -701,6 +312,7 @@ app.get('/api/menu-items/:slug', async (req, res) => {
 // HERO SLIDES & MEDIA API
 // ============================================
 
+// Get primary hero slides
 app.get('/api/hero', async (req, res) => {
     try {
         const { data, error } = await supabase.from('hero').select('*').order('created_at', { ascending: true });
@@ -711,6 +323,7 @@ app.get('/api/hero', async (req, res) => {
     }
 });
 
+// Get hero slider background videos
 app.get('/api/hero-videos', async (req, res) => {
     try {
         const { data, error } = await supabase.from('hero_videos').select('*').eq('is_active', true).order('sort_order', { ascending: true });
@@ -721,6 +334,7 @@ app.get('/api/hero-videos', async (req, res) => {
     }
 });
 
+// Get auxiliary/secondary grid items
 app.get('/api/hero-secondary', async (req, res) => {
     try {
         const { data, error } = await supabase.from('hero_secondary').select('*').eq('is_active', true).order('sort_order', { ascending: true });
@@ -748,6 +362,7 @@ app.get('/api/news', async (req, res) => {
 // PRODUCT ADVANCED DETAILS API (Colors, Sizes, Reviews, Videos, Banners)
 // ============================================
 
+// Get color variations
 app.get('/api/product-colors', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -765,6 +380,7 @@ app.get('/api/product-colors', async (req, res) => {
     }
 });
 
+// Get sizing/attribute variants
 app.get('/api/product-variants', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -782,6 +398,7 @@ app.get('/api/product-variants', async (req, res) => {
     }
 });
 
+// Get reviews list
 app.get('/api/product-reviews', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -799,6 +416,7 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
+// Submit generic public review
 app.post('/api/submit-review', async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
@@ -815,6 +433,7 @@ app.post('/api/submit-review', async (req, res) => {
     }
 });
 
+// Get embedded product videos
 app.get('/api/product-videos', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -832,6 +451,7 @@ app.get('/api/product-videos', async (req, res) => {
     }
 });
 
+// Get promotional item banners
 app.get('/api/product-banners', async (req, res) => {
     try {
         const slug = req.query.slug;
@@ -849,6 +469,7 @@ app.get('/api/product-banners', async (req, res) => {
     }
 });
 
+// Get sizes mapped to parsed Color IDs
 app.get('/api/color-sizes', async (req, res) => {
     try {
         const ids = req.query.ids;
@@ -857,7 +478,7 @@ app.get('/api/color-sizes', async (req, res) => {
         const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
         if (!idArray.length) return res.json([]);
         
-        const { data, error } = await supabase.from('color_sizes').select('*').in('color_id', idArray).order('sort_order', { ascending: true });
+        const { data, error } = await supabase from('color_sizes').select('*').in('color_id', idArray).order('sort_order', { ascending: true });
         if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
@@ -868,11 +489,6 @@ app.get('/api/color-sizes', async (req, res) => {
 // ============================================
 // PAGE STRUCTURAL ROUTES
 // ============================================
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'login.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'signup.html')));
-app.get('/reset-password', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html')));
-app.get('/profile', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'profile.html')));
-app.get('/account', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'account.html')));
 app.get('/category/:slug*', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'category.html')));
 
 // ============================================
