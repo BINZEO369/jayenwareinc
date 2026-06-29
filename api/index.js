@@ -1,8 +1,7 @@
 // ============================================
 // server.js - Complete API Server
 // Supabase Integrated | Production Ready
-// Auth & OneID Removed | Products & UI APIs Only
-// Subscriber Management Added
+// RPC-Based Subscriber System | UUID Token
 // ============================================
 
 const express = require('express');
@@ -46,6 +45,12 @@ function validateEmail(email) {
     return email && emailRegex.test(email);
 }
 
+// UUID validation helper
+function validateUUID(token) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return token && uuidRegex.test(token.trim());
+}
+
 // Format product with category/subcategory names
 function formatProduct(product) {
     if (!product) return null;
@@ -62,7 +67,7 @@ function formatProducts(products) {
 }
 
 // ============================================
-// PRODUCTS API (Categories, Subcategories with Slug)
+// PRODUCTS API
 // ============================================
 
 // Get all products
@@ -108,7 +113,7 @@ app.get('/api/product/:slug', async (req, res) => {
     }
 });
 
-// Get all categories (with slugs)
+// Get all categories
 app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -474,7 +479,7 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
-// PRODUCT DETAILS API (Colors, Variants, Reviews, Videos, Banners)
+// PRODUCT DETAILS API
 // ============================================
 
 // Get product colors
@@ -642,10 +647,11 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
-// NEWSLETTER SUBSCRIBER API
+// NEWSLETTER SUBSCRIBER API (RPC-Based)
+// Secure: UUID Token + Email/Name Verification
 // ============================================
 
-// POST - Subscribe to newsletter (public endpoint)
+// POST - Subscribe to newsletter (Public - RPC)
 app.post('/api/subscribe', async (req, res) => {
     try {
         const { email, name } = req.body;
@@ -666,77 +672,18 @@ app.post('/api/subscribe', async (req, res) => {
             });
         }
 
-        const cleanEmail = email.toLowerCase().trim();
-        const cleanName = name ? name.trim() : null;
-
-        // Check if email already exists
-        const { data: existingSubscriber, error: checkError } = await supabase
-            .from('subscribers')
-            .select('id, is_active, unsubscribed_at')
-            .eq('email', cleanEmail)
-            .single();
-
-        if (checkError && checkError.code !== 'PGRST116') {
-            throw checkError;
-        }
-
-        // If subscriber exists and is active
-        if (existingSubscriber && existingSubscriber.is_active) {
-            return res.status(409).json({
-                success: false,
-                message: 'Email is already subscribed'
+        // Call RPC function
+        const { data, error } = await supabase
+            .rpc('rpc_subscribe', {
+                p_email: email.trim(),
+                p_name: name ? name.trim() : null
             });
-        }
 
-        // If subscriber exists but was unsubscribed, reactivate them
-        if (existingSubscriber && !existingSubscriber.is_active) {
-            const { data: reactivated, error: reactivateError } = await supabase
-                .from('subscribers')
-                .update({
-                    is_active: true,
-                    unsubscribed_at: null,
-                    name: cleanName || existingSubscriber.name
-                })
-                .eq('id', existingSubscriber.id)
-                .select()
-                .single();
+        if (error) throw error;
 
-            if (reactivateError) throw reactivateError;
-
-            return res.status(200).json({
-                success: true,
-                message: 'Subscription reactivated successfully',
-                data: reactivated
-            });
-        }
-
-        // Insert new subscriber
-        const { data: newSubscriber, error: insertError } = await supabase
-            .from('subscribers')
-            .insert([{
-                email: cleanEmail,
-                name: cleanName,
-                is_active: true,
-                subscribed_at: new Date().toISOString()
-            }])
-            .select()
-            .single();
-
-        if (insertError) {
-            if (insertError.code === '23505') {
-                return res.status(409).json({
-                    success: false,
-                    message: 'Email already exists'
-                });
-            }
-            throw insertError;
-        }
-
-        return res.status(201).json({
-            success: true,
-            message: 'Successfully subscribed to newsletter',
-            data: newSubscriber
-        });
+        // Return based on success
+        const statusCode = data.success ? (data.message.includes('reactivated') ? 200 : 201) : 409;
+        return res.status(statusCode).json(data);
 
     } catch (error) {
         console.error('Subscribe error:', error);
@@ -748,10 +695,52 @@ app.post('/api/subscribe', async (req, res) => {
     }
 });
 
-// POST - Unsubscribe from newsletter (public endpoint)
+// POST - Unsubscribe using UUID Token (Public - RPC)
 app.post('/api/unsubscribe', async (req, res) => {
     try {
-        const { email } = req.body;
+        const { token } = req.body;
+
+        // Validate token
+        if (!token || !token.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Unsubscribe token is required'
+            });
+        }
+
+        // Validate UUID format
+        if (!validateUUID(token)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid token format. Must be a valid UUID.'
+            });
+        }
+
+        // Call RPC function
+        const { data, error } = await supabase
+            .rpc('rpc_unsubscribe', {
+                p_token: token.trim()
+            });
+
+        if (error) throw error;
+
+        const statusCode = data.success ? 200 : 404;
+        return res.status(statusCode).json(data);
+
+    } catch (error) {
+        console.error('Unsubscribe error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to unsubscribe',
+            error: error.message
+        });
+    }
+});
+
+// POST - Verify subscriber & get info (Email + Name required - RPC)
+app.post('/api/subscriber-status', async (req, res) => {
+    try {
+        const { email, name } = req.body;
 
         // Validate email
         if (!email || !email.trim()) {
@@ -769,122 +758,51 @@ app.post('/api/unsubscribe', async (req, res) => {
             });
         }
 
-        const cleanEmail = email.toLowerCase().trim();
-
-        // Find and unsubscribe the subscriber
-        const { data: subscriber, error: findError } = await supabase
-            .from('subscribers')
-            .update({
-                is_active: false,
-                unsubscribed_at: new Date().toISOString()
-            })
-            .eq('email', cleanEmail)
-            .eq('is_active', true)
-            .select()
-            .single();
-
-        if (findError) {
-            if (findError.code === 'PGRST116') {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Active subscription not found for this email'
-                });
-            }
-            throw findError;
-        }
-
-        return res.status(200).json({
-            success: true,
-            message: 'Successfully unsubscribed from newsletter',
-            data: subscriber
-        });
-
-    } catch (error) {
-        console.error('Unsubscribe error:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Failed to unsubscribe',
-            error: error.message
-        });
-    }
-});
-
-// GET - Check subscription status by email
-app.get('/api/subscriber-status', async (req, res) => {
-    try {
-        const { email } = req.query;
-
-        if (!email || !email.trim()) {
+        // Validate name
+        if (!name || !name.trim()) {
             return res.status(400).json({
                 success: false,
-                message: 'Email parameter is required'
+                message: 'Name is required for verification'
             });
         }
 
-        if (!validateEmail(email)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid email format'
-            });
-        }
-
-        const cleanEmail = email.toLowerCase().trim();
-
-        const { data: subscriber, error } = await supabase
-            .from('subscribers')
-            .select('id, email, name, is_active, subscribed_at, unsubscribed_at')
-            .eq('email', cleanEmail)
-            .single();
-
-        if (error) {
-            if (error.code === 'PGRST116') {
-                return res.status(200).json({
-                    success: true,
-                    is_subscribed: false,
-                    message: 'Email is not subscribed'
-                });
-            }
-            throw error;
-        }
-
-        return res.status(200).json({
-            success: true,
-            is_subscribed: subscriber.is_active,
-            data: subscriber
-        });
-
-    } catch (error) {
-        console.error('Subscriber status error:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Failed to check subscription status',
-            error: error.message
-        });
-    }
-});
-
-// GET - Get all subscribers (public view - limited info)
-app.get('/api/subscribers', async (req, res) => {
-    try {
+        // Call RPC function
         const { data, error } = await supabase
-            .from('subscribers')
-            .select('id, email, name, is_active, subscribed_at')
-            .eq('is_active', true)
-            .order('subscribed_at', { ascending: false });
+            .rpc('rpc_verify_subscriber', {
+                p_email: email.trim(),
+                p_name: name.trim()
+            });
 
         if (error) throw error;
 
-        return res.status(200).json({
-            success: true,
-            count: data.length,
-            data: data
-        });
+        const statusCode = data.success ? 200 : (data.message.includes('Name') ? 403 : 404);
+        return res.status(statusCode).json(data);
 
     } catch (error) {
-        console.error('Get subscribers error:', error);
+        console.error('Verify subscriber error:', error);
         return res.status(500).json({
             success: false,
-            message: 'Failed to fetch subscribers',
+            message: 'Failed to verify subscriber',
+            error: error.message
+        });
+    }
+});
+
+// GET - Get subscriber count (Admin only - RPC)
+app.get('/api/subscriber-count', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .rpc('rpc_get_subscriber_count');
+
+        if (error) throw error;
+
+        return res.status(200).json(data);
+
+    } catch (error) {
+        console.error('Subscriber count error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to get subscriber count',
             error: error.message
         });
     }
