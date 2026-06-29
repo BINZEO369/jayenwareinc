@@ -1,6 +1,3 @@
-
-
-
 // ============================================
 // server.js - Complete API Server
 // Supabase Integrated | Production Ready
@@ -636,77 +633,6 @@ app.get('/api/color-sizes', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// ============================================
-// SUBSCRIPTIONS API
-// ============================================
-
-// ============================================
-// SUBSCRIPTIONS API (Updated for Token-based Security)
-// ============================================
-
-// Subscribe User
-// Note: টোকেন ডাটাবেসে ট্রিগারের মাধ্যমে অটোমেটিক জেনারেট হবে। 
-// রেসপন্স হিসেবে টোকেনটি পাঠিয়ে দিন যাতে আপনি ইউজারের কাছে ইমেইল পাঠাতে পারেন।
-app.post('/api/subscribe', async (req, res) => {
-    try {
-        const { name, email } = req.body;
-        
-        if (!name || !email) {
-            return res.status(400).json({ error: 'Name and email are required' });
-        }
-
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .insert([{ name, email }])
-            .select('unsubscribe_token'); // ইনসার্ট হওয়ার পর অটো-জেনারেটেড টোকেনটি রিটার্ন করবে
-
-        if (error) {
-            if (error.code === '23505') {
-                return res.status(409).json({ error: 'This email is already registered.' });
-            }
-            return res.status(500).json({ error: error.message });
-        }
-
-        res.json({ 
-            success: true, 
-            message: 'Subscribed successfully', 
-            token: data[0].unsubscribe_token // ইউজারের ইমেইলে এই টোকেনটি পাঠাতে হবে
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Unsubscribe User (Using Email & Token)
-app.post('/api/unsubscribe', async (req, res) => {
-    try {
-        const { email, token } = req.body;
-        
-        if (!email || !token) {
-            return res.status(400).json({ error: 'Email and token are required' });
-        }
-
-        // নতুন সিকিউরড RPC ফাংশন কল করা হচ্ছে
-        const { data, error } = await supabase
-            .rpc('unsubscribe_user_by_token', {
-                p_email: email,
-                p_token: token
-            });
-
-        if (error) return res.status(500).json({ error: error.message });
-        
-        // data যদি false হয়, তার মানে ইমেইল বা টোকেন ম্যাচ করেনি
-        if (data === false) {
-            return res.status(404).json({ error: 'Invalid email or token!' });
-        }
-
-        res.json({ success: true, message: 'Successfully unsubscribed' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-
 
 // ============================================
 // PAGE ROUTES
@@ -725,5 +651,3 @@ app.get('*', (req, res) => {
 });
 
 module.exports = app;
-
-
