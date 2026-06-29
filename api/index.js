@@ -635,6 +635,61 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
+// SUBSCRIPTIONS API (Updated for Token)
+// ============================================
+
+// Subscribe User
+app.post('/api/subscribe', async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        
+        if (!name || !email) {
+            return res.status(400).json({ error: 'Name and email are required' });
+        }
+
+        // টোকেন ডাটাবেস থেকে অটো জেনারেট হবে, তাই এখানে পাঠানোর প্রয়োজন নেই
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .insert([{ name, email }])
+            .select(); // নতুন তৈরি হওয়া ডাটা (টোকেনসহ) পাওয়ার জন্য
+
+        if (error) {
+            if (error.code === '23505') {
+                return res.status(409).json({ error: 'This email is already registered.' });
+            }
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({ success: true, message: 'Subscribed successfully', data });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Unsubscribe User (Using Token via RPC)
+app.post('/api/unsubscribe', async (req, res) => {
+    try {
+        const { token } = req.body;
+        
+        if (!token) {
+            return res.status(400).json({ error: 'Token is required' });
+        }
+
+        // সরাসরি টোকেন দিয়ে RPC কল
+        const { error } = await supabase
+            .rpc('unsubscribe_user', {
+                p_token: token
+            });
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({ success: true, message: 'Unsubscribed successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
 // PAGE ROUTES
 // ============================================
 
