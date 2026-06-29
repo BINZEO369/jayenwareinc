@@ -21,7 +21,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // Service Role Key (Server-side - Bypasses RLS)
 // Get this from: Supabase Dashboard > Settings > API > service_role
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "YOUR_SERVICE_ROLE_KEY_HERE";
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDAzNjk2OCwiZXhwIjoyMDk1NjEyOTY4fQ.Eh6CdjVYOHiWLqZSBUNPXfndoksbM3NoZQSHT5PNsZQ";
 
 // Public client (respects RLS)
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
