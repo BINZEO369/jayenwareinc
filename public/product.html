@@ -13,10 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <!-- Fonts Configuration -->
     <script src="/fonts.js"></script>
     
-    <!-- Google Fonts Dynamic Loading -->
     <script>
         if (window.JAYENWARE_FONTS) {
             const link = document.createElement('link');
@@ -67,7 +65,6 @@
         
         img { max-width: 100%; height: auto; display: block; }
         
-        /* Typography System - Uses dynamic CSS variables */
         body {
             font-family: var(--font-body);
             -webkit-font-smoothing: antialiased;
@@ -108,10 +105,6 @@
             line-height: 1.8;
         }
         
-        .detail-badge {
-            font-family: var(--font-subtitle);
-        }
-        
         .detail-badge span:first-child {
             font-family: var(--font-accent);
         }
@@ -148,10 +141,6 @@
             letter-spacing: var(--tracking-wide);
         }
         
-        .star-rating label {
-            font-family: var(--font-body);
-        }
-        
         textarea, input {
             font-family: var(--font-body);
         }
@@ -170,7 +159,6 @@
             font-family: var(--font-body);
         }
         
-        /* Banner Typography */
         .banner-title {
             font-family: var(--font-heading);
             font-weight: 800;
@@ -188,7 +176,6 @@
             letter-spacing: var(--tracking-wide);
         }
         
-        /* Video Overlay Typography */
         .video-cdn-badge {
             font-family: var(--font-accent);
             font-weight: 600;
@@ -200,7 +187,6 @@
             font-weight: 600;
         }
         
-        /* Sticky Bar */
         .sticky-add-bar span {
             font-family: var(--font-body);
             font-weight: 900;
@@ -212,8 +198,60 @@
             text-transform: uppercase;
             letter-spacing: var(--tracking-wide);
         }
+
+        /* ── HERO ANIMATION (from Category Page) ── */
+        .product-hero {
+            position: relative;
+            width: 100%;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            height: 60vh;
+            min-height: 400px;
+            max-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+        .product-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            will-change: transform;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.08));
+            opacity: 0;
+            transform: scale(1.02);
+        }
+        .product-hero img.loaded {
+            animation: heroReveal 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        @keyframes heroReveal {
+            0% { opacity: 0; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .product-hero.zoomed img { transform: scale(2.5); }
+
+        @media (min-width: 768px) {
+            .product-hero { 
+                height: 70vh;
+                min-height: 500px;
+                max-height: 800px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .product-hero { 
+                height: auto;
+                min-height: 500px;
+                max-height: none;
+                border-radius: 24px;
+            }
+            .product-hero img {
+                max-height: 80vh;
+            }
+        }
         
-        /* ⚡ Color Swatch - WITH BORDER SHADOW for white colors */
+        /* Color Swatch */
         .color-swatch-btn {
             width: 40px;
             height: 40px;
@@ -221,7 +259,6 @@
             border: 2px solid rgba(0,0,0,0.12);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
             flex-shrink: 0;
             background: rgba(255,255,255,0.6);
             backdrop-filter: blur(10px);
@@ -255,7 +292,6 @@
             opacity: 0.3;
             cursor: not-allowed;
             pointer-events: none;
-            backdrop-filter: blur(5px);
         }
         .color-swatch-btn.disabled .swatch-color::after {
             content: '';
@@ -301,153 +337,8 @@
         .size-btn.disabled {
             opacity: 0.3;
             cursor: not-allowed;
-            background: rgba(245,245,247,0.5);
-            border-color: rgba(0,0,0,0.04);
             text-decoration: line-through;
             pointer-events: none;
-        }
-        
-        /* Product Hero */
-        .product-hero {
-            position: relative;
-            width: 100%;
-            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-            height: 60vh;
-            min-height: 400px;
-            max-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            cursor: zoom-in;
-            transition: background 0.3s ease;
-        }
-        .product-hero img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-            will-change: transform;
-            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.08));
-        }
-        .product-hero.zoomed img { transform: scale(2.5); }
-        
-        /* Desktop Layout */
-        @media (min-width: 1024px) {
-            .product-hero { 
-                height: auto;
-                min-height: 500px;
-                max-height: none;
-                border-radius: 24px;
-            }
-            .product-hero img {
-                max-height: 80vh;
-            }
-            
-            .desktop-layout {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-                align-items: start;
-                max-width: 1400px;
-                margin: 0 auto;
-                padding: 40px;
-            }
-            
-            .desktop-image-col {
-                position: relative;
-            }
-            
-            .desktop-info-col {
-                max-width: 600px;
-            }
-            
-            .main-image-wrapper {
-                width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-            }
-            
-            .product-info-card {
-                padding: 32px;
-            }
-            
-            .product-info-card .title-text {
-                font-size: 30px;
-            }
-            
-            #variant-price-display {
-                font-size: 36px !important;
-            }
-            
-            #variant-old-price-display {
-                font-size: 18px !important;
-            }
-            
-            .color-swatch-btn {
-                width: 44px;
-                height: 44px;
-            }
-            
-            .size-btn {
-                padding: 12px 22px;
-                font-size: 14px;
-                min-width: 52px;
-                border-radius: 14px;
-            }
-            
-            #buy-section button {
-                padding: 20px !important;
-                font-size: 14px !important;
-                border-radius: 16px !important;
-            }
-            
-            .thumbnail-item {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .detail-badge {
-                padding: 18px 22px;
-                font-size: 14px;
-            }
-            
-            .detail-badge i {
-                font-size: 22px;
-            }
-            
-            .toggle-btn {
-                padding: 20px 28px;
-                font-size: 13px;
-            }
-            
-            .full-width-section {
-                grid-column: 1 / -1;
-                width: 100%;
-                margin-top: 20px;
-            }
-            
-            .mobile-video-section {
-                grid-column: 1 / -1;
-                width: 100%;
-            }
-            .mobile-banner-section {
-                grid-column: 1 / -1;
-                width: 100%;
-            }
-            
-            .desktop-full-width-buttons {
-                grid-column: 1 / -1;
-                width: 100%;
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .product-hero { 
-                height: 70vh;
-                min-height: 500px;
-                max-height: 800px;
-            }
         }
         
         /* Apple-style Product Info Card */
@@ -462,39 +353,6 @@
             box-shadow: 0 4px 24px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04);
         }
         
-        .product-info-card .variant-pill {
-            background: rgba(0,122,255,0.08);
-            color: #007aff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        
-        .product-info-card .title-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1d1d1f;
-            margin-bottom: 4px;
-            line-height: 1.2;
-        }
-        
-        .product-info-card .section-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: #86868b;
-            margin-bottom: 10px;
-        }
-        
-        .product-info-card .divider {
-            height: 1px;
-            background: rgba(0,0,0,0.06);
-            margin: 16px 0;
-        }
-        
-        /* Star Rating */
         .star-rating { direction: rtl; display: inline-flex; }
         .star-rating input[type="radio"] { display: none; }
         .star-rating label {
@@ -506,18 +364,6 @@
         .star-rating input[type="radio"]:checked ~ label,
         .star-rating label:hover,
         .star-rating label:hover ~ label { color: #ff9500; }
-        
-        /* Skeleton Loading */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
         
         /* Liquid Glass Specs Badge */
         .detail-badge {
@@ -739,6 +585,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            pointer-events: none;
         }
         
         @media (min-width: 768px) {
@@ -778,10 +625,6 @@
             background: rgba(0,0,0,0.8);
             border-bottom-color: rgba(255,255,255,0.7);
             border-color: rgba(255,255,255,0.25);
-        }
-        .video-cdn-badge i {
-            font-size: 11px;
-            opacity: 0.8;
         }
         
         .video-title-overlay {
@@ -826,6 +669,7 @@
             font-size: 18px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            pointer-events: auto;
         }
         .sound-btn:hover {
             background: rgba(0,0,0,0.75);
@@ -884,6 +728,18 @@
         }
         .video-section.paused .video-play-indicator {
             opacity: 1;
+        }
+
+        .video-thumb-preview {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .video-thumb-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* Banner Section */
@@ -953,52 +809,96 @@
                 height: 320px;
                 border-radius: 28px;
             }
-            .product-banner-card .banner-title {
-                font-size: 28px;
-            }
-            .product-banner-card .banner-subtitle {
-                font-size: 16px;
-            }
-            .product-banner-card .banner-overlay {
-                padding: 44px 40px;
-            }
+            .product-banner-card .banner-title { font-size: 28px; }
+            .product-banner-card .banner-subtitle { font-size: 16px; }
+            .product-banner-card .banner-overlay { padding: 44px 40px; }
         }
-        
         @media (min-width: 1024px) {
             .product-banner-card {
                 height: 550px;
             }
-            .product-banner-card .banner-title {
-                font-size: 32px;
-            }
-            .product-banner-card .banner-subtitle {
-                font-size: 18px;
-            }
-            .product-banner-card .banner-overlay {
-                padding: 60px 56px;
-            }
-            .product-banner-card .banner-link {
-                font-size: 15px;
-            }
+            .product-banner-card .banner-title { font-size: 32px; }
+            .product-banner-card .banner-subtitle { font-size: 18px; }
+            .product-banner-card .banner-overlay { padding: 60px 56px; }
+            .product-banner-card .banner-link { font-size: 15px; }
         }
 
-        /* Hide duplicate footer from components.js */
-        #components-footer + footer,
-        #components-footer ~ footer:not(#components-footer) {
-            display: none !important;
+        /* Desktop Layout */
+        @media (min-width: 1024px) {
+            .desktop-layout {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: start;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 40px;
+            }
+            .product-info-card {
+                padding: 32px;
+            }
+            .product-info-card .title-text {
+                font-size: 30px;
+            }
+            #variant-price-display {
+                font-size: 36px !important;
+            }
+            #variant-old-price-display {
+                font-size: 18px !important;
+            }
+            .color-swatch-btn {
+                width: 44px;
+                height: 44px;
+            }
+            .size-btn {
+                padding: 12px 22px;
+                font-size: 14px;
+                min-width: 52px;
+                border-radius: 14px;
+            }
+            #buy-section button {
+                padding: 20px !important;
+                font-size: 14px !important;
+                border-radius: 16px !important;
+            }
+            .thumbnail-item {
+                width: 80px;
+                height: 80px;
+            }
+            .detail-badge {
+                padding: 18px 22px;
+                font-size: 14px;
+            }
+            .detail-badge i {
+                font-size: 22px;
+            }
+            .toggle-btn {
+                padding: 20px 28px;
+                font-size: 13px;
+            }
+            .full-width-section {
+                grid-column: 1 / -1;
+                width: 100%;
+                margin-top: 20px;
+            }
+            .mobile-video-section,
+            .mobile-banner-section {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            .desktop-full-width-buttons {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            .product-hero.zoomed img {
+                transform: scale(3);
+            }
         }
     </style>
 </head>
 <body class="antialiased">
 
     <script src="/components.js"></script>
-
-    <div id="global-loader" style="position:fixed;inset:0;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s;">
-        <div style="text-align:center;">
-            <div style="width:40px;height:40px;border:3px solid #e5e5e5;border-top-color:#1d1d1f;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;"></div>
-            <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.3em;color:rgba(29,29,31,0.5);">JAYENWARE</p>
-        </div>
-    </div>
 
     <main id="product-page-content" style="flex-grow:1;">
         <div id="product-not-found" style="display:none;text-align:center;padding:100px 20px;">
@@ -1009,17 +909,17 @@
         </div>
 
         <div id="product-loading" style="display:grid;grid-template-columns:1fr;gap:0;">
-            <div class="skeleton" style="width:100%;height:60vh;min-height:400px;max-height:600px;border-radius:0;"></div>
+            <div class="skeleton" style="width:100%;height:60vh;min-height:400px;max-height:600px;border-radius:0;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;"></div>
             <div style="padding:20px;">
-                <div class="skeleton" style="height:14px;width:80px;margin-bottom:8px;"></div>
-                <div class="skeleton" style="height:28px;width:100%;margin-bottom:12px;"></div>
-                <div class="skeleton" style="height:36px;width:120px;margin-bottom:16px;"></div>
-                <div class="skeleton" style="height:16px;width:200px;margin-bottom:16px;"></div>
+                <div class="skeleton" style="height:14px;width:80px;margin-bottom:8px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;"></div>
+                <div class="skeleton" style="height:28px;width:100%;margin-bottom:12px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;"></div>
+                <div class="skeleton" style="height:36px;width:120px;margin-bottom:16px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;"></div>
+                <div class="skeleton" style="height:16px;width:200px;margin-bottom:16px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;"></div>
                 <div style="display:flex;gap:8px;margin-bottom:20px;">
-                    <div class="skeleton" style="height:40px;width:100px;border-radius:12px;"></div>
-                    <div class="skeleton" style="height:40px;width:100px;border-radius:12px;"></div>
+                    <div class="skeleton" style="height:40px;width:100px;border-radius:12px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;"></div>
+                    <div class="skeleton" style="height:40px;width:100px;border-radius:12px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;"></div>
                 </div>
-                <div class="skeleton" style="height:120px;border-radius:16px;"></div>
+                <div class="skeleton" style="height:120px;border-radius:16px;background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;"></div>
             </div>
         </div>
 
@@ -1085,10 +985,11 @@
             let barcodeGenerated = false;
             let allImages = [];
             let currentVideoElement = null;
+            let videoMutedMap = {};
+            let videoScrollTimeouts = {};
             
-            const loader = document.getElementById('global-loader');
-            const notFoundDiv = document.getElementById('product-not-found');
             const loadingDiv = document.getElementById('product-loading');
+            const notFoundDiv = document.getElementById('product-not-found');
             const contentDiv = document.getElementById('product-detail-content');
             const ctlSection = document.getElementById('complete-the-look-section');
             const ctlGrid = document.getElementById('complete-the-look-grid');
@@ -1121,7 +1022,12 @@
                 
                 if (color && color.color_image) {
                     const mainImg = document.getElementById('product-hero-image');
-                    if (mainImg) mainImg.src = color.color_image;
+                    if (mainImg) {
+                        mainImg.src = color.color_image;
+                        mainImg.classList.remove('loaded');
+                        mainImg.onload = function() { this.classList.add('loaded'); };
+                        mainImg.onerror = function() { this.src = '/logo.png'; this.classList.add('loaded'); };
+                    }
                     updateThumbnailSelection(color.color_image);
                 }
                 
@@ -1152,6 +1058,9 @@
                 const mainImg = document.getElementById('product-hero-image');
                 if (mainImg) {
                     mainImg.src = imageSrc;
+                    mainImg.classList.remove('loaded');
+                    mainImg.onload = function() { this.classList.add('loaded'); };
+                    mainImg.onerror = function() { this.src = '/logo.png'; this.classList.add('loaded'); };
                     const heroContainer = document.getElementById('product-hero');
                     if (heroContainer) heroContainer.classList.remove('zoomed');
                 }
@@ -1283,12 +1192,19 @@
             }
             
             function initStickyBar() {
+                let ticking = false;
                 window.addEventListener('scroll', () => {
-                    const buySection = document.getElementById('buy-section');
-                    if (buySection && stickyBar) {
-                        const rect = buySection.getBoundingClientRect();
-                        if (rect.bottom < 0) stickyBar.classList.add('active');
-                        else stickyBar.classList.remove('active');
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const buySection = document.getElementById('buy-section');
+                            if (buySection && stickyBar) {
+                                const rect = buySection.getBoundingClientRect();
+                                if (rect.bottom < 0) stickyBar.classList.add('active');
+                                else stickyBar.classList.remove('active');
+                            }
+                            ticking = false;
+                        });
+                        ticking = true;
                     }
                 }, { passive: true });
             }
@@ -1335,9 +1251,14 @@
                 const video = document.getElementById(videoId);
                 if (!video) return;
                 video.muted = true;
+                videoMutedMap[videoId] = true;
                 video.play().then(() => {
                     const section = video.closest('.video-section');
-                    if (section) section.classList.remove('paused');
+                    if (section) {
+                        section.classList.remove('paused');
+                        const thumbPreview = section.querySelector('.video-thumb-preview');
+                        if (thumbPreview) thumbPreview.style.display = 'none';
+                    }
                 }).catch(() => {
                     const section = video.closest('.video-section');
                     if (section) section.classList.add('paused');
@@ -1350,9 +1271,11 @@
                 const icon = btnElement?.querySelector('i');
                 if (!video) return;
                 video.muted = !video.muted;
+                videoMutedMap[videoId] = video.muted;
                 if (video.muted) {
                     btnElement?.classList.add('muted');
                     if (icon) icon.className = 'fa-solid fa-volume-xmark';
+                    btnElement?.querySelector('.sound-ripple')?.remove();
                 } else {
                     btnElement?.classList.remove('muted');
                     if (icon) icon.className = 'fa-solid fa-volume-high';
@@ -1373,15 +1296,23 @@
                     if (currentVideoElement && currentVideoElement !== video) {
                         currentVideoElement.pause();
                         const otherSection = currentVideoElement.closest('.video-section');
-                        if (otherSection) otherSection.classList.add('paused');
+                        if (otherSection) {
+                            otherSection.classList.add('paused');
+                            const thumbPreview = otherSection.querySelector('.video-thumb-preview');
+                            if (thumbPreview) thumbPreview.style.display = 'block';
+                        }
                     }
                     video.play();
                     section.classList.remove('paused');
+                    const thumbPreview = section.querySelector('.video-thumb-preview');
+                    if (thumbPreview) thumbPreview.style.display = 'none';
                     currentVideoElement = video;
                     if (icon) icon.className = 'fa-solid fa-pause';
                 } else {
                     video.pause();
                     section.classList.add('paused');
+                    const thumbPreview = section.querySelector('.video-thumb-preview');
+                    if (thumbPreview) thumbPreview.style.display = 'block';
                     currentVideoElement = null;
                     if (icon) icon.className = 'fa-solid fa-play';
                 }
@@ -1480,12 +1411,12 @@
                     return `
                     <div class="video-section paused" id="video-section-${index}">
                         <video id="${videoId}" src="${video.video_url}" playsinline muted loop preload="auto" style="display:block;" onloadeddata="initVideoAutoPlay('${videoId}')"></video>
-                        ${hasThumbnail ? `<div class="video-thumb-preview" style="position:absolute;inset:0;z-index:1;pointer-events:none;"><img src="${video.thumbnail_url}" alt="${video.title || 'Video thumbnail'}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none'"></div>` : ''}
+                        ${hasThumbnail ? `<div class="video-thumb-preview" style="display:block;"><img src="${video.thumbnail_url}" alt="${video.title || 'Video thumbnail'}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none'"></div>` : ''}
                         ${hasLink ? `<a href="${video.click_link}" target="_blank" rel="noopener" class="video-cdn-badge" onclick="event.stopPropagation()" title="${video.click_link}"><i class="fa-solid fa-link"></i> ${linkText} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i></a>` : ''}
                         ${video.title ? `<div class="video-title-overlay">${video.title}${video.subtitle ? ' · ' + video.subtitle : ''}</div>` : ''}
                         <div class="video-play-indicator"><i class="fa-solid fa-play"></i></div>
                         <div class="video-sound-control">
-                            <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoSound('${videoId}', this)" title="Toggle Sound" id="sound-btn-${index}"><i class="fa-solid fa-volume-xmark"></i><span class="sound-ripple"></span></button>
+                            <button class="sound-btn muted" onclick="event.stopPropagation(); toggleVideoSound('${videoId}', this)" title="Toggle Sound" id="sound-btn-${index}"><i class="fa-solid fa-volume-xmark"></i><span class="sound-ripple"></span></button>
                             <button class="sound-btn" onclick="event.stopPropagation(); toggleVideoPlay('${videoId}', this)" title="Play/Pause" style="width:40px;height:40px;font-size:15px;"><i class="fa-solid fa-pause"></i></button>
                         </div>
                     </div>`;
@@ -1510,6 +1441,30 @@
                         </div>
                     </div>`;
                 }).join('');
+            }
+
+            function initVideoScrollMute(videoId) {
+                const video = document.getElementById(videoId);
+                if (!video) return;
+                let scrollTimeout;
+                const handleScroll = () => {
+                    if (!videoMutedMap[videoId]) {
+                        clearTimeout(scrollTimeout);
+                        scrollTimeout = setTimeout(() => {
+                            video.muted = true;
+                            videoMutedMap[videoId] = true;
+                            const soundBtn = document.getElementById(`sound-btn-${videoId.replace('product-video-', '')}`);
+                            if (soundBtn) {
+                                soundBtn.classList.add('muted');
+                                const icon = soundBtn.querySelector('i');
+                                if (icon) icon.className = 'fa-solid fa-volume-xmark';
+                                soundBtn.querySelector('.sound-ripple')?.remove();
+                            }
+                        }, 150);
+                    }
+                };
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                videoScrollTimeouts[videoId] = { handleScroll };
             }
             
             async function loadProductBySlug(slug) {
@@ -1561,6 +1516,7 @@
                 currentProduct = product;
                 barcodeGenerated = false;
                 currentVideoElement = null;
+                videoMutedMap = {};
                 selectedColorId = null; selectedSizeId = null; selectedVariant = null;
                 if (loadingDiv) loadingDiv.style.display = 'none';
                 if (notFoundDiv) notFoundDiv.style.display = 'none';
@@ -1615,17 +1571,15 @@
                 
                 contentDiv.innerHTML = `
                 <div class="desktop-layout" style="display:block;">
-                    <!-- Left Column - Images -->
                     <div class="desktop-image-col">
                         <div class="main-image-wrapper">
                             <div id="product-hero" class="product-hero">
-                                <img id="product-hero-image" src="${mainImage}" alt="${product.title || ''}" onerror="this.src='/logo.png'">
+                                <img id="product-hero-image" src="${mainImage}" alt="${product.title || ''}" onload="this.classList.add('loaded')" onerror="this.src='/logo.png';this.classList.add('loaded')">
                             </div>
                         </div>
                         ${thumbnailsHTML}
                     </div>
                     
-                    <!-- Right Column - Product Info -->
                     <div class="desktop-info-col">
                         <div class="product-info-card">
                             <span class="variant-pill">${product.category || 'Product'}</span>
@@ -1651,7 +1605,7 @@
                                 ${avgRating?`<span style="font-size:12px;color:#86868b;margin-left:6px;font-family:var(--font-accent);"><i class="fa-solid fa-star" style="color:#ff9500;font-size:11px;"></i> ${avgRating} (${prodReviews.length})</span>`:''}
                             </div>
                             
-                            <div class="divider"></div>
+                            <div class="divider" style="height:1px;background:rgba(0,0,0,0.06);margin:16px 0;"></div>
                             
                             ${colorsHTML}
                             
@@ -1662,19 +1616,15 @@
                             <div id="variant-info-pill" class="variant-info-pill" style="display:none;"></div>
                         </div>
                         
-                        <!-- Buy Buttons -->
                         <div id="buy-section" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 24px;">
-                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-family:var(--font-body);">Add to Bag</button>
-                            <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:18px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.3s;transition:all 0.3s;color:#1d1d1f;font-family:var(--font-body);">Buy Now</button>
+                            <button id="add-to-bag-btn" onclick="addToCartHandler(${product.id})" style="padding:18px;background:#1d1d1f;color:white;border:none;border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-family:var(--font-body);">Add to Bag</button>
+                            <button id="buy-now-btn" onclick="addToCartHandler(${product.id},true)" style="padding:18px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1.5px solid rgba(0,0,0,0.1);border-radius:16px;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.3s;color:#1d1d1f;font-family:var(--font-body);">Buy Now</button>
                         </div>
                     </div>
                     
-                    <!-- VIDEO SECTION - Full Width -->
                     ${videosHTML ? `<div class="mobile-video-section full-width-section">${videosHTML}</div>` : ''}
                     
-                    <!-- DESKTOP: Specs, Description, Barcode - FULL WIDTH buttons -->
                     <div class="desktop-full-width-buttons">
-                        <!-- Specifications -->
                         <button class="toggle-btn" onclick="toggleCollapse('specs-collapse','specs-icon')">
                             <span><i class="fa-solid fa-sliders"></i> &nbsp;Specifications</span>
                             <i id="specs-icon" class="fa-solid fa-chevron-down toggle-icon-right"></i>
@@ -1689,7 +1639,6 @@
                             </div>
                         </div>
                         
-                        <!-- Description -->
                         ${product.description ? `
                         <button class="toggle-btn" onclick="toggleCollapse('desc-collapse','desc-icon')">
                             <span><i class="fa-solid fa-align-left"></i> &nbsp;Description</span>
@@ -1699,7 +1648,6 @@
                             <div class="description-content">${product.description}</div>
                         </div>` : ''}
                         
-                        <!-- Barcode -->
                         ${(product.barcode) ? `
                         <button class="toggle-btn" onclick="toggleCollapse('barcode-collapse','barcode-icon', '${(product.barcode || '').replace(/'/g, "\\'")}')" style="justify-content: flex-start; gap: 12px;">
                             <span><i class="fa-solid fa-barcode"></i> &nbsp;Barcode</span>
@@ -1714,10 +1662,8 @@
                         <div style="height:16px;"></div>
                     </div>
                     
-                    <!-- BANNER SECTION - Full Width -->
                     ${bannersHTML ? `<div class="mobile-banner-section full-width-section" style="margin-top:0;">${bannersHTML}</div>` : ''}
                     
-                    <!-- Reviews Section -->
                     <div class="desktop-full-width-buttons" style="margin-top:0;padding-top:0;">
                         <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:36px;margin-top:8px;">
                             <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
@@ -1735,7 +1681,7 @@
                                     <input type="radio" id="star1" name="product-rating" value="1"><label for="star1"><i class="fa-solid fa-star"></i></label>
                                 </div>
                                 <textarea id="review-text" placeholder="Share your experience..." style="width:100%;padding:16px;border:1px solid rgba(0,0,0,0.08);border-radius:14px;font-size:14px;height:100px;margin-bottom:16px;background:rgba(255,255,255,0.6);resize:vertical;font-family:var(--font-body);"></textarea>
-                                <button onclick="submitReview(${product.id})" style="padding:14px 32px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:0.5px;font-family:var(--font-body);">Submit Review</button>
+                                <button onclick="submitReview(${product.id})" style="padding:14px 32px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--font-body);">Submit Review</button>
                             </div>
                         </div>
                         
@@ -1746,13 +1692,22 @@
                 const related = getRandomProducts(product.id, 4);
                 if (related.length) { ctlSection.style.display = 'block'; ctlGrid.innerHTML = related.map(p => productCardHTML(p)).join(''); } else { ctlSection.style.display = 'none'; }
                 initStickyBar(); updateStickyBar();
-                setTimeout(() => { const hero = document.getElementById('product-hero'); if (hero) initZoom(hero); }, 100);
+                setTimeout(() => { 
+                    const hero = document.getElementById('product-hero'); 
+                    if (hero) initZoom(hero); 
+                }, 100);
 
                 setTimeout(() => {
-                    document.querySelectorAll('.video-section video').forEach(video => {
+                    document.querySelectorAll('.video-section video').forEach((video, index) => {
+                        const videoId = `product-video-${index}`;
+                        initVideoScrollMute(videoId);
                         video.addEventListener('ended', () => {
                             const section = video.closest('.video-section');
-                            if (section) section.classList.add('paused');
+                            if (section) {
+                                section.classList.add('paused');
+                                const thumbPreview = section.querySelector('.video-thumb-preview');
+                                if (thumbPreview) thumbPreview.style.display = 'block';
+                            }
                             currentVideoElement = null;
                         });
                         video.addEventListener('play', () => {
@@ -1774,7 +1729,6 @@
                     });
                 }, 200);
 
-                // Fix duplicate footer
                 setTimeout(() => {
                     const allFooters = document.querySelectorAll('footer');
                     if (allFooters.length > 1) {
@@ -1785,8 +1739,14 @@
                 }, 500);
             }
             
-            function hideLoader() { if (loader) { loader.style.opacity = '0'; setTimeout(() => { loader.style.display = 'none'; }, 500); } }
-            function showNotFound() { hideLoader(); if (loadingDiv) loadingDiv.style.display = 'none'; if (contentDiv) contentDiv.innerHTML = ''; if (ctlSection) ctlSection.style.display = 'none'; if (notFoundDiv) notFoundDiv.style.display = 'block'; if (stickyBar) stickyBar.classList.remove('active'); }
+            function showNotFound() { 
+                if (loadingDiv) loadingDiv.style.display = 'none'; 
+                if (contentDiv) contentDiv.innerHTML = ''; 
+                if (ctlSection) ctlSection.style.display = 'none'; 
+                if (notFoundDiv) notFoundDiv.style.display = 'block'; 
+                if (stickyBar) stickyBar.classList.remove('active'); 
+            }
+            
             function generateSlug(title) { if (!title) return 'product'; return title.toLowerCase().replace(/[^\w\u0980-\u09FF]+/g, '-').replace(/^-+|-+$/g, ''); }
             
             async function init() {
@@ -1797,8 +1757,9 @@
                 if (loadingDiv) loadingDiv.style.display = 'grid';
                 if (notFoundDiv) notFoundDiv.style.display = 'none';
                 const found = await loadProductBySlug(slug);
-                if (!found) showNotFound(); else hideLoader();
+                if (!found) showNotFound();
             }
+            
             if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
         })();
     </script>
