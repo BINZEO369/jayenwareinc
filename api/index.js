@@ -2,7 +2,7 @@
 // server.js - Complete API Server
 // Supabase Integrated | Production Ready
 // Auth & OneID Removed | Products & UI APIs Only
-// Subscriber Management Added
+// Subscriber Management Added (Secured)
 // ============================================
 
 const express = require('express');
@@ -642,7 +642,7 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
-// NEWSLETTER SUBSCRIBER API
+// NEWSLETTER SUBSCRIBER API (SECURED)
 // ============================================
 
 // POST - Subscribe to newsletter (public endpoint)
@@ -672,7 +672,7 @@ app.post('/api/subscribe', async (req, res) => {
         // Check if email already exists
         const { data: existingSubscriber, error: checkError } = await supabase
             .from('subscribers')
-            .select('id, is_active, unsubscribed_at')
+            .select('id, is_active, name')
             .eq('email', cleanEmail)
             .single();
 
@@ -698,7 +698,7 @@ app.post('/api/subscribe', async (req, res) => {
                     name: cleanName || existingSubscriber.name
                 })
                 .eq('id', existingSubscriber.id)
-                .select()
+                .select('id, email, name, is_active, subscribed_at')
                 .single();
 
             if (reactivateError) throw reactivateError;
@@ -706,7 +706,12 @@ app.post('/api/subscribe', async (req, res) => {
             return res.status(200).json({
                 success: true,
                 message: 'Subscription reactivated successfully',
-                data: reactivated
+                data: {
+                    email: reactivated.email,
+                    name: reactivated.name,
+                    is_active: reactivated.is_active,
+                    subscribed_at: reactivated.subscribed_at
+                }
             });
         }
 
@@ -719,7 +724,7 @@ app.post('/api/subscribe', async (req, res) => {
                 is_active: true,
                 subscribed_at: new Date().toISOString()
             }])
-            .select()
+            .select('id, email, name, is_active, subscribed_at')
             .single();
 
         if (insertError) {
@@ -735,7 +740,12 @@ app.post('/api/subscribe', async (req, res) => {
         return res.status(201).json({
             success: true,
             message: 'Successfully subscribed to newsletter',
-            data: newSubscriber
+            data: {
+                email: newSubscriber.email,
+                name: newSubscriber.name,
+                is_active: newSubscriber.is_active,
+                subscribed_at: newSubscriber.subscribed_at
+            }
         });
 
     } catch (error) {
@@ -780,7 +790,7 @@ app.post('/api/unsubscribe', async (req, res) => {
             })
             .eq('email', cleanEmail)
             .eq('is_active', true)
-            .select()
+            .select('id, email, name, is_active, unsubscribed_at')
             .single();
 
         if (findError) {
@@ -796,7 +806,12 @@ app.post('/api/unsubscribe', async (req, res) => {
         return res.status(200).json({
             success: true,
             message: 'Successfully unsubscribed from newsletter',
-            data: subscriber
+            data: {
+                email: subscriber.email,
+                name: subscriber.name,
+                is_active: subscriber.is_active,
+                unsubscribed_at: subscriber.unsubscribed_at
+            }
         });
 
     } catch (error) {
@@ -809,7 +824,7 @@ app.post('/api/unsubscribe', async (req, res) => {
     }
 });
 
-// GET - Check subscription status by email
+// GET - Check subscription status by email (public endpoint - only own email)
 app.get('/api/subscriber-status', async (req, res) => {
     try {
         const { email } = req.query;
@@ -847,10 +862,17 @@ app.get('/api/subscriber-status', async (req, res) => {
             throw error;
         }
 
+        // Return only this subscriber's data
         return res.status(200).json({
             success: true,
             is_subscribed: subscriber.is_active,
-            data: subscriber
+            data: {
+                email: subscriber.email,
+                name: subscriber.name,
+                is_active: subscriber.is_active,
+                subscribed_at: subscriber.subscribed_at,
+                unsubscribed_at: subscriber.unsubscribed_at
+            }
         });
 
     } catch (error) {
@@ -863,31 +885,13 @@ app.get('/api/subscriber-status', async (req, res) => {
     }
 });
 
-// GET - Get all subscribers (public view - limited info)
+// ⚠️ RESTRICTED: This endpoint is blocked for public access
 app.get('/api/subscribers', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('subscribers')
-            .select('id, email, name, is_active, subscribed_at')
-            .eq('is_active', true)
-            .order('subscribed_at', { ascending: false });
-
-        if (error) throw error;
-
-        return res.status(200).json({
-            success: true,
-            count: data.length,
-            data: data
-        });
-
-    } catch (error) {
-        console.error('Get subscribers error:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Failed to fetch subscribers',
-            error: error.message
-        });
-    }
+    return res.status(403).json({
+        success: false,
+        message: 'Access denied. Subscriber list is not publicly available.',
+        hint: 'Use /api/subscriber-status?email=your@email.com to check individual subscription status.'
+    });
 });
 
 // ============================================
