@@ -635,6 +635,46 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
+// SUBSCRIPTION API
+// ============================================
+
+// সাবস্ক্রাইব করার রুট
+app.post('/api/subscribe', async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        if (!name || !email) return res.status(400).json({ error: 'Name and email are required' });
+
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .insert([{ name, email }])
+            .select();
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json({ success: true, data: data[0] });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// আনসাবস্ক্রাইব করার রুট (RPC ফাংশন কল করবে)
+app.post('/api/unsubscribe', async (req, res) => {
+    try {
+        const { token } = req.body;
+        if (!token) return res.status(400).json({ error: 'Token is required' });
+
+        // ডাটাবেসে তৈরি করা SECURITY DEFINER ফাংশনটি কল করা হচ্ছে
+        const { error } = await supabase.rpc('unsubscribe_user', { p_token: token });
+
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json({ success: true, message: 'Successfully unsubscribed' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+// ============================================
 // PAGE ROUTES
 // ============================================
 
