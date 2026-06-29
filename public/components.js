@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 6.2 (Luxury Edition - Subscription Core Integrated)
+// Version: 6.2 (Luxury Edition - with Subscription Engine)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -55,7 +55,7 @@ function injectSharedStyles() {
             --primary: #000000;
             --accent: #ffffff;
             
-            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রา-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
+            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
             --glass-white: rgba(255, 255, 255, 0.15);
             --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
@@ -328,69 +328,6 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
-        /* ==================== LUXURY NEWSLETTER SUBSCRIPTION CARD ==================== */
-        .luxury-sub-section {
-            background: #0d0d0d;
-            border-top: 1px solid #1c1c1e;
-            padding: 80px 24px;
-            width: 100% !important;
-            position: relative;
-        }
-        .luxury-sub-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
-            padding: 48px 32px;
-            max-width: 720px;
-            margin: 0 auto;
-            text-align: center;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
-        }
-        .luxury-sub-input {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
-            font-family: var(--font-body);
-            font-size: 13px;
-            border-radius: 14px !important;
-            padding: 14px 20px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        .luxury-sub-input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.4) !important;
-            background: rgba(255, 255, 255, 0.08) !important;
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.02);
-        }
-        .luxury-sub-btn {
-            background: #ffffff !important;
-            color: #000000 !important;
-            font-family: var(--font-body);
-            font-weight: 700;
-            font-size: 11px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            border-radius: 14px !important;
-            padding: 14px 28px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border: none;
-            white-space: nowrap;
-        }
-        .luxury-sub-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.15);
-            background: #f4f4f4 !important;
-        }
-        .luxury-sub-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         /* ==================== FULLY DYNAMIC FOOTER ==================== */
         #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; width: 100% !important; position: relative; clear: both; }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
@@ -398,10 +335,11 @@ function injectSharedStyles() {
         
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-            background: var(--primary) !important; color: var(--accent) !important; border-radius: 14px !important;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            background: var(--accent) !important; color: var(--primary) !important; border-radius: 14px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important; border: none; cursor: pointer;
         }
-        .btn-primary:hover { background: #1c1c1e !important; transform: translateY(-1px); }
+        .btn-primary:hover:not(:disabled) { background: #e5e5ea !important; transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
         #wish-count, #cart-count {
             background: var(--primary) !important; color: var(--accent) !important;
@@ -411,6 +349,64 @@ function injectSharedStyles() {
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
+}
+
+// ============================================================================
+// SUBSCRIPTION SYSTEM API HANDLERS
+// ============================================================================
+async function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    
+    const name = form.name.value;
+    const email = form.email.value;
+    
+    try {
+        btn.innerHTML = 'PROCESSING...';
+        btn.disabled = true;
+        
+        const response = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            showToast('Welcome to the Syndicate! 🎉', 'success');
+            form.reset();
+        } else {
+            showToast(result.error || 'Subscription failed.', 'error');
+        }
+    } catch (error) {
+        showToast('Network error occurred.', 'error');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
+// Programmatic Unsubscribe access (If needed elsewhere in account settings)
+async function unsubscribeUser(name, email) {
+    try {
+        const response = await fetch('/api/unsubscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showToast('Unsubscribed Successfully', 'success');
+        } else {
+            showToast(result.error || 'Failed to unsubscribe', 'error');
+        }
+    } catch (error) {
+        showToast('Network error occurred.', 'error');
+    }
 }
 
 // ============================================================================
@@ -582,10 +578,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 // HEADER SYSTEM (Liquid Translucent Engine - Burberry Icons Optimized)
 // ============================================================================
 async function renderHeader() {
-    // নিরাপত্তা চেক: যদি হেডার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
-    if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) {
-        return;
-    }
+    if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) return;
 
     const [menuItems, categories, subcategories] = await Promise.all([
         fetchMenuItems(),
@@ -597,18 +590,15 @@ async function renderHeader() {
     allSubcategories = subcategories;
     const menuTree = buildMenuTree(menuItems);
     
-    // Check local storage configuration for hidden state
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
-    if (isBarDismissed) {
-        document.body.classList.add('announcement-dismissed');
-    }
+    if (isBarDismissed) document.body.classList.add('announcement-dismissed');
 
     const headerHTML = `
     <div class="top-announcement-bar ${isBarDismissed ? 'bar-hidden' : ''}" id="top-announcement-bar">
         <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
         <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 6L6 18M6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
     </div>
@@ -693,104 +683,39 @@ async function renderHeader() {
 function dismissAnnouncementBar() {
     const bar = document.getElementById('top-announcement-bar');
     const nav = document.getElementById('main-nav');
-    
-    if (bar) {
-        bar.classList.add('bar-hidden');
-    }
-    
-    // ব্রাউজারের লোকাল স্টোরেজে টোকেন সেভ করা
+    if (bar) bar.classList.add('bar-hidden');
     localStorage.setItem('jabiyen_announcement_hidden', 'true');
     document.body.classList.add('announcement-dismissed');
-    
-    // হেডারকে স্মুথলি একদম টপ জিরোতে পুশ করা যদি ইউজার স্ক্রল না করে থাকে
-    if (nav && !nav.classList.contains('nav-scrolled')) {
-        nav.style.top = '0px';
-    }
+    if (nav && !nav.classList.contains('nav-scrolled')) nav.style.top = '0px';
 }
 
 // ============================================================================
-// SUBSCRIPTION CONTROLLER (API BRIDGE)
-// ============================================================================
-async function handleNewsletterSubscription(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const nameInput = document.getElementById('sub-name');
-    const emailInput = document.getElementById('sub-email');
-    const submitBtn = document.getElementById('sub-submit-btn');
-    
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
-    
-    if (!name || !email) {
-        showToast('Name and email are required architecture layers', 'error');
-        return;
-    }
-    
-    // UI স্টেট লক করা (Loading Status)
-    submitBtn.disabled = true;
-    const originalText = submitBtn.innerText;
-    submitBtn.innerText = 'Binding...';
-    
-    try {
-        const response = await fetch('/api/subscribe', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email })
-        });
-        
-        const result = await response.json();
-        
-        if (!response.ok) {
-            // ৪০৯ কনফ্লিক্ট স্ট্যাটাস এরর (ইমেইল অলরেডি রেজিস্টার্ড)
-            if (response.status === 409) {
-                showToast(result.error || 'This vault is already encrypted with this email.', 'error');
-            } else {
-                showToast(result.error || 'Pipeline connectivity fault.', 'error');
-            }
-            return;
-        }
-        
-        // সফল সাবস্ক্রিপশন
-        showToast('Subscribed to JABIYEN Intelligence Vault! 🎉', 'success');
-        form.reset();
-        
-    } catch (err) {
-        console.error('Subscription error:', err);
-        showToast('Infrastructure timeout or crash.', 'error');
-    } finally {
-        // UI রি-স্টোর করা
-        submitBtn.disabled = false;
-        submitBtn.innerText = originalText;
-    }
-}
-
-// ============================================================================
-// FOOTER & TOAST CORE SYSTEMS
+// FOOTER & TOAST CORE SYSTEMS (With Newsletter Subscription Card)
 // ============================================================================
 function renderFooter() {
-    // নিরাপত্তা চেক: যদি ফুটার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
     if (document.getElementById('main-footer')) return;
 
-    // লাক্সারি সাবস্ক্রিপশন কার্ড + মূল ফুটার একসাথে ইনজেক্ট করা হচ্ছে
     const footerHTML = `
-    <section class="luxury-sub-section">
-        <div class="luxury-sub-card">
-            <h3 class="text-heading-sm uppercase tracking-widest text-white mb-2">JOIN THE INTEL VAULT</h3>
-            <p class="text-body-sm opacity-50 max-w-md mx-auto mb-8 leading-relaxed">Subscribe to receive early drops, exclusive architecture logging, and premium apparel updates.</p>
-            
-            <form onsubmit="handleNewsletterSubscription(event)" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-                <input type="text" id="sub-name" class="luxury-sub-input" placeholder="YOUR INITIALS / NAME" required autocomplete="name">
-                <input type="email" id="sub-email" class="luxury-sub-input" placeholder="ENTER CLIENT EMAIL" required autocomplete="email">
-                <button type="submit" id="sub-submit-btn" class="luxury-sub-btn">Authenticate</button>
-            </form>
-        </div>
-    </section>
-
     <footer class="pt-16 pb-8" id="main-footer">
         <div class="w-full px-6 lg:px-12">
+            
+            <div class="mb-16 pb-12 border-b border-neutral-900 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="max-w-md text-center md:text-left">
+                    <h3 class="text-lg font-black tracking-widest text-white mb-2 uppercase" style="font-family: var(--font-heading);">Join the Syndicate</h3>
+                    <p class="text-[11px] opacity-60 leading-relaxed text-gray-300">Subscribe to receive exclusive access to early drops, architecture updates, and premium collections directly to your inbox.</p>
+                </div>
+                
+                <form onsubmit="handleNewsletterSubmit(event)" class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                    <input type="text" name="name" placeholder="YOUR NAME" required 
+                           class="bg-white/5 border border-white/10 text-white text-[11px] uppercase tracking-wider px-5 py-4 rounded-xl focus:outline-none focus:border-white/30 transition w-full sm:w-48 placeholder-white/30">
+                           
+                    <input type="email" name="email" placeholder="YOUR EMAIL" required 
+                           class="bg-white/5 border border-white/10 text-white text-[11px] uppercase tracking-wider px-5 py-4 rounded-xl focus:outline-none focus:border-white/30 transition w-full sm:w-64 placeholder-white/30">
+                           
+                    <button type="submit" class="btn-primary px-8 py-4 text-[11px]">SUBSCRIBE</button>
+                </form>
+            </div>
+
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
                     <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
@@ -814,8 +739,9 @@ function renderFooter() {
                     <p class="text-[11px] opacity-60">binzeo369@outlook.com</p>
                 </div>
             </div>
+            
             <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
-                <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
+                <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold hover:text-white transition">BINZEO Infrastructure</a></p>
                 <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine.</p>
             </div>
         </div>
@@ -841,7 +767,17 @@ function showToast(text, type = 'success') {
     }
     document.getElementById('toast-text').innerText = text;
     const iconEl = document.getElementById('toast-icon');
-    iconEl.innerHTML = type === 'success' ? '✓' : '!';
+    
+    // Type checking for icon
+    if (type === 'success') {
+        iconEl.innerHTML = '✓';
+        iconEl.style.background = 'var(--primary)';
+        iconEl.style.color = 'var(--accent)';
+    } else {
+        iconEl.innerHTML = '!';
+        iconEl.style.background = '#ff3b30'; // Apple red
+        iconEl.style.color = 'white';
+    }
     
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
@@ -997,11 +933,9 @@ window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlis
 window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromCart = removeFromCart;
 window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
 window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
-window.dismissAnnouncementBar = dismissAnnouncementBar;
-window.handleNewsletterSubscription = handleNewsletterSubscription;
+window.dismissAnnouncementBar = dismissAnnouncementBar; window.handleNewsletterSubmit = handleNewsletterSubmit; window.unsubscribeUser = unsubscribeUser;
 
 async function initSharedComponents() {
-    // যদি অলরেডি ইনিশিয়ালাইজ হয়ে থাকে, তবে কোড এখানেই এক্সিট করবে
     if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
     window.JABIYEN_COMPONENTS_INITIALIZED = true;
 
@@ -1011,8 +945,7 @@ async function initSharedComponents() {
     renderFooter();
     updateCounts();
     
-    // স্ক্রল রিয়েল-টাইম হ্যান্ডলিং সেটআপ
-    window.removeEventListener('scroll', handleNavScroll); // কোনো ডুপ্লিকেট লিসেনার থাকলে রিমুভ করা
+    window.removeEventListener('scroll', handleNavScroll); 
     window.addEventListener('scroll', handleNavScroll);
     handleNavScroll(); 
 
