@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 6.2 (Luxury Edition - Subscriber Pipeline Integrated)
+// Version: 6.2 (Luxury Edition - Subscription Core Integrated)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -55,7 +55,7 @@ function injectSharedStyles() {
             --primary: #000000;
             --accent: #ffffff;
             
-            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
+            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রา-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
             --glass-white: rgba(255, 255, 255, 0.15);
             --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
@@ -130,7 +130,7 @@ function injectSharedStyles() {
                         height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* বারটি হাইড করার আল্ট্রা-স্মুথ অ্যানিমেশন класс */
+        /* বারটি হাইড করার আল্ট্রা-স্মুথ অ্যানিমেশন ক্লাস */
         .top-announcement-bar.bar-hidden {
             transform: translateY(-100%);
             opacity: 0;
@@ -328,27 +328,73 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
+        /* ==================== LUXURY NEWSLETTER SUBSCRIPTION CARD ==================== */
+        .luxury-sub-section {
+            background: #0d0d0d;
+            border-top: 1px solid #1c1c1e;
+            padding: 80px 24px;
+            width: 100% !important;
+            position: relative;
+        }
+        .luxury-sub-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 48px 32px;
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+        }
+        .luxury-sub-input {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            font-family: var(--font-body);
+            font-size: 13px;
+            border-radius: 14px !important;
+            padding: 14px 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .luxury-sub-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.02);
+        }
+        .luxury-sub-btn {
+            background: #ffffff !important;
+            color: #000000 !important;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 14px !important;
+            padding: 14px 28px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            white-space: nowrap;
+        }
+        .luxury-sub-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.15);
+            background: #f4f4f4 !important;
+        }
+        .luxury-sub-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* ==================== FULLY DYNAMIC FOOTER ==================== */
         #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; width: 100% !important; position: relative; clear: both; }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
-        
-        /* LUXURY SUBSCRIPTION CARD INPUT SYSTEM */
-        .subscribe-card-input {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
-            transition: all 0.3s ease;
-        }
-        .subscribe-card-input:focus {
-            background: rgba(255, 255, 255, 0.09) !important;
-            border-color: rgba(255, 255, 255, 0.3) !important;
-            outline: none;
-            box-shadow: 0 0 15px rgba(255,255,255,0.03);
-        }
-        .subscribe-card-input::placeholder {
-            color: rgba(255, 255, 255, 0.3) !important;
-        }
         
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -562,7 +608,7 @@ async function renderHeader() {
         <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
         <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 6L6 18M6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
     </div>
@@ -663,56 +709,61 @@ function dismissAnnouncementBar() {
 }
 
 // ============================================================================
-// ASYNCHRONOUS SUB-PIPELINE CONTROLLER (Client API Broker)
+// SUBSCRIPTION CONTROLLER (API BRIDGE)
 // ============================================================================
-async function executeSubscription(event) {
+async function handleNewsletterSubscription(event) {
     event.preventDefault();
     
-    const submitBtn = document.getElementById('subscribe-submit-btn');
-    const nameInput = document.getElementById('subscribe-name');
-    const emailInput = document.getElementById('subscribe-email');
+    const form = event.target;
+    const nameInput = document.getElementById('sub-name');
+    const emailInput = document.getElementById('sub-email');
+    const submitBtn = document.getElementById('sub-submit-btn');
     
-    if (!nameInput.value.trim() || !emailInput.value.trim()) {
-        showToast('Name and email parameters required', 'error');
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    
+    if (!name || !email) {
+        showToast('Name and email are required architecture layers', 'error');
         return;
     }
     
-    // UI Feedback Lock
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'PROCESSING...';
-    }
+    // UI স্টেট লক করা (Loading Status)
+    submitBtn.disabled = true;
+    const originalText = submitBtn.innerText;
+    submitBtn.innerText = 'Binding...';
     
     try {
         const response = await fetch('/api/subscribe', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: nameInput.value.trim(),
-                email: emailInput.value.trim()
-            })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email })
         });
         
         const result = await response.json();
         
         if (!response.ok) {
-            throw new Error(result.error || 'Pipeline structural exception');
+            // ৪০৯ কনফ্লিক্ট স্ট্যাটাস এরর (ইমেইল অলরেডি রেজিস্টার্ড)
+            if (response.status === 409) {
+                showToast(result.error || 'This vault is already encrypted with this email.', 'error');
+            } else {
+                showToast(result.error || 'Pipeline connectivity fault.', 'error');
+            }
+            return;
         }
         
-        showToast('Subscribed Successfully! 🎉', 'success');
+        // সফল সাবস্ক্রিপশন
+        showToast('Subscribed to JABIYEN Intelligence Vault! 🎉', 'success');
+        form.reset();
         
-        // Reset Inputs
-        nameInput.value = '';
-        emailInput.value = '';
-        
-    } catch (error) {
-        console.error('Subscription system error:', error);
-        showToast(error.message, 'error');
+    } catch (err) {
+        console.error('Subscription error:', err);
+        showToast('Infrastructure timeout or crash.', 'error');
     } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerText = 'SUBSCRIBE';
-        }
+        // UI রি-স্টোর করা
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
     }
 }
 
@@ -723,54 +774,46 @@ function renderFooter() {
     // নিরাপত্তা চেক: যদি ফুটার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
     if (document.getElementById('main-footer')) return;
 
+    // লাক্সারি সাবস্ক্রিপশন কার্ড + মূল ফুটার একসাথে ইনজেক্ট করা হচ্ছে
     const footerHTML = `
+    <section class="luxury-sub-section">
+        <div class="luxury-sub-card">
+            <h3 class="text-heading-sm uppercase tracking-widest text-white mb-2">JOIN THE INTEL VAULT</h3>
+            <p class="text-body-sm opacity-50 max-w-md mx-auto mb-8 leading-relaxed">Subscribe to receive early drops, exclusive architecture logging, and premium apparel updates.</p>
+            
+            <form onsubmit="handleNewsletterSubscription(event)" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                <input type="text" id="sub-name" class="luxury-sub-input" placeholder="YOUR INITIALS / NAME" required autocomplete="name">
+                <input type="email" id="sub-email" class="luxury-sub-input" placeholder="ENTER CLIENT EMAIL" required autocomplete="email">
+                <button type="submit" id="sub-submit-btn" class="luxury-sub-btn">Authenticate</button>
+            </form>
+        </div>
+    </section>
+
     <footer class="pt-16 pb-8" id="main-footer">
         <div class="w-full px-6 lg:px-12">
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-16 items-start">
-                
-                <div class="lg:col-span-2 bg-neutral-950 border border-neutral-900 rounded-2xl p-6 sm:p-8 shadow-2xl">
-                    <h4 class="text-xs font-black uppercase tracking-widest mb-2 text-white">Join the Architecture</h4>
-                    <p class="text-[11px] leading-relaxed mb-6 opacity-50">Subscribe to access early drops, premium validation blueprints, and architectural collection updates.</p>
-                    
-                    <form id="footer-subscribe-form" onsubmit="executeSubscription(event)" class="space-y-3">
-                        <div>
-                            <input type="text" id="subscribe-name" placeholder="YOUR NAME" required
-                                class="w-full h-11 px-4 rounded-xl text-xs font-semibold tracking-wider subscribe-card-input">
-                        </div>
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <input type="email" id="subscribe-email" placeholder="EMAIL ADDRESS" required
-                                class="w-full h-11 px-4 rounded-xl text-xs font-semibold tracking-wider subscribe-card-input">
-                            <button type="submit" id="subscribe-submit-btn" 
-                                class="h-11 px-6 bg-white text-black hover:bg-neutral-200 transition font-bold text-[10px] tracking-widest rounded-xl shrink-0 uppercase">
-                                SUBSCRIBE
-                            </button>
-                        </div>
-                    </form>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
+                    <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
                 </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:col-span-3 gap-8">
-                    <div>
-                        <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
-                        <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
-                            <li><a href="/about" class="no-underline">About Corporate</a></li>
-                            <li><a href="/contact" class="no-underline">Contact Portal</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
-                        <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
-                            <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
-                        <p class="text-[11px] opacity-60 mb-2">binzeo369@outlook.com</p>
-                        <p class="text-[10px] leading-relaxed opacity-40">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
-                    </div>
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
+                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                        <li><a href="/about" class="no-underline">About Corporate</a></li>
+                        <li><a href="/contact" class="no-underline">Contact Portal</a></li>
+                    </ul>
                 </div>
-                
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
+                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                        <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
+                    <p class="text-[11px] opacity-60">binzeo369@outlook.com</p>
+                </div>
             </div>
-            
             <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
                 <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
                 <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine.</p>
@@ -821,11 +864,6 @@ function openSideMenu() {
     document.body.style.overflow = 'hidden';
 }
 
-// ============================================================================
-// EXPORT SUBSCRIPTION FUNCTION TO GLOBAL SCOPE
-// ============================================================================
-window.executeSubscription = executeSubscription;
-
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     if (drawer) drawer.classList.remove('open');
@@ -858,15 +896,15 @@ function addToCart(productId, productData) {
     showToast('Manifested in Shopping Bag! 🎉', 'success');
 }
 
-// ============================================================================
-// RENDERING & INTERFACE MANAGEMENT
-// ============================================================================
 function removeFromCart(idx) {
     cart.splice(idx, 1);
     saveCart();
     renderCartItems();
 }
 
+// ============================================================================
+// RENDERING & INTERFACE MANAGEMENT
+// ============================================================================
 function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
@@ -960,6 +998,7 @@ window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromC
 window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
 window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
 window.dismissAnnouncementBar = dismissAnnouncementBar;
+window.handleNewsletterSubscription = handleNewsletterSubscription;
 
 async function initSharedComponents() {
     // যদি অলরেডি ইনিশিয়ালাইজ হয়ে থাকে, তবে কোড এখানেই এক্সিট করবে
