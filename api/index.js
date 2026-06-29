@@ -635,60 +635,6 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
-// SUBSCRIPTIONS API
-// ============================================
-
-// Subscribe User
-app.post('/api/subscribe', async (req, res) => {
-    try {
-        const { name, email } = req.body;
-        
-        if (!name || !email) {
-            return res.status(400).json({ error: 'Name and email are required' });
-        }
-
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .insert([{ name, email }]);
-
-        if (error) {
-            // যদি ইমেইল আগে থেকেই ডাটাবেসে থাকে (Unique constraint violation)
-            if (error.code === '23505') {
-                return res.status(409).json({ error: 'This email is already registered.' });
-            }
-            return res.status(500).json({ error: error.message });
-        }
-
-        res.json({ success: true, message: 'Subscribed successfully', data });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Unsubscribe User (Using RPC)
-app.post('/api/unsubscribe', async (req, res) => {
-    try {
-        const { name, email } = req.body;
-        
-        if (!name || !email) {
-            return res.status(400).json({ error: 'Name and email are required' });
-        }
-
-        const { data, error } = await supabase
-            .rpc('unsubscribe_user', {
-                p_name: name,
-                p_email: email
-            });
-
-        if (error) return res.status(500).json({ error: error.message });
-
-        res.json({ success: true, message: 'Unsubscribed successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
 // PAGE ROUTES
 // ============================================
 
