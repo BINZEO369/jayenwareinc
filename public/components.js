@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 6.1 (Luxury Edition - Double Render Protected)
+// Version: 6.2 (Luxury Edition - Subscriber Pipeline Integrated)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -130,7 +130,7 @@ function injectSharedStyles() {
                         height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* বারটি হাইড করার আল্ট্রা-স্মুথ অ্যানিমেশন ক্লাস */
+        /* বারটি হাইড করার আল্ট্রা-স্মুথ অ্যানিমেশন класс */
         .top-announcement-bar.bar-hidden {
             transform: translateY(-100%);
             opacity: 0;
@@ -332,6 +332,23 @@ function injectSharedStyles() {
         #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; width: 100% !important; position: relative; clear: both; }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
+        
+        /* LUXURY SUBSCRIPTION CARD INPUT SYSTEM */
+        .subscribe-card-input {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            transition: all 0.3s ease;
+        }
+        .subscribe-card-input:focus {
+            background: rgba(255, 255, 255, 0.09) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            outline: none;
+            box-shadow: 0 0 15px rgba(255,255,255,0.03);
+        }
+        .subscribe-card-input::placeholder {
+            color: rgba(255, 255, 255, 0.3) !important;
+        }
         
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -541,7 +558,6 @@ async function renderHeader() {
     }
 
     const headerHTML = `
-    <!-- TOP ANNOUNCEMENT BAR (স্লিম ব্ল্যাক লাইন বিজ্ঞাপন উইথ ক্লোজ টোকেন) -->
     <div class="top-announcement-bar ${isBarDismissed ? 'bar-hidden' : ''}" id="top-announcement-bar">
         <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
         <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
@@ -647,6 +663,60 @@ function dismissAnnouncementBar() {
 }
 
 // ============================================================================
+// ASYNCHRONOUS SUB-PIPELINE CONTROLLER (Client API Broker)
+// ============================================================================
+async function executeSubscription(event) {
+    event.preventDefault();
+    
+    const submitBtn = document.getElementById('subscribe-submit-btn');
+    const nameInput = document.getElementById('subscribe-name');
+    const emailInput = document.getElementById('subscribe-email');
+    
+    if (!nameInput.value.trim() || !emailInput.value.trim()) {
+        showToast('Name and email parameters required', 'error');
+        return;
+    }
+    
+    // UI Feedback Lock
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'PROCESSING...';
+    }
+    
+    try {
+        const response = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: nameInput.value.trim(),
+                email: emailInput.value.trim()
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.error || 'Pipeline structural exception');
+        }
+        
+        showToast('Subscribed Successfully! 🎉', 'success');
+        
+        // Reset Inputs
+        nameInput.value = '';
+        emailInput.value = '';
+        
+    } catch (error) {
+        console.error('Subscription system error:', error);
+        showToast(error.message, 'error');
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'SUBSCRIBE';
+        }
+    }
+}
+
+// ============================================================================
 // FOOTER & TOAST CORE SYSTEMS
 // ============================================================================
 function renderFooter() {
@@ -656,29 +726,51 @@ function renderFooter() {
     const footerHTML = `
     <footer class="pt-16 pb-8" id="main-footer">
         <div class="w-full px-6 lg:px-12">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-                <div class="col-span-2 md:col-span-1">
-                    <h4 class="text-sm font-bold tracking-widest mb-4">JABIYEN</h4>
-                    <p class="text-[11px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-16 items-start">
+                
+                <div class="lg:col-span-2 bg-neutral-950 border border-neutral-900 rounded-2xl p-6 sm:p-8 shadow-2xl">
+                    <h4 class="text-xs font-black uppercase tracking-widest mb-2 text-white">Join the Architecture</h4>
+                    <p class="text-[11px] leading-relaxed mb-6 opacity-50">Subscribe to access early drops, premium validation blueprints, and architectural collection updates.</p>
+                    
+                    <form id="footer-subscribe-form" onsubmit="executeSubscription(event)" class="space-y-3">
+                        <div>
+                            <input type="text" id="subscribe-name" placeholder="YOUR NAME" required
+                                class="w-full h-11 px-4 rounded-xl text-xs font-semibold tracking-wider subscribe-card-input">
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="email" id="subscribe-email" placeholder="EMAIL ADDRESS" required
+                                class="w-full h-11 px-4 rounded-xl text-xs font-semibold tracking-wider subscribe-card-input">
+                            <button type="submit" id="subscribe-submit-btn" 
+                                class="h-11 px-6 bg-white text-black hover:bg-neutral-200 transition font-bold text-[10px] tracking-widest rounded-xl shrink-0 uppercase">
+                                SUBSCRIBE
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
-                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
-                        <li><a href="/about" class="no-underline">About Corporate</a></li>
-                        <li><a href="/contact" class="no-underline">Contact Portal</a></li>
-                    </ul>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:col-span-3 gap-8">
+                    <div>
+                        <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Pipeline Links</h5>
+                        <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                            <li><a href="/about" class="no-underline">About Corporate</a></li>
+                            <li><a href="/contact" class="no-underline">Contact Portal</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
+                        <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
+                            <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
+                        <p class="text-[11px] opacity-60 mb-2">binzeo369@outlook.com</p>
+                        <p class="text-[10px] leading-relaxed opacity-40">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
+                    </div>
                 </div>
-                <div>
-                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Governance</h5>
-                    <ul class="space-y-2 text-[11px] list-none p-0 opacity-70">
-                        <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-xs uppercase tracking-widest mb-4 opacity-40">Direct Contact</h5>
-                    <p class="text-[11px] opacity-60">binzeo369@outlook.com</p>
-                </div>
+                
             </div>
+            
             <div class="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600">
                 <p class="text-[9px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
                 <p class="text-[9px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine.</p>
@@ -729,6 +821,11 @@ function openSideMenu() {
     document.body.style.overflow = 'hidden';
 }
 
+// ============================================================================
+// EXPORT SUBSCRIPTION FUNCTION TO GLOBAL SCOPE
+// ============================================================================
+window.executeSubscription = executeSubscription;
+
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     if (drawer) drawer.classList.remove('open');
@@ -761,15 +858,15 @@ function addToCart(productId, productData) {
     showToast('Manifested in Shopping Bag! 🎉', 'success');
 }
 
+// ============================================================================
+// RENDERING & INTERFACE MANAGEMENT
+// ============================================================================
 function removeFromCart(idx) {
     cart.splice(idx, 1);
     saveCart();
     renderCartItems();
 }
 
-// ============================================================================
-// RENDERING & INTERFACE MANAGEMENT
-// ============================================================================
 function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
