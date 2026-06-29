@@ -762,6 +762,11 @@ app.get('/api/health', async (req, res) => {
 // ============================================
 
 // Auth pages
+// ============================================
+// PAGE ROUTES
+// ============================================
+
+// Auth pages
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -799,16 +804,21 @@ app.get('*', (req, res) => {
 });
 
 // ============================================
-// START SERVER
+// START SERVER - VERCEL COMPATIBLE
 // ============================================
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📦 API Base: http://localhost:${PORT}/api`);
-    console.log(`💚 Health: http://localhost:${PORT}/api/health`);
-    console.log(`🌍 Countries: http://localhost:${PORT}/api/countries`);
-    console.log(`📝 Signup Page: http://localhost:${PORT}/signup\n`);
-});
-
+// Vercel-এর জন্য module.exports সবার আগে
 module.exports = app;
+
+// শুধুমাত্র লোকাল ডেভেলপমেন্টের জন্য listen করবে
+// Vercel-এ চলার সময় এটি skip হবে
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`\n🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📦 API Base: http://localhost:${PORT}/api`);
+        console.log(`💚 Health: http://localhost:${PORT}/api/health`);
+        console.log(`🌍 Countries: http://localhost:${PORT}/api/countries`);
+        console.log(`📝 Signup Page: http://localhost:${PORT}/signup\n`);
+    });
+}
