@@ -2,7 +2,7 @@
 // server.js - Complete API Server
 // Supabase Integrated | Production Ready
 // Auth & OneID Removed | Products & UI APIs Only
-// Subscriber Management Added (Secured with Service Role)
+// Subscriber Management Added
 // ============================================
 
 const express = require('express');
@@ -15,19 +15,9 @@ const app = express();
 // SUPABASE CONFIGURATION
 // ============================================
 const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
 
-// Anon Key (Public - RLS restricted)
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
-
-// Service Role Key (Server-side - Bypasses RLS)
-// Get this from: Supabase Dashboard > Settings > API > service_role
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDAzNjk2OCwiZXhwIjoyMDk1NjEyOTY4fQ.Eh6CdjVYOHiWLqZSBUNPXfndoksbM3NoZQSHT5PNsZQ";
-
-// Public client (respects RLS)
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Admin client (bypasses RLS for server-side operations)
-const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============================================
 // MIDDLEWARE
@@ -652,11 +642,10 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
-// NEWSLETTER SUBSCRIBER API (PRODUCTION SECURED)
+// NEWSLETTER SUBSCRIBER API
 // ============================================
 
-// POST - Subscribe to newsletter
-// Uses ANON KEY - RLS allows INSERT only for public
+// POST - Subscribe to newsletter (public endpoint)
 app.post('/api/subscribe', async (req, res) => {
     try {
         const { email, name } = req.body;
@@ -680,10 +669,10 @@ app.post('/api/subscribe', async (req, res) => {
         const cleanEmail = email.toLowerCase().trim();
         const cleanName = name ? name.trim() : null;
 
-        // Check if email exists (using admin client to bypass RLS SELECT restriction)
-        const { data: existingSubscriber, error: checkError } = await supabaseAdmin
+        // Check if email already exists
+        const { data: existingSubscriber, error: checkError } = await supabase
             .from('subscribers')
-            .select('id, is_active, name')
+            .select('id, is_active, unsubscribed_at')
             .eq('email', cleanEmail)
             .single();
 
@@ -699,9 +688,9 @@ app.post('/api/subscribe', async (req, res) => {
             });
         }
 
-        // If subscriber exists but was unsubscribed, reactivate (using admin client)
+        // If subscriber exists but was unsubscribed, reactivate them
         if (existingSubscriber && !existingSubscriber.is_active) {
-            const { data: reactivated, error: reactivateError } = await supabaseAdmin
+            const { data: reactivated, error: reactivateError } = await supabase
                 .from('subscribers')
                 .update({
                     is_active: true,
@@ -709,7 +698,7 @@ app.post('/api/subscribe', async (req, res) => {
                     name: cleanName || existingSubscriber.name
                 })
                 .eq('id', existingSubscriber.id)
-                .select('id, email, name, is_active, subscribed_at')
+                .select()
                 .single();
 
             if (reactivateError) throw reactivateError;
@@ -717,16 +706,11 @@ app.post('/api/subscribe', async (req, res) => {
             return res.status(200).json({
                 success: true,
                 message: 'Subscription reactivated successfully',
-                data: {
-                    email: reactivated.email,
-                    name: reactivated.name,
-                    is_active: reactivated.is_active,
-                    subscribed_at: reactivated.subscribed_at
-                }
+                data: reactivated
             });
         }
 
-        // Insert new subscriber (uses anon key - RLS allows INSERT)
+        // Insert new subscriber
         const { data: newSubscriber, error: insertError } = await supabase
             .from('subscribers')
             .insert([{
@@ -735,7 +719,7 @@ app.post('/api/subscribe', async (req, res) => {
                 is_active: true,
                 subscribed_at: new Date().toISOString()
             }])
-            .select('id, email, name, is_active, subscribed_at')
+            .select()
             .single();
 
         if (insertError) {
@@ -751,12 +735,7 @@ app.post('/api/subscribe', async (req, res) => {
         return res.status(201).json({
             success: true,
             message: 'Successfully subscribed to newsletter',
-            data: {
-                email: newSubscriber.email,
-                name: newSubscriber.name,
-                is_active: newSubscriber.is_active,
-                subscribed_at: newSubscriber.subscribed_at
-            }
+            data: newSubscriber
         });
 
     } catch (error) {
@@ -769,8 +748,7 @@ app.post('/api/subscribe', async (req, res) => {
     }
 });
 
-// POST - Unsubscribe from newsletter
-// Uses SERVICE ROLE KEY - bypasses RLS
+// POST - Unsubscribe from newsletter (public endpoint)
 app.post('/api/unsubscribe', async (req, res) => {
     try {
         const { email } = req.body;
@@ -793,8 +771,8 @@ app.post('/api/unsubscribe', async (req, res) => {
 
         const cleanEmail = email.toLowerCase().trim();
 
-        // Find and unsubscribe (using admin client to bypass RLS)
-        const { data: subscriber, error: findError } = await supabaseAdmin
+        // Find and unsubscribe the subscriber
+        const { data: subscriber, error: findError } = await supabase
             .from('subscribers')
             .update({
                 is_active: false,
@@ -802,7 +780,7 @@ app.post('/api/unsubscribe', async (req, res) => {
             })
             .eq('email', cleanEmail)
             .eq('is_active', true)
-            .select('id, email, name, is_active, unsubscribed_at')
+            .select()
             .single();
 
         if (findError) {
@@ -818,12 +796,7 @@ app.post('/api/unsubscribe', async (req, res) => {
         return res.status(200).json({
             success: true,
             message: 'Successfully unsubscribed from newsletter',
-            data: {
-                email: subscriber.email,
-                name: subscriber.name,
-                is_active: subscriber.is_active,
-                unsubscribed_at: subscriber.unsubscribed_at
-            }
+            data: subscriber
         });
 
     } catch (error) {
@@ -837,7 +810,6 @@ app.post('/api/unsubscribe', async (req, res) => {
 });
 
 // GET - Check subscription status by email
-// Uses SERVICE ROLE KEY - bypasses RLS
 app.get('/api/subscriber-status', async (req, res) => {
     try {
         const { email } = req.query;
@@ -858,8 +830,7 @@ app.get('/api/subscriber-status', async (req, res) => {
 
         const cleanEmail = email.toLowerCase().trim();
 
-        // Check status (using admin client to bypass RLS)
-        const { data: subscriber, error } = await supabaseAdmin
+        const { data: subscriber, error } = await supabase
             .from('subscribers')
             .select('id, email, name, is_active, subscribed_at, unsubscribed_at')
             .eq('email', cleanEmail)
@@ -879,13 +850,7 @@ app.get('/api/subscriber-status', async (req, res) => {
         return res.status(200).json({
             success: true,
             is_subscribed: subscriber.is_active,
-            data: {
-                email: subscriber.email,
-                name: subscriber.name,
-                is_active: subscriber.is_active,
-                subscribed_at: subscriber.subscribed_at,
-                unsubscribed_at: subscriber.unsubscribed_at
-            }
+            data: subscriber
         });
 
     } catch (error) {
@@ -898,13 +863,31 @@ app.get('/api/subscriber-status', async (req, res) => {
     }
 });
 
-// GET - All subscribers (BLOCKED for public)
+// GET - Get all subscribers (public view - limited info)
 app.get('/api/subscribers', async (req, res) => {
-    return res.status(403).json({
-        success: false,
-        message: 'Access denied. Subscriber list is not publicly available.',
-        hint: 'Use /api/subscriber-status?email=your@email.com to check individual subscription status.'
-    });
+    try {
+        const { data, error } = await supabase
+            .from('subscribers')
+            .select('id, email, name, is_active, subscribed_at')
+            .eq('is_active', true)
+            .order('subscribed_at', { ascending: false });
+
+        if (error) throw error;
+
+        return res.status(200).json({
+            success: true,
+            count: data.length,
+            data: data
+        });
+
+    } catch (error) {
+        console.error('Get subscribers error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch subscribers',
+            error: error.message
+        });
+    }
 });
 
 // ============================================
