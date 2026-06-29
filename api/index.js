@@ -1,7 +1,8 @@
 // ============================================
 // server.js - Complete API Server
 // Supabase Integrated | Production Ready
-// All Endpoints Fixed & Optimized
+// Vercel + Local Compatible
+// All Endpoints Working
 // ============================================
 
 require('dotenv').config();
@@ -26,13 +27,13 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // MIDDLEWARE
 // ============================================
 
-// Security middleware
+// Security
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false
 }));
 
-// CORS - Allow all origins for development
+// CORS
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -40,14 +41,13 @@ app.use(cors({
     credentials: true
 }));
 
-// Handle preflight requests
 app.options('*', cors());
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static files - serve from 'public' folder in root
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rate limiting
@@ -149,10 +149,66 @@ function isValidEmail(email) {
 }
 
 // ============================================
-// AUTH APIS
+// API: ROOT
 // ============================================
+app.get('/api', (req, res) => {
+    res.json({
+        name: 'Jayen Ware Inc API',
+        version: '1.0.0',
+        status: 'running',
+        endpoints: [
+            'GET  /api/health',
+            'GET  /api/countries',
+            'GET  /api/countries/:id',
+            'POST /api/auth/signup',
+            'POST /api/auth/signin',
+            'POST /api/auth/signout',
+            'GET  /api/auth/me',
+            'PATCH /api/auth/profile',
+            'GET  /api/products',
+            'GET  /api/product/:slug',
+            'GET  /api/categories',
+            'GET  /api/categories/:slug',
+            'GET  /api/categories/:slug/products',
+            'GET  /api/subcategories',
+            'GET  /api/subcategories/:slug',
+            'GET  /api/subcategories/:slug/products',
+            'GET  /api/menu',
+            'GET  /api/hero',
+            'GET  /api/hero-videos',
+            'GET  /api/hero-secondary',
+            'GET  /api/news',
+            'GET  /api/product-colors',
+            'GET  /api/product-variants',
+            'GET  /api/product-reviews',
+            'POST /api/submit-review',
+            'GET  /api/product-videos',
+            'GET  /api/product-banners',
+            'GET  /api/color-sizes',
+            'GET  /api/search'
+        ]
+    });
+});
 
-// Sign Up
+// ============================================
+// API: HEALTH CHECK
+// ============================================
+app.get('/api/health', async (req, res) => {
+    try {
+        res.json({
+            status: 'ok',
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime(),
+            environment: process.env.NODE_ENV || 'development'
+        });
+    } catch (err) {
+        res.status(500).json({ status: 'error', error: err.message });
+    }
+});
+
+// ============================================
+// API: AUTH - SIGN UP
+// ============================================
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { email, password, first_name, last_name, country_id } = req.body;
@@ -184,7 +240,6 @@ app.post('/api/auth/signup', async (req, res) => {
             return res.status(400).json({ error: authError.message });
         }
 
-        // Update country_id if provided
         if (country_id && authData.user) {
             const { error: updateError } = await supabase
                 .from('user_profiles')
@@ -213,7 +268,9 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 });
 
-// Sign In
+// ============================================
+// API: AUTH - SIGN IN
+// ============================================
 app.post('/api/auth/signin', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -228,7 +285,6 @@ app.post('/api/auth/signin', async (req, res) => {
             return res.status(401).json({ error: error.message });
         }
 
-        // Get user profile with country
         const { data: profile } = await supabase
             .from('user_profiles')
             .select('*, countries(name, code)')
@@ -256,19 +312,22 @@ app.post('/api/auth/signin', async (req, res) => {
     }
 });
 
-// Sign Out
+// ============================================
+// API: AUTH - SIGN OUT
+// ============================================
 app.post('/api/auth/signout', authenticateUser, async (req, res) => {
     try {
         const { error } = await supabase.auth.signOut();
         if (error) return res.status(500).json({ error: error.message });
-
         res.json({ success: true, message: 'Signed out successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Get Current User
+// ============================================
+// API: AUTH - GET CURRENT USER
+// ============================================
 app.get('/api/auth/me', authenticateUser, async (req, res) => {
     try {
         const { data: profile, error } = await supabase
@@ -292,7 +351,9 @@ app.get('/api/auth/me', authenticateUser, async (req, res) => {
     }
 });
 
-// Update Profile
+// ============================================
+// API: AUTH - UPDATE PROFILE
+// ============================================
 app.patch('/api/auth/profile', authenticateUser, async (req, res) => {
     try {
         const { first_name, last_name, country_id } = req.body;
@@ -313,7 +374,6 @@ app.patch('/api/auth/profile', authenticateUser, async (req, res) => {
             .single();
 
         if (error) return res.status(500).json({ error: error.message });
-
         res.json({ success: true, user: data });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -321,10 +381,10 @@ app.patch('/api/auth/profile', authenticateUser, async (req, res) => {
 });
 
 // ============================================
-// COUNTRIES API
+// API: COUNTRIES
 // ============================================
 
-// Get all countries (PUBLIC - no auth needed)
+// Get all countries
 app.get('/api/countries', async (req, res) => {
     try {
         console.log('📋 Fetching countries...');
@@ -364,7 +424,7 @@ app.get('/api/countries/:id', async (req, res) => {
 });
 
 // ============================================
-// CATEGORIES API
+// API: CATEGORIES
 // ============================================
 
 // Get all categories
@@ -416,13 +476,12 @@ app.get('/api/categories/:slug', async (req, res) => {
     }
 });
 
-// Get products by category
+// Get products by category slug
 app.get('/api/categories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
         const { page = 1, limit = 20 } = req.query;
 
-        // Find category
         const { data: categories } = await supabase
             .from('categories')
             .select('*')
@@ -449,12 +508,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
 
         res.json({
             products: formatProducts(data),
-            pagination: {
-                page: parseInt(page),
-                limit: parseInt(limit),
-                total: count,
-                pages: Math.ceil(count / limit)
-            }
+            pagination: { page: parseInt(page), limit: parseInt(limit), total: count, pages: Math.ceil(count / limit) }
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -462,7 +516,7 @@ app.get('/api/categories/:slug/products', async (req, res) => {
 });
 
 // ============================================
-// SUBCATEGORIES API
+// API: SUBCATEGORIES
 // ============================================
 
 // Get all subcategories
@@ -487,9 +541,7 @@ app.get('/api/subcategories', async (req, res) => {
                 return dbSlug.replace(/^category\//, '') === category_slug;
             });
 
-            if (category) {
-                query = query.eq('category_id', category.id);
-            }
+            if (category) query = query.eq('category_id', category.id);
         }
 
         const { data, error } = await query;
@@ -511,8 +563,6 @@ app.get('/api/subcategories', async (req, res) => {
 app.get('/api/subcategories/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        const { category_slug } = req.query;
-
         const { data, error } = await supabase
             .from('subcategories')
             .select('*, categories(name, id, slug)')
@@ -520,7 +570,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
 
         if (error) return res.status(500).json({ error: error.message });
 
-        let subcategory = data.find(sub => {
+        const subcategory = data.find(sub => {
             const dbSlug = sub.slug || createSlug(sub.name);
             return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
         });
@@ -537,7 +587,7 @@ app.get('/api/subcategories/:slug', async (req, res) => {
     }
 });
 
-// Get products by subcategory
+// Get products by subcategory slug
 app.get('/api/subcategories/:slug/products', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -569,12 +619,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
 
         res.json({
             products: formatProducts(data),
-            pagination: {
-                page: parseInt(page),
-                limit: parseInt(limit),
-                total: count,
-                pages: Math.ceil(count / limit)
-            }
+            pagination: { page: parseInt(page), limit: parseInt(limit), total: count, pages: Math.ceil(count / limit) }
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -582,7 +627,7 @@ app.get('/api/subcategories/:slug/products', async (req, res) => {
 });
 
 // ============================================
-// PRODUCTS API
+// API: PRODUCTS
 // ============================================
 
 // Get all products
@@ -608,12 +653,7 @@ app.get('/api/products', async (req, res) => {
 
         res.json({
             products: formatProducts(data),
-            pagination: {
-                page: parseInt(page),
-                limit: parseInt(limit),
-                total: count,
-                pages: Math.ceil(count / limit)
-            }
+            pagination: { page: parseInt(page), limit: parseInt(limit), total: count, pages: Math.ceil(count / limit) }
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -640,7 +680,7 @@ app.get('/api/product/:slug', async (req, res) => {
 });
 
 // ============================================
-// MENU API
+// API: MENU
 // ============================================
 
 app.get('/api/menu', async (req, res) => {
@@ -671,10 +711,60 @@ app.get('/api/menu', async (req, res) => {
     }
 });
 
+// Get flat menu items
+app.get('/api/menu-items', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`*, categories:category_id(id, name), subcategories:subcategory_id(id, name)`)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        const menuItemsWithSlugs = data.map(item => ({
+            ...item,
+            slug: createSlug(item.title),
+            category_slug: item.categories ? createSlug(item.categories.name) : null,
+            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
+        }));
+
+        res.json(menuItemsWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get menu item by slug
+app.get('/api/menu-items/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`*, categories:category_id(id, name), subcategories:subcategory_id(id, name)`)
+            .eq('is_active', true);
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        const menuItem = data.find(item => createSlug(item.title) === slug);
+        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
+
+        res.json({
+            ...menuItem,
+            slug: createSlug(menuItem.title),
+            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
+            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ============================================
-// HERO API
+// API: HERO
 // ============================================
 
+// Get hero slides
 app.get('/api/hero', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -689,13 +779,119 @@ app.get('/api/hero', async (req, res) => {
     }
 });
 
+// Get hero videos
+app.get('/api/hero-videos', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_videos')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get hero secondary items
+app.get('/api/hero-secondary', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ============================================
-// PRODUCT REVIEWS API
+// API: NEWS
 // ============================================
 
+app.get('/api/news', async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const from = (page - 1) * limit;
+        const to = from + limit - 1;
+
+        const { data, error, count } = await supabase
+            .from('news')
+            .select('*', { count: 'exact' })
+            .order('created_at', { ascending: false })
+            .range(from, to);
+
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({
+            news: data,
+            pagination: { page: parseInt(page), limit: parseInt(limit), total: count, pages: Math.ceil(count / limit) }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// API: PRODUCT DETAILS
+// ============================================
+
+// Get product colors
+app.get('/api/product-colors', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+
+        const { data, error } = await supabase
+            .from('product_colors')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product variants
+app.get('/api/product-variants', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+
+        const { data, error } = await supabase
+            .from('product_variants')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product reviews
 app.get('/api/product-reviews', async (req, res) => {
     try {
-        const { slug } = req.query;
+        const slug = req.query.slug;
         if (!slug) return res.status(400).json({ error: 'Slug required' });
 
         const { data: products } = await supabase.from('products').select('*');
@@ -715,6 +911,7 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
+// Submit product review
 app.post('/api/submit-review', optionalAuth, async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
@@ -723,11 +920,15 @@ app.post('/api/submit-review', optionalAuth, async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
+        if (rating < 1 || rating > 5) {
+            return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+        }
+
         const { data, error } = await supabase
             .from('product_reviews')
             .insert([{
                 product_id,
-                user_name: user_name || 'Guest User',
+                user_name: user_name || req.user?.user_metadata?.first_name || 'Guest User',
                 rating: parseInt(rating),
                 review_text,
                 user_id: req.user?.id || null
@@ -741,19 +942,113 @@ app.post('/api/submit-review', optionalAuth, async (req, res) => {
     }
 });
 
-// ============================================
-// HEALTH CHECK
-// ============================================
-app.get('/api/health', async (req, res) => {
+// Get product videos
+app.get('/api/product-videos', async (req, res) => {
     try {
-        res.json({
-            status: 'ok',
-            timestamp: new Date().toISOString(),
-            uptime: process.uptime(),
-            environment: process.env.NODE_ENV || 'development'
-        });
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+
+        const { data, error } = await supabase
+            .from('product_videos')
+            .select('*')
+            .eq('product_id', product.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
     } catch (err) {
-        res.status(500).json({ status: 'error', error: err.message });
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product banners
+app.get('/api/product-banners', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+
+        const { data, error } = await supabase
+            .from('product_banners')
+            .select('*')
+            .eq('product_id', product.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get color sizes
+app.get('/api/color-sizes', async (req, res) => {
+    try {
+        const ids = req.query.ids;
+        if (!ids) return res.json([]);
+
+        const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        if (!idArray.length) return res.json([]);
+
+        const { data, error } = await supabase
+            .from('color_sizes')
+            .select('*')
+            .in('color_id', idArray)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// API: SEARCH
+// ============================================
+
+app.get('/api/search', async (req, res) => {
+    try {
+        const { q, type = 'all' } = req.query;
+
+        if (!q || q.length < 2) {
+            return res.json({ products: [], categories: [] });
+        }
+
+        const searchTerm = `%${q}%`;
+        const results = {};
+
+        if (type === 'all' || type === 'products') {
+            const { data: products } = await supabase
+                .from('products')
+                .select('*')
+                .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
+                .limit(10);
+            results.products = products || [];
+        }
+
+        if (type === 'all' || type === 'categories') {
+            const { data: categories } = await supabase
+                .from('categories')
+                .select('*')
+                .ilike('name', searchTerm)
+                .eq('is_active', true)
+                .limit(5);
+            results.categories = categories || [];
+        }
+
+        res.json(results);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -761,12 +1056,6 @@ app.get('/api/health', async (req, res) => {
 // PAGE ROUTES
 // ============================================
 
-// Auth pages
-// ============================================
-// PAGE ROUTES
-// ============================================
-
-// Auth pages
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -775,7 +1064,6 @@ app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
-// Category page
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'category.html'));
 });
@@ -783,6 +1071,7 @@ app.get('/category/:slug*', (req, res) => {
 // ============================================
 // ERROR HANDLING
 // ============================================
+
 app.use((err, req, res, next) => {
     console.error('❌ Unhandled error:', err);
     res.status(500).json({
@@ -791,7 +1080,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// 404 for API routes
 app.use('/api/*', (req, res) => {
     res.status(404).json({ error: 'API endpoint not found' });
 });
@@ -799,19 +1087,21 @@ app.use('/api/*', (req, res) => {
 // ============================================
 // SPA FALLBACK
 // ============================================
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ============================================
-// START SERVER - VERCEL COMPATIBLE
+// EXPORT FOR VERCEL
 // ============================================
 
-// Vercel-এর জন্য module.exports সবার আগে
 module.exports = app;
 
-// শুধুমাত্র লোকাল ডেভেলপমেন্টের জন্য listen করবে
-// Vercel-এ চলার সময় এটি skip হবে
+// ============================================
+// LOCAL DEVELOPMENT SERVER
+// ============================================
+
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
@@ -819,6 +1109,6 @@ if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
         console.log(`📦 API Base: http://localhost:${PORT}/api`);
         console.log(`💚 Health: http://localhost:${PORT}/api/health`);
         console.log(`🌍 Countries: http://localhost:${PORT}/api/countries`);
-        console.log(`📝 Signup Page: http://localhost:${PORT}/signup\n`);
+        console.log(`📝 Signup: http://localhost:${PORT}/signup\n`);
     });
 }
