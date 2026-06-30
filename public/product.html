@@ -1662,9 +1662,6 @@
                         </div>
                     </div>
                     
-                    <!-- VIDEO SECTION - Full Width -->
-                    ${videosHTML ? `<div class="mobile-video-section full-width-section">${videosHTML}</div>` : ''}
-                    
                     <!-- DESKTOP: Specs, Description, Barcode - FULL WIDTH buttons -->
                     <div class="desktop-full-width-buttons">
                         <!-- Specifications -->
@@ -1731,9 +1728,12 @@
                                 <button onclick="submitReview(${product.id})" style="padding:14px 32px;background:rgba(29,29,31,0.9);color:white;border:none;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:0.5px;font-family:var(--font-body);">Submit Review</button>
                             </div>
                         </div>
-                        
-                        <div style="height:40px;"></div>
                     </div>
+                    
+                    <!-- VIDEO SECTION - Full Width (moved below Reviews) -->
+                    ${videosHTML ? `<div class="mobile-video-section full-width-section" style="margin-top:40px;">${videosHTML}</div>` : ''}
+                    
+                    <div style="height:40px;"></div>
                 </div>`;
                 
                 const related = getRandomProducts(product.id, 4);
