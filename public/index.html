@@ -110,10 +110,11 @@
             --card-width: 260px;
             --card-gap: 16px;
             --touch-feedback: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --skeleton-base: #e8e8ed;
-            --skeleton-shine: #f5f5f7;
-            --skeleton-dark-base: #2d2d2f;
-            --skeleton-dark-shine: #3a3a3c;
+            /* Professional Skeleton Colors - Apple-style */
+            --sk-base: #e8e8ed;
+            --sk-shine: #f5f5f7;
+            --sk-dark-base: #2d2d30;
+            --sk-dark-shine: #3a3a3d;
         }
 
         * {
@@ -177,590 +178,727 @@
             transform: translateY(0);
         }
 
-        /* ==================== PROFESSIONAL SKELETON LOADER STYLES ==================== */
-        @keyframes skeletonShimmer {
+        /* ==================== PROFESSIONAL SKELETON LOADER - APPLE STYLE ==================== */
+        @keyframes sk-shimmer {
             0% {
-                background-position: -200% 0;
+                transform: translateX(-100%);
             }
             100% {
-                background-position: 200% 0;
+                transform: translateX(100%);
             }
         }
 
-        @keyframes skeletonFadeIn {
-            from {
+        @keyframes sk-fade-in {
+            0% {
                 opacity: 0;
-                transform: translateY(4px);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateY(0);
             }
         }
 
-        @keyframes skeletonFadeOut {
-            from {
+        @keyframes sk-fade-out {
+            0% {
                 opacity: 1;
             }
-            to {
+            100% {
                 opacity: 0;
             }
         }
 
-        .skeleton {
+        .skeleton-base {
             position: relative;
             overflow: hidden;
-            background: var(--skeleton-base);
-            border-radius: 6px;
+            background-color: var(--sk-base);
         }
 
-        .skeleton::after {
+        .skeleton-base::after {
             content: '';
             position: absolute;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.6) 25%,
-                rgba(255, 255, 255, 0.8) 50%,
-                rgba(255, 255, 255, 0.6) 75%,
+                rgba(255, 255, 255, 0.7) 30%,
+                rgba(255, 255, 255, 0.9) 50%,
+                rgba(255, 255, 255, 0.7) 70%,
                 transparent 100%
             );
-            background-size: 200% 100%;
-            animation: skeletonShimmer 2s infinite ease-in-out;
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
         }
 
+        /* Dark theme skeleton */
         .skeleton-dark {
-            background: var(--skeleton-dark-base);
+            background-color: var(--sk-dark-base);
         }
 
         .skeleton-dark::after {
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.05) 30%,
                 rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0.05) 75%,
+                rgba(255, 255, 255, 0.05) 70%,
                 transparent 100%
             );
-            background-size: 200% 100%;
         }
 
-        .skeleton-text {
-            height: 14px;
+        /* Skeleton shapes */
+        .sk-rect {
+            border-radius: 4px;
+        }
+
+        .sk-circle {
+            border-radius: 50%;
+        }
+
+        .sk-rounded-lg {
+            border-radius: 12px;
+        }
+
+        .sk-rounded-xl {
+            border-radius: 16px;
+        }
+
+        .sk-rounded-2xl {
+            border-radius: 20px;
+        }
+
+        .sk-text {
+            height: 12px;
             margin-bottom: 8px;
             border-radius: 4px;
         }
 
-        .skeleton-text-sm {
+        .sk-text-sm {
             height: 10px;
             margin-bottom: 6px;
             border-radius: 3px;
         }
 
-        .skeleton-text-lg {
-            height: 18px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+        .sk-text-md {
+            height: 14px;
+            margin-bottom: 8px;
+            border-radius: 4px;
         }
 
-        .skeleton-title {
+        .sk-text-lg {
+            height: 16px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .sk-title {
+            height: 20px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            width: 60%;
+        }
+
+        .sk-heading {
             height: 28px;
             margin-bottom: 16px;
-            width: 50%;
             border-radius: 6px;
+            width: 50%;
         }
 
-        .skeleton-badge {
-            display: inline-block;
-            height: 20px;
-            width: 50px;
-            border-radius: 4px;
-            margin-bottom: 8px;
+        /* Skeleton visibility */
+        .sk-wrapper {
+            transition: opacity 0.3s ease;
         }
 
-        .skeleton-btn {
-            height: 40px;
-            border-radius: 20px;
+        .sk-wrapper.sk-visible {
+            display: block;
+            animation: sk-fade-in 0.3s ease forwards;
         }
 
-        /* Skeleton Visibility Classes */
-        .skeleton-container {
-            transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
-        }
-
-        .skeleton-visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .skeleton-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .content-reveal {
-            animation: skeletonFadeIn 0.4s ease-out forwards;
-        }
-
-        /* ==================== HEADER SKELETON ==================== */
-        .header-skeleton {
-            height: 64px;
-            background: #ffffff;
-            border-bottom: 1px solid #f0f0f5;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-skeleton-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .header-skeleton-brand {
-            width: 110px;
-            height: 18px;
-            border-radius: 4px;
-        }
-
-        .header-skeleton-nav {
-            display: flex;
-            gap: 20px;
-            margin-left: auto;
-            align-items: center;
-        }
-
-        .header-skeleton-nav-item {
-            width: 60px;
-            height: 14px;
-            border-radius: 4px;
-        }
-
-        .header-skeleton-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-        }
-
-        @media (max-width: 768px) {
-            .header-skeleton {
-                padding: 0 16px;
-            }
-            .header-skeleton-nav {
-                gap: 12px;
-            }
-            .header-skeleton-nav-item {
-                width: 40px;
-            }
+        .sk-wrapper.sk-hidden {
+            display: none;
+            animation: sk-fade-out 0.3s ease forwards;
         }
 
         /* ==================== HERO SKELETON ==================== */
-        .hero-skeleton {
+        .hero-sk {
             width: 100%;
-            height: 85vh;
-            max-height: 750px;
+            height: 100vh;
+            max-height: 700px;
             position: relative;
+            background: linear-gradient(135deg, #e8e8ed 0%, #f0f0f5 50%, #e8e8ed 100%);
             overflow: hidden;
-            background: #f0f0f5;
         }
 
-        .hero-skeleton-bg {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #e8e8ed 0%, #f0f0f5 50%, #e5e5ea 100%);
-            background-size: 400% 400%;
-            animation: skeletonShimmer 3s infinite ease-in-out;
+        .hero-sk::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.5) 35%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0.5) 65%,
+                transparent 100%
+            );
+            animation: sk-shimmer 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .hero-skeleton-overlay {
+        .hero-sk-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.3));
             padding: 60px 48px;
-            background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%);
+            z-index: 2;
         }
 
-        .hero-skeleton-content {
-            max-width: 650px;
-        }
-
-        .hero-skeleton-heading {
-            height: 52px;
-            width: 80%;
-            margin-bottom: 20px;
+        .hero-sk-line {
+            height: 44px;
+            width: 70%;
+            background: rgba(255,255,255,0.5);
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.25);
+            margin-bottom: 16px;
         }
 
-        .hero-skeleton-subheading {
-            height: 22px;
-            width: 55%;
-            margin-bottom: 32px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.18);
+        .hero-sk-line-sm {
+            height: 20px;
+            width: 40%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin-bottom: 28px;
         }
 
-        .hero-skeleton-cta {
-            height: 50px;
-            width: 170px;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.35);
+        .hero-sk-btn {
+            height: 48px;
+            width: 160px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50px;
         }
 
         @media (max-width: 768px) {
-            .hero-skeleton {
+            .hero-sk {
                 height: 60vh;
                 max-height: 500px;
             }
-            .hero-skeleton-overlay {
-                padding: 40px 24px;
+            .hero-sk-overlay {
+                padding: 40px 20px;
             }
-            .hero-skeleton-heading {
-                height: 36px;
-                width: 90%;
-                margin-bottom: 14px;
+            .hero-sk-line {
+                height: 32px;
+                width: 85%;
             }
-            .hero-skeleton-subheading {
+            .hero-sk-line-sm {
                 height: 16px;
-                width: 70%;
-                margin-bottom: 24px;
+                width: 55%;
+                margin-bottom: 20px;
             }
-            .hero-skeleton-cta {
-                height: 42px;
-                width: 140px;
+            .hero-sk-btn {
+                height: 40px;
+                width: 130px;
             }
         }
 
-        /* ==================== CATEGORY CARDS SKELETON ==================== */
-        .categories-skeleton-grid {
+        /* ==================== CATEGORY SKELETON ==================== */
+        .cat-sk-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2px;
-            background: #ffffff;
+            gap: 0;
         }
 
-        @media (min-width: 1024px) {
-            .categories-skeleton-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .category-skeleton-card {
-            position: relative;
+        .cat-sk-card {
             aspect-ratio: 1/1;
+            position: relative;
             overflow: hidden;
-            background: #e8e8ed;
+        }
+
+        .cat-sk-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0.2) 60%,
+                transparent 100%
+            );
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @media (min-width: 768px) {
-            .category-skeleton-card {
+            .cat-sk-card {
                 aspect-ratio: 3/4;
             }
         }
 
         @media (min-width: 1024px) {
-            .category-skeleton-card {
+            .cat-sk-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2px;
+            }
+            .cat-sk-card {
                 aspect-ratio: 4/3;
             }
         }
 
-        .category-skeleton-card::after {
+        /* ==================== CAROUSEL SKELETON ==================== */
+        .carousel-sk-grid {
+            display: flex;
+            gap: var(--card-gap);
+            padding: 4px;
+            overflow: hidden;
+        }
+
+        .carousel-sk-card {
+            flex: 0 0 auto;
+            width: var(--card-width);
+            background: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .carousel-sk-img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: var(--sk-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-sk-img::after {
             content: '';
             position: absolute;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.4) 25%,
-                rgba(255, 255, 255, 0.6) 50%,
-                rgba(255, 255, 255, 0.4) 75%,
+                rgba(255,255,255,0.6) 35%,
+                rgba(255,255,255,0.9) 50%,
+                rgba(255,255,255,0.6) 65%,
                 transparent 100%
             );
-            background-size: 200% 100%;
-            animation: skeletonShimmer 2s infinite ease-in-out;
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .category-skeleton-label {
+        .carousel-sk-body {
+            padding: 12px 8px;
+        }
+
+        .carousel-sk-body .sk-text-sm {
+            width: 40%;
+            margin-bottom: 8px;
+        }
+
+        .carousel-sk-body .sk-text {
+            width: 80%;
+            margin-bottom: 8px;
+        }
+
+        .carousel-sk-body .sk-text-sm:last-child {
+            width: 30%;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 767px) {
+            .carousel-sk-card {
+                width: 220px;
+            }
+        }
+
+        /* ==================== PRODUCTS GRID SKELETON ==================== */
+        .products-sk-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .product-sk-card {
+            background: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .product-sk-img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: var(--sk-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-sk-img::after {
+            content: '';
             position: absolute;
-            bottom: 24px;
-            left: 24px;
-            z-index: 1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.6) 35%,
+                rgba(255,255,255,0.9) 50%,
+                rgba(255,255,255,0.6) 65%,
+                transparent 100%
+            );
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .category-skeleton-label-line {
-            height: 24px;
-            width: 140px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.3);
-            margin-bottom: 12px;
+        .product-sk-body {
+            padding: 12px 8px;
         }
 
-        .category-skeleton-label-link {
-            height: 14px;
-            width: 80px;
-            border-radius: 3px;
-            background: rgba(255, 255, 255, 0.2);
+        .product-sk-body .sk-text-sm {
+            width: 40%;
+            margin-bottom: 6px;
+        }
+        .product-sk-body .sk-text {
+            width: 80%;
+            margin-bottom: 6px;
+        }
+        .product-sk-body .sk-text-sm:last-child {
+            width: 30%;
+            margin-bottom: 0;
         }
 
         @media (min-width: 1024px) {
-            .category-skeleton-label {
-                bottom: 40px;
-                left: 40px;
-            }
-            .category-skeleton-label-line {
-                height: 32px;
-                width: 180px;
+            .products-sk-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
             }
         }
 
-        /* ==================== CAROUSEL SKELETON ==================== */
+        /* ==================== SIDEBAR SKELETON ==================== */
+        .sidebar-sk {
+            padding: 16px;
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .sidebar-sk .sk-text {
+            height: 32px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        /* ==================== NEWS SKELETON ==================== */
+        .news-sk-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .news-sk-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+        }
+
+        .news-sk-img {
+            width: 100%;
+            height: 200px;
+            background: var(--sk-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-sk-img::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.6) 35%,
+                rgba(255,255,255,0.9) 50%,
+                rgba(255,255,255,0.6) 65%,
+                transparent 100%
+            );
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .news-sk-body {
+            padding: 20px;
+        }
+
+        .news-sk-body .sk-text-sm {
+            width: 30%;
+            margin-bottom: 12px;
+        }
+        .news-sk-body .sk-text-lg {
+            width: 85%;
+            margin-bottom: 8px;
+        }
+        .news-sk-body .sk-text-sm {
+            width: 95%;
+            margin-bottom: 6px;
+        }
+
+        @media (min-width: 768px) {
+            .news-sk-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .news-sk-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+        }
+
+        /* ==================== HEADER SKELETON ==================== */
+        .header-sk {
+            height: 64px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-sk-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background: var(--sk-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-sk-logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-sk-brand {
+            width: 100px;
+            height: 16px;
+            border-radius: 4px;
+            background: var(--sk-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-sk-brand::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-sk-nav {
+            display: flex;
+            gap: 16px;
+            margin-left: auto;
+        }
+
+        .header-sk-nav-item {
+            width: 70px;
+            height: 14px;
+            border-radius: 4px;
+            background: var(--sk-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-sk-nav-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+            animation: sk-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 768px) {
+            .header-sk {
+                padding: 0 16px;
+            }
+            .header-sk-nav {
+                gap: 10px;
+            }
+            .header-sk-nav-item {
+                width: 50px;
+            }
+        }
+
+        /* ==================== FOOTER SKELETON ==================== */
+        .footer-sk {
+            background: #1d1d1f;
+            padding: 48px 24px;
+            margin-top: 40px;
+        }
+
+        .footer-sk-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-sk-logo {
+            width: 100px;
+            height: 24px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.08);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-sk-logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.06) 35%,
+                rgba(255,255,255,0.12) 50%,
+                rgba(255,255,255,0.06) 65%,
+                transparent 100%
+            );
+            animation: sk-shimmer 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .footer-sk-col {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .footer-sk-col-title {
+            width: 60%;
+            height: 14px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.08);
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-sk-col-title::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            animation: sk-shimmer 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .footer-sk-link {
+            width: 80%;
+            height: 10px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+        }
+
+        .footer-sk-link:nth-child(odd) { width: 70%; }
+        .footer-sk-link:nth-child(3) { width: 85%; }
+
+        .footer-sk-cols {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* ==================== WISHLIST SKELETON ==================== */
+        .wishlist-sk-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 1024px) {
+            .wishlist-sk-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        .wishlist-sk-card .product-sk-img {
+            aspect-ratio: 3/4;
+        }
+
+        /* ==================== LOADING OVERLAY ==================== */
+        .sk-loading-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .sk-loading-overlay.active {
+            opacity: 1;
+        }
+
+        .sk-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--sk-base);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: sk-spin 0.8s linear infinite;
+        }
+
+        @keyframes sk-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ==================== ENHANCED MOBILE TOUCH CAROUSEL ==================== */
         .carousel-section {
             padding: 48px 0;
             background: #ffffff;
             touch-action: pan-y pinch-zoom;
         }
 
-        .carousel-skeleton-grid {
-            display: flex;
-            gap: var(--card-gap);
-            padding: 4px 0;
-            overflow: hidden;
-        }
-
-        .carousel-skeleton-card {
-            flex: 0 0 auto;
-            width: var(--card-width);
-        }
-
-        .carousel-skeleton-card-image {
-            aspect-ratio: 3/4;
-            background: #e8e8ed;
-            border-radius: 0;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .carousel-skeleton-card-image::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.5) 25%,
-                rgba(255, 255, 255, 0.7) 50%,
-                rgba(255, 255, 255, 0.5) 75%,
-                transparent 100%
-            );
-            background-size: 200% 100%;
-            animation: skeletonShimmer 1.8s infinite ease-in-out;
-        }
-
-        .carousel-skeleton-card-body {
-            padding: 8px 4px;
-        }
-
-        @media (max-width: 767px) {
-            .carousel-skeleton-card {
-                width: 220px;
-            }
-        }
-
-        /* ==================== DARK THEME CAROUSEL SKELETON ==================== */
-        .carousel-skeleton-dark .carousel-skeleton-card-image {
-            background: var(--skeleton-dark-base);
-        }
-
-        .carousel-skeleton-dark .carousel-skeleton-card-image::after {
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.05) 25%,
-                rgba(255, 255, 255, 0.08) 50%,
-                rgba(255, 255, 255, 0.05) 75%,
-                transparent 100%
-            );
-            background-size: 200% 100%;
-        }
-
-        .carousel-skeleton-dark .skeleton {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .carousel-skeleton-dark .skeleton::after {
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.03) 25%,
-                rgba(255, 255, 255, 0.06) 50%,
-                rgba(255, 255, 255, 0.03) 75%,
-                transparent 100%
-            );
-            background-size: 200% 100%;
-        }
-
-        /* ==================== PRODUCTS PAGE SKELETON ==================== */
-        .products-skeleton-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        @media (min-width: 1024px) {
-            .products-skeleton-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-            }
-        }
-
-        .products-skeleton-card {
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .products-skeleton-card-image {
-            aspect-ratio: 3/4;
-            background: #e8e8ed;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .products-skeleton-card-image::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.5) 25%,
-                rgba(255, 255, 255, 0.7) 50%,
-                rgba(255, 255, 255, 0.5) 75%,
-                transparent 100%
-            );
-            background-size: 200% 100%;
-            animation: skeletonShimmer 1.8s infinite ease-in-out;
-        }
-
-        .products-skeleton-card-body {
-            padding: 12px 8px;
-        }
-
-        /* ==================== NEWS SKELETON ==================== */
-        .news-skeleton-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 768px) {
-            .news-skeleton-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .news-skeleton-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 24px;
-            }
-        }
-
-        .news-skeleton-card {
-            background: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid #f0f0f5;
-        }
-
-        .news-skeleton-card-image {
-            height: 200px;
-            background: #e8e8ed;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .news-skeleton-card-image::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.5) 25%,
-                rgba(255, 255, 255, 0.7) 50%,
-                rgba(255, 255, 255, 0.5) 75%,
-                transparent 100%
-            );
-            background-size: 200% 100%;
-            animation: skeletonShimmer 1.8s infinite ease-in-out;
-        }
-
-        .news-skeleton-card-body {
-            padding: 20px;
-        }
-
-        /* ==================== FOOTER SKELETON ==================== */
-        .footer-skeleton {
-            background: #1d1d1f;
-            padding: 48px 24px;
-            margin-top: 40px;
-        }
-
-        .footer-skeleton-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-skeleton-logo {
-            width: 100px;
-            height: 28px;
-            border-radius: 6px;
-            margin-bottom: 32px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-skeleton-columns {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-        }
-
-        @media (min-width: 768px) {
-            .footer-skeleton-columns {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 40px;
-            }
-        }
-
-        .footer-skeleton-col-title {
-            height: 16px;
-            width: 70%;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-skeleton-col-item {
-            height: 12px;
-            width: 85%;
-            border-radius: 3px;
-            margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        /* ==================== ENHANCED MOBILE TOUCH CAROUSEL ==================== */
         .carousel-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -1524,17 +1662,20 @@
 </head>
 <body class="antialiased">
 
+    <!-- SKELETON LOADING OVERLAY (Spinner) -->
+    <div id="sk-loading-overlay" class="sk-loading-overlay active">
+        <div class="sk-spinner"></div>
+    </div>
+
     <div id="header-container">
         <!-- PROFESSIONAL HEADER SKELETON -->
-        <div id="header-skeleton" class="header-skeleton skeleton-container skeleton-visible">
-            <div class="skeleton header-skeleton-logo"></div>
-            <div class="skeleton header-skeleton-brand"></div>
-            <div class="header-skeleton-nav">
-                <div class="skeleton header-skeleton-nav-item"></div>
-                <div class="skeleton header-skeleton-nav-item"></div>
-                <div class="skeleton header-skeleton-nav-item"></div>
-                <div class="skeleton header-skeleton-icon"></div>
-                <div class="skeleton header-skeleton-icon"></div>
+        <div id="header-skeleton" class="header-sk sk-wrapper sk-visible">
+            <div class="header-sk-logo"></div>
+            <div class="header-sk-brand"></div>
+            <div class="header-sk-nav">
+                <div class="header-sk-nav-item"></div>
+                <div class="header-sk-nav-item"></div>
+                <div class="header-sk-nav-item"></div>
             </div>
         </div>
     </div>
@@ -1542,52 +1683,34 @@
     <main class="pt-0">
 
         <!-- PROFESSIONAL HERO SKELETON -->
-        <div id="hero-skeleton" class="hero-skeleton skeleton-container skeleton-visible">
-            <div class="hero-skeleton-bg"></div>
-            <div class="hero-skeleton-overlay">
-                <div class="hero-skeleton-content">
-                    <div class="hero-skeleton-heading"></div>
-                    <div class="hero-skeleton-subheading"></div>
-                    <div class="hero-skeleton-cta"></div>
-                </div>
+        <div id="hero-skeleton" class="hero-sk sk-wrapper sk-visible">
+            <div class="hero-sk-overlay">
+                <div class="hero-sk-line"></div>
+                <div class="hero-sk-line-sm"></div>
+                <div class="hero-sk-btn"></div>
             </div>
         </div>
 
         <section id="home" class="page-section active-page fade-in">
 
             <!-- PROFESSIONAL CATEGORIES SKELETON -->
-            <div id="categories-skeleton" class="categories-section skeleton-container skeleton-visible">
-                <div class="categories-skeleton-grid">
-                    <div class="category-skeleton-card">
-                        <div class="category-skeleton-label">
-                            <div class="category-skeleton-label-line"></div>
-                            <div class="category-skeleton-label-link"></div>
-                        </div>
-                    </div>
-                    <div class="category-skeleton-card">
-                        <div class="category-skeleton-label">
-                            <div class="category-skeleton-label-line"></div>
-                            <div class="category-skeleton-label-link"></div>
-                        </div>
-                    </div>
-                    <div class="category-skeleton-card" style="display:none;" data-lg-only>
-                        <div class="category-skeleton-label">
-                            <div class="category-skeleton-label-line"></div>
-                            <div class="category-skeleton-label-link"></div>
-                        </div>
-                    </div>
+            <div id="categories-skeleton" class="categories-section sk-wrapper sk-visible">
+                <div class="cat-sk-grid">
+                    <div class="cat-sk-card skeleton-base"></div>
+                    <div class="cat-sk-card skeleton-base"></div>
+                    <div class="cat-sk-card skeleton-base" style="display:none;" data-lg-only></div>
                 </div>
             </div>
 
             <!-- WORLD-CLASS CATEGORIES SECTION (ACTUAL) -->
-            <section id="categories-section" class="categories-section skeleton-hidden">
+            <section id="categories-section" class="categories-section sk-wrapper sk-hidden">
                 <div id="categories-grid" class="categories-grid">
                     <!-- Dynamically populated by JS -->
                 </div>
             </section>
 
             <!-- Carousel: New Arrivals -->
-            <section id="new-arrivals-section" class="carousel-section skeleton-hidden">
+            <section id="new-arrivals-section" class="carousel-section sk-wrapper sk-hidden">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title">New Arrivals</h2>
@@ -1610,44 +1733,44 @@
                 </div>
             </section>
 
-            <!-- PROFESSIONAL CAROUSEL SKELETON: New Arrivals -->
-            <div id="new-arrivals-skeleton" class="carousel-section skeleton-container skeleton-visible">
+            <!-- Carousel Skeleton: New Arrivals -->
+            <div id="new-arrivals-skeleton" class="carousel-section sk-wrapper sk-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                        <div class="skeleton-base sk-heading" style="margin-bottom:0;background:var(--sk-base);"></div>
+                        <div class="skeleton-base sk-text" style="width:80px;margin-bottom:0;background:var(--sk-base);"></div>
                     </div>
-                    <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
+                    <div class="carousel-sk-grid">
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-base sk-text-sm"></div>
+                                <div class="skeleton-base sk-text"></div>
+                                <div class="skeleton-base sk-text-sm"></div>
                             </div>
                         </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-base sk-text-sm"></div>
+                                <div class="skeleton-base sk-text"></div>
+                                <div class="skeleton-base sk-text-sm"></div>
                             </div>
                         </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-base sk-text-sm"></div>
+                                <div class="skeleton-base sk-text"></div>
+                                <div class="skeleton-base sk-text-sm"></div>
                             </div>
                         </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-base sk-text-sm"></div>
+                                <div class="skeleton-base sk-text"></div>
+                                <div class="skeleton-base sk-text-sm"></div>
                             </div>
                         </div>
                     </div>
@@ -1655,7 +1778,7 @@
             </div>
 
             <!-- Carousel: Trending Now -->
-            <section id="hot-products-section" class="carousel-section skeleton-hidden">
+            <section id="hot-products-section" class="carousel-section sk-wrapper sk-hidden">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title">Trending Now</h2>
@@ -1678,52 +1801,24 @@
                 </div>
             </section>
 
-            <!-- PROFESSIONAL CAROUSEL SKELETON: Trending Now -->
-            <div id="hot-products-skeleton" class="carousel-section skeleton-container skeleton-visible">
+            <!-- Carousel Skeleton: Trending Now -->
+            <div id="hot-products-skeleton" class="carousel-section sk-wrapper sk-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                        <div class="skeleton-base sk-heading" style="margin-bottom:0;background:var(--sk-base);"></div>
+                        <div class="skeleton-base sk-text" style="width:80px;margin-bottom:0;background:var(--sk-base);"></div>
                     </div>
-                    <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
+                    <div class="carousel-sk-grid">
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
                     </div>
                 </div>
             </div>
 
             <!-- Carousel: Featured Products -->
-            <section id="featured-products-section" class="carousel-section skeleton-hidden" style="background: #fafafa;">
+            <section id="featured-products-section" class="carousel-section sk-wrapper sk-hidden" style="background: #fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title">Featured Products</h2>
@@ -1746,52 +1841,24 @@
                 </div>
             </section>
 
-            <!-- PROFESSIONAL CAROUSEL SKELETON: Featured -->
-            <div id="featured-products-skeleton" class="carousel-section skeleton-container skeleton-visible" style="background:#fafafa;">
+            <!-- Carousel Skeleton: Featured -->
+            <div id="featured-products-skeleton" class="carousel-section sk-wrapper sk-visible" style="background:#fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                        <div class="skeleton-base sk-heading" style="margin-bottom:0;background:var(--sk-base);"></div>
+                        <div class="skeleton-base sk-text" style="width:80px;margin-bottom:0;background:var(--sk-base);"></div>
                     </div>
-                    <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
+                    <div class="carousel-sk-grid">
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
                     </div>
                 </div>
             </div>
 
             <!-- Carousel: Best Sellers -->
-            <section id="best-selling-section" class="carousel-section skeleton-hidden">
+            <section id="best-selling-section" class="carousel-section sk-wrapper sk-hidden">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title">Best Sellers</h2>
@@ -1814,52 +1881,24 @@
                 </div>
             </section>
 
-            <!-- PROFESSIONAL CAROUSEL SKELETON: Best Sellers -->
-            <div id="best-selling-skeleton" class="carousel-section skeleton-container skeleton-visible">
+            <!-- Carousel Skeleton: Best Sellers -->
+            <div id="best-selling-skeleton" class="carousel-section sk-wrapper sk-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                        <div class="skeleton-base sk-heading" style="margin-bottom:0;background:var(--sk-base);"></div>
+                        <div class="skeleton-base sk-text" style="width:80px;margin-bottom:0;background:var(--sk-base);"></div>
                     </div>
-                    <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
+                    <div class="carousel-sk-grid">
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
                     </div>
                 </div>
             </div>
 
             <!-- Carousel: On Sale -->
-            <section id="on-sale-section" class="carousel-section skeleton-hidden" style="background: #fafafa;">
+            <section id="on-sale-section" class="carousel-section sk-wrapper sk-hidden" style="background: #fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title">On Sale</h2>
@@ -1882,52 +1921,24 @@
                 </div>
             </section>
 
-            <!-- PROFESSIONAL CAROUSEL SKELETON: On Sale -->
-            <div id="on-sale-skeleton" class="carousel-section skeleton-container skeleton-visible" style="background:#fafafa;">
+            <!-- Carousel Skeleton: On Sale -->
+            <div id="on-sale-skeleton" class="carousel-section sk-wrapper sk-visible" style="background:#fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                        <div class="skeleton-base sk-heading" style="margin-bottom:0;background:var(--sk-base);"></div>
+                        <div class="skeleton-base sk-text" style="width:80px;margin-bottom:0;background:var(--sk-base);"></div>
                     </div>
-                    <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-badge"></div>
-                                <div class="skeleton skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-text" style="width:40%;"></div>
-                            </div>
-                        </div>
+                    <div class="carousel-sk-grid">
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                        <div class="carousel-sk-card"><div class="carousel-sk-img"></div><div class="carousel-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
                     </div>
                 </div>
             </div>
 
             <!-- Carousel: Limited Edition -->
-            <section id="limited-edition-section" class="carousel-section skeleton-hidden" style="background: #1d1d1f;">
+            <section id="limited-edition-section" class="carousel-section sk-wrapper sk-hidden" style="background: #1d1d1f;">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title" style="color: #fff;">Limited Edition</h2>
@@ -1950,44 +1961,44 @@
                 </div>
             </section>
 
-            <!-- PROFESSIONAL DARK CAROUSEL SKELETON: Limited Edition -->
-            <div id="limited-edition-skeleton" class="carousel-section skeleton-container skeleton-visible carousel-skeleton-dark" style="background:#1d1d1f;">
+            <!-- Carousel Skeleton: Limited Edition (Dark Theme) -->
+            <div id="limited-edition-skeleton" class="carousel-section sk-wrapper sk-visible" style="background:#1d1d1f;">
                 <div class="carousel-container">
                     <div class="carousel-header">
-                        <div class="skeleton skeleton-dark skeleton-title"></div>
-                        <div class="skeleton skeleton-dark skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                        <div class="skeleton-dark sk-heading" style="margin-bottom:0;"></div>
+                        <div class="skeleton-dark sk-text" style="width:80px;margin-bottom:0;"></div>
                     </div>
-                    <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-dark skeleton-badge"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:40%;"></div>
+                    <div class="carousel-sk-grid">
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img" style="background:var(--sk-dark-base);"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-dark sk-text-sm"></div>
+                                <div class="skeleton-dark sk-text"></div>
+                                <div class="skeleton-dark sk-text-sm"></div>
                             </div>
                         </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-dark skeleton-badge"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:40%;"></div>
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img" style="background:var(--sk-dark-base);"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-dark sk-text-sm"></div>
+                                <div class="skeleton-dark sk-text"></div>
+                                <div class="skeleton-dark sk-text-sm"></div>
                             </div>
                         </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-dark skeleton-badge"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:40%;"></div>
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img" style="background:var(--sk-dark-base);"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-dark sk-text-sm"></div>
+                                <div class="skeleton-dark sk-text"></div>
+                                <div class="skeleton-dark sk-text-sm"></div>
                             </div>
                         </div>
-                        <div class="carousel-skeleton-card">
-                            <div class="carousel-skeleton-card-image"></div>
-                            <div class="carousel-skeleton-card-body">
-                                <div class="skeleton skeleton-dark skeleton-badge"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:85%;"></div>
-                                <div class="skeleton skeleton-dark skeleton-text" style="width:40%;"></div>
+                        <div class="carousel-sk-card">
+                            <div class="carousel-sk-img" style="background:var(--sk-dark-base);"></div>
+                            <div class="carousel-sk-body">
+                                <div class="skeleton-dark sk-text-sm"></div>
+                                <div class="skeleton-dark sk-text"></div>
+                                <div class="skeleton-dark sk-text-sm"></div>
                             </div>
                         </div>
                     </div>
@@ -2010,13 +2021,13 @@
                             </div>
                             <div id="sidebar-categories" class="space-y-1 hidden lg:block" style="max-height:60vh;overflow-y:auto"></div>
                             <!-- PROFESSIONAL SIDEBAR SKELETON -->
-                            <div id="sidebar-categories-skeleton" class="space-y-2 skeleton-container skeleton-visible" style="padding: 4px 0;">
-                                <div class="skeleton skeleton-text" style="width:85%;height:32px;border-radius:8px;"></div>
-                                <div class="skeleton skeleton-text" style="width:70%;height:32px;border-radius:8px;"></div>
-                                <div class="skeleton skeleton-text" style="width:75%;height:32px;border-radius:8px;"></div>
-                                <div class="skeleton skeleton-text" style="width:60%;height:32px;border-radius:8px;"></div>
-                                <div class="skeleton skeleton-text" style="width:80%;height:32px;border-radius:8px;"></div>
-                                <div class="skeleton skeleton-text" style="width:65%;height:32px;border-radius:8px;"></div>
+                            <div id="sidebar-categories-skeleton" class="sidebar-sk sk-wrapper sk-visible" style="border:none;padding:8px 0;">
+                                <div class="skeleton-base sk-text" style="width:85%;height:36px;margin-bottom:6px;border-radius:8px;"></div>
+                                <div class="skeleton-base sk-text" style="width:70%;height:36px;margin-bottom:6px;border-radius:8px;"></div>
+                                <div class="skeleton-base sk-text" style="width:75%;height:36px;margin-bottom:6px;border-radius:8px;"></div>
+                                <div class="skeleton-base sk-text" style="width:60%;height:36px;margin-bottom:6px;border-radius:8px;"></div>
+                                <div class="skeleton-base sk-text" style="width:80%;height:36px;margin-bottom:6px;border-radius:8px;"></div>
+                                <div class="skeleton-base sk-text" style="width:65%;height:36px;margin-bottom:6px;border-radius:8px;"></div>
                             </div>
                             <div id="mobile-filters" class="hidden lg:hidden mt-4 pt-4 border-t border-gray-100">
                                 <div class="space-y-3">
@@ -2050,55 +2061,13 @@
                             </div>
                         </div>
                         <!-- PROFESSIONAL PRODUCTS SKELETON -->
-                        <div id="products-grid-skeleton" class="products-skeleton-grid skeleton-container skeleton-visible">
-                            <div class="products-skeleton-card">
-                                <div class="products-skeleton-card-image"></div>
-                                <div class="products-skeleton-card-body">
-                                    <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                                    <div class="skeleton skeleton-text" style="width:88%;"></div>
-                                    <div class="skeleton skeleton-text" style="width:35%;"></div>
-                                </div>
-                            </div>
-                            <div class="products-skeleton-card">
-                                <div class="products-skeleton-card-image"></div>
-                                <div class="products-skeleton-card-body">
-                                    <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                                    <div class="skeleton skeleton-text" style="width:88%;"></div>
-                                    <div class="skeleton skeleton-text" style="width:35%;"></div>
-                                </div>
-                            </div>
-                            <div class="products-skeleton-card">
-                                <div class="products-skeleton-card-image"></div>
-                                <div class="products-skeleton-card-body">
-                                    <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                                    <div class="skeleton skeleton-text" style="width:88%;"></div>
-                                    <div class="skeleton skeleton-text" style="width:35%;"></div>
-                                </div>
-                            </div>
-                            <div class="products-skeleton-card">
-                                <div class="products-skeleton-card-image"></div>
-                                <div class="products-skeleton-card-body">
-                                    <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                                    <div class="skeleton skeleton-text" style="width:88%;"></div>
-                                    <div class="skeleton skeleton-text" style="width:35%;"></div>
-                                </div>
-                            </div>
-                            <div class="products-skeleton-card">
-                                <div class="products-skeleton-card-image"></div>
-                                <div class="products-skeleton-card-body">
-                                    <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                                    <div class="skeleton skeleton-text" style="width:88%;"></div>
-                                    <div class="skeleton skeleton-text" style="width:35%;"></div>
-                                </div>
-                            </div>
-                            <div class="products-skeleton-card">
-                                <div class="products-skeleton-card-image"></div>
-                                <div class="products-skeleton-card-body">
-                                    <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                                    <div class="skeleton skeleton-text" style="width:88%;"></div>
-                                    <div class="skeleton skeleton-text" style="width:35%;"></div>
-                                </div>
-                            </div>
+                        <div id="products-grid-skeleton" class="products-sk-grid sk-wrapper sk-visible">
+                            <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                            <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                            <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                            <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                            <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                            <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
                         </div>
                         <div id="products-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6"></div>
                     </div>
@@ -2114,39 +2083,11 @@
                     <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold font-serif text-primary">Your Wishlist</h2>
                 </div>
                 <!-- PROFESSIONAL WISHLIST SKELETON -->
-                <div id="wishlist-grid-skeleton" class="products-skeleton-grid skeleton-container skeleton-visible" style="grid-template-columns: repeat(2, 1fr);">
-                    <div class="products-skeleton-card">
-                        <div class="products-skeleton-card-image"></div>
-                        <div class="products-skeleton-card-body">
-                            <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                            <div class="skeleton skeleton-text" style="width:88%;"></div>
-                            <div class="skeleton skeleton-text" style="width:35%;"></div>
-                        </div>
-                    </div>
-                    <div class="products-skeleton-card">
-                        <div class="products-skeleton-card-image"></div>
-                        <div class="products-skeleton-card-body">
-                            <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                            <div class="skeleton skeleton-text" style="width:88%;"></div>
-                            <div class="skeleton skeleton-text" style="width:35%;"></div>
-                        </div>
-                    </div>
-                    <div class="products-skeleton-card">
-                        <div class="products-skeleton-card-image"></div>
-                        <div class="products-skeleton-card-body">
-                            <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                            <div class="skeleton skeleton-text" style="width:88%;"></div>
-                            <div class="skeleton skeleton-text" style="width:35%;"></div>
-                        </div>
-                    </div>
-                    <div class="products-skeleton-card">
-                        <div class="products-skeleton-card-image"></div>
-                        <div class="products-skeleton-card-body">
-                            <div class="skeleton skeleton-badge" style="width:50px;"></div>
-                            <div class="skeleton skeleton-text" style="width:88%;"></div>
-                            <div class="skeleton skeleton-text" style="width:35%;"></div>
-                        </div>
-                    </div>
+                <div id="wishlist-grid-skeleton" class="wishlist-sk-grid sk-wrapper sk-visible">
+                    <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                    <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                    <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
+                    <div class="product-sk-card"><div class="product-sk-img"></div><div class="product-sk-body"><div class="skeleton-base sk-text-sm"></div><div class="skeleton-base sk-text"></div><div class="skeleton-base sk-text-sm"></div></div></div>
                 </div>
                 <div id="wishlist-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div>
                 <div id="empty-wishlist" class="hidden text-center py-20">
@@ -2165,35 +2106,29 @@
                     <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold font-serif text-primary">The Journal</h2>
                 </div>
                 <!-- PROFESSIONAL NEWS SKELETON -->
-                <div id="news-grid-skeleton" class="news-skeleton-grid skeleton-container skeleton-visible">
-                    <div class="news-skeleton-card">
-                        <div class="news-skeleton-card-image"></div>
-                        <div class="news-skeleton-card-body">
-                            <div class="skeleton skeleton-text-sm" style="width:30%;margin-bottom:12px;"></div>
-                            <div class="skeleton skeleton-text-lg" style="width:90%;margin-bottom:10px;"></div>
-                            <div class="skeleton skeleton-text" style="width:100%;margin-bottom:6px;"></div>
-                            <div class="skeleton skeleton-text" style="width:80%;margin-bottom:6px;"></div>
-                            <div class="skeleton skeleton-text" style="width:50%;"></div>
+                <div id="news-grid-skeleton" class="news-sk-grid sk-wrapper sk-visible">
+                    <div class="news-sk-card">
+                        <div class="news-sk-img"></div>
+                        <div class="news-sk-body">
+                            <div class="skeleton-base sk-text-sm"></div>
+                            <div class="skeleton-base sk-text-lg"></div>
+                            <div class="skeleton-base sk-text-sm"></div>
                         </div>
                     </div>
-                    <div class="news-skeleton-card">
-                        <div class="news-skeleton-card-image"></div>
-                        <div class="news-skeleton-card-body">
-                            <div class="skeleton skeleton-text-sm" style="width:30%;margin-bottom:12px;"></div>
-                            <div class="skeleton skeleton-text-lg" style="width:90%;margin-bottom:10px;"></div>
-                            <div class="skeleton skeleton-text" style="width:100%;margin-bottom:6px;"></div>
-                            <div class="skeleton skeleton-text" style="width:80%;margin-bottom:6px;"></div>
-                            <div class="skeleton skeleton-text" style="width:50%;"></div>
+                    <div class="news-sk-card">
+                        <div class="news-sk-img"></div>
+                        <div class="news-sk-body">
+                            <div class="skeleton-base sk-text-sm"></div>
+                            <div class="skeleton-base sk-text-lg"></div>
+                            <div class="skeleton-base sk-text-sm"></div>
                         </div>
                     </div>
-                    <div class="news-skeleton-card">
-                        <div class="news-skeleton-card-image"></div>
-                        <div class="news-skeleton-card-body">
-                            <div class="skeleton skeleton-text-sm" style="width:30%;margin-bottom:12px;"></div>
-                            <div class="skeleton skeleton-text-lg" style="width:90%;margin-bottom:10px;"></div>
-                            <div class="skeleton skeleton-text" style="width:100%;margin-bottom:6px;"></div>
-                            <div class="skeleton skeleton-text" style="width:80%;margin-bottom:6px;"></div>
-                            <div class="skeleton skeleton-text" style="width:50%;"></div>
+                    <div class="news-sk-card">
+                        <div class="news-sk-img"></div>
+                        <div class="news-sk-body">
+                            <div class="skeleton-base sk-text-sm"></div>
+                            <div class="skeleton-base sk-text-lg"></div>
+                            <div class="skeleton-base sk-text-sm"></div>
                         </div>
                     </div>
                 </div>
@@ -2205,33 +2140,20 @@
 
     <div id="footer-container">
         <!-- PROFESSIONAL FOOTER SKELETON -->
-        <div id="footer-skeleton" class="footer-skeleton skeleton-container skeleton-visible">
-            <div class="footer-skeleton-inner">
-                <div class="skeleton-dark footer-skeleton-logo"></div>
-                <div class="footer-skeleton-columns">
-                    <div>
-                        <div class="skeleton-dark footer-skeleton-col-title"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
+        <div id="footer-skeleton" class="footer-sk sk-wrapper sk-visible">
+            <div class="footer-sk-inner">
+                <div class="footer-sk-logo"></div>
+                <div class="footer-sk-cols">
+                    <div class="footer-sk-col">
+                        <div class="footer-sk-col-title"></div>
+                        <div class="footer-sk-link"></div>
+                        <div class="footer-sk-link"></div>
+                        <div class="footer-sk-link"></div>
                     </div>
-                    <div>
-                        <div class="skeleton-dark footer-skeleton-col-title"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                    </div>
-                    <div>
-                        <div class="skeleton-dark footer-skeleton-col-title"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                    </div>
-                    <div>
-                        <div class="skeleton-dark footer-skeleton-col-title"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
-                        <div class="skeleton-dark footer-skeleton-col-item"></div>
+                    <div class="footer-sk-col">
+                        <div class="footer-sk-col-title"></div>
+                        <div class="footer-sk-link"></div>
+                        <div class="footer-sk-link"></div>
                     </div>
                 </div>
             </div>
@@ -2280,25 +2202,26 @@
             if (id) {
                 const el = document.getElementById(id);
                 if (el) {
-                    el.classList.add('skeleton-visible');
-                    el.classList.remove('skeleton-hidden');
+                    el.classList.add('sk-visible');
+                    el.classList.remove('sk-hidden');
                 }
             }
+            // Special cases for inline skeletons
             if (key === 'sidebar-categories') {
                 const skel = document.getElementById('sidebar-categories-skeleton');
-                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+                if (skel) { skel.classList.add('sk-visible'); skel.classList.remove('sk-hidden'); }
             }
             if (key === 'products-grid') {
                 const skel = document.getElementById('products-grid-skeleton');
-                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+                if (skel) { skel.classList.add('sk-visible'); skel.classList.remove('sk-hidden'); }
             }
             if (key === 'wishlist-grid') {
                 const skel = document.getElementById('wishlist-grid-skeleton');
-                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+                if (skel) { skel.classList.add('sk-visible'); skel.classList.remove('sk-hidden'); }
             }
             if (key === 'news-grid') {
                 const skel = document.getElementById('news-grid-skeleton');
-                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+                if (skel) { skel.classList.add('sk-visible'); skel.classList.remove('sk-hidden'); }
             }
         }
 
@@ -2307,25 +2230,26 @@
             if (id) {
                 const el = document.getElementById(id);
                 if (el) {
-                    el.classList.add('skeleton-hidden');
-                    el.classList.remove('skeleton-visible');
+                    el.classList.add('sk-hidden');
+                    el.classList.remove('sk-visible');
                 }
             }
+            // Special cases for inline skeletons
             if (key === 'sidebar-categories') {
                 const skel = document.getElementById('sidebar-categories-skeleton');
-                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+                if (skel) { skel.classList.add('sk-hidden'); skel.classList.remove('sk-visible'); }
             }
             if (key === 'products-grid') {
                 const skel = document.getElementById('products-grid-skeleton');
-                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+                if (skel) { skel.classList.add('sk-hidden'); skel.classList.remove('sk-visible'); }
             }
             if (key === 'wishlist-grid') {
                 const skel = document.getElementById('wishlist-grid-skeleton');
-                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+                if (skel) { skel.classList.add('sk-hidden'); skel.classList.remove('sk-visible'); }
             }
             if (key === 'news-grid') {
                 const skel = document.getElementById('news-grid-skeleton');
-                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+                if (skel) { skel.classList.add('sk-hidden'); skel.classList.remove('sk-visible'); }
             }
         }
 
@@ -2334,6 +2258,9 @@
                 'sidebar-categories', 'products-grid', 'wishlist-grid', 'news-grid'
             ]);
             allSkeletonKeys.forEach(key => hideSkeleton(key));
+            // Hide loading overlay
+            const overlay = document.getElementById('sk-loading-overlay');
+            if (overlay) overlay.classList.remove('active');
         }
 
         let currentData = {
@@ -2425,19 +2352,22 @@
             hideSkeleton('sidebar-categories');
         }
 
+        // ============================================================
+        // WORLD-CLASS CATEGORY CARDS – DIRECT DB LINKS, NO HARDCODED PREFIXES
+        // ============================================================
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
             const section = document.getElementById('categories-section');
             if (!grid || !section) return;
 
             if (!currentData.categories || currentData.categories.length === 0) {
-                section.classList.add('hidden');
+                section.classList.add('sk-hidden');
                 hideSkeleton('categories');
                 return;
             }
 
-            section.classList.remove('hidden');
-            section.classList.remove('skeleton-hidden');
+            section.classList.remove('sk-hidden');
+            section.classList.add('sk-visible');
 
             grid.innerHTML = currentData.categories.map((cat, index) => {
                 const catName = cat.name || '';
@@ -2636,6 +2566,9 @@
             hideSkeleton('news-grid');
         }
 
+        // -------------------------------------------------------
+        // SMOOTH CAROUSEL SLIDING
+        // -------------------------------------------------------
         function slideCarousel(carouselId, direction) {
             const carousel = document.getElementById(carouselId);
             if (!carousel) return;
@@ -2730,16 +2663,20 @@
                 const el = document.getElementById(sec.id);
                 if (!el) return;
                 if (sec.products && sec.products.length > 0) {
-                    el.classList.remove('hidden', 'skeleton-hidden');
+                    el.classList.remove('sk-hidden');
+                    el.classList.add('sk-visible');
                     renderCarouselProducts(sec.carousel, sec.products);
                     hideSkeleton(sec.skeletonKey);
                 } else {
-                    el.classList.add('hidden');
+                    el.classList.add('sk-hidden');
                     hideSkeleton(sec.skeletonKey);
                 }
             });
         }
 
+        // -------------------------------------------------------
+        // MOMENTUM-BASED DRAG (no snapping, buttery smooth)
+        // -------------------------------------------------------
         function initCarouselTouchSupport() {
             document.querySelectorAll('.carousel-track').forEach(carousel => {
                 let isDown = false;
@@ -2886,6 +2823,7 @@
                 if (heroVideosData?.length) currentData.heroVideos = heroVideosData;
                 if (heroSecondaryData?.length) currentData.hero_secondary = heroSecondaryData;
 
+                // Hide hero skeleton
                 hideSkeleton('hero');
 
                 window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', {
@@ -2899,10 +2837,17 @@
                 renderHomepageSections();
                 handleInitialRoute();
 
+                // Hide header and footer skeletons
                 hideSkeleton('header');
                 hideSkeleton('footer');
 
-                console.log('[App] Data loaded successfully');
+                // Hide loading overlay with delay for smooth transition
+                setTimeout(() => {
+                    const overlay = document.getElementById('sk-loading-overlay');
+                    if (overlay) overlay.classList.remove('active');
+                }, 300);
+
+                console.log('[App] Data loaded, skeletons hidden');
             } catch (err) {
                 console.error('[App] Error:', err);
                 hideAllSkeletons();
