@@ -72,7 +72,6 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Skeleton Loading */
     .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
@@ -84,7 +83,6 @@
       100% { background-position: 200% 0; }
     }
 
-    /* Breadcrumb */
     .breadcrumb {
       display: flex;
       align-items: center;
@@ -102,7 +100,6 @@
     .breadcrumb a:hover { color: var(--primary); }
     .breadcrumb .current { color: var(--primary); font-weight: 600; }
 
-    /* Page Header */
     .page-header {
       position: relative;
       width: 100vw;
@@ -144,13 +141,14 @@
       text-align: center; width: 88%; max-width: 680px; padding: 0 16px;
     }
     .page-header .header-label {
-      display: inline-block;
+      display: none;
       font-family: 'Inter', sans-serif; font-size: clamp(7px, 1vw, 9px); font-weight: 500;
       letter-spacing: 0.45em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
       margin-bottom: clamp(12px, 2vh, 20px);
       opacity: 0; transform: translateY(8px);
       animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
     }
+    .page-header .header-label.has-content { display: inline-block; }
     .page-header .header-title {
       font-family: 'Manrope', sans-serif; font-size: clamp(22px, 4.5vw, 56px); font-weight: 900;
       line-height: 1.1; color: #ffffff; margin: 0; letter-spacing: -0.01em;
@@ -159,7 +157,6 @@
     }
     @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* Story Cards */
     .story-card {
       opacity: 0;
       transform: translateY(40px);
@@ -186,7 +183,9 @@
       border-radius: 12px;
       background: #f0f0f0;
       margin-bottom: 32px;
+      display: none;
     }
+    .story-card .story-image-wrap.has-image { display: block; }
     @media (max-width: 768px) {
       .story-card .story-image-wrap { border-radius: 8px; margin-bottom: 24px; }
     }
@@ -222,7 +221,9 @@
     .story-card .story-side-col {
       flex-shrink: 0;
       width: 280px;
+      display: none;
     }
+    .story-card .story-side-col.has-image { display: block; }
     @media (max-width: 768px) {
       .story-card .story-side-col { width: 100%; }
     }
@@ -266,7 +267,6 @@
       margin-bottom: 0;
     }
 
-    /* Side Image */
     .story-card .story-side-image {
       width: 100%;
       aspect-ratio: 3/4;
@@ -290,7 +290,6 @@
       }
     }
 
-    /* CTA Button */
     .story-cta {
       display: inline-flex;
       align-items: center;
@@ -324,7 +323,6 @@
       .story-cta { width: 100%; justify-content: center; padding: 14px 24px; font-size: 14px; }
     }
 
-    /* Divider */
     .story-divider {
       width: 100%;
       height: 1px;
@@ -338,7 +336,6 @@
       .story-divider { margin-bottom: 28px; }
     }
 
-    /* Date Badge */
     .story-date {
       display: inline-flex;
       align-items: center;
@@ -352,7 +349,6 @@
       font-size: 13px;
     }
 
-    /* Error State */
     .error-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
     .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
     .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
@@ -360,13 +356,11 @@
     .error-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
     .error-state .btn-primary:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
 
-    /* Empty State */
     .empty-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
     .empty-state i { font-size: 56px; color: #d1d1d6; margin-bottom: 24px; }
     .empty-state h3 { font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
     .empty-state p { font-size: 15px; color: var(--accent); max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
 
-    /* Back to Top */
     .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; }
     .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
     .back-to-top:active { transform: scale(0.9); }
@@ -376,20 +370,16 @@
 </head>
 <body class="antialiased">
 
-  <!-- Dynamic Header -->
   <div id="dynamic-header"></div>
 
-  <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" style="margin-bottom: 0; padding-bottom: 0; padding-top: 0;">
 
-    <!-- Breadcrumb -->
     <nav class="breadcrumb" id="breadcrumb">
       <a href="/">Home</a>
       <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
       <span class="current">আমাদের গল্প</span>
     </nav>
 
-    <!-- Error State -->
     <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
       <h2>কন্টেন্ট লোড করা যায়নি</h2>
@@ -399,14 +389,12 @@
       </button>
     </div>
 
-    <!-- Empty State -->
     <div class="empty-state" id="empty-state">
       <i class="fa-solid fa-book-open"></i>
       <h3>এখনো কোনো গল্প প্রকাশিত হয়নি</h3>
       <p>আমাদের গল্প শীঘ্রই এখানে প্রকাশিত হবে। আমাদের সাথে থাকুন।</p>
     </div>
 
-    <!-- Page Header (Fully Dynamic) -->
     <div class="page-header" id="page-header">
       <img id="header-bg-img" src="" alt="" class="header-bg-img" />
       <div class="header-overlay"></div>
@@ -416,9 +404,7 @@
       </div>
     </div>
 
-    <!-- Stories Container -->
     <div id="stories-container">
-      <!-- Skeleton Loading -->
       <div id="skeleton-container">
         <div class="story-card">
           <div class="story-image-wrap skeleton"></div>
@@ -455,16 +441,13 @@
         </div>
       </div>
 
-      <!-- Actual Stories -->
       <div id="stories-content" style="display:none;"></div>
     </div>
 
   </main>
 
-  <!-- Dynamic Footer -->
   <div id="dynamic-footer"></div>
 
-  <!-- Back to Top -->
   <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
   </button>
@@ -473,14 +456,8 @@
 
   <script>
     (function() {
-      // ============================================
-      // CONFIGURATION
-      // ============================================
       const API_BASE = window.location.origin;
 
-      // ============================================
-      // UTILITY FUNCTIONS
-      // ============================================
       function formatDate(dateString) {
         if (!dateString) return '';
         try {
@@ -499,28 +476,15 @@
         return div.innerHTML;
       }
 
-      // ============================================
-      // API CALLS
-      // ============================================
       async function fetchStories() {
-        try {
-          const response = await fetch(`${API_BASE}/api/stories`, {
-            headers: { 'Accept': 'application/json' }
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-          const data = await response.json();
-          return data || [];
-        } catch (error) {
-          console.error('Error fetching stories:', error);
-          throw error;
-        }
+        const response = await fetch(`${API_BASE}/api/stories`, {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        return data || [];
       }
 
-      // ============================================
-      // RENDER FUNCTIONS
-      // ============================================
       function showSkeleton() {
         document.getElementById('skeleton-container').style.display = 'block';
         document.getElementById('stories-content').style.display = 'none';
@@ -551,8 +515,7 @@
         const headerLabel = document.getElementById('header-label');
         const headerTitle = document.getElementById('header-main-title');
 
-        // Find first story with header_image for hero background
-        const heroStory = stories.find(s => s.header_image) || stories[0];
+        const heroStory = stories.find(function(s) { return s.header_image; }) || stories[0];
 
         if (heroStory && heroStory.header_image) {
           headerImg.src = heroStory.header_image;
@@ -565,21 +528,15 @@
           headerImg.style.display = 'none';
         }
 
-        // Set header label from first story's header_subtitle
         if (heroStory && heroStory.header_subtitle) {
           headerLabel.textContent = heroStory.header_subtitle;
-          headerLabel.style.display = 'inline-block';
+          headerLabel.classList.add('has-content');
         } else {
           headerLabel.textContent = '';
-          headerLabel.style.display = 'none';
+          headerLabel.classList.remove('has-content');
         }
 
-        // Set header title from first story's header_title
-        if (heroStory && heroStory.header_title) {
-          headerTitle.textContent = heroStory.header_title;
-        } else {
-          headerTitle.textContent = '';
-        }
+        headerTitle.textContent = heroStory && heroStory.header_title ? heroStory.header_title : '';
 
         pageHeader.classList.add('visible');
       }
@@ -590,150 +547,106 @@
         document.getElementById('empty-state').style.display = 'none';
         document.getElementById('stories-content').style.display = 'block';
 
-        // Update page header dynamically
         updatePageHeader(stories);
 
-        const container = document.getElementById('stories-content');
+        var container = document.getElementById('stories-content');
         container.innerHTML = '';
 
-        // Render each story
-        stories.forEach((story, index) => {
-          const wrapper = createStoryCard(story, index);
+        stories.forEach(function(story, index) {
+          var wrapper = createStoryCard(story, index);
           container.appendChild(wrapper);
         });
 
-        // Initialize scroll animations
         initScrollAnimations();
 
-        // Remove the last divider
-        const dividers = container.querySelectorAll('.story-divider');
+        var dividers = container.querySelectorAll('.story-divider');
         if (dividers.length > 0) {
           dividers[dividers.length - 1].style.display = 'none';
         }
       }
 
       function createStoryCard(story, index) {
-        const card = document.createElement('div');
+        var card = document.createElement('div');
         card.className = 'story-card';
         card.setAttribute('data-story-index', index);
         card.setAttribute('data-animate', 'true');
 
-        const hasSectionImage = !!story.section_image;
-        const hasHeaderImage = !!story.header_image;
-        const hasCTA = !!story.cta_text;
+        var hasSectionImage = !!story.section_image;
+        var hasHeaderImage = !!story.header_image;
+        var hasCTA = !!(story.cta_text && story.cta_link);
 
-        let html = '';
+        var html = '';
 
-        // Header Image (main wide image) — only from DB
         if (hasHeaderImage) {
-          html += `
-            <div class="story-image-wrap">
-              <img src="${escapeHTML(story.header_image)}" 
-                   alt="${escapeHTML(story.header_title || '')}" 
-                   loading="${index < 2 ? 'eager' : 'lazy'}"
-                   onerror="this.parentElement.style.display='none';" />
-            </div>
-          `;
+          html += '<div class="story-image-wrap has-image">';
+          html += '<img src="' + escapeHTML(story.header_image) + '" alt="' + escapeHTML(story.header_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
+          html += '</div>';
         }
 
-        // Content Row
         html += '<div class="story-content-wrap">';
-        
-        // Text Column
         html += '<div class="story-text-col">';
 
-        // Date — only if exists in DB
         if (story.created_at) {
-          html += `
-            <div class="story-date">
-              <i class="fa-regular fa-calendar"></i>
-              <span>${formatDate(story.created_at)}</span>
-            </div>
-          `;
+          html += '<div class="story-date"><i class="fa-regular fa-calendar"></i><span>' + formatDate(story.created_at) + '</span></div>';
         }
 
-        // Header Title (shown when no header image) — only from DB
         if (!hasHeaderImage && story.header_title) {
-          html += `<h2 class="story-title">${escapeHTML(story.header_title)}</h2>`;
+          html += '<h2 class="story-title">' + escapeHTML(story.header_title) + '</h2>';
         }
 
-        // Header Subtitle — only from DB
         if (story.header_subtitle) {
-          html += `<p class="story-label">${escapeHTML(story.header_subtitle)}</p>`;
+          html += '<p class="story-label">' + escapeHTML(story.header_subtitle) + '</p>';
         }
 
-        // Section Title — only from DB
         if (story.section_title) {
-          html += `<h2 class="story-title">${escapeHTML(story.section_title)}</h2>`;
+          html += '<h2 class="story-title">' + escapeHTML(story.section_title) + '</h2>';
         }
 
-        // Section Subtitle — only from DB
         if (story.section_subtitle) {
-          html += `<p class="story-subtitle">${escapeHTML(story.section_subtitle)}</p>`;
+          html += '<p class="story-subtitle">' + escapeHTML(story.section_subtitle) + '</p>';
         }
 
-        // Section Description — only from DB
         if (story.section_description) {
-          const paragraphs = story.section_description
-            .split('\n')
-            .filter(p => p.trim())
-            .map(p => `<p>${escapeHTML(p.trim())}</p>`)
-            .join('');
-          html += `<div class="story-description">${paragraphs}</div>`;
+          var paragraphs = story.section_description.split('\n').filter(function(p) { return p.trim(); }).map(function(p) {
+            return '<p>' + escapeHTML(p.trim()) + '</p>';
+          }).join('');
+          html += '<div class="story-description">' + paragraphs + '</div>';
         }
 
-        // CTA Button — only from DB
         if (hasCTA) {
-          html += `
-            <a href="${escapeHTML(story.cta_link || '#')}" class="story-cta">
-              ${escapeHTML(story.cta_text)}
-              <span class="cta-arrow"><i class="fa-solid fa-arrow-right"></i></span>
-            </a>
-          `;
+          html += '<a href="' + escapeHTML(story.cta_link) + '" class="story-cta">' + escapeHTML(story.cta_text) + '<span class="cta-arrow"><i class="fa-solid fa-arrow-right"></i></span></a>';
         }
 
-        html += '</div>'; // End text-col
+        html += '</div>';
 
-        // Side Image Column — only from DB
         if (hasSectionImage) {
-          html += `
-            <div class="story-side-col">
-              <div class="story-side-image">
-                <img src="${escapeHTML(story.section_image)}" 
-                     alt="${escapeHTML(story.section_title || '')}" 
-                     loading="lazy"
-                     onerror="this.parentElement.style.display='none';" />
-              </div>
-            </div>
-          `;
+          html += '<div class="story-side-col has-image">';
+          html += '<div class="story-side-image"><img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="lazy" onerror="this.parentElement.parentElement.classList.remove(\'has-image\');" /></div>';
+          html += '</div>';
         }
 
-        html += '</div>'; // End content-wrap
+        html += '</div>';
 
         card.innerHTML = html;
 
-        // Add divider after each story
-        const divider = document.createElement('div');
+        var divider = document.createElement('div');
         divider.className = 'story-divider';
 
-        const wrapper = document.createElement('div');
+        var wrapper = document.createElement('div');
         wrapper.appendChild(card);
         wrapper.appendChild(divider);
 
         return wrapper;
       }
 
-      // ============================================
-      // SCROLL ANIMATIONS
-      // ============================================
       function initScrollAnimations() {
-        const observerOptions = {
+        var observerOptions = {
           threshold: 0.15,
           rootMargin: '0px 0px -30px 0px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               entry.target.classList.add('visible');
               observer.unobserve(entry.target);
@@ -741,21 +654,18 @@
           });
         }, observerOptions);
 
-        document.querySelectorAll('[data-animate="true"]').forEach((card, index) => {
-          card.style.transitionDelay = `${index * 0.1}s`;
+        document.querySelectorAll('[data-animate="true"]').forEach(function(card, index) {
+          card.style.transitionDelay = (index * 0.1) + 's';
           observer.observe(card);
         });
       }
 
-      // ============================================
-      // BACK TO TOP
-      // ============================================
       function initBackToTop() {
-        const btn = document.getElementById('back-to-top');
-        let ticking = false;
-        window.addEventListener('scroll', () => {
+        var btn = document.getElementById('back-to-top');
+        var ticking = false;
+        window.addEventListener('scroll', function() {
           if (!ticking) {
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function() {
               if (window.scrollY > 500) {
                 btn.classList.add('visible');
               } else {
@@ -768,20 +678,14 @@
         }, { passive: true });
       }
 
-      // ============================================
-      // MAIN LOAD FUNCTION
-      // ============================================
       async function loadStories() {
         showSkeleton();
-
         try {
-          const stories = await fetchStories();
-
+          var stories = await fetchStories();
           if (!stories || stories.length === 0) {
             showEmpty();
             return;
           }
-
           renderStories(stories);
         } catch (error) {
           console.error('Failed to load stories:', error);
@@ -789,22 +693,18 @@
         }
       }
 
-      // Expose to global scope for retry button
       window.loadStories = loadStories;
 
-      // ============================================
-      // INITIALIZATION
-      // ============================================
-      document.addEventListener('DOMContentLoaded', () => {
-        // Apply custom fonts if available
+      document.addEventListener('DOMContentLoaded', function() {
         if (window.JAYENWARE_FONTS) {
-          const root = document.documentElement;
-          const vars = window.JAYENWARE_FONTS.cssVariables;
-          for (const [key, value] of Object.entries(vars)) {
-            root.style.setProperty(key, value);
+          var root = document.documentElement;
+          var vars = window.JAYENWARE_FONTS.cssVariables;
+          for (var key in vars) {
+            if (vars.hasOwnProperty(key)) {
+              root.style.setProperty(key, vars[key]);
+            }
           }
         }
-
         initBackToTop();
         loadStories();
       });
