@@ -228,6 +228,7 @@
       letter-spacing: 0.3em;
       color: var(--accent);
       margin-bottom: 12px;
+      display: block;
     }
     .story-card .story-title {
       font-family: 'Manrope', sans-serif;
@@ -237,15 +238,18 @@
       color: var(--primary);
       margin: 0 0 8px 0;
       letter-spacing: -0.02em;
+      display: block;
     }
-    .story-card .story-subtitle {
+    .story-card .story-section-subtitle {
       font-family: 'Inter', sans-serif;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 500;
-      color: var(--accent);
-      margin-bottom: 24px;
+      color: #666;
+      margin: 0 0 24px 0;
       line-height: 1.5;
       display: block;
+      visibility: visible;
+      opacity: 1;
     }
     .story-card .story-description {
       font-size: 15px;
@@ -586,19 +590,14 @@
           html += '<div class="story-date"><i class="fa-regular fa-calendar"></i><span>' + formatDate(story.created_at) + '</span></div>';
         }
 
-        // Header subtitle (small label above title)
-        if (story.header_subtitle) {
-          html += '<p class="story-label">' + escapeHTML(story.header_subtitle) + '</p>';
-        }
-
         // Section title (main heading)
         if (story.section_title) {
           html += '<h2 class="story-title">' + escapeHTML(story.section_title) + '</h2>';
         }
 
-        // Section subtitle (appears right after section title)
+        // Section subtitle (NOW USING A UNIQUE CLASS NAME)
         if (story.section_subtitle) {
-          html += '<p class="story-subtitle">' + escapeHTML(story.section_subtitle) + '</p>';
+          html += '<p class="story-section-subtitle">' + escapeHTML(story.section_subtitle) + '</p>';
         }
 
         // Section description
