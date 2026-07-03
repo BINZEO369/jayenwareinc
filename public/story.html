@@ -87,8 +87,10 @@
       position: relative;
       width: 100vw;
       height: 100vh;
-      min-height: 500px;
-      max-height: 800px;
+      height: 100dvh;
+      min-height: 100vh;
+      min-height: 100dvh;
+      max-height: none;
       overflow: hidden;
       background: #000;
       margin-bottom: 48px;
@@ -100,10 +102,24 @@
     }
     .page-header.visible { display: block; }
     @media (max-width: 768px) {
-      .page-header { height: 70vh; min-height: 400px; max-height: 600px; margin-bottom: 36px; }
+      .page-header { 
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        margin-bottom: 36px; 
+      }
     }
     @media (max-width: 480px) {
-      .page-header { height: 60vh; min-height: 350px; max-height: 500px; margin-bottom: 28px; }
+      .page-header { 
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        margin-bottom: 28px; 
+      }
     }
     .page-header .header-bg-img {
       position: absolute; 
@@ -166,11 +182,12 @@
       .story-card { margin-bottom: 36px; }
     }
 
-    /* Full-width section image - INCREASED HEIGHT */
+    /* Full-width section image */
     .story-card .story-full-image-wrap {
       position: relative;
       width: 100vw;
       height: 90vh;
+      height: 90dvh;
       min-height: 500px;
       max-height: 900px;
       overflow: hidden;
@@ -182,10 +199,22 @@
     }
     .story-card .story-full-image-wrap.has-image { display: block; }
     @media (max-width: 768px) {
-      .story-card .story-full-image-wrap { height: 70vh; min-height: 400px; max-height: 600px; margin-bottom: 36px; }
+      .story-card .story-full-image-wrap { 
+        height: 80vh;
+        height: 80dvh;
+        min-height: 400px; 
+        max-height: 700px; 
+        margin-bottom: 36px; 
+      }
     }
     @media (max-width: 480px) {
-      .story-card .story-full-image-wrap { height: 60vh; min-height: 350px; max-height: 500px; margin-bottom: 28px; }
+      .story-card .story-full-image-wrap { 
+        height: 70vh;
+        height: 70dvh;
+        min-height: 350px; 
+        max-height: 600px; 
+        margin-bottom: 28px; 
+      }
     }
     .story-card .story-full-image-wrap img {
       width: 100%;
@@ -212,11 +241,6 @@
     .story-card .story-text-col {
       flex: 1;
       min-width: 0;
-    }
-    .story-card .story-side-col {
-      flex-shrink: 0;
-      width: 280px;
-      display: none;
     }
 
     .story-card .story-label {
@@ -544,7 +568,7 @@
 
         var html = '';
 
-        // Full-width section image (only section_image, NOT header_image)
+        // Full-width section image
         if (hasSectionImage) {
           html += '<div class="story-full-image-wrap has-image">';
           html += '<img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
@@ -559,7 +583,7 @@
           html += '<div class="story-date"><i class="fa-regular fa-calendar"></i><span>' + formatDate(story.created_at) + '</span></div>';
         }
 
-        // Section title (main heading)
+        // Section title
         if (story.section_title) {
           html += '<h2 class="story-title">' + escapeHTML(story.section_title) + '</h2>';
         }
@@ -583,7 +607,6 @@
         }
 
         html += '</div>'; // Close story-text-col
-
         html += '</div>'; // Close story-content-wrap
 
         card.innerHTML = html;
