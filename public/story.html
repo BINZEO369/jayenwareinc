@@ -7,7 +7,7 @@
   <meta name="description" content="Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/stories" />
+  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/story" />
   <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
   <link rel="apple-touch-icon" href="/logo.png" />
@@ -93,7 +93,7 @@
       padding: 16px 0;
     }
 
-    /* Hero Banner - Same as category page */
+    /* Hero Banner */
     .story-hero-banner {
       position: relative;
       width: 100vw;
@@ -227,16 +227,6 @@
     .story-card:hover .card-image {
       transform: scale(1.08);
     }
-    .story-card .card-image-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .story-card:hover .card-image-overlay {
-      opacity: 1;
-    }
     .story-card .card-content {
       padding: 24px;
     }
@@ -256,40 +246,12 @@
       color: var(--primary);
       line-height: 1.3;
       margin-bottom: 12px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
     .story-card .card-description {
       font-size: 14px;
       color: var(--accent);
       line-height: 1.6;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
       margin-bottom: 16px;
-    }
-    .story-card .card-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary);
-      text-decoration: none;
-      transition: gap 0.3s ease;
-    }
-    .story-card .card-cta:hover {
-      gap: 10px;
-    }
-    .story-card .card-cta i {
-      font-size: 12px;
-      transition: transform 0.3s ease;
-    }
-    .story-card .card-cta:hover i {
-      transform: translateX(3px);
     }
 
     /* Story Detail Section */
@@ -339,7 +301,8 @@
       color: var(--primary);
       max-width: 800px;
       margin: 0 auto 40px;
-      white-space: pre-line;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
     .story-detail-section .section-cta {
       text-align: center;
@@ -363,7 +326,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     }
 
-    /* Error State */
+    /* Error & Empty States */
     .error-state {
       text-align: center;
       padding: 80px 20px;
@@ -410,7 +373,6 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
 
-    /* Empty State */
     .empty-state {
       text-align: center;
       padding: 64px 20px;
@@ -478,24 +440,11 @@
       transform: translateY(0);
       pointer-events: auto;
     }
-    .back-to-top:active {
-      transform: scale(0.9);
-    }
-    @media (hover: hover) {
-      .back-to-top:hover {
-        background: #333;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 32px rgba(0,0,0,0.25);
-      }
-    }
 
     @media (max-width: 768px) {
       .story-detail-section {
         margin-top: 48px;
         padding: 32px 0;
-      }
-      .story-detail-section .section-description {
-        font-size: 14px;
       }
       .story-card .card-content {
         padding: 16px;
@@ -508,15 +457,6 @@
         right: 20px;
         width: 44px;
         height: 44px;
-      }
-    }
-    @media (max-width: 480px) {
-      .stories-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-      .story-detail-section .section-title {
-        font-size: 24px;
       }
     }
   </style>
@@ -535,7 +475,7 @@
 
     <!-- Hero Banner -->
     <div class="story-hero-banner" id="story-hero-banner">
-      <img id="hero-bg-img" src="" alt="Our Story" class="hero-bg-img" style="display:none;" />
+      <img id="hero-bg-img" src="" alt="Our Story" class="hero-bg-img" />
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <p class="hero-subtitle" id="hero-subtitle">আমাদের গল্প</p>
@@ -599,7 +539,13 @@
 
   <script>
     (function() {
-      document.addEventListener('DOMContentLoaded', () => {
+      // Global variables
+      let allStories = [];
+      let featuredStory = null;
+
+      // Initialize when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        // Apply custom fonts if available
         if (window.JAYENWARE_FONTS) {
           const root = document.documentElement;
           const vars = window.JAYENWARE_FONTS.cssVariables;
@@ -607,21 +553,30 @@
             root.style.setProperty(key, value);
           }
         }
+        
+        // Initialize back to top button
+        initBackToTop();
+        
+        // Load story data
         setTimeout(initStoryPage, 100);
       });
 
-      let allStories = [];
-      let featuredStory = null;
-
+      // API fetch function
       async function fetchAPI(endpoint) {
         try {
-          const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
+          console.log('Fetching:', endpoint);
+          const res = await fetch(endpoint, { 
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-cache'
+          });
+          
           if (!res.ok) {
             console.error(`API Error: ${endpoint} returned ${res.status}`);
             return null;
           }
+          
           const data = await res.json();
-          console.log(`API Response for ${endpoint}:`, data); // Debug log
+          console.log(`Response from ${endpoint}:`, data);
           return data;
         } catch (err) {
           console.error(`Fetch error for ${endpoint}:`, err);
@@ -629,18 +584,21 @@
         }
       }
 
+      // Load all stories
       async function loadStories() {
-        const stories = await fetchAPI('/api/stories');
-        return stories || [];
+        return await fetchAPI('/api/stories');
       }
 
+      // Load featured story
       async function loadFeaturedStory() {
-        const story = await fetchAPI('/api/story/featured');
-        return story;
+        return await fetchAPI('/api/story/featured');
       }
 
+      // Render skeleton loading
       function renderSkeleton(count = 6) {
         const grid = document.getElementById('stories-grid');
+        if (!grid) return;
+        
         grid.innerHTML = Array(count).fill(`
           <div class="story-card">
             <div class="card-image-wrapper">
@@ -657,6 +615,7 @@
         `).join('');
       }
 
+      // Show error state
       function showErrorState() {
         document.getElementById('story-hero-banner').style.display = 'none';
         document.getElementById('stories-grid').innerHTML = '';
@@ -665,148 +624,150 @@
         document.getElementById('error-state').style.display = 'flex';
       }
 
+      // Show empty state
       function showEmptyState() {
         document.getElementById('stories-grid').innerHTML = '';
         document.getElementById('story-detail-section').style.display = 'none';
         document.getElementById('empty-state').classList.add('visible');
       }
 
-      function truncateText(text, maxLength = 150) {
-        if (!text) return '';
-        if (text.length <= maxLength) return text;
-        return text.substring(0, maxLength).trim() + '...';
-      }
-
+      // Render story card
       function renderStoryCard(story) {
-        // Debug: Check what data we're receiving
-        console.log('Rendering story card:', story);
-        
         const imageUrl = story.header_image || story.section_image || '/logo.png';
         const description = story.section_description || story.header_subtitle || '';
         
-        console.log('Story description:', description); // Debug log
-        
         return `
-        <div class="story-card" onclick="window.location.href='${story.cta_link || '#'}'" role="button" tabindex="0">
+        <div class="story-card" onclick="window.location.href='${story.cta_link || '/story'}'" role="button" tabindex="0">
           <div class="card-image-wrapper">
             <img src="${imageUrl}" alt="${story.header_title || 'Story'}" class="card-image" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';" />
-            <div class="card-image-overlay"></div>
           </div>
           <div class="card-content">
             <span class="card-label">Our Story</span>
             <h3 class="card-title">${story.header_title || 'Untitled Story'}</h3>
-            <p class="card-description">${truncateText(description, 120)}</p>
-            ${story.cta_text ? `
-            <span class="card-cta">
-              ${story.cta_text}
-              <i class="fa-solid fa-arrow-right"></i>
-            </span>
-            ` : ''}
+            ${description ? `<p class="card-description">${description.substring(0, 150)}${description.length > 150 ? '...' : ''}</p>` : ''}
           </div>
         </div>`;
       }
 
+      // Render stories grid
       function renderStoriesGrid() {
         const grid = document.getElementById('stories-grid');
+        if (!grid) return;
+        
         if (!allStories.length) {
           showEmptyState();
           return;
         }
+        
         document.getElementById('empty-state').classList.remove('visible');
         grid.innerHTML = allStories.map(renderStoryCard).join('');
+        console.log('Rendered', allStories.length, 'stories in grid');
       }
 
+      // Update hero banner
       function updateHeroBanner() {
-        const heroBanner = document.getElementById('story-hero-banner');
-        const heroImg = document.getElementById('hero-bg-img');
-        const heroTitle = document.getElementById('hero-title');
-        const heroSubtitle = document.getElementById('hero-subtitle');
-        const heroCtaWrap = document.getElementById('hero-cta-wrap');
-        
-        // Use featured story for hero, or first story
         const heroStory = featuredStory || (allStories.length > 0 ? allStories[0] : null);
         
-        console.log('Hero story:', heroStory); // Debug log
+        console.log('Updating hero with:', heroStory);
         
-        if (heroStory) {
-          heroBanner.style.display = 'block';
-          
-          // Set hero image
-          if (heroStory.header_image) {
-            heroImg.src = heroStory.header_image;
-            heroImg.style.display = 'block';
-            heroImg.alt = heroStory.header_title;
-            heroImg.onerror = function() {
-              this.src = '/logo.png';
-              this.style.objectFit = 'contain';
-              this.style.padding = '40px';
-              this.style.background = '#1a1a1a';
-            };
-          } else {
-            heroImg.style.display = 'none';
-          }
-          
-          // Set hero title and subtitle
-          heroTitle.textContent = heroStory.header_title || 'Our Story';
-          heroSubtitle.textContent = heroStory.header_subtitle || 'আমাদের গল্প';
-          
-          // Set CTA
-          if (heroStory.cta_text && heroStory.cta_link) {
-            heroCtaWrap.style.display = 'block';
-            document.getElementById('hero-cta-text').textContent = heroStory.cta_text;
-            document.getElementById('hero-cta-link').href = heroStory.cta_link;
-          } else {
-            heroCtaWrap.style.display = 'none';
-          }
+        if (!heroStory) {
+          // Keep default hero
+          document.getElementById('hero-title').textContent = 'Discover Our Journey';
+          document.getElementById('hero-subtitle').textContent = 'আমাদের গল্প';
+          document.getElementById('hero-bg-img').style.display = 'none';
+          document.getElementById('hero-cta-wrap').style.display = 'none';
+          return;
         }
+        
+        // Set hero image
+        const heroImg = document.getElementById('hero-bg-img');
+        if (heroStory.header_image) {
+          heroImg.src = heroStory.header_image;
+          heroImg.style.display = 'block';
+          heroImg.alt = heroStory.header_title || 'Our Story';
+          heroImg.onerror = function() {
+            this.src = '/logo.png';
+            this.style.objectFit = 'contain';
+            this.style.padding = '40px';
+            this.style.background = '#1a1a1a';
+          };
+        } else {
+          heroImg.style.display = 'none';
+        }
+        
+        // Set hero title and subtitle
+        document.getElementById('hero-title').textContent = heroStory.header_title || 'Our Story';
+        document.getElementById('hero-subtitle').textContent = heroStory.header_subtitle || 'আমাদের গল্প';
+        
+        // Set CTA
+        const heroCtaWrap = document.getElementById('hero-cta-wrap');
+        if (heroStory.cta_text && heroStory.cta_link) {
+          heroCtaWrap.style.display = 'block';
+          document.getElementById('hero-cta-text').textContent = heroStory.cta_text;
+          document.getElementById('hero-cta-link').href = heroStory.cta_link;
+        } else {
+          heroCtaWrap.style.display = 'none';
+        }
+        
+        console.log('Hero updated successfully');
       }
 
+      // Update detail section
       function updateDetailSection() {
         const detailSection = document.getElementById('story-detail-section');
         const detailStory = featuredStory;
         
-        console.log('Featured story for detail section:', detailStory); // Debug log
+        console.log('Updating detail section with:', detailStory);
         
         if (!detailStory) {
           detailSection.style.display = 'none';
+          console.log('No featured story, hiding detail section');
           return;
         }
         
+        // Show the section
         detailSection.style.display = 'block';
         
-        // Set section title and subtitle
+        // Set section title
         const sectionTitle = detailStory.section_title || detailStory.header_title || '';
-        const sectionSubtitle = detailStory.section_subtitle || '';
-        const sectionDescription = detailStory.section_description || '';
-        
-        console.log('Section Title:', sectionTitle); // Debug log
-        console.log('Section Subtitle:', sectionSubtitle); // Debug log
-        console.log('Section Description:', sectionDescription); // Debug log
-        
         document.getElementById('detail-section-title').textContent = sectionTitle;
+        console.log('Section title set to:', sectionTitle);
+        
+        // Set section subtitle
+        const sectionSubtitle = detailStory.section_subtitle || '';
         document.getElementById('detail-section-subtitle').textContent = sectionSubtitle;
+        console.log('Section subtitle set to:', sectionSubtitle);
         
         // Set section image
         const sectionImage = document.getElementById('detail-section-image');
         if (detailStory.section_image) {
           sectionImage.src = detailStory.section_image;
           sectionImage.style.display = 'block';
-          sectionImage.alt = detailStory.section_title || detailStory.header_title;
+          sectionImage.alt = sectionTitle;
           sectionImage.onerror = function() {
             this.style.display = 'none';
           };
+          console.log('Section image set to:', detailStory.section_image);
         } else {
           sectionImage.style.display = 'none';
+          console.log('No section image');
         }
         
-        // Set section description - THIS IS THE FIX
+        // Set section description
         const descriptionElement = document.getElementById('detail-section-description');
+        const sectionDescription = detailStory.section_description || '';
+        
+        console.log('Section description value:', sectionDescription);
+        console.log('Section description length:', sectionDescription.length);
+        
         if (sectionDescription && sectionDescription.trim() !== '') {
           descriptionElement.textContent = sectionDescription;
           descriptionElement.style.display = 'block';
+          console.log('Description displayed');
         } else {
           descriptionElement.textContent = '';
           descriptionElement.style.display = 'none';
+          console.log('No description to display');
         }
         
         // Set CTA
@@ -815,11 +776,14 @@
           ctaSection.style.display = 'block';
           document.getElementById('detail-cta-text').textContent = detailStory.cta_text;
           document.getElementById('detail-cta-link').href = detailStory.cta_link;
+          console.log('CTA set');
         } else {
           ctaSection.style.display = 'none';
+          console.log('No CTA');
         }
       }
 
+      // Update page metadata
       function updateBreadcrumb() {
         document.getElementById('breadcrumb-current').textContent = 'আমাদের গল্প';
         document.title = 'আমাদের গল্প | JAYENWARE';
@@ -831,12 +795,15 @@
         }
       }
 
+      // Initialize back to top button
       function initBackToTop() {
         const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+        
         let ticking = false;
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', function() {
           if (!ticking) {
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function() {
               if (window.scrollY > 500) {
                 btn.classList.add('visible');
               } else {
@@ -849,51 +816,62 @@
         }, { passive: true });
       }
 
+      // Main initialization function
       async function initStoryPage() {
+        console.log('=== Initializing Story Page ===');
+        
+        // Show skeleton loading
         renderSkeleton(6);
         updateBreadcrumb();
         
         try {
-          // Load stories data
+          // Load data from API
+          console.log('Loading stories and featured story...');
           const [storiesData, featuredData] = await Promise.all([
             loadStories(),
             loadFeaturedStory()
           ]);
           
-          console.log('Stories data:', storiesData); // Debug log
-          console.log('Featured data:', featuredData); // Debug log
+          console.log('Stories loaded:', storiesData);
+          console.log('Featured story loaded:', featuredData);
           
+          // Check if both failed
           if (storiesData === null && featuredData === null) {
+            console.error('Both API calls failed');
             showErrorState();
             return;
           }
           
+          // Set data
           allStories = Array.isArray(storiesData) ? storiesData : [];
           featuredStory = featuredData;
           
-          // Remove featured story from grid if it exists and has an ID
+          console.log('Total stories:', allStories.length);
+          console.log('Featured story exists:', !!featuredStory);
+          
+          // Remove featured story from grid
           if (featuredStory && featuredStory.id) {
+            const beforeFilter = allStories.length;
             allStories = allStories.filter(story => story.id !== featuredStory.id);
+            console.log(`Filtered ${beforeFilter - allStories.length} featured story from grid`);
           }
           
           // Hide error state
           document.getElementById('error-state').style.display = 'none';
           
-          // Update UI
+          // Update all sections
+          console.log('Updating UI sections...');
           updateHeroBanner();
           renderStoriesGrid();
           updateDetailSection();
           
+          console.log('=== Story Page Initialization Complete ===');
+          
         } catch (err) {
-          console.error('Error initializing story page:', err);
+          console.error('Fatal error initializing story page:', err);
           showErrorState();
         }
       }
-
-      // Initialize back to top on DOM ready
-      document.addEventListener('DOMContentLoaded', () => {
-        initBackToTop();
-      });
 
     })();
   </script>
