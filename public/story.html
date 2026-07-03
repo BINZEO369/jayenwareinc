@@ -620,7 +620,9 @@
             console.error(`API Error: ${endpoint} returned ${res.status}`);
             return null;
           }
-          return await res.json();
+          const data = await res.json();
+          console.log(`API Response for ${endpoint}:`, data); // Debug log
+          return data;
         } catch (err) {
           console.error(`Fetch error for ${endpoint}:`, err);
           return null;
@@ -676,8 +678,13 @@
       }
 
       function renderStoryCard(story) {
+        // Debug: Check what data we're receiving
+        console.log('Rendering story card:', story);
+        
         const imageUrl = story.header_image || story.section_image || '/logo.png';
         const description = story.section_description || story.header_subtitle || '';
+        
+        console.log('Story description:', description); // Debug log
         
         return `
         <div class="story-card" onclick="window.location.href='${story.cta_link || '#'}'" role="button" tabindex="0">
@@ -719,6 +726,8 @@
         // Use featured story for hero, or first story
         const heroStory = featuredStory || (allStories.length > 0 ? allStories[0] : null);
         
+        console.log('Hero story:', heroStory); // Debug log
+        
         if (heroStory) {
           heroBanner.style.display = 'block';
           
@@ -756,6 +765,8 @@
         const detailSection = document.getElementById('story-detail-section');
         const detailStory = featuredStory;
         
+        console.log('Featured story for detail section:', detailStory); // Debug log
+        
         if (!detailStory) {
           detailSection.style.display = 'none';
           return;
@@ -764,8 +775,16 @@
         detailSection.style.display = 'block';
         
         // Set section title and subtitle
-        document.getElementById('detail-section-title').textContent = detailStory.section_title || detailStory.header_title || '';
-        document.getElementById('detail-section-subtitle').textContent = detailStory.section_subtitle || '';
+        const sectionTitle = detailStory.section_title || detailStory.header_title || '';
+        const sectionSubtitle = detailStory.section_subtitle || '';
+        const sectionDescription = detailStory.section_description || '';
+        
+        console.log('Section Title:', sectionTitle); // Debug log
+        console.log('Section Subtitle:', sectionSubtitle); // Debug log
+        console.log('Section Description:', sectionDescription); // Debug log
+        
+        document.getElementById('detail-section-title').textContent = sectionTitle;
+        document.getElementById('detail-section-subtitle').textContent = sectionSubtitle;
         
         // Set section image
         const sectionImage = document.getElementById('detail-section-image');
@@ -780,8 +799,15 @@
           sectionImage.style.display = 'none';
         }
         
-        // Set section description
-        document.getElementById('detail-section-description').textContent = detailStory.section_description || '';
+        // Set section description - THIS IS THE FIX
+        const descriptionElement = document.getElementById('detail-section-description');
+        if (sectionDescription && sectionDescription.trim() !== '') {
+          descriptionElement.textContent = sectionDescription;
+          descriptionElement.style.display = 'block';
+        } else {
+          descriptionElement.textContent = '';
+          descriptionElement.style.display = 'none';
+        }
         
         // Set CTA
         const ctaSection = document.getElementById('detail-section-cta');
@@ -834,6 +860,9 @@
             loadFeaturedStory()
           ]);
           
+          console.log('Stories data:', storiesData); // Debug log
+          console.log('Featured data:', featuredData); // Debug log
+          
           if (storiesData === null && featuredData === null) {
             showErrorState();
             return;
@@ -842,8 +871,8 @@
           allStories = Array.isArray(storiesData) ? storiesData : [];
           featuredStory = featuredData;
           
-          // Remove featured story from grid if it exists
-          if (featuredStory) {
+          // Remove featured story from grid if it exists and has an ID
+          if (featuredStory && featuredStory.id) {
             allStories = allStories.filter(story => story.id !== featuredStory.id);
           }
           
