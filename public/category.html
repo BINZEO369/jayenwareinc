@@ -93,12 +93,15 @@
       padding: 16px 0;
     }
 
+    /* FULL SCREEN HERO BANNER - Same as story page header */
     .category-hero-banner {
       position: relative;
       width: 100vw;
-      height: 85vh;
-      min-height: 480px;
-      max-height: 700px;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100vh;
+      min-height: 100dvh;
+      max-height: none;
       overflow: hidden;
       background: #000;
       margin-bottom: 48px;
@@ -109,10 +112,24 @@
       margin-top: 0;
     }
     @media (max-width: 768px) {
-      .category-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
+      .category-hero-banner { 
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        margin-bottom: 36px; 
+      }
     }
     @media (max-width: 480px) {
-      .category-hero-banner { height: 60vh; min-height: 360px; margin-bottom: 28px; }
+      .category-hero-banner { 
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        margin-bottom: 28px; 
+      }
     }
     .category-hero-banner .hero-bg-img {
       position: absolute; 
@@ -172,17 +189,28 @@
     .category-hero-banner .hero-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
     @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* Video Section */
+    /* Video Section - Same full screen */
     .category-video-section {
-      position: relative; width: 100vw; height: 85vh; min-height: 480px; max-height: 700px;
+      position: relative; width: 100vw; height: 100vh; height: 100dvh;
+      min-height: 100vh; min-height: 100dvh; max-height: none;
       overflow: hidden; background: #000; margin-top: 48px; margin-bottom: 0;
       margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); left: 0; right: 0; display: none;
     }
     @media (max-width: 768px) {
-      .category-video-section { height: 70vh; min-height: 420px; max-height: 550px; margin-top: 36px; }
+      .category-video-section { 
+        height: 100vh; height: 100dvh;
+        min-height: 100vh; min-height: 100dvh;
+        max-height: none;
+        margin-top: 36px; 
+      }
     }
     @media (max-width: 480px) {
-      .category-video-section { height: 60vh; min-height: 360px; margin-top: 28px; }
+      .category-video-section { 
+        height: 100vh; height: 100dvh;
+        min-height: 100vh; min-height: 100dvh;
+        max-height: none;
+        margin-top: 28px; 
+      }
     }
     .category-video-section video { 
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; 
@@ -226,7 +254,7 @@
     }
     .category-video-section .video-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
 
-    /* Custom Sound Toggle Button - Liquid Glass Design at Bottom */
+    /* Custom Sound Toggle Button */
     .video-sound-toggle {
       position: absolute;
       bottom: 24px;
