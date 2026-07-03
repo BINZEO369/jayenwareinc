@@ -467,10 +467,10 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
-// STORY API (আমাদের গল্প) - FIXED VERSION
+// STORY API (আমাদের গল্প)
 // ============================================
 
-// Get all active stories
+// Get all active stories (sorted by sort_order)
 app.get('/api/stories', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -478,16 +478,10 @@ app.get('/api/stories', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-        
-        if (error) {
-            console.error('Error fetching stories:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        // Always return an array
+
+        if (error) return res.status(500).json({ error: error.message });
         res.json(data || []);
     } catch (err) {
-        console.error('Exception fetching stories:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -496,157 +490,19 @@ app.get('/api/stories', async (req, res) => {
 app.get('/api/stories/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         const { data, error } = await supabase
             .from('story')
             .select('*')
             .eq('id', id)
             .eq('is_active', true)
             .single();
-        
-        if (error) {
-            console.error('Error fetching story by ID:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        if (!data) {
-            return res.status(404).json({ error: 'Story not found' });
-        }
-        
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Story not found' });
+
         res.json(data);
     } catch (err) {
-        console.error('Exception fetching story by ID:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get latest/featured story - FIXED: Removed .single() to handle empty results
-app.get('/api/story/featured', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('story')
-            .select('*')
-            .eq('is_active', true)
-            .order('created_at', { ascending: false })
-            .limit(1);
-        
-        if (error) {
-            console.error('Error fetching featured story:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        // Return first story or null if no stories exist
-        const featuredStory = data && data.length > 0 ? data[0] : null;
-        
-        console.log('Featured story data:', featuredStory ? 'Found' : 'Not found');
-        
-        res.json(featuredStory);
-    } catch (err) {
-        console.error('Exception fetching featured story:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Create new story
-app.post('/api/stories', async (req, res) => {
-    try {
-        const {
-            header_title,
-            header_subtitle,
-            header_image,
-            section_title,
-            section_subtitle,
-            section_image,
-            section_description,
-            cta_text,
-            cta_link,
-            sort_order
-        } = req.body;
-        
-        if (!header_title) {
-            return res.status(400).json({ error: 'Header title is required' });
-        }
-        
-        const { data, error } = await supabase
-            .from('story')
-            .insert([{
-                header_title,
-                header_subtitle,
-                header_image,
-                section_title,
-                section_subtitle,
-                section_image,
-                section_description,
-                cta_text,
-                cta_link,
-                sort_order: sort_order || 0
-            }])
-            .select()
-            .single();
-        
-        if (error) {
-            console.error('Error creating story:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        res.status(201).json(data);
-    } catch (err) {
-        console.error('Exception creating story:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Update story by ID
-app.put('/api/stories/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = req.body;
-        
-        // Remove id from update data if present
-        delete updateData.id;
-        delete updateData.created_at;
-        
-        const { data, error } = await supabase
-            .from('story')
-            .update(updateData)
-            .eq('id', id)
-            .select()
-            .single();
-        
-        if (error) {
-            console.error('Error updating story:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        if (!data) {
-            return res.status(404).json({ error: 'Story not found' });
-        }
-        
-        res.json(data);
-    } catch (err) {
-        console.error('Exception updating story:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Delete story by ID
-app.delete('/api/stories/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const { error } = await supabase
-            .from('story')
-            .delete()
-            .eq('id', id);
-        
-        if (error) {
-            console.error('Error deleting story:', error);
-            return res.status(500).json({ error: error.message });
-        }
-        
-        res.json({ success: true, message: 'Story deleted successfully' });
-    } catch (err) {
-        console.error('Exception deleting story:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -724,7 +580,7 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
-// Submit product review
+// Submit product review (Left active assuming guest reviews are allowed based on previous setup)
 app.post('/api/submit-review', async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
@@ -826,11 +682,6 @@ app.get('/api/color-sizes', async (req, res) => {
 // Category page (with subcategory support)
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
-});
-
-// Story page - ADD THIS ROUTE
-app.get('/story', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'story.html'));
 });
 
 // ============================================
