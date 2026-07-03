@@ -86,9 +86,9 @@
     .page-header {
       position: relative;
       width: 100vw;
-      height: 60vh;
-      min-height: 360px;
-      max-height: 550px;
+      height: 100vh;
+      min-height: 500px;
+      max-height: 800px;
       overflow: hidden;
       background: #000;
       margin-bottom: 48px;
@@ -100,10 +100,10 @@
     }
     .page-header.visible { display: block; }
     @media (max-width: 768px) {
-      .page-header { height: 50vh; min-height: 300px; max-height: 420px; margin-bottom: 36px; }
+      .page-header { height: 70vh; min-height: 400px; max-height: 600px; margin-bottom: 36px; }
     }
     @media (max-width: 480px) {
-      .page-header { height: 45vh; min-height: 260px; margin-bottom: 28px; }
+      .page-header { height: 60vh; min-height: 350px; max-height: 500px; margin-bottom: 28px; }
     }
     .page-header .header-bg-img {
       position: absolute; 
@@ -166,13 +166,13 @@
       .story-card { margin-bottom: 36px; }
     }
 
-    /* Full-width section image */
+    /* Full-width section image - INCREASED HEIGHT */
     .story-card .story-full-image-wrap {
       position: relative;
       width: 100vw;
-      height: 70vh;
-      min-height: 400px;
-      max-height: 700px;
+      height: 90vh;
+      min-height: 500px;
+      max-height: 900px;
       overflow: hidden;
       background: #f0f0f0;
       margin-bottom: 48px;
@@ -182,10 +182,10 @@
     }
     .story-card .story-full-image-wrap.has-image { display: block; }
     @media (max-width: 768px) {
-      .story-card .story-full-image-wrap { height: 50vh; min-height: 300px; max-height: 500px; margin-bottom: 36px; }
+      .story-card .story-full-image-wrap { height: 70vh; min-height: 400px; max-height: 600px; margin-bottom: 36px; }
     }
     @media (max-width: 480px) {
-      .story-card .story-full-image-wrap { height: 40vh; min-height: 250px; max-height: 400px; margin-bottom: 28px; }
+      .story-card .story-full-image-wrap { height: 60vh; min-height: 350px; max-height: 500px; margin-bottom: 28px; }
     }
     .story-card .story-full-image-wrap img {
       width: 100%;
@@ -196,37 +196,6 @@
     }
     @media (hover: hover) {
       .story-card:hover .story-full-image-wrap img {
-        transform: scale(1.03);
-      }
-    }
-
-    .story-card .story-image-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      max-height: 560px;
-      overflow: hidden;
-      border-radius: 12px;
-      background: #f0f0f0;
-      margin-bottom: 32px;
-      display: none;
-    }
-    .story-card .story-image-wrap.has-image { display: block; }
-    @media (max-width: 768px) {
-      .story-card .story-image-wrap { border-radius: 8px; margin-bottom: 24px; }
-    }
-    @media (max-width: 480px) {
-      .story-card .story-image-wrap { aspect-ratio: 4/3; border-radius: 6px; margin-bottom: 20px; }
-    }
-    .story-card .story-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-    @media (hover: hover) {
-      .story-card:hover .story-image-wrap img {
         transform: scale(1.03);
       }
     }
@@ -248,10 +217,6 @@
       flex-shrink: 0;
       width: 280px;
       display: none;
-    }
-    .story-card .story-side-col.has-image { display: block; }
-    @media (max-width: 768px) {
-      .story-card .story-side-col { width: 100%; }
     }
 
     .story-card .story-label {
@@ -296,29 +261,6 @@
     }
     .story-card .story-description p:last-child {
       margin-bottom: 0;
-    }
-
-    .story-card .story-side-image {
-      width: 100%;
-      aspect-ratio: 3/4;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #f5f5f7;
-    }
-    @media (max-width: 768px) {
-      .story-card .story-side-image { aspect-ratio: 16/9; max-height: 360px; border-radius: 8px; }
-    }
-    .story-card .story-side-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 0.6s ease;
-    }
-    @media (hover: hover) {
-      .story-card:hover .story-side-image img {
-        transform: scale(1.05);
-      }
     }
 
     .story-cta {
@@ -442,9 +384,6 @@
               <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
               <div class="skeleton" style="height:14px;width:75%;margin-bottom:8px;"></div>
             </div>
-            <div class="story-side-col">
-              <div class="skeleton" style="aspect-ratio:3/4;border-radius:10px;"></div>
-            </div>
           </div>
         </div>
         <div class="story-divider"></div>
@@ -458,9 +397,6 @@
               <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
               <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
               <div class="skeleton" style="height:14px;width:75%;margin-bottom:8px;"></div>
-            </div>
-            <div class="story-side-col">
-              <div class="skeleton" style="aspect-ratio:3/4;border-radius:10px;"></div>
             </div>
           </div>
         </div>
@@ -604,22 +540,14 @@
         card.setAttribute('data-animate', 'true');
 
         var hasSectionImage = !!story.section_image;
-        var hasHeaderImage = !!story.header_image;
         var hasCTA = !!(story.cta_text && story.cta_link);
 
         var html = '';
 
-        // Full-width section image (NEW - spans entire viewport width)
+        // Full-width section image (only section_image, NOT header_image)
         if (hasSectionImage) {
           html += '<div class="story-full-image-wrap has-image">';
           html += '<img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
-          html += '</div>';
-        }
-
-        // Header image (regular full width within container)
-        if (hasHeaderImage && !hasSectionImage) {
-          html += '<div class="story-image-wrap has-image">';
-          html += '<img src="' + escapeHTML(story.header_image) + '" alt="' + escapeHTML(story.header_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
           html += '</div>';
         }
 
@@ -655,13 +583,6 @@
         }
 
         html += '</div>'; // Close story-text-col
-
-        // Side image (only if section_image not already shown as full-width)
-        if (hasSectionImage && !hasSectionImage) {
-          html += '<div class="story-side-col has-image">';
-          html += '<div class="story-side-image"><img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="lazy" onerror="this.parentElement.parentElement.classList.remove(\'has-image\');" /></div>';
-          html += '</div>';
-        }
 
         html += '</div>'; // Close story-content-wrap
 
