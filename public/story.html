@@ -1,879 +1,471 @@
 <!DOCTYPE html>
-<html lang="bn-BD" class="scroll-smooth">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title id="page-title">আমাদের গল্প | JAYENWARE</title>
-  <meta name="description" content="Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion." />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/story" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
-  <link rel="apple-touch-icon" href="/logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-
-  <script src="/fonts.js"></script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#1d1d1f',
-            accent: '#86868b',
-            soft: '#f5f5f7',
-            blue: '#007aff'
-          },
-          fontFamily: {
-            sans: ["'Inter', 'sans-serif'"],
-            serif: ["'Manrope', 'sans-serif'"],
-            mono: ["'Sora', 'sans-serif'"]
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমাদের গল্প | Shohoj Bazaar</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts - Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Hind Siliguri', sans-serif;
         }
-      }
-    }
-  </script>
-
-  <style>
-    :root {
-      --primary: #1d1d1f;
-      --accent: #86868b;
-      --soft: #f5f5f7;
-      --blue: #007aff;
-    }
-    * {
-      -webkit-tap-highlight-color: transparent;
-      box-sizing: border-box;
-    }
-    body {
-      background-color: #ffffff;
-      color: #1d1d1f;
-      overflow-x: hidden;
-      font-family: 'Inter', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    .skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 4px;
-    }
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--accent);
-      padding: 16px 0;
-    }
-
-    /* Hero Banner */
-    .story-hero-banner {
-      position: relative;
-      width: 100vw;
-      height: 85vh;
-      min-height: 480px;
-      max-height: 700px;
-      overflow: hidden;
-      background: #000;
-      margin-bottom: 48px;
-      margin-left: calc(-50vw + 50%);
-      margin-right: calc(-50vw + 50%);
-      left: 0;
-      right: 0;
-      margin-top: 0;
-    }
-    @media (max-width: 768px) {
-      .story-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
-    }
-    @media (max-width: 480px) {
-      .story-hero-banner { height: 60vh; min-height: 360px; margin-bottom: 28px; }
-    }
-    .story-hero-banner .hero-bg-img {
-      position: absolute; 
-      inset: 0; 
-      width: 100%; 
-      height: 100%; 
-      object-fit: cover;
-      object-position: top center;
-      animation: heroZoom 20s ease-in-out infinite alternate;
-    }
-    @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
-    .story-hero-banner .hero-overlay {
-      position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.15) 65%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0.7) 100%);
-    }
-    .story-hero-banner .hero-content {
-      position: absolute; bottom: clamp(50px, 12vh, 110px); left: 50%; transform: translateX(-50%); z-index: 2;
-      text-align: center; width: 88%; max-width: 680px; padding: 0 16px;
-    }
-    .story-hero-banner .hero-subtitle {
-      display: inline-block;
-      font-family: 'Inter', sans-serif; font-size: clamp(7px, 1vw, 9px); font-weight: 500;
-      letter-spacing: 0.45em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
-      margin-bottom: clamp(12px, 2vh, 20px);
-      opacity: 0; transform: translateY(8px);
-      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
-    }
-    .story-hero-banner .hero-title {
-      font-family: 'Manrope', sans-serif; font-size: clamp(22px, 4.5vw, 60px); font-weight: 900;
-      line-height: 1.1; color: #ffffff; margin: 0 0 clamp(16px, 2.5vh, 28px) 0; letter-spacing: -0.01em;
-      opacity: 0; transform: translateY(12px);
-      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
-    }
-    .story-hero-banner .hero-cta-wrap {
-      opacity: 0; transform: translateY(8px);
-      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
-    }
-    .story-hero-banner .hero-cta {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-family: 'Inter', sans-serif; font-size: clamp(8px, 1vw, 10px); font-weight: 500;
-      letter-spacing: 0.25em; text-transform: uppercase; color: #ffffff; text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-      padding: 0; border: none; background: none; cursor: pointer;
-    }
-    .story-hero-banner .hero-cta:hover { gap: 8px; color: rgba(255, 255, 255, 0.85); }
-    .story-hero-banner .hero-cta .cta-arrow {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 28px; height: 14px; position: relative;
-      transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-    }
-    .story-hero-banner .hero-cta .cta-arrow::after {
-      content: ''; position: absolute; top: 50%; right: 0; width: 6px; height: 6px;
-      border-top: 1px solid #ffffff; border-right: 1px solid #ffffff;
-      transform: translateY(-50%) rotate(45deg);
-      transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-    }
-    .story-hero-banner .hero-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
-    @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-    /* Story Grid */
-    .stories-grid {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: 32px;
-      margin-top: 48px;
-    }
-    @media (min-width: 768px) {
-      .stories-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 40px;
-      }
-    }
-    @media (min-width: 1200px) {
-      .stories-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 48px;
-      }
-    }
-
-    /* Story Card */
-    .story-card {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #fff;
-      transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-      cursor: pointer;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    .story-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-    }
-    .story-card:active {
-      transform: scale(0.98);
-    }
-    .story-card .card-image-wrapper {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/10;
-      overflow: hidden;
-      background: #f5f5f7;
-    }
-    .story-card .card-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 0.6s ease;
-    }
-    .story-card:hover .card-image {
-      transform: scale(1.08);
-    }
-    .story-card .card-content {
-      padding: 24px;
-    }
-    .story-card .card-label {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--blue);
-      margin-bottom: 12px;
-    }
-    .story-card .card-title {
-      font-family: 'Manrope', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary);
-      line-height: 1.3;
-      margin-bottom: 12px;
-    }
-    .story-card .card-description {
-      font-size: 14px;
-      color: var(--accent);
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    /* Story Detail Section */
-    .story-detail-section {
-      margin-top: 64px;
-      padding: 48px 0;
-      border-top: 1px solid #e5e5ea;
-    }
-    .story-detail-section .section-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-    .story-detail-section .section-label {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-    .story-detail-section .section-title {
-      font-family: 'Manrope', sans-serif;
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 800;
-      color: var(--primary);
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-    .story-detail-section .section-subtitle {
-      font-size: 16px;
-      color: var(--accent);
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.7;
-    }
-    .story-detail-section .section-image {
-      width: 100%;
-      max-height: 600px;
-      object-fit: cover;
-      border-radius: 16px;
-      margin-bottom: 40px;
-    }
-    .story-detail-section .section-description {
-      font-size: 16px;
-      line-height: 1.8;
-      color: var(--primary);
-      max-width: 800px;
-      margin: 0 auto 40px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    .story-detail-section .section-cta {
-      text-align: center;
-    }
-    .story-detail-section .cta-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 32px;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .story-detail-section .cta-button:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    }
-
-    /* Error & Empty States */
-    .error-state {
-      text-align: center;
-      padding: 80px 20px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 50vh;
-    }
-    .error-state i {
-      font-size: 64px;
-      color: #d1d1d6;
-      margin-bottom: 24px;
-    }
-    .error-state h2 {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 12px;
-    }
-    .error-state p {
-      font-size: 15px;
-      color: var(--accent);
-      max-width: 480px;
-      margin: 0 auto 28px;
-      line-height: 1.7;
-    }
-    .error-state .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .error-state .btn-primary:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 64px 20px;
-      display: none;
-    }
-    .empty-state.visible {
-      display: block;
-    }
-    .empty-state i {
-      font-size: 52px;
-      color: #d1d1d6;
-      margin-bottom: 20px;
-    }
-    .empty-state h3 {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 10px;
-    }
-    .empty-state p {
-      font-size: 14px;
-      color: var(--accent);
-      max-width: 420px;
-      margin: 0 auto 20px;
-      line-height: 1.6;
-    }
-    .empty-state .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-
-    /* Back to Top */
-    .back-to-top {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 50;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
-      pointer-events: none;
-    }
-    .back-to-top.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    @media (max-width: 768px) {
-      .story-detail-section {
-        margin-top: 48px;
-        padding: 32px 0;
-      }
-      .story-card .card-content {
-        padding: 16px;
-      }
-      .story-card .card-title {
-        font-size: 18px;
-      }
-      .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 44px;
-        height: 44px;
-      }
-    }
-  </style>
+        
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .animate-fadeInLeft {
+            animation: fadeInLeft 0.8s ease-out;
+        }
+        
+        .animate-fadeInRight {
+            animation: fadeInRight 0.8s ease-out;
+        }
+        
+        .animate-scaleIn {
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        /* Story Card Hover Effect */
+        .story-card {
+            transition: all 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+        
+        .story-image img {
+            transition: transform 0.5s ease;
+        }
+        
+        /* Gradient Overlay */
+        .gradient-overlay {
+            background: linear-gradient(to bottom, 
+                rgba(0,0,0,0.1) 0%, 
+                rgba(0,0,0,0.4) 50%, 
+                rgba(0,0,0,0.8) 100%);
+        }
+        
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </head>
-<body class="antialiased">
-
-  <div id="dynamic-header"></div>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" style="margin-bottom: 0; padding-bottom: 0; padding-top: 0;">
-
-    <nav class="breadcrumb" id="breadcrumb">
-      <a href="/">Home</a>
-      <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
-      <span class="current" id="breadcrumb-current">আমাদের গল্প</span>
-    </nav>
-
-    <!-- Hero Banner -->
-    <div class="story-hero-banner" id="story-hero-banner">
-      <img id="hero-bg-img" src="" alt="Our Story" class="hero-bg-img" />
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <p class="hero-subtitle" id="hero-subtitle">আমাদের গল্প</p>
-        <h1 class="hero-title" id="hero-title">Discover Our Journey</h1>
-        <div class="hero-cta-wrap" id="hero-cta-wrap" style="display:none;">
-          <a href="#" class="hero-cta" id="hero-cta-link">
-            <span id="hero-cta-text">Explore Stories</span>
-            <span class="cta-arrow"></span>
-          </a>
+<body class="bg-gray-50">
+    
+    <!-- ============================================ -->
+    <!-- NAVIGATION (Include your existing navbar) -->
+    <!-- ============================================ -->
+    <div id="navbar-container"></div>
+    
+    <!-- ============================================ -->
+    <!-- PAGE HEADER -->
+    <!-- ============================================ -->
+    <div class="bg-gradient-to-r from-green-600 to-green-700 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                আমাদের গল্প
+            </h1>
+            <p class="text-xl text-green-100 max-w-2xl mx-auto">
+                সহজ বাজারের পথচলা, আমাদের স্বপ্ন, আমাদের অর্জন
+            </p>
         </div>
-      </div>
     </div>
-
-    <!-- Error State -->
-    <div class="error-state" id="error-state">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <h2>Stories Not Found</h2>
-      <p>We couldn't load our stories at this moment. Please try again later or browse our other sections.</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-        <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
-      </div>
-    </div>
-
-    <!-- Stories Grid -->
-    <div class="stories-grid" id="stories-grid"></div>
-
-    <!-- Empty State -->
-    <div class="empty-state" id="empty-state">
-      <i class="fa-solid fa-book-open"></i>
-      <h3>No Stories Yet</h3>
-      <p>Our story section is being crafted. Check back soon to discover the journey behind Jayenware.</p>
-      <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
-    </div>
-
-    <!-- Featured Story Detail Section -->
-    <div class="story-detail-section" id="story-detail-section" style="display:none;">
-      <div class="section-header">
-        <span class="section-label">Featured Story</span>
-        <h2 class="section-title" id="detail-section-title"></h2>
-        <p class="section-subtitle" id="detail-section-subtitle"></p>
-      </div>
-      <img id="detail-section-image" src="" alt="" class="section-image" style="display:none;" />
-      <div class="section-description" id="detail-section-description"></div>
-      <div class="section-cta" id="detail-section-cta" style="display:none;">
-        <a href="#" class="cta-button" id="detail-cta-link">
-          <span id="detail-cta-text">Learn More</span>
-          <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-
-  </main>
-
-  <div id="dynamic-footer"></div>
-
-  <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
-    <i class="fa-solid fa-arrow-up"></i>
-  </button>
-
-  <script src="/components.js"></script>
-
-  <script>
-    (function() {
-      // Global variables
-      let allStories = [];
-      let featuredStory = null;
-
-      // Initialize when DOM is ready
-      document.addEventListener('DOMContentLoaded', function() {
-        // Apply custom fonts if available
-        if (window.JAYENWARE_FONTS) {
-          const root = document.documentElement;
-          const vars = window.JAYENWARE_FONTS.cssVariables;
-          for (const [key, value] of Object.entries(vars)) {
-            root.style.setProperty(key, value);
-          }
-        }
-        
-        // Initialize back to top button
-        initBackToTop();
-        
-        // Load story data
-        setTimeout(initStoryPage, 100);
-      });
-
-      // API fetch function
-      async function fetchAPI(endpoint) {
-        try {
-          console.log('Fetching:', endpoint);
-          const res = await fetch(endpoint, { 
-            headers: { 'Accept': 'application/json' },
-            cache: 'no-cache'
-          });
-          
-          if (!res.ok) {
-            console.error(`API Error: ${endpoint} returned ${res.status}`);
-            return null;
-          }
-          
-          const data = await res.json();
-          console.log(`Response from ${endpoint}:`, data);
-          return data;
-        } catch (err) {
-          console.error(`Fetch error for ${endpoint}:`, err);
-          return null;
-        }
-      }
-
-      // Load all stories
-      async function loadStories() {
-        return await fetchAPI('/api/stories');
-      }
-
-      // Load featured story
-      async function loadFeaturedStory() {
-        return await fetchAPI('/api/story/featured');
-      }
-
-      // Render skeleton loading
-      function renderSkeleton(count = 6) {
-        const grid = document.getElementById('stories-grid');
-        if (!grid) return;
-        
-        grid.innerHTML = Array(count).fill(`
-          <div class="story-card">
-            <div class="card-image-wrapper">
-              <div class="skeleton" style="width:100%;height:100%;"></div>
+    
+    <!-- ============================================ -->
+    <!-- STORIES CONTAINER -->
+    <!-- ============================================ -->
+    <div id="stories-container" class="container mx-auto px-4 py-16">
+        <!-- Loading State -->
+        <div id="loading-state" class="space-y-12">
+            <!-- 3 Skeleton Cards -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="skeleton h-96"></div>
+                <div class="p-8 space-y-4">
+                    <div class="skeleton h-8 w-3/4 rounded"></div>
+                    <div class="skeleton h-4 w-1/2 rounded"></div>
+                    <div class="skeleton h-24 rounded"></div>
+                </div>
             </div>
-            <div class="card-content">
-              <div class="skeleton" style="height:10px;width:25%;margin-bottom:12px;"></div>
-              <div class="skeleton" style="height:20px;width:80%;margin-bottom:8px;"></div>
-              <div class="skeleton" style="height:14px;width:100%;margin-bottom:6px;"></div>
-              <div class="skeleton" style="height:14px;width:90%;margin-bottom:16px;"></div>
-              <div class="skeleton" style="height:14px;width:30%;"></div>
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="skeleton h-96"></div>
+                <div class="p-8 space-y-4">
+                    <div class="skeleton h-8 w-3/4 rounded"></div>
+                    <div class="skeleton h-4 w-1/2 rounded"></div>
+                    <div class="skeleton h-24 rounded"></div>
+                </div>
             </div>
-          </div>
-        `).join('');
-      }
-
-      // Show error state
-      function showErrorState() {
-        document.getElementById('story-hero-banner').style.display = 'none';
-        document.getElementById('stories-grid').innerHTML = '';
-        document.getElementById('empty-state').classList.remove('visible');
-        document.getElementById('story-detail-section').style.display = 'none';
-        document.getElementById('error-state').style.display = 'flex';
-      }
-
-      // Show empty state
-      function showEmptyState() {
-        document.getElementById('stories-grid').innerHTML = '';
-        document.getElementById('story-detail-section').style.display = 'none';
-        document.getElementById('empty-state').classList.add('visible');
-      }
-
-      // Render story card
-      function renderStoryCard(story) {
-        const imageUrl = story.header_image || story.section_image || '/logo.png';
-        const description = story.section_description || story.header_subtitle || '';
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="skeleton h-96"></div>
+                <div class="p-8 space-y-4">
+                    <div class="skeleton h-8 w-3/4 rounded"></div>
+                    <div class="skeleton h-4 w-1/2 rounded"></div>
+                    <div class="skeleton h-24 rounded"></div>
+                </div>
+            </div>
+        </div>
         
-        return `
-        <div class="story-card" onclick="window.location.href='${story.cta_link || '/story'}'" role="button" tabindex="0">
-          <div class="card-image-wrapper">
-            <img src="${imageUrl}" alt="${story.header_title || 'Story'}" class="card-image" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';" />
-          </div>
-          <div class="card-content">
-            <span class="card-label">Our Story</span>
-            <h3 class="card-title">${story.header_title || 'Untitled Story'}</h3>
-            ${description ? `<p class="card-description">${description.substring(0, 150)}${description.length > 150 ? '...' : ''}</p>` : ''}
-          </div>
-        </div>`;
-      }
-
-      // Render stories grid
-      function renderStoriesGrid() {
-        const grid = document.getElementById('stories-grid');
-        if (!grid) return;
+        <!-- Stories Content -->
+        <div id="stories-content" class="space-y-16 hidden">
+            <!-- Dynamically loaded stories will appear here -->
+        </div>
         
-        if (!allStories.length) {
-          showEmptyState();
-          return;
+        <!-- Empty State -->
+        <div id="empty-state" class="text-center py-20 hidden">
+            <i class="fas fa-book-open text-6xl text-gray-300 mb-6"></i>
+            <h2 class="text-2xl font-bold text-gray-600 mb-2">কোনো গল্প পাওয়া যায়নি</h2>
+            <p class="text-gray-500">শীঘ্রই আমাদের গল্প এখানে প্রকাশিত হবে</p>
+        </div>
+        
+        <!-- Error State -->
+        <div id="error-state" class="text-center py-20 hidden">
+            <i class="fas fa-exclamation-triangle text-6xl text-red-300 mb-6"></i>
+            <h2 class="text-2xl font-bold text-red-600 mb-2">ডেটা লোড করতে সমস্যা হচ্ছে</h2>
+            <p class="text-gray-500 mb-4">পুনরায় চেষ্টা করুন</p>
+            <button onclick="loadStories()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+                <i class="fas fa-sync-alt mr-2"></i> আবার চেষ্টা করুন
+            </button>
+        </div>
+    </div>
+    
+    <!-- ============================================ -->
+    <!-- FOOTER (Include your existing footer) -->
+    <!-- ============================================ -->
+    <div id="footer-container"></div>
+    
+    <!-- ============================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================ -->
+    <script>
+        // Configuration
+        const API_BASE_URL = window.location.origin;
+        
+        // ============================================
+        // LOAD STORIES
+        // ============================================
+        async function loadStories() {
+            const loadingState = document.getElementById('loading-state');
+            const storiesContent = document.getElementById('stories-content');
+            const emptyState = document.getElementById('empty-state');
+            const errorState = document.getElementById('error-state');
+            
+            // Show loading
+            loadingState.classList.remove('hidden');
+            storiesContent.classList.add('hidden');
+            emptyState.classList.add('hidden');
+            errorState.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/stories`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const stories = await response.json();
+                
+                // Hide loading
+                loadingState.classList.add('hidden');
+                
+                if (stories.length === 0) {
+                    // Show empty state
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+                
+                // Render stories
+                renderStories(stories);
+                storiesContent.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error loading stories:', error);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+            }
         }
         
-        document.getElementById('empty-state').classList.remove('visible');
-        grid.innerHTML = allStories.map(renderStoryCard).join('');
-        console.log('Rendered', allStories.length, 'stories in grid');
-      }
-
-      // Update hero banner
-      function updateHeroBanner() {
-        const heroStory = featuredStory || (allStories.length > 0 ? allStories[0] : null);
-        
-        console.log('Updating hero with:', heroStory);
-        
-        if (!heroStory) {
-          // Keep default hero
-          document.getElementById('hero-title').textContent = 'Discover Our Journey';
-          document.getElementById('hero-subtitle').textContent = 'আমাদের গল্প';
-          document.getElementById('hero-bg-img').style.display = 'none';
-          document.getElementById('hero-cta-wrap').style.display = 'none';
-          return;
-        }
-        
-        // Set hero image
-        const heroImg = document.getElementById('hero-bg-img');
-        if (heroStory.header_image) {
-          heroImg.src = heroStory.header_image;
-          heroImg.style.display = 'block';
-          heroImg.alt = heroStory.header_title || 'Our Story';
-          heroImg.onerror = function() {
-            this.src = '/logo.png';
-            this.style.objectFit = 'contain';
-            this.style.padding = '40px';
-            this.style.background = '#1a1a1a';
-          };
-        } else {
-          heroImg.style.display = 'none';
-        }
-        
-        // Set hero title and subtitle
-        document.getElementById('hero-title').textContent = heroStory.header_title || 'Our Story';
-        document.getElementById('hero-subtitle').textContent = heroStory.header_subtitle || 'আমাদের গল্প';
-        
-        // Set CTA
-        const heroCtaWrap = document.getElementById('hero-cta-wrap');
-        if (heroStory.cta_text && heroStory.cta_link) {
-          heroCtaWrap.style.display = 'block';
-          document.getElementById('hero-cta-text').textContent = heroStory.cta_text;
-          document.getElementById('hero-cta-link').href = heroStory.cta_link;
-        } else {
-          heroCtaWrap.style.display = 'none';
-        }
-        
-        console.log('Hero updated successfully');
-      }
-
-      // Update detail section
-      function updateDetailSection() {
-        const detailSection = document.getElementById('story-detail-section');
-        const detailStory = featuredStory;
-        
-        console.log('Updating detail section with:', detailStory);
-        
-        if (!detailStory) {
-          detailSection.style.display = 'none';
-          console.log('No featured story, hiding detail section');
-          return;
-        }
-        
-        // Show the section
-        detailSection.style.display = 'block';
-        
-        // Set section title
-        const sectionTitle = detailStory.section_title || detailStory.header_title || '';
-        document.getElementById('detail-section-title').textContent = sectionTitle;
-        console.log('Section title set to:', sectionTitle);
-        
-        // Set section subtitle
-        const sectionSubtitle = detailStory.section_subtitle || '';
-        document.getElementById('detail-section-subtitle').textContent = sectionSubtitle;
-        console.log('Section subtitle set to:', sectionSubtitle);
-        
-        // Set section image
-        const sectionImage = document.getElementById('detail-section-image');
-        if (detailStory.section_image) {
-          sectionImage.src = detailStory.section_image;
-          sectionImage.style.display = 'block';
-          sectionImage.alt = sectionTitle;
-          sectionImage.onerror = function() {
-            this.style.display = 'none';
-          };
-          console.log('Section image set to:', detailStory.section_image);
-        } else {
-          sectionImage.style.display = 'none';
-          console.log('No section image');
-        }
-        
-        // Set section description
-        const descriptionElement = document.getElementById('detail-section-description');
-        const sectionDescription = detailStory.section_description || '';
-        
-        console.log('Section description value:', sectionDescription);
-        console.log('Section description length:', sectionDescription.length);
-        
-        if (sectionDescription && sectionDescription.trim() !== '') {
-          descriptionElement.textContent = sectionDescription;
-          descriptionElement.style.display = 'block';
-          console.log('Description displayed');
-        } else {
-          descriptionElement.textContent = '';
-          descriptionElement.style.display = 'none';
-          console.log('No description to display');
-        }
-        
-        // Set CTA
-        const ctaSection = document.getElementById('detail-section-cta');
-        if (detailStory.cta_text && detailStory.cta_link) {
-          ctaSection.style.display = 'block';
-          document.getElementById('detail-cta-text').textContent = detailStory.cta_text;
-          document.getElementById('detail-cta-link').href = detailStory.cta_link;
-          console.log('CTA set');
-        } else {
-          ctaSection.style.display = 'none';
-          console.log('No CTA');
-        }
-      }
-
-      // Update page metadata
-      function updateBreadcrumb() {
-        document.getElementById('breadcrumb-current').textContent = 'আমাদের গল্প';
-        document.title = 'আমাদের গল্প | JAYENWARE';
-        document.getElementById('page-title').textContent = 'আমাদের গল্প | JAYENWARE';
-        
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc) {
-          metaDesc.setAttribute('content', 'Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion.');
-        }
-      }
-
-      // Initialize back to top button
-      function initBackToTop() {
-        const btn = document.getElementById('back-to-top');
-        if (!btn) return;
-        
-        let ticking = false;
-        window.addEventListener('scroll', function() {
-          if (!ticking) {
-            requestAnimationFrame(function() {
-              if (window.scrollY > 500) {
-                btn.classList.add('visible');
-              } else {
-                btn.classList.remove('visible');
-              }
-              ticking = false;
+        // ============================================
+        // RENDER STORIES
+        // ============================================
+        function renderStories(stories) {
+            const container = document.getElementById('stories-content');
+            container.innerHTML = '';
+            
+            stories.forEach((story, index) => {
+                const storyCard = createStoryCard(story, index);
+                container.appendChild(storyCard);
             });
-            ticking = true;
-          }
-        }, { passive: true });
-      }
-
-      // Main initialization function
-      async function initStoryPage() {
-        console.log('=== Initializing Story Page ===');
-        
-        // Show skeleton loading
-        renderSkeleton(6);
-        updateBreadcrumb();
-        
-        try {
-          // Load data from API
-          console.log('Loading stories and featured story...');
-          const [storiesData, featuredData] = await Promise.all([
-            loadStories(),
-            loadFeaturedStory()
-          ]);
-          
-          console.log('Stories loaded:', storiesData);
-          console.log('Featured story loaded:', featuredData);
-          
-          // Check if both failed
-          if (storiesData === null && featuredData === null) {
-            console.error('Both API calls failed');
-            showErrorState();
-            return;
-          }
-          
-          // Set data
-          allStories = Array.isArray(storiesData) ? storiesData : [];
-          featuredStory = featuredData;
-          
-          console.log('Total stories:', allStories.length);
-          console.log('Featured story exists:', !!featuredStory);
-          
-          // Remove featured story from grid
-          if (featuredStory && featuredStory.id) {
-            const beforeFilter = allStories.length;
-            allStories = allStories.filter(story => story.id !== featuredStory.id);
-            console.log(`Filtered ${beforeFilter - allStories.length} featured story from grid`);
-          }
-          
-          // Hide error state
-          document.getElementById('error-state').style.display = 'none';
-          
-          // Update all sections
-          console.log('Updating UI sections...');
-          updateHeroBanner();
-          renderStoriesGrid();
-          updateDetailSection();
-          
-          console.log('=== Story Page Initialization Complete ===');
-          
-        } catch (err) {
-          console.error('Fatal error initializing story page:', err);
-          showErrorState();
+            
+            // Initialize Intersection Observer for animations
+            initializeAnimations();
         }
-      }
-
-    })();
-  </script>
+        
+        // ============================================
+        // CREATE STORY CARD
+        // ============================================
+        function createStoryCard(story, index) {
+            const card = document.createElement('div');
+            card.className = 'story-card bg-white rounded-2xl shadow-lg overflow-hidden opacity-0 transform translate-y-8';
+            card.setAttribute('data-animate', 'true');
+            
+            const isEven = index % 2 === 0;
+            
+            // Main card content
+            card.innerHTML = `
+                <!-- Header Section -->
+                ${story.header_image ? `
+                <div class="relative story-image overflow-hidden">
+                    <img src="${story.header_image}" 
+                         alt="${story.header_title || 'Story Image'}" 
+                         class="w-full h-64 md:h-96 object-cover"
+                         onerror="this.src='https://via.placeholder.com/1200x400?text=Story+Image'">
+                    <div class="absolute inset-0 gradient-overlay"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-2">${story.header_title || ''}</h2>
+                        ${story.header_subtitle ? `<p class="text-xl opacity-90">${story.header_subtitle}</p>` : ''}
+                    </div>
+                </div>
+                ` : `
+                <div class="bg-gradient-to-r from-green-500 to-green-600 p-12 text-white">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">${story.header_title || ''}</h2>
+                    ${story.header_subtitle ? `<p class="text-xl opacity-90">${story.header_subtitle}</p>` : ''}
+                </div>
+                `}
+                
+                <!-- Content Section -->
+                <div class="p-8 md:p-12">
+                    <div class="flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-8 items-center">
+                        
+                        <!-- Section Image -->
+                        ${story.section_image ? `
+                        <div class="flex-shrink-0 w-full md:w-1/2">
+                            <img src="${story.section_image}" 
+                                 alt="${story.section_title || 'Section Image'}" 
+                                 class="w-full h-64 md:h-80 object-cover rounded-xl shadow-md"
+                                 onerror="this.src='https://via.placeholder.com/600x400?text=Section+Image'">
+                        </div>
+                        ` : ''}
+                        
+                        <!-- Section Text Content -->
+                        <div class="${story.section_image ? 'w-full md:w-1/2' : 'w-full'} space-y-4">
+                            ${story.section_title ? `
+                            <h3 class="text-2xl md:text-3xl font-bold text-gray-800">
+                                ${story.section_title}
+                            </h3>
+                            ` : ''}
+                            
+                            ${story.section_subtitle ? `
+                            <p class="text-lg text-green-600 font-semibold">
+                                ${story.section_subtitle}
+                            </p>
+                            ` : ''}
+                            
+                            ${story.section_description ? `
+                            <div class="text-gray-600 leading-relaxed space-y-3">
+                                ${story.section_description.split('\n').map(para => 
+                                    para.trim() ? `<p>${para}</p>` : ''
+                                ).join('')}
+                            </div>
+                            ` : ''}
+                            
+                            <!-- CTA Button -->
+                            ${story.cta_text ? `
+                            <div class="pt-4">
+                                <a href="${story.cta_link || '#'}" 
+                                   class="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition transform hover:scale-105">
+                                    ${story.cta_text}
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Info (Created Date) -->
+                ${story.created_at ? `
+                <div class="border-t border-gray-100 px-8 py-4 bg-gray-50">
+                    <div class="flex items-center gap-2 text-sm text-gray-500">
+                        <i class="far fa-calendar-alt"></i>
+                        <span>${formatDate(story.created_at)}</span>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+            
+            return card;
+        }
+        
+        // ============================================
+        // INTERSECTION OBSERVER FOR ANIMATIONS
+        // ============================================
+        function initializeAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        
+                        // Add animation with delay based on index
+                        setTimeout(() => {
+                            element.style.transition = 'all 0.8s ease-out';
+                            element.style.opacity = '1';
+                            element.style.transform = 'translateY(0)';
+                        }, index * 200);
+                        
+                        observer.unobserve(element);
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all story cards
+            document.querySelectorAll('[data-animate="true"]').forEach(card => {
+                observer.observe(card);
+            });
+        }
+        
+        // ============================================
+        // FORMAT DATE
+        // ============================================
+        function formatDate(dateString) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            
+            try {
+                const date = new Date(dateString);
+                // Bengali date formatting
+                return date.toLocaleDateString('bn-BD', options);
+            } catch (error) {
+                return dateString;
+            }
+        }
+        
+        // ============================================
+        // LOAD COMMON COMPONENTS (Navbar & Footer)
+        // ============================================
+        async function loadCommonComponents() {
+            try {
+                // If you have separate navbar/footer files
+                const [navbarResponse, footerResponse] = await Promise.all([
+                    fetch('/components/navbar.html'),
+                    fetch('/components/footer.html')
+                ]);
+                
+                if (navbarResponse.ok) {
+                    const navbarHtml = await navbarResponse.text();
+                    document.getElementById('navbar-container').innerHTML = navbarHtml;
+                }
+                
+                if (footerResponse.ok) {
+                    const footerHtml = await footerResponse.text();
+                    document.getElementById('footer-container').innerHTML = footerHtml;
+                }
+            } catch (error) {
+                console.warn('Could not load navbar/footer:', error);
+                // Fallback simple navbar
+                document.getElementById('navbar-container').innerHTML = `
+                    <nav class="bg-white shadow-md">
+                        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                            <a href="/" class="text-2xl font-bold text-green-600">Shohoj Bazaar</a>
+                            <div class="space-x-4">
+                                <a href="/" class="text-gray-600 hover:text-green-600">হোম</a>
+                                <a href="/category" class="text-gray-600 hover:text-green-600">ক্যাটাগরি</a>
+                                <a href="/story.html" class="text-green-600 font-semibold">আমাদের গল্প</a>
+                            </div>
+                        </div>
+                    </nav>
+                `;
+            }
+        }
+        
+        // ============================================
+        // INITIALIZE PAGE
+        // ============================================
+        async function initializePage() {
+            // Load common components first
+            await loadCommonComponents();
+            
+            // Load stories
+            await loadStories();
+        }
+        
+        // Start when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>
