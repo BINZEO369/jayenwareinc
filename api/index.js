@@ -467,7 +467,7 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
-// STORY API (আমাদের গল্প)
+// STORY API (আমাদের গল্প) - FIXED VERSION
 // ============================================
 
 // Get all active stories
@@ -479,9 +479,15 @@ app.get('/api/stories', async (req, res) => {
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
-        if (error) return res.status(500).json({ error: error.message });
+        if (error) {
+            console.error('Error fetching stories:', error);
+            return res.status(500).json({ error: error.message });
+        }
+        
+        // Always return an array
         res.json(data || []);
     } catch (err) {
+        console.error('Exception fetching stories:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -498,16 +504,23 @@ app.get('/api/stories/:id', async (req, res) => {
             .eq('is_active', true)
             .single();
         
-        if (error) return res.status(500).json({ error: error.message });
-        if (!data) return res.status(404).json({ error: 'Story not found' });
+        if (error) {
+            console.error('Error fetching story by ID:', error);
+            return res.status(500).json({ error: error.message });
+        }
+        
+        if (!data) {
+            return res.status(404).json({ error: 'Story not found' });
+        }
         
         res.json(data);
     } catch (err) {
+        console.error('Exception fetching story by ID:', err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Get latest/featured story (most recently created active story)
+// Get latest/featured story - FIXED: Removed .single() to handle empty results
 app.get('/api/story/featured', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -515,24 +528,26 @@ app.get('/api/story/featured', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+            .limit(1);
         
         if (error) {
-            // If no data found, return empty object instead of error
-            if (error.code === 'PGRST116') {
-                return res.json(null);
-            }
+            console.error('Error fetching featured story:', error);
             return res.status(500).json({ error: error.message });
         }
         
-        res.json(data);
+        // Return first story or null if no stories exist
+        const featuredStory = data && data.length > 0 ? data[0] : null;
+        
+        console.log('Featured story data:', featuredStory ? 'Found' : 'Not found');
+        
+        res.json(featuredStory);
     } catch (err) {
+        console.error('Exception fetching featured story:', err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Create new story (for admin use - included for completeness)
+// Create new story
 app.post('/api/stories', async (req, res) => {
     try {
         const {
@@ -569,14 +584,19 @@ app.post('/api/stories', async (req, res) => {
             .select()
             .single();
         
-        if (error) return res.status(500).json({ error: error.message });
+        if (error) {
+            console.error('Error creating story:', error);
+            return res.status(500).json({ error: error.message });
+        }
+        
         res.status(201).json(data);
     } catch (err) {
+        console.error('Exception creating story:', err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Update story by ID (for admin use - included for completeness)
+// Update story by ID
 app.put('/api/stories/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -593,16 +613,23 @@ app.put('/api/stories/:id', async (req, res) => {
             .select()
             .single();
         
-        if (error) return res.status(500).json({ error: error.message });
-        if (!data) return res.status(404).json({ error: 'Story not found' });
+        if (error) {
+            console.error('Error updating story:', error);
+            return res.status(500).json({ error: error.message });
+        }
+        
+        if (!data) {
+            return res.status(404).json({ error: 'Story not found' });
+        }
         
         res.json(data);
     } catch (err) {
+        console.error('Exception updating story:', err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Delete story by ID (for admin use - included for completeness)
+// Delete story by ID
 app.delete('/api/stories/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -612,10 +639,14 @@ app.delete('/api/stories/:id', async (req, res) => {
             .delete()
             .eq('id', id);
         
-        if (error) return res.status(500).json({ error: error.message });
+        if (error) {
+            console.error('Error deleting story:', error);
+            return res.status(500).json({ error: error.message });
+        }
         
         res.json({ success: true, message: 'Story deleted successfully' });
     } catch (err) {
+        console.error('Exception deleting story:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -795,6 +826,11 @@ app.get('/api/color-sizes', async (req, res) => {
 // Category page (with subcategory support)
 app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
+});
+
+// Story page - ADD THIS ROUTE
+app.get('/story', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'story.html'));
 });
 
 // ============================================
