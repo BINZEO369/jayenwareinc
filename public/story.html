@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bn-BD" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title id="page-title">আমাদের গল্প | JAYENWARE</title>
-  <meta name="description" content="জেনে নিন Jayenware-এর পথচলার গল্প, আমাদের স্বপ্ন ও অর্জনের ইতিহাস।" />
+  <title id="page-title">Our Story | JAYENWARE</title>
+  <meta name="description" content="Discover the journey of Jayenware, our dreams and achievements throughout history." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/story" />
@@ -68,6 +68,10 @@
       max-width: 100%;
       height: auto;
       display: block;
+      /* Smooth image rendering */
+      image-rendering: auto;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -128,9 +132,14 @@
       height: 100%; 
       object-fit: cover;
       object-position: center;
+      /* Smooth animation */
+      will-change: transform;
       animation: headerZoom 20s ease-in-out infinite alternate;
+      /* Prevent jitter */
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
-    @keyframes headerZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
+    @keyframes headerZoom { from { transform: scale(1); } to { transform: scale(1.03); } }
     .page-header .header-overlay {
       position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.75) 100%);
@@ -170,6 +179,8 @@
       transform: translateY(40px);
       transition: all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
       margin-bottom: 80px;
+      /* Smooth rendering */
+      will-change: transform, opacity;
     }
     .story-card.visible {
       opacity: 1;
@@ -221,11 +232,15 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+      /* Smooth transitions */
+      will-change: transform;
+      transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
     @media (hover: hover) {
       .story-card:hover .story-full-image-wrap img {
-        transform: scale(1.03);
+        transform: scale(1.02) translateZ(0);
       }
     }
 
@@ -303,10 +318,13 @@
       transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
       border: none;
       cursor: pointer;
+      /* Smooth */
+      will-change: transform;
+      transform: translateZ(0);
     }
     .story-cta:hover {
       background: #333;
-      transform: translateY(-2px);
+      transform: translateY(-2px) translateZ(0);
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
       gap: 12px;
     }
@@ -350,15 +368,15 @@
     .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
     .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
     .error-state p { font-size: 15px; color: var(--accent); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; }
-    .error-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
-    .error-state .btn-primary:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .error-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; will-change: transform; transform: translateZ(0); }
+    .error-state .btn-primary:hover { background: #333; transform: translateY(-2px) translateZ(0); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
 
     .empty-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
     .empty-state i { font-size: 56px; color: #d1d1d6; margin-bottom: 24px; }
     .empty-state h3 { font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
     .empty-state p { font-size: 15px; color: var(--accent); max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
 
-    .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; }
+    .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; will-change: transform, opacity; }
     .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
     .back-to-top:active { transform: scale(0.9); }
     @media (hover: hover) { .back-to-top:hover { background: #333; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.25); } }
@@ -373,17 +391,17 @@
 
     <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
-      <h2>কিছু ভুল হয়েছে</h2>
-      <p>গল্প লোড করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p>
+      <h2>Something went wrong</h2>
+      <p>Failed to load stories. Please try again.</p>
       <button class="btn-primary" onclick="loadStories()">
-        <i class="fa-solid fa-rotate"></i> <span>আবার চেষ্টা করুন</span>
+        <i class="fa-solid fa-rotate"></i> <span>Try Again</span>
       </button>
     </div>
 
     <div class="empty-state" id="empty-state">
       <i class="fa-solid fa-book-open"></i>
-      <h3>কোনো গল্প পাওয়া যায়নি</h3>
-      <p>এখনো কোনো গল্প প্রকাশিত হয়নি। শীঘ্রই নতুন গল্প আসছে।</p>
+      <h3>No stories found</h3>
+      <p>No stories have been published yet. Check back soon for new content.</p>
     </div>
 
     <div class="page-header" id="page-header">
@@ -448,7 +466,7 @@
         try {
           var date = new Date(dateString);
           var options = { year: 'numeric', month: 'long', day: 'numeric' };
-          return date.toLocaleDateString('bn-BD', options);
+          return date.toLocaleDateString('en-US', options);
         } catch (e) {
           return dateString;
         }
@@ -549,7 +567,10 @@
           container.appendChild(wrapper);
         }
 
-        initScrollAnimations();
+        // Smooth reveal after DOM update
+        requestAnimationFrame(function() {
+          initScrollAnimations();
+        });
 
         var dividers = container.querySelectorAll('.story-divider');
         if (dividers.length > 0) {
@@ -568,10 +589,10 @@
 
         var html = '';
 
-        // Full-width section image
+        // Full-width section image with smooth loading
         if (hasSectionImage) {
           html += '<div class="story-full-image-wrap has-image">';
-          html += '<img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
+          html += '<img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" style="opacity:0;transition:opacity 0.6s ease;" onload="this.style.opacity=1;" />';
           html += '</div>';
         }
 
@@ -623,8 +644,8 @@
 
       function initScrollAnimations() {
         var observerOptions = {
-          threshold: 0.15,
-          rootMargin: '0px 0px -30px 0px'
+          threshold: 0.1,
+          rootMargin: '0px 0px -20px 0px'
         };
 
         var observer = new IntersectionObserver(function(entries) {
@@ -637,7 +658,7 @@
         }, observerOptions);
 
         document.querySelectorAll('[data-animate="true"]').forEach(function(card, index) {
-          card.style.transitionDelay = (index * 0.1) + 's';
+          card.style.transitionDelay = (index * 0.08) + 's';
           observer.observe(card);
         });
       }
