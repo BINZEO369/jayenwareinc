@@ -1,7 +1,7 @@
 // ============================================================
 // hero-video.js - JAYENWARE Hero Video Section Component
 // Apple-Style Hero Video Section with Auto-Play Videos
-// Version: 1.0.0
+// Version: 1.0.1 - Full Screen Update
 // ============================================================
 
 (function() {
@@ -32,16 +32,30 @@
                 position: relative;
                 width: 100%;
                 height: 100vh;
-                min-height: 600px;
-                max-height: 900px;
+                height: 100dvh;
+                min-height: 100vh;
+                min-height: 100dvh;
+                max-height: none;
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
             }
-            @media (max-width: 640px) {
+            @media (max-width: 768px) {
                 .hero-video-wrapper {
-                    height: 70vh;
-                    min-height: 450px;
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 100vh;
+                    min-height: 100dvh;
+                    max-height: none;
+                }
+            }
+            @media (max-width: 480px) {
+                .hero-video-wrapper {
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 100vh;
+                    min-height: 100dvh;
+                    max-height: none;
                 }
             }
             
@@ -78,7 +92,7 @@
                 padding: 0 24px;
                 max-width: 800px;
                 width: 100%;
-                margin-bottom: clamp(20px, 5vh, 60px);
+                margin-bottom: clamp(40px, 10vh, 80px);
             }
             
             /* Video Text Animations - Enhanced Staggered Reveal */
@@ -428,14 +442,14 @@
             this.videos = [];
             this.isTransitioning = false;
             this.isMuted = true;
-            this.videoDuration = 8000; // 8 seconds per video
+            this.videoDuration = 8000;
             
             // Timers
             this.progressInterval = null;
             this.autoplayInterval = null;
             this.loadingTimeout = null;
             
-            // DOM Elements (cached after init)
+            // DOM Elements
             this.section = null;
             this.player = null;
             this.poster = null;
@@ -448,13 +462,7 @@
             this.isVideoLoaded = false;
         }
 
-        /**
-         * Initialize the hero video section
-         * @param {Array} data - Array of video objects [{video_url, title, description, cta_title, cta_link, poster}]
-         * @param {Object} options - Configuration options
-         */
         init(data, options = {}) {
-            // Validate data
             if (!data || data.length === 0) {
                 console.warn('[HeroVideo] No video data provided. Hiding section.');
                 this.hide();
@@ -465,7 +473,6 @@
             this.videoDuration = options.videoDuration || 8000;
             this.isMuted = options.muted !== undefined ? options.muted : true;
 
-            // Cache DOM elements
             this.cacheElements();
 
             if (!this.section) {
@@ -473,25 +480,15 @@
                 return;
             }
 
-            // Show section
             this.show();
-            
-            // Setup navigation
             this.setupNavigation();
-            
-            // Load first video
             this.loadVideo(0);
-            
-            // Start autoplay
             this.startAutoplay();
 
             this.isInitialized = true;
-            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos');
+            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Full Screen Mode');
         }
 
-        /**
-         * Cache all DOM elements
-         */
         cacheElements() {
             this.section = document.getElementById('hero-video-section');
             this.player = document.getElementById('hero-video-player');
@@ -501,13 +498,9 @@
             this.navContainer = document.getElementById('hero-video-nav');
         }
 
-        /**
-         * Show the section with animation
-         */
         show() {
             if (!this.section) return;
             this.section.classList.remove('hidden-section');
-            // Trigger animation after a small delay
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     this.section.classList.add('visible');
@@ -515,9 +508,6 @@
             });
         }
 
-        /**
-         * Hide the section
-         */
         hide() {
             if (!this.section) return;
             this.cleanup();
@@ -525,9 +515,6 @@
             this.section.classList.remove('visible');
         }
 
-        /**
-         * Setup navigation dots
-         */
         setupNavigation() {
             if (!this.navContainer) return;
             
@@ -540,7 +527,6 @@
                 ).join('');
                 this.navContainer.style.display = 'flex';
                 
-                // Bind dot clicks
                 this.navContainer.addEventListener('click', (e) => {
                     const dot = e.target.closest('.hero-video-dot');
                     if (!dot) return;
@@ -554,9 +540,6 @@
             }
         }
 
-        /**
-         * Load and play a specific video by index
-         */
         loadVideo(index) {
             if (index < 0 || index >= this.videos.length) return;
             if (!this.player) return;
@@ -566,15 +549,11 @@
             this.isTransitioning = true;
             this.isVideoLoaded = false;
 
-            // Show loading state
             this.showLoading();
 
-            // Animate text out
             this.animateTextOut(() => {
-                // Update text content
                 this.updateContent(video);
 
-                // Set poster if available
                 if (this.poster && video.poster) {
                     this.poster.src = video.poster;
                     this.poster.style.display = 'block';
@@ -583,43 +562,34 @@
                     this.poster.style.display = 'none';
                 }
 
-                // Load video
                 this.player.src = video.video_url;
                 this.player.muted = this.isMuted;
                 this.player.load();
 
-                // Handle video ready
                 this.player.oncanplay = () => {
                     this.isVideoLoaded = true;
                     this.hideLoading();
                     
-                    // Hide poster
                     if (this.poster) {
                         this.poster.classList.add('fade-out');
                     }
 
-                    // Play video
                     const playPromise = this.player.play();
                     if (playPromise !== undefined) {
                         playPromise.catch(() => {
-                            // Autoplay blocked, will try on user interaction
                             console.warn('[HeroVideo] Autoplay blocked');
                         });
                     }
 
                     this.isTransitioning = false;
                     this.startProgressTracking();
-                    
-                    // Animate text in
                     this.animateTextIn();
                 };
 
-                // Handle video error
                 this.player.onerror = () => {
                     console.error('[HeroVideo] Error loading video:', video.video_url);
                     this.hideLoading();
                     this.isTransitioning = false;
-                    // Try next video after error
                     if (this.videos.length > 1) {
                         setTimeout(() => {
                             const nextIndex = (this.currentIndex + 1) % this.videos.length;
@@ -629,16 +599,10 @@
                 };
             });
 
-            // Update navigation dots
             this.updateDots();
-            
-            // Reset progress bar
             this.resetProgress();
         }
 
-        /**
-         * Update text content for current video
-         */
         updateContent(video) {
             const labelEl = document.getElementById('hero-video-label');
             const titleEl = document.getElementById('hero-video-title');
@@ -657,9 +621,6 @@
             }
         }
 
-        /**
-         * Animate text elements out (exit animation)
-         */
         animateTextOut(callback) {
             const elements = [
                 document.getElementById('hero-video-label'),
@@ -673,19 +634,15 @@
                 return;
             }
 
-            // Add exit animation class with staggered delays
             elements.forEach((el, i) => {
                 el.style.transitionDelay = `${i * 0.05}s`;
                 el.classList.add('video-text-exit');
             });
 
-            // Wait for exit animation to complete
             setTimeout(() => {
-                // Remove exit class and reset transforms
                 elements.forEach((el, i) => {
                     el.classList.remove('video-text-exit');
                     el.style.transitionDelay = '0s';
-                    // Keep elements invisible until enter animation
                     el.style.opacity = '0';
                     el.style.transform = 'translateY(20px)';
                     el.style.filter = 'blur(6px)';
@@ -694,9 +651,6 @@
             }, 400);
         }
 
-        /**
-         * Animate text elements in (enter animation)
-         */
         animateTextIn() {
             const elements = [
                 document.getElementById('hero-video-label'),
@@ -707,13 +661,11 @@
 
             if (elements.length === 0) return;
 
-            // Prepare for enter animation
             elements.forEach((el, i) => {
                 el.classList.add('video-text-enter');
                 el.style.transitionDelay = `${0.1 + i * 0.15}s`;
             });
 
-            // Trigger enter animation
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     elements.forEach((el) => {
@@ -724,7 +676,6 @@
                 });
             });
 
-            // Cleanup after animation
             setTimeout(() => {
                 elements.forEach((el) => {
                     el.classList.remove('video-text-enter');
@@ -733,9 +684,6 @@
             }, 1000);
         }
 
-        /**
-         * Toggle sound on/off
-         */
         toggleSound() {
             if (!this.player) return;
             
@@ -746,9 +694,6 @@
             console.log('[HeroVideo] Sound', this.isMuted ? 'muted' : 'unmuted');
         }
 
-        /**
-         * Update sound button icon based on mute state
-         */
         updateSoundButtonUI() {
             const mutedIcon = document.getElementById('sound-icon-muted');
             const unmutedIcon = document.getElementById('sound-icon-unmuted');
@@ -767,16 +712,13 @@
             }
         }
 
-        /**
-         * Start progress bar tracking
-         */
         startProgressTracking() {
             this.clearProgressInterval();
             
             if (!this.progressBar) return;
 
             const duration = this.videoDuration;
-            const interval = 50; // Update every 50ms
+            const interval = 50;
             const totalSteps = duration / interval;
             let currentStep = 0;
 
@@ -800,9 +742,6 @@
             }, interval);
         }
 
-        /**
-         * Reset progress bar
-         */
         resetProgress() {
             this.clearProgressInterval();
             if (this.progressBar) {
@@ -811,9 +750,6 @@
             }
         }
 
-        /**
-         * Start autoplay cycle
-         */
         startAutoplay() {
             this.clearAutoplayInterval();
             
@@ -827,15 +763,11 @@
             }, this.videoDuration);
         }
 
-        /**
-         * Switch to a specific video (public method)
-         */
         switchToVideo(index) {
             if (this.isTransitioning) return;
             if (index < 0 || index >= this.videos.length) return;
             if (index === this.currentIndex) return;
 
-            // Smooth progress bar to 100% before switching
             if (this.progressBar) {
                 this.progressBar.style.transition = 'width 0.3s ease';
                 this.progressBar.style.width = '100%';
@@ -850,52 +782,34 @@
             }, 300);
         }
 
-        /**
-         * Go to next video
-         */
         nextVideo() {
             const nextIndex = (this.currentIndex + 1) % this.videos.length;
             this.switchToVideo(nextIndex);
         }
 
-        /**
-         * Go to previous video
-         */
         prevVideo() {
             const prevIndex = (this.currentIndex - 1 + this.videos.length) % this.videos.length;
             this.switchToVideo(prevIndex);
         }
 
-        /**
-         * Update navigation dot indicators
-         */
         updateDots() {
             document.querySelectorAll('.hero-video-dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === this.currentIndex);
             });
         }
 
-        /**
-         * Show loading overlay
-         */
         showLoading() {
             if (this.loadingOverlay) {
                 this.loadingOverlay.classList.remove('hidden');
             }
         }
 
-        /**
-         * Hide loading overlay
-         */
         hideLoading() {
             if (this.loadingOverlay) {
                 this.loadingOverlay.classList.add('hidden');
             }
         }
 
-        /**
-         * Clear progress interval
-         */
         clearProgressInterval() {
             if (this.progressInterval) {
                 clearInterval(this.progressInterval);
@@ -903,9 +817,6 @@
             }
         }
 
-        /**
-         * Clear autoplay interval
-         */
         clearAutoplayInterval() {
             if (this.autoplayInterval) {
                 clearInterval(this.autoplayInterval);
@@ -913,9 +824,6 @@
             }
         }
 
-        /**
-         * Pause the video
-         */
         pause() {
             if (this.player && this.isVideoLoaded) {
                 this.player.pause();
@@ -924,9 +832,6 @@
             }
         }
 
-        /**
-         * Resume the video
-         */
         resume() {
             if (this.player && this.isVideoLoaded && this.player.paused) {
                 const playPromise = this.player.play();
@@ -939,9 +844,6 @@
             }
         }
 
-        /**
-         * Refresh with new data
-         */
         refresh(newData, options = {}) {
             this.cleanup();
             this.currentIndex = 0;
@@ -950,9 +852,6 @@
             this.init(newData, options);
         }
 
-        /**
-         * Cleanup all intervals and resources
-         */
         cleanup() {
             this.clearProgressInterval();
             this.clearAutoplayInterval();
@@ -972,9 +871,6 @@
             this.isVideoLoaded = false;
         }
 
-        /**
-         * Destroy the component completely
-         */
         destroy() {
             this.cleanup();
             this.hide();
@@ -985,65 +881,48 @@
     }
 
     // ==================== GLOBAL API ====================
-    // Create singleton instance
     const heroVideo = new HeroVideoComponent();
 
-    /**
-     * Initialize Hero Video Section - Called from external scripts
-     * @param {Array} videoData - Array of video objects
-     * @param {Object} options - Configuration options
-     * 
-     * Usage: window.JAYENWARE.heroVideo.init(videoArray, { videoDuration: 10000, muted: false });
-     */
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroVideo = heroVideo;
 
     // ==================== AUTO-INITIALIZATION ====================
-    // Inject styles
     if (!document.getElementById('hero-video-styles')) {
         document.head.insertAdjacentHTML('beforeend', HERO_VIDEO_CSS);
     }
 
-    // Inject HTML template if not present
-    // ফিক্সড ভার্সন - ভিডিও সবসময় #home এর সবার উপরে
-function injectHTML() {
-    if (document.getElementById('hero-video-section')) {
-        return; // Already exists
-    }
+    function injectHTML() {
+        if (document.getElementById('hero-video-section')) {
+            return;
+        }
 
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = getHeroVideoHTML();
-    const videoSection = tempDiv.firstElementChild;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = getHeroVideoHTML();
+        const videoSection = tempDiv.firstElementChild;
 
-    // সবসময় #home সেকশনের প্রথম চাইল্ড হিসেবে ইনসার্ট করুন
-    const homeSection = document.getElementById('home');
-    
-    if (homeSection) {
-        // home section-এর একদম শুরুতে (প্রথম চাইল্ড) বসান
-        homeSection.insertBefore(videoSection, homeSection.firstChild);
-        console.log('[HeroVideo] ✅ Inserted as first child of #home');
-    } else {
-        // Fallback: main element-এর শুরুতে
-        const mainElement = document.querySelector('main');
-        if (mainElement) {
-            mainElement.insertBefore(videoSection, mainElement.firstChild);
-            console.log('[HeroVideo] ⚠️ Inserted in <main> (fallback)');
+        const homeSection = document.getElementById('home');
+        
+        if (homeSection) {
+            homeSection.insertBefore(videoSection, homeSection.firstChild);
+            console.log('[HeroVideo] ✅ Inserted as first child of #home');
         } else {
-            document.body.insertBefore(videoSection, document.body.firstChild);
-            console.log('[HeroVideo] ⚠️ Inserted in <body> (ultimate fallback)');
+            const mainElement = document.querySelector('main');
+            if (mainElement) {
+                mainElement.insertBefore(videoSection, mainElement.firstChild);
+                console.log('[HeroVideo] ⚠️ Inserted in <main> (fallback)');
+            } else {
+                document.body.insertBefore(videoSection, document.body.firstChild);
+                console.log('[HeroVideo] ⚠️ Inserted in <body> (ultimate fallback)');
+            }
         }
     }
-}
 
-    // Wait for DOM and try to auto-initialize
     function tryAutoInit() {
         injectHTML();
 
-        // Check if data is already available (loaded by main script)
         if (window.currentData && window.currentData.heroVideos && window.currentData.heroVideos.length > 0) {
             heroVideo.init(window.currentData.heroVideos);
         } else {
-            // Try to fetch data directly
             fetchHeroVideoData();
         }
     }
@@ -1065,7 +944,6 @@ function injectHTML() {
         }
     }
 
-    // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(tryAutoInit, 150);
@@ -1074,5 +952,5 @@ function injectHTML() {
         setTimeout(tryAutoInit, 150);
     }
 
-    console.log('[HeroVideo] Component loaded and ready');
+    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode');
 })();
