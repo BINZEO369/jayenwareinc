@@ -100,6 +100,72 @@
     .breadcrumb a:hover { color: var(--primary); }
     .breadcrumb .current { color: var(--primary); font-weight: 600; }
 
+    .page-header {
+      position: relative;
+      width: 100vw;
+      height: 60vh;
+      min-height: 360px;
+      max-height: 550px;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 48px;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      left: 0;
+      right: 0;
+      display: none;
+    }
+    .page-header.visible { display: block; }
+    @media (max-width: 768px) {
+      .page-header { height: 50vh; min-height: 300px; max-height: 420px; margin-bottom: 36px; }
+    }
+    @media (max-width: 480px) {
+      .page-header { height: 45vh; min-height: 260px; margin-bottom: 28px; }
+    }
+    .page-header .header-bg-img {
+      position: absolute; 
+      inset: 0; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      object-position: center;
+      animation: headerZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes headerZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
+    .page-header .header-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.75) 100%);
+    }
+    .page-header .header-content {
+      position: absolute; bottom: clamp(40px, 10vh, 80px); left: 50%; transform: translateX(-50%); z-index: 2;
+      text-align: center; width: 88%; max-width: 680px; padding: 0 16px;
+    }
+    .page-header .header-label {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(14px, 2vw, 20px);
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 8px;
+      margin-bottom: 0;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.45s forwards;
+    }
+    .page-header .header-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(28px, 5vw, 56px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+    }
+    @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
+
     .story-card {
       opacity: 0;
       transform: translateY(40px);
@@ -317,6 +383,12 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" style="margin-bottom: 0; padding-bottom: 0; padding-top: 0;">
 
+    <nav class="breadcrumb" id="breadcrumb">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
+      <span class="current" id="breadcrumb-current">Story</span>
+    </nav>
+
     <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
       <h2></h2>
@@ -330,6 +402,15 @@
       <i class="fa-solid fa-book-open"></i>
       <h3></h3>
       <p></p>
+    </div>
+
+    <div class="page-header" id="page-header">
+      <img id="header-bg-img" src="" alt="" class="header-bg-img" />
+      <div class="header-overlay"></div>
+      <div class="header-content">
+        <h1 class="header-title" id="header-main-title"></h1>
+        <p class="header-label" id="header-label" style="display:none;"></p>
+      </div>
     </div>
 
     <div id="stories-container">
@@ -413,11 +494,19 @@
         return data || [];
       }
 
+      function setText(id, text) {
+        var el = document.getElementById(id);
+        if (el && text) {
+          el.textContent = text;
+        }
+      }
+
       function showSkeleton() {
         document.getElementById('skeleton-container').style.display = 'block';
         document.getElementById('stories-content').style.display = 'none';
         document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('page-header').classList.remove('visible');
       }
 
       function showError() {
@@ -425,6 +514,7 @@
         document.getElementById('stories-content').style.display = 'none';
         document.getElementById('error-state').style.display = 'flex';
         document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('page-header').classList.remove('visible');
       }
 
       function showEmpty() {
@@ -432,6 +522,46 @@
         document.getElementById('stories-content').style.display = 'none';
         document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').style.display = 'flex';
+        document.getElementById('page-header').classList.remove('visible');
+      }
+
+      function updatePageHeader(stories) {
+        var pageHeader = document.getElementById('page-header');
+        var headerImg = document.getElementById('header-bg-img');
+        var headerLabel = document.getElementById('header-label');
+        var headerTitle = document.getElementById('header-main-title');
+
+        var heroStory = null;
+        for (var i = 0; i < stories.length; i++) {
+          if (stories[i].header_image) {
+            heroStory = stories[i];
+            break;
+          }
+        }
+        if (!heroStory) heroStory = stories[0];
+
+        if (heroStory && heroStory.header_image) {
+          headerImg.src = heroStory.header_image;
+          headerImg.alt = heroStory.header_title || '';
+          headerImg.style.display = 'block';
+          headerImg.onerror = function() {
+            this.style.display = 'none';
+          };
+        } else {
+          headerImg.style.display = 'none';
+        }
+
+        if (heroStory && heroStory.header_subtitle) {
+          headerLabel.textContent = heroStory.header_subtitle;
+          headerLabel.style.display = 'block';
+        } else {
+          headerLabel.textContent = '';
+          headerLabel.style.display = 'none';
+        }
+
+        headerTitle.textContent = heroStory && heroStory.header_title ? heroStory.header_title : '';
+
+        pageHeader.classList.add('visible');
       }
 
       function renderStories(stories) {
@@ -439,6 +569,8 @@
         document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').style.display = 'none';
         document.getElementById('stories-content').style.display = 'block';
+
+        updatePageHeader(stories);
 
         var container = document.getElementById('stories-content');
         container.innerHTML = '';
