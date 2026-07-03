@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="bn-BD" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title id="page-title">আমাদের গল্প | JAYENWARE</title>
+  <meta name="description" content="Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/stories" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <script src="/fonts.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#007aff'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--accent);
+      padding: 16px 0;
+    }
+
+    /* Hero Banner - Same as category page */
+    .story-hero-banner {
+      position: relative;
+      width: 100vw;
+      height: 85vh;
+      min-height: 480px;
+      max-height: 700px;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 48px;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      left: 0;
+      right: 0;
+      margin-top: 0;
+    }
+    @media (max-width: 768px) {
+      .story-hero-banner { height: 70vh; min-height: 420px; max-height: 550px; margin-bottom: 36px; }
+    }
+    @media (max-width: 480px) {
+      .story-hero-banner { height: 60vh; min-height: 360px; margin-bottom: 28px; }
+    }
+    .story-hero-banner .hero-bg-img {
+      position: absolute; 
+      inset: 0; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      object-position: top center;
+      animation: heroZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
+    .story-hero-banner .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.15) 65%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0.7) 100%);
+    }
+    .story-hero-banner .hero-content {
+      position: absolute; bottom: clamp(50px, 12vh, 110px); left: 50%; transform: translateX(-50%); z-index: 2;
+      text-align: center; width: 88%; max-width: 680px; padding: 0 16px;
+    }
+    .story-hero-banner .hero-subtitle {
+      display: inline-block;
+      font-family: 'Inter', sans-serif; font-size: clamp(7px, 1vw, 9px); font-weight: 500;
+      letter-spacing: 0.45em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
+      margin-bottom: clamp(12px, 2vh, 20px);
+      opacity: 0; transform: translateY(8px);
+      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
+    }
+    .story-hero-banner .hero-title {
+      font-family: 'Manrope', sans-serif; font-size: clamp(22px, 4.5vw, 60px); font-weight: 900;
+      line-height: 1.1; color: #ffffff; margin: 0 0 clamp(16px, 2.5vh, 28px) 0; letter-spacing: -0.01em;
+      opacity: 0; transform: translateY(12px);
+      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+    }
+    .story-hero-banner .hero-cta-wrap {
+      opacity: 0; transform: translateY(8px);
+      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
+    }
+    .story-hero-banner .hero-cta {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: 'Inter', sans-serif; font-size: clamp(8px, 1vw, 10px); font-weight: 500;
+      letter-spacing: 0.25em; text-transform: uppercase; color: #ffffff; text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      padding: 0; border: none; background: none; cursor: pointer;
+    }
+    .story-hero-banner .hero-cta:hover { gap: 8px; color: rgba(255, 255, 255, 0.85); }
+    .story-hero-banner .hero-cta .cta-arrow {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 14px; position: relative;
+      transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .story-hero-banner .hero-cta .cta-arrow::after {
+      content: ''; position: absolute; top: 50%; right: 0; width: 6px; height: 6px;
+      border-top: 1px solid #ffffff; border-right: 1px solid #ffffff;
+      transform: translateY(-50%) rotate(45deg);
+      transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .story-hero-banner .hero-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
+    @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* Story Grid */
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+    @media (min-width: 768px) {
+      .stories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+    }
+    @media (min-width: 1200px) {
+      .stories-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 48px;
+      }
+    }
+
+    /* Story Card */
+    .story-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .story-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    .story-card:active {
+      transform: scale(0.98);
+    }
+    .story-card .card-image-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: #f5f5f7;
+    }
+    .story-card .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.6s ease;
+    }
+    .story-card:hover .card-image {
+      transform: scale(1.08);
+    }
+    .story-card .card-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .story-card:hover .card-image-overlay {
+      opacity: 1;
+    }
+    .story-card .card-content {
+      padding: 24px;
+    }
+    .story-card .card-label {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+    .story-card .card-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.3;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .story-card .card-description {
+      font-size: 14px;
+      color: var(--accent);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .story-card .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      transition: gap 0.3s ease;
+    }
+    .story-card .card-cta:hover {
+      gap: 10px;
+    }
+    .story-card .card-cta i {
+      font-size: 12px;
+      transition: transform 0.3s ease;
+    }
+    .story-card .card-cta:hover i {
+      transform: translateX(3px);
+    }
+
+    /* Story Detail Section */
+    .story-detail-section {
+      margin-top: 64px;
+      padding: 48px 0;
+      border-top: 1px solid #e5e5ea;
+    }
+    .story-detail-section .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .story-detail-section .section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .story-detail-section .section-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .story-detail-section .section-subtitle {
+      font-size: 16px;
+      color: var(--accent);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .story-detail-section .section-image {
+      width: 100%;
+      max-height: 600px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+    .story-detail-section .section-description {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--primary);
+      max-width: 800px;
+      margin: 0 auto 40px;
+      white-space: pre-line;
+    }
+    .story-detail-section .section-cta {
+      text-align: center;
+    }
+    .story-detail-section .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .story-detail-section .cta-button:hover {
+      background: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    /* Error State */
+    .error-state {
+      text-align: center;
+      padding: 80px 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 50vh;
+    }
+    .error-state i {
+      font-size: 64px;
+      color: #d1d1d6;
+      margin-bottom: 24px;
+    }
+    .error-state h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .error-state p {
+      font-size: 15px;
+      color: var(--accent);
+      max-width: 480px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+    .error-state .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .error-state .btn-primary:hover {
+      background: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 64px 20px;
+      display: none;
+    }
+    .empty-state.visible {
+      display: block;
+    }
+    .empty-state i {
+      font-size: 52px;
+      color: #d1d1d6;
+      margin-bottom: 20px;
+    }
+    .empty-state h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .empty-state p {
+      font-size: 14px;
+      color: var(--accent);
+      max-width: 420px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+    .empty-state .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    /* Back to Top */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .back-to-top:active {
+      transform: scale(0.9);
+    }
+    @media (hover: hover) {
+      .back-to-top:hover {
+        background: #333;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 32px rgba(0,0,0,0.25);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .story-detail-section {
+        margin-top: 48px;
+        padding: 32px 0;
+      }
+      .story-detail-section .section-description {
+        font-size: 14px;
+      }
+      .story-card .card-content {
+        padding: 16px;
+      }
+      .story-card .card-title {
+        font-size: 18px;
+      }
+      .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+      }
+    }
+    @media (max-width: 480px) {
+      .stories-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .story-detail-section .section-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <div id="dynamic-header"></div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" style="margin-bottom: 0; padding-bottom: 0; padding-top: 0;">
+
+    <nav class="breadcrumb" id="breadcrumb">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
+      <span class="current" id="breadcrumb-current">আমাদের গল্প</span>
+    </nav>
+
+    <!-- Hero Banner -->
+    <div class="story-hero-banner" id="story-hero-banner">
+      <img id="hero-bg-img" src="" alt="Our Story" class="hero-bg-img" style="display:none;" />
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-subtitle" id="hero-subtitle">আমাদের গল্প</p>
+        <h1 class="hero-title" id="hero-title">Discover Our Journey</h1>
+        <div class="hero-cta-wrap" id="hero-cta-wrap" style="display:none;">
+          <a href="#" class="hero-cta" id="hero-cta-link">
+            <span id="hero-cta-text">Explore Stories</span>
+            <span class="cta-arrow"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" id="error-state">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <h2>Stories Not Found</h2>
+      <p>We couldn't load our stories at this moment. Please try again later or browse our other sections.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
+      </div>
+    </div>
+
+    <!-- Stories Grid -->
+    <div class="stories-grid" id="stories-grid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state">
+      <i class="fa-solid fa-book-open"></i>
+      <h3>No Stories Yet</h3>
+      <p>Our story section is being crafted. Check back soon to discover the journey behind Jayenware.</p>
+      <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
+    </div>
+
+    <!-- Featured Story Detail Section -->
+    <div class="story-detail-section" id="story-detail-section" style="display:none;">
+      <div class="section-header">
+        <span class="section-label">Featured Story</span>
+        <h2 class="section-title" id="detail-section-title"></h2>
+        <p class="section-subtitle" id="detail-section-subtitle"></p>
+      </div>
+      <img id="detail-section-image" src="" alt="" class="section-image" style="display:none;" />
+      <div class="section-description" id="detail-section-description"></div>
+      <div class="section-cta" id="detail-section-cta" style="display:none;">
+        <a href="#" class="cta-button" id="detail-cta-link">
+          <span id="detail-cta-text">Learn More</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="dynamic-footer"></div>
+
+  <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <script src="/components.js"></script>
+
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.JAYENWARE_FONTS) {
+          const root = document.documentElement;
+          const vars = window.JAYENWARE_FONTS.cssVariables;
+          for (const [key, value] of Object.entries(vars)) {
+            root.style.setProperty(key, value);
+          }
+        }
+        setTimeout(initStoryPage, 100);
+      });
+
+      let allStories = [];
+      let featuredStory = null;
+
+      async function fetchAPI(endpoint) {
+        try {
+          const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
+          if (!res.ok) {
+            console.error(`API Error: ${endpoint} returned ${res.status}`);
+            return null;
+          }
+          return await res.json();
+        } catch (err) {
+          console.error(`Fetch error for ${endpoint}:`, err);
+          return null;
+        }
+      }
+
+      async function loadStories() {
+        const stories = await fetchAPI('/api/stories');
+        return stories || [];
+      }
+
+      async function loadFeaturedStory() {
+        const story = await fetchAPI('/api/story/featured');
+        return story;
+      }
+
+      function renderSkeleton(count = 6) {
+        const grid = document.getElementById('stories-grid');
+        grid.innerHTML = Array(count).fill(`
+          <div class="story-card">
+            <div class="card-image-wrapper">
+              <div class="skeleton" style="width:100%;height:100%;"></div>
+            </div>
+            <div class="card-content">
+              <div class="skeleton" style="height:10px;width:25%;margin-bottom:12px;"></div>
+              <div class="skeleton" style="height:20px;width:80%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:14px;width:100%;margin-bottom:6px;"></div>
+              <div class="skeleton" style="height:14px;width:90%;margin-bottom:16px;"></div>
+              <div class="skeleton" style="height:14px;width:30%;"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function showErrorState() {
+        document.getElementById('story-hero-banner').style.display = 'none';
+        document.getElementById('stories-grid').innerHTML = '';
+        document.getElementById('empty-state').classList.remove('visible');
+        document.getElementById('story-detail-section').style.display = 'none';
+        document.getElementById('error-state').style.display = 'flex';
+      }
+
+      function showEmptyState() {
+        document.getElementById('stories-grid').innerHTML = '';
+        document.getElementById('story-detail-section').style.display = 'none';
+        document.getElementById('empty-state').classList.add('visible');
+      }
+
+      function truncateText(text, maxLength = 150) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength).trim() + '...';
+      }
+
+      function renderStoryCard(story) {
+        const imageUrl = story.header_image || story.section_image || '/logo.png';
+        const description = story.section_description || story.header_subtitle || '';
+        
+        return `
+        <div class="story-card" onclick="window.location.href='${story.cta_link || '#'}'" role="button" tabindex="0">
+          <div class="card-image-wrapper">
+            <img src="${imageUrl}" alt="${story.header_title || 'Story'}" class="card-image" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';" />
+            <div class="card-image-overlay"></div>
+          </div>
+          <div class="card-content">
+            <span class="card-label">Our Story</span>
+            <h3 class="card-title">${story.header_title || 'Untitled Story'}</h3>
+            <p class="card-description">${truncateText(description, 120)}</p>
+            ${story.cta_text ? `
+            <span class="card-cta">
+              ${story.cta_text}
+              <i class="fa-solid fa-arrow-right"></i>
+            </span>
+            ` : ''}
+          </div>
+        </div>`;
+      }
+
+      function renderStoriesGrid() {
+        const grid = document.getElementById('stories-grid');
+        if (!allStories.length) {
+          showEmptyState();
+          return;
+        }
+        document.getElementById('empty-state').classList.remove('visible');
+        grid.innerHTML = allStories.map(renderStoryCard).join('');
+      }
+
+      function updateHeroBanner() {
+        const heroBanner = document.getElementById('story-hero-banner');
+        const heroImg = document.getElementById('hero-bg-img');
+        const heroTitle = document.getElementById('hero-title');
+        const heroSubtitle = document.getElementById('hero-subtitle');
+        const heroCtaWrap = document.getElementById('hero-cta-wrap');
+        
+        // Use featured story for hero, or first story
+        const heroStory = featuredStory || (allStories.length > 0 ? allStories[0] : null);
+        
+        if (heroStory) {
+          heroBanner.style.display = 'block';
+          
+          // Set hero image
+          if (heroStory.header_image) {
+            heroImg.src = heroStory.header_image;
+            heroImg.style.display = 'block';
+            heroImg.alt = heroStory.header_title;
+            heroImg.onerror = function() {
+              this.src = '/logo.png';
+              this.style.objectFit = 'contain';
+              this.style.padding = '40px';
+              this.style.background = '#1a1a1a';
+            };
+          } else {
+            heroImg.style.display = 'none';
+          }
+          
+          // Set hero title and subtitle
+          heroTitle.textContent = heroStory.header_title || 'Our Story';
+          heroSubtitle.textContent = heroStory.header_subtitle || 'আমাদের গল্প';
+          
+          // Set CTA
+          if (heroStory.cta_text && heroStory.cta_link) {
+            heroCtaWrap.style.display = 'block';
+            document.getElementById('hero-cta-text').textContent = heroStory.cta_text;
+            document.getElementById('hero-cta-link').href = heroStory.cta_link;
+          } else {
+            heroCtaWrap.style.display = 'none';
+          }
+        }
+      }
+
+      function updateDetailSection() {
+        const detailSection = document.getElementById('story-detail-section');
+        const detailStory = featuredStory;
+        
+        if (!detailStory) {
+          detailSection.style.display = 'none';
+          return;
+        }
+        
+        detailSection.style.display = 'block';
+        
+        // Set section title and subtitle
+        document.getElementById('detail-section-title').textContent = detailStory.section_title || detailStory.header_title || '';
+        document.getElementById('detail-section-subtitle').textContent = detailStory.section_subtitle || '';
+        
+        // Set section image
+        const sectionImage = document.getElementById('detail-section-image');
+        if (detailStory.section_image) {
+          sectionImage.src = detailStory.section_image;
+          sectionImage.style.display = 'block';
+          sectionImage.alt = detailStory.section_title || detailStory.header_title;
+          sectionImage.onerror = function() {
+            this.style.display = 'none';
+          };
+        } else {
+          sectionImage.style.display = 'none';
+        }
+        
+        // Set section description
+        document.getElementById('detail-section-description').textContent = detailStory.section_description || '';
+        
+        // Set CTA
+        const ctaSection = document.getElementById('detail-section-cta');
+        if (detailStory.cta_text && detailStory.cta_link) {
+          ctaSection.style.display = 'block';
+          document.getElementById('detail-cta-text').textContent = detailStory.cta_text;
+          document.getElementById('detail-cta-link').href = detailStory.cta_link;
+        } else {
+          ctaSection.style.display = 'none';
+        }
+      }
+
+      function updateBreadcrumb() {
+        document.getElementById('breadcrumb-current').textContent = 'আমাদের গল্প';
+        document.title = 'আমাদের গল্প | JAYENWARE';
+        document.getElementById('page-title').textContent = 'আমাদের গল্প | JAYENWARE';
+        
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+          metaDesc.setAttribute('content', 'Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion.');
+        }
+      }
+
+      function initBackToTop() {
+        const btn = document.getElementById('back-to-top');
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              if (window.scrollY > 500) {
+                btn.classList.add('visible');
+              } else {
+                btn.classList.remove('visible');
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      }
+
+      async function initStoryPage() {
+        renderSkeleton(6);
+        updateBreadcrumb();
+        
+        try {
+          // Load stories data
+          const [storiesData, featuredData] = await Promise.all([
+            loadStories(),
+            loadFeaturedStory()
+          ]);
+          
+          if (storiesData === null && featuredData === null) {
+            showErrorState();
+            return;
+          }
+          
+          allStories = Array.isArray(storiesData) ? storiesData : [];
+          featuredStory = featuredData;
+          
+          // Remove featured story from grid if it exists
+          if (featuredStory) {
+            allStories = allStories.filter(story => story.id !== featuredStory.id);
+          }
+          
+          // Hide error state
+          document.getElementById('error-state').style.display = 'none';
+          
+          // Update UI
+          updateHeroBanner();
+          renderStoriesGrid();
+          updateDetailSection();
+          
+        } catch (err) {
+          console.error('Error initializing story page:', err);
+          showErrorState();
+        }
+      }
+
+      // Initialize back to top on DOM ready
+      document.addEventListener('DOMContentLoaded', () => {
+        initBackToTop();
+      });
+
+    })();
+  </script>
+</body>
+</html>
