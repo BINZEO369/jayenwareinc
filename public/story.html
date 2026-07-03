@@ -235,7 +235,7 @@
       font-weight: 800;
       line-height: 1.15;
       color: var(--primary);
-      margin: 0 0 16px 0;
+      margin: 0 0 8px 0;
       letter-spacing: -0.02em;
     }
     .story-card .story-subtitle {
@@ -245,6 +245,7 @@
       color: var(--accent);
       margin-bottom: 24px;
       line-height: 1.5;
+      display: block;
     }
     .story-card .story-description {
       font-size: 15px;
@@ -368,17 +369,17 @@
 
     <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
-      <h2></h2>
-      <p></p>
+      <h2>কিছু ভুল হয়েছে</h2>
+      <p>গল্প লোড করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p>
       <button class="btn-primary" onclick="loadStories()">
-        <i class="fa-solid fa-rotate"></i> <span></span>
+        <i class="fa-solid fa-rotate"></i> <span>আবার চেষ্টা করুন</span>
       </button>
     </div>
 
     <div class="empty-state" id="empty-state">
       <i class="fa-solid fa-book-open"></i>
-      <h3></h3>
-      <p></p>
+      <h3>কোনো গল্প পাওয়া যায়নি</h3>
+      <p>এখনো কোনো গল্প প্রকাশিত হয়নি। শীঘ্রই নতুন গল্প আসছে।</p>
     </div>
 
     <div class="page-header" id="page-header">
@@ -570,6 +571,7 @@
 
         var html = '';
 
+        // Header image (full width at top of card)
         if (hasHeaderImage) {
           html += '<div class="story-image-wrap has-image">';
           html += '<img src="' + escapeHTML(story.header_image) + '" alt="' + escapeHTML(story.header_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
@@ -579,26 +581,27 @@
         html += '<div class="story-content-wrap">';
         html += '<div class="story-text-col">';
 
+        // Date
         if (story.created_at) {
           html += '<div class="story-date"><i class="fa-regular fa-calendar"></i><span>' + formatDate(story.created_at) + '</span></div>';
         }
 
-        if (!hasHeaderImage && story.header_title) {
-          html += '<h2 class="story-title">' + escapeHTML(story.header_title) + '</h2>';
-        }
-
+        // Header subtitle (small label above title)
         if (story.header_subtitle) {
           html += '<p class="story-label">' + escapeHTML(story.header_subtitle) + '</p>';
         }
 
+        // Section title (main heading)
         if (story.section_title) {
           html += '<h2 class="story-title">' + escapeHTML(story.section_title) + '</h2>';
         }
 
+        // Section subtitle (appears right after section title)
         if (story.section_subtitle) {
           html += '<p class="story-subtitle">' + escapeHTML(story.section_subtitle) + '</p>';
         }
 
+        // Section description
         if (story.section_description) {
           var paragraphs = story.section_description.split('\n').filter(function(p) { return p.trim(); }).map(function(p) {
             return '<p>' + escapeHTML(p.trim()) + '</p>';
@@ -606,19 +609,21 @@
           html += '<div class="story-description">' + paragraphs + '</div>';
         }
 
+        // CTA Button
         if (hasCTA) {
           html += '<a href="' + escapeHTML(story.cta_link) + '" class="story-cta">' + escapeHTML(story.cta_text) + '<span class="cta-arrow"><i class="fa-solid fa-arrow-right"></i></span></a>';
         }
 
-        html += '</div>';
+        html += '</div>'; // Close story-text-col
 
+        // Side image
         if (hasSectionImage) {
           html += '<div class="story-side-col has-image">';
           html += '<div class="story-side-image"><img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="lazy" onerror="this.parentElement.parentElement.classList.remove(\'has-image\');" /></div>';
           html += '</div>';
         }
 
-        html += '</div>';
+        html += '</div>'; // Close story-content-wrap
 
         card.innerHTML = html;
 
