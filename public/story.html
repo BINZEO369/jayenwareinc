@@ -116,7 +116,9 @@
       margin-right: calc(-50vw + 50%);
       left: 0;
       right: 0;
+      display: none;
     }
+    .page-header.visible { display: block; }
     @media (max-width: 768px) {
       .page-header { height: 50vh; min-height: 300px; max-height: 420px; margin-bottom: 36px; }
     }
@@ -355,7 +357,7 @@
     .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
     .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
     .error-state p { font-size: 15px; color: var(--accent); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; }
-    .error-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; }
+    .error-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
     .error-state .btn-primary:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
 
     /* Empty State */
@@ -388,7 +390,7 @@
     </nav>
 
     <!-- Error State -->
-    <div class="error-state" id="error-state" style="display:none;">
+    <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
       <h2>কন্টেন্ট লোড করা যায়নি</h2>
       <p>দুঃখিত, আমাদের গল্পগুলো লোড করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p>
@@ -398,19 +400,19 @@
     </div>
 
     <!-- Empty State -->
-    <div class="empty-state" id="empty-state" style="display:none;">
+    <div class="empty-state" id="empty-state">
       <i class="fa-solid fa-book-open"></i>
       <h3>এখনো কোনো গল্প প্রকাশিত হয়নি</h3>
       <p>আমাদের গল্প শীঘ্রই এখানে প্রকাশিত হবে। আমাদের সাথে থাকুন।</p>
     </div>
 
-    <!-- Page Header -->
+    <!-- Page Header (Fully Dynamic) -->
     <div class="page-header" id="page-header">
-      <img id="header-bg-img" src="" alt="আমাদের গল্প" class="header-bg-img" style="display:none;" />
+      <img id="header-bg-img" src="" alt="" class="header-bg-img" />
       <div class="header-overlay"></div>
       <div class="header-content">
-        <p class="header-label">আমাদের যাত্রা</p>
-        <h1 class="header-title" id="header-main-title">আমাদের গল্প</h1>
+        <p class="header-label" id="header-label"></p>
+        <h1 class="header-title" id="header-main-title"></h1>
       </div>
     </div>
 
@@ -519,58 +521,85 @@
       // ============================================
       // RENDER FUNCTIONS
       // ============================================
-      function renderSkeleton() {
+      function showSkeleton() {
         document.getElementById('skeleton-container').style.display = 'block';
         document.getElementById('stories-content').style.display = 'none';
         document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('page-header').classList.remove('visible');
       }
 
-      function renderError() {
+      function showError() {
         document.getElementById('skeleton-container').style.display = 'none';
         document.getElementById('stories-content').style.display = 'none';
         document.getElementById('error-state').style.display = 'flex';
         document.getElementById('empty-state').style.display = 'none';
-        document.getElementById('page-header').style.display = 'none';
+        document.getElementById('page-header').classList.remove('visible');
       }
 
-      function renderEmpty() {
+      function showEmpty() {
         document.getElementById('skeleton-container').style.display = 'none';
         document.getElementById('stories-content').style.display = 'none';
         document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').style.display = 'flex';
-        document.getElementById('page-header').style.display = 'block';
+        document.getElementById('page-header').classList.remove('visible');
+      }
+
+      function updatePageHeader(stories) {
+        const pageHeader = document.getElementById('page-header');
+        const headerImg = document.getElementById('header-bg-img');
+        const headerLabel = document.getElementById('header-label');
+        const headerTitle = document.getElementById('header-main-title');
+
+        // Find first story with header_image for hero background
+        const heroStory = stories.find(s => s.header_image) || stories[0];
+
+        if (heroStory && heroStory.header_image) {
+          headerImg.src = heroStory.header_image;
+          headerImg.alt = heroStory.header_title || '';
+          headerImg.style.display = 'block';
+          headerImg.onerror = function() {
+            this.style.display = 'none';
+          };
+        } else {
+          headerImg.style.display = 'none';
+        }
+
+        // Set header label from first story's header_subtitle
+        if (heroStory && heroStory.header_subtitle) {
+          headerLabel.textContent = heroStory.header_subtitle;
+          headerLabel.style.display = 'inline-block';
+        } else {
+          headerLabel.textContent = '';
+          headerLabel.style.display = 'none';
+        }
+
+        // Set header title from first story's header_title
+        if (heroStory && heroStory.header_title) {
+          headerTitle.textContent = heroStory.header_title;
+        } else {
+          headerTitle.textContent = '';
+        }
+
+        pageHeader.classList.add('visible');
       }
 
       function renderStories(stories) {
         document.getElementById('skeleton-container').style.display = 'none';
         document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').style.display = 'none';
-        document.getElementById('page-header').style.display = 'block';
         document.getElementById('stories-content').style.display = 'block';
+
+        // Update page header dynamically
+        updatePageHeader(stories);
 
         const container = document.getElementById('stories-content');
         container.innerHTML = '';
 
-        // Update page header with first story's header_image
-        if (stories.length > 0 && stories[0].header_image) {
-          const headerImg = document.getElementById('header-bg-img');
-          headerImg.src = stories[0].header_image;
-          headerImg.style.display = 'block';
-          headerImg.onerror = function() {
-            this.style.display = 'none';
-          };
-          if (stories[0].header_title) {
-            document.getElementById('header-main-title').textContent = stories[0].header_title;
-          }
-        } else {
-          document.getElementById('header-bg-img').style.display = 'none';
-        }
-
         // Render each story
         stories.forEach((story, index) => {
-          const storyCard = createStoryCard(story, index);
-          container.appendChild(storyCard);
+          const wrapper = createStoryCard(story, index);
+          container.appendChild(wrapper);
         });
 
         // Initialize scroll animations
@@ -589,19 +618,18 @@
         card.setAttribute('data-story-index', index);
         card.setAttribute('data-animate', 'true');
 
-        // Determine if section_image exists to adjust layout
-        const hasSectionImage = story.section_image ? true : false;
-        const hasHeaderImage = story.header_image ? true : false;
-        const hasCTA = story.cta_text ? true : false;
+        const hasSectionImage = !!story.section_image;
+        const hasHeaderImage = !!story.header_image;
+        const hasCTA = !!story.cta_text;
 
         let html = '';
 
-        // Header Image (main wide image)
+        // Header Image (main wide image) — only from DB
         if (hasHeaderImage) {
           html += `
             <div class="story-image-wrap">
               <img src="${escapeHTML(story.header_image)}" 
-                   alt="${escapeHTML(story.header_title || 'Story Image')}" 
+                   alt="${escapeHTML(story.header_title || '')}" 
                    loading="${index < 2 ? 'eager' : 'lazy'}"
                    onerror="this.parentElement.style.display='none';" />
             </div>
@@ -614,7 +642,7 @@
         // Text Column
         html += '<div class="story-text-col">';
 
-        // Date
+        // Date — only if exists in DB
         if (story.created_at) {
           html += `
             <div class="story-date">
@@ -624,27 +652,27 @@
           `;
         }
 
-        // Header Title (if no header image, show as main title)
+        // Header Title (shown when no header image) — only from DB
         if (!hasHeaderImage && story.header_title) {
           html += `<h2 class="story-title">${escapeHTML(story.header_title)}</h2>`;
         }
 
-        // Header Subtitle
+        // Header Subtitle — only from DB
         if (story.header_subtitle) {
           html += `<p class="story-label">${escapeHTML(story.header_subtitle)}</p>`;
         }
 
-        // Section Title
+        // Section Title — only from DB
         if (story.section_title) {
           html += `<h2 class="story-title">${escapeHTML(story.section_title)}</h2>`;
         }
 
-        // Section Subtitle
+        // Section Subtitle — only from DB
         if (story.section_subtitle) {
           html += `<p class="story-subtitle">${escapeHTML(story.section_subtitle)}</p>`;
         }
 
-        // Section Description
+        // Section Description — only from DB
         if (story.section_description) {
           const paragraphs = story.section_description
             .split('\n')
@@ -654,7 +682,7 @@
           html += `<div class="story-description">${paragraphs}</div>`;
         }
 
-        // CTA Button
+        // CTA Button — only from DB
         if (hasCTA) {
           html += `
             <a href="${escapeHTML(story.cta_link || '#')}" class="story-cta">
@@ -666,13 +694,13 @@
 
         html += '</div>'; // End text-col
 
-        // Side Image Column
+        // Side Image Column — only from DB
         if (hasSectionImage) {
           html += `
             <div class="story-side-col">
               <div class="story-side-image">
                 <img src="${escapeHTML(story.section_image)}" 
-                     alt="${escapeHTML(story.section_title || 'Section Image')}" 
+                     alt="${escapeHTML(story.section_title || '')}" 
                      loading="lazy"
                      onerror="this.parentElement.style.display='none';" />
               </div>
@@ -684,7 +712,7 @@
 
         card.innerHTML = html;
 
-        // Add divider after each story except the last
+        // Add divider after each story
         const divider = document.createElement('div');
         divider.className = 'story-divider';
 
@@ -714,7 +742,6 @@
         }, observerOptions);
 
         document.querySelectorAll('[data-animate="true"]').forEach((card, index) => {
-          // Add stagger delay
           card.style.transitionDelay = `${index * 0.1}s`;
           observer.observe(card);
         });
@@ -745,20 +772,20 @@
       // MAIN LOAD FUNCTION
       // ============================================
       async function loadStories() {
-        renderSkeleton();
+        showSkeleton();
 
         try {
           const stories = await fetchStories();
 
           if (!stories || stories.length === 0) {
-            renderEmpty();
+            showEmpty();
             return;
           }
 
           renderStories(stories);
         } catch (error) {
           console.error('Failed to load stories:', error);
-          renderError();
+          showError();
         }
       }
 
