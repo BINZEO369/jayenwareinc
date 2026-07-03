@@ -83,23 +83,6 @@
       100% { background-position: 200% 0; }
     }
 
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--accent);
-      padding: 16px 0;
-    }
-    .breadcrumb a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .breadcrumb a:hover { color: var(--primary); }
-    .breadcrumb .current { color: var(--primary); font-weight: 600; }
-
     .page-header {
       position: relative;
       width: 100vw;
@@ -383,12 +366,6 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" style="margin-bottom: 0; padding-bottom: 0; padding-top: 0;">
 
-    <nav class="breadcrumb" id="breadcrumb">
-      <a href="/">Home</a>
-      <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
-      <span class="current" id="breadcrumb-current">Story</span>
-    </nav>
-
     <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
       <h2></h2>
@@ -492,13 +469,6 @@
         if (!response.ok) throw new Error('HTTP ' + response.status);
         var data = await response.json();
         return data || [];
-      }
-
-      function setText(id, text) {
-        var el = document.getElementById(id);
-        if (el && text) {
-          el.textContent = text;
-        }
       }
 
       function showSkeleton() {
