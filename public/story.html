@@ -166,6 +166,40 @@
       .story-card { margin-bottom: 36px; }
     }
 
+    /* Full-width section image */
+    .story-card .story-full-image-wrap {
+      position: relative;
+      width: 100vw;
+      height: 70vh;
+      min-height: 400px;
+      max-height: 700px;
+      overflow: hidden;
+      background: #f0f0f0;
+      margin-bottom: 48px;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      display: none;
+    }
+    .story-card .story-full-image-wrap.has-image { display: block; }
+    @media (max-width: 768px) {
+      .story-card .story-full-image-wrap { height: 50vh; min-height: 300px; max-height: 500px; margin-bottom: 36px; }
+    }
+    @media (max-width: 480px) {
+      .story-card .story-full-image-wrap { height: 40vh; min-height: 250px; max-height: 400px; margin-bottom: 28px; }
+    }
+    .story-card .story-full-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    @media (hover: hover) {
+      .story-card:hover .story-full-image-wrap img {
+        transform: scale(1.03);
+      }
+    }
+
     .story-card .story-image-wrap {
       position: relative;
       width: 100%;
@@ -398,7 +432,7 @@
     <div id="stories-container">
       <div id="skeleton-container">
         <div class="story-card">
-          <div class="story-image-wrap skeleton"></div>
+          <div class="story-full-image-wrap skeleton"></div>
           <div class="story-content-wrap">
             <div class="story-text-col">
               <div class="skeleton" style="height:10px;width:25%;margin-bottom:16px;"></div>
@@ -415,7 +449,7 @@
         </div>
         <div class="story-divider"></div>
         <div class="story-card">
-          <div class="story-image-wrap skeleton"></div>
+          <div class="story-full-image-wrap skeleton"></div>
           <div class="story-content-wrap">
             <div class="story-text-col">
               <div class="skeleton" style="height:10px;width:25%;margin-bottom:16px;"></div>
@@ -575,8 +609,15 @@
 
         var html = '';
 
-        // Header image (full width at top of card)
-        if (hasHeaderImage) {
+        // Full-width section image (NEW - spans entire viewport width)
+        if (hasSectionImage) {
+          html += '<div class="story-full-image-wrap has-image">';
+          html += '<img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
+          html += '</div>';
+        }
+
+        // Header image (regular full width within container)
+        if (hasHeaderImage && !hasSectionImage) {
           html += '<div class="story-image-wrap has-image">';
           html += '<img src="' + escapeHTML(story.header_image) + '" alt="' + escapeHTML(story.header_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" />';
           html += '</div>';
@@ -595,7 +636,7 @@
           html += '<h2 class="story-title">' + escapeHTML(story.section_title) + '</h2>';
         }
 
-        // Section subtitle (NOW USING A UNIQUE CLASS NAME)
+        // Section subtitle
         if (story.section_subtitle) {
           html += '<p class="story-section-subtitle">' + escapeHTML(story.section_subtitle) + '</p>';
         }
@@ -615,8 +656,8 @@
 
         html += '</div>'; // Close story-text-col
 
-        // Side image
-        if (hasSectionImage) {
+        // Side image (only if section_image not already shown as full-width)
+        if (hasSectionImage && !hasSectionImage) {
           html += '<div class="story-side-col has-image">';
           html += '<div class="story-side-image"><img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="lazy" onerror="this.parentElement.parentElement.classList.remove(\'has-image\');" /></div>';
           html += '</div>';
