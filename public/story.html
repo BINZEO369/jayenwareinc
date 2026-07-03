@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title id="page-title">JAYENWARE</title>
-  <meta name="description" id="meta-description" content="" />
+  <title id="page-title">আমাদের গল্প | JAYENWARE</title>
+  <meta name="description" content="Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/story" />
+  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/stories" />
   <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
   <link rel="apple-touch-icon" href="/logo.png" />
@@ -92,20 +92,8 @@
       color: var(--accent);
       padding: 16px 0;
     }
-    .breadcrumb a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .breadcrumb a:hover {
-      color: var(--primary);
-    }
-    .breadcrumb .current {
-      color: var(--primary);
-      font-weight: 500;
-    }
 
-    /* Hero Banner */
+    /* Hero Banner - Same as category page */
     .story-hero-banner {
       position: relative;
       width: 100vw;
@@ -185,7 +173,7 @@
     .story-hero-banner .hero-cta:hover .cta-arrow::after { right: -2px; opacity: 0.8; }
     @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* Stories Grid */
+    /* Story Grid */
     .stories-grid {
       display: grid;
       grid-template-columns: repeat(1, 1fr);
@@ -542,19 +530,19 @@
     <nav class="breadcrumb" id="breadcrumb">
       <a href="/">Home</a>
       <span class="separator"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></span>
-      <span class="current" id="breadcrumb-current"></span>
+      <span class="current" id="breadcrumb-current">আমাদের গল্প</span>
     </nav>
 
     <!-- Hero Banner -->
-    <div class="story-hero-banner" id="story-hero-banner" style="display:none;">
-      <img id="hero-bg-img" src="" alt="" class="hero-bg-img" style="display:none;" />
+    <div class="story-hero-banner" id="story-hero-banner">
+      <img id="hero-bg-img" src="" alt="Our Story" class="hero-bg-img" style="display:none;" />
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <p class="hero-subtitle" id="hero-subtitle"></p>
-        <h1 class="hero-title" id="hero-title"></h1>
+        <p class="hero-subtitle" id="hero-subtitle">আমাদের গল্প</p>
+        <h1 class="hero-title" id="hero-title">Discover Our Journey</h1>
         <div class="hero-cta-wrap" id="hero-cta-wrap" style="display:none;">
           <a href="#" class="hero-cta" id="hero-cta-link">
-            <span id="hero-cta-text"></span>
+            <span id="hero-cta-text">Explore Stories</span>
             <span class="cta-arrow"></span>
           </a>
         </div>
@@ -564,7 +552,7 @@
     <!-- Error State -->
     <div class="error-state" id="error-state">
       <i class="fa-solid fa-circle-exclamation"></i>
-      <h2>Something went wrong</h2>
+      <h2>Stories Not Found</h2>
       <p>We couldn't load our stories at this moment. Please try again later or browse our other sections.</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
         <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
@@ -577,15 +565,15 @@
     <!-- Empty State -->
     <div class="empty-state" id="empty-state">
       <i class="fa-solid fa-book-open"></i>
-      <h3>No stories available</h3>
-      <p>Check back soon to discover the journey behind Jayenware.</p>
+      <h3>No Stories Yet</h3>
+      <p>Our story section is being crafted. Check back soon to discover the journey behind Jayenware.</p>
       <a href="/" class="btn-primary"><i class="fa-solid fa-house"></i> Back to Home</a>
     </div>
 
     <!-- Featured Story Detail Section -->
     <div class="story-detail-section" id="story-detail-section" style="display:none;">
       <div class="section-header">
-        <span class="section-label" id="section-label"></span>
+        <span class="section-label">Featured Story</span>
         <h2 class="section-title" id="detail-section-title"></h2>
         <p class="section-subtitle" id="detail-section-subtitle"></p>
       </div>
@@ -593,7 +581,7 @@
       <div class="section-description" id="detail-section-description"></div>
       <div class="section-cta" id="detail-section-cta" style="display:none;">
         <a href="#" class="cta-button" id="detail-cta-link">
-          <span id="detail-cta-text"></span>
+          <span id="detail-cta-text">Learn More</span>
           <i class="fa-solid fa-arrow-right"></i>
         </a>
       </div>
@@ -640,11 +628,13 @@
       }
 
       async function loadStories() {
-        return await fetchAPI('/api/stories');
+        const stories = await fetchAPI('/api/stories');
+        return stories || [];
       }
 
       async function loadFeaturedStory() {
-        return await fetchAPI('/api/story/featured');
+        const story = await fetchAPI('/api/story/featured');
+        return story;
       }
 
       function renderSkeleton(count = 6) {
@@ -674,10 +664,8 @@
       }
 
       function showEmptyState() {
-        document.getElementById('story-hero-banner').style.display = 'none';
         document.getElementById('stories-grid').innerHTML = '';
         document.getElementById('story-detail-section').style.display = 'none';
-        document.getElementById('error-state').style.display = 'none';
         document.getElementById('empty-state').classList.add('visible');
       }
 
@@ -688,31 +676,22 @@
       }
 
       function renderStoryCard(story) {
-        const imageUrl = story.header_image || story.section_image || '';
+        const imageUrl = story.header_image || story.section_image || '/logo.png';
         const description = story.section_description || story.header_subtitle || '';
-        const cardLabel = story.header_subtitle || '';
-        const cardTitle = story.header_title || '';
-        const cardCta = story.cta_text || '';
-        const cardLink = story.cta_link || '#';
-        
-        // If no image, use a placeholder
-        const imageHTML = imageUrl ? 
-          `<img src="${imageUrl}" alt="${cardTitle}" class="card-image" loading="lazy" onerror="this.parentElement.style.display='none';" />` :
-          '';
         
         return `
-        <div class="story-card" onclick="${cardLink !== '#' ? `window.location.href='${cardLink}'` : ''}" role="button" tabindex="0">
+        <div class="story-card" onclick="window.location.href='${story.cta_link || '#'}'" role="button" tabindex="0">
           <div class="card-image-wrapper">
-            ${imageHTML}
+            <img src="${imageUrl}" alt="${story.header_title || 'Story'}" class="card-image" loading="lazy" onerror="this.src='/logo.png';this.style.objectFit='contain';this.style.padding='20px';" />
             <div class="card-image-overlay"></div>
           </div>
           <div class="card-content">
-            ${cardLabel ? `<span class="card-label">${cardLabel}</span>` : ''}
-            ${cardTitle ? `<h3 class="card-title">${cardTitle}</h3>` : ''}
-            ${description ? `<p class="card-description">${truncateText(description, 120)}</p>` : ''}
-            ${cardCta ? `
+            <span class="card-label">Our Story</span>
+            <h3 class="card-title">${story.header_title || 'Untitled Story'}</h3>
+            <p class="card-description">${truncateText(description, 120)}</p>
+            ${story.cta_text ? `
             <span class="card-cta">
-              ${cardCta}
+              ${story.cta_text}
               <i class="fa-solid fa-arrow-right"></i>
             </span>
             ` : ''}
@@ -722,12 +701,11 @@
 
       function renderStoriesGrid() {
         const grid = document.getElementById('stories-grid');
-        if (!allStories || !allStories.length) {
+        if (!allStories.length) {
           showEmptyState();
           return;
         }
         document.getElementById('empty-state').classList.remove('visible');
-        document.getElementById('error-state').style.display = 'none';
         grid.innerHTML = allStories.map(renderStoryCard).join('');
       }
 
@@ -738,41 +716,39 @@
         const heroSubtitle = document.getElementById('hero-subtitle');
         const heroCtaWrap = document.getElementById('hero-cta-wrap');
         
+        // Use featured story for hero, or first story
         const heroStory = featuredStory || (allStories.length > 0 ? allStories[0] : null);
         
-        if (!heroStory) {
-          heroBanner.style.display = 'none';
-          return;
-        }
-        
-        heroBanner.style.display = 'block';
-        
-        // Set hero image
-        if (heroStory.header_image) {
-          heroImg.src = heroStory.header_image;
-          heroImg.style.display = 'block';
-          heroImg.alt = heroStory.header_title || '';
-          heroImg.onerror = function() {
-            this.style.display = 'none';
-          };
-        } else {
-          heroImg.style.display = 'none';
-        }
-        
-        // Set hero title and subtitle
-        heroTitle.textContent = heroStory.header_title || '';
-        heroSubtitle.textContent = heroStory.header_subtitle || '';
-        
-        // Hide subtitle element if empty
-        heroSubtitle.style.display = heroStory.header_subtitle ? 'inline-block' : 'none';
-        
-        // Set CTA
-        if (heroStory.cta_text && heroStory.cta_link) {
-          heroCtaWrap.style.display = 'block';
-          document.getElementById('hero-cta-text').textContent = heroStory.cta_text;
-          document.getElementById('hero-cta-link').href = heroStory.cta_link;
-        } else {
-          heroCtaWrap.style.display = 'none';
+        if (heroStory) {
+          heroBanner.style.display = 'block';
+          
+          // Set hero image
+          if (heroStory.header_image) {
+            heroImg.src = heroStory.header_image;
+            heroImg.style.display = 'block';
+            heroImg.alt = heroStory.header_title;
+            heroImg.onerror = function() {
+              this.src = '/logo.png';
+              this.style.objectFit = 'contain';
+              this.style.padding = '40px';
+              this.style.background = '#1a1a1a';
+            };
+          } else {
+            heroImg.style.display = 'none';
+          }
+          
+          // Set hero title and subtitle
+          heroTitle.textContent = heroStory.header_title || 'Our Story';
+          heroSubtitle.textContent = heroStory.header_subtitle || 'আমাদের গল্প';
+          
+          // Set CTA
+          if (heroStory.cta_text && heroStory.cta_link) {
+            heroCtaWrap.style.display = 'block';
+            document.getElementById('hero-cta-text').textContent = heroStory.cta_text;
+            document.getElementById('hero-cta-link').href = heroStory.cta_link;
+          } else {
+            heroCtaWrap.style.display = 'none';
+          }
         }
       }
 
@@ -785,44 +761,18 @@
           return;
         }
         
-        // Check if there's any section content to show
-        const hasSectionContent = detailStory.section_title || 
-                                   detailStory.section_subtitle || 
-                                   detailStory.section_image || 
-                                   detailStory.section_description;
-        
-        if (!hasSectionContent) {
-          detailSection.style.display = 'none';
-          return;
-        }
-        
         detailSection.style.display = 'block';
         
-        // Set section label
-        const sectionLabel = document.getElementById('section-label');
-        if (detailStory.header_subtitle) {
-          sectionLabel.textContent = detailStory.header_subtitle;
-          sectionLabel.style.display = 'inline-block';
-        } else {
-          sectionLabel.style.display = 'none';
-        }
-        
-        // Set section title
-        const sectionTitle = document.getElementById('detail-section-title');
-        sectionTitle.textContent = detailStory.section_title || '';
-        sectionTitle.style.display = detailStory.section_title ? 'block' : 'none';
-        
-        // Set section subtitle
-        const sectionSubtitle = document.getElementById('detail-section-subtitle');
-        sectionSubtitle.textContent = detailStory.section_subtitle || '';
-        sectionSubtitle.style.display = detailStory.section_subtitle ? 'block' : 'none';
+        // Set section title and subtitle
+        document.getElementById('detail-section-title').textContent = detailStory.section_title || detailStory.header_title || '';
+        document.getElementById('detail-section-subtitle').textContent = detailStory.section_subtitle || '';
         
         // Set section image
         const sectionImage = document.getElementById('detail-section-image');
         if (detailStory.section_image) {
           sectionImage.src = detailStory.section_image;
           sectionImage.style.display = 'block';
-          sectionImage.alt = detailStory.section_title || '';
+          sectionImage.alt = detailStory.section_title || detailStory.header_title;
           sectionImage.onerror = function() {
             this.style.display = 'none';
           };
@@ -830,15 +780,8 @@
           sectionImage.style.display = 'none';
         }
         
-        // Set section description - THIS IS THE FIX
-        const sectionDescription = document.getElementById('detail-section-description');
-        if (detailStory.section_description) {
-          sectionDescription.textContent = detailStory.section_description;
-          sectionDescription.style.display = 'block';
-        } else {
-          sectionDescription.textContent = '';
-          sectionDescription.style.display = 'none';
-        }
+        // Set section description
+        document.getElementById('detail-section-description').textContent = detailStory.section_description || '';
         
         // Set CTA
         const ctaSection = document.getElementById('detail-section-cta');
@@ -851,25 +794,14 @@
         }
       }
 
-      function updateBreadcrumbAndMeta(storyData) {
-        // Update breadcrumb
-        const breadcrumbCurrent = document.getElementById('breadcrumb-current');
-        if (storyData && storyData.header_title) {
-          breadcrumbCurrent.textContent = storyData.header_title;
-          document.title = storyData.header_title + ' | JAYENWARE';
-          document.getElementById('page-title').textContent = storyData.header_title + ' | JAYENWARE';
-        } else {
-          breadcrumbCurrent.textContent = '';
-          document.title = 'JAYENWARE';
-          document.getElementById('page-title').textContent = 'JAYENWARE';
-        }
+      function updateBreadcrumb() {
+        document.getElementById('breadcrumb-current').textContent = 'আমাদের গল্প';
+        document.title = 'আমাদের গল্প | JAYENWARE';
+        document.getElementById('page-title').textContent = 'আমাদের গল্প | JAYENWARE';
         
-        // Update meta description
-        const metaDesc = document.getElementById('meta-description');
-        if (metaDesc && storyData && storyData.section_description) {
-          metaDesc.setAttribute('content', truncateText(storyData.section_description, 160));
-        } else if (metaDesc) {
-          metaDesc.setAttribute('content', '');
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+          metaDesc.setAttribute('content', 'Discover the story behind Jayenware - our journey, heritage, and commitment to authentic Bangladesh fashion.');
         }
       }
 
@@ -893,17 +825,17 @@
 
       async function initStoryPage() {
         renderSkeleton(6);
+        updateBreadcrumb();
         
         try {
+          // Load stories data
           const [storiesData, featuredData] = await Promise.all([
             loadStories(),
             loadFeaturedStory()
           ]);
           
-          // Handle API errors
           if (storiesData === null && featuredData === null) {
             showErrorState();
-            updateBreadcrumbAndMeta(null);
             return;
           }
           
@@ -911,15 +843,8 @@
           featuredStory = featuredData;
           
           // Remove featured story from grid if it exists
-          if (featuredStory && allStories.length > 0) {
+          if (featuredStory) {
             allStories = allStories.filter(story => story.id !== featuredStory.id);
-          }
-          
-          // If no stories at all
-          if (allStories.length === 0 && !featuredStory) {
-            showEmptyState();
-            updateBreadcrumbAndMeta(null);
-            return;
           }
           
           // Hide error state
@@ -929,15 +854,14 @@
           updateHeroBanner();
           renderStoriesGrid();
           updateDetailSection();
-          updateBreadcrumbAndMeta(featuredStory || (allStories.length > 0 ? allStories[0] : null));
           
         } catch (err) {
           console.error('Error initializing story page:', err);
           showErrorState();
-          updateBreadcrumbAndMeta(null);
         }
       }
 
+      // Initialize back to top on DOM ready
       document.addEventListener('DOMContentLoaded', () => {
         initBackToTop();
       });
