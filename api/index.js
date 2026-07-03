@@ -467,6 +467,160 @@ app.get('/api/news', async (req, res) => {
 });
 
 // ============================================
+// STORY API (আমাদের গল্প)
+// ============================================
+
+// Get all active stories
+app.get('/api/stories', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('story')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single story by ID
+app.get('/api/stories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const { data, error } = await supabase
+            .from('story')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Story not found' });
+        
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get latest/featured story (most recently created active story)
+app.get('/api/story/featured', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('story')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+        
+        if (error) {
+            // If no data found, return empty object instead of error
+            if (error.code === 'PGRST116') {
+                return res.json(null);
+            }
+            return res.status(500).json({ error: error.message });
+        }
+        
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Create new story (for admin use - included for completeness)
+app.post('/api/stories', async (req, res) => {
+    try {
+        const {
+            header_title,
+            header_subtitle,
+            header_image,
+            section_title,
+            section_subtitle,
+            section_image,
+            section_description,
+            cta_text,
+            cta_link,
+            sort_order
+        } = req.body;
+        
+        if (!header_title) {
+            return res.status(400).json({ error: 'Header title is required' });
+        }
+        
+        const { data, error } = await supabase
+            .from('story')
+            .insert([{
+                header_title,
+                header_subtitle,
+                header_image,
+                section_title,
+                section_subtitle,
+                section_image,
+                section_description,
+                cta_text,
+                cta_link,
+                sort_order: sort_order || 0
+            }])
+            .select()
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.status(201).json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update story by ID (for admin use - included for completeness)
+app.put('/api/stories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateData = req.body;
+        
+        // Remove id from update data if present
+        delete updateData.id;
+        delete updateData.created_at;
+        
+        const { data, error } = await supabase
+            .from('story')
+            .update(updateData)
+            .eq('id', id)
+            .select()
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Story not found' });
+        
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete story by ID (for admin use - included for completeness)
+app.delete('/api/stories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const { error } = await supabase
+            .from('story')
+            .delete()
+            .eq('id', id);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json({ success: true, message: 'Story deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
 // PRODUCT DETAILS API (Colors, Variants, Reviews, Videos, Banners)
 // ============================================
 
@@ -539,7 +693,7 @@ app.get('/api/product-reviews', async (req, res) => {
     }
 });
 
-// Submit product review (Left active assuming guest reviews are allowed based on previous setup)
+// Submit product review
 app.post('/api/submit-review', async (req, res) => {
     try {
         const { product_id, user_name, rating, review_text } = req.body;
