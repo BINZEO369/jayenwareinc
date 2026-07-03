@@ -56,6 +56,10 @@
       "dest": "/public/category.html"
     },
     {
+      "src": "/story",
+      "dest": "/public/story.html"
+    },
+    {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
       "dest": "/public/$1"
     },
