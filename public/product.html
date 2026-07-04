@@ -67,7 +67,6 @@
         
         img { max-width: 100%; height: auto; display: block; }
         
-        /* Typography System - Uses dynamic CSS variables */
         body {
             font-family: var(--font-body);
             -webkit-font-smoothing: antialiased;
@@ -161,7 +160,6 @@
             font-family: var(--font-body);
         }
         
-        /* Banner Typography */
         .banner-title {
             font-family: var(--font-heading);
             font-weight: 800;
@@ -179,7 +177,6 @@
             letter-spacing: var(--tracking-wide);
         }
         
-        /* Sticky Bar */
         .sticky-add-bar span {
             font-family: var(--font-body);
             font-weight: 900;
@@ -192,7 +189,6 @@
             letter-spacing: var(--tracking-wide);
         }
         
-        /* ⚡ Color Swatch - WITH BORDER SHADOW for white colors */
         .color-swatch-btn {
             width: 40px;
             height: 40px;
@@ -247,7 +243,6 @@
             transform: rotate(-45deg);
         }
         
-        /* Size Button */
         .size-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
@@ -286,7 +281,6 @@
             pointer-events: none;
         }
         
-        /* Product Hero */
         .product-hero {
             position: relative;
             width: 100%;
@@ -311,7 +305,6 @@
         }
         .product-hero.zoomed img { transform: scale(2.5); }
         
-        /* Desktop Layout */
         @media (min-width: 1024px) {
             .product-hero { 
                 height: auto;
@@ -429,7 +422,6 @@
             }
         }
         
-        /* Apple-style Product Info Card */
         .product-info-card {
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(30px);
@@ -473,7 +465,6 @@
             margin: 16px 0;
         }
         
-        /* Skeleton Loading */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -485,7 +476,6 @@
             100% { background-position: -200% 0; }
         }
         
-        /* Liquid Glass Specs Badge */
         .detail-badge {
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(15px);
@@ -511,7 +501,6 @@
             text-align: center;
         }
         
-        /* Toggle Button */
         .toggle-btn {
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(15px);
@@ -557,7 +546,6 @@
             border: 1px solid rgba(0,0,0,0.04);
         }
         
-        /* Barcode Wrapper */
         .barcode-wrapper {
             background: rgba(255,255,255,0.8);
             backdrop-filter: blur(15px);
@@ -688,7 +676,6 @@
         }
         .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
 
-        /* Video Section - Clean Minimal Style */
         .video-section {
             position: relative;
             width: 100%;
@@ -721,7 +708,6 @@
             }
         }
         
-        /* Video Text Overlay - Clean, No Background */
         .video-text-center {
             position: absolute;
             top: 50%;
@@ -833,7 +819,6 @@
             opacity: 1;
         }
 
-        /* Banner Section */
         .product-banner-card {
             position: relative;
             border-radius: 24px;
@@ -929,7 +914,7 @@
             }
         }
 
-        /* Hide duplicate footer from components.js */
+        /* Hide duplicate footer */
         #components-footer + footer,
         #components-footer ~ footer:not(#components-footer) {
             display: none !important;
@@ -1231,27 +1216,83 @@
                 }, { passive: true });
             }
             
+            // ================================================================
+            // 🔥 UPDATED: addToCartHandler - Sends ALL Product Details to Cart
+            // ================================================================
             window.addToCartHandler = function(productId, buyNow = false) {
                 const product = allProducts.find(p => p.id == productId);
                 if (!product) return showToast('Product not found', 'error');
+                
                 if (productColors.length > 0 && !selectedVariant) {
                     if (!selectedColorId) return showToast('Please select a color', 'error');
                     if (!selectedSizeId) return showToast('Please select a size', 'error');
                 }
-                if (selectedVariant && selectedVariant.stock <= 0) return showToast('Out of stock', 'error');
-                let finalPrice = product.price;
-                let variantId = null, variantName = null, variantSku = null;
-                if (selectedVariant) {
-                    variantId = selectedVariant.id;
-                    variantName = selectedVariant.name;
-                    variantSku = selectedVariant.sku;
-                    finalPrice = selectedVariant.price;
+                
+                if (selectedVariant && selectedVariant.stock <= 0) {
+                    return showToast('Out of stock', 'error');
                 }
-                if (typeof cart === 'undefined') { window.location.reload(); return; }
-                cart.push({ id: Date.now(), product_id: product.id, variant_id: variantId, title: product.title, price: finalPrice, img: product.img, variant: variantName, sku: variantSku, quantity: 1 });
-                saveCart();
-                showToast('Added to Bag! 🎉');
-                if (buyNow) window.location.href = '/checkout';
+                
+                // Get color and size details
+                const selectedColor = productColors.find(c => c.id == selectedColorId);
+                const selectedSize = colorSizes.find(s => s.id == selectedSizeId);
+                
+                // Determine the correct image (prioritize color_image)
+                const displayImage = selectedColor?.color_image || product.img || '/logo.png';
+                
+                // ================================================================
+                // 🔥 BUILD COMPLETE PRODUCT DATA WITH ALL DETAILS
+                // ================================================================
+                const productData = {
+                    // Basic Info
+                    title: product.title,
+                    price: selectedVariant?.price || product.price,
+                    old_price: selectedVariant?.old_price || product.old_price || null,
+                    img: displayImage,
+                    
+                    // === VARIANT DETAILS ===
+                    variant_id: selectedVariant?.id || null,
+                    variant_name: selectedVariant?.name || null,
+                    
+                    // === COLOR DETAILS (Full) ===
+                    color_id: selectedColorId || null,
+                    color_name: selectedColor?.color_name || null,
+                    color_code: selectedColor?.color_code || null,
+                    color_image: selectedColor?.color_image || null,
+                    
+                    // === SIZE DETAILS ===
+                    size_id: selectedSizeId || null,
+                    size_name: selectedSize?.size_name || null,
+                    
+                    // === DUAL BARCODE SYSTEM ===
+                    main_barcode: product.barcode || null,               // Product level barcode
+                    variant_barcode: selectedVariant?.barcode || null,   // Variant level barcode
+                    sku: selectedVariant?.sku || product.sku || null,
+                    
+                    // === CATEGORY DETAILS ===
+                    category: product.category || null,
+                    subcategory: product.subcategory || null,
+                    
+                    // === STOCK & WEIGHT ===
+                    stock: selectedVariant?.stock || product.stock || null,
+                    weight: selectedVariant?.weight || null,
+                    
+                    // === ADDITIONAL PRODUCT DETAILS ===
+                    fabric_type: product.fabric_type || null,
+                    gsm_type: product.gsm_type || null,
+                    fit_type: product.fit_type || null,
+                    gender: product.gender || null,
+                    print_type: product.print_type || null,
+                    
+                    quantity: 1
+                };
+                
+                // Send to cart
+                window.addToCart(productId, productData);
+                showToast('Added to Bag! 🎉', 'success');
+                
+                if (buyNow) {
+                    window.location.href = '/checkout';
+                }
             };
             
             window.initZoom = function(container) {
