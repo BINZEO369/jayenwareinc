@@ -1,8 +1,6 @@
-
-
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 6.1 (Luxury Edition - Double Render Protected)
+// Version: 6.2 (Full Variant Support - Color, Size, SKU, Dual Barcode)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -48,7 +46,6 @@ function applyFontVariables() {
 // SHARED CSS STYLES (Burberry Inspired High-End Minimalist Design)
 // ============================================================================
 function injectSharedStyles() {
-    // স্টাইল যেন দুইবার ইনজেক্ট না হয়
     if (document.getElementById("shared-components-style")) return;
 
     const styles = `
@@ -57,25 +54,19 @@ function injectSharedStyles() {
             --primary: #000000;
             --accent: #ffffff;
             
-            /* লিকুইড কাঁচের ফ্রস্টেড আল্ট্রা-স্বচ্ছ ব্যাকগ্রাউন্ড ফিল্টার */
             --glass-white: rgba(255, 255, 255, 0.15);
             --glass-white-thick: rgba(255, 255, 255, 0.7);
             --glass-black: rgba(0, 0, 0, 0.6);
             --glass-black-thick: rgba(0, 0, 0, 0.82);
             
-            /* লিকুইড গ্লাস বর্ডার সিস্টেম */
             --glass-border-light: rgba(255, 255, 255, 0.2);
             --glass-border-dark: rgba(0, 0, 0, 0.06);
             --glass-border-inline: rgba(255, 255, 255, 0.15);
             
-            /* অ্যাপল স্ট্যান্ডার্ড স্যাচুরেশন ফিল্টার */
             --glass-blur: blur(25px) saturate(200%);
-            
-            /* অ্যানাউন্সমেন্ট বারের হাইট ডিফল্ট */
             --bar-height: 36px;
         }
         
-        /* DYNAMIC FIX */
         html, body {
             overflow-x: hidden !important;
             width: 100% !important;
@@ -132,7 +123,6 @@ function injectSharedStyles() {
                         height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* বারটি হাইড করার আল্ট্রা-স্মুথ অ্যানিমেশন ক্লাস */
         .top-announcement-bar.bar-hidden {
             transform: translateY(-100%);
             opacity: 0;
@@ -173,7 +163,6 @@ function injectSharedStyles() {
             border-bottom: 1px solid var(--glass-border-light);
             box-shadow: none;
             
-            /* লাক্সারি স্যুইচিং অ্যানিমেশন ইফেক্ট */
             transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
                         backdrop-filter 0.4s ease, 
                         border-color 0.4s ease, 
@@ -184,7 +173,6 @@ function injectSharedStyles() {
             padding: 0 !important;
         }
 
-        /* স্ক্রল হওয়ার পর প্রিমিয়াম সলিড হোয়াইট + ফ্রস্টেড লুক */
         .glass-nav.nav-scrolled {
             top: 0 !important; 
             background: rgba(255, 255, 255, 0.85) !important;
@@ -194,7 +182,6 @@ function injectSharedStyles() {
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
         
-        /* বার রিমুভড হলে হেডার পজিশন ডিফল্ট জিরো করা */
         body.announcement-dismissed .glass-nav:not(.nav-scrolled) {
             top: 0 !important;
         }
@@ -221,7 +208,7 @@ function injectSharedStyles() {
             color: var(--primary);
         }
         
-        /* ==================== BURBERRY STYLE MINIMALIST NAVIGATION ICONS ==================== */
+        /* ==================== HEADER ICONS ==================== */
         .header-icon-btn {
             background: none;
             border: none;
@@ -306,7 +293,7 @@ function injectSharedStyles() {
         
         .side-drawer-footer { padding: 32px; border-top: 1px solid rgba(0, 0, 0, 0.05); background: rgba(255, 255, 255, 0.2); flex-shrink: 0; }
         
-        /* ==================== CART DRAWER ==================== */
+        /* ==================== CART DRAWER (Enhanced) ==================== */
         #cart-drawer {
             position: fixed; top: 0; right: 0; width: 100%; max-width: 440px; height: 100vh; height: 100dvh;
             background: var(--glass-black-thick) !important; backdrop-filter: var(--glass-blur) !important;
@@ -330,7 +317,7 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
         
-        /* ==================== FULLY DYNAMIC FOOTER ==================== */
+        /* ==================== FOOTER ==================== */
         #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; width: 100% !important; position: relative; clear: both; }
         #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
@@ -346,6 +333,27 @@ function injectSharedStyles() {
             background: var(--primary) !important; color: var(--accent) !important;
             font-size: 8px !important; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.55);
             top: -2px !important; right: -2px !important;
+        }
+        
+        /* ==================== CART ITEM VARIANT BADGE ==================== */
+        .cart-variant-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: rgba(255,255,255,0.08);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .cart-barcode-text {
+            font-family: 'Courier New', monospace;
+            font-size: 7px;
+            letter-spacing: 0.1em;
+            opacity: 0.4;
         }
     </style>
     `;
@@ -518,10 +526,9 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 }
 
 // ============================================================================
-// HEADER SYSTEM (Liquid Translucent Engine - Burberry Icons Optimized)
+// HEADER SYSTEM
 // ============================================================================
 async function renderHeader() {
-    // নিরাপত্তা চেক: যদি হেডার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
     if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) {
         return;
     }
@@ -536,14 +543,13 @@ async function renderHeader() {
     allSubcategories = subcategories;
     const menuTree = buildMenuTree(menuItems);
     
-    // Check local storage configuration for hidden state
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
     if (isBarDismissed) {
         document.body.classList.add('announcement-dismissed');
     }
 
     const headerHTML = `
-    <!-- TOP ANNOUNCEMENT BAR (স্লিম ব্ল্যাক লাইন বিজ্ঞাপন উইথ ক্লোজ টোকেন) -->
+    <!-- TOP ANNOUNCEMENT BAR -->
     <div class="top-announcement-bar ${isBarDismissed ? 'bar-hidden' : ''}" id="top-announcement-bar">
         <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
         <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
@@ -638,11 +644,9 @@ function dismissAnnouncementBar() {
         bar.classList.add('bar-hidden');
     }
     
-    // ব্রাউজারের লোকাল স্টোরেজে টোকেন সেভ করা
     localStorage.setItem('jabiyen_announcement_hidden', 'true');
     document.body.classList.add('announcement-dismissed');
     
-    // হেডারকে স্মুথলি একদম টপ জিরোতে পুশ করা যদি ইউজার স্ক্রল না করে থাকে
     if (nav && !nav.classList.contains('nav-scrolled')) {
         nav.style.top = '0px';
     }
@@ -652,7 +656,6 @@ function dismissAnnouncementBar() {
 // FOOTER & TOAST CORE SYSTEMS
 // ============================================================================
 function renderFooter() {
-    // নিরাপত্তা চেক: যদি ফুটার অলরেডি ডমে থাকে, তাহলে নতুন করে রেন্ডার করবে না
     if (document.getElementById('main-footer')) return;
 
     const footerHTML = `
@@ -741,7 +744,7 @@ function closeSideMenu() {
 }
 
 // ============================================================================
-// CART CONTROLLER & STORAGE BINDING
+// ENHANCED CART CONTROLLER - Full Variant Support (Color, Size, SKU, Dual Barcode)
 // ============================================================================
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
@@ -751,26 +754,138 @@ function toggleCart() {
     }
 }
 
-function addToCart(productId, productData) {
-    if (!productData) return;
-    const existingIndex = cart.findIndex(item => item.product_id === productData.id);
-    if (existingIndex > -1) {
-        cart[existingIndex].quantity += 1;
-    } else {
-        cart.push({ id: Date.now(), product_id: productData.id, title: productData.title, price: productData.price, img: productData.img, quantity: 1 });
+// ============================================================================
+// ADD TO CART - Enhanced with Full Variant Support
+// ============================================================================
+window.addToCart = function(productId, options = {}) {
+    /*
+    Cart Item Schema:
+    {
+      id: timestamp,
+      product_id: number,
+      title: string,
+      price: number,
+      old_price: number,
+      img: string,
+      
+      // Variant Information
+      variant_id: number | null,
+      color_id: number | null,
+      color_name: string | null,
+      color_code: string | null,
+      color_image: string | null,
+      size_id: number | null,
+      size_name: string | null,
+      
+      // Dual Barcode System
+      main_barcode: string | null,      // Product level barcode
+      variant_barcode: string | null,   // Variant level barcode
+      sku: string | null,
+      
+      category: string | null,
+      subcategory: string | null,
+      quantity: number
     }
-    saveCart();
-    showToast('Manifested in Shopping Bag! 🎉', 'success');
-}
-
-function removeFromCart(idx) {
-    cart.splice(idx, 1);
+    */
+    
+    if (!productId || !options.title) {
+        console.error('Product ID and Title are required');
+        return;
+    }
+    
+    // Check if product already exists with same variant
+    const existingIndex = cart.findIndex(item => {
+        if (item.product_id !== productId) return false;
+        
+        // If variant_id exists, match by variant
+        if (options.variant_id && item.variant_id === options.variant_id) return true;
+        
+        // If no variant_id, match by color and size
+        if (!options.variant_id && !item.variant_id) {
+            return item.color_id === (options.color_id || null) && 
+                   item.size_id === (options.size_id || null);
+        }
+        
+        return false;
+    });
+    
+    if (existingIndex > -1) {
+        cart[existingIndex].quantity += (options.quantity || 1);
+        showToast(`Updated quantity: ${cart[existingIndex].title} (${cart[existingIndex].quantity})`, 'success');
+    } else {
+        // Build variant details string for display
+        let variantParts = [];
+        if (options.color_name) variantParts.push(options.color_name);
+        if (options.size_name) variantParts.push(options.size_name);
+        const variantDisplay = variantParts.length ? ` (${variantParts.join(' • ')})` : '';
+        
+        const newItem = {
+            id: Date.now(),
+            product_id: productId,
+            title: options.title,
+            price: options.price || 0,
+            old_price: options.old_price || null,
+            img: options.img || '/logo.png',
+            
+            // Variant Information
+            variant_id: options.variant_id || null,
+            color_id: options.color_id || null,
+            color_name: options.color_name || null,
+            color_code: options.color_code || null,
+            color_image: options.color_image || null,
+            size_id: options.size_id || null,
+            size_name: options.size_name || null,
+            
+            // Dual Barcode System
+            main_barcode: options.main_barcode || options.barcode || null,
+            variant_barcode: options.variant_barcode || null,
+            sku: options.sku || null,
+            
+            category: options.category || null,
+            subcategory: options.subcategory || null,
+            
+            quantity: options.quantity || 1
+        };
+        
+        cart.push(newItem);
+        showToast(`Added to Bag: ${options.title}${variantDisplay}`, 'success');
+    }
+    
     saveCart();
     renderCartItems();
-}
+};
 
 // ============================================================================
-// RENDERING & INTERFACE MANAGEMENT
+// REMOVE FROM CART
+// ============================================================================
+window.removeFromCart = function(idx) {
+    const item = cart[idx];
+    if (!item) return;
+    
+    const itemName = item.title + (item.color_name ? ` (${item.color_name})` : '') + (item.size_name ? ` ${item.size_name}` : '');
+    if (cart.length === 1 || window.confirm(`Remove "${itemName}" from bag?`)) {
+        cart.splice(idx, 1);
+        saveCart();
+        renderCartItems();
+        showToast('Removed from Bag', 'info');
+    }
+};
+
+// ============================================================================
+// UPDATE QUANTITY
+// ============================================================================
+window.updateCartQuantity = function(idx, newQuantity) {
+    if (newQuantity < 1) {
+        removeFromCart(idx);
+        return;
+    }
+    cart[idx].quantity = newQuantity;
+    saveCart();
+    renderCartItems();
+};
+
+// ============================================================================
+// RENDER CART ITEMS - Enhanced with Full Variant Details
 // ============================================================================
 function renderCartItems() {
     const container = document.getElementById('cart-items');
@@ -779,35 +894,165 @@ function renderCartItems() {
     if (!container) return;
     
     if (!cart.length) {
-        container.innerHTML = '<p class="text-center opacity-40 py-12 text-xs tracking-wider uppercase">Bag Configuration Void</p>';
+        container.innerHTML = `
+            <div class="text-center py-12">
+                <i class="fa-regular fa-bag-shopping text-4xl opacity-20 mb-4"></i>
+                <p class="text-xs tracking-wider uppercase opacity-40">Bag Configuration Void</p>
+                <p class="text-[10px] opacity-30 mt-2">Start shopping to fill your vault</p>
+            </div>
+        `;
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
+        updateCounts();
         return;
     }
+    
     let sub = 0;
     container.innerHTML = cart.map((item, idx) => {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
-        return `<div class="flex gap-4 p-4 items-center">
-            <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl shrink-0 border border-white/10" alt="${item.title}">
+        
+        // Build variant details string
+        let variantDetails = [];
+        if (item.color_name) variantDetails.push(item.color_name);
+        if (item.size_name) variantDetails.push(item.size_name);
+        const variantText = variantDetails.length ? variantDetails.join(' • ') : '';
+        
+        // Build SKU/Barcode line (Dual Barcode)
+        let barcodeLine = [];
+        if (item.main_barcode) barcodeLine.push(`Main: ${item.main_barcode.substring(0, 8)}...`);
+        if (item.variant_barcode) barcodeLine.push(`Var: ${item.variant_barcode.substring(0, 8)}...`);
+        if (item.sku) barcodeLine.push(`SKU: ${item.sku}`);
+        const barcodeText = barcodeLine.length ? barcodeLine.join(' | ') : '';
+        
+        // Color indicator dot
+        const colorDot = item.color_code ? 
+            `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${item.color_code};border:1px solid rgba(255,255,255,0.2);flex-shrink:0;"></span>` : '';
+        
+        return `
+        <div class="flex gap-4 p-4 items-start bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm transition-all hover:bg-white/10">
+            <img src="${item.img}" class="w-16 h-16 object-cover rounded-xl shrink-0 border border-white/10" alt="${item.title}" onerror="this.src='/logo.png'">
+            
             <div class="flex-grow min-w-0">
                 <h4 class="text-xs font-bold truncate tracking-wide">${item.title}</h4>
-                <div class="flex items-center gap-3 mt-1">
-                    <p class="text-xs font-black">৳${itemTotal.toFixed(2)}</p>
-                    <span class="text-[10px] opacity-40">Qty: ${item.quantity || 1}</span>
+                
+                ${variantText ? `
+                    <div class="flex items-center gap-2 mt-0.5">
+                        ${colorDot}
+                        <span class="text-[9px] uppercase tracking-wider opacity-60">${variantText}</span>
+                    </div>
+                ` : ''}
+                
+                ${barcodeText ? `
+                    <div class="text-[7px] uppercase tracking-widest opacity-40 font-mono mt-0.5">${barcodeText}</div>
+                ` : ''}
+                
+                <div class="flex items-center gap-3 mt-1.5">
+                    <p class="text-sm font-black">৳${itemTotal.toFixed(2)}</p>
+                    ${item.old_price ? `
+                        <span class="text-[10px] line-through opacity-40">৳${(item.old_price * item.quantity).toFixed(2)}</span>
+                    ` : ''}
+                    
+                    <div class="flex items-center gap-1 ml-auto">
+                        <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) - 1})" class="text-white/40 hover:text-white transition px-2 py-0.5 text-sm">−</button>
+                        <span class="text-[10px] opacity-40 w-6 text-center">${item.quantity || 1}</span>
+                        <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) + 1})" class="text-white/40 hover:text-white transition px-2 py-0.5 text-sm">+</button>
+                    </div>
                 </div>
             </div>
-            <button onclick="removeFromCart(${idx})" class="drawer-close-btn text-neutral-400 hover:text-white shrink-0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            
+            <button onclick="removeFromCart(${idx})" class="drawer-close-btn text-neutral-400 hover:text-white shrink-0 mt-1">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>`;
     }).join('');
+    
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
     if (totalEl) totalEl.innerText = `৳${sub.toFixed(2)}`;
+    updateCounts();
 }
 
+// ============================================================================
+// CART UTILITY FUNCTIONS
+// ============================================================================
+window.getCartItemDetails = function(productId, variantId = null) {
+    const item = cart.find(item => {
+        if (item.product_id !== productId) return false;
+        if (variantId && item.variant_id !== variantId) return false;
+        return true;
+    });
+    return item || null;
+};
+
+window.isVariantInCart = function(productId, colorId, sizeId) {
+    return cart.some(item => {
+        if (item.product_id !== productId) return false;
+        if (colorId && item.color_id !== colorId) return false;
+        if (sizeId && item.size_id !== sizeId) return false;
+        return true;
+    });
+};
+
+window.getProductQuantityInCart = function(productId) {
+    return cart.filter(item => item.product_id === productId)
+               .reduce((total, item) => total + (item.quantity || 0), 0);
+};
+
+window.clearCart = function() {
+    if (cart.length === 0) return;
+    if (window.confirm('Clear all items from your bag?')) {
+        cart = [];
+        saveCart();
+        renderCartItems();
+        showToast('Bag Cleared', 'info');
+    }
+};
+
+window.getCartSummary = function() {
+    const summary = {
+        items: cart.map(item => ({
+            id: item.id,
+            product_id: item.product_id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+            variant: {
+                color: item.color_name,
+                color_code: item.color_code,
+                size: item.size_name,
+                sku: item.sku,
+                main_barcode: item.main_barcode,
+                variant_barcode: item.variant_barcode
+            },
+            total: item.price * item.quantity
+        })),
+        subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        total_items: cart.reduce((sum, item) => sum + (item.quantity || 0), 0),
+        item_count: cart.length
+    };
+    return summary;
+};
+
+// ============================================================================
+// UPDATE COUNTS - Enhanced
+// ============================================================================
 function updateCounts() {
     const cartCount = document.getElementById('cart-count');
     const wishCount = document.getElementById('wish-count');
-    if (cartCount) cartCount.innerText = cart.length;
+    
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    
+    if (cartCount) {
+        cartCount.innerText = totalItems;
+        // Animation effect
+        cartCount.style.transition = 'transform 0.2s ease';
+        cartCount.style.transform = 'scale(1.3)';
+        setTimeout(() => {
+            cartCount.style.transform = 'scale(1)';
+        }, 200);
+    }
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
@@ -816,6 +1061,9 @@ function saveCart() {
     updateCounts();
 }
 
+// ============================================================================
+// WISHLIST CONTROLLER
+// ============================================================================
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
@@ -840,7 +1088,7 @@ function toggleDrawerSubmenu(submenuId, element) {
 }
 
 // ============================================================================
-// SCROLL DETECTOR FOR DYNAMIC GLASSMORPHISM NAV
+// SCROLL DETECTOR
 // ============================================================================
 function handleNavScroll() {
     const nav = document.getElementById('main-nav');
@@ -860,14 +1108,27 @@ function handleNavScroll() {
 // ============================================================================
 // APIS & INITIALIZATION
 // ============================================================================
-window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlist = toggleWishlist;
-window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromCart = removeFromCart;
-window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
-window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
+window.showToast = showToast;
+window.hideToast = hideToast;
+window.toggleWishlist = toggleWishlist;
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.removeFromCart = removeFromCart;
+window.updateCartQuantity = updateCartQuantity;
+window.getCartItemDetails = getCartItemDetails;
+window.isVariantInCart = isVariantInCart;
+window.getProductQuantityInCart = getProductQuantityInCart;
+window.clearCart = clearCart;
+window.getCartSummary = getCartSummary;
+window.openSideMenu = openSideMenu;
+window.closeSideMenu = closeSideMenu;
+window.toggleDrawerSubmenu = toggleDrawerSubmenu;
+window.saveCart = saveCart;
+window.renderCartItems = renderCartItems;
+window.updateCounts = updateCounts;
 window.dismissAnnouncementBar = dismissAnnouncementBar;
 
 async function initSharedComponents() {
-    // যদি অলরেডি ইনিশিয়ালাইজ হয়ে থাকে, তবে কোড এখানেই এক্সিট করবে
     if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
     window.JABIYEN_COMPONENTS_INITIALIZED = true;
 
@@ -877,8 +1138,7 @@ async function initSharedComponents() {
     renderFooter();
     updateCounts();
     
-    // স্ক্রল রিয়েল-টাইম হ্যান্ডলিং সেটআপ
-    window.removeEventListener('scroll', handleNavScroll); // কোনো ডুপ্লিকেট লিসেনার থাকলে রিমুভ করা
+    window.removeEventListener('scroll', handleNavScroll);
     window.addEventListener('scroll', handleNavScroll);
     handleNavScroll(); 
 
