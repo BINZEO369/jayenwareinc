@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 6.3 (Premium Cart - Full Product Details with Color, Size, Dual Barcode, Dynamic Images)
+// Version: 7.0 (Ultra Premium Cart - Full Product Details with Color, Size, Dual Barcode, Dynamic Images)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -292,9 +292,9 @@ function injectSharedStyles() {
         
         .side-drawer-footer { padding: 32px; border-top: 1px solid rgba(0, 0, 0, 0.05); background: rgba(255, 255, 255, 0.2); flex-shrink: 0; }
         
-        /* ==================== CART DRAWER - Premium Enhanced ==================== */
+        /* ==================== CART DRAWER - ULTRA PREMIUM ==================== */
         #cart-drawer {
-            position: fixed; top: 0; right: 0; width: 100%; max-width: 440px; height: 100vh; height: 100dvh;
+            position: fixed; top: 0; right: 0; width: 100%; max-width: 480px; height: 100vh; height: 100dvh;
             background: var(--glass-black-thick) !important; backdrop-filter: var(--glass-blur) !important;
             -webkit-backdrop-filter: var(--glass-blur) !important; border-left: 1px solid var(--glass-border-inline); z-index: 210;
             transform: translateX(105%) !important; visibility: hidden;
@@ -308,15 +308,15 @@ function injectSharedStyles() {
         .custom-scroll::-webkit-scrollbar { width: 3px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         
-        /* ==================== CART ITEM - Premium Card Design ==================== */
+        /* ==================== CART ITEM - ULTRA PREMIUM CARD DESIGN ==================== */
         .cart-item-card {
             background: rgba(255, 255, 255, 0.04) !important;
             border: 1px solid rgba(255, 255, 255, 0.06) !important;
             backdrop-filter: blur(20px) !important;
             -webkit-backdrop-filter: blur(20px) !important;
             border-radius: 20px !important;
-            padding: 16px !important;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            padding: 18px !important;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
             position: relative;
             overflow: hidden;
         }
@@ -327,37 +327,54 @@ function injectSharedStyles() {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .cart-item-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
             pointer-events: none;
         }
         .cart-item-card:hover {
             background: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.12) !important;
-            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
         
         .cart-item-image {
-            width: 80px;
-            height: 80px;
+            width: 88px;
+            height: 88px;
             object-fit: cover;
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             flex-shrink: 0;
             background: rgba(255,255,255,0.05);
+            transition: transform 0.3s ease;
+        }
+        .cart-item-card:hover .cart-item-image {
+            transform: scale(1.02);
         }
         
         .cart-item-title {
             font-family: var(--font-heading);
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             color: #ffffff;
             line-height: 1.3;
+            letter-spacing: -0.01em;
         }
         
         .cart-item-variant {
             display: flex;
             align-items: center;
-            gap: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
             margin-top: 4px;
         }
         
@@ -365,15 +382,17 @@ function injectSharedStyles() {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.06);
-            padding: 2px 12px 2px 8px;
+            background: rgba(255,255,255,0.08);
+            padding: 3px 14px 3px 8px;
             border-radius: 20px;
             font-size: 9px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.75);
             font-family: var(--font-subtitle);
+            border: 1px solid rgba(255,255,255,0.04);
+            backdrop-filter: blur(10px);
         }
         
         .cart-item-variant-badge .color-dot {
@@ -382,21 +401,28 @@ function injectSharedStyles() {
             border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.15);
             flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         }
         
         .cart-item-barcode {
             font-family: 'Courier New', monospace;
             font-size: 8px;
             letter-spacing: 0.08em;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.25);
             margin-top: 3px;
+            background: rgba(255,255,255,0.03);
+            padding: 2px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.03);
         }
         
         .cart-item-price {
             font-family: var(--font-body);
             font-weight: 900;
-            font-size: 15px;
+            font-size: 16px;
             color: #ffffff;
+            letter-spacing: -0.01em;
         }
         
         .cart-item-old-price {
@@ -409,45 +435,51 @@ function injectSharedStyles() {
         .cart-item-quantity-control {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             background: rgba(255,255,255,0.06);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 2px 4px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
         .cart-item-quantity-control button {
             background: none;
             border: none;
             color: rgba(255,255,255,0.5);
             cursor: pointer;
-            padding: 2px 8px;
+            padding: 4px 10px;
             font-size: 14px;
             transition: all 0.2s ease;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-weight: 600;
         }
         .cart-item-quantity-control button:hover {
             color: #ffffff;
             background: rgba(255,255,255,0.08);
+            transform: scale(1.05);
         }
         .cart-item-quantity-control .qty-num {
-            font-size: 11px;
-            font-weight: 600;
-            min-width: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 24px;
             text-align: center;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.9);
+            font-family: var(--font-body);
         }
         
         .cart-item-remove-btn {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.15);
             cursor: pointer;
-            padding: 6px;
-            transition: all 0.2s ease;
-            border-radius: 10px;
+            padding: 8px;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            line-height: 1;
         }
         .cart-item-remove-btn:hover {
             color: #ef4444;
-            background: rgba(239,68,68,0.1);
+            background: rgba(239,68,68,0.12);
+            transform: scale(1.05);
         }
         
         .cart-item-sku-badge {
@@ -457,6 +489,46 @@ function injectSharedStyles() {
             color: rgba(255,255,255,0.25);
             letter-spacing: 0.05em;
             text-transform: uppercase;
+            background: rgba(255,255,255,0.03);
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        .cart-item-extra-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            margin-top: 4px;
+        }
+        .cart-item-extra-details span {
+            font-size: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.2);
+            font-family: var(--font-subtitle);
+            font-weight: 500;
+        }
+        .cart-item-extra-details span::before {
+            content: '•';
+            margin-right: 6px;
+            color: rgba(255,255,255,0.1);
+        }
+        .cart-item-extra-details span:first-child::before {
+            display: none;
+        }
+        
+        .cart-item-category-tag {
+            font-size: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.15);
+            font-family: var(--font-body);
+            font-weight: 500;
+            background: rgba(255,255,255,0.03);
+            padding: 1px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
         }
         
         /* ==================== TOAST ==================== */
@@ -488,24 +560,24 @@ function injectSharedStyles() {
         /* ==================== CART EMPTY STATE ==================== */
         .cart-empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
         .cart-empty-state i {
-            font-size: 48px;
-            color: rgba(255,255,255,0.08);
-            margin-bottom: 16px;
+            font-size: 56px;
+            color: rgba(255,255,255,0.06);
+            margin-bottom: 20px;
         }
         .cart-empty-state h3 {
             font-family: var(--font-heading);
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.5);
             margin-bottom: 6px;
         }
         .cart-empty-state p {
             font-family: var(--font-body);
-            font-size: 12px;
-            color: rgba(255,255,255,0.25);
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
         }
         
         /* ==================== CART CHECKOUT SUMMARY ==================== */
@@ -535,9 +607,17 @@ function injectSharedStyles() {
             color: rgba(255,255,255,0.6);
         }
         .cart-summary-total .value {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 900;
             color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+        
+        /* ==================== CART ITEM DIVIDER ==================== */
+        .cart-item-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            margin: 4px 0;
         }
     </style>
     `;
@@ -808,6 +888,10 @@ async function renderHeader() {
                     <span class="label">Subtotal</span>
                     <span class="value" id="cart-subtotal">৳ 0.00</span>
                 </div>
+                <div class="cart-summary-row">
+                    <span class="label">Items</span>
+                    <span class="value" id="cart-item-count">0</span>
+                </div>
                 <div class="cart-summary-row cart-summary-total">
                     <span class="label">Total</span>
                     <span class="value" id="cart-total">৳ 0.00</span>
@@ -947,47 +1031,6 @@ function toggleCart() {
 // ADD TO CART - Premium Full Details with Color Image Matching
 // ============================================================================
 window.addToCart = function(productId, options = {}) {
-    /*
-    Cart Item Schema - Premium Full Details:
-    {
-      id: timestamp,
-      product_id: number,
-      title: string,
-      price: number,
-      old_price: number,
-      img: string,                    // Main image or color matched image
-      
-      // === FULL VARIANT DETAILS ===
-      variant_id: number | null,
-      variant_name: string | null,
-      
-      // === COLOR DETAILS ===
-      color_id: number | null,
-      color_name: string | null,
-      color_code: string | null,
-      color_image: string | null,     // Color specific image
-      
-      // === SIZE DETAILS ===
-      size_id: number | null,
-      size_name: string | null,
-      
-      // === DUAL BARCODE SYSTEM ===
-      main_barcode: string | null,    // Product level barcode
-      variant_barcode: string | null, // Variant level barcode
-      sku: string | null,
-      
-      // === CATEGORY DETAILS ===
-      category: string | null,
-      subcategory: string | null,
-      
-      // === STOCK & PRICING ===
-      stock: number | null,
-      weight: string | null,
-      
-      quantity: number
-    }
-    */
-    
     if (!productId || !options.title) {
         console.error('Product ID and Title are required');
         return;
@@ -1009,13 +1052,11 @@ window.addToCart = function(productId, options = {}) {
         const variantName = options.color_name ? ` ${options.color_name}` : '';
         showToast(`Updated: ${cart[existingIndex].title}${variantName} × ${cart[existingIndex].quantity}`, 'success');
     } else {
-        // Build variant display name
         let variantParts = [];
         if (options.color_name) variantParts.push(options.color_name);
         if (options.size_name) variantParts.push(options.size_name);
         const variantDisplay = variantParts.length ? ` (${variantParts.join(' • ')})` : '';
         
-        // Determine the correct image - prioritize color_image, then main img
         const displayImage = options.color_image || options.img || '/logo.png';
         
         const newItem = {
@@ -1052,6 +1093,13 @@ window.addToCart = function(productId, options = {}) {
             // Stock & Pricing
             stock: options.stock || null,
             weight: options.weight || null,
+            
+            // Extra Details
+            fabric_type: options.fabric_type || null,
+            gsm_type: options.gsm_type || null,
+            fit_type: options.fit_type || null,
+            gender: options.gender || null,
+            print_type: options.print_type || null,
             
             quantity: options.quantity || 1
         };
@@ -1097,12 +1145,13 @@ window.updateCartQuantity = function(idx, newQuantity) {
 };
 
 // ============================================================================
-// RENDER CART ITEMS - Premium Full Details with Color Matching
+// RENDER CART ITEMS - ULTRA PREMIUM with ALL Details
 // ============================================================================
 function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
+    const itemCountEl = document.getElementById('cart-item-count');
     if (!container) return;
     
     if (!cart.length) {
@@ -1115,14 +1164,18 @@ function renderCartItems() {
         `;
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
+        if (itemCountEl) itemCountEl.innerText = '0';
         updateCounts();
         return;
     }
     
     let sub = 0;
+    let totalItems = 0;
+    
     container.innerHTML = cart.map((item, idx) => {
         const itemTotal = item.price * (item.quantity || 1);
         sub += itemTotal;
+        totalItems += (item.quantity || 1);
         
         // Build variant details
         let variantBadges = [];
@@ -1161,6 +1214,23 @@ function renderCartItems() {
         if (item.variant_barcode) barcodeParts.push(`Var: ${item.variant_barcode}`);
         const barcodeText = barcodeParts.length ? barcodeParts.join(' | ') : '';
         
+        // Build extra details
+        let extraDetails = [];
+        if (item.fabric_type) extraDetails.push(`Fabric: ${item.fabric_type}`);
+        if (item.fit_type) extraDetails.push(`Fit: ${item.fit_type}`);
+        if (item.gsm_type) extraDetails.push(`GSM: ${item.gsm_type}`);
+        if (item.weight) extraDetails.push(`Weight: ${item.weight}g`);
+        if (item.gender) extraDetails.push(`Gender: ${item.gender}`);
+        if (item.print_type) extraDetails.push(`Print: ${item.print_type}`);
+        const extraText = extraDetails.length ? extraDetails.join(' • ') : '';
+        
+        // Category
+        let categoryText = '';
+        if (item.category) {
+            categoryText = item.category;
+            if (item.subcategory) categoryText += ` / ${item.subcategory}`;
+        }
+        
         return `
         <div class="cart-item-card">
             <div class="flex gap-4">
@@ -1169,7 +1239,9 @@ function renderCartItems() {
                 
                 <!-- Product Info -->
                 <div class="flex-grow min-w-0">
-                    <h4 class="cart-item-title">${item.title}</h4>
+                    <div class="flex items-start justify-between gap-2">
+                        <h4 class="cart-item-title">${item.title}</h4>
+                    </div>
                     
                     <!-- Variant Badges -->
                     <div class="cart-item-variant">
@@ -1179,6 +1251,18 @@ function renderCartItems() {
                     <!-- Barcode -->
                     ${barcodeText ? `
                         <div class="cart-item-barcode">${barcodeText}</div>
+                    ` : ''}
+                    
+                    <!-- Extra Details -->
+                    ${extraText ? `
+                        <div class="cart-item-extra-details">
+                            ${extraDetails.map(d => `<span>${d}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Category -->
+                    ${categoryText ? `
+                        <div class="cart-item-category-tag">${categoryText}</div>
                     ` : ''}
                     
                     <!-- Price & Quantity -->
@@ -1211,6 +1295,7 @@ function renderCartItems() {
     
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
     if (totalEl) totalEl.innerText = `৳${sub.toFixed(2)}`;
+    if (itemCountEl) itemCountEl.innerText = totalItems;
     updateCounts();
 }
 
@@ -1272,6 +1357,14 @@ window.getCartSummary = function() {
                 main_barcode: item.main_barcode,
                 variant_barcode: item.variant_barcode
             },
+            extra: {
+                fabric: item.fabric_type,
+                fit: item.fit_type,
+                gsm: item.gsm_type,
+                weight: item.weight,
+                gender: item.gender,
+                print: item.print_type
+            },
             total: item.price * item.quantity
         })),
         subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
@@ -1292,7 +1385,6 @@ function updateCounts() {
     
     if (cartCount) {
         cartCount.innerText = totalItems;
-        // Bounce animation
         cartCount.style.transition = 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)';
         cartCount.style.transform = 'scale(1.4)';
         setTimeout(() => {
