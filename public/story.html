@@ -86,7 +86,7 @@
       100% { background-position: 200% 0; }
     }
 
-    /* ============ PAGE HEADER (First story with header_image) ============ */
+    /* HEADER SLIDER */
     .page-header {
       position: relative;
       width: 100vw;
@@ -125,7 +125,28 @@
         margin-bottom: 28px; 
       }
     }
-    .page-header .header-bg-img {
+
+    /* Header Slides Container */
+    .header-slides-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .header-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+    .header-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+    .header-slide .header-bg-img {
       position: absolute; 
       inset: 0; 
       width: 100%; 
@@ -133,17 +154,20 @@
       object-fit: cover;
       object-position: center;
       will-change: transform;
-      animation: headerZoom 20s ease-in-out infinite alternate;
       transform: translateZ(0);
       -webkit-transform: translateZ(0);
     }
-    @keyframes headerZoom { from { transform: scale(1); } to { transform: scale(1.03); } }
+    .header-slide.active .header-bg-img {
+      animation: headerZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes headerZoom { from { transform: scale(1) translateZ(0); } to { transform: scale(1.03) translateZ(0); } }
+
     .page-header .header-overlay {
-      position: absolute; inset: 0; z-index: 1;
+      position: absolute; inset: 0; z-index: 2;
       background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.75) 100%);
     }
     .page-header .header-content {
-      position: absolute; bottom: clamp(40px, 10vh, 80px); left: 50%; transform: translateX(-50%); z-index: 2;
+      position: absolute; bottom: clamp(40px, 10vh, 80px); left: 50%; transform: translateX(-50%); z-index: 3;
       text-align: center; width: 88%; max-width: 680px; padding: 0 16px;
     }
     .page-header .header-label {
@@ -156,7 +180,11 @@
       letter-spacing: 0.02em;
       opacity: 0;
       transform: translateY(8px);
-      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.45s forwards;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .page-header .header-label.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .page-header .header-title {
       font-family: 'Manrope', sans-serif;
@@ -168,11 +196,97 @@
       letter-spacing: -0.01em;
       opacity: 0;
       transform: translateY(12px);
-      animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    @keyframes heroFadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .page-header .header-title.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-    /* ============ STORY CARDS ============ */
+    /* Header Dots Navigation */
+    .header-dots-nav {
+      position: absolute;
+      bottom: clamp(16px, 3vh, 28px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .header-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      outline: none;
+      padding: 0;
+    }
+    .header-dot:hover {
+      background: rgba(255,255,255,0.7);
+      transform: scale(1.2);
+    }
+    .header-dot.active {
+      background: #ffffff;
+      width: 24px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Header Arrow Navigation */
+    .header-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 4;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .page-header:hover .header-arrow {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .header-arrow:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .header-arrow:active { transform: translateY(-50%) scale(0.9); }
+    .header-arrow-prev { left: clamp(12px, 2vw, 24px); }
+    .header-arrow-next { right: clamp(12px, 2vw, 24px); }
+    @media (max-width: 768px) {
+      .header-arrow { width: 36px; height: 36px; font-size: 12px; }
+      .header-arrow { opacity: 1; pointer-events: auto; }
+    }
+
+    /* Progress bar */
+    .header-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.6);
+      z-index: 4;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
     .story-card {
       opacity: 0;
       transform: translateY(40px);
@@ -191,7 +305,6 @@
       .story-card { margin-bottom: 36px; }
     }
 
-    /* Full-width section image */
     .story-card .story-full-image-wrap {
       position: relative;
       width: 100vw;
@@ -360,7 +473,6 @@
       font-size: 13px;
     }
 
-    /* ============ STATES ============ */
     .error-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
     .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
     .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
@@ -401,14 +513,21 @@
       <p>No stories have been published yet. Check back soon for new content.</p>
     </div>
 
-    <!-- PAGE HEADER: Shows first story with header_image -->
     <div class="page-header" id="page-header">
-      <img id="header-bg-img" src="" alt="" class="header-bg-img" />
+      <div class="header-slides-container" id="header-slides"></div>
       <div class="header-overlay"></div>
       <div class="header-content">
         <h1 class="header-title" id="header-main-title"></h1>
         <p class="header-label" id="header-label" style="display:none;"></p>
       </div>
+      <div class="header-dots-nav" id="header-dots"></div>
+      <div class="header-progress-bar" id="header-progress"></div>
+      <button class="header-arrow header-arrow-prev" id="header-arrow-prev" onclick="window.storySlider.prev()" aria-label="Previous slide">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button class="header-arrow header-arrow-next" id="header-arrow-next" onclick="window.storySlider.next()" aria-label="Next slide">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
     </div>
 
     <div id="stories-container">
@@ -510,43 +629,215 @@
         document.getElementById('page-header').classList.remove('visible');
       }
 
-      /**
-       * Update page header with first story that has header_image
-       * If no header_image found, use first story
-       */
-      function updatePageHeader(firstStory) {
+      // ==================== HEADER SLIDER ====================
+      function createHeaderSlider(headerStories) {
+        var slidesContainer = document.getElementById('header-slides');
+        var dotsContainer = document.getElementById('header-dots');
+        var titleEl = document.getElementById('header-main-title');
+        var labelEl = document.getElementById('header-label');
+        var progressBar = document.getElementById('header-progress');
         var pageHeader = document.getElementById('page-header');
-        var headerImg = document.getElementById('header-bg-img');
-        var headerLabel = document.getElementById('header-label');
-        var headerTitle = document.getElementById('header-main-title');
 
-        if (!firstStory) {
-          pageHeader.classList.remove('visible');
+        if (!headerStories || headerStories.length === 0) {
+          pageHeader.classList.add('visible');
           return;
         }
 
-        if (firstStory.header_image) {
-          headerImg.src = firstStory.header_image;
-          headerImg.alt = firstStory.header_title || '';
-          headerImg.style.display = 'block';
-          headerImg.onerror = function() {
-            this.style.display = 'none';
-          };
+        // Build slides
+        slidesContainer.innerHTML = headerStories.map(function(story, i) {
+          return '<div class="header-slide ' + (i === 0 ? 'active' : '') + '" data-index="' + i + '">' +
+            '<img class="header-bg-img" src="' + escapeHTML(story.header_image) + '" alt="' + escapeHTML(story.header_title || '') + '" onerror="this.style.display=none;" />' +
+          '</div>';
+        }).join('');
+
+        // Build dots (only if multiple slides)
+        if (headerStories.length > 1) {
+          dotsContainer.innerHTML = headerStories.map(function(_, i) {
+            return '<button class="header-dot ' + (i === 0 ? 'active' : '') + '" data-index="' + i + '" aria-label="Slide ' + (i + 1) + '"></button>';
+          }).join('');
+          dotsContainer.style.display = 'flex';
+
+          // Dot click events
+          dotsContainer.querySelectorAll('.header-dot').forEach(function(dot) {
+            dot.addEventListener('click', function() {
+              var index = parseInt(this.getAttribute('data-index'));
+              goToSlide(index);
+            });
+          });
         } else {
-          headerImg.style.display = 'none';
+          dotsContainer.style.display = 'none';
         }
 
-        if (firstStory.header_subtitle) {
-          headerLabel.textContent = firstStory.header_subtitle;
-          headerLabel.style.display = 'block';
-        } else {
-          headerLabel.textContent = '';
-          headerLabel.style.display = 'none';
+        // Arrows visibility
+        var prevArrow = document.getElementById('header-arrow-prev');
+        var nextArrow = document.getElementById('header-arrow-next');
+        if (headerStories.length <= 1) {
+          if (prevArrow) prevArrow.style.display = 'none';
+          if (nextArrow) nextArrow.style.display = 'none';
         }
 
-        headerTitle.textContent = firstStory.header_title || '';
+        var currentIndex = 0;
+        var totalSlides = headerStories.length;
+        var autoplayInterval = null;
+        var progressInterval = null;
+        var slideDuration = 6000; // 6 seconds per slide
+        var isTransitioning = false;
 
+        function updateContent(index) {
+          var story = headerStories[index];
+          
+          // Animate out
+          titleEl.classList.remove('visible');
+          labelEl.classList.remove('visible');
+          
+          setTimeout(function() {
+            titleEl.textContent = story.header_title || '';
+            if (story.header_subtitle) {
+              labelEl.textContent = story.header_subtitle;
+              labelEl.style.display = 'block';
+            } else {
+              labelEl.textContent = '';
+              labelEl.style.display = 'none';
+            }
+            
+            // Animate in
+            requestAnimationFrame(function() {
+              titleEl.classList.add('visible');
+              if (story.header_subtitle) labelEl.classList.add('visible');
+            });
+          }, 300);
+        }
+
+        function goToSlide(index) {
+          if (isTransitioning || index === currentIndex) return;
+          if (index < 0 || index >= totalSlides) return;
+
+          isTransitioning = true;
+
+          // Remove active from current
+          var currentSlide = slidesContainer.querySelector('.header-slide.active');
+          if (currentSlide) currentSlide.classList.remove('active');
+
+          // Add active to new
+          var newSlide = slidesContainer.querySelector('.header-slide[data-index="' + index + '"]');
+          if (newSlide) newSlide.classList.add('active');
+
+          // Update dots
+          var dots = dotsContainer.querySelectorAll('.header-dot');
+          dots.forEach(function(dot) { dot.classList.remove('active'); });
+          var activeDot = dotsContainer.querySelector('.header-dot[data-index="' + index + '"]');
+          if (activeDot) activeDot.classList.add('active');
+
+          // Update content
+          updateContent(index);
+
+          // Update progress
+          resetProgress();
+
+          currentIndex = index;
+
+          // Reset autoplay
+          clearAutoplay();
+          startAutoplay();
+
+          setTimeout(function() {
+            isTransitioning = false;
+          }, 600);
+        }
+
+        function startAutoplay() {
+          if (totalSlides <= 1) return;
+          clearAutoplay();
+          autoplayInterval = setInterval(function() {
+            var nextIndex = (currentIndex + 1) % totalSlides;
+            goToSlide(nextIndex);
+          }, slideDuration);
+          startProgress();
+        }
+
+        function clearAutoplay() {
+          if (autoplayInterval) {
+            clearInterval(autoplayInterval);
+            autoplayInterval = null;
+          }
+          clearProgress();
+        }
+
+        function startProgress() {
+          clearProgress();
+          if (!progressBar) return;
+          
+          progressBar.style.transition = 'none';
+          progressBar.style.width = '0%';
+          
+          var startTime = Date.now();
+          progressInterval = setInterval(function() {
+            var elapsed = Date.now() - startTime;
+            var percentage = (elapsed / slideDuration) * 100;
+            progressBar.style.transition = 'width 0.1s linear';
+            progressBar.style.width = Math.min(percentage, 100) + '%';
+          }, 50);
+        }
+
+        function clearProgress() {
+          if (progressInterval) {
+            clearInterval(progressInterval);
+            progressInterval = null;
+          }
+        }
+
+        function resetProgress() {
+          clearProgress();
+          if (progressBar) {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+          }
+          startProgress();
+        }
+
+        // Initialize
+        updateContent(0);
         pageHeader.classList.add('visible');
+        startAutoplay();
+
+        // Pause on hover
+        pageHeader.addEventListener('mouseenter', function() {
+          clearAutoplay();
+        });
+        pageHeader.addEventListener('mouseleave', function() {
+          startAutoplay();
+        });
+
+        // Touch/swipe support
+        var touchStartX = 0;
+        var touchEndX = 0;
+        pageHeader.addEventListener('touchstart', function(e) {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        pageHeader.addEventListener('touchend', function(e) {
+          touchEndX = e.changedTouches[0].screenX;
+          var diff = touchStartX - touchEndX;
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              // Swipe left - next
+              goToSlide((currentIndex + 1) % totalSlides);
+            } else {
+              // Swipe right - prev
+              goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
+            }
+          }
+        });
+
+        // Expose public API
+        window.storySlider = {
+          next: function() { goToSlide((currentIndex + 1) % totalSlides); },
+          prev: function() { goToSlide((currentIndex - 1 + totalSlides) % totalSlides); },
+          goTo: function(index) { goToSlide(index); },
+          getCurrent: function() { return currentIndex; },
+          getTotal: function() { return totalSlides; },
+          pause: function() { clearAutoplay(); },
+          resume: function() { startAutoplay(); }
+        };
       }
 
       function renderStories(stories) {
@@ -555,24 +846,13 @@
         document.getElementById('empty-state').style.display = 'none';
         document.getElementById('stories-content').style.display = 'block';
 
-        // Find first story with header_image for page header
-        var firstStoryWithImage = null;
-        for (var i = 0; i < stories.length; i++) {
-          if (stories[i].header_image) {
-            firstStoryWithImage = stories[i];
-            break;
-          }
-        }
-        if (!firstStoryWithImage) {
-          firstStoryWithImage = stories[0];
-        }
-
-        updatePageHeader(firstStoryWithImage);
+        // Collect all stories with header_image for slider
+        var headerStories = stories.filter(function(s) { return !!s.header_image; });
+        createHeaderSlider(headerStories);
 
         var container = document.getElementById('stories-content');
         container.innerHTML = '';
 
-        // Render ALL stories as cards - each shows its own content
         for (var i = 0; i < stories.length; i++) {
           var wrapper = createStoryCard(stories[i], i);
           container.appendChild(wrapper);
@@ -595,44 +875,31 @@
         card.setAttribute('data-animate', 'true');
 
         var hasSectionImage = !!story.section_image;
-        var hasHeaderImage = !!story.header_image;
         var hasCTA = !!(story.cta_text && story.cta_link);
 
         var html = '';
 
-        // Show EITHER section_image OR header_image as full-width
-        var imageToShow = story.section_image || story.header_image;
-        if (imageToShow) {
+        if (hasSectionImage) {
           html += '<div class="story-full-image-wrap has-image">';
-          html += '<img src="' + escapeHTML(imageToShow) + '" alt="' + escapeHTML(story.section_title || story.header_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" style="opacity:0;transition:opacity 0.6s ease;" onload="this.style.opacity=1;" />';
+          html += '<img src="' + escapeHTML(story.section_image) + '" alt="' + escapeHTML(story.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" style="opacity:0;transition:opacity 0.6s ease;" onload="this.style.opacity=1;" />';
           html += '</div>';
         }
 
         html += '<div class="story-content-wrap">';
         html += '<div class="story-text-col">';
 
-        // Date
         if (story.created_at) {
           html += '<div class="story-date"><i class="fa-regular fa-calendar"></i><span>' + formatDate(story.created_at) + '</span></div>';
         }
 
-        // Header subtitle as label
-        if (story.header_subtitle) {
-          html += '<p class="story-label">' + escapeHTML(story.header_subtitle) + '</p>';
+        if (story.section_title) {
+          html += '<h2 class="story-title">' + escapeHTML(story.section_title) + '</h2>';
         }
 
-        // Section title (or header_title if no section_title)
-        var displayTitle = story.section_title || story.header_title;
-        if (displayTitle) {
-          html += '<h2 class="story-title">' + escapeHTML(displayTitle) + '</h2>';
-        }
-
-        // Section subtitle
         if (story.section_subtitle) {
           html += '<p class="story-section-subtitle">' + escapeHTML(story.section_subtitle) + '</p>';
         }
 
-        // Section description
         if (story.section_description) {
           var paragraphs = story.section_description.split('\n').filter(function(p) { return p.trim(); }).map(function(p) {
             return '<p>' + escapeHTML(p.trim()) + '</p>';
@@ -640,13 +907,12 @@
           html += '<div class="story-description">' + paragraphs + '</div>';
         }
 
-        // CTA Button
         if (hasCTA) {
           html += '<a href="' + escapeHTML(story.cta_link) + '" class="story-cta">' + escapeHTML(story.cta_text) + '<span class="cta-arrow"><i class="fa-solid fa-arrow-right"></i></span></a>';
         }
 
-        html += '</div>'; // Close story-text-col
-        html += '</div>'; // Close story-content-wrap
+        html += '</div>';
+        html += '</div>';
 
         card.innerHTML = html;
 
