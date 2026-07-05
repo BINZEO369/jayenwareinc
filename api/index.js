@@ -718,6 +718,173 @@ app.get('/api/announcements', async (req, res) => {
     }
 });
 // ============================================
+// FOOTER API
+// ============================================
+
+// Get Footer Payment Methods
+app.get('/api/footer/payment-methods', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_payment_methods')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Shipping Partners
+app.get('/api/footer/shipping-partners', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_shipping_partners')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Certifications
+app.get('/api/footer/certifications', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_certifications')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer App Links
+app.get('/api/footer/app-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_app_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Countries
+app.get('/api/footer/countries', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_country_selector')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Default Country
+app.get('/api/footer/default-country', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_country_selector')
+            .select('*')
+            .eq('is_default', true)
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Trust Badges
+app.get('/api/footer/trust-badges', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_trust_badges')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Settings
+app.get('/api/footer/settings', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_settings')
+            .select('*')
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Complete Footer Data (All in one call)
+app.get('/api/footer/complete', async (req, res) => {
+    try {
+        const [
+            { data: paymentMethods },
+            { data: shippingPartners },
+            { data: certifications },
+            { data: appLinks },
+            { data: countries },
+            { data: trustBadges },
+            { data: settings }
+        ] = await Promise.all([
+            supabase.from('footer_payment_methods').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_shipping_partners').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_certifications').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_app_links').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_country_selector').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_trust_badges').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_settings').select('*').eq('is_active', true).single()
+        ]);
+        
+        res.json({
+            payment_methods: paymentMethods || [],
+            shipping_partners: shippingPartners || [],
+            certifications: certifications || [],
+            app_links: appLinks || [],
+            countries: countries || [],
+            trust_badges: trustBadges || [],
+            settings: settings || null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+// ============================================
 // PAGE ROUTES
 // ============================================
 
