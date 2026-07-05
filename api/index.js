@@ -676,6 +676,48 @@ app.get('/api/color-sizes', async (req, res) => {
 });
 
 // ============================================
+// ANNOUNCEMENT BAR API
+// ============================================
+
+// Get active announcement (সবচেয়ে সক্রিয় একটি)
+app.get('/api/announcement', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('announcement_bar')
+            .select('*')
+            .eq('is_active', true)
+            .lte('start_date', new Date().toISOString())
+            .gte('end_date', new Date().toISOString())
+            .order('created_at', { ascending: false })
+            .limit(1);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // যদি ডাটা থাকে তাহলে প্রথমটি রিটার্ন করবে, নাহলে null
+        res.json(data && data.length > 0 ? data[0] : null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all active announcements (একাধিক থাকলে)
+app.get('/api/announcements', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('announcement_bar')
+            .select('*')
+            .eq('is_active', true)
+            .lte('start_date', new Date().toISOString())
+            .gte('end_date', new Date().toISOString())
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+// ============================================
 // PAGE ROUTES
 // ============================================
 
