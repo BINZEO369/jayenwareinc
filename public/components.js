@@ -1,8 +1,6 @@
-
-
- // ============================================================================
+// ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 9.0 (Complete Footer System - 10 Tables Integration)
+// Version: 10.0 (Complete Footer System - 12 API Endpoints Integration)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -74,7 +72,7 @@ async function fetchAnnouncement() {
 }
 
 // ============================================================================
-// FOOTER DATA API FETCH
+// FOOTER DATA API FETCH - Using /api/footer/complete endpoint
 // ============================================================================
 async function fetchFooterData() {
     try {
@@ -85,6 +83,144 @@ async function fetchFooterData() {
         return data;
     } catch (error) {
         console.error('Footer data fetch error:', error);
+        return null;
+    }
+}
+
+// ============================================================================
+// Individual Footer API Fetches (for specific sections)
+// ============================================================================
+async function fetchFooterSocialLinks() {
+    try {
+        const response = await fetch('/api/footer/social-links');
+        if (!response.ok) throw new Error('Failed to fetch social links');
+        return await response.json();
+    } catch (error) {
+        console.error('Social links fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterQuickLinks() {
+    try {
+        const response = await fetch('/api/footer/quick-links');
+        if (!response.ok) throw new Error('Failed to fetch quick links');
+        return await response.json();
+    } catch (error) {
+        console.error('Quick links fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterQuickLinksTree() {
+    try {
+        const response = await fetch('/api/footer/quick-links-tree');
+        if (!response.ok) throw new Error('Failed to fetch quick links tree');
+        return await response.json();
+    } catch (error) {
+        console.error('Quick links tree fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterContent(sectionName = null) {
+    try {
+        const url = sectionName 
+            ? `/api/footer/content/${sectionName}` 
+            : '/api/footer/content';
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch footer content');
+        return await response.json();
+    } catch (error) {
+        console.error('Footer content fetch error:', error);
+        return sectionName ? null : [];
+    }
+}
+
+async function fetchFooterPaymentMethods() {
+    try {
+        const response = await fetch('/api/footer/payment-methods');
+        if (!response.ok) throw new Error('Failed to fetch payment methods');
+        return await response.json();
+    } catch (error) {
+        console.error('Payment methods fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterShippingPartners() {
+    try {
+        const response = await fetch('/api/footer/shipping-partners');
+        if (!response.ok) throw new Error('Failed to fetch shipping partners');
+        return await response.json();
+    } catch (error) {
+        console.error('Shipping partners fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterCertifications() {
+    try {
+        const response = await fetch('/api/footer/certifications');
+        if (!response.ok) throw new Error('Failed to fetch certifications');
+        return await response.json();
+    } catch (error) {
+        console.error('Certifications fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterAppLinks() {
+    try {
+        const response = await fetch('/api/footer/app-links');
+        if (!response.ok) throw new Error('Failed to fetch app links');
+        return await response.json();
+    } catch (error) {
+        console.error('App links fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterCountries() {
+    try {
+        const response = await fetch('/api/footer/countries');
+        if (!response.ok) throw new Error('Failed to fetch countries');
+        return await response.json();
+    } catch (error) {
+        console.error('Countries fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterDefaultCountry() {
+    try {
+        const response = await fetch('/api/footer/default-country');
+        if (!response.ok) throw new Error('Failed to fetch default country');
+        return await response.json();
+    } catch (error) {
+        console.error('Default country fetch error:', error);
+        return null;
+    }
+}
+
+async function fetchFooterTrustBadges() {
+    try {
+        const response = await fetch('/api/footer/trust-badges');
+        if (!response.ok) throw new Error('Failed to fetch trust badges');
+        return await response.json();
+    } catch (error) {
+        console.error('Trust badges fetch error:', error);
+        return [];
+    }
+}
+
+async function fetchFooterSettings() {
+    try {
+        const response = await fetch('/api/footer/settings');
+        if (!response.ok) throw new Error('Failed to fetch footer settings');
+        return await response.json();
+    } catch (error) {
+        console.error('Footer settings fetch error:', error);
         return null;
     }
 }
@@ -819,7 +955,7 @@ function getSocialIconHTML(platform, link) {
 }
 
 // ============================================================================
-// FOOTER - FULLY DYNAMIC (10 Tables Integration)
+// FOOTER - FULLY DYNAMIC (10 Tables + 12 API Endpoints Integration)
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
@@ -939,7 +1075,7 @@ async function renderFooter() {
                 <div>
                     <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${contactTitle}</h5>
                     <div class="space-y-2">
-                        <p class="text-[10px] opacity-60 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg><a href="mailto:${contactEmail}" class="no-underline">${contactEmail}</a></p>
+                        <p class="text-[10px] opacity-60 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 20.9 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg><a href="mailto:${contactEmail}" class="no-underline">${contactEmail}</a></p>
                         <p class="text-[10px] opacity-40 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2"/></svg><span>${contactPhone}</span></p>
                         <p class="text-[10px] opacity-40 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg><span>${contactAddress}</span></p>
                     </div>
@@ -1085,6 +1221,12 @@ window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window
 window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
 window.dismissAnnouncementBar = dismissAnnouncementBar; window.fetchAnnouncement = fetchAnnouncement;
 window.fetchFooterData = fetchFooterData; window.handleCountryChange = handleCountryChange;
+window.fetchFooterSocialLinks = fetchFooterSocialLinks; window.fetchFooterQuickLinks = fetchFooterQuickLinks;
+window.fetchFooterQuickLinksTree = fetchFooterQuickLinksTree; window.fetchFooterContent = fetchFooterContent;
+window.fetchFooterPaymentMethods = fetchFooterPaymentMethods; window.fetchFooterShippingPartners = fetchFooterShippingPartners;
+window.fetchFooterCertifications = fetchFooterCertifications; window.fetchFooterAppLinks = fetchFooterAppLinks;
+window.fetchFooterCountries = fetchFooterCountries; window.fetchFooterDefaultCountry = fetchFooterDefaultCountry;
+window.fetchFooterTrustBadges = fetchFooterTrustBadges; window.fetchFooterSettings = fetchFooterSettings;
 
 // ============================================================================
 // INITIALIZATION
