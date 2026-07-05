@@ -721,6 +721,104 @@ app.get('/api/announcements', async (req, res) => {
 // FOOTER API
 // ============================================
 
+// ============================================
+// FOOTER API (Updated with Social, Quick Links, Content)
+// ============================================
+
+// Get Footer Social Links
+app.get('/api/footer/social-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_social_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Quick Links (flat)
+app.get('/api/footer/quick-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_quick_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Footer Quick Links (tree/hierarchy)
+app.get('/api/footer/quick-links-tree', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_quick_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // Build tree
+        const buildTree = (items, parentId = null) => {
+            return items
+                .filter(item => (item.parent_id || null) === parentId)
+                .map(item => ({
+                    ...item,
+                    children: buildTree(items, item.id)
+                }));
+        };
+        
+        res.json(buildTree(data || []));
+    } catch (err) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get Footer Content
+app.get('/api/footer/content', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_content')
+            .select('*')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single Footer Content by section name
+app.get('/api/footer/content/:section', async (req, res) => {
+    try {
+        const { section } = req.params;
+        const { data, error } = await supabase
+            .from('footer_content')
+            .select('*')
+            .eq('section_name', section)
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Section not found' });
+        
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Get Footer Payment Methods
 app.get('/api/footer/payment-methods', async (req, res) => {
     try {
@@ -850,10 +948,13 @@ app.get('/api/footer/settings', async (req, res) => {
     }
 });
 
-// Get Complete Footer Data (All in one call)
+// Get Complete Footer Data (All in one call) - UPDATED
 app.get('/api/footer/complete', async (req, res) => {
     try {
         const [
+            { data: socialLinks },
+            { data: quickLinks },
+            { data: footerContent },
             { data: paymentMethods },
             { data: shippingPartners },
             { data: certifications },
@@ -862,6 +963,9 @@ app.get('/api/footer/complete', async (req, res) => {
             { data: trustBadges },
             { data: settings }
         ] = await Promise.all([
+            supabase.from('footer_social_links').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_quick_links').select('*').eq('is_active', true).order('sort_order'),
+            supabase.from('footer_content').select('*').eq('is_active', true),
             supabase.from('footer_payment_methods').select('*').eq('is_active', true).order('sort_order'),
             supabase.from('footer_shipping_partners').select('*').eq('is_active', true).order('sort_order'),
             supabase.from('footer_certifications').select('*').eq('is_active', true).order('sort_order'),
@@ -871,7 +975,21 @@ app.get('/api/footer/complete', async (req, res) => {
             supabase.from('footer_settings').select('*').eq('is_active', true).single()
         ]);
         
+        // Build quick links tree
+        const buildTree = (items, parentId = null) => {
+            return items
+                .filter(item => (item.parent_id || null) === parentId)
+                .map(item => ({
+                    ...item,
+                    children: buildTree(items, item.id)
+                }));
+        };
+        
         res.json({
+            social_links: socialLinks || [],
+            quick_links: quickLinks || [],
+            quick_links_tree: buildTree(quickLinks || []),
+            footer_content: footerContent || [],
             payment_methods: paymentMethods || [],
             shipping_partners: shippingPartners || [],
             certifications: certifications || [],
@@ -884,15 +1002,6 @@ app.get('/api/footer/complete', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// ============================================
-// PAGE ROUTES
-// ============================================
-
-// Category page (with subcategory support)
-app.get('/category/:slug*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
-});
-
 // ============================================
 // SPA FALLBACK (Must be last)
 // ============================================
