@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 7.2 (Announcement Bar API Integrated)
+// Version: 7.3 (Premium Social Icons Footer)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -570,10 +570,88 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
 
-        /* ==================== FOOTER ==================== */
-        #main-footer { background: #000000; color: #8e8e93; border-top: 1px solid #1c1c1e; width: 100% !important; position: relative; clear: both; }
-        #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
+        /* ==================== FOOTER - PREMIUM SOCIAL SECTION ==================== */
+        #main-footer {
+            background: #000000;
+            color: #8e8e93;
+            border-top: 1px solid #1c1c1e;
+            width: 100% !important;
+            position: relative;
+            clear: both;
+        }
+        #main-footer h4, #main-footer h5, #main-footer a {
+            color: var(--accent) !important;
+            transition: opacity 0.25s ease;
+        }
         #main-footer a:hover { opacity: 0.5; }
+        
+        /* Social Icons - Premium Monochrome */
+        .social-icon-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.5);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .social-icon-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .social-icon-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.15);
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .social-icon-link:hover::before {
+            opacity: 1;
+        }
+        .social-icon-link svg {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+        .social-icon-link:hover svg {
+            transform: scale(1.1);
+        }
+        
+        .social-icons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-start;
+        }
+        
+        @media (max-width: 640px) {
+            .social-icon-link {
+                width: 34px;
+                height: 34px;
+            }
+            .social-icon-link svg {
+                width: 14px;
+                height: 14px;
+            }
+            .social-icons-grid {
+                gap: 6px;
+            }
+        }
+        
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
             background: var(--primary) !important; color: var(--accent) !important; border-radius: 12px !important;
@@ -977,39 +1055,119 @@ function dismissAnnouncementBar() {
 }
 
 // ============================================================================
-// FOOTER & TOAST
+// SOCIAL ICONS - PREMIUM MONOCHROME SVG SET
+// ============================================================================
+function getSocialIconHTML(platform, link) {
+    const icons = {
+        'facebook': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        },
+        'instagram': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.908 12.2384 16.0396 11.4077 15.9059C10.5771 15.7722 9.80971 15.3801 9.21479 14.7851C8.61987 14.1902 8.2278 13.4228 8.09412 12.5922C7.96044 11.7615 8.092 10.9098 8.47026 10.1583C8.84852 9.40678 9.45418 8.7937 10.2009 8.4062C10.9477 8.0187 11.7978 7.87652 12.63 8C13.4789 8.12583 14.2648 8.52151 14.8716 9.12836C15.4785 9.73521 15.8742 10.5211 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>`
+        },
+        'youtube': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1792 5.51057 21.8387 5.15941C21.4982 4.80824 21.0708 4.55518 20.6 4.43C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92916 4.58518 2.50178 4.83824 2.16132 5.18941C1.82085 5.54057 1.57882 5.97541 1.46 6.45C1.14521 8.17418 0.991095 9.92534 1 11.68C0.991095 13.4347 1.14521 15.1858 1.46 16.91C1.57882 17.3846 1.82085 17.8194 2.16132 18.1706C2.50178 18.5218 2.92916 18.7748 3.4 18.9C5.12 19.36 12 19.36 12 19.36C12 19.36 18.88 19.36 20.6 18.9C21.0708 18.7748 21.4982 18.5218 21.8387 18.1706C22.1792 17.8194 22.4212 17.3846 22.54 16.91C22.8548 15.1858 23.0089 13.4347 23 11.68C23.0089 9.92534 22.8548 8.17418 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.68L9.75 8.34V15.02Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        },
+        'tiktok': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12V8.5C9 6.01472 11.0147 4 13.5 4H16M9 20C7.34315 20 6 18.6569 6 17C6 15.3431 7.34315 14 9 14C10.6569 14 12 15.3431 12 17V4M20 8V12C18.3431 12 17 10.6569 17 9V8H20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        },
+        'x': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" fill="currentColor"/></svg>`
+        },
+        'pinterest': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16C8 16 6 10 6 8C6 4 9 2 12 2C16 2 18 5 18 8C18 12 16 16 13 16C11 16 10 14 10 14M10 14L8 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>`
+        },
+        'threads': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M16.5 10.5C16.5 10.5 15.5 8 12 8C8.5 8 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 12 16.5C14.5 16.5 15.5 14.5 15.5 13.5C15.5 12.5 14.5 12 13 12C11.5 12 10.5 12.5 10.5 13.5C10.5 14.5 11.5 15 12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+        },
+        'whatsapp': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5C21 16.7467 16.7467 21 11.5 21C9.38318 21 7.42019 20.3098 5.86667 19.1333L2 20L2.86667 16.1333C1.69019 14.5798 1 12.6168 1 10.5C1 5.25329 5.25329 1 10.5 1C15.7467 1 20 5.25329 20 10.5V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8.5C8 8.5 8.5 7.5 9.5 7.5C10.5 7.5 11 8 11.5 9C12 10 12.5 10.5 13 11C13.5 11.5 14 12 14.5 12.5C15 13 15.5 13.5 16 14.5C16.5 15.5 16 16 16 16L15 16.5C14.5 16.5 13.5 16 13 15.5C12.5 15 11 13.5 10.5 13C10 12.5 9.5 12 9 11.5C8.5 11 8 10.5 8 9.5C8 8.5 8 8.5 8 8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`
+        },
+        'linkedin': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>`
+        },
+        'email': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        },
+        'google': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M12 6V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/></svg>`
+        },
+        'maps': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>`
+        },
+        'linktree': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2V14M12 14L8 10M12 14L16 10M12 22V18M8 18L12 14M16 18L12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="14" r="1" fill="currentColor"/></svg>`
+        },
+        'messenger': {
+            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 14.5 2.8 16.8 4.2 18.7L3.5 21.5L6.4 20.2C8.1 21.3 10.1 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 13L10 9.5L14 12.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        }
+    };
+    
+    const iconData = icons[platform];
+    if (!iconData) return null;
+    
+    return `
+        <a href="${link}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}">
+            ${iconData.svg}
+        </a>
+    `;
+}
+
+// ============================================================================
+// FOOTER WITH PREMIUM SOCIAL ICONS
 // ============================================================================
 function renderFooter() {
     if (document.getElementById('main-footer')) return;
+    
+    const socialLink = 'https://binzeo.com/sociallink';
+    const socialPlatforms = [
+        'facebook', 'instagram', 'youtube', 'tiktok', 'x', 
+        'pinterest', 'threads', 'whatsapp', 'linkedin', 
+        'email', 'google', 'maps', 'linktree', 'messenger'
+    ];
+    
+    let socialIconsHTML = socialPlatforms.map(platform => {
+        return getSocialIconHTML(platform, socialLink);
+    }).filter(html => html !== null).join('');
+    
     const footerHTML = `
     <footer class="pt-12 pb-6" id="main-footer">
         <div class="w-full px-4 lg:px-12">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                <div class="col-span-2 md:col-span-1">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="md:col-span-1">
                     <h4 class="text-sm font-bold tracking-widest mb-3">JABIYEN</h4>
-                    <p class="text-[10px] leading-relaxed mb-3 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
+                    <p class="text-[10px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
+                    <!-- Social Icons -->
+                    <div class="social-icons-grid mt-3">
+                        ${socialIconsHTML}
+                    </div>
                 </div>
                 <div>
                     <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Pipeline Links</h5>
                     <ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">
                         <li><a href="/about" class="no-underline">About Corporate</a></li>
                         <li><a href="/contact" class="no-underline">Contact Portal</a></li>
+                        <li><a href="/journal" class="no-underline">Journal</a></li>
                     </ul>
                 </div>
                 <div>
                     <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Governance</h5>
                     <ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">
                         <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
+                        <li><a href="/terms" class="no-underline">Terms Engine</a></li>
+                        <li><a href="/returns" class="no-underline">Returns Architecture</a></li>
                     </ul>
                 </div>
                 <div>
                     <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Direct Contact</h5>
                     <p class="text-[10px] opacity-60">binzeo369@outlook.com</p>
+                    <p class="text-[10px] opacity-40 mt-1">+880 1234 567890</p>
+                    <p class="text-[10px] opacity-40">Dhaka, Bangladesh</p>
                 </div>
             </div>
             <div class="border-t border-neutral-900 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-gray-600">
                 <p class="text-[8px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
-                <p class="text-[8px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine.</p>
+                <p class="text-[8px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1017,6 +1175,9 @@ function renderFooter() {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 }
 
+// ============================================================================
+// TOAST SYSTEM
+// ============================================================================
 function showToast(text, type = 'success') {
     let toast = document.getElementById('toast');
     if (!toast) {
