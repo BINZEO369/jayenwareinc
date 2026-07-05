@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 7.1 (Ultra Premium Cart - Mobile Optimized with Toggle Details)
+// Version: 7.2 (Announcement Bar API Integrated)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -10,6 +10,7 @@ let userSession = null;
 let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
+let announcementData = null;
 
 window.JABIYEN_COMPONENTS_INITIALIZED = window.JABIYEN_COMPONENTS_INITIALIZED || false;
 
@@ -39,6 +40,22 @@ function applyFontVariables() {
     root.style.setProperty('--font-heading', fonts.families.heading || 'Manrope, sans-serif');
     root.style.setProperty('--font-subtitle', fonts.families.subtitle || 'Sora, sans-serif');
     root.style.setProperty('--font-body', fonts.families.body || 'Inter, sans-serif');
+}
+
+// ============================================================================
+// ANNOUNCEMENT API FETCH
+// ============================================================================
+async function fetchAnnouncement() {
+    try {
+        const response = await fetch('/api/announcement');
+        if (!response.ok) throw new Error('Failed to fetch announcement');
+        const data = await response.json();
+        announcementData = data;
+        return data;
+    } catch (error) {
+        console.error('Announcement fetch error:', error);
+        return null;
+    }
 }
 
 // ============================================================================
@@ -83,7 +100,7 @@ function injectSharedStyles() {
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #3a3a3c; }
         
-        /* ==================== TOP ANNOUNCEMENT BAR ==================== */
+        /* ==================== TOP ANNOUNCEMENT BAR - DYNAMIC ==================== */
         .top-announcement-bar {
             background: #000000 !important;
             color: #ffffff !important;
@@ -111,6 +128,16 @@ function injectSharedStyles() {
             opacity: 0;
             height: 0 !important;
             pointer-events: none;
+        }
+        .top-announcement-bar a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: underline;
+            font-weight: 700;
+            margin-left: 6px;
+            transition: color 0.2s ease;
+        }
+        .top-announcement-bar a:hover {
+            color: #ffffff;
         }
         .announcement-close-btn {
             position: absolute;
@@ -796,30 +823,65 @@ async function renderHeader() {
         return;
     }
 
-    const [menuItems, categories, subcategories] = await Promise.all([
+    // Fetch all data including announcement
+    const [menuItems, categories, subcategories, announcement] = await Promise.all([
         fetchMenuItems(),
         fetchCategories(),
-        fetchSubcategories()
+        fetchSubcategories(),
+        fetchAnnouncement()
     ]);
     
     allCategories = categories;
     allSubcategories = subcategories;
+    announcementData = announcement;
     const menuTree = buildMenuTree(menuItems);
     
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
+    const hasAnnouncement = announcementData && announcementData.message;
+    const shouldShowBar = hasAnnouncement && !isBarDismissed;
+    
     if (isBarDismissed) {
         document.body.classList.add('announcement-dismissed');
     }
 
+    // Build announcement bar HTML dynamically from DB
+    let announcementHTML = '';
+    if (hasAnnouncement) {
+        const bgColor = announcementData.bg_color || '#000000';
+        const textColor = announcementData.text_color || '#ffffff';
+        const message = announcementData.message || '';
+        const linkUrl = announcementData.link_url || '';
+        const linkTitle = announcementData.link_title || '';
+        
+        let linkHTML = '';
+        if (linkUrl && linkTitle) {
+            linkHTML = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkTitle}</a>`;
+        }
+        
+        announcementHTML = `
+        <div class="top-announcement-bar ${shouldShowBar ? '' : 'bar-hidden'}" 
+             id="top-announcement-bar" 
+             style="background: ${bgColor} !important; color: ${textColor} !important;">
+            <span id="announcement-text">${message} ${linkHTML}</span>
+            <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        `;
+    } else {
+        // No announcement - hide bar completely
+        document.body.classList.add('announcement-dismissed');
+        announcementHTML = `
+        <div class="top-announcement-bar bar-hidden" id="top-announcement-bar">
+            <span id="announcement-text"></span>
+        </div>
+        `;
+    }
+
     const headerHTML = `
-    <div class="top-announcement-bar ${isBarDismissed ? 'bar-hidden' : ''}" id="top-announcement-bar">
-        <span id="announcement-text">Sign up today and get 15% off your architecture collection order</span>
-        <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-    </div>
+    ${announcementHTML}
 
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
@@ -903,7 +965,7 @@ async function renderHeader() {
 }
 
 // ============================================================================
-// ANNOUNCEMENT LOGIC
+// ANNOUNCEMENT LOGIC - Updated to handle DB data
 // ============================================================================
 function dismissAnnouncementBar() {
     const bar = document.getElementById('top-announcement-bar');
@@ -1373,12 +1435,15 @@ function handleNavScroll() {
     const nav = document.getElementById('main-nav');
     if (!nav) return;
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
+    const hasAnnouncement = announcementData && announcementData.message;
+    const barHeight = (hasAnnouncement && !isBarDismissed) ? '36px' : '0px';
+    
     if (window.scrollY > 20) {
         nav.classList.add('nav-scrolled');
         nav.style.top = '0px';
     } else {
         nav.classList.remove('nav-scrolled');
-        nav.style.top = isBarDismissed ? '0px' : '36px';
+        nav.style.top = barHeight;
     }
 }
 
@@ -1406,6 +1471,7 @@ window.saveCart = saveCart;
 window.renderCartItems = renderCartItems;
 window.updateCounts = updateCounts;
 window.dismissAnnouncementBar = dismissAnnouncementBar;
+window.fetchAnnouncement = fetchAnnouncement;
 
 async function initSharedComponents() {
     if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
