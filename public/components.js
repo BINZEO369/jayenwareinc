@@ -845,9 +845,9 @@ async function renderFooter() {
         quickLinksColumn3HTML = renderSection(col2);
     }
 
-    // ======================== FOOTER CONTENT (brand & contact) ========================
-    const brandSection = footerData.footer_content?.find(c => c.section_name === 'brand') || {};
-    const contactSection = footerData.footer_content?.find(c => c.section_name === 'contact') || {};
+    // ======================== FOOTER CONTENT ========================
+    const brandSection = footerData.footer_content?.find(c => c.section_name === 'brand') || null;
+    const contactSection = footerData.footer_content?.find(c => c.section_name === 'contact') || null;
 
     // ======================== PAYMENT METHODS ========================
     let paymentMethodsHTML = '';
@@ -903,18 +903,25 @@ async function renderFooter() {
         <div class="w-full px-4 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
                 <div class="md:col-span-1">
-                    ${brandSection.title ? `<div class="flex items-center gap-2.5 mb-3"><img src="${brandSection.logo_url || '/logo.png'}" class="w-7 h-7 rounded-lg" alt="${brandSection.title}"><h4 class="text-sm font-bold tracking-widest">${brandSection.title}</h4></div>` : ''}
+                    ${brandSection ? `
+                    <div class="flex items-center gap-2.5 mb-3">
+                        ${brandSection.logo_url ? `<img src="${brandSection.logo_url}" class="w-7 h-7 rounded-lg" alt="${brandSection.title || 'Logo'}">` : ''}
+                        ${brandSection.title ? `<h4 class="text-sm font-bold tracking-widest">${brandSection.title}</h4>` : ''}
+                    </div>
                     ${brandSection.description ? `<p class="text-[10px] leading-relaxed mb-4 opacity-50">${brandSection.description}</p>` : ''}
+                    ` : ''}
                     ${socialIconsHTML ? `<div class="social-icons-grid mt-3">${socialIconsHTML}</div>` : ''}
                     ${paymentMethodsHTML}${shippingPartnersHTML}${certificationsHTML}${countrySelectorHTML}${appLinksHTML}
                 </div>
                 <div>${quickLinksColumn2HTML}</div>
                 <div>${quickLinksColumn3HTML}</div>
                 <div>
+                    ${contactSection ? `
                     ${contactSection.title ? `<h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${contactSection.title}</h5>` : ''}
                     <div class="space-y-2">
                         ${contactSection.description ? `<p class="text-[10px] opacity-60 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 20.9 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg><a href="mailto:${contactSection.description}" class="no-underline">${contactSection.description}</a></p>` : ''}
                     </div>
+                    ` : ''}
                 </div>
             </div>
             ${trustBadgesHTML}
