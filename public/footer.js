@@ -56,14 +56,14 @@ function injectFooterStyles() {
 
         /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
-            max-width: 160px;
-            width: 100%;
+            max-width: 80px;
+            width: 40%;
             height: auto;
             margin-bottom: 20px;
             border-radius: 4px;
             display: block;
             object-fit: contain;
-            filter: brightness(0.9);
+            filter: brightness(0.95);
             transition: filter 0.3s ease;
         }
         
