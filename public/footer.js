@@ -1,6 +1,6 @@
 // ============================================================================
 // footer.js - Professional Premium Footer Component
-// Version: 2.1 (Fully Synchronized with 11-Table Database Architecture)
+// Version: 2.2 (Fully Synchronized with 11-Table Database Architecture & Fixed Content)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -55,15 +55,18 @@ function injectFooterStyles() {
 
         /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
-            max-width: 140px;
-            margin-bottom: 20px;
+            max-width: 220px; /* লোগো বড় করে সুন্দরভাবে দেখানোর জন্য সাইজ বাড়ানো হয়েছে */
+            width: 100%;
+            height: auto;
+            margin-bottom: 24px;
             border-radius: 4px;
             display: block;
+            object-fit: contain;
         }
         
         .footer-brand-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 1.5rem;
+            font-size: 1.75rem; /* টাইটেলের সাইজ সামান্য বাড়ানো হয়েছে */
             font-weight: 800;
             letter-spacing: 0.05em;
             margin-bottom: 12px;
@@ -72,10 +75,11 @@ function injectFooterStyles() {
         }
         
         .footer-brand-desc {
-            font-size: 0.875rem;
-            opacity: 0.75;
+            font-size: 0.95rem; /* ডেসক্রিপশনের ফন্ট সাইজ দৃশ্যমান করার জন্য বাড়ানো হয়েছে */
+            opacity: 0.85;
             margin-bottom: 24px;
             max-width: 320px;
+            line-height: 1.7;
         }
 
         /* ==================== 2. SOCIAL LINKS ==================== */
@@ -114,7 +118,7 @@ function injectFooterStyles() {
         /* ==================== 3 & 4. MENUS ==================== */
         .footer-section-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -143,8 +147,8 @@ function injectFooterStyles() {
         
         .footer-links-list > li {
             margin-bottom: 14px;
-            font-size: 0.875rem;
-            opacity: 0.8;
+            font-size: 0.9rem;
+            opacity: 0.85;
         }
         
         .footer-link-desc {
@@ -164,7 +168,7 @@ function injectFooterStyles() {
         
         .footer-nested-links > li {
             margin-bottom: 8px;
-            font-size: 0.8125rem;
+            font-size: 0.85rem;
         }
 
         /* ==================== 5. PAYMENT METHODS ==================== */
@@ -257,14 +261,14 @@ function injectFooterStyles() {
         
         .footer-app-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
-        /* ==================== 9. COUNTRY SELECTOR (UPDATED) ==================== */
+        /* ==================== 9. COUNTRY SELECTOR ==================== */
         .footer-country-wrapper {
             background: rgba(0, 0, 0, 0.3);
             padding: 12px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: 20px;
-            display: block; /* Ensure it takes full width of container */
+            display: block; 
             width: 100%;
             max-width: 320px;
         }
@@ -307,8 +311,15 @@ function injectFooterStyles() {
             align-items: flex-start;
             gap: 12px;
             margin-bottom: 14px;
-            font-size: 0.875rem;
-            opacity: 0.85;
+            font-size: 0.95rem; /* কন্টাক্ট ইনফো বড় ও স্পষ্ট করা হয়েছে */
+            opacity: 0.9;
+        }
+        .footer-contact-item a {
+            font-weight: 500;
+        }
+        .footer-contact-icon {
+            font-size: 1.1rem;
+            margin-top: 2px;
         }
 
         /* ==================== 11. BOTTOM BAR ==================== */
@@ -320,8 +331,8 @@ function injectFooterStyles() {
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            font-size: 0.75rem;
-            opacity: 0.6;
+            font-size: 0.85rem;
+            opacity: 0.7;
         }
         
         @media (min-width: 768px) {
@@ -331,6 +342,7 @@ function injectFooterStyles() {
         .footer-layout-centered .footer-grid { text-align: center; }
         .footer-layout-centered .footer-section-title::after { left: 50%; transform: translateX(-50%); }
         .footer-layout-centered .footer-country-wrapper { margin: 20px auto 0; }
+        .footer-layout-centered .footer-contact-item { justify-content: center; }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
@@ -369,10 +381,23 @@ async function renderFooter() {
         const layoutStyle = settings.layout_style || 'standard';
         const customCSS = settings.custom_css || '';
         
-        // --- Table 4: Content Processing ---
-        const brand = content.find(c => c.section_name === 'brand') || {};
-        const info = content.find(c => c.section_name === 'info') || {};
-        const contact = content.find(c => c.section_name === 'contact') || {};
+        // --- Table 4: Robust Content Processing ---
+        // section_name এর উপর নির্ভর না করে ডাটাবেসের সব কন্টেন্ট একসাথে মার্জ করা হলো
+        let mergedContent = {};
+        if (Array.isArray(content) && content.length > 0) {
+            content.forEach(item => {
+                mergedContent = { ...mergedContent, ...item };
+            });
+        }
+        
+        const logoUrl = mergedContent.logo_url || '';
+        const brandTitle = mergedContent.title || '';
+        const brandDesc = mergedContent.description || '';
+        const address = mergedContent.address || '';
+        const phone = mergedContent.phone || '';
+        const email = mergedContent.email || '';
+        const workingHours = mergedContent.working_hours || '';
+        const defaultCopyright = settings.copyright_text || mergedContent.copyright_text || '© JayenWare. All Rights Reserved.';
 
         // --- Table 1: Social Links ---
         let socialsHTML = '';
@@ -400,16 +425,14 @@ async function renderFooter() {
                 }).join('') + `</div>`;
         }
 
-        // --- Table 9: Country Selector (UPDATED ROBUST LOGIC) ---
+        // --- Table 9: Country Selector ---
         let countryHTML = '';
         let dirAttribute = 'ltr';
         
-        // 'settings.show_country_selector' এর কন্ডিশন বাধ্যবাধকতা সরিয়ে সরাসরি ডাটা চেক করা হলো
         if (countries && countries.length > 0) {
             const defaultCountry = countries.find(c => c.is_default) || countries[0];
             if (defaultCountry && defaultCountry.is_rtl) dirAttribute = 'rtl';
             
-            // Exchange rate check (To avoid showing undefined)
             let exchangeRateHTML = '';
             if (defaultCountry && defaultCountry.exchange_rate && defaultCountry.exchange_rate !== 1) {
                 const symbol = defaultCountry.currency_symbol || defaultCountry.currency_code || '';
@@ -523,13 +546,13 @@ async function renderFooter() {
                 <div class="footer-grid">
                     
                     <div>
-                        ${brand.logo_url ? `<img src="${brand.logo_url}" alt="${brand.title || 'Brand'}" class="footer-brand-logo">` : ''}
-                        ${brand.title ? `<h4 class="footer-brand-title">${brand.title}</h4>` : ''}
-                        <p class="footer-brand-desc">${brand.description || info.description || ''}</p>
+                        ${logoUrl ? `<img src="${logoUrl}" alt="${brandTitle || 'Brand'}" class="footer-brand-logo">` : ''}
+                        ${brandTitle ? `<h4 class="footer-brand-title">${brandTitle}</h4>` : ''}
+                        ${brandDesc ? `<p class="footer-brand-desc">${brandDesc}</p>` : ''}
                         
                         ${socialsHTML}
                         ${appsHTML}
-                        ${countryHTML} <!-- Country HTML Injected Here -->
+                        ${countryHTML}
                     </div>
                     
                     ${menusHTML}
@@ -537,10 +560,10 @@ async function renderFooter() {
                     <div>
                         <h5 class="footer-section-title">Contact & Trust</h5>
                         <div style="margin-bottom: 24px;">
-                            ${contact.address ? `<div class="footer-contact-item">📍 <span>${contact.address}</span></div>` : ''}
-                            ${contact.phone ? `<div class="footer-contact-item">☎ <span><a href="tel:${contact.phone}">${contact.phone}</a></span></div>` : ''}
-                            ${contact.email ? `<div class="footer-contact-item">✉ <span><a href="mailto:${contact.email}">${contact.email}</a></span></div>` : ''}
-                            ${contact.working_hours ? `<div class="footer-contact-item">🕐 <span>${contact.working_hours}</span></div>` : ''}
+                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span> <span>${address}</span></div>` : ''}
+                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
+                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
+                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span> <span>${workingHours}</span></div>` : ''}
                         </div>
                         
                         ${(trustHTML || certsHTML || shippingHTML) ? `
@@ -555,8 +578,8 @@ async function renderFooter() {
                 </div>
                 
                 <div class="footer-bottom-bar">
-                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" style="color: #fff; font-weight: bold;">BINZEO Infrastructure</a> v${settings.version || '2.1'}</p>
-                    <p>${settings.copyright_text || brand.copyright_text || '© JayenWare. All Rights Reserved.'}</p>
+                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" style="color: #fff; font-weight: bold;">BINZEO Infrastructure</a> v${settings.version || '2.2'}</p>
+                    <p>${defaultCopyright}</p>
                 </div>
             </div>
         </footer>
