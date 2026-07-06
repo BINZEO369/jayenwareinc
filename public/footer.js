@@ -1,7 +1,9 @@
 // ============================================================================
 // footer.js - Professional Premium Footer Component
-// Version: 2.3 (Refined Design - Fashion Brand Inspired)
+// Version: 2.4 (Ultra Responsive - Mobile & Desktop Optimized)
 // Brand: JABIYEN (Premium Apparel)
+// Description: Fully responsive footer with compact typography, mobile-first
+//              two-column layout for smaller screens, and refined fashion aesthetics.
 // ============================================================================
 
 function injectFooterStyles() {
@@ -17,9 +19,16 @@ function injectFooterStyles() {
             z-index: 10;
             background-color: var(--footer-bg, #0a0a0a);
             color: var(--footer-text, #b0b0b0);
-            line-height: 1.5;
+            line-height: 1.4;
             width: 100%;
             letter-spacing: 0.01em;
+            box-sizing: border-box;
+        }
+        
+        #main-footer *,
+        #main-footer *::before,
+        #main-footer *::after {
+            box-sizing: border-box;
         }
         
         #main-footer a {
@@ -36,31 +45,42 @@ function injectFooterStyles() {
         /* ==================== MAIN GRID ==================== */
         .footer-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px 40px;
-            padding-bottom: 32px;
+            grid-template-columns: 1fr 1fr; /* মোবাইলে দুই কলাম */
+            gap: 20px 16px;
+            padding-bottom: 24px;
         }
         
-        @media (min-width: 768px) {
+        /* খুব ছোট মোবাইলে এক কলাম */
+        @media (max-width: 380px) {
             .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
         }
         
+        /* ট্যাবলেট */
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 28px 24px;
+            }
+        }
+        
+        /* ডেস্কটপ */
         @media (min-width: 1024px) {
             .footer-grid {
-                grid-template-columns: 1.8fr 1.2fr 1.2fr 1.8fr;
-                gap: 40px;
+                grid-template-columns: 1.8fr 1fr 1fr 1.8fr;
+                gap: 32px;
             }
         }
 
         /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
-            max-width: 80px;
-            width: 40%;
+            max-width: 120px;
+            width: 100%;
             height: auto;
-            margin-bottom: 20px;
-            border-radius: 4px;
+            margin-bottom: 14px;
+            border-radius: 3px;
             display: block;
             object-fit: contain;
             filter: brightness(0.95);
@@ -73,21 +93,21 @@ function injectFooterStyles() {
         
         .footer-brand-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
-            margin-bottom: 10px;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
             text-transform: uppercase;
             color: #ffffff;
-            line-height: 1.3;
+            line-height: 1.2;
         }
         
         .footer-brand-desc {
-            font-size: 0.8125rem;
-            opacity: 0.7;
-            margin-bottom: 20px;
-            max-width: 300px;
-            line-height: 1.6;
+            font-size: 0.6875rem;
+            opacity: 0.65;
+            margin-bottom: 16px;
+            max-width: 100%;
+            line-height: 1.5;
             font-weight: 350;
         }
 
@@ -95,16 +115,16 @@ function injectFooterStyles() {
         .social-icons-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
         
         .social-icon-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 34px;
-            height: 34px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -119,30 +139,31 @@ function injectFooterStyles() {
             color: #ffffff;
         }
         
-        .social-icon-link svg, .social-icon-link img {
-            width: 16px;
-            height: 16px;
+        .social-icon-link svg, 
+        .social-icon-link img {
+            width: 14px;
+            height: 14px;
             object-fit: contain;
         }
 
         /* ==================== SECTION TITLES & DESCRIPTIONS ==================== */
         .footer-section-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
             font-weight: 600;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            margin-bottom: 16px;
-            color: #8a8a8a;
+            margin-bottom: 10px;
+            color: #7a7a7a;
             position: relative;
             padding-bottom: 0;
         }
         
         .footer-section-desc {
-            font-size: 0.7rem;
-            opacity: 0.5;
-            margin-top: -12px;
-            margin-bottom: 16px;
+            font-size: 0.625rem;
+            opacity: 0.45;
+            margin-top: -8px;
+            margin-bottom: 10px;
             font-style: italic;
             display: block;
         }
@@ -155,9 +176,9 @@ function injectFooterStyles() {
         }
         
         .footer-links-list > li {
-            margin-bottom: 10px;
-            font-size: 0.8125rem;
-            opacity: 0.8;
+            margin-bottom: 7px;
+            font-size: 0.6875rem;
+            opacity: 0.75;
             transition: opacity 0.2s;
         }
         
@@ -167,38 +188,38 @@ function injectFooterStyles() {
         
         .footer-link-desc {
             display: block;
-            font-size: 0.6875rem;
-            opacity: 0.5;
-            margin-top: 2px;
+            font-size: 0.6rem;
+            opacity: 0.45;
+            margin-top: 1px;
             font-style: italic;
         }
 
         .footer-nested-links {
             list-style: none;
-            padding-left: 14px;
-            margin-top: 8px;
-            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            padding-left: 12px;
+            margin-top: 6px;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .footer-nested-links > li {
-            margin-bottom: 6px;
-            font-size: 0.75rem;
-            opacity: 0.7;
+            margin-bottom: 5px;
+            font-size: 0.65rem;
+            opacity: 0.65;
         }
 
         /* ==================== 5. PAYMENT METHODS ==================== */
         .footer-payment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
-            margin-bottom: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 6px;
+            margin-bottom: 12px;
         }
         
         .footer-payment-item {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 8px 6px;
-            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 4px;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -213,9 +234,21 @@ function injectFooterStyles() {
             border-color: rgba(255, 255, 255, 0.15);
         }
         
-        .footer-payment-icon { height: 20px; margin-bottom: 4px; object-fit: contain; }
-        .footer-payment-name { font-size: 0.65rem; font-weight: 500; opacity: 0.8; }
-        .footer-payment-account { font-size: 0.6rem; opacity: 0.5; margin-top: 2px; }
+        .footer-payment-icon { 
+            height: 16px; 
+            margin-bottom: 3px; 
+            object-fit: contain; 
+        }
+        .footer-payment-name { 
+            font-size: 0.6rem; 
+            font-weight: 500; 
+            opacity: 0.8; 
+        }
+        .footer-payment-account { 
+            font-size: 0.55rem; 
+            opacity: 0.45; 
+            margin-top: 1px; 
+        }
         
         .footer-qr-tooltip {
             position: absolute;
@@ -223,84 +256,103 @@ function injectFooterStyles() {
             left: 50%;
             transform: translateX(-50%);
             background: #ffffff;
-            padding: 4px;
-            border-radius: 6px;
+            padding: 3px;
+            border-radius: 4px;
             display: none;
             box-shadow: 0 6px 16px rgba(0,0,0,0.4);
             z-index: 20;
         }
-        .footer-payment-item:hover .footer-qr-tooltip { display: block; }
-        .footer-qr-tooltip img { width: 70px; height: 70px; }
+        .footer-payment-item:hover .footer-qr-tooltip { 
+            display: block; 
+        }
+        .footer-qr-tooltip img { 
+            width: 60px; 
+            height: 60px; 
+        }
 
         /* ==================== 6, 7 & 10. BADGES ==================== */
         .footer-mini-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 20px;
+            gap: 4px;
+            margin-bottom: 14px;
         }
         
         .footer-badge-box {
             background: rgba(255, 255, 255, 0.03);
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 4px 8px;
+            border-radius: 3px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            gap: 5px;
+            font-size: 0.625rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         
-        .footer-badge-box img { max-height: 20px; object-fit: contain; }
-        .badge-text-wrapper { display: flex; flex-direction: column; }
-        .badge-subtitle { font-size: 0.6rem; opacity: 0.5; }
+        .footer-badge-box img { 
+            max-height: 16px; 
+            object-fit: contain; 
+        }
+        .badge-text-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .badge-subtitle { 
+            font-size: 0.55rem; 
+            opacity: 0.45; 
+        }
 
         /* ==================== 8. APP LINKS ==================== */
         .footer-app-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
         
         .footer-app-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 14px;
-            border-radius: 6px;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 10px;
+            border-radius: 4px;
             font-weight: 500;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             transition: background 0.25s;
         }
         
-        .footer-app-btn:hover { background: rgba(255, 255, 255, 0.12); }
-        .footer-app-btn img { width: 18px; height: 18px; }
+        .footer-app-btn:hover { 
+            background: rgba(255, 255, 255, 0.12); 
+        }
+        .footer-app-btn img { 
+            width: 14px; 
+            height: 14px; 
+        }
 
         /* ==================== 9. COUNTRY SELECTOR ==================== */
         .footer-country-wrapper {
             background: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            margin-top: 16px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 10px;
             display: block; 
             width: 100%;
-            max-width: 280px;
+            max-width: 100%;
         }
         
         .footer-country-select {
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            color: #d0d0d0;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 8px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            color: #c0c0c0;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 8px;
+            border-radius: 3px;
+            font-size: 0.65rem;
             outline: none;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             cursor: pointer;
         }
         
@@ -311,58 +363,92 @@ function injectFooterStyles() {
         .footer-country-select option { 
             background: #1a1a1a; 
             color: #e0e0e0; 
-            padding: 8px;
+            padding: 6px;
         }
         
         .footer-exchange-rate { 
-            font-size: 0.65rem; 
-            opacity: 0.6; 
+            font-size: 0.6rem; 
+            opacity: 0.55; 
             color: #909090;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
 
         /* ==================== CONTACT INFO ==================== */
         .footer-contact-item {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 0.8125rem;
-            opacity: 0.8;
+            gap: 8px;
+            margin-bottom: 7px;
+            font-size: 0.6875rem;
+            opacity: 0.75;
         }
         .footer-contact-item a {
             font-weight: 400;
         }
         .footer-contact-icon {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             margin-top: 1px;
-            opacity: 0.7;
+            opacity: 0.65;
         }
 
         /* ==================== 11. BOTTOM BAR ==================== */
         .footer-bottom-bar {
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            margin-top: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
-            font-size: 0.75rem;
-            opacity: 0.5;
+            gap: 6px;
+            font-size: 0.65rem;
+            opacity: 0.45;
         }
         
         @media (min-width: 768px) {
-            .footer-bottom-bar { flex-direction: row; }
+            .footer-bottom-bar { 
+                flex-direction: row; 
+            }
         }
 
-        .footer-layout-centered .footer-grid { text-align: center; }
-        .footer-layout-centered .footer-section-title::after { left: 50%; transform: translateX(-50%); }
-        .footer-layout-centered .footer-country-wrapper { margin: 16px auto 0; }
-        .footer-layout-centered .footer-contact-item { justify-content: center; }
-        .footer-layout-centered .footer-brand-desc { margin-left: auto; margin-right: auto; }
+        /* ==================== CENTERED LAYOUT OVERRIDES ==================== */
+        .footer-layout-centered .footer-grid { 
+            text-align: center; 
+        }
+        .footer-layout-centered .footer-section-title::after { 
+            left: 50%; 
+            transform: translateX(-50%); 
+        }
+        .footer-layout-centered .footer-country-wrapper { 
+            margin: 10px auto 0; 
+        }
+        .footer-layout-centered .footer-contact-item { 
+            justify-content: center; 
+        }
+        .footer-layout-centered .footer-brand-desc { 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        
+        /* মোবাইল সেন্টার্ড লেআউটের জন্যও দুই কলাম ঠিক রাখা */
+        @media (max-width: 767px) {
+            .footer-layout-centered .footer-contact-item {
+                justify-content: flex-start;
+            }
+        }
+        
+        /* ==================== UTILITY CLASSES ==================== */
+        .footer-full-width-mobile {
+            grid-column: 1 / -1;
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-full-width-mobile {
+                grid-column: auto;
+            }
+        }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
@@ -527,7 +613,7 @@ async function renderFooter() {
         // --- Table 6, 7 & 10: Trust Badges, Certs, Shipping ---
         let trustHTML = '';
         if (trustBadges && trustBadges.length > 0) {
-            trustHTML += `<div style="margin-bottom: 12px;"><h5 class="footer-section-title" style="margin-bottom: 8px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
+            trustHTML += `<div style="margin-bottom: 10px;"><h5 class="footer-section-title" style="margin-bottom: 6px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 6px;">` +
                 trustBadges.sort((a, b) => a.sort_order - b.sort_order).map(badge => `
                 <div class="footer-badge-box">
                     ${badge.badge_url ? `<img src="${badge.badge_url}" alt="${badge.title}">` : ''}
@@ -541,7 +627,7 @@ async function renderFooter() {
         
         let certsHTML = '';
         if (certifications && certifications.length > 0) {
-            certsHTML += `<div style="margin-bottom: 12px;"><h5 class="footer-section-title" style="margin-bottom: 8px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
+            certsHTML += `<div style="margin-bottom: 10px;"><h5 class="footer-section-title" style="margin-bottom: 6px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 6px;">` +
                 certifications.sort((a, b) => a.sort_order - b.sort_order).map(cert => `
                 <div class="footer-badge-box">
                     ${cert.link_url ? `<a href="${cert.link_url}" target="_blank">` : ''}
@@ -553,7 +639,7 @@ async function renderFooter() {
 
         let shippingHTML = '';
         if (shippingPartners && shippingPartners.length > 0) {
-            shippingHTML += `<div style="margin-bottom: 12px;"><h5 class="footer-section-title" style="margin-bottom: 8px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
+            shippingHTML += `<div style="margin-bottom: 10px;"><h5 class="footer-section-title" style="margin-bottom: 6px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 6px;">` +
                 shippingPartners.sort((a, b) => a.sort_order - b.sort_order).map(ship => `
                 <div class="footer-badge-box" title="${ship.name}">
                     ${ship.icon_url ? `<img src="${ship.icon_url}" alt="${ship.name}">` : `<span>${ship.name}</span>`}
@@ -565,11 +651,12 @@ async function renderFooter() {
         const layoutClass = layoutStyle === 'centered' ? 'footer-layout-centered' : '';
         
         const footerHTML = `
-        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 40px 20px 20px;" dir="${dirAttribute}">
+        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 28px 16px 16px;" dir="${dirAttribute}">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
             <div style="width: 100%; max-width: 1200px; margin: 0 auto;">
                 <div class="footer-grid">
                     
+                    <!-- ব্র্যান্ড ও কানেক্ট সেকশন - মোবাইলে দুই কলামের প্রথম কলাম -->
                     <div>
                         ${logoUrl ? `<img src="${logoUrl}" alt="${brandTitle || 'Brand Logo'}" class="footer-brand-logo">` : ''}
                         ${brandTitle ? `<h4 class="footer-brand-title">${brandTitle}</h4>` : ''}
@@ -583,16 +670,15 @@ async function renderFooter() {
                         ${countryHTML}
                     </div>
                     
-                    ${menusHTML}
-                    
+                    <!-- কন্টাক্ট ও ট্রাস্ট সেকশন - মোবাইলে দুই কলামের দ্বিতীয় কলাম -->
                     <div>
                         <h5 class="footer-section-title">Get in Touch</h5>
                         <span class="footer-section-desc">We're here to help</span>
-                        <div style="margin-bottom: 20px;">
-                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${address}</span></div>` : ''}
-                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
-                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
-                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${workingHours}</span></div>` : ''}
+                        <div style="margin-bottom: 14px;">
+                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span> <span>${address}</span></div>` : ''}
+                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
+                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
+                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span> <span>${workingHours}</span></div>` : ''}
                         </div>
                         
                         ${trustHTML}
@@ -601,10 +687,13 @@ async function renderFooter() {
                         
                         ${paymentsHTML}
                     </div>
+                    
+                    <!-- মেনু সেকশনগুলো - মোবাইলে পূর্ণ প্রস্থ, ডেস্কটপে নিজস্ব কলাম -->
+                    ${menusHTML}
                 </div>
                 
                 <div class="footer-bottom-bar">
-                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ccc; font-weight: 500;">BINZEO</a> v${settings.version || '2.3'}</p>
+                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ccc; font-weight: 500;">BINZEO</a> v${settings.version || '2.4'}</p>
                     <p>${defaultCopyright}</p>
                 </div>
             </div>
