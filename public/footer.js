@@ -1,6 +1,6 @@
 // ============================================================================
 // footer.js - Professional Premium Footer Component
-// Version: 2.0 (Fully Synchronized with 11-Table Database Architecture)
+// Version: 2.1 (Fully Synchronized with 11-Table Database Architecture)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -18,6 +18,7 @@ function injectFooterStyles() {
             background-color: var(--footer-bg, #121212);
             color: var(--footer-text, #e0e0e0);
             line-height: 1.6;
+            width: 100%;
         }
         
         #main-footer a {
@@ -46,18 +47,18 @@ function injectFooterStyles() {
         }
         
         @media (min-width: 1024px) {
-            /* 4-column layout for diverse data coverage */
             .footer-grid {
                 grid-template-columns: 2fr 1.5fr 1.5fr 2fr;
                 gap: 50px;
             }
         }
 
-        /* ==================== 1. BRAND & CONTENT (footer_content) ==================== */
+        /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
             max-width: 140px;
             margin-bottom: 20px;
             border-radius: 4px;
+            display: block;
         }
         
         .footer-brand-title {
@@ -77,12 +78,12 @@ function injectFooterStyles() {
             max-width: 320px;
         }
 
-        /* ==================== 2. SOCIAL LINKS (footer_social_links) ==================== */
+        /* ==================== 2. SOCIAL LINKS ==================== */
         .social-icons-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
         
         .social-icon-link {
@@ -110,7 +111,7 @@ function injectFooterStyles() {
             object-fit: contain;
         }
 
-        /* ==================== 3 & 4. MENUS & QUICK LINKS ==================== */
+        /* ==================== 3 & 4. MENUS ==================== */
         .footer-section-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
             font-size: 0.9rem;
@@ -166,7 +167,7 @@ function injectFooterStyles() {
             font-size: 0.8125rem;
         }
 
-        /* ==================== 5. PAYMENT METHODS (footer_payment_methods) ==================== */
+        /* ==================== 5. PAYMENT METHODS ==================== */
         .footer-payment-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -211,7 +212,7 @@ function injectFooterStyles() {
         .footer-payment-item:hover .footer-qr-tooltip { display: block; }
         .footer-qr-tooltip img { width: 80px; height: 80px; }
 
-        /* ==================== 6 & 7 & 10. SHIPPING, CERTS, BADGES ==================== */
+        /* ==================== 6, 7 & 10. BADGES ==================== */
         .footer-mini-grid {
             display: flex;
             flex-wrap: wrap;
@@ -256,28 +257,49 @@ function injectFooterStyles() {
         
         .footer-app-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
-        /* ==================== 9. COUNTRY SELECTOR ==================== */
+        /* ==================== 9. COUNTRY SELECTOR (UPDATED) ==================== */
         .footer-country-wrapper {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            display: block; /* Ensure it takes full width of container */
+            width: 100%;
+            max-width: 320px;
         }
         
         .footer-country-select {
             width: 100%;
-            background: transparent;
-            color: inherit;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 10px 12px;
+            border-radius: 6px;
             font-size: 0.875rem;
             outline: none;
             margin-bottom: 8px;
+            cursor: pointer;
         }
         
-        .footer-country-select option { background: #1a1a1a; color: #fff; }
-        .footer-exchange-rate { font-size: 0.7rem; opacity: 0.7; }
+        .footer-country-select:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .footer-country-select option { 
+            background: #1a1a1a; 
+            color: #ffffff; 
+            padding: 10px;
+        }
+        
+        .footer-exchange-rate { 
+            font-size: 0.75rem; 
+            opacity: 0.8; 
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
         /* ==================== CONTACT INFO ==================== */
         .footer-contact-item {
@@ -289,7 +311,7 @@ function injectFooterStyles() {
             opacity: 0.85;
         }
 
-        /* ==================== 11. BOTTOM BAR & SETTINGS ==================== */
+        /* ==================== 11. BOTTOM BAR ==================== */
         .footer-bottom-bar {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 24px;
@@ -308,12 +330,12 @@ function injectFooterStyles() {
 
         .footer-layout-centered .footer-grid { text-align: center; }
         .footer-layout-centered .footer-section-title::after { left: 50%; transform: translateX(-50%); }
+        .footer-layout-centered .footer-country-wrapper { margin: 20px auto 0; }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
 }
 
-// Re-using the provided exact SVG mapping function
 function getSocialIconHTML(platform, link) {
     const icons = {
         'facebook': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -325,9 +347,6 @@ function getSocialIconHTML(platform, link) {
     return icons[platform] || '';
 }
 
-// ============================================================================
-// MAIN RENDER FUNCTION
-// ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     
@@ -357,7 +376,7 @@ async function renderFooter() {
 
         // --- Table 1: Social Links ---
         let socialsHTML = '';
-        if (settings.show_social_links !== false && socialLinks.length > 0) {
+        if (socialLinks && socialLinks.length > 0) {
             socialsHTML = `<div class="social-icons-grid">` + 
                 socialLinks.sort((a, b) => a.sort_order - b.sort_order).map(link => {
                     const platform = (link.platform_name || '').toLowerCase();
@@ -370,7 +389,7 @@ async function renderFooter() {
 
         // --- Table 8: App Links ---
         let appsHTML = '';
-        if (settings.show_app_links !== false && appLinks.length > 0) {
+        if (appLinks && appLinks.length > 0) {
             appsHTML = `<div class="footer-app-grid">` + 
                 appLinks.sort((a, b) => a.sort_order - b.sort_order).map(app => {
                     let btnHTML = '';
@@ -381,59 +400,70 @@ async function renderFooter() {
                 }).join('') + `</div>`;
         }
 
-        // --- Table 9: Country Selector ---
+        // --- Table 9: Country Selector (UPDATED ROBUST LOGIC) ---
         let countryHTML = '';
         let dirAttribute = 'ltr';
-        if (settings.show_country_selector !== false && countries.length > 0) {
+        
+        // 'settings.show_country_selector' এর কন্ডিশন বাধ্যবাধকতা সরিয়ে সরাসরি ডাটা চেক করা হলো
+        if (countries && countries.length > 0) {
             const defaultCountry = countries.find(c => c.is_default) || countries[0];
-            if (defaultCountry.is_rtl) dirAttribute = 'rtl';
+            if (defaultCountry && defaultCountry.is_rtl) dirAttribute = 'rtl';
+            
+            // Exchange rate check (To avoid showing undefined)
+            let exchangeRateHTML = '';
+            if (defaultCountry && defaultCountry.exchange_rate && defaultCountry.exchange_rate !== 1) {
+                const symbol = defaultCountry.currency_symbol || defaultCountry.currency_code || '';
+                exchangeRateHTML = `<div class="footer-exchange-rate"><span>💱</span> Exchange: 1 USD = ${symbol}${defaultCountry.exchange_rate}</div>`;
+            }
             
             countryHTML = `
             <div class="footer-country-wrapper">
                 <select class="footer-country-select" onchange="window.location.href=this.value">
-                    ${countries.sort((a, b) => a.sort_order - b.sort_order).map(c => `
-                        <option value="?country=${c.country_code}&lang=${c.language_code}" ${c.is_default ? 'selected' : ''}>
-                            ${c.country_name} - ${c.currency_code} (${c.currency_symbol}) ${c.language_name ? `| ${c.language_name}` : ''}
+                    ${countries.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)).map(c => `
+                        <option value="?country=${c.country_code || ''}&lang=${c.language_code || ''}" ${c.is_default ? 'selected' : ''}>
+                            ${c.country_name || 'Unknown'} - ${c.currency_code || ''} (${c.currency_symbol || ''}) ${c.language_name ? `| ${c.language_name}` : ''}
                         </option>
                     `).join('')}
                 </select>
-                ${defaultCountry.exchange_rate !== 1 ? `<div class="footer-exchange-rate">Exchange: 1 USD = ${defaultCountry.currency_symbol}${defaultCountry.exchange_rate}</div>` : ''}
+                ${exchangeRateHTML}
             </div>`;
         }
 
         // --- Table 2 & 3: Menus and Quick Links ---
         let menusHTML = '';
-        menus.sort((a, b) => a.sort_order - b.sort_order).forEach(menu => {
-            const links = menu.links || [];
-            const parents = links.filter(l => !l.parent_id).sort((a, b) => a.sort_order - b.sort_order);
-            
-            menusHTML += `
-            <div>
-                <h5 class="footer-section-title">${menu.title}</h5>
-                <ul class="footer-links-list">
-                    ${parents.map(parent => {
-                        const target = parent.open_in_new_tab ? 'target="_blank"' : '';
-                        const children = links.filter(l => l.parent_id === parent.id).sort((a, b) => a.sort_order - b.sort_order);
-                        
-                        let childHTML = '';
-                        if(children.length > 0) {
-                            childHTML = `<ul class="footer-nested-links">
-                                ${children.map(child => `<li><a href="${child.link_url}" ${child.open_in_new_tab ? 'target="_blank"' : ''}>${child.icon_class ? `<i class="${child.icon_class}"></i> ` : ''}${child.title}</a>${child.description ? `<span class="footer-link-desc">${child.description}</span>` : ''}</li>`).join('')}
-                            </ul>`;
-                        }
-                        return `<li>
-                            <a href="${parent.link_url}" ${target}>${parent.icon_class ? `<i class="${parent.icon_class}"></i> ` : ''}${parent.title}</a>
-                            ${parent.description ? `<span class="footer-link-desc">${parent.description}</span>` : ''}
-                            ${childHTML}
-                        </li>`;
-                    }).join('')}
-                </ul>
-            </div>`;
-        });
+        if (menus && menus.length > 0) {
+            menus.sort((a, b) => a.sort_order - b.sort_order).forEach(menu => {
+                const links = menu.links || [];
+                const parents = links.filter(l => !l.parent_id).sort((a, b) => a.sort_order - b.sort_order);
+                
+                menusHTML += `
+                <div>
+                    <h5 class="footer-section-title">${menu.title}</h5>
+                    <ul class="footer-links-list">
+                        ${parents.map(parent => {
+                            const target = parent.open_in_new_tab ? 'target="_blank"' : '';
+                            const children = links.filter(l => l.parent_id === parent.id).sort((a, b) => a.sort_order - b.sort_order);
+                            
+                            let childHTML = '';
+                            if(children.length > 0) {
+                                childHTML = `<ul class="footer-nested-links">
+                                    ${children.map(child => `<li><a href="${child.link_url || '#'}" ${child.open_in_new_tab ? 'target="_blank"' : ''}>${child.icon_class ? `<i class="${child.icon_class}"></i> ` : ''}${child.title}</a>${child.description ? `<span class="footer-link-desc">${child.description}</span>` : ''}</li>`).join('')}
+                                </ul>`;
+                            }
+                            return `<li>
+                                <a href="${parent.link_url || '#'}" ${target}>${parent.icon_class ? `<i class="${parent.icon_class}"></i> ` : ''}${parent.title}</a>
+                                ${parent.description ? `<span class="footer-link-desc">${parent.description}</span>` : ''}
+                                ${childHTML}
+                            </li>`;
+                        }).join('')}
+                    </ul>
+                </div>`;
+            });
+        }
 
         // --- Table 5: Payment Methods ---
         let paymentsHTML = '';
-        if (settings.show_payment_methods !== false && paymentMethods.length > 0) {
+        if (paymentMethods && paymentMethods.length > 0) {
             paymentsHTML = `
             <div class="footer-section">
                 <h5 class="footer-section-title">Payments</h5>
@@ -451,7 +481,7 @@ async function renderFooter() {
 
         // --- Table 6, 7 & 10: Trust Badges, Certs, Shipping ---
         let trustHTML = '';
-        if (trustBadges.length > 0) {
+        if (trustBadges && trustBadges.length > 0) {
             trustHTML += trustBadges.sort((a, b) => a.sort_order - b.sort_order).map(badge => `
                 <div class="footer-badge-box">
                     ${badge.badge_url ? `<img src="${badge.badge_url}" alt="${badge.title}">` : ''}
@@ -464,7 +494,7 @@ async function renderFooter() {
         }
         
         let certsHTML = '';
-        if (certifications.length > 0) {
+        if (certifications && certifications.length > 0) {
             certsHTML += certifications.sort((a, b) => a.sort_order - b.sort_order).map(cert => `
                 <div class="footer-badge-box">
                     ${cert.link_url ? `<a href="${cert.link_url}" target="_blank">` : ''}
@@ -475,7 +505,7 @@ async function renderFooter() {
         }
 
         let shippingHTML = '';
-        if (shippingPartners.length > 0) {
+        if (shippingPartners && shippingPartners.length > 0) {
             shippingHTML += shippingPartners.sort((a, b) => a.sort_order - b.sort_order).map(ship => `
                 <div class="footer-badge-box" title="${ship.name}">
                     ${ship.icon_url ? `<img src="${ship.icon_url}" alt="${ship.name}">` : `<span>${ship.name}</span>`}
@@ -484,12 +514,12 @@ async function renderFooter() {
         }
 
         // --- Build Final HTML ---
-        const layoutClass = settings.layout_style === 'centered' ? 'footer-layout-centered' : '';
+        const layoutClass = layoutStyle === 'centered' ? 'footer-layout-centered' : '';
         
         const footerHTML = `
-        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor};" dir="${dirAttribute}">
+        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 40px 20px 20px;" dir="${dirAttribute}">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
-            <div class="w-full px-4 lg:px-12">
+            <div style="width: 100%; max-width: 1280px; margin: 0 auto;">
                 <div class="footer-grid">
                     
                     <div>
@@ -499,7 +529,7 @@ async function renderFooter() {
                         
                         ${socialsHTML}
                         ${appsHTML}
-                        ${countryHTML}
+                        ${countryHTML} <!-- Country HTML Injected Here -->
                     </div>
                     
                     ${menusHTML}
@@ -525,7 +555,7 @@ async function renderFooter() {
                 </div>
                 
                 <div class="footer-bottom-bar">
-                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" style="color: #fff; font-weight: bold;">BINZEO Infrastructure</a> v${settings.version || '2.0'}</p>
+                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" style="color: #fff; font-weight: bold;">BINZEO Infrastructure</a> v${settings.version || '2.1'}</p>
                     <p>${settings.copyright_text || brand.copyright_text || '© JayenWare. All Rights Reserved.'}</p>
                 </div>
             </div>
