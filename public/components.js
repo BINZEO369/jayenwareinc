@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 8.0 (Dynamic Database-Driven Footer - 10 Tables)
+// Version: 9.0 (Complete Database-Driven Footer - All Columns from 11 Tables)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -570,19 +570,15 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
 
-        /* ==================== FOOTER - PREMIUM SOCIAL SECTION ==================== */
+        /* ==================== FOOTER - COMPLETE DYNAMIC SYSTEM ==================== */
         #main-footer {
-            background: #000000;
-            color: #8e8e93;
-            border-top: 1px solid #1c1c1e;
             width: 100% !important;
             position: relative;
             clear: both;
+            font-family: var(--font-body);
         }
-        #main-footer h4, #main-footer h5, #main-footer a {
-            color: var(--accent) !important;
-            transition: opacity 0.25s ease;
-        }
+        #main-footer h4, #main-footer h5 { color: inherit; transition: opacity 0.25s ease; }
+        #main-footer a { color: inherit; transition: opacity 0.25s ease; }
         #main-footer a:hover { opacity: 0.5; }
         
         /* Social Icons - Premium Monochrome */
@@ -617,9 +613,7 @@ function injectSharedStyles() {
             color: #ffffff;
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
-        .social-icon-link:hover::before {
-            opacity: 1;
-        }
+        .social-icon-link:hover::before { opacity: 1; }
         .social-icon-link svg {
             width: 16px;
             height: 16px;
@@ -627,9 +621,7 @@ function injectSharedStyles() {
             z-index: 1;
             transition: transform 0.3s ease;
         }
-        .social-icon-link:hover svg {
-            transform: scale(1.1);
-        }
+        .social-icon-link:hover svg { transform: scale(1.1); }
         
         .social-icons-grid {
             display: flex;
@@ -658,16 +650,18 @@ function injectSharedStyles() {
             font-size: 10px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.7);
+            color: inherit;
             border-radius: 8px;
             padding: 6px 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             outline: none;
+            opacity: 0.7;
         }
         #main-footer select:hover {
             background: rgba(255,255,255,0.08);
             border-color: rgba(255,255,255,0.2);
+            opacity: 0.9;
         }
         #main-footer select:focus {
             border-color: rgba(255,255,255,0.3);
@@ -684,7 +678,7 @@ function injectSharedStyles() {
             gap: 6px;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.7);
+            color: inherit;
             padding: 6px 12px;
             border-radius: 10px;
             font-size: 9px;
@@ -693,11 +687,12 @@ function injectSharedStyles() {
             transition: all 0.3s ease;
             font-family: var(--font-subtitle);
             letter-spacing: 0.03em;
+            opacity: 0.7;
         }
         .footer-app-btn:hover {
             background: rgba(255,255,255,0.15);
             border-color: rgba(255,255,255,0.15);
-            color: #ffffff;
+            opacity: 1;
             transform: translateY(-1px);
         }
         
@@ -722,14 +717,78 @@ function injectSharedStyles() {
             }
         }
         .footer-bottom-bar a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
             font-weight: 700;
             transition: color 0.3s ease;
         }
-        .footer-bottom-bar a:hover {
-            color: rgba(255,255,255,0.9);
-            opacity: 1;
+        .footer-bottom-bar a:hover { opacity: 1; }
+        
+        /* Footer Payment QR Code */
+        .footer-qr-code {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: #ffffff;
+            padding: 4px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .footer-qr-code:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Footer Account Number */
+        .footer-account-number {
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            letter-spacing: 0.05em;
+            opacity: 0.4;
+            background: rgba(255,255,255,0.03);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 2px;
+        }
+        
+        /* Footer Cert Badge */
+        .footer-cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 6px 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .footer-cert-badge:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+        
+        /* Footer RTL Support */
+        [dir="rtl"] #main-footer {
+            direction: rtl;
+            text-align: right;
+        }
+        [dir="rtl"] .footer-bottom-bar {
+            direction: rtl;
+        }
+        
+        /* Layout Styles */
+        .footer-layout-centered {
+            text-align: center;
+        }
+        .footer-layout-centered .social-icons-grid {
+            justify-content: center;
+        }
+        .footer-layout-minimal {
+            padding: 20px 0;
+        }
+        .footer-layout-expanded {
+            padding: 40px 0;
         }
         
         .btn-primary {
@@ -1029,7 +1088,6 @@ async function renderHeader() {
         </div>
         `;
     } else {
-        // No announcement - hide bar completely
         document.body.classList.add('announcement-dismissed');
         announcementHTML = `
         <div class="top-announcement-bar bar-hidden" id="top-announcement-bar">
@@ -1194,7 +1252,7 @@ function getSocialIconHTML(platform, link) {
 }
 
 // ============================================================================
-// FOOTER - DYNAMIC DATABASE-DRIVEN (10 Tables Integration)
+// FOOTER - COMPLETE DATABASE-DRIVEN (ALL 11 TABLES - ALL COLUMNS UTILIZED)
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
@@ -1218,99 +1276,160 @@ async function renderFooter() {
             settings = null 
         } = footerData;
         
-        // Footer Settings
-        const bgColor = settings?.background_color || '#000000';
+        // =====================================================================
+        // FOOTER SETTINGS (footer_settings table - ALL columns)
+        // =====================================================================
+        const bgColor = settings?.background_color || '#1a1a1a';
         const textColor = settings?.text_color || '#ffffff';
-        const copyrightText = settings?.copyright_text || '© 2025 JABIYEN. All Rights Reserved.';
+        const copyrightText = settings?.copyright_text || '© 2025 JayenWare. All Rights Reserved.';
+        const layoutStyle = settings?.layout_style || 'standard';
+        const theme = settings?.theme || 'dark';
+        const version = settings?.version || '1.0';
         const showSocial = settings?.show_social_links !== false;
         const showPayment = settings?.show_payment_methods !== false;
         const showApp = settings?.show_app_links !== false;
         const showCountry = settings?.show_country_selector !== false;
+        const customCSS = settings?.custom_css || '';
         
-        // Find specific content sections
+        // =====================================================================
+        // FOOTER CONTENT (footer_content table - ALL columns)
+        // =====================================================================
         const brandContent = content.find(c => c.section_name === 'brand') || {};
         const contactContent = content.find(c => c.section_name === 'contact') || {};
-        const linksContent = content.find(c => c.section_name === 'quick_links') || {};
         
-        // Social Icons HTML
+        const brandTitle = brandContent.title || 'JABIYEN';
+        const brandDesc = brandContent.description || 'Premium lifestyle apparel architecture.';
+        const brandLogo = brandContent.logo_url || '/logo.png';
+        const brandCopyright = brandContent.copyright_text || copyrightText;
+        
+        const contactEmail = contactContent.email || brandContent.email || '';
+        const contactPhone = contactContent.phone || brandContent.phone || '';
+        const contactAddress = contactContent.address || brandContent.address || '';
+        const contactHours = contactContent.working_hours || brandContent.working_hours || '';
+        
+        // =====================================================================
+        // SOCIAL LINKS (footer_social_links table - ALL columns)
+        // =====================================================================
         let socialIconsHTML = '';
         if (showSocial && socialLinks.length > 0) {
-            socialIconsHTML = socialLinks.map(link => {
-                const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
-                return getSocialIconHTML(platform, link.link_url || '#');
-            }).filter(html => html !== null).join('');
+            socialIconsHTML = socialLinks
+                .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+                .map(link => {
+                    const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
+                    const iconHTML = getSocialIconHTML(platform, link.link_url || '#');
+                    if (!iconHTML) return '';
+                    // Use hover_title for tooltip, platform_icon if custom icon needed
+                    const hoverTitle = link.hover_title || link.platform_name || '';
+                    // If platform_icon is provided as custom URL, use img instead of SVG
+                    if (link.platform_icon && link.platform_icon.startsWith('http')) {
+                        return `
+                        <a href="${link.link_url || '#'}" target="_blank" rel="noopener noreferrer" 
+                           class="social-icon-link" aria-label="${link.platform_name}" title="${hoverTitle}">
+                            <img src="${link.platform_icon}" alt="${link.platform_name}" style="width:16px;height:16px;object-fit:contain;">
+                        </a>`;
+                    }
+                    return iconHTML.replace(`aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}"`, 
+                        `aria-label="${link.platform_name}" title="${hoverTitle}"`);
+                }).filter(html => html !== '').join('');
         }
         
-        // Payment Methods HTML
+        // =====================================================================
+        // PAYMENT METHODS (footer_payment_methods table - ALL columns)
+        // =====================================================================
         let paymentHTML = '';
         if (showPayment && paymentMethods.length > 0) {
+            const sortedPayments = [...paymentMethods].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             paymentHTML = `
             <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Payment Methods</h5>
-                <div class="flex flex-wrap gap-2">
-                    ${paymentMethods.map(pm => {
-                        const iconHTML = pm.icon_url 
-                            ? `<img src="${pm.icon_url}" alt="${pm.name}" class="h-6 w-auto opacity-60 hover:opacity-100 transition-opacity">`
-                            : `<span class="text-[9px] opacity-50">${pm.name}</span>`;
-                        return iconHTML;
+                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Payment Methods</h5>
+                <div class="flex flex-wrap gap-2 items-center">
+                    ${sortedPayments.map(pm => {
+                        let pmHTML = '';
+                        if (pm.icon_url) {
+                            pmHTML += `<img src="${pm.icon_url}" alt="${pm.name}" class="h-6 w-auto opacity-60 hover:opacity-100 transition-opacity" title="${pm.name}">`;
+                        } else {
+                            pmHTML += `<span class="text-[9px] opacity-50">${pm.name}</span>`;
+                        }
+                        // Show account number if available
+                        if (pm.account_number) {
+                            pmHTML += `<span class="footer-account-number">${pm.account_number}</span>`;
+                        }
+                        // Show QR code if available
+                        if (pm.qr_code_url) {
+                            pmHTML += `<img src="${pm.qr_code_url}" alt="${pm.name} QR" class="footer-qr-code ml-1" title="Scan QR for ${pm.name}" onclick="window.open('${pm.qr_code_url}', '_blank')">`;
+                        }
+                        return `<div class="flex flex-col items-center gap-1">${pmHTML}</div>`;
                     }).join('')}
                 </div>
             </div>`;
         }
         
-        // Shipping Partners HTML
+        // =====================================================================
+        // SHIPPING PARTNERS (footer_shipping_partners table - ALL columns)
+        // =====================================================================
         let shippingHTML = '';
         if (shippingPartners.length > 0) {
+            const sortedShipping = [...shippingPartners].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             shippingHTML = `
             <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Shipping Partners</h5>
-                <div class="flex flex-wrap gap-2">
-                    ${shippingPartners.map(sp => {
+                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Shipping Partners</h5>
+                <div class="flex flex-wrap gap-2 items-center">
+                    ${sortedShipping.map(sp => {
                         return sp.icon_url 
-                            ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-5 w-auto opacity-50 hover:opacity-80 transition-opacity">`
+                            ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-5 w-auto opacity-50 hover:opacity-80 transition-opacity" title="${sp.name}">`
                             : `<span class="text-[9px] opacity-40">${sp.name}</span>`;
                     }).join('')}
                 </div>
             </div>`;
         }
         
-        // Certifications HTML
+        // =====================================================================
+        // CERTIFICATIONS (footer_certifications table - ALL columns)
+        // =====================================================================
         let certHTML = '';
         if (certifications.length > 0) {
+            const sortedCerts = [...certifications].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             certHTML = `
             <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Certifications</h5>
-                <div class="flex flex-wrap gap-2">
-                    ${certifications.map(cert => {
-                        const badgeHTML = cert.badge_url 
+                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Certifications</h5>
+                <div class="flex flex-wrap gap-2 items-center">
+                    ${sortedCerts.map(cert => {
+                        const badgeContent = cert.badge_url 
                             ? `<img src="${cert.badge_url}" alt="${cert.name}" class="h-8 w-auto opacity-60 hover:opacity-90 transition-opacity">`
                             : `<span class="text-[9px] opacity-40">${cert.name}</span>`;
-                        return cert.link_url 
-                            ? `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer">${badgeHTML}</a>`
-                            : badgeHTML;
+                        
+                        if (cert.link_url) {
+                            return `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" class="footer-cert-badge" title="${cert.name}">${badgeContent}<span class="text-[8px] opacity-50">${cert.name}</span></a>`;
+                        }
+                        return `<div class="footer-cert-badge" title="${cert.name}">${badgeContent}<span class="text-[8px] opacity-50">${cert.name}</span></div>`;
                     }).join('')}
                 </div>
             </div>`;
         }
         
-        // App Links HTML
+        // =====================================================================
+        // APP LINKS (footer_app_links table - ALL columns)
+        // =====================================================================
         let appHTML = '';
         if (showApp && appLinks.length > 0) {
+            const sortedApps = [...appLinks].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             appHTML = `
             <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Download Our App</h5>
+                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Download Our App</h5>
                 <div class="flex flex-wrap gap-2">
-                    ${appLinks.map(app => {
+                    ${sortedApps.map(app => {
                         let buttons = '';
+                        const iconImg = app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}" class="w-4 h-4 object-contain">` : '';
+                        
                         if (app.app_store_url) {
-                            buttons += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+                            buttons += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Download on App Store">
+                                ${iconImg || '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>'}
                                 App Store
                             </a>`;
                         }
                         if (app.play_store_url) {
-                            buttons += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>
+                            buttons += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Get it on Google Play">
+                                ${iconImg || '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>'}
                                 Play Store
                             </a>`;
                         }
@@ -1320,38 +1439,54 @@ async function renderFooter() {
             </div>`;
         }
         
-        // Country Selector HTML
+        // =====================================================================
+        // COUNTRY SELECTOR (footer_country_selector table - ALL columns)
+        // =====================================================================
         let countryHTML = '';
         if (showCountry && countries.length > 0) {
-            const defaultCountry = countries.find(c => c.is_default) || countries[0];
+            const sortedCountries = [...countries].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+            const defaultCountry = sortedCountries.find(c => c.is_default) || sortedCountries[0];
+            
+            // Check if any country has RTL enabled and apply dir attribute
+            if (defaultCountry?.is_rtl) {
+                const footerEl = document.getElementById('main-footer');
+                if (footerEl) footerEl.setAttribute('dir', 'rtl');
+            }
+            
             countryHTML = `
             <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Country & Language</h5>
-                <select onchange="if(this.value) window.location.href=this.value">
-                    ${countries.map(country => {
-                        const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="w-4 h-3 inline-block mr-1" alt="${country.country_name}">` : '';
-                        const currency = country.currency_symbol || country.currency_code || '';
-                        const lang = country.language_code ? ` (${country.language_code.toUpperCase()})` : '';
+                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Country & Language</h5>
+                <select onchange="if(this.value) window.location.href=this.value" aria-label="Select country and language">
+                    ${sortedCountries.map(country => {
+                        const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="w-4 h-3 inline-block mr-1" alt="${country.country_code}">` : '';
+                        const currencyDisplay = country.currency_symbol || (country.currency_code ? country.currency_code + ' ' : '');
+                        const langDisplay = country.language_name || country.language_code || '';
+                        const label = `${flagHTML}${country.country_name} ${currencyDisplay}${langDisplay ? '(' + langDisplay + ')' : ''}`;
                         const selected = country.is_default ? 'selected' : '';
-                        return `<option value="?country=${country.country_code}" ${selected}>${flagHTML}${country.country_name} ${currency}${lang}</option>`;
+                        return `<option value="?country=${country.country_code}&lang=${country.language_code || ''}" ${selected}>${label.trim()}</option>`;
                     }).join('')}
                 </select>
+                ${defaultCountry?.exchange_rate && defaultCountry.exchange_rate !== 1 ? 
+                    `<p class="text-[7px] opacity-30 mt-1">Exchange Rate: 1 USD = ${defaultCountry.currency_symbol || ''}${defaultCountry.exchange_rate}</p>` : ''}
             </div>`;
         }
         
-        // Trust Badges HTML
+        // =====================================================================
+        // TRUST BADGES (footer_trust_badges table - ALL columns)
+        // =====================================================================
         let badgesHTML = '';
         if (trustBadges.length > 0) {
+            const sortedBadges = [...trustBadges].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             badgesHTML = `
             <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Trust & Security</h5>
+                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Trust & Security</h5>
                 <div class="flex flex-wrap gap-2">
-                    ${trustBadges.map(badge => {
+                    ${sortedBadges.map(badge => {
                         const badgeImg = badge.badge_url 
                             ? `<img src="${badge.badge_url}" alt="${badge.title}" class="h-7 w-auto opacity-60 hover:opacity-90 transition-opacity">`
                             : `<span class="text-[8px] opacity-40">${badge.title}</span>`;
                         return `
-                        <div class="text-center" title="${badge.subtitle || badge.title}">
+                        <div class="text-center" title="${badge.title}${badge.subtitle ? ': ' + badge.subtitle : ''}">
                             ${badgeImg}
                             ${badge.subtitle ? `<p class="text-[6px] opacity-30 mt-0.5">${badge.subtitle}</p>` : ''}
                         </div>`;
@@ -1360,44 +1495,75 @@ async function renderFooter() {
             </div>`;
         }
         
-        // Build Menu Columns
+        // =====================================================================
+        // MENUS & QUICK LINKS (footer_menus + footer_quick_links - ALL columns)
+        // =====================================================================
         let menuColumnsHTML = '';
         if (menus.length > 0) {
-            menuColumnsHTML = menus.map(menu => {
+            const sortedMenus = [...menus].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+            menuColumnsHTML = sortedMenus.map(menu => {
                 const links = menu.links || [];
+                const sortedLinks = [...links].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+                
+                // Build nested quick links (parent_id relationship)
+                const topLevelLinks = sortedLinks.filter(l => !l.parent_id);
+                const childLinks = sortedLinks.filter(l => l.parent_id);
+                
                 return `
                 <div>
-                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${menu.title || 'Links'}</h5>
-                    <ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">
-                        ${links.map(link => {
+                    <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">${menu.title || 'Links'}</h5>
+                    <ul class="space-y-1.5 text-[10px] list-none p-0" style="opacity:0.7;">
+                        ${topLevelLinks.map(link => {
                             const target = link.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
                             const iconHTML = link.icon_class ? `<i class="${link.icon_class} mr-1"></i>` : '';
-                            const descHTML = link.description ? `<span class="block text-[8px] opacity-40">${link.description}</span>` : '';
-                            return `<li><a href="${link.link_url || '#'}" class="no-underline" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}</li>`;
+                            const descHTML = link.description ? `<span class="block text-[8px]" style="opacity:0.4;">${link.description}</span>` : '';
+                            
+                            // Check for child links
+                            const children = childLinks.filter(cl => cl.parent_id === link.id);
+                            let childrenHTML = '';
+                            if (children.length > 0) {
+                                childrenHTML = `
+                                <ul class="list-none p-0 ml-3 mt-1 space-y-0.5">
+                                    ${children.map(child => {
+                                        const childTarget = child.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
+                                        const childIcon = child.icon_class ? `<i class="${child.icon_class} mr-1"></i>` : '';
+                                        const childDesc = child.description ? `<span class="block text-[7px]" style="opacity:0.3;">${child.description}</span>` : '';
+                                        return `<li><a href="${child.link_url || '#'}" class="no-underline" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
+                                    }).join('')}
+                                </ul>`;
+                            }
+                            
+                            return `<li><a href="${link.link_url || '#'}" class="no-underline" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}${childrenHTML}</li>`;
                         }).join('')}
                     </ul>
                 </div>`;
             }).join('');
         }
         
-        // Brand Description
-        const brandTitle = brandContent.title || 'JABIYEN';
-        const brandDesc = brandContent.description || 'Premium lifestyle apparel architecture calibrated for modern aesthetics.';
-        const brandLogo = brandContent.logo_url || '/logo.png';
-        const brandEmail = contactContent.email || brandContent.email || '';
-        const brandPhone = contactContent.phone || brandContent.phone || '';
-        const brandAddress = contactContent.address || brandContent.address || '';
-        const brandHours = contactContent.working_hours || brandContent.working_hours || '';
+        // =====================================================================
+        // LAYOUT CLASS
+        // =====================================================================
+        let layoutClass = '';
+        switch(layoutStyle) {
+            case 'centered': layoutClass = 'footer-layout-centered'; break;
+            case 'minimal': layoutClass = 'footer-layout-minimal'; break;
+            case 'expanded': layoutClass = 'footer-layout-expanded'; break;
+            default: layoutClass = '';
+        }
         
+        // =====================================================================
+        // BUILD COMPLETE FOOTER HTML
+        // =====================================================================
         const footerHTML = `
-        <footer class="pt-12 pb-6" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
+        <footer class="pt-12 pb-6 ${layoutClass}" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
+            ${customCSS ? `<style>${customCSS}</style>` : ''}
             <div class="w-full px-4 lg:px-12">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
                     <!-- Brand Column -->
                     <div class="md:col-span-1">
                         ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="h-8 w-auto mb-3 opacity-80">` : ''}
                         <h4 class="text-sm font-bold tracking-widest mb-3">${brandTitle}</h4>
-                        <p class="text-[10px] leading-relaxed mb-4 opacity-50">${brandDesc}</p>
+                        <p class="text-[10px] leading-relaxed mb-4" style="opacity:0.5;">${brandDesc}</p>
                         
                         ${showSocial && socialIconsHTML ? `
                         <div class="social-icons-grid mt-3">
@@ -1413,11 +1579,11 @@ async function renderFooter() {
                     
                     <!-- Contact Column -->
                     <div>
-                        <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Direct Contact</h5>
-                        ${brandEmail ? `<p class="text-[10px] opacity-60">${brandEmail}</p>` : ''}
-                        ${brandPhone ? `<p class="text-[10px] opacity-40 mt-1">${brandPhone}</p>` : ''}
-                        ${brandAddress ? `<p class="text-[10px] opacity-40">${brandAddress}</p>` : ''}
-                        ${brandHours ? `<p class="text-[10px] opacity-30 mt-1">${brandHours}</p>` : ''}
+                        <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Direct Contact</h5>
+                        ${contactEmail ? `<p class="text-[10px]" style="opacity:0.6;">${contactEmail}</p>` : ''}
+                        ${contactPhone ? `<p class="text-[10px] mt-1" style="opacity:0.4;">${contactPhone}</p>` : ''}
+                        ${contactAddress ? `<p class="text-[10px]" style="opacity:0.4;">${contactAddress}</p>` : ''}
+                        ${contactHours ? `<p class="text-[10px] mt-1" style="opacity:0.3;">${contactHours}</p>` : ''}
                         
                         ${paymentHTML}
                         ${shippingHTML}
@@ -1428,8 +1594,8 @@ async function renderFooter() {
                 
                 <!-- Bottom Bar -->
                 <div class="footer-bottom-bar">
-                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer">BINZEO Infrastructure</a></p>
-                    <p>${copyrightText}</p>
+                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer">BINZEO Infrastructure</a> ${version ? 'v' + version : ''}</p>
+                    <p>${brandCopyright || copyrightText}</p>
                 </div>
             </div>
         </footer>
@@ -1437,14 +1603,23 @@ async function renderFooter() {
         
         document.body.insertAdjacentHTML('beforeend', footerHTML);
         
+        // Apply RTL if default country has is_rtl
+        if (countries.length > 0) {
+            const defaultCountry = countries.find(c => c.is_default) || countries[0];
+            if (defaultCountry?.is_rtl) {
+                const footerEl = document.getElementById('main-footer');
+                if (footerEl) footerEl.setAttribute('dir', 'rtl');
+            }
+        }
+        
     } catch (error) {
         console.error('Footer render error:', error);
         // Fallback minimal footer
         const fallbackHTML = `
-        <footer class="pt-12 pb-6" id="main-footer" style="background: #000000 !important; color: #ffffff !important;">
+        <footer class="pt-12 pb-6" id="main-footer" style="background: #1a1a1a !important; color: #ffffff !important;">
             <div class="w-full px-4 lg:px-12 text-center">
-                <p class="text-[10px] opacity-50">© ${new Date().getFullYear()} JABIYEN. All Rights Reserved.</p>
-                <p class="text-[8px] opacity-30 mt-1">Powered by BINZEO Infrastructure</p>
+                <p class="text-[10px] opacity-50">© ${new Date().getFullYear()} JayenWare. All Rights Reserved.</p>
+                <p class="text-[8px] opacity-30 mt-1">Powered by BINZEO Infrastructure v1.0</p>
             </div>
         </footer>`;
         document.body.insertAdjacentHTML('beforeend', fallbackHTML);
