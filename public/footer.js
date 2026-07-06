@@ -1,9 +1,9 @@
 // ============================================================================
 // footer.js - Professional Premium Footer Component
-// Version: 2.5 (Ultra Responsive - Mobile & Desktop Optimized with Collapsible Menus)
+// Version: 2.6 (Minimalist Luxury - World Class Fashion Brand Aesthetic)
 // Brand: JABIYEN (Premium Apparel)
-// Description: Fully responsive footer with compact typography, mobile-first
-//              two-column layout, collapsible menu sections, and refined fashion aesthetics.
+// Description: Clean, minimal footer with refined typography, no background
+//              containers, collapsible mobile menus, and iconic brand simplicity.
 // ============================================================================
 
 function injectFooterStyles() {
@@ -18,10 +18,10 @@ function injectFooterStyles() {
             position: relative;
             z-index: 10;
             background-color: var(--footer-bg, #0a0a0a);
-            color: var(--footer-text, #b0b0b0);
-            line-height: 1.4;
+            color: var(--footer-text, #999999);
+            line-height: 1.5;
             width: 100%;
-            letter-spacing: 0.01em;
+            letter-spacing: 0.02em;
             box-sizing: border-box;
         }
         
@@ -32,55 +32,53 @@ function injectFooterStyles() {
         }
         
         #main-footer a {
-            color: inherit;
+            color: #888888;
             text-decoration: none;
-            transition: color 0.25s ease, opacity 0.25s ease;
+            transition: color 0.3s ease;
         }
         
         #main-footer a:hover {
             color: #ffffff;
-            opacity: 1;
         }
 
         /* ==================== MAIN GRID ==================== */
         .footer-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px 16px;
-            padding-bottom: 24px;
+            gap: 32px 24px;
+            padding-bottom: 40px;
         }
         
         @media (max-width: 380px) {
             .footer-grid {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 24px;
             }
         }
         
         @media (min-width: 768px) {
             .footer-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 28px 24px;
+                gap: 40px 32px;
             }
         }
         
         @media (min-width: 1024px) {
             .footer-grid {
-                grid-template-columns: 1.8fr 1fr 1fr 1.8fr;
-                gap: 32px;
+                grid-template-columns: 1.5fr 0.8fr 0.8fr 1.5fr;
+                gap: 48px;
             }
         }
 
         /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
-            max-width: 100px;
+            max-width: 130px;
             width: 100%;
             height: auto;
-            margin-bottom: 10px;
-            border-radius: 3px;
+            margin-bottom: 16px;
             display: block;
             object-fit: contain;
-            filter: brightness(0.95);
+            filter: brightness(0.9);
             transition: filter 0.3s ease;
         }
         
@@ -90,21 +88,21 @@ function injectFooterStyles() {
         
         .footer-brand-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            margin-bottom: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            color: #ffffff;
-            line-height: 1.2;
+            color: #cccccc;
+            line-height: 1.3;
         }
         
         .footer-brand-desc {
-            font-size: 0.6rem;
-            opacity: 0.6;
-            margin-bottom: 12px;
-            max-width: 100%;
-            line-height: 1.4;
+            font-size: 0.65rem;
+            color: #777777;
+            margin-bottom: 24px;
+            max-width: 280px;
+            line-height: 1.6;
             font-weight: 350;
         }
 
@@ -112,81 +110,72 @@ function injectFooterStyles() {
         .social-icons-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 12px;
+            gap: 16px;
+            margin-bottom: 28px;
         }
         
         .social-icon-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #a0a0a0;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            width: 20px;
+            height: 20px;
+            color: #888888;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
         
         .social-icon-link:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.25);
             color: #ffffff;
+            transform: translateY(-1px);
         }
         
         .social-icon-link svg, 
         .social-icon-link img {
-            width: 13px;
-            height: 13px;
+            width: 16px;
+            height: 16px;
             object-fit: contain;
         }
 
-        /* ==================== SECTION TITLES & DESCRIPTIONS ==================== */
+        /* ==================== SECTION TITLES ==================== */
         .footer-section-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 0.625rem;
+            font-size: 0.65rem;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            margin-bottom: 8px;
-            color: #7a7a7a;
-            position: relative;
-            padding-bottom: 0;
+            margin-bottom: 16px;
+            color: #666666;
         }
 
         /* ==================== COLLAPSIBLE MENU BUTTON ==================== */
         .footer-menu-toggle {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #9a9a9a;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.625rem;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #888888;
+            padding: 10px 0;
+            font-size: 0.65rem;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: color 0.3s ease;
             text-align: left;
             font-family: var(--font-heading, 'Manrope', sans-serif);
         }
         
         .footer-menu-toggle:hover {
-            background: rgba(255, 255, 255, 0.06);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.15);
         }
         
         .footer-menu-toggle-icon {
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             transition: transform 0.3s ease;
-            opacity: 0.6;
+            opacity: 0.4;
         }
         
         .footer-menu-toggle.active .footer-menu-toggle-icon {
@@ -196,12 +185,13 @@ function injectFooterStyles() {
         .footer-menu-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease, margin 0.4s ease;
+            transition: max-height 0.4s ease, margin 0.4s ease;
         }
         
         .footer-menu-content.open {
-            max-height: 800px;
-            margin-top: 8px;
+            max-height: 600px;
+            margin-top: 12px;
+            margin-bottom: 12px;
         }
 
         /* ==================== 3 & 4. MENUS ==================== */
@@ -212,14 +202,14 @@ function injectFooterStyles() {
         }
         
         .footer-links-list > li {
-            margin-bottom: 6px;
-            font-size: 0.625rem;
-            opacity: 0.7;
-            transition: opacity 0.2s;
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+            color: #888888;
+            transition: color 0.3s ease;
         }
         
         .footer-links-list > li:hover {
-            opacity: 1;
+            color: #ffffff;
         }
         
         .footer-link-desc {
@@ -228,215 +218,200 @@ function injectFooterStyles() {
 
         .footer-nested-links {
             list-style: none;
-            padding-left: 10px;
-            margin-top: 4px;
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            padding-left: 12px;
+            margin-top: 6px;
+            margin-bottom: 4px;
         }
         
         .footer-nested-links > li {
-            margin-bottom: 4px;
-            font-size: 0.6rem;
-            opacity: 0.6;
+            margin-bottom: 6px;
+            font-size: 0.65rem;
+            color: #777777;
         }
 
         /* ==================== 5. PAYMENT METHODS ==================== */
         .footer-payment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
-            gap: 5px;
-            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 0;
         }
         
         .footer-payment-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 5px 3px;
-            border-radius: 3px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
+            justify-content: center;
             position: relative;
-            cursor: pointer;
-            transition: background 0.25s, border-color 0.25s;
+            cursor: default;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
         }
         
         .footer-payment-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
+            opacity: 0.8;
         }
         
         .footer-payment-icon { 
-            height: 14px; 
-            margin-bottom: 2px; 
-            object-fit: contain; 
+            height: 18px; 
+            width: auto;
+            object-fit: contain;
+            filter: grayscale(100%) brightness(2);
         }
+        
         .footer-payment-name { 
-            font-size: 0.55rem; 
-            font-weight: 500; 
-            opacity: 0.8; 
+            display: none;
         }
         .footer-payment-account { 
-            font-size: 0.5rem; 
-            opacity: 0.45; 
-            margin-top: 1px; 
+            display: none;
         }
         
         .footer-qr-tooltip {
-            position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff;
-            padding: 2px;
-            border-radius: 3px;
             display: none;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-            z-index: 20;
-        }
-        .footer-payment-item:hover .footer-qr-tooltip { 
-            display: block; 
-        }
-        .footer-qr-tooltip img { 
-            width: 50px; 
-            height: 50px; 
         }
 
         /* ==================== 6, 7 & 10. BADGES ==================== */
         .footer-mini-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 10px;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 20px;
         }
         
         .footer-badge-box {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 3px 6px;
-            border-radius: 3px;
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.55rem;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 8px;
+            font-size: 0.6rem;
+            color: #777777;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-badge-box:hover {
+            opacity: 0.9;
         }
         
         .footer-badge-box img { 
-            max-height: 14px; 
-            object-fit: contain; 
+            max-height: 16px; 
+            width: auto;
+            object-fit: contain;
+            filter: grayscale(100%) brightness(2);
         }
         .badge-text-wrapper { 
             display: flex; 
             flex-direction: column; 
         }
         .badge-subtitle { 
-            font-size: 0.5rem; 
-            opacity: 0.45; 
+            font-size: 0.55rem; 
+            color: #666666; 
         }
 
         /* ==================== 8. APP LINKS ==================== */
         .footer-app-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 12px;
+            gap: 16px;
+            margin-bottom: 28px;
         }
         
         .footer-app-btn {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 5px 8px;
-            border-radius: 3px;
+            gap: 8px;
+            color: #888888;
             font-weight: 500;
-            font-size: 0.6rem;
-            transition: background 0.25s;
+            font-size: 0.65rem;
+            transition: color 0.3s ease;
+            letter-spacing: 0.05em;
         }
         
         .footer-app-btn:hover { 
-            background: rgba(255, 255, 255, 0.12); 
+            color: #ffffff; 
         }
         .footer-app-btn img { 
-            width: 12px; 
-            height: 12px; 
+            width: 14px; 
+            height: 14px;
+            opacity: 0.6;
         }
 
         /* ==================== 9. COUNTRY SELECTOR ==================== */
         .footer-country-wrapper {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 6px;
-            border-radius: 3px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 8px;
+            margin-top: 20px;
             display: block; 
             width: 100%;
-            max-width: 100%;
+            max-width: 220px;
         }
         
         .footer-country-select {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            color: #c0c0c0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 5px 6px;
-            border-radius: 3px;
-            font-size: 0.6rem;
+            background: none;
+            color: #888888;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 0;
+            font-size: 0.65rem;
             outline: none;
-            margin-bottom: 3px;
             cursor: pointer;
+            letter-spacing: 0.05em;
+            font-family: var(--font-body, 'Inter', sans-serif);
         }
         
         .footer-country-select:focus {
-            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
         }
         
         .footer-country-select option { 
             background: #1a1a1a; 
-            color: #e0e0e0; 
-            padding: 5px;
+            color: #cccccc; 
+            padding: 6px;
         }
         
         .footer-exchange-rate { 
-            font-size: 0.55rem; 
-            opacity: 0.5; 
-            color: #909090;
+            font-size: 0.6rem; 
+            color: #666666;
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 4px;
+            margin-top: 8px;
         }
 
         /* ==================== CONTACT INFO ==================== */
         .footer-contact-item {
             display: flex;
             align-items: flex-start;
-            gap: 6px;
-            margin-bottom: 6px;
-            font-size: 0.625rem;
-            opacity: 0.7;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+            color: #888888;
         }
         .footer-contact-item a {
             font-weight: 400;
+            color: #888888;
+        }
+        .footer-contact-item a:hover {
+            color: #ffffff;
         }
         .footer-contact-icon {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin-top: 1px;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         /* ==================== 11. BOTTOM BAR ==================== */
         .footer-bottom-bar {
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            padding-top: 12px;
-            margin-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 20px;
+            margin-top: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            gap: 4px;
+            gap: 8px;
             font-size: 0.6rem;
-            opacity: 0.4;
+            color: #666666;
         }
         
         @media (min-width: 768px) {
@@ -450,7 +425,7 @@ function injectFooterStyles() {
             text-align: center; 
         }
         .footer-layout-centered .footer-country-wrapper { 
-            margin: 8px auto 0; 
+            margin: 20px auto 0; 
         }
         .footer-layout-centered .footer-contact-item { 
             justify-content: center; 
@@ -460,9 +435,17 @@ function injectFooterStyles() {
             margin-right: auto; 
         }
         .footer-layout-centered .footer-menu-toggle {
-            text-align: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
+        }
+        .footer-layout-centered .footer-payment-grid {
+            justify-content: center;
+        }
+        .footer-layout-centered .footer-mini-grid {
+            justify-content: center;
+        }
+        .footer-layout-centered .social-icons-grid {
+            justify-content: center;
         }
         
         @media (max-width: 767px) {
@@ -470,31 +453,47 @@ function injectFooterStyles() {
                 justify-content: flex-start;
             }
             .footer-layout-centered .footer-menu-toggle {
-                text-align: left;
                 justify-content: space-between;
+            }
+            .footer-layout-centered .footer-payment-grid {
+                justify-content: flex-start;
+            }
+            .footer-layout-centered .footer-mini-grid {
+                justify-content: flex-start;
+            }
+            .footer-layout-centered .social-icons-grid {
+                justify-content: flex-start;
             }
         }
 
         /* ==================== MOBILE SPECIFIC ==================== */
         @media (max-width: 767px) {
             .footer-brand-logo {
-                max-width: 80px;
-                margin-bottom: 8px;
+                max-width: 100px;
+                margin-bottom: 12px;
             }
             .footer-brand-title {
-                font-size: 0.75rem;
+                font-size: 0.8rem;
             }
             .footer-menu-toggle {
-                font-size: 0.6rem;
-                padding: 6px 10px;
+                font-size: 0.65rem;
+                padding: 10px 0;
+            }
+            .footer-payment-grid {
+                gap: 10px;
+            }
+            .footer-payment-icon { 
+                height: 16px; 
             }
         }
         
+        /* ==================== DESKTOP SPECIFIC ==================== */
         @media (min-width: 1024px) {
             .footer-menu-content {
                 max-height: none !important;
                 overflow: visible !important;
                 margin-top: 0 !important;
+                margin-bottom: 0 !important;
             }
             .footer-menu-toggle {
                 display: none !important;
@@ -548,7 +547,7 @@ async function renderFooter() {
         } = footerData;
         
         const bgColor = settings.background_color || '#0a0a0a';
-        const textColor = settings.text_color || '#b0b0b0';
+        const textColor = settings.text_color || '#999999';
         const layoutStyle = settings.layout_style || 'standard';
         const customCSS = settings.custom_css || '';
         
@@ -583,9 +582,9 @@ async function renderFooter() {
             appsHTML = `<div class="footer-app-grid">` + 
                 appLinks.sort((a, b) => a.sort_order - b.sort_order).map(app => {
                     let btnHTML = '';
-                    const icon = app.icon_url ? `<img src="${app.icon_url}" alt="app icon">` : '📱';
-                    if(app.app_store_url) btnHTML += `<a href="${app.app_store_url}" class="footer-app-btn" target="_blank">${icon} App Store</a>`;
-                    if(app.play_store_url) btnHTML += `<a href="${app.play_store_url}" class="footer-app-btn" target="_blank">${icon} Play Store</a>`;
+                    const icon = app.icon_url ? `<img src="${app.icon_url}" alt="app icon">` : '';
+                    if(app.app_store_url) btnHTML += `<a href="${app.app_store_url}" class="footer-app-btn" target="_blank">${icon}App Store</a>`;
+                    if(app.play_store_url) btnHTML += `<a href="${app.play_store_url}" class="footer-app-btn" target="_blank">${icon}Play Store</a>`;
                     return btnHTML;
                 }).join('') + `</div>`;
         }
@@ -600,7 +599,7 @@ async function renderFooter() {
             let exchangeRateHTML = '';
             if (defaultCountry && defaultCountry.exchange_rate && defaultCountry.exchange_rate !== 1) {
                 const symbol = defaultCountry.currency_symbol || defaultCountry.currency_code || '';
-                exchangeRateHTML = `<div class="footer-exchange-rate"><span>💱</span> 1 USD = ${symbol}${defaultCountry.exchange_rate}</div>`;
+                exchangeRateHTML = `<div class="footer-exchange-rate">1 USD = ${symbol}${defaultCountry.exchange_rate}</div>`;
             }
             
             countryHTML = `
@@ -608,7 +607,7 @@ async function renderFooter() {
                 <select class="footer-country-select" onchange="window.location.href=this.value">
                     ${countries.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)).map(c => `
                         <option value="?country=${c.country_code || ''}&lang=${c.language_code || ''}" ${c.is_default ? 'selected' : ''}>
-                            ${c.country_name || 'Unknown'} - ${c.currency_code || ''} (${c.currency_symbol || ''}) ${c.language_name ? `| ${c.language_name}` : ''}
+                            ${c.country_name || 'Unknown'} / ${c.currency_code || ''} ${c.language_name ? '/ ' + c.language_name : ''}
                         </option>
                     `).join('')}
                 </select>
@@ -657,13 +656,11 @@ async function renderFooter() {
         if (paymentMethods && paymentMethods.length > 0) {
             paymentsHTML = `
             <div class="footer-section">
-                <h5 class="footer-section-title">Secure Payments</h5>
+                <h5 class="footer-section-title">Accepted Payments</h5>
                 <div class="footer-payment-grid">
                     ${paymentMethods.sort((a, b) => a.sort_order - b.sort_order).map(pm => `
                         <div class="footer-payment-item" title="${pm.name}">
                             ${pm.icon_url ? `<img src="${pm.icon_url}" alt="${pm.name}" class="footer-payment-icon">` : `<span class="footer-payment-name">${pm.name}</span>`}
-                            ${pm.account_number ? `<span class="footer-payment-account">${pm.account_number}</span>` : ''}
-                            ${pm.qr_code_url ? `<div class="footer-qr-tooltip"><img src="${pm.qr_code_url}" alt="QR Code"></div>` : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -672,7 +669,7 @@ async function renderFooter() {
 
         let trustHTML = '';
         if (trustBadges && trustBadges.length > 0) {
-            trustHTML += `<div style="margin-bottom: 8px;"><h5 class="footer-section-title" style="margin-bottom: 4px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 4px;">` +
+            trustHTML += `<div style="margin-bottom: 16px;"><h5 class="footer-section-title" style="margin-bottom: 12px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
                 trustBadges.sort((a, b) => a.sort_order - b.sort_order).map(badge => `
                 <div class="footer-badge-box">
                     ${badge.badge_url ? `<img src="${badge.badge_url}" alt="${badge.title}">` : ''}
@@ -686,7 +683,7 @@ async function renderFooter() {
         
         let certsHTML = '';
         if (certifications && certifications.length > 0) {
-            certsHTML += `<div style="margin-bottom: 8px;"><h5 class="footer-section-title" style="margin-bottom: 4px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 4px;">` +
+            certsHTML += `<div style="margin-bottom: 16px;"><h5 class="footer-section-title" style="margin-bottom: 12px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
                 certifications.sort((a, b) => a.sort_order - b.sort_order).map(cert => `
                 <div class="footer-badge-box">
                     ${cert.link_url ? `<a href="${cert.link_url}" target="_blank">` : ''}
@@ -698,7 +695,7 @@ async function renderFooter() {
 
         let shippingHTML = '';
         if (shippingPartners && shippingPartners.length > 0) {
-            shippingHTML += `<div style="margin-bottom: 8px;"><h5 class="footer-section-title" style="margin-bottom: 4px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 4px;">` +
+            shippingHTML += `<div style="margin-bottom: 16px;"><h5 class="footer-section-title" style="margin-bottom: 12px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
                 shippingPartners.sort((a, b) => a.sort_order - b.sort_order).map(ship => `
                 <div class="footer-badge-box" title="${ship.name}">
                     ${ship.icon_url ? `<img src="${ship.icon_url}" alt="${ship.name}">` : `<span>${ship.name}</span>`}
@@ -709,7 +706,7 @@ async function renderFooter() {
         const layoutClass = layoutStyle === 'centered' ? 'footer-layout-centered' : '';
         
         const footerHTML = `
-        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 24px 12px 12px;" dir="${dirAttribute}">
+        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 48px 20px 24px;" dir="${dirAttribute}">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
             <div style="width: 100%; max-width: 1200px; margin: 0 auto;">
                 <div class="footer-grid">
@@ -719,21 +716,20 @@ async function renderFooter() {
                         ${brandTitle ? `<h4 class="footer-brand-title">${brandTitle}</h4>` : ''}
                         ${brandDesc ? `<p class="footer-brand-desc">${brandDesc}</p>` : ''}
                         
-                        <h5 class="footer-section-title">Connect</h5>
                         ${socialsHTML}
                         
-                        <h5 class="footer-section-title">Download App</h5>
                         ${appsHTML}
+                        
                         ${countryHTML}
                     </div>
                     
                     <div>
-                        <h5 class="footer-section-title">Get in Touch</h5>
-                        <div style="margin-bottom: 10px;">
-                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span> <span>${address}</span></div>` : ''}
-                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
-                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
-                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span> <span>${workingHours}</span></div>` : ''}
+                        <h5 class="footer-section-title">Contact</h5>
+                        <div style="margin-bottom: 20px;">
+                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${address}</span></div>` : ''}
+                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
+                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
+                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${workingHours}</span></div>` : ''}
                         </div>
                         
                         ${trustHTML}
@@ -747,7 +743,7 @@ async function renderFooter() {
                 </div>
                 
                 <div class="footer-bottom-bar">
-                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ccc; font-weight: 500;">BINZEO</a> v${settings.version || '2.5'}</p>
+                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank">BINZEO</a> v${settings.version || '2.6'}</p>
                     <p>${defaultCopyright}</p>
                 </div>
             </div>
