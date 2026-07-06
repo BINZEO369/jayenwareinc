@@ -1,9 +1,9 @@
 // ============================================================================
 // footer.js - Professional Premium Footer Component
-// Version: 2.4 (Ultra Responsive - Mobile & Desktop Optimized)
+// Version: 2.5 (Ultra Responsive - Mobile & Desktop Optimized with Collapsible Menus)
 // Brand: JABIYEN (Premium Apparel)
 // Description: Fully responsive footer with compact typography, mobile-first
-//              two-column layout for smaller screens, and refined fashion aesthetics.
+//              two-column layout, collapsible menu sections, and refined fashion aesthetics.
 // ============================================================================
 
 function injectFooterStyles() {
@@ -45,12 +45,11 @@ function injectFooterStyles() {
         /* ==================== MAIN GRID ==================== */
         .footer-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* মোবাইলে দুই কলাম */
+            grid-template-columns: 1fr 1fr;
             gap: 20px 16px;
             padding-bottom: 24px;
         }
         
-        /* খুব ছোট মোবাইলে এক কলাম */
         @media (max-width: 380px) {
             .footer-grid {
                 grid-template-columns: 1fr;
@@ -58,7 +57,6 @@ function injectFooterStyles() {
             }
         }
         
-        /* ট্যাবলেট */
         @media (min-width: 768px) {
             .footer-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -66,7 +64,6 @@ function injectFooterStyles() {
             }
         }
         
-        /* ডেস্কটপ */
         @media (min-width: 1024px) {
             .footer-grid {
                 grid-template-columns: 1.8fr 1fr 1fr 1.8fr;
@@ -76,10 +73,10 @@ function injectFooterStyles() {
 
         /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
-            max-width: 120px;
+            max-width: 100px;
             width: 100%;
             height: auto;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             border-radius: 3px;
             display: block;
             object-fit: contain;
@@ -93,21 +90,21 @@ function injectFooterStyles() {
         
         .footer-brand-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 0.06em;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-transform: uppercase;
             color: #ffffff;
             line-height: 1.2;
         }
         
         .footer-brand-desc {
-            font-size: 0.6875rem;
-            opacity: 0.65;
-            margin-bottom: 16px;
+            font-size: 0.6rem;
+            opacity: 0.6;
+            margin-bottom: 12px;
             max-width: 100%;
-            line-height: 1.5;
+            line-height: 1.4;
             font-weight: 350;
         }
 
@@ -115,16 +112,16 @@ function injectFooterStyles() {
         .social-icons-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
+            gap: 5px;
+            margin-bottom: 12px;
         }
         
         .social-icon-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -141,31 +138,70 @@ function injectFooterStyles() {
         
         .social-icon-link svg, 
         .social-icon-link img {
-            width: 14px;
-            height: 14px;
+            width: 13px;
+            height: 13px;
             object-fit: contain;
         }
 
         /* ==================== SECTION TITLES & DESCRIPTIONS ==================== */
         .footer-section-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 0.6875rem;
+            font-size: 0.625rem;
             font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #7a7a7a;
             position: relative;
             padding-bottom: 0;
         }
-        
-        .footer-section-desc {
+
+        /* ==================== COLLAPSIBLE MENU BUTTON ==================== */
+        .footer-menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #9a9a9a;
+            padding: 8px 12px;
+            border-radius: 4px;
             font-size: 0.625rem;
-            opacity: 0.45;
-            margin-top: -8px;
-            margin-bottom: 10px;
-            font-style: italic;
-            display: block;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: left;
+            font-family: var(--font-heading, 'Manrope', sans-serif);
+        }
+        
+        .footer-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .footer-menu-toggle-icon {
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+            opacity: 0.6;
+        }
+        
+        .footer-menu-toggle.active .footer-menu-toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .footer-menu-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease, margin 0.4s ease;
+        }
+        
+        .footer-menu-content.open {
+            max-height: 800px;
+            margin-top: 8px;
         }
 
         /* ==================== 3 & 4. MENUS ==================== */
@@ -176,9 +212,9 @@ function injectFooterStyles() {
         }
         
         .footer-links-list > li {
-            margin-bottom: 7px;
-            font-size: 0.6875rem;
-            opacity: 0.75;
+            margin-bottom: 6px;
+            font-size: 0.625rem;
+            opacity: 0.7;
             transition: opacity 0.2s;
         }
         
@@ -187,39 +223,35 @@ function injectFooterStyles() {
         }
         
         .footer-link-desc {
-            display: block;
-            font-size: 0.6rem;
-            opacity: 0.45;
-            margin-top: 1px;
-            font-style: italic;
+            display: none;
         }
 
         .footer-nested-links {
             list-style: none;
-            padding-left: 12px;
-            margin-top: 6px;
+            padding-left: 10px;
+            margin-top: 4px;
             border-left: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .footer-nested-links > li {
-            margin-bottom: 5px;
-            font-size: 0.65rem;
-            opacity: 0.65;
+            margin-bottom: 4px;
+            font-size: 0.6rem;
+            opacity: 0.6;
         }
 
         /* ==================== 5. PAYMENT METHODS ==================== */
         .footer-payment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-            gap: 6px;
-            margin-bottom: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 5px;
+            margin-bottom: 10px;
         }
         
         .footer-payment-item {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 6px 4px;
-            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 5px 3px;
+            border-radius: 3px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -235,17 +267,17 @@ function injectFooterStyles() {
         }
         
         .footer-payment-icon { 
-            height: 16px; 
-            margin-bottom: 3px; 
+            height: 14px; 
+            margin-bottom: 2px; 
             object-fit: contain; 
         }
         .footer-payment-name { 
-            font-size: 0.6rem; 
+            font-size: 0.55rem; 
             font-weight: 500; 
             opacity: 0.8; 
         }
         .footer-payment-account { 
-            font-size: 0.55rem; 
+            font-size: 0.5rem; 
             opacity: 0.45; 
             margin-top: 1px; 
         }
@@ -256,8 +288,8 @@ function injectFooterStyles() {
             left: 50%;
             transform: translateX(-50%);
             background: #ffffff;
-            padding: 3px;
-            border-radius: 4px;
+            padding: 2px;
+            border-radius: 3px;
             display: none;
             box-shadow: 0 6px 16px rgba(0,0,0,0.4);
             z-index: 20;
@@ -266,8 +298,8 @@ function injectFooterStyles() {
             display: block; 
         }
         .footer-qr-tooltip img { 
-            width: 60px; 
-            height: 60px; 
+            width: 50px; 
+            height: 50px; 
         }
 
         /* ==================== 6, 7 & 10. BADGES ==================== */
@@ -275,22 +307,22 @@ function injectFooterStyles() {
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
         
         .footer-badge-box {
             background: rgba(255, 255, 255, 0.03);
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 3px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.625rem;
+            gap: 4px;
+            font-size: 0.55rem;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
         
         .footer-badge-box img { 
-            max-height: 16px; 
+            max-height: 14px; 
             object-fit: contain; 
         }
         .badge-text-wrapper { 
@@ -298,7 +330,7 @@ function injectFooterStyles() {
             flex-direction: column; 
         }
         .badge-subtitle { 
-            font-size: 0.55rem; 
+            font-size: 0.5rem; 
             opacity: 0.45; 
         }
 
@@ -306,20 +338,20 @@ function injectFooterStyles() {
         .footer-app-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
+            gap: 5px;
+            margin-bottom: 12px;
         }
         
         .footer-app-btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 5px 8px;
+            border-radius: 3px;
             font-weight: 500;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             transition: background 0.25s;
         }
         
@@ -327,17 +359,17 @@ function injectFooterStyles() {
             background: rgba(255, 255, 255, 0.12); 
         }
         .footer-app-btn img { 
-            width: 14px; 
-            height: 14px; 
+            width: 12px; 
+            height: 12px; 
         }
 
         /* ==================== 9. COUNTRY SELECTOR ==================== */
         .footer-country-wrapper {
             background: rgba(0, 0, 0, 0.2);
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            margin-top: 10px;
+            padding: 6px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 8px;
             display: block; 
             width: 100%;
             max-width: 100%;
@@ -347,12 +379,12 @@ function injectFooterStyles() {
             width: 100%;
             background: rgba(255, 255, 255, 0.03);
             color: #c0c0c0;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 6px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 6px;
             border-radius: 3px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             outline: none;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             cursor: pointer;
         }
         
@@ -363,48 +395,48 @@ function injectFooterStyles() {
         .footer-country-select option { 
             background: #1a1a1a; 
             color: #e0e0e0; 
-            padding: 6px;
+            padding: 5px;
         }
         
         .footer-exchange-rate { 
-            font-size: 0.6rem; 
-            opacity: 0.55; 
+            font-size: 0.55rem; 
+            opacity: 0.5; 
             color: #909090;
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
 
         /* ==================== CONTACT INFO ==================== */
         .footer-contact-item {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
-            margin-bottom: 7px;
-            font-size: 0.6875rem;
-            opacity: 0.75;
+            gap: 6px;
+            margin-bottom: 6px;
+            font-size: 0.625rem;
+            opacity: 0.7;
         }
         .footer-contact-item a {
             font-weight: 400;
         }
         .footer-contact-icon {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin-top: 1px;
-            opacity: 0.65;
+            opacity: 0.6;
         }
 
         /* ==================== 11. BOTTOM BAR ==================== */
         .footer-bottom-bar {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 16px;
-            margin-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 12px;
+            margin-top: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            gap: 6px;
-            font-size: 0.65rem;
-            opacity: 0.45;
+            gap: 4px;
+            font-size: 0.6rem;
+            opacity: 0.4;
         }
         
         @media (min-width: 768px) {
@@ -417,12 +449,8 @@ function injectFooterStyles() {
         .footer-layout-centered .footer-grid { 
             text-align: center; 
         }
-        .footer-layout-centered .footer-section-title::after { 
-            left: 50%; 
-            transform: translateX(-50%); 
-        }
         .footer-layout-centered .footer-country-wrapper { 
-            margin: 10px auto 0; 
+            margin: 8px auto 0; 
         }
         .footer-layout-centered .footer-contact-item { 
             justify-content: center; 
@@ -431,22 +459,48 @@ function injectFooterStyles() {
             margin-left: auto; 
             margin-right: auto; 
         }
+        .footer-layout-centered .footer-menu-toggle {
+            text-align: center;
+            justify-content: center;
+            gap: 6px;
+        }
         
-        /* মোবাইল সেন্টার্ড লেআউটের জন্যও দুই কলাম ঠিক রাখা */
         @media (max-width: 767px) {
             .footer-layout-centered .footer-contact-item {
                 justify-content: flex-start;
             }
+            .footer-layout-centered .footer-menu-toggle {
+                text-align: left;
+                justify-content: space-between;
+            }
         }
-        
-        /* ==================== UTILITY CLASSES ==================== */
-        .footer-full-width-mobile {
-            grid-column: 1 / -1;
+
+        /* ==================== MOBILE SPECIFIC ==================== */
+        @media (max-width: 767px) {
+            .footer-brand-logo {
+                max-width: 80px;
+                margin-bottom: 8px;
+            }
+            .footer-brand-title {
+                font-size: 0.75rem;
+            }
+            .footer-menu-toggle {
+                font-size: 0.6rem;
+                padding: 6px 10px;
+            }
         }
         
         @media (min-width: 1024px) {
-            .footer-full-width-mobile {
-                grid-column: auto;
+            .footer-menu-content {
+                max-height: none !important;
+                overflow: visible !important;
+                margin-top: 0 !important;
+            }
+            .footer-menu-toggle {
+                display: none !important;
+            }
+            .footer-section-title {
+                display: block !important;
             }
         }
     </style>
@@ -465,6 +519,18 @@ function getSocialIconHTML(platform, link) {
     return icons[platform] || '';
 }
 
+function initMenuToggles() {
+    document.querySelectorAll('.footer-menu-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content) {
+                content.classList.toggle('open');
+            }
+        });
+    });
+}
+
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     
@@ -481,13 +547,11 @@ async function renderFooter() {
             countries = [], trustBadges = [], settings = {} 
         } = footerData;
         
-        // --- Table 11: Settings ---
         const bgColor = settings.background_color || '#0a0a0a';
         const textColor = settings.text_color || '#b0b0b0';
         const layoutStyle = settings.layout_style || 'standard';
         const customCSS = settings.custom_css || '';
         
-        // --- Table 4: Robust Content Processing ---
         let mergedContent = {};
         if (Array.isArray(content) && content.length > 0) {
             content.forEach(item => {
@@ -504,20 +568,16 @@ async function renderFooter() {
         const workingHours = mergedContent.working_hours || '';
         const defaultCopyright = settings.copyright_text || mergedContent.copyright_text || '© JayenWare. All Rights Reserved.';
 
-        // --- Table 1: Social Links ---
         let socialsHTML = '';
         if (socialLinks && socialLinks.length > 0) {
             socialsHTML = `<div class="social-icons-grid">` + 
                 socialLinks.sort((a, b) => a.sort_order - b.sort_order).map(link => {
                     const platform = (link.platform_name || '').toLowerCase();
                     const iconContent = link.platform_icon ? `<img src="${link.platform_icon}" alt="${link.platform_name}">` : getSocialIconHTML(platform, link.link_url);
-                    return `<a href="${link.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="${link.hover_title || link.platform_name}">
-                                ${iconContent}
-                            </a>`;
+                    return `<a href="${link.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="${link.hover_title || link.platform_name}">${iconContent}</a>`;
                 }).join('') + `</div>`;
         }
 
-        // --- Table 8: App Links ---
         let appsHTML = '';
         if (appLinks && appLinks.length > 0) {
             appsHTML = `<div class="footer-app-grid">` + 
@@ -530,7 +590,6 @@ async function renderFooter() {
                 }).join('') + `</div>`;
         }
 
-        // --- Table 9: Country Selector ---
         let countryHTML = '';
         let dirAttribute = 'ltr';
         
@@ -546,7 +605,6 @@ async function renderFooter() {
             
             countryHTML = `
             <div class="footer-country-wrapper">
-                <span class="footer-section-desc">Select your region</span>
                 <select class="footer-country-select" onchange="window.location.href=this.value">
                     ${countries.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)).map(c => `
                         <option value="?country=${c.country_code || ''}&lang=${c.language_code || ''}" ${c.is_default ? 'selected' : ''}>
@@ -558,46 +616,48 @@ async function renderFooter() {
             </div>`;
         }
 
-        // --- Table 2 & 3: Menus and Quick Links ---
         let menusHTML = '';
         if (menus && menus.length > 0) {
-            menus.sort((a, b) => a.sort_order - b.sort_order).forEach(menu => {
+            menus.sort((a, b) => a.sort_order - b.sort_order).forEach((menu, index) => {
                 const links = menu.links || [];
                 const parents = links.filter(l => !l.parent_id).sort((a, b) => a.sort_order - b.sort_order);
+                const menuId = `footer-menu-${index}-${Date.now()}`;
                 
                 menusHTML += `
                 <div>
-                    <h5 class="footer-section-title">${menu.title}</h5>
-                    <span class="footer-section-desc">${menu.description || 'Explore our ' + menu.title.toLowerCase()}</span>
-                    <ul class="footer-links-list">
-                        ${parents.map(parent => {
-                            const target = parent.open_in_new_tab ? 'target="_blank"' : '';
-                            const children = links.filter(l => l.parent_id === parent.id).sort((a, b) => a.sort_order - b.sort_order);
-                            
-                            let childHTML = '';
-                            if(children.length > 0) {
-                                childHTML = `<ul class="footer-nested-links">
-                                    ${children.map(child => `<li><a href="${child.link_url || '#'}" ${child.open_in_new_tab ? 'target="_blank"' : ''}>${child.icon_class ? `<i class="${child.icon_class}"></i> ` : ''}${child.title}</a>${child.description ? `<span class="footer-link-desc">${child.description}</span>` : ''}</li>`).join('')}
-                                </ul>`;
-                            }
-                            return `<li>
-                                <a href="${parent.link_url || '#'}" ${target}>${parent.icon_class ? `<i class="${parent.icon_class}"></i> ` : ''}${parent.title}</a>
-                                ${parent.description ? `<span class="footer-link-desc">${parent.description}</span>` : ''}
-                                ${childHTML}
-                            </li>`;
-                        }).join('')}
-                    </ul>
+                    <h5 class="footer-section-title" style="display: none;">${menu.title}</h5>
+                    <button class="footer-menu-toggle" aria-expanded="false" aria-controls="${menuId}">
+                        ${menu.title}
+                        <span class="footer-menu-toggle-icon">▼</span>
+                    </button>
+                    <div class="footer-menu-content" id="${menuId}">
+                        <ul class="footer-links-list">
+                            ${parents.map(parent => {
+                                const target = parent.open_in_new_tab ? 'target="_blank"' : '';
+                                const children = links.filter(l => l.parent_id === parent.id).sort((a, b) => a.sort_order - b.sort_order);
+                                
+                                let childHTML = '';
+                                if(children.length > 0) {
+                                    childHTML = `<ul class="footer-nested-links">
+                                        ${children.map(child => `<li><a href="${child.link_url || '#'}" ${child.open_in_new_tab ? 'target="_blank"' : ''}>${child.title}</a></li>`).join('')}
+                                    </ul>`;
+                                }
+                                return `<li>
+                                    <a href="${parent.link_url || '#'}" ${target}>${parent.title}</a>
+                                    ${childHTML}
+                                </li>`;
+                            }).join('')}
+                        </ul>
+                    </div>
                 </div>`;
             });
         }
 
-        // --- Table 5: Payment Methods ---
         let paymentsHTML = '';
         if (paymentMethods && paymentMethods.length > 0) {
             paymentsHTML = `
             <div class="footer-section">
                 <h5 class="footer-section-title">Secure Payments</h5>
-                <span class="footer-section-desc">We accept</span>
                 <div class="footer-payment-grid">
                     ${paymentMethods.sort((a, b) => a.sort_order - b.sort_order).map(pm => `
                         <div class="footer-payment-item" title="${pm.name}">
@@ -610,10 +670,9 @@ async function renderFooter() {
             </div>`;
         }
 
-        // --- Table 6, 7 & 10: Trust Badges, Certs, Shipping ---
         let trustHTML = '';
         if (trustBadges && trustBadges.length > 0) {
-            trustHTML += `<div style="margin-bottom: 10px;"><h5 class="footer-section-title" style="margin-bottom: 6px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 6px;">` +
+            trustHTML += `<div style="margin-bottom: 8px;"><h5 class="footer-section-title" style="margin-bottom: 4px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 4px;">` +
                 trustBadges.sort((a, b) => a.sort_order - b.sort_order).map(badge => `
                 <div class="footer-badge-box">
                     ${badge.badge_url ? `<img src="${badge.badge_url}" alt="${badge.title}">` : ''}
@@ -627,7 +686,7 @@ async function renderFooter() {
         
         let certsHTML = '';
         if (certifications && certifications.length > 0) {
-            certsHTML += `<div style="margin-bottom: 10px;"><h5 class="footer-section-title" style="margin-bottom: 6px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 6px;">` +
+            certsHTML += `<div style="margin-bottom: 8px;"><h5 class="footer-section-title" style="margin-bottom: 4px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 4px;">` +
                 certifications.sort((a, b) => a.sort_order - b.sort_order).map(cert => `
                 <div class="footer-badge-box">
                     ${cert.link_url ? `<a href="${cert.link_url}" target="_blank">` : ''}
@@ -639,7 +698,7 @@ async function renderFooter() {
 
         let shippingHTML = '';
         if (shippingPartners && shippingPartners.length > 0) {
-            shippingHTML += `<div style="margin-bottom: 10px;"><h5 class="footer-section-title" style="margin-bottom: 6px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 6px;">` +
+            shippingHTML += `<div style="margin-bottom: 8px;"><h5 class="footer-section-title" style="margin-bottom: 4px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 4px;">` +
                 shippingPartners.sort((a, b) => a.sort_order - b.sort_order).map(ship => `
                 <div class="footer-badge-box" title="${ship.name}">
                     ${ship.icon_url ? `<img src="${ship.icon_url}" alt="${ship.name}">` : `<span>${ship.name}</span>`}
@@ -647,16 +706,14 @@ async function renderFooter() {
             `).join('') + `</div></div>`;
         }
 
-        // --- Build Final HTML ---
         const layoutClass = layoutStyle === 'centered' ? 'footer-layout-centered' : '';
         
         const footerHTML = `
-        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 28px 16px 16px;" dir="${dirAttribute}">
+        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 24px 12px 12px;" dir="${dirAttribute}">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
             <div style="width: 100%; max-width: 1200px; margin: 0 auto;">
                 <div class="footer-grid">
                     
-                    <!-- ব্র্যান্ড ও কানেক্ট সেকশন - মোবাইলে দুই কলামের প্রথম কলাম -->
                     <div>
                         ${logoUrl ? `<img src="${logoUrl}" alt="${brandTitle || 'Brand Logo'}" class="footer-brand-logo">` : ''}
                         ${brandTitle ? `<h4 class="footer-brand-title">${brandTitle}</h4>` : ''}
@@ -670,11 +727,9 @@ async function renderFooter() {
                         ${countryHTML}
                     </div>
                     
-                    <!-- কন্টাক্ট ও ট্রাস্ট সেকশন - মোবাইলে দুই কলামের দ্বিতীয় কলাম -->
                     <div>
                         <h5 class="footer-section-title">Get in Touch</h5>
-                        <span class="footer-section-desc">We're here to help</span>
-                        <div style="margin-bottom: 14px;">
+                        <div style="margin-bottom: 10px;">
                             ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span> <span>${address}</span></div>` : ''}
                             ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
                             ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
@@ -688,12 +743,11 @@ async function renderFooter() {
                         ${paymentsHTML}
                     </div>
                     
-                    <!-- মেনু সেকশনগুলো - মোবাইলে পূর্ণ প্রস্থ, ডেস্কটপে নিজস্ব কলাম -->
                     ${menusHTML}
                 </div>
                 
                 <div class="footer-bottom-bar">
-                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ccc; font-weight: 500;">BINZEO</a> v${settings.version || '2.4'}</p>
+                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ccc; font-weight: 500;">BINZEO</a> v${settings.version || '2.5'}</p>
                     <p>${defaultCopyright}</p>
                 </div>
             </div>
@@ -702,19 +756,19 @@ async function renderFooter() {
         
         document.body.insertAdjacentHTML('beforeend', footerHTML);
         
+        initMenuToggles();
+        
     } catch (error) {
         console.error('Footer DB synchronization failed:', error);
     }
 }
 
-// Ensure execution
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderFooter);
 } else {
     setTimeout(renderFooter, 50);
 }
 
-// Module export logic
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { renderFooter, getSocialIconHTML };
 }
