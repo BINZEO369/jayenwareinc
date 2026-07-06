@@ -1,13 +1,11 @@
-
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 9.0 (Complete Footer System - 10 Tables Integration)
+// Version: 10.0 (Database-Driven - 10 Tables Integration)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
 let cart = JSON.parse(localStorage.getItem('jabiyen_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('jabiyen_wish') || '[]');
-let userSession = null;
 let allMenuItems = [];
 let allCategories = [];
 let allSubcategories = [];
@@ -57,34 +55,65 @@ function applyFontVariables() {
 }
 
 // ============================================================================
-// ANNOUNCEMENT API FETCH
+// API FETCH FUNCTIONS
 // ============================================================================
 async function fetchAnnouncement() {
     try {
         const response = await fetch('/api/announcement');
         if (!response.ok) throw new Error('Failed to fetch announcement');
-        const data = await response.json();
-        announcementData = data;
-        return data;
+        announcementData = await response.json();
+        return announcementData;
     } catch (error) {
         console.error('Announcement fetch error:', error);
         return null;
     }
 }
 
-// ============================================================================
-// FOOTER DATA API FETCH
-// ============================================================================
 async function fetchFooterData() {
     try {
         const response = await fetch('/api/footer/complete');
         if (!response.ok) throw new Error('Failed to fetch footer data');
-        const data = await response.json();
-        footerData = data;
-        return data;
+        footerData = await response.json();
+        return footerData;
     } catch (error) {
         console.error('Footer data fetch error:', error);
         return null;
+    }
+}
+
+async function fetchMenuItems() {
+    try {
+        const response = await fetch('/api/menu-items');
+        if (!response.ok) throw new Error('Failed to fetch menu pipeline');
+        allMenuItems = await response.json();
+        return allMenuItems;
+    } catch (error) {
+        console.error('Menu infrastructure error:', error);
+        return [];
+    }
+}
+
+async function fetchCategories() {
+    try {
+        const response = await fetch('/api/categories');
+        if (!response.ok) throw new Error('Failed to fetch categories');
+        allCategories = await response.json();
+        return allCategories;
+    } catch (error) {
+        console.error('Category framework error:', error);
+        return [];
+    }
+}
+
+async function fetchSubcategories() {
+    try {
+        const response = await fetch('/api/subcategories');
+        if (!response.ok) throw new Error('Failed to fetch subcategories');
+        allSubcategories = await response.json();
+        return allSubcategories;
+    } catch (error) {
+        console.error('Subcategory architecture error:', error);
+        return [];
     }
 }
 
@@ -534,47 +563,11 @@ function injectSharedStyles() {
 }
 
 // ============================================================================
-// DATA CONTROLLER & UTILITIES
+// UTILITIES
 // ============================================================================
 function createSlug(text) {
     if (!text) return '';
     return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
-}
-
-async function fetchMenuItems() {
-    try {
-        const response = await fetch('/api/menu-items');
-        if (!response.ok) throw new Error('Failed to fetch menu pipeline');
-        allMenuItems = await response.json();
-        return allMenuItems;
-    } catch (error) {
-        console.error('Menu infrastructure error:', error);
-        return [];
-    }
-}
-
-async function fetchCategories() {
-    try {
-        const response = await fetch('/api/categories');
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        allCategories = await response.json();
-        return allCategories;
-    } catch (error) {
-        console.error('Category framework error:', error);
-        return [];
-    }
-}
-
-async function fetchSubcategories() {
-    try {
-        const response = await fetch('/api/subcategories');
-        if (!response.ok) throw new Error('Failed to fetch subcategories');
-        allSubcategories = await response.json();
-        return allSubcategories;
-    } catch (error) {
-        console.error('Subcategory architecture error:', error);
-        return [];
-    }
 }
 
 function buildMenuTree(items, parentId = null) {
@@ -600,7 +593,7 @@ function getMenuLinkUrl(item) {
 }
 
 // ============================================================================
-// RENDER UNIFIED DRAWER ENGINE
+// DRAWER MENU ENGINE
 // ============================================================================
 function renderUnifiedDrawerMenu(rootItems) {
     let html = '';
@@ -657,7 +650,7 @@ function renderDrawerSubItems(item, parentId) {
 }
 
 function renderDatabaseCategoriesToDrawer(parentId) {
-    if (!allCategories || allCategories.length === 0) return '<div class="menu-node-sub-item opacity-40">No configuration found</div>';
+    if (!allCategories || allCategories.length === 0) return '';
     let html = '';
     allCategories.forEach((cat, idx) => {
         const catSlug = cat.slug || createSlug(cat.name);
@@ -721,8 +714,9 @@ async function renderHeader() {
         </div>`;
     } else {
         document.body.classList.add('announcement-dismissed');
-        announcementHTML = `<div class="top-announcement-bar bar-hidden" id="top-announcement-bar"><span id="announcement-text"></span></div>`;
     }
+
+    const drawerContent = menuTree.length > 0 ? renderUnifiedDrawerMenu(menuTree) : '';
 
     const headerHTML = `
     ${announcementHTML}
@@ -737,7 +731,7 @@ async function renderHeader() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
-        <div class="side-menu-scroll" id="sideMenuContent">${renderUnifiedDrawerMenu(menuTree)}</div>
+        <div class="side-menu-scroll" id="sideMenuContent">${drawerContent}</div>
         <div class="side-drawer-footer">
             <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
         </div>
@@ -795,57 +789,49 @@ function dismissAnnouncementBar() {
 // ============================================================================
 // SOCIAL ICONS - PREMIUM MONOCHROME SVG SET
 // ============================================================================
-function getSocialIconHTML(platform, link) {
+function getSocialIconSVG(platform) {
     const icons = {
-        'facebook': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-        'instagram': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.908 12.2384 16.0396 11.4077 15.9059C10.5771 15.7722 9.80971 15.3801 9.21479 14.7851C8.61987 14.1902 8.2278 13.4228 8.09412 12.5922C7.96044 11.7615 8.092 10.9098 8.47026 10.1583C8.84852 9.40678 9.45418 8.7937 10.2009 8.4062C10.9477 8.0187 11.7978 7.87652 12.63 8C13.4789 8.12583 14.2648 8.52151 14.8716 9.12836C15.4785 9.73521 15.8742 10.5211 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>` },
-        'youtube': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1792 5.51057 21.8387 5.15941C21.4982 4.80824 21.0708 4.55518 20.6 4.43C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92916 4.58518 2.50178 4.83824 2.16132 5.18941C1.82085 5.54057 1.57882 5.97541 1.46 6.45C1.14521 8.17418 0.991095 9.92534 1 11.68C0.991095 13.4347 1.14521 15.1858 1.46 16.91C1.57882 17.3846 1.82085 17.8194 2.16132 18.1706C2.50178 18.5218 2.92916 18.7748 3.4 18.9C5.12 19.36 12 19.36 12 19.36C12 19.36 18.88 19.36 20.6 18.9C21.0708 18.7748 21.4982 18.5218 21.8387 18.1706C22.1792 17.8194 22.4212 17.3846 22.54 16.91C22.8548 15.1858 23.0089 13.4347 23 11.68C23.0089 9.92534 22.8548 8.17418 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.68L9.75 8.34V15.02Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-        'tiktok': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12V8.5C9 6.01472 11.0147 4 13.5 4H16M9 20C7.34315 20 6 18.6569 6 17C6 15.3431 7.34315 14 9 14C10.6569 14 12 15.3431 12 17V4M20 8V12C18.3431 12 17 10.6569 17 9V8H20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-        'x': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" fill="currentColor"/></svg>` },
-        'pinterest': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16C8 16 6 10 6 8C6 4 9 2 12 2C16 2 18 5 18 8C18 12 16 16 13 16C11 16 10 14 10 14M10 14L8 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>` },
-        'threads': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M16.5 10.5C16.5 10.5 15.5 8 12 8C8.5 8 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 12 16.5C14.5 16.5 15.5 14.5 15.5 13.5C15.5 12.5 14.5 12 13 12C11.5 12 10.5 12.5 10.5 13.5C10.5 14.5 11.5 15 12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>` },
-        'whatsapp': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5C21 16.7467 16.7467 21 11.5 21C9.38318 21 7.42019 20.3098 5.86667 19.1333L2 20L2.86667 16.1333C1.69019 14.5798 1 12.6168 1 10.5C1 5.25329 5.25329 1 10.5 1C15.7467 1 20 5.25329 20 10.5V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8.5C8 8.5 8.5 7.5 9.5 7.5C10.5 7.5 11 8 11.5 9C12 10 12.5 10.5 13 11C13.5 11.5 14 12 14.5 12.5C15 13 15.5 13.5 16 14.5C16.5 15.5 16 16 16 16L15 16.5C14.5 16.5 13.5 16 13 15.5C12.5 15 11 13.5 10.5 13C10 12.5 9.5 12 9 11.5C8.5 11 8 10.5 8 9.5C8 8.5 8 8.5 8 8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>` },
-        'linkedin': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>` },
-        'email': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 20.9 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-        'google': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M12 6V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/></svg>` },
-        'maps': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>` },
-        'linktree': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2V14M12 14L8 10M12 14L16 10M12 22V18M8 18L12 14M16 18L12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="14" r="1" fill="currentColor"/></svg>` },
-        'messenger': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 14.5 2.8 16.8 4.2 18.7L3.5 21.5L6.4 20.2C8.1 21.3 10.1 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 13L10 9.5L14 12.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` }
+        'facebook': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        'instagram': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.908 12.2384 16.0396 11.4077 15.9059C10.5771 15.7722 9.80971 15.3801 9.21479 14.7851C8.61987 14.1902 8.2278 13.4228 8.09412 12.5922C7.96044 11.7615 8.092 10.9098 8.47026 10.1583C8.84852 9.40678 9.45418 8.7937 10.2009 8.4062C10.9477 8.0187 11.7978 7.87652 12.63 8C13.4789 8.12583 14.2648 8.52151 14.8716 9.12836C15.4785 9.73521 15.8742 10.5211 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>`,
+        'youtube': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1792 5.51057 21.8387 5.15941C21.4982 4.80824 21.0708 4.55518 20.6 4.43C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92916 4.58518 2.50178 4.83824 2.16132 5.18941C1.82085 5.54057 1.57882 5.97541 1.46 6.45C1.14521 8.17418 0.991095 9.92534 1 11.68C0.991095 13.4347 1.14521 15.1858 1.46 16.91C1.57882 17.3846 1.82085 17.8194 2.16132 18.1706C2.50178 18.5218 2.92916 18.7748 3.4 18.9C5.12 19.36 12 19.36 12 19.36C12 19.36 18.88 19.36 20.6 18.9C21.0708 18.7748 21.4982 18.5218 21.8387 18.1706C22.1792 17.8194 22.4212 17.3846 22.54 16.91C22.8548 15.1858 23.0089 13.4347 23 11.68C23.0089 9.92534 22.8548 8.17418 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.68L9.75 8.34V15.02Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        'tiktok': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12V8.5C9 6.01472 11.0147 4 13.5 4H16M9 20C7.34315 20 6 18.6569 6 17C6 15.3431 7.34315 14 9 14C10.6569 14 12 15.3431 12 17V4M20 8V12C18.3431 12 17 10.6569 17 9V8H20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        'x': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" fill="currentColor"/></svg>`,
+        'pinterest': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16C8 16 6 10 6 8C6 4 9 2 12 2C16 2 18 5 18 8C18 12 16 16 13 16C11 16 10 14 10 14M10 14L8 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>`,
+        'threads': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M16.5 10.5C16.5 10.5 15.5 8 12 8C8.5 8 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 12 16.5C14.5 16.5 15.5 14.5 15.5 13.5C15.5 12.5 14.5 12 13 12C11.5 12 10.5 12.5 10.5 13.5C10.5 14.5 11.5 15 12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+        'whatsapp': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5C21 16.7467 16.7467 21 11.5 21C9.38318 21 7.42019 20.3098 5.86667 19.1333L2 20L2.86667 16.1333C1.69019 14.5798 1 12.6168 1 10.5C1 5.25329 5.25329 1 10.5 1C15.7467 1 20 5.25329 20 10.5V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8.5C8 8.5 8.5 7.5 9.5 7.5C10.5 7.5 11 8 11.5 9C12 10 12.5 10.5 13 11C13.5 11.5 14 12 14.5 12.5C15 13 15.5 13.5 16 14.5C16.5 15.5 16 16 16 16L15 16.5C14.5 16.5 13.5 16 13 15.5C12.5 15 11 13.5 10.5 13C10 12.5 9.5 12 9 11.5C8.5 11 8 10.5 8 9.5C8 8.5 8 8.5 8 8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
+        'linkedin': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>`,
+        'email': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 20.9 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
     };
-    const iconData = icons[platform];
-    if (!iconData) return null;
-    return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}">${iconData.svg}</a>`;
+    return icons[platform] || null;
 }
 
 // ============================================================================
-// FOOTER - FULLY DYNAMIC (10 Tables Integration)
+// FOOTER - FULLY DYNAMIC (10 Tables - Database Driven)
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     await fetchFooterData();
 
-    // ======================== SOCIAL LINKS FROM DB ========================
+    // ======================== SOCIAL LINKS ========================
     let socialIconsHTML = '';
-    if (footerData?.social_links && footerData.social_links.length > 0) {
+    if (footerData.social_links?.length) {
         socialIconsHTML = footerData.social_links.map(social => {
             if (social.platform_icon && social.platform_icon.trim().startsWith('<svg')) {
                 return `<a href="${social.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${social.platform_name}">${social.platform_icon}</a>`;
             }
             const platformKey = social.platform_name.toLowerCase().replace(/\s+/g, '');
-            const iconHTML = getSocialIconHTML(platformKey, social.link_url);
-            return iconHTML || `<a href="${social.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${social.platform_name}"><span class="text-[8px] font-bold">${social.platform_name.charAt(0)}</span></a>`;
-        }).filter(html => html !== null).join('');
-    }
-    if (!socialIconsHTML) {
-        const socialLink = 'https://binzeo.com/sociallink';
-        socialIconsHTML = ['facebook','instagram','youtube','tiktok','x','pinterest','threads','whatsapp','linkedin','email','google','maps','linktree','messenger']
-            .map(p => getSocialIconHTML(p, socialLink)).filter(h => h).join('');
+            const svg = getSocialIconSVG(platformKey);
+            if (svg) {
+                return `<a href="${social.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${social.platform_name}">${svg}</a>`;
+            }
+            return `<a href="${social.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${social.platform_name}"><span class="text-[8px] font-bold">${social.platform_name.charAt(0)}</span></a>`;
+        }).join('');
     }
 
     // ======================== QUICK LINKS TREE ========================
     let quickLinksColumn2HTML = '';
     let quickLinksColumn3HTML = '';
-    if (footerData?.quick_links_tree && footerData.quick_links_tree.length > 0) {
+    if (footerData.quick_links_tree?.length) {
         const mid = Math.ceil(footerData.quick_links_tree.length / 2);
         const col1 = footerData.quick_links_tree.slice(0, mid);
         const col2 = footerData.quick_links_tree.slice(mid);
@@ -857,41 +843,33 @@ async function renderFooter() {
         }).join('');
         quickLinksColumn2HTML = renderSection(col1);
         quickLinksColumn3HTML = renderSection(col2);
-    } else {
-        quickLinksColumn2HTML = `<h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Pipeline Links</h5><ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70"><li><a href="/about" class="no-underline">About Corporate</a></li><li><a href="/contact" class="no-underline">Contact Portal</a></li><li><a href="/journal" class="no-underline">Journal</a></li><li><a href="/products" class="no-underline">All Products</a></li></ul>`;
-        quickLinksColumn3HTML = `<h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Governance</h5><ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70"><li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li><li><a href="/terms" class="no-underline">Terms Engine</a></li><li><a href="/returns" class="no-underline">Returns Architecture</a></li><li><a href="/faq" class="no-underline">FAQ Engine</a></li></ul>`;
     }
 
-    // ======================== FOOTER CONTENT ========================
-    const brandSection = footerData?.footer_content?.find(c => c.section_name === 'brand') || {};
-    const brandTitle = brandSection.title || 'JABIYEN';
-    const brandDescription = brandSection.description || 'Premium lifestyle apparel architecture calibrated for modern aesthetics.';
-    const brandLogo = brandSection.logo_url || '/logo.png';
-    const contactSection = footerData?.footer_content?.find(c => c.section_name === 'contact') || {};
-    const contactTitle = contactSection.title || 'Direct Contact';
-    const contactDescription = contactSection.description || 'binzeo369@outlook.com';
+    // ======================== FOOTER CONTENT (brand & contact) ========================
+    const brandSection = footerData.footer_content?.find(c => c.section_name === 'brand') || {};
+    const contactSection = footerData.footer_content?.find(c => c.section_name === 'contact') || {};
 
     // ======================== PAYMENT METHODS ========================
     let paymentMethodsHTML = '';
-    if (footerData?.payment_methods?.length) {
+    if (footerData.payment_methods?.length) {
         paymentMethodsHTML = `<div class="mt-6"><h5 class="text-[9px] uppercase tracking-widest mb-2.5 opacity-40">Payment Methods</h5><div class="flex flex-wrap items-center gap-3 footer-payment-icons">${footerData.payment_methods.map(pm => pm.icon_url ? `<img src="${pm.icon_url}" alt="${pm.name}" class="h-5 w-auto opacity-60 hover:opacity-100 transition-all duration-300" title="${pm.name}" loading="lazy">` : `<span class="text-[8px] uppercase tracking-wider opacity-50 bg-white/5 px-2 py-1 rounded-md">${pm.name}</span>`).join('')}</div></div>`;
     }
 
     // ======================== SHIPPING PARTNERS ========================
     let shippingPartnersHTML = '';
-    if (footerData?.shipping_partners?.length) {
+    if (footerData.shipping_partners?.length) {
         shippingPartnersHTML = `<div class="mt-4"><h5 class="text-[9px] uppercase tracking-widest mb-2 opacity-40">Shipping Partners</h5><div class="flex flex-wrap items-center gap-3 footer-shipping-icons">${footerData.shipping_partners.map(sp => sp.icon_url ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-4 w-auto opacity-50 hover:opacity-90 transition-all duration-300" title="${sp.name}" loading="lazy">` : `<span class="text-[7px] uppercase tracking-wide opacity-40 bg-white/5 px-2 py-0.5 rounded">${sp.name}</span>`).join('')}</div></div>`;
     }
 
     // ======================== CERTIFICATIONS ========================
     let certificationsHTML = '';
-    if (footerData?.certifications?.length) {
+    if (footerData.certifications?.length) {
         certificationsHTML = `<div class="mt-4"><h5 class="text-[9px] uppercase tracking-widest mb-2 opacity-40">Certifications</h5><div class="flex flex-wrap items-center gap-3 footer-cert-badges">${footerData.certifications.map(cert => { const bc = cert.badge_url ? `<img src="${cert.badge_url}" alt="${cert.name}" class="h-5 w-auto opacity-60 hover:opacity-100 transition-all duration-300" loading="lazy">` : `<span class="text-[7px] uppercase tracking-wider opacity-50">${cert.name}</span>`; return cert.link_url ? `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" title="${cert.name}" class="inline-block">${bc}</a>` : `<span class="inline-block" title="${cert.name}">${bc}</span>`; }).join('')}</div></div>`;
     }
 
     // ======================== APP LINKS ========================
     let appLinksHTML = '';
-    if (footerData?.app_links?.length) {
+    if (footerData.app_links?.length) {
         const btns = footerData.app_links.map(app => {
             let h = '';
             if (app.app_store_url) h += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">${app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}" class="w-4 h-4 opacity-70" loading="lazy">` : ''}<div class="text-left leading-tight"><span class="text-[6px] uppercase tracking-widest opacity-50 block">Download on</span><span class="text-[9px] font-bold tracking-wide">App Store</span></div></a>`;
@@ -903,51 +881,46 @@ async function renderFooter() {
 
     // ======================== COUNTRY SELECTOR ========================
     let countrySelectorHTML = '';
-    if (footerData?.countries?.length) {
+    if (footerData.countries?.length) {
         countrySelectorHTML = `<div class="mt-4"><h5 class="text-[9px] uppercase tracking-widest mb-2 opacity-40">Country & Language</h5><select id="footer-country-select" class="footer-country-select" onchange="handleCountryChange(this)">${footerData.countries.map(c => `<option value="${c.country_code}" data-currency="${c.currency_code||'BDT'}" data-symbol="${c.currency_symbol||'৳'}" data-language="${c.language_code||'en'}" ${c.is_default?'selected':''}>${c.flag_url?c.flag_url+' ':''}${c.country_name} (${c.language_name||c.language_code||'EN'})</option>`).join('')}</select></div>`;
     }
 
     // ======================== TRUST BADGES ========================
     let trustBadgesHTML = '';
-    if (footerData?.trust_badges?.length) {
+    if (footerData.trust_badges?.length) {
         trustBadgesHTML = `<div class="mt-5 pt-4 border-t border-white/5"><h5 class="text-[9px] uppercase tracking-widest mb-3 opacity-40 text-center">Trust Badges</h5><div class="flex flex-wrap items-center justify-center gap-6">${footerData.trust_badges.map(b => b.badge_url ? `<div class="footer-trust-badge-item"><img src="${b.badge_url}" alt="${b.title}" class="h-8 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300" loading="lazy">${b.subtitle?`<span class="text-[6px] uppercase tracking-widest opacity-40">${b.subtitle}</span>`:''}</div>` : `<div class="footer-trust-badge-item text-center"><span class="text-[8px] font-bold tracking-wider opacity-70 block">${b.title}</span>${b.subtitle?`<span class="text-[6px] uppercase tracking-widest opacity-40">${b.subtitle}</span>`:''}</div>`).join('')}</div></div>`;
     }
 
-    // ======================== SETTINGS ========================
-    const s = footerData?.settings || {};
-    const copyrightText = s.copyright_text || '© 2025 JABIYEN. All Rights Reserved.';
-    const poweredByText = s.powered_by_text || 'Powered by BINZEO Infrastructure';
-    const poweredByLink = s.powered_by_link || 'https://binzeo.vercel.app';
-    const contactEmail = s.contact_email || contactDescription;
-    const contactPhone = s.contact_phone || '+880 1234 567890';
-    const contactAddress = s.contact_address || 'Dhaka, Bangladesh';
+    // ======================== SETTINGS (Database-Driven) ========================
+    const s = footerData.settings || {};
+    const theme = s.theme || 'dark';
+    const layout = s.layout_style || 'standard';
+    const version = s.version || '1.0';
 
     // ======================== BUILD FOOTER ========================
     const footerHTML = `
-    <footer class="pt-12 pb-6" id="main-footer">
+    <footer class="pt-12 pb-6" id="main-footer" data-theme="${theme}" data-layout="${layout}" data-version="${version}">
         <div class="w-full px-4 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
                 <div class="md:col-span-1">
-                    <div class="flex items-center gap-2.5 mb-3"><img src="${brandLogo}" class="w-7 h-7 rounded-lg" alt="${brandTitle}"><h4 class="text-sm font-bold tracking-widest">${brandTitle}</h4></div>
-                    <p class="text-[10px] leading-relaxed mb-4 opacity-50">${brandDescription} Built on <a href="${poweredByLink}" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white hover:opacity-70">BINZEO</a>.</p>
-                    <div class="social-icons-grid mt-3">${socialIconsHTML}</div>
+                    ${brandSection.title ? `<div class="flex items-center gap-2.5 mb-3"><img src="${brandSection.logo_url || '/logo.png'}" class="w-7 h-7 rounded-lg" alt="${brandSection.title}"><h4 class="text-sm font-bold tracking-widest">${brandSection.title}</h4></div>` : ''}
+                    ${brandSection.description ? `<p class="text-[10px] leading-relaxed mb-4 opacity-50">${brandSection.description}</p>` : ''}
+                    ${socialIconsHTML ? `<div class="social-icons-grid mt-3">${socialIconsHTML}</div>` : ''}
                     ${paymentMethodsHTML}${shippingPartnersHTML}${certificationsHTML}${countrySelectorHTML}${appLinksHTML}
                 </div>
                 <div>${quickLinksColumn2HTML}</div>
                 <div>${quickLinksColumn3HTML}</div>
                 <div>
-                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${contactTitle}</h5>
+                    ${contactSection.title ? `<h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${contactSection.title}</h5>` : ''}
                     <div class="space-y-2">
-                        <p class="text-[10px] opacity-60 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg><a href="mailto:${contactEmail}" class="no-underline">${contactEmail}</a></p>
-                        <p class="text-[10px] opacity-40 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2"/></svg><span>${contactPhone}</span></p>
-                        <p class="text-[10px] opacity-40 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg><span>${contactAddress}</span></p>
+                        ${contactSection.description ? `<p class="text-[10px] opacity-60 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 20.9 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg><a href="mailto:${contactSection.description}" class="no-underline">${contactSection.description}</a></p>` : ''}
                     </div>
                 </div>
             </div>
             ${trustBadgesHTML}
-            <div class="border-t border-neutral-900 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-gray-600 ${footerData?.trust_badges?.length?'mt-0':'mt-6'}">
-                <p class="text-[8px] uppercase tracking-widest"><a href="${poweredByLink}" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold hover:text-white transition-colors">${poweredByText}</a></p>
-                <p class="text-[8px] uppercase tracking-widest">&copy; <span id="display-year"></span> ${copyrightText}</p>
+            <div class="border-t border-neutral-900 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-gray-600 ${footerData.trust_badges?.length ? 'mt-0' : 'mt-6'}">
+                <p class="text-[8px] uppercase tracking-widest opacity-40">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold hover:text-white transition-colors">BINZEO</a></p>
+                <p class="text-[8px] uppercase tracking-widest">&copy; <span id="display-year"></span> ${s.copyright_text || 'JABIYEN'} <span class="opacity-40 ml-1">v${version}</span></p>
             </div>
         </div>
     </footer>`;
@@ -1001,7 +974,7 @@ function hideToast() { const toast = document.getElementById('toast'); if (toast
 // ============================================================================
 function openSideMenu() { document.getElementById('sideMenuDrawer')?.classList.add('open'); document.getElementById('sideMenuOverlay')?.classList.add('active'); document.body.style.overflow = 'hidden'; }
 function closeSideMenu() { document.getElementById('sideMenuDrawer')?.classList.remove('open'); document.getElementById('sideMenuOverlay')?.classList.remove('active'); document.body.style.overflow = ''; document.querySelectorAll('.menu-node-submenu.open').forEach(s => s.classList.remove('open')); }
-function toggleDrawerSubmenu(id, el) { document.getElementById(id)?.classList.toggle('open'); }
+function toggleDrawerSubmenu(id) { document.getElementById(id)?.classList.toggle('open'); }
 function toggleCart() { const d = document.getElementById('cart-drawer'); if (d) { d.classList.toggle('open'); if (d.classList.contains('open')) renderCartItems(); } }
 window.toggleCartItemDetails = function(idx) { document.getElementById(`cart-details-${idx}`)?.classList.toggle('open'); document.getElementById(`cart-toggle-icon-${idx}`)?.classList.toggle('open'); };
 
@@ -1072,18 +1045,32 @@ function handleNavScroll() {
 }
 
 // ============================================================================
-// EXPORT ALL GLOBALS
+// GLOBAL EXPORTS
 // ============================================================================
-window.showToast = showToast; window.hideToast = hideToast; window.toggleWishlist = toggleWishlist;
-window.addToCart = addToCart; window.toggleCart = toggleCart; window.removeFromCart = removeFromCart;
-window.updateCartQuantity = updateCartQuantity; window.toggleCartItemDetails = toggleCartItemDetails;
-window.getCartItemDetails = getCartItemDetails; window.isVariantInCart = isVariantInCart;
-window.getProductQuantityInCart = getProductQuantityInCart; window.getVariantQuantityInCart = getVariantQuantityInCart;
-window.clearCart = clearCart; window.getCartSummary = getCartSummary;
-window.openSideMenu = openSideMenu; window.closeSideMenu = closeSideMenu; window.toggleDrawerSubmenu = toggleDrawerSubmenu;
-window.saveCart = saveCart; window.renderCartItems = renderCartItems; window.updateCounts = updateCounts;
-window.dismissAnnouncementBar = dismissAnnouncementBar; window.fetchAnnouncement = fetchAnnouncement;
-window.fetchFooterData = fetchFooterData; window.handleCountryChange = handleCountryChange;
+window.showToast = showToast;
+window.hideToast = hideToast;
+window.toggleWishlist = toggleWishlist;
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.removeFromCart = removeFromCart;
+window.updateCartQuantity = updateCartQuantity;
+window.toggleCartItemDetails = toggleCartItemDetails;
+window.getCartItemDetails = getCartItemDetails;
+window.isVariantInCart = isVariantInCart;
+window.getProductQuantityInCart = getProductQuantityInCart;
+window.getVariantQuantityInCart = getVariantQuantityInCart;
+window.clearCart = clearCart;
+window.getCartSummary = getCartSummary;
+window.openSideMenu = openSideMenu;
+window.closeSideMenu = closeSideMenu;
+window.toggleDrawerSubmenu = toggleDrawerSubmenu;
+window.saveCart = saveCart;
+window.renderCartItems = renderCartItems;
+window.updateCounts = updateCounts;
+window.dismissAnnouncementBar = dismissAnnouncementBar;
+window.fetchAnnouncement = fetchAnnouncement;
+window.fetchFooterData = fetchFooterData;
+window.handleCountryChange = handleCountryChange;
 
 // ============================================================================
 // INITIALIZATION
@@ -1091,10 +1078,18 @@ window.fetchFooterData = fetchFooterData; window.handleCountryChange = handleCou
 async function initSharedComponents() {
     if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
     window.JABIYEN_COMPONENTS_INITIALIZED = true;
-    loadFontsConfiguration(); injectSharedStyles();
-    await renderHeader(); await renderFooter(); updateCounts();
-    window.removeEventListener('scroll', handleNavScroll); window.addEventListener('scroll', handleNavScroll); handleNavScroll();
+    loadFontsConfiguration();
+    injectSharedStyles();
+    await renderHeader();
+    await renderFooter();
+    updateCounts();
+    window.removeEventListener('scroll', handleNavScroll);
+    window.addEventListener('scroll', handleNavScroll);
+    handleNavScroll();
 }
-if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSharedComponents); }
-else { setTimeout(initSharedComponents, 60); }
 
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSharedComponents);
+} else {
+    setTimeout(initSharedComponents, 60);
+}
