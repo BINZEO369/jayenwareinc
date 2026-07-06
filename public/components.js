@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 9.0 (Complete Database-Driven Footer - All Columns from 11 Tables)
+// Version: 9.1 (Complete Database-Driven Footer - All Columns from 11 Tables - Fixed Content Merge)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -791,6 +791,15 @@ function injectSharedStyles() {
             padding: 40px 0;
         }
         
+        /* Footer contact icon */
+        .footer-contact-icon {
+            display: inline-block;
+            width: 10px;
+            text-align: center;
+            margin-right: 4px;
+            opacity: 0.4;
+        }
+        
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
             background: var(--primary) !important; color: var(--accent) !important; border-radius: 12px !important;
@@ -1252,7 +1261,7 @@ function getSocialIconHTML(platform, link) {
 }
 
 // ============================================================================
-// FOOTER - COMPLETE DATABASE-DRIVEN (ALL 11 TABLES - ALL COLUMNS UTILIZED)
+// FOOTER - COMPLETE DATABASE-DRIVEN (ALL 11 TABLES - ALL COLUMNS - FIXED CONTENT MERGE)
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
@@ -1292,20 +1301,41 @@ async function renderFooter() {
         const customCSS = settings?.custom_css || '';
         
         // =====================================================================
-        // FOOTER CONTENT (footer_content table - ALL columns)
+        // FOOTER CONTENT - Merge ALL content rows (FIXED)
         // =====================================================================
-        const brandContent = content.find(c => c.section_name === 'brand') || {};
-        const contactContent = content.find(c => c.section_name === 'contact') || {};
+        // Instead of just taking 'brand' and 'contact', we merge ALL content rows
+        // This ensures no data is missed - any section_name with data will be used
         
-        const brandTitle = brandContent.title || 'JABIYEN';
-        const brandDesc = brandContent.description || 'Premium lifestyle apparel architecture.';
-        const brandLogo = brandContent.logo_url || '/logo.png';
-        const brandCopyright = brandContent.copyright_text || copyrightText;
+        const mergedContent = {};
+        content.forEach(c => {
+            if (c.title) mergedContent.title = mergedContent.title || c.title;
+            if (c.description) mergedContent.description = mergedContent.description || c.description;
+            if (c.logo_url) mergedContent.logo_url = mergedContent.logo_url || c.logo_url;
+            if (c.email) mergedContent.email = mergedContent.email || c.email;
+            if (c.phone) mergedContent.phone = mergedContent.phone || c.phone;
+            if (c.address) mergedContent.address = mergedContent.address || c.address;
+            if (c.working_hours) mergedContent.working_hours = mergedContent.working_hours || c.working_hours;
+            if (c.copyright_text) mergedContent.copyright_text = mergedContent.copyright_text || c.copyright_text;
+            if (c.section_name) mergedContent.section_name = mergedContent.section_name || c.section_name;
+        });
         
-        const contactEmail = contactContent.email || brandContent.email || '';
-        const contactPhone = contactContent.phone || brandContent.phone || '';
-        const contactAddress = contactContent.address || brandContent.address || '';
-        const contactHours = contactContent.working_hours || brandContent.working_hours || '';
+        // Also check individual sections for specific data
+        const brandSection = content.find(c => c.section_name === 'brand') || {};
+        const contactSection = content.find(c => c.section_name === 'contact') || {};
+        const aboutSection = content.find(c => c.section_name === 'about') || {};
+        const infoSection = content.find(c => c.section_name === 'info') || {};
+        
+        // Build final values with priority: specific section > merged > defaults
+        const brandTitle = brandSection.title || mergedContent.title || 'JABIYEN';
+        const brandDesc = brandSection.description || aboutSection.description || mergedContent.description || 'Premium lifestyle apparel architecture.';
+        const brandLogo = brandSection.logo_url || mergedContent.logo_url || '/logo.png';
+        const brandCopyright = brandSection.copyright_text || infoSection.copyright_text || mergedContent.copyright_text || copyrightText;
+        
+        // Contact info - check ALL sections for these values
+        const contactEmail = contactSection.email || infoSection.email || brandSection.email || mergedContent.email || '';
+        const contactPhone = contactSection.phone || infoSection.phone || brandSection.phone || mergedContent.phone || '';
+        const contactAddress = contactSection.address || infoSection.address || brandSection.address || mergedContent.address || '';
+        const contactHours = contactSection.working_hours || infoSection.working_hours || brandSection.working_hours || mergedContent.working_hours || '';
         
         // =====================================================================
         // SOCIAL LINKS (footer_social_links table - ALL columns)
@@ -1316,10 +1346,8 @@ async function renderFooter() {
                 .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
                 .map(link => {
                     const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
-                    const iconHTML = getSocialIconHTML(platform, link.link_url || '#');
-                    if (!iconHTML) return '';
-                    // Use hover_title for tooltip, platform_icon if custom icon needed
                     const hoverTitle = link.hover_title || link.platform_name || '';
+                    
                     // If platform_icon is provided as custom URL, use img instead of SVG
                     if (link.platform_icon && link.platform_icon.startsWith('http')) {
                         return `
@@ -1328,8 +1356,14 @@ async function renderFooter() {
                             <img src="${link.platform_icon}" alt="${link.platform_name}" style="width:16px;height:16px;object-fit:contain;">
                         </a>`;
                     }
-                    return iconHTML.replace(`aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}"`, 
-                        `aria-label="${link.platform_name}" title="${hoverTitle}"`);
+                    
+                    const iconHTML = getSocialIconHTML(platform, link.link_url || '#');
+                    if (!iconHTML) return '';
+                    
+                    return iconHTML.replace(
+                        `aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}"`, 
+                        `aria-label="${link.platform_name}" title="${hoverTitle}"`
+                    );
                 }).filter(html => html !== '').join('');
         }
         
@@ -1350,11 +1384,9 @@ async function renderFooter() {
                         } else {
                             pmHTML += `<span class="text-[9px] opacity-50">${pm.name}</span>`;
                         }
-                        // Show account number if available
                         if (pm.account_number) {
                             pmHTML += `<span class="footer-account-number">${pm.account_number}</span>`;
                         }
-                        // Show QR code if available
                         if (pm.qr_code_url) {
                             pmHTML += `<img src="${pm.qr_code_url}" alt="${pm.name} QR" class="footer-qr-code ml-1" title="Scan QR for ${pm.name}" onclick="window.open('${pm.qr_code_url}', '_blank')">`;
                         }
@@ -1447,12 +1479,6 @@ async function renderFooter() {
             const sortedCountries = [...countries].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             const defaultCountry = sortedCountries.find(c => c.is_default) || sortedCountries[0];
             
-            // Check if any country has RTL enabled and apply dir attribute
-            if (defaultCountry?.is_rtl) {
-                const footerEl = document.getElementById('main-footer');
-                if (footerEl) footerEl.setAttribute('dir', 'rtl');
-            }
-            
             countryHTML = `
             <div class="mt-4">
                 <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Country & Language</h5>
@@ -1460,7 +1486,7 @@ async function renderFooter() {
                     ${sortedCountries.map(country => {
                         const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="w-4 h-3 inline-block mr-1" alt="${country.country_code}">` : '';
                         const currencyDisplay = country.currency_symbol || (country.currency_code ? country.currency_code + ' ' : '');
-                        const langDisplay = country.language_name || country.language_code || '';
+                        const langDisplay = country.language_name || (country.language_code ? country.language_code.toUpperCase() : '');
                         const label = `${flagHTML}${country.country_name} ${currencyDisplay}${langDisplay ? '(' + langDisplay + ')' : ''}`;
                         const selected = country.is_default ? 'selected' : '';
                         return `<option value="?country=${country.country_code}&lang=${country.language_code || ''}" ${selected}>${label.trim()}</option>`;
@@ -1505,7 +1531,6 @@ async function renderFooter() {
                 const links = menu.links || [];
                 const sortedLinks = [...links].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
                 
-                // Build nested quick links (parent_id relationship)
                 const topLevelLinks = sortedLinks.filter(l => !l.parent_id);
                 const childLinks = sortedLinks.filter(l => l.parent_id);
                 
@@ -1518,7 +1543,6 @@ async function renderFooter() {
                             const iconHTML = link.icon_class ? `<i class="${link.icon_class} mr-1"></i>` : '';
                             const descHTML = link.description ? `<span class="block text-[8px]" style="opacity:0.4;">${link.description}</span>` : '';
                             
-                            // Check for child links
                             const children = childLinks.filter(cl => cl.parent_id === link.id);
                             let childrenHTML = '';
                             if (children.length > 0) {
@@ -1580,10 +1604,10 @@ async function renderFooter() {
                     <!-- Contact Column -->
                     <div>
                         <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Direct Contact</h5>
-                        ${contactEmail ? `<p class="text-[10px]" style="opacity:0.6;">${contactEmail}</p>` : ''}
-                        ${contactPhone ? `<p class="text-[10px] mt-1" style="opacity:0.4;">${contactPhone}</p>` : ''}
-                        ${contactAddress ? `<p class="text-[10px]" style="opacity:0.4;">${contactAddress}</p>` : ''}
-                        ${contactHours ? `<p class="text-[10px] mt-1" style="opacity:0.3;">${contactHours}</p>` : ''}
+                        ${contactEmail ? `<p class="text-[10px]" style="opacity:0.6;"><span class="footer-contact-icon">✉</span>${contactEmail}</p>` : ''}
+                        ${contactPhone ? `<p class="text-[10px] mt-1" style="opacity:0.4;"><span class="footer-contact-icon">☎</span>${contactPhone}</p>` : ''}
+                        ${contactAddress ? `<p class="text-[10px] mt-1" style="opacity:0.4;"><span class="footer-contact-icon">📍</span>${contactAddress}</p>` : ''}
+                        ${contactHours ? `<p class="text-[10px] mt-1" style="opacity:0.3;"><span class="footer-contact-icon">🕐</span>${contactHours}</p>` : ''}
                         
                         ${paymentHTML}
                         ${shippingHTML}
@@ -1595,7 +1619,7 @@ async function renderFooter() {
                 <!-- Bottom Bar -->
                 <div class="footer-bottom-bar">
                     <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer">BINZEO Infrastructure</a> ${version ? 'v' + version : ''}</p>
-                    <p>${brandCopyright || copyrightText}</p>
+                    <p>${brandCopyright}</p>
                 </div>
             </div>
         </footer>
@@ -1833,7 +1857,6 @@ function renderCartItems() {
         sub += itemTotal;
         totalItems += (item.quantity || 1);
         
-        // Variant badges
         let variantBadges = [];
         if (item.color_name) {
             const colorDot = item.color_code ? 
@@ -1847,13 +1870,11 @@ function renderCartItems() {
             variantBadges.push(`<span class="cart-item-sku-badge">SKU: ${item.sku}</span>`);
         }
         
-        // Barcode
         let barcodeParts = [];
         if (item.main_barcode) barcodeParts.push(`Main: ${item.main_barcode}`);
         if (item.variant_barcode) barcodeParts.push(`Var: ${item.variant_barcode}`);
         const barcodeText = barcodeParts.length ? barcodeParts.join(' | ') : '';
         
-        // Extra details for toggle
         let extraDetails = [];
         if (item.fabric_type) extraDetails.push(`Fabric: ${item.fabric_type}`);
         if (item.fit_type) extraDetails.push(`Fit: ${item.fit_type}`);
