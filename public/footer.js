@@ -63,7 +63,7 @@ function injectFooterStyles() {
             border-radius: 4px;
             display: block;
             object-fit: contain;
-            filter: brightness(0.95);
+            filter: brightness(0.9);
             transition: filter 0.3s ease;
         }
         
