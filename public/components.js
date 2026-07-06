@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 10.0 (Premium Professional Footer Design - Enhanced Image & Text Styling)
+// Version: 10.1 (Mobile-Friendly Premium Footer + Fixed Country Selector + Enhanced Design)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -59,7 +59,7 @@ async function fetchAnnouncement() {
 }
 
 // ============================================================================
-// SHARED CSS STYLES - PROFESSIONAL FOOTER DESIGN
+// SHARED CSS STYLES - PREMIUM MOBILE-FRIENDLY FOOTER DESIGN
 // ============================================================================
 function injectSharedStyles() {
     if (document.getElementById("shared-components-style")) return;
@@ -100,7 +100,7 @@ function injectSharedStyles() {
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #3a3a3c; }
         
-        /* ==================== TOP ANNOUNCEMENT BAR - DYNAMIC ==================== */
+        /* ==================== TOP ANNOUNCEMENT BAR ==================== */
         .top-announcement-bar {
             background: #000000 !important;
             color: #ffffff !important;
@@ -136,9 +136,7 @@ function injectSharedStyles() {
             margin-left: 6px;
             transition: color 0.2s ease;
         }
-        .top-announcement-bar a:hover {
-            color: #ffffff;
-        }
+        .top-announcement-bar a:hover { color: #ffffff; }
         .announcement-close-btn {
             position: absolute;
             right: 16px;
@@ -276,7 +274,7 @@ function injectSharedStyles() {
         .menu-node-sub-item:hover { color: var(--primary); padding-left: 4px; }
         .side-drawer-footer { padding: 24px; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(255,255,255,0.2); flex-shrink: 0; }
 
-        /* ==================== CART DRAWER - MOBILE OPTIMIZED ==================== */
+        /* ==================== CART DRAWER ==================== */
         #cart-drawer {
             position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
             background: var(--glass-black-thick) !important; backdrop-filter: var(--glass-blur) !important;
@@ -292,7 +290,7 @@ function injectSharedStyles() {
         .custom-scroll::-webkit-scrollbar { width: 2px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
 
-        /* ==================== CART ITEM - MOBILE FRIENDLY ==================== */
+        /* ==================== CART ITEM ==================== */
         .cart-item-card {
             background: rgba(255,255,255,0.04) !important;
             border: 1px solid rgba(255,255,255,0.06) !important;
@@ -318,7 +316,6 @@ function injectSharedStyles() {
             background: rgba(255,255,255,0.07) !important;
             border-color: rgba(255,255,255,0.12) !important;
         }
-        
         .cart-item-image {
             width: 64px;
             height: 64px;
@@ -328,7 +325,6 @@ function injectSharedStyles() {
             flex-shrink: 0;
             background: rgba(255,255,255,0.03);
         }
-        
         .cart-item-title {
             font-family: var(--font-heading);
             font-weight: 700;
@@ -337,7 +333,6 @@ function injectSharedStyles() {
             line-height: 1.3;
             letter-spacing: -0.01em;
         }
-        
         .cart-item-variant {
             display: flex;
             align-items: center;
@@ -345,7 +340,6 @@ function injectSharedStyles() {
             gap: 4px;
             margin-top: 2px;
         }
-        
         .cart-item-variant-badge {
             display: inline-flex;
             align-items: center;
@@ -368,20 +362,6 @@ function injectSharedStyles() {
             border: 1px solid rgba(255,255,255,0.12);
             flex-shrink: 0;
         }
-        
-        .cart-item-barcode {
-            font-family: 'Courier New', monospace;
-            font-size: 6px;
-            letter-spacing: 0.06em;
-            color: rgba(255,255,255,0.2);
-            margin-top: 1px;
-            background: rgba(255,255,255,0.02);
-            padding: 1px 8px;
-            border-radius: 6px;
-            display: inline-block;
-            border: 1px solid rgba(255,255,255,0.02);
-        }
-        
         .cart-item-price {
             font-family: var(--font-body);
             font-weight: 900;
@@ -395,8 +375,6 @@ function injectSharedStyles() {
             text-decoration: line-through;
             color: rgba(255,255,255,0.25);
         }
-        
-        /* ==================== QUANTITY CONTROLS - MOBILE OPTIMIZED ==================== */
         .cart-item-quantity-control {
             display: flex;
             align-items: center;
@@ -440,7 +418,6 @@ function injectSharedStyles() {
             font-family: var(--font-body);
             user-select: none;
         }
-        
         .cart-item-remove-btn {
             background: none;
             border: none;
@@ -457,7 +434,6 @@ function injectSharedStyles() {
             color: #ef4444;
             background: rgba(239,68,68,0.08);
         }
-        
         .cart-item-sku-badge {
             font-family: var(--font-subtitle);
             font-size: 7px;
@@ -470,8 +446,6 @@ function injectSharedStyles() {
             border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.02);
         }
-        
-        /* ==================== DETAILS TOGGLE ==================== */
         .cart-item-details-toggle {
             background: none;
             border: none;
@@ -499,10 +473,7 @@ function injectSharedStyles() {
             transition: transform 0.3s ease;
             font-size: 6px;
         }
-        .cart-item-details-toggle .toggle-icon.open {
-            transform: rotate(180deg);
-        }
-        
+        .cart-item-details-toggle .toggle-icon.open { transform: rotate(180deg); }
         .cart-item-extra-details {
             max-height: 0;
             overflow: hidden;
@@ -532,13 +503,6 @@ function injectSharedStyles() {
             font-family: var(--font-subtitle);
             font-weight: 500;
         }
-        .cart-item-extra-details-inner span::before {
-            content: '•';
-            margin-right: 4px;
-            color: rgba(255,255,255,0.08);
-        }
-        .cart-item-extra-details-inner span:first-child::before { display: none; }
-        
         .cart-item-category-tag {
             font-size: 6px;
             text-transform: uppercase;
@@ -552,7 +516,6 @@ function injectSharedStyles() {
             border: 1px solid rgba(255,255,255,0.02);
             display: inline-block;
         }
-        
         .cart-item-bottom-row {
             display: flex;
             align-items: center;
@@ -571,7 +534,7 @@ function injectSharedStyles() {
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
 
         /* ================================================================ */
-        /* FOOTER - PROFESSIONAL PREMIUM DESIGN SYSTEM                       */
+        /* FOOTER - PREMIUM MOBILE-FRIENDLY PROFESSIONAL DESIGN              */
         /* ================================================================ */
         
         #main-footer {
@@ -580,40 +543,86 @@ function injectSharedStyles() {
             clear: both;
             font-family: var(--font-body);
             overflow: hidden;
+            padding: 40px 0 20px 0;
+        }
+        @media (min-width: 768px) {
+            #main-footer {
+                padding: 56px 0 24px 0;
+            }
+        }
+        @media (min-width: 1024px) {
+            #main-footer {
+                padding: 64px 0 28px 0;
+            }
         }
         
-        /* Footer Grid Layout */
+        #main-footer .footer-container {
+            width: 100%;
+            padding: 0 16px;
+            max-width: 100%;
+        }
+        @media (min-width: 640px) {
+            #main-footer .footer-container {
+                padding: 0 24px;
+            }
+        }
+        @media (min-width: 1024px) {
+            #main-footer .footer-container {
+                padding: 0 40px;
+                max-width: 1280px;
+                margin: 0 auto;
+            }
+        }
+        
+        /* Footer Grid - Mobile First */
         #main-footer .footer-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 32px;
-            margin-bottom: 40px;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+        @media (min-width: 640px) {
+            #main-footer .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
         }
         @media (min-width: 768px) {
             #main-footer .footer-grid {
                 grid-template-columns: 1.3fr 0.9fr 0.9fr 1fr;
-                gap: 24px;
+                gap: 20px;
+                margin-bottom: 40px;
             }
         }
         @media (min-width: 1024px) {
             #main-footer .footer-grid {
-                grid-template-columns: 1.4fr 0.8fr 0.8fr 1fr;
                 gap: 32px;
             }
         }
         
-        /* Footer Section Headings */
+        /* Footer Columns */
+        #main-footer .footer-col {
+            min-width: 0;
+        }
+        
+        /* Section Title */
         #main-footer .footer-section-title {
             font-family: var(--font-heading);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             opacity: 0.45;
             position: relative;
             display: inline-block;
             padding-bottom: 8px;
+        }
+        @media (min-width: 768px) {
+            #main-footer .footer-section-title {
+                font-size: 11px;
+                margin-bottom: 16px;
+            }
         }
         #main-footer .footer-section-title::after {
             content: '';
@@ -631,47 +640,67 @@ function injectSharedStyles() {
             transform: translateX(-50%);
         }
         
-        /* Footer Brand Logo */
+        /* Brand Logo */
         #main-footer .footer-brand-logo {
-            height: 32px;
+            height: 28px;
             width: auto;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             opacity: 0.85;
             transition: opacity 0.3s ease;
             object-fit: contain;
-            max-width: 140px;
+            max-width: 120px;
         }
-        #main-footer .footer-brand-logo:hover {
-            opacity: 1;
+        @media (min-width: 768px) {
+            #main-footer .footer-brand-logo {
+                height: 32px;
+                max-width: 140px;
+                margin-bottom: 12px;
+            }
         }
+        #main-footer .footer-brand-logo:hover { opacity: 1; }
         
-        /* Footer Brand Title */
+        /* Brand Title */
         #main-footer .footer-brand-title {
             font-family: var(--font-heading);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             letter-spacing: 0.06em;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: inherit;
         }
+        @media (min-width: 768px) {
+            #main-footer .footer-brand-title {
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+        }
         
-        /* Footer Brand Description */
+        /* Brand Description */
         #main-footer .footer-brand-desc {
             font-size: 10px;
             line-height: 1.6;
             opacity: 0.5;
-            margin-bottom: 16px;
-            max-width: 280px;
+            margin-bottom: 14px;
+            max-width: 100%;
+        }
+        @media (min-width: 768px) {
+            #main-footer .footer-brand-desc {
+                max-width: 280px;
+                margin-bottom: 16px;
+            }
         }
         
-        /* Footer Links List */
+        /* Footer Links */
         #main-footer .footer-links-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
         #main-footer .footer-links-list li {
-            margin-bottom: 6px;
+            margin-bottom: 5px;
+        }
+        @media (min-width: 768px) {
+            #main-footer .footer-links-list li { margin-bottom: 6px; }
         }
         #main-footer .footer-links-list a {
             font-size: 10px;
@@ -681,11 +710,18 @@ function injectSharedStyles() {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 2px 0;
+            padding: 3px 0;
+            touch-action: manipulation;
         }
-        #main-footer .footer-links-list a:hover {
-            opacity: 1;
-            transform: translateX(3px);
+        #main-footer .footer-links-list a:active {
+            opacity: 0.9;
+            transform: scale(0.97);
+        }
+        @media (hover: hover) {
+            #main-footer .footer-links-list a:hover {
+                opacity: 1;
+                transform: translateX(3px);
+            }
         }
         #main-footer .footer-links-list a i {
             font-size: 8px;
@@ -693,7 +729,7 @@ function injectSharedStyles() {
             width: 12px;
             text-align: center;
         }
-        #main-footer .footer-links-list .footer-link-desc {
+        #main-footer .footer-link-desc {
             display: block;
             font-size: 8px;
             opacity: 0.35;
@@ -701,38 +737,49 @@ function injectSharedStyles() {
             padding-left: 18px;
         }
         
-        /* Footer Nested Links */
+        /* Nested Links */
         #main-footer .footer-nested-links {
             list-style: none;
             padding: 0 0 0 14px;
             margin: 3px 0 6px 0;
             border-left: 1px solid rgba(255,255,255,0.06);
         }
-        #main-footer .footer-nested-links li {
-            margin-bottom: 3px;
-        }
+        #main-footer .footer-nested-links li { margin-bottom: 3px; }
         #main-footer .footer-nested-links a {
             font-size: 9px;
             opacity: 0.45;
-            padding: 1px 0;
+            padding: 2px 0;
         }
-        #main-footer .footer-nested-links a:hover {
-            opacity: 0.8;
-            transform: translateX(2px);
+        @media (hover: hover) {
+            #main-footer .footer-nested-links a:hover {
+                opacity: 0.8;
+                transform: translateX(2px);
+            }
         }
-        #main-footer .footer-nested-links .footer-nested-desc {
+        #main-footer .footer-nested-desc {
             font-size: 7px;
             opacity: 0.28;
             padding-left: 14px;
         }
         
-        /* ==================== SOCIAL ICONS - PREMIUM ==================== */
-        .social-icon-link {
+        /* ==================== SOCIAL ICONS ==================== */
+        #main-footer .social-icons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: flex-start;
+        }
+        @media (min-width: 768px) {
+            #main-footer .social-icons-grid { gap: 7px; }
+        }
+        .footer-layout-centered .social-icons-grid { justify-content: center; }
+        
+        #main-footer .social-icon-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.08);
@@ -741,94 +788,99 @@ function injectSharedStyles() {
             text-decoration: none;
             position: relative;
             overflow: hidden;
+            touch-action: manipulation;
         }
-        .social-icon-link::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.35s ease;
+        @media (min-width: 768px) {
+            #main-footer .social-icon-link {
+                width: 38px;
+                height: 38px;
+            }
         }
-        .social-icon-link:hover {
-            transform: translateY(-3px) scale(1.05);
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.18);
+        #main-footer .social-icon-link:active {
+            transform: scale(0.9);
+            background: rgba(255,255,255,0.1);
             color: #ffffff;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
-        .social-icon-link:hover::before { opacity: 1; }
-        .social-icon-link svg {
-            width: 15px;
-            height: 15px;
+        @media (hover: hover) {
+            #main-footer .social-icon-link:hover {
+                transform: translateY(-3px) scale(1.05);
+                background: rgba(255,255,255,0.08);
+                border-color: rgba(255,255,255,0.18);
+                color: #ffffff;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            }
+        }
+        #main-footer .social-icon-link svg,
+        #main-footer .social-icon-link img {
+            width: 14px;
+            height: 14px;
             position: relative;
             z-index: 1;
             transition: transform 0.3s ease;
-        }
-        .social-icon-link:hover svg { transform: scale(1.1); }
-        .social-icon-link img {
-            width: 15px;
-            height: 15px;
             object-fit: contain;
-            position: relative;
-            z-index: 1;
         }
-        
-        .social-icons-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            justify-content: flex-start;
-        }
-        .footer-layout-centered .social-icons-grid {
-            justify-content: center;
-        }
-        
-        @media (max-width: 640px) {
-            .social-icon-link {
-                width: 34px;
-                height: 34px;
+        @media (min-width: 768px) {
+            #main-footer .social-icon-link svg,
+            #main-footer .social-icon-link img {
+                width: 15px;
+                height: 15px;
             }
-            .social-icon-link svg, .social-icon-link img {
-                width: 13px;
-                height: 13px;
+        }
+        @media (hover: hover) {
+            #main-footer .social-icon-link:hover svg,
+            #main-footer .social-icon-link:hover img {
+                transform: scale(1.1);
             }
-            .social-icons-grid { gap: 5px; }
         }
         
-        /* ==================== PAYMENT METHODS - PROFESSIONAL ==================== */
+        /* ==================== PAYMENT METHODS ==================== */
+        #main-footer .footer-section { margin-top: 14px; }
+        @media (min-width: 768px) { #main-footer .footer-section { margin-top: 16px; } }
+        #main-footer .footer-section:first-child { margin-top: 0; }
+        
         #main-footer .footer-payment-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
+        @media (min-width: 768px) { #main-footer .footer-payment-grid { gap: 8px; } }
+        
         #main-footer .footer-payment-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
         #main-footer .footer-payment-icon {
-            height: 22px;
+            height: 18px;
             width: auto;
-            max-width: 50px;
+            max-width: 44px;
             object-fit: contain;
             opacity: 0.5;
             transition: all 0.3s ease;
             filter: grayscale(30%);
         }
-        #main-footer .footer-payment-icon:hover {
-            opacity: 0.9;
-            filter: grayscale(0%);
-            transform: translateY(-1px);
+        @media (min-width: 768px) {
+            #main-footer .footer-payment-icon {
+                height: 22px;
+                max-width: 50px;
+            }
+        }
+        @media (hover: hover) {
+            #main-footer .footer-payment-icon:hover {
+                opacity: 0.9;
+                filter: grayscale(0%);
+                transform: translateY(-1px);
+            }
         }
         #main-footer .footer-payment-name {
-            font-size: 8px;
+            font-size: 7px;
             opacity: 0.4;
             text-align: center;
         }
+        @media (min-width: 768px) { #main-footer .footer-payment-name { font-size: 8px; } }
+        
         #main-footer .footer-payment-account {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 7px;
@@ -838,10 +890,12 @@ function injectSharedStyles() {
             padding: 2px 7px;
             border-radius: 3px;
             margin-top: 1px;
+            word-break: break-all;
+            max-width: 100px;
         }
         #main-footer .footer-payment-qr {
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             object-fit: contain;
             border-radius: 6px;
             border: 1px solid rgba(255,255,255,0.06);
@@ -850,120 +904,182 @@ function injectSharedStyles() {
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        #main-footer .footer-payment-qr:hover {
-            transform: scale(1.08);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        @media (min-width: 768px) {
+            #main-footer .footer-payment-qr {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        @media (hover: hover) {
+            #main-footer .footer-payment-qr:hover {
+                transform: scale(1.08);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
         }
         
         /* ==================== SHIPPING PARTNERS ==================== */
         #main-footer .footer-shipping-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
+        @media (min-width: 768px) { #main-footer .footer-shipping-grid { gap: 8px; } }
         #main-footer .footer-shipping-icon {
-            height: 18px;
+            height: 16px;
             width: auto;
-            max-width: 60px;
+            max-width: 55px;
             object-fit: contain;
             opacity: 0.4;
             transition: all 0.3s ease;
             filter: grayscale(50%);
         }
-        #main-footer .footer-shipping-icon:hover {
-            opacity: 0.75;
-            filter: grayscale(0%);
+        @media (min-width: 768px) {
+            #main-footer .footer-shipping-icon {
+                height: 18px;
+                max-width: 60px;
+            }
+        }
+        @media (hover: hover) {
+            #main-footer .footer-shipping-icon:hover {
+                opacity: 0.75;
+                filter: grayscale(0%);
+            }
         }
         #main-footer .footer-shipping-name {
-            font-size: 8px;
+            font-size: 7px;
             opacity: 0.35;
         }
+        @media (min-width: 768px) { #main-footer .footer-shipping-name { font-size: 8px; } }
         
         /* ==================== CERTIFICATIONS ==================== */
         #main-footer .footer-cert-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 5px;
             align-items: center;
         }
+        @media (min-width: 768px) { #main-footer .footer-cert-grid { gap: 6px; } }
         #main-footer .footer-cert-item {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.04);
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 5px 9px;
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
+            touch-action: manipulation;
         }
-        #main-footer .footer-cert-item:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.1);
-            transform: translateY(-1px);
+        @media (min-width: 768px) {
+            #main-footer .footer-cert-item { padding: 6px 10px; }
+        }
+        @media (hover: hover) {
+            #main-footer .footer-cert-item:hover {
+                background: rgba(255,255,255,0.05);
+                border-color: rgba(255,255,255,0.1);
+                transform: translateY(-1px);
+            }
         }
         #main-footer .footer-cert-icon {
-            height: 24px;
+            height: 20px;
             width: auto;
-            max-width: 50px;
+            max-width: 44px;
             object-fit: contain;
             opacity: 0.5;
             transition: opacity 0.3s ease;
         }
-        #main-footer .footer-cert-item:hover .footer-cert-icon {
-            opacity: 0.85;
+        @media (min-width: 768px) {
+            #main-footer .footer-cert-icon {
+                height: 24px;
+                max-width: 50px;
+            }
+        }
+        @media (hover: hover) {
+            #main-footer .footer-cert-item:hover .footer-cert-icon { opacity: 0.85; }
         }
         #main-footer .footer-cert-name {
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 600;
             opacity: 0.45;
             letter-spacing: 0.03em;
         }
+        @media (min-width: 768px) { #main-footer .footer-cert-name { font-size: 8px; } }
         
-        /* ==================== APP DOWNLOAD BUTTONS ==================== */
+        /* ==================== APP BUTTONS ==================== */
         #main-footer .footer-app-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 7px;
+            gap: 6px;
         }
+        @media (min-width: 768px) { #main-footer .footer-app-grid { gap: 7px; } }
         #main-footer .footer-app-btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.06);
             color: inherit;
-            padding: 7px 14px;
+            padding: 6px 12px;
             border-radius: 10px;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 700;
             text-decoration: none;
             transition: all 0.3s ease;
             font-family: var(--font-subtitle);
             letter-spacing: 0.03em;
             opacity: 0.65;
+            touch-action: manipulation;
         }
-        #main-footer .footer-app-btn:hover {
+        @media (min-width: 768px) {
+            #main-footer .footer-app-btn {
+                padding: 7px 14px;
+                font-size: 9px;
+            }
+        }
+        #main-footer .footer-app-btn:active {
             background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.15);
-            opacity: 1;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transform: scale(0.96);
+        }
+        @media (hover: hover) {
+            #main-footer .footer-app-btn:hover {
+                background: rgba(255,255,255,0.12);
+                border-color: rgba(255,255,255,0.15);
+                opacity: 1;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            }
         }
         #main-footer .footer-app-btn svg {
-            width: 13px;
-            height: 13px;
+            width: 11px;
+            height: 11px;
             flex-shrink: 0;
         }
+        @media (min-width: 768px) {
+            #main-footer .footer-app-btn svg { width: 13px; height: 13px; }
+        }
         #main-footer .footer-app-btn img {
-            width: 15px;
-            height: 15px;
+            width: 13px;
+            height: 13px;
             object-fit: contain;
         }
+        @media (min-width: 768px) {
+            #main-footer .footer-app-btn img { width: 15px; height: 15px; }
+        }
         
-        /* ==================== COUNTRY SELECTOR ==================== */
+        /* ==================== COUNTRY SELECTOR - FIXED ==================== */
+        #main-footer .footer-country-select-wrapper {
+            position: relative;
+            display: inline-block;
+            min-width: 150px;
+            max-width: 100%;
+        }
+        @media (min-width: 768px) {
+            #main-footer .footer-country-select-wrapper { min-width: 170px; }
+        }
+        
         #main-footer .footer-country-select {
             font-family: var(--font-body);
             font-size: 10px;
@@ -971,17 +1087,25 @@ function injectSharedStyles() {
             border: 1px solid rgba(255,255,255,0.08);
             color: inherit;
             border-radius: 8px;
-            padding: 7px 32px 7px 12px;
+            padding: 8px 36px 8px 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             outline: none;
-            opacity: 0.65;
+            opacity: 0.7;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='white' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            min-width: 160px;
+            -moz-appearance: none;
+            width: 100%;
+            min-height: 38px;
+            line-height: 1.4;
+            touch-action: manipulation;
+        }
+        @media (min-width: 768px) {
+            #main-footer .footer-country-select {
+                font-size: 10px;
+                padding: 7px 32px 7px 12px;
+                min-height: auto;
+            }
         }
         #main-footer .footer-country-select:hover {
             background: rgba(255,255,255,0.07);
@@ -995,8 +1119,24 @@ function injectSharedStyles() {
         #main-footer .footer-country-select option {
             background: #1a1a1a;
             color: #ffffff;
-            padding: 8px;
+            padding: 10px;
+            font-size: 10px;
         }
+        
+        /* Custom dropdown arrow */
+        #main-footer .footer-country-select-arrow {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+        #main-footer .footer-country-select-wrapper:hover .footer-country-select-arrow {
+            opacity: 0.6;
+        }
+        
         #main-footer .footer-country-flag {
             width: 16px;
             height: 11px;
@@ -1005,6 +1145,7 @@ function injectSharedStyles() {
             display: inline-block;
             vertical-align: middle;
             margin-right: 5px;
+            flex-shrink: 0;
         }
         #main-footer .footer-exchange-rate {
             font-size: 7px;
@@ -1017,47 +1158,62 @@ function injectSharedStyles() {
         #main-footer .footer-badges-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
+        @media (min-width: 768px) { #main-footer .footer-badges-grid { gap: 8px; } }
         #main-footer .footer-badge-item {
             text-align: center;
             transition: all 0.3s ease;
+            padding: 4px;
+            border-radius: 6px;
         }
-        #main-footer .footer-badge-item:hover {
-            transform: translateY(-2px);
+        @media (hover: hover) {
+            #main-footer .footer-badge-item:hover {
+                transform: translateY(-2px);
+                background: rgba(255,255,255,0.02);
+            }
         }
         #main-footer .footer-badge-icon {
-            height: 28px;
+            height: 22px;
             width: auto;
-            max-width: 60px;
+            max-width: 55px;
             object-fit: contain;
             opacity: 0.5;
             transition: opacity 0.3s ease;
         }
-        #main-footer .footer-badge-item:hover .footer-badge-icon {
-            opacity: 0.85;
+        @media (min-width: 768px) {
+            #main-footer .footer-badge-icon {
+                height: 28px;
+                max-width: 60px;
+            }
+        }
+        @media (hover: hover) {
+            #main-footer .footer-badge-item:hover .footer-badge-icon { opacity: 0.85; }
         }
         #main-footer .footer-badge-title {
-            font-size: 7px;
+            font-size: 6px;
             font-weight: 600;
             opacity: 0.35;
             margin-top: 2px;
             letter-spacing: 0.03em;
         }
+        @media (min-width: 768px) { #main-footer .footer-badge-title { font-size: 7px; } }
         #main-footer .footer-badge-subtitle {
-            font-size: 6px;
+            font-size: 5px;
             opacity: 0.25;
             margin-top: 1px;
         }
+        @media (min-width: 768px) { #main-footer .footer-badge-subtitle { font-size: 6px; } }
         
         /* ==================== CONTACT INFO ==================== */
         #main-footer .footer-contact-item {
             display: flex;
             align-items: flex-start;
             gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 7px;
             font-size: 10px;
         }
+        @media (min-width: 768px) { #main-footer .footer-contact-item { margin-bottom: 8px; } }
         #main-footer .footer-contact-icon {
             width: 14px;
             text-align: center;
@@ -1065,39 +1221,49 @@ function injectSharedStyles() {
             opacity: 0.4;
             font-size: 10px;
             line-height: 1.5;
+            padding-top: 1px;
         }
         #main-footer .footer-contact-text {
             opacity: 0.55;
             line-height: 1.5;
             transition: opacity 0.3s ease;
+            word-break: break-word;
         }
-        #main-footer .footer-contact-text:hover {
-            opacity: 0.8;
+        @media (hover: hover) {
+            #main-footer .footer-contact-text:hover { opacity: 0.8; }
         }
         #main-footer .footer-contact-text a {
             text-decoration: none;
             color: inherit;
+            touch-action: manipulation;
         }
         
         /* ==================== BOTTOM BAR ==================== */
         #main-footer .footer-bottom-bar {
             border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 20px;
-            margin-top: 12px;
+            padding-top: 18px;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             opacity: 0.35;
-            font-size: 8px;
+            font-size: 7px;
             text-transform: uppercase;
             letter-spacing: 0.07em;
             font-family: var(--font-subtitle);
+            text-align: center;
         }
-        @media (min-width: 768px) {
+        @media (min-width: 640px) {
             #main-footer .footer-bottom-bar {
                 flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+                font-size: 8px;
+                text-align: left;
+                padding-top: 20px;
+                margin-top: 12px;
             }
         }
         #main-footer .footer-bottom-bar a {
@@ -1106,16 +1272,8 @@ function injectSharedStyles() {
             color: inherit;
             transition: opacity 0.3s ease;
         }
-        #main-footer .footer-bottom-bar a:hover {
-            opacity: 0.7;
-        }
-        
-        /* ==================== FOOTER SECTION SPACING ==================== */
-        #main-footer .footer-section {
-            margin-top: 16px;
-        }
-        #main-footer .footer-section:first-child {
-            margin-top: 0;
+        @media (hover: hover) {
+            #main-footer .footer-bottom-bar a:hover { opacity: 0.7; }
         }
         
         /* ==================== RTL SUPPORT ==================== */
@@ -1135,6 +1293,9 @@ function injectSharedStyles() {
         [dir="rtl"] #main-footer .footer-bottom-bar {
             direction: rtl;
         }
+        @media (min-width: 640px) {
+            [dir="rtl"] #main-footer .footer-bottom-bar { text-align: right; }
+        }
         [dir="rtl"] #main-footer .footer-links-list a:hover {
             transform: translateX(-3px);
         }
@@ -1147,8 +1308,28 @@ function injectSharedStyles() {
             transform: translateX(-2px);
         }
         [dir="rtl"] #main-footer .footer-country-select {
-            background-position: left 10px center;
-            padding: 7px 12px 7px 32px;
+            padding: 8px 12px 8px 36px;
+        }
+        @media (min-width: 768px) {
+            [dir="rtl"] #main-footer .footer-country-select {
+                padding: 7px 12px 7px 32px;
+            }
+        }
+        [dir="rtl"] #main-footer .footer-country-select-arrow {
+            right: auto;
+            left: 10px;
+        }
+        [dir="rtl"] #main-footer .footer-country-flag {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+        [dir="rtl"] #main-footer .footer-link-desc {
+            padding-left: 0;
+            padding-right: 18px;
+        }
+        [dir="rtl"] #main-footer .footer-nested-desc {
+            padding-left: 0;
+            padding-right: 14px;
         }
         
         /* ==================== LAYOUT VARIATIONS ==================== */
@@ -1162,52 +1343,69 @@ function injectSharedStyles() {
         .footer-layout-centered .footer-contact-item {
             justify-content: center;
         }
+        @media (min-width: 768px) {
+            .footer-layout-centered .footer-contact-item { justify-content: center; }
+        }
         .footer-layout-minimal {
-            padding: 30px 0 !important;
+            padding: 24px 0 !important;
         }
         .footer-layout-minimal .footer-grid {
-            gap: 20px;
+            gap: 16px;
         }
         .footer-layout-expanded {
-            padding: 60px 0 !important;
+            padding: 48px 0 24px 0 !important;
+        }
+        @media (min-width: 768px) {
+            .footer-layout-expanded {
+                padding: 72px 0 32px 0 !important;
+            }
         }
         .footer-layout-expanded .footer-grid {
-            gap: 40px;
+            gap: 32px;
+        }
+        @media (min-width: 1024px) {
+            .footer-layout-expanded .footer-grid { gap: 48px; }
         }
         
-        /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 767px) {
-            #main-footer .footer-brand-logo {
-                height: 26px;
+        /* ==================== MOBILE ACCORDION FOR MENUS ==================== */
+        @media (max-width: 639px) {
+            #main-footer .footer-col-menu .footer-section-title {
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                padding-bottom: 12px;
+                margin-bottom: 0;
             }
-            #main-footer .footer-brand-title {
-                font-size: 14px;
+            #main-footer .footer-col-menu .footer-section-title::after {
+                display: none;
             }
-            #main-footer .footer-brand-desc {
-                max-width: 100%;
-            }
-            #main-footer .footer-section-title {
-                font-size: 10px;
-                margin-bottom: 12px;
-            }
-            #main-footer .footer-payment-icon {
-                height: 18px;
-                max-width: 40px;
-            }
-            #main-footer .footer-payment-qr {
-                width: 40px;
-                height: 40px;
-            }
-            #main-footer .footer-cert-icon {
-                height: 20px;
-            }
-            #main-footer .footer-badge-icon {
-                height: 22px;
-            }
-            #main-footer .footer-app-btn {
-                padding: 6px 10px;
+            #main-footer .footer-col-menu .footer-section-title .footer-menu-arrow {
+                display: inline-block;
+                transition: transform 0.3s ease;
+                opacity: 0.4;
                 font-size: 8px;
             }
+            #main-footer .footer-col-menu.open .footer-section-title .footer-menu-arrow {
+                transform: rotate(180deg);
+            }
+            #main-footer .footer-col-menu .footer-links-list {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin 0.3s ease;
+                opacity: 0;
+                margin-top: 0;
+            }
+            #main-footer .footer-col-menu.open .footer-links-list {
+                max-height: 600px;
+                opacity: 1;
+                margin-top: 6px;
+                margin-bottom: 12px;
+            }
+        }
+        @media (min-width: 640px) {
+            #main-footer .footer-menu-arrow { display: none !important; }
         }
         
         .btn-primary {
@@ -1230,23 +1428,9 @@ function injectSharedStyles() {
             text-align: center;
             padding: 40px 20px;
         }
-        .cart-empty-state i {
-            font-size: 44px;
-            color: rgba(255,255,255,0.05);
-            margin-bottom: 16px;
-        }
-        .cart-empty-state h3 {
-            font-family: var(--font-heading);
-            font-size: 16px;
-            font-weight: 700;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 4px;
-        }
-        .cart-empty-state p {
-            font-family: var(--font-body);
-            font-size: 11px;
-            color: rgba(255,255,255,0.15);
-        }
+        .cart-empty-state i { font-size: 44px; color: rgba(255,255,255,0.05); margin-bottom: 16px; }
+        .cart-empty-state h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+        .cart-empty-state p { font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.15); }
 
         /* ==================== CART CHECKOUT SUMMARY ==================== */
         .cart-summary-row {
@@ -1264,17 +1448,8 @@ function injectSharedStyles() {
             padding-top: 10px;
             margin-top: 4px;
         }
-        .cart-summary-total .label {
-            font-size: 11px;
-            font-weight: 700;
-            color: rgba(255,255,255,0.5);
-        }
-        .cart-summary-total .value {
-            font-size: 18px;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-        }
+        .cart-summary-total .label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); }
+        .cart-summary-total .value { font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: -0.01em; }
         .cart-checkout-btn {
             padding: 14px !important;
             font-size: 10px !important;
@@ -1384,9 +1559,6 @@ function renderUnifiedDrawerMenu(rootItems) {
     return html;
 }
 
-// ============================================================================
-// DRAWER INNER LOGICS
-// ============================================================================
 function renderDrawerSubItems(item, parentId) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderDatabaseCategoriesToDrawer(parentId);
@@ -1475,9 +1647,7 @@ async function renderHeader() {
     const hasAnnouncement = announcementData && announcementData.message;
     const shouldShowBar = hasAnnouncement && !isBarDismissed;
     
-    if (isBarDismissed) {
-        document.body.classList.add('announcement-dismissed');
-    }
+    if (isBarDismissed) document.body.classList.add('announcement-dismissed');
 
     let announcementHTML = '';
     if (hasAnnouncement) {
@@ -1486,36 +1656,22 @@ async function renderHeader() {
         const message = announcementData.message || '';
         const linkUrl = announcementData.link_url || '';
         const linkTitle = announcementData.link_title || '';
-        
-        let linkHTML = '';
-        if (linkUrl && linkTitle) {
-            linkHTML = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkTitle}</a>`;
-        }
+        let linkHTML = linkUrl && linkTitle ? `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkTitle}</a>` : '';
         
         announcementHTML = `
-        <div class="top-announcement-bar ${shouldShowBar ? '' : 'bar-hidden'}" 
-             id="top-announcement-bar" 
-             style="background: ${bgColor} !important; color: ${textColor} !important;">
+        <div class="top-announcement-bar ${shouldShowBar ? '' : 'bar-hidden'}" id="top-announcement-bar" style="background: ${bgColor} !important; color: ${textColor} !important;">
             <span id="announcement-text">${message} ${linkHTML}</span>
             <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-        </div>
-        `;
+        </div>`;
     } else {
         document.body.classList.add('announcement-dismissed');
-        announcementHTML = `
-        <div class="top-announcement-bar bar-hidden" id="top-announcement-bar">
-            <span id="announcement-text"></span>
-        </div>
-        `;
+        announcementHTML = `<div class="top-announcement-bar bar-hidden" id="top-announcement-bar"><span id="announcement-text"></span></div>`;
     }
 
     const headerHTML = `
     ${announcementHTML}
-
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
@@ -1527,46 +1683,32 @@ async function renderHeader() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
-        <div class="side-menu-scroll" id="sideMenuContent">
-            ${renderUnifiedDrawerMenu(menuTree)}
-        </div>
+        <div class="side-menu-scroll" id="sideMenuContent">${renderUnifiedDrawerMenu(menuTree)}</div>
         <div class="side-drawer-footer">
             <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
         </div>
     </div>
-    
     <nav class="glass-nav" id="main-nav">
         <div class="h-14 lg:h-16 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2.5 shrink-0 no-underline">
                 <img src="/logo.png" class="w-7 h-7 lg:w-9 lg:h-9 rounded-xl" alt="JABIYEN Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
-            
             <div class="flex items-center shrink-0 gap-0.5">
                 <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <span id="wish-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                
                 <a href="/cart" onclick="toggleCart();return false;" class="header-icon-btn" aria-label="Cart">
-                    <svg width="17" height="19" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                        <path d="M5 6C5 3.5 6.5 1 9.5 1C12.5 1 14 3.5 14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    </svg>
+                    <svg width="17" height="19" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M5 6C5 3.5 6.5 1 9.5 1C12.5 1 14 3.5 14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                     <span id="cart-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
-                
                 <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu">
-                    <svg width="20" height="13" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    </svg>
+                    <svg width="20" height="13" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 </button>
             </div>
         </div>
     </nav>
-    
     <div id="cart-drawer" class="shadow-2xl">
         <div class="p-4 border-b flex justify-between items-center bg-soft">
             <h2 class="text-[10px] font-black uppercase tracking-widest">Shopping Vault</h2>
@@ -1577,23 +1719,13 @@ async function renderHeader() {
         <div id="cart-items" class="flex-grow overflow-y-auto p-4 space-y-3 custom-scroll"></div>
         <div class="p-4 border-t bg-soft">
             <div class="space-y-1 mb-4">
-                <div class="cart-summary-row">
-                    <span class="label">Subtotal</span>
-                    <span class="value" id="cart-subtotal">৳ 0.00</span>
-                </div>
-                <div class="cart-summary-row">
-                    <span class="label">Items</span>
-                    <span class="value" id="cart-item-count">0</span>
-                </div>
-                <div class="cart-summary-row cart-summary-total">
-                    <span class="label">Total</span>
-                    <span class="value" id="cart-total">৳ 0.00</span>
-                </div>
+                <div class="cart-summary-row"><span class="label">Subtotal</span><span class="value" id="cart-subtotal">৳ 0.00</span></div>
+                <div class="cart-summary-row"><span class="label">Items</span><span class="value" id="cart-item-count">0</span></div>
+                <div class="cart-summary-row cart-summary-total"><span class="label">Total</span><span class="value" id="cart-total">৳ 0.00</span></div>
             </div>
             <a href="/checkout" class="w-full py-3.5 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg cart-checkout-btn">Execute Checkout</a>
         </div>
-    </div>
-    `;
+    </div>`;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 }
 
@@ -1610,66 +1742,33 @@ function dismissAnnouncementBar() {
 }
 
 // ============================================================================
-// SOCIAL ICONS - PREMIUM MONOCHROME SVG SET
+// SOCIAL ICONS
 // ============================================================================
 function getSocialIconHTML(platform, link) {
     const icons = {
-        'facebook': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        },
-        'instagram': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.908 12.2384 16.0396 11.4077 15.9059C10.5771 15.7722 9.80971 15.3801 9.21479 14.7851C8.61987 14.1902 8.2278 13.4228 8.09412 12.5922C7.96044 11.7615 8.092 10.9098 8.47026 10.1583C8.84852 9.40678 9.45418 8.7937 10.2009 8.4062C10.9477 8.0187 11.7978 7.87652 12.63 8C13.4789 8.12583 14.2648 8.52151 14.8716 9.12836C15.4785 9.73521 15.8742 10.5211 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>`
-        },
-        'youtube': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1792 5.51057 21.8387 5.15941C21.4982 4.80824 21.0708 4.55518 20.6 4.43C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92916 4.58518 2.50178 4.83824 2.16132 5.18941C1.82085 5.54057 1.57882 5.97541 1.46 6.45C1.14521 8.17418 0.991095 9.92534 1 11.68C0.991095 13.4347 1.14521 15.1858 1.46 16.91C1.57882 17.3846 1.82085 17.8194 2.16132 18.1706C2.50178 18.5218 2.92916 18.7748 3.4 18.9C5.12 19.36 12 19.36 12 19.36C12 19.36 18.88 19.36 20.6 18.9C21.0708 18.7748 21.4982 18.5218 21.8387 18.1706C22.1792 17.8194 22.4212 17.3846 22.54 16.91C22.8548 15.1858 23.0089 13.4347 23 11.68C23.0089 9.92534 22.8548 8.17418 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.68L9.75 8.34V15.02Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        },
-        'tiktok': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12V8.5C9 6.01472 11.0147 4 13.5 4H16M9 20C7.34315 20 6 18.6569 6 17C6 15.3431 7.34315 14 9 14C10.6569 14 12 15.3431 12 17V4M20 8V12C18.3431 12 17 10.6569 17 9V8H20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        },
-        'x': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" fill="currentColor"/></svg>`
-        },
-        'pinterest': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16C8 16 6 10 6 8C6 4 9 2 12 2C16 2 18 5 18 8C18 12 16 16 13 16C11 16 10 14 10 14M10 14L8 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>`
-        },
-        'threads': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M16.5 10.5C16.5 10.5 15.5 8 12 8C8.5 8 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 12 16.5C14.5 16.5 15.5 14.5 15.5 13.5C15.5 12.5 14.5 12 13 12C11.5 12 10.5 12.5 10.5 13.5C10.5 14.5 11.5 15 12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
-        },
-        'whatsapp': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5C21 16.7467 16.7467 21 11.5 21C9.38318 21 7.42019 20.3098 5.86667 19.1333L2 20L2.86667 16.1333C1.69019 14.5798 1 12.6168 1 10.5C1 5.25329 5.25329 1 10.5 1C15.7467 1 20 5.25329 20 10.5V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8.5C8 8.5 8.5 7.5 9.5 7.5C10.5 7.5 11 8 11.5 9C12 10 12.5 10.5 13 11C13.5 11.5 14 12 14.5 12.5C15 13 15.5 13.5 16 14.5C16.5 15.5 16 16 16 16L15 16.5C14.5 16.5 13.5 16 13 15.5C12.5 15 11 13.5 10.5 13C10 12.5 9.5 12 9 11.5C8.5 11 8 10.5 8 9.5C8 8.5 8 8.5 8 8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`
-        },
-        'linkedin': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>`
-        },
-        'email': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        },
-        'google': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M12 6V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/></svg>`
-        },
-        'maps': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>`
-        },
-        'linktree': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2V14M12 14L8 10M12 14L16 10M12 22V18M8 18L12 14M16 18L12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="14" r="1" fill="currentColor"/></svg>`
-        },
-        'messenger': {
-            svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 14.5 2.8 16.8 4.2 18.7L3.5 21.5L6.4 20.2C8.1 21.3 10.1 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 13L10 9.5L14 12.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        }
+        'facebook': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+        'instagram': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.908 12.2384 16.0396 11.4077 15.9059C10.5771 15.7722 9.80971 15.3801 9.21479 14.7851C8.61987 14.1902 8.2278 13.4228 8.09412 12.5922C7.96044 11.7615 8.092 10.9098 8.47026 10.1583C8.84852 9.40678 9.45418 8.7937 10.2009 8.4062C10.9477 8.0187 11.7978 7.87652 12.63 8C13.4789 8.12583 14.2648 8.52151 14.8716 9.12836C15.4785 9.73521 15.8742 10.5211 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>` },
+        'youtube': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1792 5.51057 21.8387 5.15941C21.4982 4.80824 21.0708 4.55518 20.6 4.43C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92916 4.58518 2.50178 4.83824 2.16132 5.18941C1.82085 5.54057 1.57882 5.97541 1.46 6.45C1.14521 8.17418 0.991095 9.92534 1 11.68C0.991095 13.4347 1.14521 15.1858 1.46 16.91C1.57882 17.3846 1.82085 17.8194 2.16132 18.1706C2.50178 18.5218 2.92916 18.7748 3.4 18.9C5.12 19.36 12 19.36 12 19.36C12 19.36 18.88 19.36 20.6 18.9C21.0708 18.7748 21.4982 18.5218 21.8387 18.1706C22.1792 17.8194 22.4212 17.3846 22.54 16.91C22.8548 15.1858 23.0089 13.4347 23 11.68C23.0089 9.92534 22.8548 8.17418 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.68L9.75 8.34V15.02Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+        'tiktok': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12V8.5C9 6.01472 11.0147 4 13.5 4H16M9 20C7.34315 20 6 18.6569 6 17C6 15.3431 7.34315 14 9 14C10.6569 14 12 15.3431 12 17V4M20 8V12C18.3431 12 17 10.6569 17 9V8H20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+        'x': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" fill="currentColor"/></svg>` },
+        'pinterest': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16C8 16 6 10 6 8C6 4 9 2 12 2C16 2 18 5 18 8C18 12 16 16 13 16C11 16 10 14 10 14M10 14L8 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>` },
+        'threads': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M16.5 10.5C16.5 10.5 15.5 8 12 8C8.5 8 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 12 16.5C14.5 16.5 15.5 14.5 15.5 13.5C15.5 12.5 14.5 12 13 12C11.5 12 10.5 12.5 10.5 13.5C10.5 14.5 11.5 15 12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>` },
+        'whatsapp': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5C21 16.7467 16.7467 21 11.5 21C9.38318 21 7.42019 20.3098 5.86667 19.1333L2 20L2.86667 16.1333C1.69019 14.5798 1 12.6168 1 10.5C1 5.25329 5.25329 1 10.5 1C15.7467 1 20 5.25329 20 10.5V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8.5C8 8.5 8.5 7.5 9.5 7.5C10.5 7.5 11 8 11.5 9C12 10 12.5 10.5 13 11C13.5 11.5 14 12 14.5 12.5C15 13 15.5 13.5 16 14.5C16.5 15.5 16 16 16 16L15 16.5C14.5 16.5 13.5 16 13 15.5C12.5 15 11 13.5 10.5 13C10 12.5 9.5 12 9 11.5C8.5 11 8 10.5 8 9.5C8 8.5 8 8.5 8 8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>` },
+        'linkedin': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>` },
+        'email': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+        'google': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/><path d="M12 6V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/></svg>` },
+        'maps': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>` },
+        'linktree': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2V14M12 14L8 10M12 14L16 10M12 22V18M8 18L12 14M16 18L12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="14" r="1" fill="currentColor"/></svg>` },
+        'messenger': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 14.5 2.8 16.8 4.2 18.7L3.5 21.5L6.4 20.2C8.1 21.3 10.1 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 13L10 9.5L14 12.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` }
     };
     
     const iconData = icons[platform];
     if (!iconData) return null;
-    
-    return `
-        <a href="${link}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}">
-            ${iconData.svg}
-        </a>
-    `;
+    return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}">${iconData.svg}</a>`;
 }
 
 // ============================================================================
-// FOOTER - PROFESSIONAL DATABASE-DRIVEN (ALL 11 TABLES - ALL COLUMNS)
+// FOOTER - MOBILE-FRIENDLY + FIXED COUNTRY SELECTOR
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
@@ -1679,22 +1778,8 @@ async function renderFooter() {
         if (!response.ok) throw new Error('Footer API failed');
         const footerData = await response.json();
         
-        const { 
-            content = [], 
-            socialLinks = [], 
-            menus = [], 
-            paymentMethods = [], 
-            shippingPartners = [], 
-            certifications = [], 
-            appLinks = [], 
-            countries = [], 
-            trustBadges = [], 
-            settings = null 
-        } = footerData;
+        const { content = [], socialLinks = [], menus = [], paymentMethods = [], shippingPartners = [], certifications = [], appLinks = [], countries = [], trustBadges = [], settings = null } = footerData;
         
-        // =====================================================================
-        // FOOTER SETTINGS
-        // =====================================================================
         const bgColor = settings?.background_color || '#1a1a1a';
         const textColor = settings?.text_color || '#ffffff';
         const copyrightText = settings?.copyright_text || '© 2025 JayenWare. All Rights Reserved.';
@@ -1706,9 +1791,7 @@ async function renderFooter() {
         const showCountry = settings?.show_country_selector !== false;
         const customCSS = settings?.custom_css || '';
         
-        // =====================================================================
-        // FOOTER CONTENT - Merge ALL content rows
-        // =====================================================================
+        // Merge content
         const mergedContent = {};
         content.forEach(c => {
             if (c.title) mergedContent.title = mergedContent.title || c.title;
@@ -1735,143 +1818,68 @@ async function renderFooter() {
         const contactAddress = contactSection.address || infoSection.address || brandSection.address || mergedContent.address || '';
         const contactHours = contactSection.working_hours || infoSection.working_hours || brandSection.working_hours || mergedContent.working_hours || '';
         
-        // =====================================================================
-        // SOCIAL LINKS
-        // =====================================================================
+        // Social Links
         let socialIconsHTML = '';
         if (showSocial && socialLinks.length > 0) {
-            socialIconsHTML = socialLinks
-                .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
-                .map(link => {
-                    const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
-                    const hoverTitle = link.hover_title || link.platform_name || '';
-                    
-                    if (link.platform_icon && link.platform_icon.startsWith('http')) {
-                        return `
-                        <a href="${link.link_url || '#'}" target="_blank" rel="noopener noreferrer" 
-                           class="social-icon-link" aria-label="${link.platform_name}" title="${hoverTitle}">
-                            <img src="${link.platform_icon}" alt="${link.platform_name}">
-                        </a>`;
-                    }
-                    
-                    const iconHTML = getSocialIconHTML(platform, link.link_url || '#');
-                    if (!iconHTML) return '';
-                    
-                    return iconHTML.replace(
-                        `aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}"`, 
-                        `aria-label="${link.platform_name}" title="${hoverTitle}"`
-                    );
-                }).filter(html => html !== '').join('');
+            socialIconsHTML = socialLinks.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)).map(link => {
+                const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
+                const hoverTitle = link.hover_title || link.platform_name || '';
+                if (link.platform_icon && link.platform_icon.startsWith('http')) {
+                    return `<a href="${link.link_url || '#'}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${link.platform_name}" title="${hoverTitle}"><img src="${link.platform_icon}" alt="${link.platform_name}"></a>`;
+                }
+                const iconHTML = getSocialIconHTML(platform, link.link_url || '#');
+                if (!iconHTML) return '';
+                return iconHTML.replace(`aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}"`, `aria-label="${link.platform_name}" title="${hoverTitle}"`);
+            }).filter(html => html !== '').join('');
         }
         
-        // =====================================================================
-        // PAYMENT METHODS
-        // =====================================================================
+        // Payment Methods
         let paymentHTML = '';
         if (showPayment && paymentMethods.length > 0) {
             const sortedPayments = [...paymentMethods].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            paymentHTML = `
-            <div class="footer-section">
-                <h5 class="footer-section-title">Payment Methods</h5>
-                <div class="footer-payment-grid">
-                    ${sortedPayments.map(pm => {
-                        let itemHTML = '';
-                        if (pm.icon_url) {
-                            itemHTML += `<img src="${pm.icon_url}" alt="${pm.name}" class="footer-payment-icon" title="${pm.name}">`;
-                        } else {
-                            itemHTML += `<span class="footer-payment-name">${pm.name}</span>`;
-                        }
-                        if (pm.account_number) {
-                            itemHTML += `<span class="footer-payment-account">${pm.account_number}</span>`;
-                        }
-                        if (pm.qr_code_url) {
-                            itemHTML += `<img src="${pm.qr_code_url}" alt="${pm.name} QR" class="footer-payment-qr" title="Scan QR for ${pm.name}" onclick="window.open('${pm.qr_code_url}', '_blank')">`;
-                        }
-                        return `<div class="footer-payment-item">${itemHTML}</div>`;
-                    }).join('')}
-                </div>
-            </div>`;
+            paymentHTML = `<div class="footer-section"><h5 class="footer-section-title">Payment Methods</h5><div class="footer-payment-grid">${sortedPayments.map(pm => {
+                let itemHTML = '';
+                if (pm.icon_url) itemHTML += `<img src="${pm.icon_url}" alt="${pm.name}" class="footer-payment-icon" title="${pm.name}">`;
+                else itemHTML += `<span class="footer-payment-name">${pm.name}</span>`;
+                if (pm.account_number) itemHTML += `<span class="footer-payment-account">${pm.account_number}</span>`;
+                if (pm.qr_code_url) itemHTML += `<img src="${pm.qr_code_url}" alt="${pm.name} QR" class="footer-payment-qr" title="Scan QR for ${pm.name}" onclick="window.open('${pm.qr_code_url}', '_blank')">`;
+                return `<div class="footer-payment-item">${itemHTML}</div>`;
+            }).join('')}</div></div>`;
         }
         
-        // =====================================================================
-        // SHIPPING PARTNERS
-        // =====================================================================
+        // Shipping Partners
         let shippingHTML = '';
         if (shippingPartners.length > 0) {
             const sortedShipping = [...shippingPartners].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            shippingHTML = `
-            <div class="footer-section">
-                <h5 class="footer-section-title">Shipping Partners</h5>
-                <div class="footer-shipping-grid">
-                    ${sortedShipping.map(sp => {
-                        return sp.icon_url 
-                            ? `<img src="${sp.icon_url}" alt="${sp.name}" class="footer-shipping-icon" title="${sp.name}">`
-                            : `<span class="footer-shipping-name">${sp.name}</span>`;
-                    }).join('')}
-                </div>
-            </div>`;
+            shippingHTML = `<div class="footer-section"><h5 class="footer-section-title">Shipping Partners</h5><div class="footer-shipping-grid">${sortedShipping.map(sp => sp.icon_url ? `<img src="${sp.icon_url}" alt="${sp.name}" class="footer-shipping-icon" title="${sp.name}">` : `<span class="footer-shipping-name">${sp.name}</span>`).join('')}</div></div>`;
         }
         
-        // =====================================================================
-        // CERTIFICATIONS
-        // =====================================================================
+        // Certifications
         let certHTML = '';
         if (certifications.length > 0) {
             const sortedCerts = [...certifications].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            certHTML = `
-            <div class="footer-section">
-                <h5 class="footer-section-title">Certifications</h5>
-                <div class="footer-cert-grid">
-                    ${sortedCerts.map(cert => {
-                        const badgeContent = cert.badge_url 
-                            ? `<img src="${cert.badge_url}" alt="${cert.name}" class="footer-cert-icon">`
-                            : `<span class="footer-cert-name">${cert.name}</span>`;
-                        const nameContent = cert.badge_url ? `<span class="footer-cert-name">${cert.name}</span>` : '';
-                        
-                        if (cert.link_url) {
-                            return `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" class="footer-cert-item" title="${cert.name}">${badgeContent}${nameContent}</a>`;
-                        }
-                        return `<div class="footer-cert-item" title="${cert.name}">${badgeContent}${nameContent}</div>`;
-                    }).join('')}
-                </div>
-            </div>`;
+            certHTML = `<div class="footer-section"><h5 class="footer-section-title">Certifications</h5><div class="footer-cert-grid">${sortedCerts.map(cert => {
+                const badgeContent = cert.badge_url ? `<img src="${cert.badge_url}" alt="${cert.name}" class="footer-cert-icon">` : `<span class="footer-cert-name">${cert.name}</span>`;
+                const nameContent = cert.badge_url ? `<span class="footer-cert-name">${cert.name}</span>` : '';
+                if (cert.link_url) return `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" class="footer-cert-item" title="${cert.name}">${badgeContent}${nameContent}</a>`;
+                return `<div class="footer-cert-item" title="${cert.name}">${badgeContent}${nameContent}</div>`;
+            }).join('')}</div></div>`;
         }
         
-        // =====================================================================
-        // APP LINKS
-        // =====================================================================
+        // App Links
         let appHTML = '';
         if (showApp && appLinks.length > 0) {
             const sortedApps = [...appLinks].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            appHTML = `
-            <div class="footer-section">
-                <h5 class="footer-section-title">Download Our App</h5>
-                <div class="footer-app-grid">
-                    ${sortedApps.map(app => {
-                        let buttons = '';
-                        const iconImg = app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}">` : '';
-                        
-                        if (app.app_store_url) {
-                            buttons += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Download on App Store">
-                                ${iconImg || '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>'}
-                                App Store
-                            </a>`;
-                        }
-                        if (app.play_store_url) {
-                            buttons += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Get it on Google Play">
-                                ${iconImg || '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>'}
-                                Play Store
-                            </a>`;
-                        }
-                        return buttons;
-                    }).join('')}
-                </div>
-            </div>`;
+            appHTML = `<div class="footer-section"><h5 class="footer-section-title">Download Our App</h5><div class="footer-app-grid">${sortedApps.map(app => {
+                let buttons = '';
+                const iconImg = app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}">` : '';
+                if (app.app_store_url) buttons += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Download on App Store">${iconImg || '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>'} App Store</a>`;
+                if (app.play_store_url) buttons += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Get it on Google Play">${iconImg || '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>'} Play Store</a>`;
+                return buttons;
+            }).join('')}</div></div>`;
         }
         
-        // =====================================================================
-        // COUNTRY SELECTOR
-        // =====================================================================
+        // Country Selector - FIXED with wrapper and custom arrow
         let countryHTML = '';
         if (showCountry && countries.length > 0) {
             const sortedCountries = [...countries].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
@@ -1880,81 +1888,67 @@ async function renderFooter() {
             countryHTML = `
             <div class="footer-section">
                 <h5 class="footer-section-title">Country & Language</h5>
-                <select class="footer-country-select" onchange="if(this.value) window.location.href=this.value" aria-label="Select country and language">
-                    ${sortedCountries.map(country => {
-                        const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="footer-country-flag" alt="${country.country_code}">` : '';
-                        const currencyDisplay = country.currency_symbol || (country.currency_code ? country.currency_code + ' ' : '');
-                        const langDisplay = country.language_name || (country.language_code ? country.language_code.toUpperCase() : '');
-                        const label = `${country.country_name} ${currencyDisplay}${langDisplay ? '(' + langDisplay + ')' : ''}`;
-                        const selected = country.is_default ? 'selected' : '';
-                        return `<option value="?country=${country.country_code}&lang=${country.language_code || ''}" ${selected}>${flagHTML}${label.trim()}</option>`;
-                    }).join('')}
-                </select>
-                ${defaultCountry?.exchange_rate && defaultCountry.exchange_rate !== 1 ? 
-                    `<p class="footer-exchange-rate">Exchange Rate: 1 USD = ${defaultCountry.currency_symbol || ''}${defaultCountry.exchange_rate}</p>` : ''}
+                <div class="footer-country-select-wrapper">
+                    <select class="footer-country-select" onchange="if(this.value) window.location.href=this.value" aria-label="Select country and language">
+                        ${sortedCountries.map(country => {
+                            const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="footer-country-flag" alt="${country.country_code}">` : '';
+                            const currencyDisplay = country.currency_symbol || (country.currency_code ? country.currency_code + ' ' : '');
+                            const langDisplay = country.language_name || (country.language_code ? country.language_code.toUpperCase() : '');
+                            const label = `${country.country_name} ${currencyDisplay}${langDisplay ? '(' + langDisplay + ')' : ''}`;
+                            const selected = country.is_default ? 'selected' : '';
+                            return `<option value="?country=${country.country_code}&lang=${country.language_code || ''}" ${selected}>${flagHTML}${label.trim()}</option>`;
+                        }).join('')}
+                    </select>
+                    <span class="footer-country-select-arrow" aria-hidden="true">
+                        <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                ${defaultCountry?.exchange_rate && defaultCountry.exchange_rate !== 1 ? `<p class="footer-exchange-rate">Exchange Rate: 1 USD = ${defaultCountry.currency_symbol || ''}${defaultCountry.exchange_rate}</p>` : ''}
             </div>`;
         }
         
-        // =====================================================================
-        // TRUST BADGES
-        // =====================================================================
+        // Trust Badges
         let badgesHTML = '';
         if (trustBadges.length > 0) {
             const sortedBadges = [...trustBadges].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            badgesHTML = `
-            <div class="footer-section">
-                <h5 class="footer-section-title">Trust & Security</h5>
-                <div class="footer-badges-grid">
-                    ${sortedBadges.map(badge => {
-                        const badgeImg = badge.badge_url 
-                            ? `<img src="${badge.badge_url}" alt="${badge.title}" class="footer-badge-icon">`
-                            : `<span class="footer-badge-title">${badge.title}</span>`;
-                        return `
-                        <div class="footer-badge-item" title="${badge.title}${badge.subtitle ? ': ' + badge.subtitle : ''}">
-                            ${badgeImg}
-                            ${badge.badge_url ? `<p class="footer-badge-title">${badge.title}</p>` : ''}
-                            ${badge.subtitle ? `<p class="footer-badge-subtitle">${badge.subtitle}</p>` : ''}
-                        </div>`;
-                    }).join('')}
-                </div>
-            </div>`;
+            badgesHTML = `<div class="footer-section"><h5 class="footer-section-title">Trust & Security</h5><div class="footer-badges-grid">${sortedBadges.map(badge => {
+                const badgeImg = badge.badge_url ? `<img src="${badge.badge_url}" alt="${badge.title}" class="footer-badge-icon">` : `<span class="footer-badge-title">${badge.title}</span>`;
+                return `<div class="footer-badge-item" title="${badge.title}${badge.subtitle ? ': ' + badge.subtitle : ''}">${badgeImg}${badge.badge_url ? `<p class="footer-badge-title">${badge.title}</p>` : ''}${badge.subtitle ? `<p class="footer-badge-subtitle">${badge.subtitle}</p>` : ''}</div>`;
+            }).join('')}</div></div>`;
         }
         
-        // =====================================================================
-        // MENUS & QUICK LINKS
-        // =====================================================================
+        // Menus & Quick Links - Mobile Accordion
         let menuColumnsHTML = '';
         if (menus.length > 0) {
             const sortedMenus = [...menus].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            menuColumnsHTML = sortedMenus.map(menu => {
+            menuColumnsHTML = sortedMenus.map((menu, menuIdx) => {
                 const links = menu.links || [];
                 const sortedLinks = [...links].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
                 const topLevelLinks = sortedLinks.filter(l => !l.parent_id);
                 const childLinks = sortedLinks.filter(l => l.parent_id);
+                const menuId = `footer-menu-${menuIdx}-${Date.now()}`;
                 
                 return `
-                <div>
-                    <h5 class="footer-section-title">${menu.title || 'Links'}</h5>
+                <div class="footer-col footer-col-menu" id="${menuId}">
+                    <h5 class="footer-section-title" onclick="toggleFooterMenu('${menuId}')">
+                        ${menu.title || 'Links'}
+                        <span class="footer-menu-arrow">▼</span>
+                    </h5>
                     <ul class="footer-links-list">
                         ${topLevelLinks.map(link => {
                             const target = link.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
                             const iconHTML = link.icon_class ? `<i class="${link.icon_class}"></i>` : '';
                             const descHTML = link.description ? `<span class="footer-link-desc">${link.description}</span>` : '';
-                            
                             const children = childLinks.filter(cl => cl.parent_id === link.id);
                             let childrenHTML = '';
                             if (children.length > 0) {
-                                childrenHTML = `
-                                <ul class="footer-nested-links">
-                                    ${children.map(child => {
-                                        const childTarget = child.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
-                                        const childIcon = child.icon_class ? `<i class="${child.icon_class}"></i>` : '';
-                                        const childDesc = child.description ? `<span class="footer-nested-desc">${child.description}</span>` : '';
-                                        return `<li><a href="${child.link_url || '#'}" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
-                                    }).join('')}
-                                </ul>`;
+                                childrenHTML = `<ul class="footer-nested-links">${children.map(child => {
+                                    const childTarget = child.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
+                                    const childIcon = child.icon_class ? `<i class="${child.icon_class}"></i>` : '';
+                                    const childDesc = child.description ? `<span class="footer-nested-desc">${child.description}</span>` : '';
+                                    return `<li><a href="${child.link_url || '#'}" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
+                                }).join('')}</ul>`;
                             }
-                            
                             return `<li><a href="${link.link_url || '#'}" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}${childrenHTML}</li>`;
                         }).join('')}
                     </ul>
@@ -1962,9 +1956,7 @@ async function renderFooter() {
             }).join('');
         }
         
-        // =====================================================================
-        // LAYOUT CLASS
-        // =====================================================================
+        // Layout class
         let layoutClass = '';
         switch(layoutStyle) {
             case 'centered': layoutClass = 'footer-layout-centered'; break;
@@ -1973,58 +1965,43 @@ async function renderFooter() {
             default: layoutClass = '';
         }
         
-        // =====================================================================
-        // BUILD COMPLETE FOOTER HTML
-        // =====================================================================
+        // Build footer HTML
         const footerHTML = `
-        <footer class="pt-12 pb-6 ${layoutClass}" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
+        <footer class="${layoutClass}" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
-            <div class="w-full px-4 lg:px-12">
+            <div class="footer-container">
                 <div class="footer-grid">
-                    <!-- Brand Column -->
-                    <div>
+                    <div class="footer-col">
                         ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="footer-brand-logo">` : ''}
                         <h4 class="footer-brand-title">${brandTitle}</h4>
                         <p class="footer-brand-desc">${brandDesc}</p>
-                        
-                        ${showSocial && socialIconsHTML ? `
-                        <div class="social-icons-grid">
-                            ${socialIconsHTML}
-                        </div>` : ''}
-                        
+                        ${showSocial && socialIconsHTML ? `<div class="social-icons-grid">${socialIconsHTML}</div>` : ''}
                         ${appHTML}
                         ${countryHTML}
                     </div>
-                    
-                    <!-- Dynamic Menu Columns -->
                     ${menuColumnsHTML}
-                    
-                    <!-- Contact Column -->
-                    <div>
+                    <div class="footer-col">
                         <h5 class="footer-section-title">Direct Contact</h5>
                         ${contactEmail ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span><span class="footer-contact-text"><a href="mailto:${contactEmail}">${contactEmail}</a></span></div>` : ''}
                         ${contactPhone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span><span class="footer-contact-text"><a href="tel:${contactPhone}">${contactPhone}</a></span></div>` : ''}
                         ${contactAddress ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span><span class="footer-contact-text">${contactAddress}</span></div>` : ''}
                         ${contactHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span><span class="footer-contact-text">${contactHours}</span></div>` : ''}
-                        
                         ${paymentHTML}
                         ${shippingHTML}
                         ${certHTML}
                         ${badgesHTML}
                     </div>
                 </div>
-                
-                <!-- Bottom Bar -->
                 <div class="footer-bottom-bar">
                     <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer">BINZEO Infrastructure</a> ${version ? 'v' + version : ''}</p>
                     <p>${brandCopyright}</p>
                 </div>
             </div>
-        </footer>
-        `;
+        </footer>`;
         
         document.body.insertAdjacentHTML('beforeend', footerHTML);
         
+        // RTL support
         if (countries.length > 0) {
             const defaultCountry = countries.find(c => c.is_default) || countries[0];
             if (defaultCountry?.is_rtl) {
@@ -2035,16 +2012,20 @@ async function renderFooter() {
         
     } catch (error) {
         console.error('Footer render error:', error);
-        const fallbackHTML = `
-        <footer class="pt-12 pb-6" id="main-footer" style="background: #1a1a1a !important; color: #ffffff !important;">
-            <div class="w-full px-4 lg:px-12 text-center">
-                <p class="text-[10px] opacity-50">© ${new Date().getFullYear()} JayenWare. All Rights Reserved.</p>
-                <p class="text-[8px] opacity-30 mt-1">Powered by BINZEO Infrastructure v1.0</p>
-            </div>
-        </footer>`;
+        const fallbackHTML = `<footer id="main-footer" style="background:#1a1a1a!important;color:#ffffff!important;padding:40px 16px;text-align:center;"><p style="font-size:10px;opacity:0.5;">© ${new Date().getFullYear()} JayenWare. All Rights Reserved.</p><p style="font-size:8px;opacity:0.3;margin-top:4px;">Powered by BINZEO Infrastructure</p></footer>`;
         document.body.insertAdjacentHTML('beforeend', fallbackHTML);
     }
 }
+
+// ============================================================================
+// TOGGLE FOOTER MENU ON MOBILE
+// ============================================================================
+window.toggleFooterMenu = function(menuId) {
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    if (window.innerWidth >= 640) return; // Only on mobile
+    menu.classList.toggle('open');
+};
 
 // ============================================================================
 // TOAST SYSTEM
@@ -2055,13 +2036,7 @@ function showToast(text, type = 'success') {
         toast = document.createElement('div');
         toast.id = 'toast';
         toast.className = 'fixed bottom-5 right-5 z-[100] transition-transform duration-300 translate-x-[120%]';
-        toast.innerHTML = `
-            <div class="shadow-xl p-3.5 flex items-center gap-3 min-w-[240px]">
-                <span id="toast-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0"></span>
-                <p id="toast-text" class="text-[10px] font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
-                <button onclick="hideToast()" class="drawer-close-btn text-gray-400 hover:text-black shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            </div>
-        `;
+        toast.innerHTML = `<div class="shadow-xl p-3.5 flex items-center gap-3 min-w-[240px]"><span id="toast-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0"></span><p id="toast-text" class="text-[10px] font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p><button onclick="hideToast()" class="drawer-close-btn text-gray-400 hover:text-black shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
         document.body.appendChild(toast);
     }
     document.getElementById('toast-text').innerText = text;
@@ -2071,11 +2046,7 @@ function showToast(text, type = 'success') {
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
 }
-
-function hideToast() {
-    const toast = document.getElementById('toast');
-    if (toast) toast.style.transform = 'translateX(120%)';
-}
+function hideToast() { const toast = document.getElementById('toast'); if (toast) toast.style.transform = 'translateX(120%)'; }
 
 // ============================================================================
 // SIDE DRAWER CONTROLLER
@@ -2087,7 +2058,6 @@ function openSideMenu() {
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
-
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
     if (drawer) drawer.classList.remove('open');
@@ -2098,351 +2068,104 @@ function closeSideMenu() {
 }
 
 // ============================================================================
-// ENHANCED CART SYSTEM
+// CART SYSTEM
 // ============================================================================
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
-    if (drawer) {
-        drawer.classList.toggle('open');
-        if (drawer.classList.contains('open')) renderCartItems();
-    }
+    if (drawer) { drawer.classList.toggle('open'); if (drawer.classList.contains('open')) renderCartItems(); }
 }
-
 window.toggleCartItemDetails = function(idx) {
     const details = document.getElementById(`cart-details-${idx}`);
     const icon = document.getElementById(`cart-toggle-icon-${idx}`);
-    if (details) {
-        details.classList.toggle('open');
-        if (icon) icon.classList.toggle('open');
-    }
+    if (details) { details.classList.toggle('open'); if (icon) icon.classList.toggle('open'); }
 };
-
 window.addToCart = function(productId, options = {}) {
-    if (!productId || !options.title) {
-        console.error('Product ID and Title are required');
-        return;
-    }
-    
+    if (!productId || !options.title) { console.error('Product ID and Title are required'); return; }
     const existingIndex = cart.findIndex(item => {
         if (item.product_id !== productId) return false;
         if (options.variant_id && item.variant_id === options.variant_id) return true;
-        if (!options.variant_id && !item.variant_id) {
-            return item.color_id === (options.color_id || null) && 
-                   item.size_id === (options.size_id || null);
-        }
+        if (!options.variant_id && !item.variant_id) return item.color_id === (options.color_id || null) && item.size_id === (options.size_id || null);
         return false;
     });
-    
     if (existingIndex > -1) {
         cart[existingIndex].quantity += (options.quantity || 1);
-        const variantName = options.color_name ? ` ${options.color_name}` : '';
-        showToast(`Updated: ${cart[existingIndex].title}${variantName} × ${cart[existingIndex].quantity}`, 'success');
+        showToast(`Updated: ${cart[existingIndex].title} × ${cart[existingIndex].quantity}`, 'success');
     } else {
-        let variantParts = [];
-        if (options.color_name) variantParts.push(options.color_name);
-        if (options.size_name) variantParts.push(options.size_name);
-        const variantDisplay = variantParts.length ? ` (${variantParts.join(' • ')})` : '';
-        
-        const displayImage = options.color_image || options.img || '/logo.png';
-        
-        const newItem = {
-            id: Date.now(),
-            product_id: productId,
-            title: options.title,
-            price: options.price || 0,
-            old_price: options.old_price || null,
-            img: displayImage,
-            variant_id: options.variant_id || null,
-            variant_name: options.variant_name || null,
-            color_id: options.color_id || null,
-            color_name: options.color_name || null,
-            color_code: options.color_code || null,
-            color_image: options.color_image || null,
-            size_id: options.size_id || null,
-            size_name: options.size_name || null,
-            main_barcode: options.main_barcode || options.barcode || null,
-            variant_barcode: options.variant_barcode || null,
-            sku: options.sku || null,
-            category: options.category || null,
-            subcategory: options.subcategory || null,
-            stock: options.stock || null,
-            weight: options.weight || null,
-            fabric_type: options.fabric_type || null,
-            gsm_type: options.gsm_type || null,
-            fit_type: options.fit_type || null,
-            gender: options.gender || null,
-            print_type: options.print_type || null,
+        cart.push({
+            id: Date.now(), product_id: productId, title: options.title, price: options.price || 0,
+            old_price: options.old_price || null, img: options.color_image || options.img || '/logo.png',
+            variant_id: options.variant_id || null, color_id: options.color_id || null, color_name: options.color_name || null,
+            color_code: options.color_code || null, size_id: options.size_id || null, size_name: options.size_name || null,
+            sku: options.sku || null, category: options.category || null, subcategory: options.subcategory || null,
+            fabric_type: options.fabric_type || null, fit_type: options.fit_type || null, gsm_type: options.gsm_type || null,
+            weight: options.weight || null, gender: options.gender || null, print_type: options.print_type || null,
             quantity: options.quantity || 1
-        };
-        
-        cart.push(newItem);
-        showToast(`Added: ${options.title}${variantDisplay}`, 'success');
+        });
+        showToast(`Added: ${options.title}`, 'success');
     }
-    
-    saveCart();
-    renderCartItems();
+    saveCart(); renderCartItems();
 };
-
 window.removeFromCart = function(idx) {
-    const item = cart[idx];
-    if (!item) return;
-    let itemName = item.title;
-    if (item.color_name) itemName += ` (${item.color_name})`;
-    if (item.size_name) itemName += ` ${item.size_name}`;
-    if (cart.length === 1 || window.confirm(`Remove "${itemName}" from bag?`)) {
-        cart.splice(idx, 1);
-        saveCart();
-        renderCartItems();
-        showToast('Removed from Bag', 'info');
-    }
+    const item = cart[idx]; if (!item) return;
+    if (cart.length === 1 || window.confirm(`Remove "${item.title}" from bag?`)) { cart.splice(idx, 1); saveCart(); renderCartItems(); showToast('Removed from Bag', 'info'); }
 };
-
 window.updateCartQuantity = function(idx, newQuantity) {
-    if (newQuantity < 1) {
-        removeFromCart(idx);
-        return;
-    }
-    cart[idx].quantity = newQuantity;
-    saveCart();
-    renderCartItems();
+    if (newQuantity < 1) { removeFromCart(idx); return; }
+    cart[idx].quantity = newQuantity; saveCart(); renderCartItems();
 };
-
 function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
     const itemCountEl = document.getElementById('cart-item-count');
     if (!container) return;
-    
     if (!cart.length) {
-        container.innerHTML = `
-            <div class="cart-empty-state">
-                <i class="fa-regular fa-bag-shopping"></i>
-                <h3>Your Vault is Empty</h3>
-                <p>Start shopping to fill your collection</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="cart-empty-state"><i class="fa-regular fa-bag-shopping"></i><h3>Your Vault is Empty</h3><p>Start shopping to fill your collection</p></div>`;
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         if (itemCountEl) itemCountEl.innerText = '0';
-        updateCounts();
-        return;
+        updateCounts(); return;
     }
-    
-    let sub = 0;
-    let totalItems = 0;
-    
+    let sub = 0, totalItems = 0;
     container.innerHTML = cart.map((item, idx) => {
-        const itemTotal = item.price * (item.quantity || 1);
-        sub += itemTotal;
-        totalItems += (item.quantity || 1);
-        
-        let variantBadges = [];
-        if (item.color_name) {
-            const colorDot = item.color_code ? 
-                `<span class="color-dot" style="background:${item.color_code};"></span>` : '';
-            variantBadges.push(`<span class="cart-item-variant-badge">${colorDot}${item.color_name}</span>`);
-        }
-        if (item.size_name) {
-            variantBadges.push(`<span class="cart-item-variant-badge">${item.size_name}</span>`);
-        }
-        if (item.sku) {
-            variantBadges.push(`<span class="cart-item-sku-badge">SKU: ${item.sku}</span>`);
-        }
-        
-        let barcodeParts = [];
-        if (item.main_barcode) barcodeParts.push(`Main: ${item.main_barcode}`);
-        if (item.variant_barcode) barcodeParts.push(`Var: ${item.variant_barcode}`);
-        const barcodeText = barcodeParts.length ? barcodeParts.join(' | ') : '';
-        
-        let extraDetails = [];
-        if (item.fabric_type) extraDetails.push(`Fabric: ${item.fabric_type}`);
-        if (item.fit_type) extraDetails.push(`Fit: ${item.fit_type}`);
-        if (item.gsm_type) extraDetails.push(`GSM: ${item.gsm_type}`);
-        if (item.weight) extraDetails.push(`Weight: ${item.weight}g`);
-        if (item.gender) extraDetails.push(`Gender: ${item.gender}`);
-        if (item.print_type) extraDetails.push(`Print: ${item.print_type}`);
-        
-        let categoryText = '';
-        if (item.category) {
-            categoryText = item.category;
-            if (item.subcategory) categoryText += ` / ${item.subcategory}`;
-        }
-        
-        const hasExtraDetails = extraDetails.length > 0 || categoryText || barcodeText;
-        
-        return `
-        <div class="cart-item-card">
-            <div class="flex gap-3">
-                <img src="${item.img}" class="cart-item-image" alt="${item.title}" onerror="this.src='/logo.png'">
-                <div class="flex-grow min-w-0">
-                    <div class="flex items-start justify-between gap-1">
-                        <h4 class="cart-item-title">${item.title}</h4>
-                    </div>
-                    <div class="cart-item-variant">${variantBadges.join('')}</div>
-                    <div class="cart-item-bottom-row">
-                        <div class="flex items-center gap-2">
-                            <span class="cart-item-price">৳${itemTotal.toFixed(2)}</span>
-                            ${item.old_price ? `<span class="cart-item-old-price">৳${(item.old_price * item.quantity).toFixed(2)}</span>` : ''}
-                        </div>
-                        <div class="cart-item-quantity-control">
-                            <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) - 1})" aria-label="Decrease">−</button>
-                            <span class="qty-num">${item.quantity || 1}</span>
-                            <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) + 1})" aria-label="Increase">+</button>
-                        </div>
-                    </div>
-                    ${hasExtraDetails ? `
-                        <button class="cart-item-details-toggle" onclick="toggleCartItemDetails(${idx})">
-                            Details <span class="toggle-icon" id="cart-toggle-icon-${idx}">▼</span>
-                        </button>
-                    ` : ''}
-                    <div class="cart-item-extra-details" id="cart-details-${idx}">
-                        <div class="cart-item-extra-details-inner">
-                            ${categoryText ? `<span>📁 ${categoryText}</span>` : ''}
-                            ${barcodeText ? `<span>🔲 ${barcodeText}</span>` : ''}
-                            ${extraDetails.map(d => `<span>${d}</span>`).join('')}
-                        </div>
-                    </div>
-                </div>
-                <button onclick="removeFromCart(${idx})" class="cart-item-remove-btn" aria-label="Remove">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-            </div>
-        </div>`;
+        const itemTotal = item.price * (item.quantity || 1); sub += itemTotal; totalItems += (item.quantity || 1);
+        return `<div class="cart-item-card"><div class="flex gap-3"><img src="${item.img}" class="cart-item-image" alt="${item.title}" onerror="this.src='/logo.png'"><div class="flex-grow min-w-0"><h4 class="cart-item-title">${item.title}</h4><div class="cart-item-bottom-row"><span class="cart-item-price">৳${itemTotal.toFixed(2)}</span><div class="cart-item-quantity-control"><button onclick="updateCartQuantity(${idx},${(item.quantity||1)-1})">−</button><span class="qty-num">${item.quantity||1}</span><button onclick="updateCartQuantity(${idx},${(item.quantity||1)+1})">+</button></div></div></div><button onclick="removeFromCart(${idx})" class="cart-item-remove-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>`;
     }).join('');
-    
     if (subtotalEl) subtotalEl.innerText = `৳${sub.toFixed(2)}`;
     if (totalEl) totalEl.innerText = `৳${sub.toFixed(2)}`;
     if (itemCountEl) itemCountEl.innerText = totalItems;
     updateCounts();
 }
-
-window.getCartItemDetails = function(productId, variantId = null) {
-    return cart.find(item => {
-        if (item.product_id !== productId) return false;
-        if (variantId && item.variant_id !== variantId) return false;
-        return true;
-    }) || null;
-};
-
-window.isVariantInCart = function(productId, colorId, sizeId) {
-    return cart.some(item => {
-        if (item.product_id !== productId) return false;
-        if (colorId && item.color_id !== colorId) return false;
-        if (sizeId && item.size_id !== sizeId) return false;
-        return true;
-    });
-};
-
-window.getProductQuantityInCart = function(productId) {
-    return cart.filter(item => item.product_id === productId)
-               .reduce((total, item) => total + (item.quantity || 0), 0);
-};
-
-window.getVariantQuantityInCart = function(productId, variantId) {
-    const item = cart.find(item => item.product_id === productId && item.variant_id === variantId);
-    return item ? item.quantity : 0;
-};
-
-window.clearCart = function() {
-    if (cart.length === 0) return;
-    if (window.confirm('Clear all items from your bag?')) {
-        cart = [];
-        saveCart();
-        renderCartItems();
-        showToast('Bag Cleared', 'info');
-    }
-};
-
-window.getCartSummary = function() {
-    return {
-        items: cart.map(item => ({
-            id: item.id,
-            product_id: item.product_id,
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-            variant: {
-                color: item.color_name,
-                color_code: item.color_code,
-                color_image: item.color_image,
-                size: item.size_name,
-                sku: item.sku,
-                main_barcode: item.main_barcode,
-                variant_barcode: item.variant_barcode
-            },
-            extra: {
-                fabric: item.fabric_type,
-                fit: item.fit_type,
-                gsm: item.gsm_type,
-                weight: item.weight,
-                gender: item.gender,
-                print: item.print_type
-            },
-            total: item.price * item.quantity
-        })),
-        subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-        total_items: cart.reduce((sum, item) => sum + (item.quantity || 0), 0),
-        item_count: cart.length
-    };
-};
-
 function updateCounts() {
     const cartCount = document.getElementById('cart-count');
     const wishCount = document.getElementById('wish-count');
     const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    if (cartCount) {
-        cartCount.innerText = totalItems;
-        cartCount.style.transition = 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        cartCount.style.transform = 'scale(1.4)';
-        setTimeout(() => { cartCount.style.transform = 'scale(1)'; }, 150);
-    }
+    if (cartCount) { cartCount.innerText = totalItems; }
     if (wishCount) wishCount.innerText = wishlist.length;
 }
-
-function saveCart() {
-    localStorage.setItem('jabiyen_cart', JSON.stringify(cart));
-    updateCounts();
-}
-
+function saveCart() { localStorage.setItem('jabiyen_cart', JSON.stringify(cart)); updateCounts(); }
 function toggleWishlist(id) {
-    if (wishlist.includes(id)) {
-        wishlist = wishlist.filter(x => x !== id);
-        showToast('Purged from Registry', 'info');
-    } else {
-        wishlist.push(id);
-        showToast('Saved to Vault Collection ❤️', 'success');
-    }
-    localStorage.setItem('jabiyen_wish', JSON.stringify(wishlist));
-    updateCounts();
+    if (wishlist.includes(id)) { wishlist = wishlist.filter(x => x !== id); showToast('Purged from Registry', 'info'); }
+    else { wishlist.push(id); showToast('Saved to Vault Collection ❤️', 'success'); }
+    localStorage.setItem('jabiyen_wish', JSON.stringify(wishlist)); updateCounts();
 }
-
 function toggleDrawerSubmenu(submenuId, element) {
     const submenu = document.getElementById(submenuId);
     if (!submenu) return;
     submenu.classList.toggle('open');
 }
-
 function handleNavScroll() {
     const nav = document.getElementById('main-nav');
     if (!nav) return;
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
     const hasAnnouncement = announcementData && announcementData.message;
     const barHeight = (hasAnnouncement && !isBarDismissed) ? '36px' : '0px';
-    
-    if (window.scrollY > 20) {
-        nav.classList.add('nav-scrolled');
-        nav.style.top = '0px';
-    } else {
-        nav.classList.remove('nav-scrolled');
-        nav.style.top = barHeight;
-    }
+    if (window.scrollY > 20) { nav.classList.add('nav-scrolled'); nav.style.top = '0px'; }
+    else { nav.classList.remove('nav-scrolled'); nav.style.top = barHeight; }
 }
 
 // ============================================================================
-// APIS & INITIALIZATION
+// EXPORTS & INITIALIZATION
 // ============================================================================
 window.showToast = showToast;
 window.hideToast = hideToast;
@@ -2452,37 +2175,23 @@ window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
 window.updateCartQuantity = updateCartQuantity;
 window.toggleCartItemDetails = toggleCartItemDetails;
-window.getCartItemDetails = getCartItemDetails;
-window.isVariantInCart = isVariantInCart;
-window.getProductQuantityInCart = getProductQuantityInCart;
-window.getVariantQuantityInCart = getVariantQuantityInCart;
-window.clearCart = clearCart;
-window.getCartSummary = getCartSummary;
+window.toggleFooterMenu = toggleFooterMenu;
 window.openSideMenu = openSideMenu;
 window.closeSideMenu = closeSideMenu;
 window.toggleDrawerSubmenu = toggleDrawerSubmenu;
-window.saveCart = saveCart;
-window.renderCartItems = renderCartItems;
-window.updateCounts = updateCounts;
 window.dismissAnnouncementBar = dismissAnnouncementBar;
-window.fetchAnnouncement = fetchAnnouncement;
 
 async function initSharedComponents() {
     if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
     window.JABIYEN_COMPONENTS_INITIALIZED = true;
-
     loadFontsConfiguration();
     injectSharedStyles();
     await renderHeader();
     await renderFooter();
     updateCounts();
-    
     window.removeEventListener('scroll', handleNavScroll);
     window.addEventListener('scroll', handleNavScroll);
-    handleNavScroll(); 
-
-    const yearEl = document.getElementById('display-year');
-    if (yearEl) yearEl.innerText = new Date().getFullYear();
+    handleNavScroll();
 }
 
 if (document.readyState === 'loading') {
