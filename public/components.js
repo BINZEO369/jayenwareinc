@@ -1,6 +1,7 @@
+
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 9.1 (Premium Footer Overhaul - 10 Tables Integration)
+// Version: 9.0 (Complete Footer System - 10 Tables Integration)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -441,113 +442,69 @@ function injectSharedStyles() {
 
         /* ==================== FOOTER - PREMIUM STYLES ==================== */
         #main-footer {
-            background: #000000; 
-            color: #8e8e93;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            width: 100% !important; 
-            position: relative; 
-            clear: both;
-            font-family: var(--font-body);
+            background: #000000; color: #8e8e93;
+            border-top: 1px solid #1c1c1e;
+            width: 100% !important; position: relative; clear: both;
         }
+        #main-footer h4, #main-footer h5, #main-footer a { color: var(--accent) !important; transition: opacity 0.25s ease; }
+        #main-footer a:hover { opacity: 0.5; }
         
-        .footer-heading {
-            font-family: var(--font-heading);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        .footer-link {
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 12px;
-            line-height: 2;
-            display: inline-block;
-        }
-        
-        .footer-link:hover {
-            color: #ffffff;
-            transform: translateX(4px);
-            opacity: 1;
-        }
-
-        /* Social Icons */
         .social-icon-link {
             display: inline-flex; align-items: center; justify-content: center;
-            width: 40px; height: 40px; border-radius: 50%;
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.5); 
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.5); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none; position: relative; overflow: hidden;
         }
-        
+        .social-icon-link::before {
+            content: ''; position: absolute; inset: 0; border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.35s ease;
+        }
         .social-icon-link:hover {
-            transform: translateY(-4px); 
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.2); 
-            color: #ffffff; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transform: translateY(-3px) scale(1.05); background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.15); color: #ffffff; box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
-        
-        .social-icon-link svg { width: 18px; height: 18px; position: relative; z-index: 1; transition: transform 0.3s ease; }
+        .social-icon-link:hover::before { opacity: 1; }
+        .social-icon-link svg { width: 16px; height: 16px; position: relative; z-index: 1; transition: transform 0.3s ease; }
         .social-icon-link:hover svg { transform: scale(1.1); }
-        .social-icons-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; }
+        .social-icons-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; }
         
-        /* Interactive Badges & Icons */
-        .footer-payment-icons img, .footer-shipping-icons img, .footer-cert-badges img, .footer-trust-badge-item img {
-            filter: grayscale(100%) opacity(0.6); 
-            transition: all 0.4s ease;
+        @media (max-width: 640px) {
+            .social-icon-link { width: 34px; height: 34px; }
+            .social-icon-link svg { width: 14px; height: 14px; }
+            .social-icons-grid { gap: 6px; }
         }
         
-        .footer-payment-icons img:hover, .footer-shipping-icons img:hover, .footer-cert-badges img:hover, .footer-trust-badge-item:hover img {
-            filter: grayscale(0%) opacity(1); 
-            transform: scale(1.08);
+        .footer-payment-icons img, .footer-shipping-icons img, .footer-cert-badges img {
+            filter: grayscale(100%) brightness(200%); transition: all 0.3s ease;
         }
-
-        /* Country & Language Selectors */
+        .footer-payment-icons img:hover, .footer-shipping-icons img:hover, .footer-cert-badges img:hover {
+            filter: grayscale(0%) brightness(100%); transform: scale(1.05);
+        }
         .footer-country-select {
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.8); 
-            border-radius: 8px; 
-            padding: 10px 14px;
-            font-size: 12px; 
-            font-family: var(--font-body); 
-            cursor: pointer;
-            transition: all 0.3s ease; 
-            outline: none;
-            width: 100%;
-            appearance: none;
-            -webkit-appearance: none;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7); border-radius: 10px; padding: 6px 12px;
+            font-size: 10px; font-family: var(--font-body); cursor: pointer;
+            transition: all 0.3s ease; outline: none;
         }
-        
-        .footer-country-select:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
-        
-        /* App Store Buttons */
+        .footer-country-select:hover { border-color: rgba(255,255,255,0.2); }
+        .footer-country-select:focus { border-color: rgba(255,255,255,0.3); box-shadow: 0 0 0 2px rgba(255,255,255,0.05); }
         .footer-app-btn {
-            display: flex; align-items: center; gap: 10px;
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; 
-            padding: 8px 16px; 
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px; padding: 6px 14px; transition: all 0.3s ease;
+            text-decoration: none; color: rgba(255,255,255,0.7);
+        }
+        .footer-app-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); opacity: 1 !important; }
+        .footer-trust-badge-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
             transition: all 0.3s ease;
-            text-decoration: none; 
-            color: rgba(255,255,255,0.8);
-            width: fit-content;
         }
-        .footer-app-btn:hover { 
-            background: rgba(255,255,255,0.08); 
-            border-color: rgba(255,255,255,0.2); 
-            transform: translateY(-2px);
-        }
-
-        /* Utilities */
+        .footer-trust-badge-item:hover { transform: translateY(-2px); }
+        .footer-trust-badge-item img { filter: grayscale(100%) brightness(150%); transition: all 0.3s ease; }
+        .footer-trust-badge-item:hover img { filter: grayscale(0%) brightness(100%); }
+        
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
             background: var(--primary) !important; color: var(--accent) !important; border-radius: 12px !important;
@@ -861,13 +818,13 @@ function getSocialIconHTML(platform, link) {
 }
 
 // ============================================================================
-// FOOTER - FULLY DYNAMIC & PREMIUM GRID
+// FOOTER - FULLY DYNAMIC (10 Tables Integration)
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     await fetchFooterData();
 
-    // 1. Social Links Generation
+    // ======================== SOCIAL LINKS FROM DB ========================
     let socialIconsHTML = '';
     if (footerData?.social_links && footerData.social_links.length > 0) {
         socialIconsHTML = footerData.social_links.map(social => {
@@ -876,198 +833,124 @@ async function renderFooter() {
             }
             const platformKey = social.platform_name.toLowerCase().replace(/\s+/g, '');
             const iconHTML = getSocialIconHTML(platformKey, social.link_url);
-            return iconHTML || `<a href="${social.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${social.platform_name}"><span class="text-[10px] font-bold">${social.platform_name.charAt(0)}</span></a>`;
+            return iconHTML || `<a href="${social.link_url}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${social.platform_name}"><span class="text-[8px] font-bold">${social.platform_name.charAt(0)}</span></a>`;
         }).filter(html => html !== null).join('');
     }
     if (!socialIconsHTML) {
-        const fallbackLink = 'https://binzeo.com/sociallink';
-        socialIconsHTML = ['facebook', 'instagram', 'youtube', 'x', 'linkedin']
-            .map(p => getSocialIconHTML(p, fallbackLink)).filter(h => h).join('');
+        const socialLink = 'https://binzeo.com/sociallink';
+        socialIconsHTML = ['facebook','instagram','youtube','tiktok','x','pinterest','threads','whatsapp','linkedin','email','google','maps','linktree','messenger']
+            .map(p => getSocialIconHTML(p, socialLink)).filter(h => h).join('');
     }
 
-    // 2. Quick Links Setup
-    let quickLinksHTML = '';
+    // ======================== QUICK LINKS TREE ========================
+    let quickLinksColumn2HTML = '';
+    let quickLinksColumn3HTML = '';
     if (footerData?.quick_links_tree && footerData.quick_links_tree.length > 0) {
-        quickLinksHTML = footerData.quick_links_tree.map(section => {
-            if (section.children && section.children.length > 0) {
-                const links = section.children.map(child => `<li><a href="${child.link_url}" class="footer-link">${child.title}</a></li>`).join('');
-                return `<div><h5 class="footer-heading">${section.title}</h5><ul class="space-y-2 list-none p-0 m-0">${links}</ul></div>`;
-            } else {
-                return `<div><a href="${section.link_url}" class="footer-heading footer-link mb-0">${section.title}</a></div>`;
+        const mid = Math.ceil(footerData.quick_links_tree.length / 2);
+        const col1 = footerData.quick_links_tree.slice(0, mid);
+        const col2 = footerData.quick_links_tree.slice(mid);
+        const renderSection = (items) => items.map(s => {
+            if (s.children?.length) {
+                return `<div class="mb-4"><h5 class="text-[10px] uppercase tracking-widest mb-2 opacity-40">${s.title}</h5><ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">${s.children.map(c => `<li><a href="${c.link_url}" class="no-underline">${c.title}</a></li>`).join('')}</ul></div>`;
             }
+            return `<div class="mb-3"><a href="${s.link_url}" class="text-[10px] uppercase tracking-widest opacity-40 no-underline hover:opacity-70 transition-opacity">${s.title}</a></div>`;
         }).join('');
+        quickLinksColumn2HTML = renderSection(col1);
+        quickLinksColumn3HTML = renderSection(col2);
     } else {
-        quickLinksHTML = `
-            <div>
-                <h5 class="footer-heading">Shop Directory</h5>
-                <ul class="space-y-2 list-none p-0 m-0">
-                    <li><a href="/products" class="footer-link">New Arrivals</a></li>
-                    <li><a href="/category/men" class="footer-link">Menswear</a></li>
-                    <li><a href="/category/women" class="footer-link">Womenswear</a></li>
-                    <li><a href="/journal" class="footer-link">Lookbook</a></li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="footer-heading">Customer Care</h5>
-                <ul class="space-y-2 list-none p-0 m-0">
-                    <li><a href="/contact" class="footer-link">Contact Us</a></li>
-                    <li><a href="/faq" class="footer-link">FAQ & Policies</a></li>
-                    <li><a href="/returns" class="footer-link">Returns & Exchanges</a></li>
-                    <li><a href="/shipping" class="footer-link">Shipping Info</a></li>
-                </ul>
-            </div>`;
+        quickLinksColumn2HTML = `<h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Pipeline Links</h5><ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70"><li><a href="/about" class="no-underline">About Corporate</a></li><li><a href="/contact" class="no-underline">Contact Portal</a></li><li><a href="/journal" class="no-underline">Journal</a></li><li><a href="/products" class="no-underline">All Products</a></li></ul>`;
+        quickLinksColumn3HTML = `<h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Governance</h5><ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70"><li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li><li><a href="/terms" class="no-underline">Terms Engine</a></li><li><a href="/returns" class="no-underline">Returns Architecture</a></li><li><a href="/faq" class="no-underline">FAQ Engine</a></li></ul>`;
     }
 
-    // 3. Footer Branding & Content
+    // ======================== FOOTER CONTENT ========================
     const brandSection = footerData?.footer_content?.find(c => c.section_name === 'brand') || {};
     const brandTitle = brandSection.title || 'JABIYEN';
-    const brandDescription = brandSection.description || 'Elevating modern aesthetics through premium architecture and mindful craftsmanship. Curated for the contemporary minimalist.';
+    const brandDescription = brandSection.description || 'Premium lifestyle apparel architecture calibrated for modern aesthetics.';
     const brandLogo = brandSection.logo_url || '/logo.png';
-    
     const contactSection = footerData?.footer_content?.find(c => c.section_name === 'contact') || {};
-    const contactTitle = contactSection.title || 'Get In Touch';
+    const contactTitle = contactSection.title || 'Direct Contact';
+    const contactDescription = contactSection.description || 'binzeo369@outlook.com';
 
-    // 4. Payment & Shipping Icons
+    // ======================== PAYMENT METHODS ========================
     let paymentMethodsHTML = '';
     if (footerData?.payment_methods?.length) {
-        paymentMethodsHTML = `<div class="footer-payment-icons flex flex-wrap gap-4 items-center">
-            ${footerData.payment_methods.map(pm => pm.icon_url ? `<img src="${pm.icon_url}" alt="${pm.name}" class="h-6 w-auto" title="${pm.name}" loading="lazy">` : `<span class="text-[9px] uppercase tracking-wider opacity-60 bg-white/10 px-2 py-1 rounded">${pm.name}</span>`).join('')}
-        </div>`;
+        paymentMethodsHTML = `<div class="mt-6"><h5 class="text-[9px] uppercase tracking-widest mb-2.5 opacity-40">Payment Methods</h5><div class="flex flex-wrap items-center gap-3 footer-payment-icons">${footerData.payment_methods.map(pm => pm.icon_url ? `<img src="${pm.icon_url}" alt="${pm.name}" class="h-5 w-auto opacity-60 hover:opacity-100 transition-all duration-300" title="${pm.name}" loading="lazy">` : `<span class="text-[8px] uppercase tracking-wider opacity-50 bg-white/5 px-2 py-1 rounded-md">${pm.name}</span>`).join('')}</div></div>`;
     }
 
+    // ======================== SHIPPING PARTNERS ========================
     let shippingPartnersHTML = '';
     if (footerData?.shipping_partners?.length) {
-        shippingPartnersHTML = `<div class="footer-shipping-icons flex flex-wrap gap-4 items-center">
-            ${footerData.shipping_partners.map(sp => sp.icon_url ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-5 w-auto" title="${sp.name}" loading="lazy">` : `<span class="text-[9px] uppercase tracking-wide opacity-50 bg-white/5 px-2 py-1 rounded">${sp.name}</span>`).join('')}
-        </div>`;
+        shippingPartnersHTML = `<div class="mt-4"><h5 class="text-[9px] uppercase tracking-widest mb-2 opacity-40">Shipping Partners</h5><div class="flex flex-wrap items-center gap-3 footer-shipping-icons">${footerData.shipping_partners.map(sp => sp.icon_url ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-4 w-auto opacity-50 hover:opacity-90 transition-all duration-300" title="${sp.name}" loading="lazy">` : `<span class="text-[7px] uppercase tracking-wide opacity-40 bg-white/5 px-2 py-0.5 rounded">${sp.name}</span>`).join('')}</div></div>`;
     }
 
-    // 5. Certifications & Badges
-    let trustBadgesHTML = '';
-    if (footerData?.trust_badges?.length) {
-        trustBadgesHTML = footerData.trust_badges.map(b => b.badge_url ? `<div class="footer-trust-badge-item text-center"><img src="${b.badge_url}" alt="${b.title}" class="h-10 w-auto mb-2 mx-auto" loading="lazy">${b.subtitle ? `<span class="block text-[8px] uppercase tracking-widest opacity-50">${b.subtitle}</span>` : ''}</div>` : '').join('');
-    }
-
-    let certsHTML = '';
+    // ======================== CERTIFICATIONS ========================
+    let certificationsHTML = '';
     if (footerData?.certifications?.length) {
-        certsHTML = footerData.certifications.map(cert => {
-            const bc = cert.badge_url ? `<img src="${cert.badge_url}" alt="${cert.name}" class="h-8 w-auto mx-auto" loading="lazy">` : `<span class="text-[8px] uppercase tracking-wider opacity-50">${cert.name}</span>`;
-            return cert.link_url ? `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" title="${cert.name}" class="footer-trust-badge-item text-center block">${bc}</a>` : `<div class="footer-trust-badge-item text-center block" title="${cert.name}">${bc}</div>`;
-        }).join('');
+        certificationsHTML = `<div class="mt-4"><h5 class="text-[9px] uppercase tracking-widest mb-2 opacity-40">Certifications</h5><div class="flex flex-wrap items-center gap-3 footer-cert-badges">${footerData.certifications.map(cert => { const bc = cert.badge_url ? `<img src="${cert.badge_url}" alt="${cert.name}" class="h-5 w-auto opacity-60 hover:opacity-100 transition-all duration-300" loading="lazy">` : `<span class="text-[7px] uppercase tracking-wider opacity-50">${cert.name}</span>`; return cert.link_url ? `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" title="${cert.name}" class="inline-block">${bc}</a>` : `<span class="inline-block" title="${cert.name}">${bc}</span>`; }).join('')}</div></div>`;
     }
 
-    // 6. Apps & Country Select
+    // ======================== APP LINKS ========================
     let appLinksHTML = '';
     if (footerData?.app_links?.length) {
-        appLinksHTML = footerData.app_links.map(app => {
+        const btns = footerData.app_links.map(app => {
             let h = '';
-            if (app.app_store_url) h += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.125 15.112c-.417.203-.896.347-1.425.432-.527.085-1.077.128-1.64.128-1.455 0-2.67-.323-3.626-.962-.953-.637-1.636-1.536-2.035-2.675h1.272c.31.75.79 1.343 1.43 1.764.637.417 1.455.626 2.44.626.544 0 1.05-.058 1.504-.176.45-.116.852-.3 1.196-.547V17.112zM8.32 12.015c0-1.474.453-2.65 1.353-3.513.895-.858 2.128-1.293 3.684-1.293.437 0 .86.036 1.258.106V8.62c-.407-.08-.838-.12-1.285-.12-1.22 0-2.185.335-2.883.996-.693.656-1.043 1.57-1.043 2.723h-1.084zm7.653 1.13c0 1.11-.297 1.99-.887 2.628-.585.632-1.417.95-2.483.95-.572 0-1.096-.077-1.56-.23V15.22c.435.158.917.238 1.434.238.742 0 1.314-.2 1.7-.594.382-.39.576-.98.576-1.76V8.5h1.22v4.645z"/></svg><div class="text-left"><span class="text-[8px] uppercase tracking-widest opacity-60 block">Download on</span><span class="text-[11px] font-bold tracking-wide">App Store</span></div></a>`;
-            if (app.play_store_url) h += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.523 15.34l-3.327-3.328 3.327-3.328c.45.26 1.444.85 2.164 1.282.905.545 1.314.934 1.314 2.046 0 1.113-.41 1.503-1.314 2.047-.72.433-1.714 1.022-2.164 1.283zm-4.32-4.322l-8.528-8.528c-.347-.348-.823-.42-1.272-.257-.45.164-.73.578-.73 1.066v17.404c0 .487.28.9.73 1.065.45.163.926.09 1.272-.258l8.528-8.527zm-1.414 1.415L7.203 17.02l4.586 2.652 4.586-2.65-4.586-4.587zm0-2.83l4.586-4.586-4.586-2.652-4.586 2.65 4.586 4.587z"/></svg><div class="text-left"><span class="text-[8px] uppercase tracking-widest opacity-60 block">Get it on</span><span class="text-[11px] font-bold tracking-wide">Google Play</span></div></a>`;
+            if (app.app_store_url) h += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">${app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}" class="w-4 h-4 opacity-70" loading="lazy">` : ''}<div class="text-left leading-tight"><span class="text-[6px] uppercase tracking-widest opacity-50 block">Download on</span><span class="text-[9px] font-bold tracking-wide">App Store</span></div></a>`;
+            if (app.play_store_url) h += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">${app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}" class="w-4 h-4 opacity-70" loading="lazy">` : ''}<div class="text-left leading-tight"><span class="text-[6px] uppercase tracking-widest opacity-50 block">Get it on</span><span class="text-[9px] font-bold tracking-wide">Google Play</span></div></a>`;
             return h;
         }).join('');
+        if (btns) appLinksHTML = `<div class="mt-5"><h5 class="text-[9px] uppercase tracking-widest mb-2.5 opacity-40">Get Our App</h5><div class="flex flex-wrap gap-2">${btns}</div></div>`;
     }
 
+    // ======================== COUNTRY SELECTOR ========================
     let countrySelectorHTML = '';
     if (footerData?.countries?.length) {
-        countrySelectorHTML = `
-            <select id="footer-country-select" class="footer-country-select mt-2" onchange="handleCountryChange(this)">
-                ${footerData.countries.map(c => `<option value="${c.country_code}" data-currency="${c.currency_code||'BDT'}" data-symbol="${c.currency_symbol||'৳'}" data-language="${c.language_code||'en'}" ${c.is_default?'selected':''}>${c.flag_url?c.flag_url+' ':''}${c.country_name} (${c.currency_code})</option>`).join('')}
-            </select>`;
+        countrySelectorHTML = `<div class="mt-4"><h5 class="text-[9px] uppercase tracking-widest mb-2 opacity-40">Country & Language</h5><select id="footer-country-select" class="footer-country-select" onchange="handleCountryChange(this)">${footerData.countries.map(c => `<option value="${c.country_code}" data-currency="${c.currency_code||'BDT'}" data-symbol="${c.currency_symbol||'৳'}" data-language="${c.language_code||'en'}" ${c.is_default?'selected':''}>${c.flag_url?c.flag_url+' ':''}${c.country_name} (${c.language_name||c.language_code||'EN'})</option>`).join('')}</select></div>`;
     }
 
-    // 7. Core Settings
+    // ======================== TRUST BADGES ========================
+    let trustBadgesHTML = '';
+    if (footerData?.trust_badges?.length) {
+        trustBadgesHTML = `<div class="mt-5 pt-4 border-t border-white/5"><h5 class="text-[9px] uppercase tracking-widest mb-3 opacity-40 text-center">Trust Badges</h5><div class="flex flex-wrap items-center justify-center gap-6">${footerData.trust_badges.map(b => b.badge_url ? `<div class="footer-trust-badge-item"><img src="${b.badge_url}" alt="${b.title}" class="h-8 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300" loading="lazy">${b.subtitle?`<span class="text-[6px] uppercase tracking-widest opacity-40">${b.subtitle}</span>`:''}</div>` : `<div class="footer-trust-badge-item text-center"><span class="text-[8px] font-bold tracking-wider opacity-70 block">${b.title}</span>${b.subtitle?`<span class="text-[6px] uppercase tracking-widest opacity-40">${b.subtitle}</span>`:''}</div>`).join('')}</div></div>`;
+    }
+
+    // ======================== SETTINGS ========================
     const s = footerData?.settings || {};
-    const copyrightText = s.copyright_text || '© JABIYEN. All Rights Reserved.';
-    const poweredByText = s.powered_by_text || 'Designed by BINZEO';
+    const copyrightText = s.copyright_text || '© 2025 JABIYEN. All Rights Reserved.';
+    const poweredByText = s.powered_by_text || 'Powered by BINZEO Infrastructure';
     const poweredByLink = s.powered_by_link || 'https://binzeo.vercel.app';
-    const contactEmail = s.contact_email || 'hello@jabiyen.com';
+    const contactEmail = s.contact_email || contactDescription;
     const contactPhone = s.contact_phone || '+880 1234 567890';
     const contactAddress = s.contact_address || 'Dhaka, Bangladesh';
 
-    // 8. Build Complete Footer Layout
+    // ======================== BUILD FOOTER ========================
     const footerHTML = `
-    <footer class="pt-16 pb-8" id="main-footer">
-        <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-16 mb-16">
-                
-                <div class="lg:col-span-4">
-                    <div class="flex items-center gap-3 mb-6">
-                        <img src="${brandLogo}" class="w-10 h-10 rounded-xl" alt="${brandTitle}">
-                        <h4 class="text-xl font-black tracking-[0.2em] text-white">${brandTitle}</h4>
+    <footer class="pt-12 pb-6" id="main-footer">
+        <div class="w-full px-4 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-2.5 mb-3"><img src="${brandLogo}" class="w-7 h-7 rounded-lg" alt="${brandTitle}"><h4 class="text-sm font-bold tracking-widest">${brandTitle}</h4></div>
+                    <p class="text-[10px] leading-relaxed mb-4 opacity-50">${brandDescription} Built on <a href="${poweredByLink}" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white hover:opacity-70">BINZEO</a>.</p>
+                    <div class="social-icons-grid mt-3">${socialIconsHTML}</div>
+                    ${paymentMethodsHTML}${shippingPartnersHTML}${certificationsHTML}${countrySelectorHTML}${appLinksHTML}
+                </div>
+                <div>${quickLinksColumn2HTML}</div>
+                <div>${quickLinksColumn3HTML}</div>
+                <div>
+                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${contactTitle}</h5>
+                    <div class="space-y-2">
+                        <p class="text-[10px] opacity-60 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg><a href="mailto:${contactEmail}" class="no-underline">${contactEmail}</a></p>
+                        <p class="text-[10px] opacity-40 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2"/></svg><span>${contactPhone}</span></p>
+                        <p class="text-[10px] opacity-40 flex items-center gap-2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-40 shrink-0"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg><span>${contactAddress}</span></p>
                     </div>
-                    <p class="text-sm leading-relaxed mb-8 opacity-60 pr-4">${brandDescription}</p>
-                    
-                    <h5 class="footer-heading mb-4">Join Our Community</h5>
-                    <div class="social-icons-grid">
-                        ${socialIconsHTML}
-                    </div>
-                </div>
-
-                <div class="lg:col-span-5 grid grid-cols-2 gap-8">
-                    ${quickLinksHTML}
-                </div>
-
-                <div class="lg:col-span-3">
-                    <h5 class="footer-heading">${contactTitle}</h5>
-                    <ul class="space-y-4 list-none p-0 m-0 mb-8">
-                        <li class="flex items-start gap-3 opacity-70 hover:opacity-100 transition-opacity">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2"/></svg>
-                            <a href="mailto:${contactEmail}" class="text-sm no-underline text-inherit">${contactEmail}</a>
-                        </li>
-                        <li class="flex items-start gap-3 opacity-70 hover:opacity-100 transition-opacity">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2"/></svg>
-                            <span class="text-sm">${contactPhone}</span>
-                        </li>
-                        <li class="flex items-start gap-3 opacity-70 hover:opacity-100 transition-opacity">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0"><path d="M12 22C12 22 20 16 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 16 12 22 12 22Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>
-                            <span class="text-sm leading-snug">${contactAddress}</span>
-                        </li>
-                    </ul>
-
-                    ${countrySelectorHTML ? `
-                        <div class="mt-6">
-                            <h5 class="footer-heading mb-3 text-[10px]">Region Selection</h5>
-                            ${countrySelectorHTML}
-                        </div>
-                    ` : ''}
                 </div>
             </div>
-
-            ${(trustBadgesHTML || certsHTML || appLinksHTML) ? `
-            <div class="border-t border-white/10 pt-10 pb-8 flex flex-col lg:flex-row items-center justify-between gap-8">
-                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-8">
-                    ${trustBadgesHTML}
-                    ${certsHTML}
-                </div>
-                ${appLinksHTML ? `
-                <div class="flex flex-col sm:flex-row gap-3">
-                    ${appLinksHTML}
-                </div>` : ''}
+            ${trustBadgesHTML}
+            <div class="border-t border-neutral-900 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-gray-600 ${footerData?.trust_badges?.length?'mt-0':'mt-6'}">
+                <p class="text-[8px] uppercase tracking-widest"><a href="${poweredByLink}" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold hover:text-white transition-colors">${poweredByText}</a></p>
+                <p class="text-[8px] uppercase tracking-widest">&copy; <span id="display-year"></span> ${copyrightText}</p>
             </div>
-            ` : ''}
-
-            <div class="border-t border-white/10 pt-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-                
-                <div class="flex flex-col sm:flex-row items-center gap-6 lg:gap-12">
-                    ${paymentMethodsHTML}
-                    ${shippingPartnersHTML}
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-center gap-4 text-center lg:text-right">
-                    <p class="text-[10px] uppercase tracking-widest opacity-40">
-                        <span id="display-year"></span> ${copyrightText}
-                    </p>
-                    <p class="text-[10px] uppercase tracking-widest opacity-40 hidden sm:block">|</p>
-                    <p class="text-[10px] uppercase tracking-widest opacity-40">
-                        <a href="${poweredByLink}" target="_blank" rel="noopener noreferrer" class="text-white no-underline hover:opacity-100 transition-opacity">${poweredByText}</a>
-                    </p>
-                </div>
-            </div>
-
         </div>
     </footer>`;
-    
     document.body.insertAdjacentHTML('beforeend', footerHTML);
     const yearEl = document.getElementById('display-year');
     if (yearEl) yearEl.innerText = new Date().getFullYear();
@@ -1214,3 +1097,4 @@ async function initSharedComponents() {
 }
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSharedComponents); }
 else { setTimeout(initSharedComponents, 60); }
+
