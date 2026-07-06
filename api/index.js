@@ -719,6 +719,292 @@ app.get('/api/announcements', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+// ============================================
+// FOOTER API (Complete Footer System)
+// ============================================
+
+// Get footer content by section name
+app.get('/api/footer-content/:section', async (req, res) => {
+    try {
+        const { section } = req.params;
+        const { data, error } = await supabase
+            .from('footer_content')
+            .select('*')
+            .eq('section_name', section)
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all footer content
+app.get('/api/footer-content', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_content')
+            .select('*')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer social links
+app.get('/api/footer/social-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_social_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer menus with quick links
+app.get('/api/footer/menus', async (req, res) => {
+    try {
+        const { data: menus, error: menuError } = await supabase
+            .from('footer_menus')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (menuError) return res.status(500).json({ error: menuError.message });
+        
+        const { data: links, error: linkError } = await supabase
+            .from('footer_quick_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (linkError) return res.status(500).json({ error: linkError.message });
+        
+        const menuWithLinks = menus.map(menu => ({
+            ...menu,
+            links: links.filter(link => link.menu_id === menu.id)
+        }));
+        
+        res.json(menuWithLinks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer quick links
+app.get('/api/footer/quick-links', async (req, res) => {
+    try {
+        const { menu_id } = req.query;
+        let query = supabase
+            .from('footer_quick_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (menu_id) {
+            query = query.eq('menu_id', menu_id);
+        }
+        
+        const { data, error } = await query;
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer payment methods
+app.get('/api/footer/payment-methods', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_payment_methods')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer shipping partners
+app.get('/api/footer/shipping-partners', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_shipping_partners')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer certifications
+app.get('/api/footer/certifications', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_certifications')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer app links
+app.get('/api/footer/app-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_app_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer country selector
+app.get('/api/footer/countries', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_country_selector')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get default country
+app.get('/api/footer/default-country', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_country_selector')
+            .select('*')
+            .eq('is_active', true)
+            .eq('is_default', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer trust badges
+app.get('/api/footer/trust-badges', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_trust_badges')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer settings
+app.get('/api/footer/settings', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_settings')
+            .select('*')
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get complete footer data (all components)
+app.get('/api/footer/complete', async (req, res) => {
+    try {
+        const [
+            { data: content },
+            { data: socialLinks },
+            { data: menus },
+            { data: quickLinks },
+            { data: paymentMethods },
+            { data: shippingPartners },
+            { data: certifications },
+            { data: appLinks },
+            { data: countries },
+            { data: trustBadges },
+            { data: settings }
+        ] = await Promise.all([
+            supabase.from('footer_content').select('*').eq('is_active', true),
+            supabase.from('footer_social_links').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_menus').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_quick_links').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_payment_methods').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_shipping_partners').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_certifications').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_app_links').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_country_selector').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_trust_badges').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_settings').select('*').eq('is_active', true).single()
+        ]);
+
+        const menuWithLinks = (menus || []).map(menu => ({
+            ...menu,
+            links: (quickLinks || []).filter(link => link.menu_id === menu.id)
+        }));
+
+        res.json({
+            content: content || [],
+            socialLinks: socialLinks || [],
+            menus: menuWithLinks,
+            paymentMethods: paymentMethods || [],
+            shippingPartners: shippingPartners || [],
+            certifications: certifications || [],
+            appLinks: appLinks || [],
+            countries: countries || [],
+            trustBadges: trustBadges || [],
+            settings: settings || null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 // ============================================
 // PAGE ROUTES
 // ============================================
