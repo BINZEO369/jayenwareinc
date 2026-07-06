@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 9.1 (Complete Database-Driven Footer - All Columns from 11 Tables - Fixed Content Merge)
+// Version: 10.0 (Premium Professional Footer Design - Enhanced Image & Text Styling)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -59,7 +59,7 @@ async function fetchAnnouncement() {
 }
 
 // ============================================================================
-// SHARED CSS STYLES
+// SHARED CSS STYLES - PROFESSIONAL FOOTER DESIGN
 // ============================================================================
 function injectSharedStyles() {
     if (document.getElementById("shared-components-style")) return;
@@ -471,7 +471,7 @@ function injectSharedStyles() {
             border: 1px solid rgba(255,255,255,0.02);
         }
         
-        /* ==================== DETAILS TOGGLE - MOBILE FRIENDLY ==================== */
+        /* ==================== DETAILS TOGGLE ==================== */
         .cart-item-details-toggle {
             background: none;
             border: none;
@@ -570,18 +570,163 @@ function injectSharedStyles() {
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
 
-        /* ==================== FOOTER - COMPLETE DYNAMIC SYSTEM ==================== */
+        /* ================================================================ */
+        /* FOOTER - PROFESSIONAL PREMIUM DESIGN SYSTEM                       */
+        /* ================================================================ */
+        
         #main-footer {
             width: 100% !important;
             position: relative;
             clear: both;
             font-family: var(--font-body);
+            overflow: hidden;
         }
-        #main-footer h4, #main-footer h5 { color: inherit; transition: opacity 0.25s ease; }
-        #main-footer a { color: inherit; transition: opacity 0.25s ease; }
-        #main-footer a:hover { opacity: 0.5; }
         
-        /* Social Icons - Premium Monochrome */
+        /* Footer Grid Layout */
+        #main-footer .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        @media (min-width: 768px) {
+            #main-footer .footer-grid {
+                grid-template-columns: 1.3fr 0.9fr 0.9fr 1fr;
+                gap: 24px;
+            }
+        }
+        @media (min-width: 1024px) {
+            #main-footer .footer-grid {
+                grid-template-columns: 1.4fr 0.8fr 0.8fr 1fr;
+                gap: 32px;
+            }
+        }
+        
+        /* Footer Section Headings */
+        #main-footer .footer-section-title {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            opacity: 0.45;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+        #main-footer .footer-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 20px;
+            height: 1.5px;
+            background: currentColor;
+            opacity: 0.3;
+            border-radius: 1px;
+        }
+        .footer-layout-centered .footer-section-title::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Footer Brand Logo */
+        #main-footer .footer-brand-logo {
+            height: 32px;
+            width: auto;
+            margin-bottom: 12px;
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+            object-fit: contain;
+            max-width: 140px;
+        }
+        #main-footer .footer-brand-logo:hover {
+            opacity: 1;
+        }
+        
+        /* Footer Brand Title */
+        #main-footer .footer-brand-title {
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+            color: inherit;
+        }
+        
+        /* Footer Brand Description */
+        #main-footer .footer-brand-desc {
+            font-size: 10px;
+            line-height: 1.6;
+            opacity: 0.5;
+            margin-bottom: 16px;
+            max-width: 280px;
+        }
+        
+        /* Footer Links List */
+        #main-footer .footer-links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #main-footer .footer-links-list li {
+            margin-bottom: 6px;
+        }
+        #main-footer .footer-links-list a {
+            font-size: 10px;
+            text-decoration: none;
+            opacity: 0.6;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 0;
+        }
+        #main-footer .footer-links-list a:hover {
+            opacity: 1;
+            transform: translateX(3px);
+        }
+        #main-footer .footer-links-list a i {
+            font-size: 8px;
+            opacity: 0.4;
+            width: 12px;
+            text-align: center;
+        }
+        #main-footer .footer-links-list .footer-link-desc {
+            display: block;
+            font-size: 8px;
+            opacity: 0.35;
+            margin-top: 1px;
+            padding-left: 18px;
+        }
+        
+        /* Footer Nested Links */
+        #main-footer .footer-nested-links {
+            list-style: none;
+            padding: 0 0 0 14px;
+            margin: 3px 0 6px 0;
+            border-left: 1px solid rgba(255,255,255,0.06);
+        }
+        #main-footer .footer-nested-links li {
+            margin-bottom: 3px;
+        }
+        #main-footer .footer-nested-links a {
+            font-size: 9px;
+            opacity: 0.45;
+            padding: 1px 0;
+        }
+        #main-footer .footer-nested-links a:hover {
+            opacity: 0.8;
+            transform: translateX(2px);
+        }
+        #main-footer .footer-nested-links .footer-nested-desc {
+            font-size: 7px;
+            opacity: 0.28;
+            padding-left: 14px;
+        }
+        
+        /* ==================== SOCIAL ICONS - PREMIUM ==================== */
         .social-icon-link {
             display: inline-flex;
             align-items: center;
@@ -589,8 +734,8 @@ function injectSharedStyles() {
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             color: rgba(255,255,255,0.5);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
@@ -602,32 +747,42 @@ function injectSharedStyles() {
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.35s ease;
         }
         .social-icon-link:hover {
             transform: translateY(-3px) scale(1.05);
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.18);
             color: #ffffff;
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
         .social-icon-link:hover::before { opacity: 1; }
         .social-icon-link svg {
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             position: relative;
             z-index: 1;
             transition: transform 0.3s ease;
         }
         .social-icon-link:hover svg { transform: scale(1.1); }
+        .social-icon-link img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+        }
         
         .social-icons-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 7px;
             justify-content: flex-start;
+        }
+        .footer-layout-centered .social-icons-grid {
+            justify-content: center;
         }
         
         @media (max-width: 640px) {
@@ -635,51 +790,152 @@ function injectSharedStyles() {
                 width: 34px;
                 height: 34px;
             }
-            .social-icon-link svg {
-                width: 14px;
-                height: 14px;
+            .social-icon-link svg, .social-icon-link img {
+                width: 13px;
+                height: 13px;
             }
-            .social-icons-grid {
-                gap: 6px;
-            }
+            .social-icons-grid { gap: 5px; }
         }
         
-        /* Footer Select Styling */
-        #main-footer select {
-            font-family: var(--font-body);
-            font-size: 10px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: inherit;
-            border-radius: 8px;
-            padding: 6px 10px;
-            cursor: pointer;
+        /* ==================== PAYMENT METHODS - PROFESSIONAL ==================== */
+        #main-footer .footer-payment-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        #main-footer .footer-payment-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        #main-footer .footer-payment-icon {
+            height: 22px;
+            width: auto;
+            max-width: 50px;
+            object-fit: contain;
+            opacity: 0.5;
             transition: all 0.3s ease;
-            outline: none;
-            opacity: 0.7;
+            filter: grayscale(30%);
         }
-        #main-footer select:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.2);
+        #main-footer .footer-payment-icon:hover {
             opacity: 0.9;
+            filter: grayscale(0%);
+            transform: translateY(-1px);
         }
-        #main-footer select:focus {
-            border-color: rgba(255,255,255,0.3);
+        #main-footer .footer-payment-name {
+            font-size: 8px;
+            opacity: 0.4;
+            text-align: center;
         }
-        #main-footer select option {
-            background: #1a1a1a;
-            color: #ffffff;
+        #main-footer .footer-payment-account {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 7px;
+            letter-spacing: 0.04em;
+            opacity: 0.35;
+            background: rgba(255,255,255,0.03);
+            padding: 2px 7px;
+            border-radius: 3px;
+            margin-top: 1px;
+        }
+        #main-footer .footer-payment-qr {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: #ffffff;
+            padding: 3px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        #main-footer .footer-payment-qr:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
-        /* Footer App Buttons */
-        .footer-app-btn {
+        /* ==================== SHIPPING PARTNERS ==================== */
+        #main-footer .footer-shipping-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        #main-footer .footer-shipping-icon {
+            height: 18px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            filter: grayscale(50%);
+        }
+        #main-footer .footer-shipping-icon:hover {
+            opacity: 0.75;
+            filter: grayscale(0%);
+        }
+        #main-footer .footer-shipping-name {
+            font-size: 8px;
+            opacity: 0.35;
+        }
+        
+        /* ==================== CERTIFICATIONS ==================== */
+        #main-footer .footer-cert-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        #main-footer .footer-cert-item {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.08);
+            gap: 7px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 6px 10px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+        #main-footer .footer-cert-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+        #main-footer .footer-cert-icon {
+            height: 24px;
+            width: auto;
+            max-width: 50px;
+            object-fit: contain;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        #main-footer .footer-cert-item:hover .footer-cert-icon {
+            opacity: 0.85;
+        }
+        #main-footer .footer-cert-name {
+            font-size: 8px;
+            font-weight: 600;
+            opacity: 0.45;
+            letter-spacing: 0.03em;
+        }
+        
+        /* ==================== APP DOWNLOAD BUTTONS ==================== */
+        #main-footer .footer-app-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+        #main-footer .footer-app-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.06);
             color: inherit;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 10px;
             font-size: 9px;
             font-weight: 700;
@@ -687,117 +943,271 @@ function injectSharedStyles() {
             transition: all 0.3s ease;
             font-family: var(--font-subtitle);
             letter-spacing: 0.03em;
-            opacity: 0.7;
+            opacity: 0.65;
         }
-        .footer-app-btn:hover {
-            background: rgba(255,255,255,0.15);
+        #main-footer .footer-app-btn:hover {
+            background: rgba(255,255,255,0.12);
             border-color: rgba(255,255,255,0.15);
             opacity: 1;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        #main-footer .footer-app-btn svg {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+        #main-footer .footer-app-btn img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
         }
         
-        /* Footer Bottom Bar */
-        .footer-bottom-bar {
-            border-top: 1px solid rgba(255,255,255,0.06);
+        /* ==================== COUNTRY SELECTOR ==================== */
+        #main-footer .footer-country-select {
+            font-family: var(--font-body);
+            font-size: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: inherit;
+            border-radius: 8px;
+            padding: 7px 32px 7px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            opacity: 0.65;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='white' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            min-width: 160px;
+        }
+        #main-footer .footer-country-select:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.15);
+            opacity: 0.85;
+        }
+        #main-footer .footer-country-select:focus {
+            border-color: rgba(255,255,255,0.25);
+            opacity: 0.9;
+        }
+        #main-footer .footer-country-select option {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 8px;
+        }
+        #main-footer .footer-country-flag {
+            width: 16px;
+            height: 11px;
+            object-fit: cover;
+            border-radius: 2px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        #main-footer .footer-exchange-rate {
+            font-size: 7px;
+            opacity: 0.28;
+            margin-top: 4px;
+            font-family: var(--font-subtitle);
+        }
+        
+        /* ==================== TRUST BADGES ==================== */
+        #main-footer .footer-badges-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        #main-footer .footer-badge-item {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        #main-footer .footer-badge-item:hover {
+            transform: translateY(-2px);
+        }
+        #main-footer .footer-badge-icon {
+            height: 28px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        #main-footer .footer-badge-item:hover .footer-badge-icon {
+            opacity: 0.85;
+        }
+        #main-footer .footer-badge-title {
+            font-size: 7px;
+            font-weight: 600;
+            opacity: 0.35;
+            margin-top: 2px;
+            letter-spacing: 0.03em;
+        }
+        #main-footer .footer-badge-subtitle {
+            font-size: 6px;
+            opacity: 0.25;
+            margin-top: 1px;
+        }
+        
+        /* ==================== CONTACT INFO ==================== */
+        #main-footer .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 10px;
+        }
+        #main-footer .footer-contact-icon {
+            width: 14px;
+            text-align: center;
+            flex-shrink: 0;
+            opacity: 0.4;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+        #main-footer .footer-contact-text {
+            opacity: 0.55;
+            line-height: 1.5;
+            transition: opacity 0.3s ease;
+        }
+        #main-footer .footer-contact-text:hover {
+            opacity: 0.8;
+        }
+        #main-footer .footer-contact-text a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* ==================== BOTTOM BAR ==================== */
+        #main-footer .footer-bottom-bar {
+            border-top: 1px solid rgba(255,255,255,0.05);
             padding-top: 20px;
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            opacity: 0.4;
+            gap: 10px;
+            opacity: 0.35;
             font-size: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.07em;
+            font-family: var(--font-subtitle);
         }
         @media (min-width: 768px) {
-            .footer-bottom-bar {
+            #main-footer .footer-bottom-bar {
                 flex-direction: row;
             }
         }
-        .footer-bottom-bar a {
+        #main-footer .footer-bottom-bar a {
             font-weight: 700;
-            transition: color 0.3s ease;
-        }
-        .footer-bottom-bar a:hover { opacity: 1; }
-        
-        /* Footer Payment QR Code */
-        .footer-qr-code {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.06);
-            background: #ffffff;
-            padding: 4px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        .footer-qr-code:hover {
-            transform: scale(1.1);
-        }
-        
-        /* Footer Account Number */
-        .footer-account-number {
-            font-family: 'Courier New', monospace;
-            font-size: 8px;
-            letter-spacing: 0.05em;
-            opacity: 0.4;
-            background: rgba(255,255,255,0.03);
-            padding: 2px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 2px;
-        }
-        
-        /* Footer Cert Badge */
-        .footer-cert-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 6px 10px;
-            transition: all 0.3s ease;
             text-decoration: none;
+            color: inherit;
+            transition: opacity 0.3s ease;
         }
-        .footer-cert-badge:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.1);
+        #main-footer .footer-bottom-bar a:hover {
+            opacity: 0.7;
         }
         
-        /* Footer RTL Support */
+        /* ==================== FOOTER SECTION SPACING ==================== */
+        #main-footer .footer-section {
+            margin-top: 16px;
+        }
+        #main-footer .footer-section:first-child {
+            margin-top: 0;
+        }
+        
+        /* ==================== RTL SUPPORT ==================== */
         [dir="rtl"] #main-footer {
             direction: rtl;
             text-align: right;
         }
-        [dir="rtl"] .footer-bottom-bar {
+        [dir="rtl"] #main-footer .footer-section-title::after {
+            left: auto;
+            right: 0;
+        }
+        [dir="rtl"] .footer-layout-centered .footer-section-title::after {
+            left: 50%;
+            right: auto;
+            transform: translateX(50%);
+        }
+        [dir="rtl"] #main-footer .footer-bottom-bar {
             direction: rtl;
         }
+        [dir="rtl"] #main-footer .footer-links-list a:hover {
+            transform: translateX(-3px);
+        }
+        [dir="rtl"] #main-footer .footer-nested-links {
+            border-left: none;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            padding: 0 14px 0 0;
+        }
+        [dir="rtl"] #main-footer .footer-nested-links a:hover {
+            transform: translateX(-2px);
+        }
+        [dir="rtl"] #main-footer .footer-country-select {
+            background-position: left 10px center;
+            padding: 7px 12px 7px 32px;
+        }
         
-        /* Layout Styles */
+        /* ==================== LAYOUT VARIATIONS ==================== */
         .footer-layout-centered {
             text-align: center;
         }
-        .footer-layout-centered .social-icons-grid {
+        .footer-layout-centered .footer-brand-desc {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer-layout-centered .footer-contact-item {
             justify-content: center;
         }
         .footer-layout-minimal {
-            padding: 20px 0;
+            padding: 30px 0 !important;
+        }
+        .footer-layout-minimal .footer-grid {
+            gap: 20px;
         }
         .footer-layout-expanded {
-            padding: 40px 0;
+            padding: 60px 0 !important;
+        }
+        .footer-layout-expanded .footer-grid {
+            gap: 40px;
         }
         
-        /* Footer contact icon */
-        .footer-contact-icon {
-            display: inline-block;
-            width: 10px;
-            text-align: center;
-            margin-right: 4px;
-            opacity: 0.4;
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 767px) {
+            #main-footer .footer-brand-logo {
+                height: 26px;
+            }
+            #main-footer .footer-brand-title {
+                font-size: 14px;
+            }
+            #main-footer .footer-brand-desc {
+                max-width: 100%;
+            }
+            #main-footer .footer-section-title {
+                font-size: 10px;
+                margin-bottom: 12px;
+            }
+            #main-footer .footer-payment-icon {
+                height: 18px;
+                max-width: 40px;
+            }
+            #main-footer .footer-payment-qr {
+                width: 40px;
+                height: 40px;
+            }
+            #main-footer .footer-cert-icon {
+                height: 20px;
+            }
+            #main-footer .footer-badge-icon {
+                height: 22px;
+            }
+            #main-footer .footer-app-btn {
+                padding: 6px 10px;
+                font-size: 8px;
+            }
         }
         
         .btn-primary {
@@ -1049,7 +1459,6 @@ async function renderHeader() {
         return;
     }
 
-    // Fetch all data including announcement
     const [menuItems, categories, subcategories, announcement] = await Promise.all([
         fetchMenuItems(),
         fetchCategories(),
@@ -1070,7 +1479,6 @@ async function renderHeader() {
         document.body.classList.add('announcement-dismissed');
     }
 
-    // Build announcement bar HTML dynamically from DB
     let announcementHTML = '';
     if (hasAnnouncement) {
         const bgColor = announcementData.bg_color || '#000000';
@@ -1190,7 +1598,7 @@ async function renderHeader() {
 }
 
 // ============================================================================
-// ANNOUNCEMENT LOGIC - Updated to handle DB data
+// ANNOUNCEMENT LOGIC
 // ============================================================================
 function dismissAnnouncementBar() {
     const bar = document.getElementById('top-announcement-bar');
@@ -1261,13 +1669,12 @@ function getSocialIconHTML(platform, link) {
 }
 
 // ============================================================================
-// FOOTER - COMPLETE DATABASE-DRIVEN (ALL 11 TABLES - ALL COLUMNS - FIXED CONTENT MERGE)
+// FOOTER - PROFESSIONAL DATABASE-DRIVEN (ALL 11 TABLES - ALL COLUMNS)
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     
     try {
-        // Fetch complete footer data from API
         const response = await fetch('/api/footer/complete');
         if (!response.ok) throw new Error('Footer API failed');
         const footerData = await response.json();
@@ -1286,13 +1693,12 @@ async function renderFooter() {
         } = footerData;
         
         // =====================================================================
-        // FOOTER SETTINGS (footer_settings table - ALL columns)
+        // FOOTER SETTINGS
         // =====================================================================
         const bgColor = settings?.background_color || '#1a1a1a';
         const textColor = settings?.text_color || '#ffffff';
         const copyrightText = settings?.copyright_text || '© 2025 JayenWare. All Rights Reserved.';
         const layoutStyle = settings?.layout_style || 'standard';
-        const theme = settings?.theme || 'dark';
         const version = settings?.version || '1.0';
         const showSocial = settings?.show_social_links !== false;
         const showPayment = settings?.show_payment_methods !== false;
@@ -1301,11 +1707,8 @@ async function renderFooter() {
         const customCSS = settings?.custom_css || '';
         
         // =====================================================================
-        // FOOTER CONTENT - Merge ALL content rows (FIXED)
+        // FOOTER CONTENT - Merge ALL content rows
         // =====================================================================
-        // Instead of just taking 'brand' and 'contact', we merge ALL content rows
-        // This ensures no data is missed - any section_name with data will be used
-        
         const mergedContent = {};
         content.forEach(c => {
             if (c.title) mergedContent.title = mergedContent.title || c.title;
@@ -1316,29 +1719,24 @@ async function renderFooter() {
             if (c.address) mergedContent.address = mergedContent.address || c.address;
             if (c.working_hours) mergedContent.working_hours = mergedContent.working_hours || c.working_hours;
             if (c.copyright_text) mergedContent.copyright_text = mergedContent.copyright_text || c.copyright_text;
-            if (c.section_name) mergedContent.section_name = mergedContent.section_name || c.section_name;
         });
         
-        // Also check individual sections for specific data
         const brandSection = content.find(c => c.section_name === 'brand') || {};
         const contactSection = content.find(c => c.section_name === 'contact') || {};
         const aboutSection = content.find(c => c.section_name === 'about') || {};
         const infoSection = content.find(c => c.section_name === 'info') || {};
         
-        // Build final values with priority: specific section > merged > defaults
         const brandTitle = brandSection.title || mergedContent.title || 'JABIYEN';
         const brandDesc = brandSection.description || aboutSection.description || mergedContent.description || 'Premium lifestyle apparel architecture.';
         const brandLogo = brandSection.logo_url || mergedContent.logo_url || '/logo.png';
         const brandCopyright = brandSection.copyright_text || infoSection.copyright_text || mergedContent.copyright_text || copyrightText;
-        
-        // Contact info - check ALL sections for these values
         const contactEmail = contactSection.email || infoSection.email || brandSection.email || mergedContent.email || '';
         const contactPhone = contactSection.phone || infoSection.phone || brandSection.phone || mergedContent.phone || '';
         const contactAddress = contactSection.address || infoSection.address || brandSection.address || mergedContent.address || '';
         const contactHours = contactSection.working_hours || infoSection.working_hours || brandSection.working_hours || mergedContent.working_hours || '';
         
         // =====================================================================
-        // SOCIAL LINKS (footer_social_links table - ALL columns)
+        // SOCIAL LINKS
         // =====================================================================
         let socialIconsHTML = '';
         if (showSocial && socialLinks.length > 0) {
@@ -1348,12 +1746,11 @@ async function renderFooter() {
                     const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
                     const hoverTitle = link.hover_title || link.platform_name || '';
                     
-                    // If platform_icon is provided as custom URL, use img instead of SVG
                     if (link.platform_icon && link.platform_icon.startsWith('http')) {
                         return `
                         <a href="${link.link_url || '#'}" target="_blank" rel="noopener noreferrer" 
                            class="social-icon-link" aria-label="${link.platform_name}" title="${hoverTitle}">
-                            <img src="${link.platform_icon}" alt="${link.platform_name}" style="width:16px;height:16px;object-fit:contain;">
+                            <img src="${link.platform_icon}" alt="${link.platform_name}">
                         </a>`;
                     }
                     
@@ -1368,100 +1765,101 @@ async function renderFooter() {
         }
         
         // =====================================================================
-        // PAYMENT METHODS (footer_payment_methods table - ALL columns)
+        // PAYMENT METHODS
         // =====================================================================
         let paymentHTML = '';
         if (showPayment && paymentMethods.length > 0) {
             const sortedPayments = [...paymentMethods].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             paymentHTML = `
-            <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Payment Methods</h5>
-                <div class="flex flex-wrap gap-2 items-center">
+            <div class="footer-section">
+                <h5 class="footer-section-title">Payment Methods</h5>
+                <div class="footer-payment-grid">
                     ${sortedPayments.map(pm => {
-                        let pmHTML = '';
+                        let itemHTML = '';
                         if (pm.icon_url) {
-                            pmHTML += `<img src="${pm.icon_url}" alt="${pm.name}" class="h-6 w-auto opacity-60 hover:opacity-100 transition-opacity" title="${pm.name}">`;
+                            itemHTML += `<img src="${pm.icon_url}" alt="${pm.name}" class="footer-payment-icon" title="${pm.name}">`;
                         } else {
-                            pmHTML += `<span class="text-[9px] opacity-50">${pm.name}</span>`;
+                            itemHTML += `<span class="footer-payment-name">${pm.name}</span>`;
                         }
                         if (pm.account_number) {
-                            pmHTML += `<span class="footer-account-number">${pm.account_number}</span>`;
+                            itemHTML += `<span class="footer-payment-account">${pm.account_number}</span>`;
                         }
                         if (pm.qr_code_url) {
-                            pmHTML += `<img src="${pm.qr_code_url}" alt="${pm.name} QR" class="footer-qr-code ml-1" title="Scan QR for ${pm.name}" onclick="window.open('${pm.qr_code_url}', '_blank')">`;
+                            itemHTML += `<img src="${pm.qr_code_url}" alt="${pm.name} QR" class="footer-payment-qr" title="Scan QR for ${pm.name}" onclick="window.open('${pm.qr_code_url}', '_blank')">`;
                         }
-                        return `<div class="flex flex-col items-center gap-1">${pmHTML}</div>`;
+                        return `<div class="footer-payment-item">${itemHTML}</div>`;
                     }).join('')}
                 </div>
             </div>`;
         }
         
         // =====================================================================
-        // SHIPPING PARTNERS (footer_shipping_partners table - ALL columns)
+        // SHIPPING PARTNERS
         // =====================================================================
         let shippingHTML = '';
         if (shippingPartners.length > 0) {
             const sortedShipping = [...shippingPartners].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             shippingHTML = `
-            <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Shipping Partners</h5>
-                <div class="flex flex-wrap gap-2 items-center">
+            <div class="footer-section">
+                <h5 class="footer-section-title">Shipping Partners</h5>
+                <div class="footer-shipping-grid">
                     ${sortedShipping.map(sp => {
                         return sp.icon_url 
-                            ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-5 w-auto opacity-50 hover:opacity-80 transition-opacity" title="${sp.name}">`
-                            : `<span class="text-[9px] opacity-40">${sp.name}</span>`;
+                            ? `<img src="${sp.icon_url}" alt="${sp.name}" class="footer-shipping-icon" title="${sp.name}">`
+                            : `<span class="footer-shipping-name">${sp.name}</span>`;
                     }).join('')}
                 </div>
             </div>`;
         }
         
         // =====================================================================
-        // CERTIFICATIONS (footer_certifications table - ALL columns)
+        // CERTIFICATIONS
         // =====================================================================
         let certHTML = '';
         if (certifications.length > 0) {
             const sortedCerts = [...certifications].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             certHTML = `
-            <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Certifications</h5>
-                <div class="flex flex-wrap gap-2 items-center">
+            <div class="footer-section">
+                <h5 class="footer-section-title">Certifications</h5>
+                <div class="footer-cert-grid">
                     ${sortedCerts.map(cert => {
                         const badgeContent = cert.badge_url 
-                            ? `<img src="${cert.badge_url}" alt="${cert.name}" class="h-8 w-auto opacity-60 hover:opacity-90 transition-opacity">`
-                            : `<span class="text-[9px] opacity-40">${cert.name}</span>`;
+                            ? `<img src="${cert.badge_url}" alt="${cert.name}" class="footer-cert-icon">`
+                            : `<span class="footer-cert-name">${cert.name}</span>`;
+                        const nameContent = cert.badge_url ? `<span class="footer-cert-name">${cert.name}</span>` : '';
                         
                         if (cert.link_url) {
-                            return `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" class="footer-cert-badge" title="${cert.name}">${badgeContent}<span class="text-[8px] opacity-50">${cert.name}</span></a>`;
+                            return `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer" class="footer-cert-item" title="${cert.name}">${badgeContent}${nameContent}</a>`;
                         }
-                        return `<div class="footer-cert-badge" title="${cert.name}">${badgeContent}<span class="text-[8px] opacity-50">${cert.name}</span></div>`;
+                        return `<div class="footer-cert-item" title="${cert.name}">${badgeContent}${nameContent}</div>`;
                     }).join('')}
                 </div>
             </div>`;
         }
         
         // =====================================================================
-        // APP LINKS (footer_app_links table - ALL columns)
+        // APP LINKS
         // =====================================================================
         let appHTML = '';
         if (showApp && appLinks.length > 0) {
             const sortedApps = [...appLinks].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             appHTML = `
-            <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Download Our App</h5>
-                <div class="flex flex-wrap gap-2">
+            <div class="footer-section">
+                <h5 class="footer-section-title">Download Our App</h5>
+                <div class="footer-app-grid">
                     ${sortedApps.map(app => {
                         let buttons = '';
-                        const iconImg = app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}" class="w-4 h-4 object-contain">` : '';
+                        const iconImg = app.icon_url ? `<img src="${app.icon_url}" alt="${app.platform_name}">` : '';
                         
                         if (app.app_store_url) {
                             buttons += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Download on App Store">
-                                ${iconImg || '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>'}
+                                ${iconImg || '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>'}
                                 App Store
                             </a>`;
                         }
                         if (app.play_store_url) {
                             buttons += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn" title="Get it on Google Play">
-                                ${iconImg || '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>'}
+                                ${iconImg || '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>'}
                                 Play Store
                             </a>`;
                         }
@@ -1472,7 +1870,7 @@ async function renderFooter() {
         }
         
         // =====================================================================
-        // COUNTRY SELECTOR (footer_country_selector table - ALL columns)
+        // COUNTRY SELECTOR
         // =====================================================================
         let countryHTML = '';
         if (showCountry && countries.length > 0) {
@@ -1480,41 +1878,42 @@ async function renderFooter() {
             const defaultCountry = sortedCountries.find(c => c.is_default) || sortedCountries[0];
             
             countryHTML = `
-            <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Country & Language</h5>
-                <select onchange="if(this.value) window.location.href=this.value" aria-label="Select country and language">
+            <div class="footer-section">
+                <h5 class="footer-section-title">Country & Language</h5>
+                <select class="footer-country-select" onchange="if(this.value) window.location.href=this.value" aria-label="Select country and language">
                     ${sortedCountries.map(country => {
-                        const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="w-4 h-3 inline-block mr-1" alt="${country.country_code}">` : '';
+                        const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="footer-country-flag" alt="${country.country_code}">` : '';
                         const currencyDisplay = country.currency_symbol || (country.currency_code ? country.currency_code + ' ' : '');
                         const langDisplay = country.language_name || (country.language_code ? country.language_code.toUpperCase() : '');
-                        const label = `${flagHTML}${country.country_name} ${currencyDisplay}${langDisplay ? '(' + langDisplay + ')' : ''}`;
+                        const label = `${country.country_name} ${currencyDisplay}${langDisplay ? '(' + langDisplay + ')' : ''}`;
                         const selected = country.is_default ? 'selected' : '';
-                        return `<option value="?country=${country.country_code}&lang=${country.language_code || ''}" ${selected}>${label.trim()}</option>`;
+                        return `<option value="?country=${country.country_code}&lang=${country.language_code || ''}" ${selected}>${flagHTML}${label.trim()}</option>`;
                     }).join('')}
                 </select>
                 ${defaultCountry?.exchange_rate && defaultCountry.exchange_rate !== 1 ? 
-                    `<p class="text-[7px] opacity-30 mt-1">Exchange Rate: 1 USD = ${defaultCountry.currency_symbol || ''}${defaultCountry.exchange_rate}</p>` : ''}
+                    `<p class="footer-exchange-rate">Exchange Rate: 1 USD = ${defaultCountry.currency_symbol || ''}${defaultCountry.exchange_rate}</p>` : ''}
             </div>`;
         }
         
         // =====================================================================
-        // TRUST BADGES (footer_trust_badges table - ALL columns)
+        // TRUST BADGES
         // =====================================================================
         let badgesHTML = '';
         if (trustBadges.length > 0) {
             const sortedBadges = [...trustBadges].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             badgesHTML = `
-            <div class="mt-4">
-                <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Trust & Security</h5>
-                <div class="flex flex-wrap gap-2">
+            <div class="footer-section">
+                <h5 class="footer-section-title">Trust & Security</h5>
+                <div class="footer-badges-grid">
                     ${sortedBadges.map(badge => {
                         const badgeImg = badge.badge_url 
-                            ? `<img src="${badge.badge_url}" alt="${badge.title}" class="h-7 w-auto opacity-60 hover:opacity-90 transition-opacity">`
-                            : `<span class="text-[8px] opacity-40">${badge.title}</span>`;
+                            ? `<img src="${badge.badge_url}" alt="${badge.title}" class="footer-badge-icon">`
+                            : `<span class="footer-badge-title">${badge.title}</span>`;
                         return `
-                        <div class="text-center" title="${badge.title}${badge.subtitle ? ': ' + badge.subtitle : ''}">
+                        <div class="footer-badge-item" title="${badge.title}${badge.subtitle ? ': ' + badge.subtitle : ''}">
                             ${badgeImg}
-                            ${badge.subtitle ? `<p class="text-[6px] opacity-30 mt-0.5">${badge.subtitle}</p>` : ''}
+                            ${badge.badge_url ? `<p class="footer-badge-title">${badge.title}</p>` : ''}
+                            ${badge.subtitle ? `<p class="footer-badge-subtitle">${badge.subtitle}</p>` : ''}
                         </div>`;
                     }).join('')}
                 </div>
@@ -1522,7 +1921,7 @@ async function renderFooter() {
         }
         
         // =====================================================================
-        // MENUS & QUICK LINKS (footer_menus + footer_quick_links - ALL columns)
+        // MENUS & QUICK LINKS
         // =====================================================================
         let menuColumnsHTML = '';
         if (menus.length > 0) {
@@ -1530,34 +1929,33 @@ async function renderFooter() {
             menuColumnsHTML = sortedMenus.map(menu => {
                 const links = menu.links || [];
                 const sortedLinks = [...links].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-                
                 const topLevelLinks = sortedLinks.filter(l => !l.parent_id);
                 const childLinks = sortedLinks.filter(l => l.parent_id);
                 
                 return `
                 <div>
-                    <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">${menu.title || 'Links'}</h5>
-                    <ul class="space-y-1.5 text-[10px] list-none p-0" style="opacity:0.7;">
+                    <h5 class="footer-section-title">${menu.title || 'Links'}</h5>
+                    <ul class="footer-links-list">
                         ${topLevelLinks.map(link => {
                             const target = link.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
-                            const iconHTML = link.icon_class ? `<i class="${link.icon_class} mr-1"></i>` : '';
-                            const descHTML = link.description ? `<span class="block text-[8px]" style="opacity:0.4;">${link.description}</span>` : '';
+                            const iconHTML = link.icon_class ? `<i class="${link.icon_class}"></i>` : '';
+                            const descHTML = link.description ? `<span class="footer-link-desc">${link.description}</span>` : '';
                             
                             const children = childLinks.filter(cl => cl.parent_id === link.id);
                             let childrenHTML = '';
                             if (children.length > 0) {
                                 childrenHTML = `
-                                <ul class="list-none p-0 ml-3 mt-1 space-y-0.5">
+                                <ul class="footer-nested-links">
                                     ${children.map(child => {
                                         const childTarget = child.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
-                                        const childIcon = child.icon_class ? `<i class="${child.icon_class} mr-1"></i>` : '';
-                                        const childDesc = child.description ? `<span class="block text-[7px]" style="opacity:0.3;">${child.description}</span>` : '';
-                                        return `<li><a href="${child.link_url || '#'}" class="no-underline" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
+                                        const childIcon = child.icon_class ? `<i class="${child.icon_class}"></i>` : '';
+                                        const childDesc = child.description ? `<span class="footer-nested-desc">${child.description}</span>` : '';
+                                        return `<li><a href="${child.link_url || '#'}" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
                                     }).join('')}
                                 </ul>`;
                             }
                             
-                            return `<li><a href="${link.link_url || '#'}" class="no-underline" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}${childrenHTML}</li>`;
+                            return `<li><a href="${link.link_url || '#'}" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}${childrenHTML}</li>`;
                         }).join('')}
                     </ul>
                 </div>`;
@@ -1582,15 +1980,15 @@ async function renderFooter() {
         <footer class="pt-12 pb-6 ${layoutClass}" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
             <div class="w-full px-4 lg:px-12">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="footer-grid">
                     <!-- Brand Column -->
-                    <div class="md:col-span-1">
-                        ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="h-8 w-auto mb-3 opacity-80">` : ''}
-                        <h4 class="text-sm font-bold tracking-widest mb-3">${brandTitle}</h4>
-                        <p class="text-[10px] leading-relaxed mb-4" style="opacity:0.5;">${brandDesc}</p>
+                    <div>
+                        ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="footer-brand-logo">` : ''}
+                        <h4 class="footer-brand-title">${brandTitle}</h4>
+                        <p class="footer-brand-desc">${brandDesc}</p>
                         
                         ${showSocial && socialIconsHTML ? `
-                        <div class="social-icons-grid mt-3">
+                        <div class="social-icons-grid">
                             ${socialIconsHTML}
                         </div>` : ''}
                         
@@ -1603,11 +2001,11 @@ async function renderFooter() {
                     
                     <!-- Contact Column -->
                     <div>
-                        <h5 class="text-[10px] uppercase tracking-widest mb-3" style="opacity:0.4;">Direct Contact</h5>
-                        ${contactEmail ? `<p class="text-[10px]" style="opacity:0.6;"><span class="footer-contact-icon">✉</span>${contactEmail}</p>` : ''}
-                        ${contactPhone ? `<p class="text-[10px] mt-1" style="opacity:0.4;"><span class="footer-contact-icon">☎</span>${contactPhone}</p>` : ''}
-                        ${contactAddress ? `<p class="text-[10px] mt-1" style="opacity:0.4;"><span class="footer-contact-icon">📍</span>${contactAddress}</p>` : ''}
-                        ${contactHours ? `<p class="text-[10px] mt-1" style="opacity:0.3;"><span class="footer-contact-icon">🕐</span>${contactHours}</p>` : ''}
+                        <h5 class="footer-section-title">Direct Contact</h5>
+                        ${contactEmail ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span><span class="footer-contact-text"><a href="mailto:${contactEmail}">${contactEmail}</a></span></div>` : ''}
+                        ${contactPhone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span><span class="footer-contact-text"><a href="tel:${contactPhone}">${contactPhone}</a></span></div>` : ''}
+                        ${contactAddress ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span><span class="footer-contact-text">${contactAddress}</span></div>` : ''}
+                        ${contactHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span><span class="footer-contact-text">${contactHours}</span></div>` : ''}
                         
                         ${paymentHTML}
                         ${shippingHTML}
@@ -1627,7 +2025,6 @@ async function renderFooter() {
         
         document.body.insertAdjacentHTML('beforeend', footerHTML);
         
-        // Apply RTL if default country has is_rtl
         if (countries.length > 0) {
             const defaultCountry = countries.find(c => c.is_default) || countries[0];
             if (defaultCountry?.is_rtl) {
@@ -1638,7 +2035,6 @@ async function renderFooter() {
         
     } catch (error) {
         console.error('Footer render error:', error);
-        // Fallback minimal footer
         const fallbackHTML = `
         <footer class="pt-12 pb-6" id="main-footer" style="background: #1a1a1a !important; color: #ffffff !important;">
             <div class="w-full px-4 lg:px-12 text-center">
@@ -1702,9 +2098,8 @@ function closeSideMenu() {
 }
 
 // ============================================================================
-// ==================== ENHANCED CART SYSTEM ====================
+// ENHANCED CART SYSTEM
 // ============================================================================
-
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
     if (drawer) {
@@ -1713,9 +2108,6 @@ function toggleCart() {
     }
 }
 
-// ============================================================================
-// TOGGLE DETAILS - Show/Hide Extra Product Details
-// ============================================================================
 window.toggleCartItemDetails = function(idx) {
     const details = document.getElementById(`cart-details-${idx}`);
     const icon = document.getElementById(`cart-toggle-icon-${idx}`);
@@ -1725,9 +2117,6 @@ window.toggleCartItemDetails = function(idx) {
     }
 };
 
-// ============================================================================
-// ADD TO CART
-// ============================================================================
 window.addToCart = function(productId, options = {}) {
     if (!productId || !options.title) {
         console.error('Product ID and Title are required');
@@ -1794,9 +2183,6 @@ window.addToCart = function(productId, options = {}) {
     renderCartItems();
 };
 
-// ============================================================================
-// REMOVE FROM CART
-// ============================================================================
 window.removeFromCart = function(idx) {
     const item = cart[idx];
     if (!item) return;
@@ -1811,9 +2197,6 @@ window.removeFromCart = function(idx) {
     }
 };
 
-// ============================================================================
-// UPDATE QUANTITY
-// ============================================================================
 window.updateCartQuantity = function(idx, newQuantity) {
     if (newQuantity < 1) {
         removeFromCart(idx);
@@ -1824,9 +2207,6 @@ window.updateCartQuantity = function(idx, newQuantity) {
     renderCartItems();
 };
 
-// ============================================================================
-// RENDER CART ITEMS - MOBILE OPTIMIZED WITH TOGGLE DETAILS
-// ============================================================================
 function renderCartItems() {
     const container = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
@@ -1895,33 +2275,27 @@ function renderCartItems() {
         <div class="cart-item-card">
             <div class="flex gap-3">
                 <img src="${item.img}" class="cart-item-image" alt="${item.title}" onerror="this.src='/logo.png'">
-                
                 <div class="flex-grow min-w-0">
                     <div class="flex items-start justify-between gap-1">
                         <h4 class="cart-item-title">${item.title}</h4>
                     </div>
-                    
                     <div class="cart-item-variant">${variantBadges.join('')}</div>
-                    
                     <div class="cart-item-bottom-row">
                         <div class="flex items-center gap-2">
                             <span class="cart-item-price">৳${itemTotal.toFixed(2)}</span>
                             ${item.old_price ? `<span class="cart-item-old-price">৳${(item.old_price * item.quantity).toFixed(2)}</span>` : ''}
                         </div>
-                        
                         <div class="cart-item-quantity-control">
                             <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) - 1})" aria-label="Decrease">−</button>
                             <span class="qty-num">${item.quantity || 1}</span>
                             <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) + 1})" aria-label="Increase">+</button>
                         </div>
                     </div>
-                    
                     ${hasExtraDetails ? `
                         <button class="cart-item-details-toggle" onclick="toggleCartItemDetails(${idx})">
                             Details <span class="toggle-icon" id="cart-toggle-icon-${idx}">▼</span>
                         </button>
                     ` : ''}
-                    
                     <div class="cart-item-extra-details" id="cart-details-${idx}">
                         <div class="cart-item-extra-details-inner">
                             ${categoryText ? `<span>📁 ${categoryText}</span>` : ''}
@@ -1930,7 +2304,6 @@ function renderCartItems() {
                         </div>
                     </div>
                 </div>
-                
                 <button onclick="removeFromCart(${idx})" class="cart-item-remove-btn" aria-label="Remove">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1946,9 +2319,6 @@ function renderCartItems() {
     updateCounts();
 }
 
-// ============================================================================
-// CART UTILITY FUNCTIONS
-// ============================================================================
 window.getCartItemDetails = function(productId, variantId = null) {
     return cart.find(item => {
         if (item.product_id !== productId) return false;
@@ -2019,9 +2389,6 @@ window.getCartSummary = function() {
     };
 };
 
-// ============================================================================
-// UPDATE COUNTS
-// ============================================================================
 function updateCounts() {
     const cartCount = document.getElementById('cart-count');
     const wishCount = document.getElementById('wish-count');
@@ -2040,9 +2407,6 @@ function saveCart() {
     updateCounts();
 }
 
-// ============================================================================
-// WISHLIST
-// ============================================================================
 function toggleWishlist(id) {
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
@@ -2061,9 +2425,6 @@ function toggleDrawerSubmenu(submenuId, element) {
     submenu.classList.toggle('open');
 }
 
-// ============================================================================
-// SCROLL DETECTOR
-// ============================================================================
 function handleNavScroll() {
     const nav = document.getElementById('main-nav');
     if (!nav) return;
