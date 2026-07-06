@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 7.3 (Premium Social Icons Footer)
+// Version: 8.0 (Dynamic Database-Driven Footer - 10 Tables)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -652,6 +652,86 @@ function injectSharedStyles() {
             }
         }
         
+        /* Footer Select Styling */
+        #main-footer select {
+            font-family: var(--font-body);
+            font-size: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        #main-footer select:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+        }
+        #main-footer select:focus {
+            border-color: rgba(255,255,255,0.3);
+        }
+        #main-footer select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        /* Footer App Buttons */
+        .footer-app-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.7);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: var(--font-subtitle);
+            letter-spacing: 0.03em;
+        }
+        .footer-app-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.15);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+        
+        /* Footer Bottom Bar */
+        .footer-bottom-bar {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 20px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.4;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        @media (min-width: 768px) {
+            .footer-bottom-bar {
+                flex-direction: row;
+            }
+        }
+        .footer-bottom-bar a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        .footer-bottom-bar a:hover {
+            color: rgba(255,255,255,0.9);
+            opacity: 1;
+        }
+        
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
             background: var(--primary) !important; color: var(--accent) !important; border-radius: 12px !important;
@@ -1114,65 +1194,261 @@ function getSocialIconHTML(platform, link) {
 }
 
 // ============================================================================
-// FOOTER WITH PREMIUM SOCIAL ICONS
+// FOOTER - DYNAMIC DATABASE-DRIVEN (10 Tables Integration)
 // ============================================================================
-function renderFooter() {
+async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     
-    const socialLink = 'https://binzeo.com/sociallink';
-    const socialPlatforms = [
-        'facebook', 'instagram', 'youtube', 'tiktok', 'x', 
-        'pinterest', 'threads', 'whatsapp', 'linkedin', 
-        'email', 'google', 'maps', 'linktree', 'messenger'
-    ];
-    
-    let socialIconsHTML = socialPlatforms.map(platform => {
-        return getSocialIconHTML(platform, socialLink);
-    }).filter(html => html !== null).join('');
-    
-    const footerHTML = `
-    <footer class="pt-12 pb-6" id="main-footer">
-        <div class="w-full px-4 lg:px-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-                <div class="md:col-span-1">
-                    <h4 class="text-sm font-bold tracking-widest mb-3">JABIYEN</h4>
-                    <p class="text-[10px] leading-relaxed mb-4 opacity-50">Premium lifestyle apparel architecture calibrated for modern aesthetics. Built on <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="font-bold underline text-white">BINZEO</a>.</p>
-                    <!-- Social Icons -->
-                    <div class="social-icons-grid mt-3">
-                        ${socialIconsHTML}
+    try {
+        // Fetch complete footer data from API
+        const response = await fetch('/api/footer/complete');
+        if (!response.ok) throw new Error('Footer API failed');
+        const footerData = await response.json();
+        
+        const { 
+            content = [], 
+            socialLinks = [], 
+            menus = [], 
+            paymentMethods = [], 
+            shippingPartners = [], 
+            certifications = [], 
+            appLinks = [], 
+            countries = [], 
+            trustBadges = [], 
+            settings = null 
+        } = footerData;
+        
+        // Footer Settings
+        const bgColor = settings?.background_color || '#000000';
+        const textColor = settings?.text_color || '#ffffff';
+        const copyrightText = settings?.copyright_text || '© 2025 JABIYEN. All Rights Reserved.';
+        const showSocial = settings?.show_social_links !== false;
+        const showPayment = settings?.show_payment_methods !== false;
+        const showApp = settings?.show_app_links !== false;
+        const showCountry = settings?.show_country_selector !== false;
+        
+        // Find specific content sections
+        const brandContent = content.find(c => c.section_name === 'brand') || {};
+        const contactContent = content.find(c => c.section_name === 'contact') || {};
+        const linksContent = content.find(c => c.section_name === 'quick_links') || {};
+        
+        // Social Icons HTML
+        let socialIconsHTML = '';
+        if (showSocial && socialLinks.length > 0) {
+            socialIconsHTML = socialLinks.map(link => {
+                const platform = (link.platform_name || '').toLowerCase().replace(/\s+/g, '');
+                return getSocialIconHTML(platform, link.link_url || '#');
+            }).filter(html => html !== null).join('');
+        }
+        
+        // Payment Methods HTML
+        let paymentHTML = '';
+        if (showPayment && paymentMethods.length > 0) {
+            paymentHTML = `
+            <div class="mt-4">
+                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Payment Methods</h5>
+                <div class="flex flex-wrap gap-2">
+                    ${paymentMethods.map(pm => {
+                        const iconHTML = pm.icon_url 
+                            ? `<img src="${pm.icon_url}" alt="${pm.name}" class="h-6 w-auto opacity-60 hover:opacity-100 transition-opacity">`
+                            : `<span class="text-[9px] opacity-50">${pm.name}</span>`;
+                        return iconHTML;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+        
+        // Shipping Partners HTML
+        let shippingHTML = '';
+        if (shippingPartners.length > 0) {
+            shippingHTML = `
+            <div class="mt-4">
+                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Shipping Partners</h5>
+                <div class="flex flex-wrap gap-2">
+                    ${shippingPartners.map(sp => {
+                        return sp.icon_url 
+                            ? `<img src="${sp.icon_url}" alt="${sp.name}" class="h-5 w-auto opacity-50 hover:opacity-80 transition-opacity">`
+                            : `<span class="text-[9px] opacity-40">${sp.name}</span>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+        
+        // Certifications HTML
+        let certHTML = '';
+        if (certifications.length > 0) {
+            certHTML = `
+            <div class="mt-4">
+                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Certifications</h5>
+                <div class="flex flex-wrap gap-2">
+                    ${certifications.map(cert => {
+                        const badgeHTML = cert.badge_url 
+                            ? `<img src="${cert.badge_url}" alt="${cert.name}" class="h-8 w-auto opacity-60 hover:opacity-90 transition-opacity">`
+                            : `<span class="text-[9px] opacity-40">${cert.name}</span>`;
+                        return cert.link_url 
+                            ? `<a href="${cert.link_url}" target="_blank" rel="noopener noreferrer">${badgeHTML}</a>`
+                            : badgeHTML;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+        
+        // App Links HTML
+        let appHTML = '';
+        if (showApp && appLinks.length > 0) {
+            appHTML = `
+            <div class="mt-4">
+                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Download Our App</h5>
+                <div class="flex flex-wrap gap-2">
+                    ${appLinks.map(app => {
+                        let buttons = '';
+                        if (app.app_store_url) {
+                            buttons += `<a href="${app.app_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+                                App Store
+                            </a>`;
+                        }
+                        if (app.play_store_url) {
+                            buttons += `<a href="${app.play_store_url}" target="_blank" rel="noopener noreferrer" class="footer-app-btn">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M14.94 11.5L17.5 8.94C17.66 8.78 17.66 8.53 17.5 8.37L16.14 7.01C15.98 6.85 15.73 6.85 15.57 7.01L13 9.58L10.43 7.01C10.27 6.85 10.02 6.85 9.86 7.01L8.5 8.37C8.34 8.53 8.34 8.78 8.5 8.94L11.06 11.5L8.5 14.06C8.34 14.22 8.34 14.47 8.5 14.63L9.86 15.99C10.02 16.15 10.27 16.15 10.43 15.99L13 13.42L15.57 15.99C15.73 16.15 15.98 16.15 16.14 15.99L17.5 14.63C17.66 14.47 17.66 14.22 17.5 14.06L14.94 11.5Z"/></svg>
+                                Play Store
+                            </a>`;
+                        }
+                        return buttons;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+        
+        // Country Selector HTML
+        let countryHTML = '';
+        if (showCountry && countries.length > 0) {
+            const defaultCountry = countries.find(c => c.is_default) || countries[0];
+            countryHTML = `
+            <div class="mt-4">
+                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Country & Language</h5>
+                <select onchange="if(this.value) window.location.href=this.value">
+                    ${countries.map(country => {
+                        const flagHTML = country.flag_url ? `<img src="${country.flag_url}" class="w-4 h-3 inline-block mr-1" alt="${country.country_name}">` : '';
+                        const currency = country.currency_symbol || country.currency_code || '';
+                        const lang = country.language_code ? ` (${country.language_code.toUpperCase()})` : '';
+                        const selected = country.is_default ? 'selected' : '';
+                        return `<option value="?country=${country.country_code}" ${selected}>${flagHTML}${country.country_name} ${currency}${lang}</option>`;
+                    }).join('')}
+                </select>
+            </div>`;
+        }
+        
+        // Trust Badges HTML
+        let badgesHTML = '';
+        if (trustBadges.length > 0) {
+            badgesHTML = `
+            <div class="mt-4">
+                <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Trust & Security</h5>
+                <div class="flex flex-wrap gap-2">
+                    ${trustBadges.map(badge => {
+                        const badgeImg = badge.badge_url 
+                            ? `<img src="${badge.badge_url}" alt="${badge.title}" class="h-7 w-auto opacity-60 hover:opacity-90 transition-opacity">`
+                            : `<span class="text-[8px] opacity-40">${badge.title}</span>`;
+                        return `
+                        <div class="text-center" title="${badge.subtitle || badge.title}">
+                            ${badgeImg}
+                            ${badge.subtitle ? `<p class="text-[6px] opacity-30 mt-0.5">${badge.subtitle}</p>` : ''}
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+        
+        // Build Menu Columns
+        let menuColumnsHTML = '';
+        if (menus.length > 0) {
+            menuColumnsHTML = menus.map(menu => {
+                const links = menu.links || [];
+                return `
+                <div>
+                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">${menu.title || 'Links'}</h5>
+                    <ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">
+                        ${links.map(link => {
+                            const target = link.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
+                            const iconHTML = link.icon_class ? `<i class="${link.icon_class} mr-1"></i>` : '';
+                            const descHTML = link.description ? `<span class="block text-[8px] opacity-40">${link.description}</span>` : '';
+                            return `<li><a href="${link.link_url || '#'}" class="no-underline" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}</li>`;
+                        }).join('')}
+                    </ul>
+                </div>`;
+            }).join('');
+        }
+        
+        // Brand Description
+        const brandTitle = brandContent.title || 'JABIYEN';
+        const brandDesc = brandContent.description || 'Premium lifestyle apparel architecture calibrated for modern aesthetics.';
+        const brandLogo = brandContent.logo_url || '/logo.png';
+        const brandEmail = contactContent.email || brandContent.email || '';
+        const brandPhone = contactContent.phone || brandContent.phone || '';
+        const brandAddress = contactContent.address || brandContent.address || '';
+        const brandHours = contactContent.working_hours || brandContent.working_hours || '';
+        
+        const footerHTML = `
+        <footer class="pt-12 pb-6" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
+            <div class="w-full px-4 lg:px-12">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                    <!-- Brand Column -->
+                    <div class="md:col-span-1">
+                        ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="h-8 w-auto mb-3 opacity-80">` : ''}
+                        <h4 class="text-sm font-bold tracking-widest mb-3">${brandTitle}</h4>
+                        <p class="text-[10px] leading-relaxed mb-4 opacity-50">${brandDesc}</p>
+                        
+                        ${showSocial && socialIconsHTML ? `
+                        <div class="social-icons-grid mt-3">
+                            ${socialIconsHTML}
+                        </div>` : ''}
+                        
+                        ${appHTML}
+                        ${countryHTML}
+                    </div>
+                    
+                    <!-- Dynamic Menu Columns -->
+                    ${menuColumnsHTML}
+                    
+                    <!-- Contact Column -->
+                    <div>
+                        <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Direct Contact</h5>
+                        ${brandEmail ? `<p class="text-[10px] opacity-60">${brandEmail}</p>` : ''}
+                        ${brandPhone ? `<p class="text-[10px] opacity-40 mt-1">${brandPhone}</p>` : ''}
+                        ${brandAddress ? `<p class="text-[10px] opacity-40">${brandAddress}</p>` : ''}
+                        ${brandHours ? `<p class="text-[10px] opacity-30 mt-1">${brandHours}</p>` : ''}
+                        
+                        ${paymentHTML}
+                        ${shippingHTML}
+                        ${certHTML}
+                        ${badgesHTML}
                     </div>
                 </div>
-                <div>
-                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Pipeline Links</h5>
-                    <ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">
-                        <li><a href="/about" class="no-underline">About Corporate</a></li>
-                        <li><a href="/contact" class="no-underline">Contact Portal</a></li>
-                        <li><a href="/journal" class="no-underline">Journal</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Governance</h5>
-                    <ul class="space-y-1.5 text-[10px] list-none p-0 opacity-70">
-                        <li><a href="/privacy-policy" class="no-underline">Privacy Core</a></li>
-                        <li><a href="/terms" class="no-underline">Terms Engine</a></li>
-                        <li><a href="/returns" class="no-underline">Returns Architecture</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-[10px] uppercase tracking-widest mb-3 opacity-40">Direct Contact</h5>
-                    <p class="text-[10px] opacity-60">binzeo369@outlook.com</p>
-                    <p class="text-[10px] opacity-40 mt-1">+880 1234 567890</p>
-                    <p class="text-[10px] opacity-40">Dhaka, Bangladesh</p>
+                
+                <!-- Bottom Bar -->
+                <div class="footer-bottom-bar">
+                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer">BINZEO Infrastructure</a></p>
+                    <p>${copyrightText}</p>
                 </div>
             </div>
-            <div class="border-t border-neutral-900 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-gray-600">
-                <p class="text-[8px] uppercase tracking-widest">Powered by <a href="https://binzeo.vercel.app" target="_blank" rel="noopener noreferrer" class="text-neutral-400 no-underline font-bold">BINZEO Infrastructure</a></p>
-                <p class="text-[8px] uppercase tracking-widest">&copy; <span id="display-year"></span> JABIYEN Engine. All rights reserved.</p>
+        </footer>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', footerHTML);
+        
+    } catch (error) {
+        console.error('Footer render error:', error);
+        // Fallback minimal footer
+        const fallbackHTML = `
+        <footer class="pt-12 pb-6" id="main-footer" style="background: #000000 !important; color: #ffffff !important;">
+            <div class="w-full px-4 lg:px-12 text-center">
+                <p class="text-[10px] opacity-50">© ${new Date().getFullYear()} JABIYEN. All Rights Reserved.</p>
+                <p class="text-[8px] opacity-30 mt-1">Powered by BINZEO Infrastructure</p>
             </div>
-        </div>
-    </footer>
-    `;
-    document.body.insertAdjacentHTML('beforeend', footerHTML);
+        </footer>`;
+        document.body.insertAdjacentHTML('beforeend', fallbackHTML);
+    }
 }
 
 // ============================================================================
@@ -1641,7 +1917,7 @@ async function initSharedComponents() {
     loadFontsConfiguration();
     injectSharedStyles();
     await renderHeader();
-    renderFooter();
+    await renderFooter();
     updateCounts();
     
     window.removeEventListener('scroll', handleNavScroll);
@@ -1657,5 +1933,3 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initSharedComponents, 60);
 }
-
-
