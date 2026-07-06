@@ -1,6 +1,6 @@
 // ============================================================================
 // footer.js - Professional Premium Footer Component
-// Version: 2.3 (World-Class Global Design & Measurement Architecture)
+// Version: 2.3 (Refined Design - Fashion Brand Inspired)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -9,29 +9,23 @@ function injectFooterStyles() {
 
     const styles = `
     <style id="footer-components-style">
-        /* ==================== GLOBAL DESIGN SYSTEM ==================== */
+        /* ==================== BASE FOOTER STYLES ==================== */
         #main-footer {
-            font-family: var(--font-body, 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+            font-family: var(--font-body, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
             border-top: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
             z-index: 10;
-            background-color: var(--footer-bg, #0d0d0d);
-            color: var(--footer-text, #a3a3a3);
-            line-height: 1.6;
+            background-color: var(--footer-bg, #0a0a0a);
+            color: var(--footer-text, #b0b0b0);
+            line-height: 1.5;
             width: 100%;
-            -webkit-font-smoothing: antialiased;
-            box-sizing: border-box;
-        }
-
-        #main-footer *, #main-footer *::before, #main-footer *::after {
-            box-sizing: border-box;
+            letter-spacing: 0.01em;
         }
         
         #main-footer a {
             color: inherit;
             text-decoration: none;
-            transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-            display: inline-block;
+            transition: color 0.25s ease, opacity 0.25s ease;
         }
         
         #main-footer a:hover {
@@ -39,418 +33,336 @@ function injectFooterStyles() {
             opacity: 1;
         }
 
-        .footer-container {
-            width: 100%;
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 80px 24px 32px 24px;
-        }
-
-        @media (max-width: 768px) {
-            .footer-container {
-                padding: 48px 20px 24px 20px;
-            }
-        }
-
-        /* ==================== RESPONSIVE GLOBAL GRID ==================== */
+        /* ==================== MAIN GRID ==================== */
         .footer-grid {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
-            gap: 40px;
-            padding-bottom: 60px;
+            grid-template-columns: 1fr;
+            gap: 32px 40px;
+            padding-bottom: 32px;
         }
         
-        @media (max-width: 1024px) {
+        @media (min-width: 768px) {
             .footer-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1.8fr 1.2fr 1.2fr 1.8fr;
                 gap: 40px;
             }
         }
-        
-        @media (max-width: 576px) {
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 36px;
-            }
-        }
 
-        /* ==================== 1. BRAND IDENTITY & MEASUREMENTS ==================== */
-        .footer-brand-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
+        /* ==================== 1. BRAND & CONTENT ==================== */
         .footer-brand-logo {
-            /* গ্লোবাল স্ট্যান্ডার্ড ব্র্যান্ড লোগো সাইজ */
-            width: 160px; 
+            max-width: 160px;
+            width: 100%;
             height: auto;
-            max-height: 50px;
+            margin-bottom: 20px;
+            border-radius: 4px;
             display: block;
             object-fit: contain;
-            filter: brightness(1);
+            filter: brightness(0.95);
+            transition: filter 0.3s ease;
+        }
+        
+        .footer-brand-logo:hover {
+            filter: brightness(1.1);
         }
         
         .footer-brand-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 0.06em;
-            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
             text-transform: uppercase;
             color: #ffffff;
+            line-height: 1.3;
         }
         
         .footer-brand-desc {
-            font-size: 0.9rem;
-            color: #8e8e93;
-            margin: 0;
-            max-width: 280px;
+            font-size: 0.8125rem;
+            opacity: 0.7;
+            margin-bottom: 20px;
+            max-width: 300px;
             line-height: 1.6;
+            font-weight: 350;
         }
 
-        /* ==================== 2. PREMIUM SOCIAL LINKS ==================== */
+        /* ==================== 2. SOCIAL LINKS ==================== */
         .social-icons-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 8px;
+            gap: 8px;
+            margin-bottom: 20px;
         }
         
         .social-icon-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            /* গ্লোবাল টাচ টার্গেট সাইজ (40x40px) মোবাইল ফ্রেন্ডলি */
-            width: 40px;
-            height: 40px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #e5e5e7;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #a0a0a0;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
         }
         
         .social-icon-link:hover {
-            background: #ffffff;
-            color: #000000;
+            background: rgba(255, 255, 255, 0.12);
             transform: translateY(-2px);
-            border-color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
         
         .social-icon-link svg, .social-icon-link img {
-            /* প্রিমিয়াম আইকন অপটিমাইজড সাইজ */
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             object-fit: contain;
         }
 
-        /* ==================== 3 & 4. MENUS & TYPOGRAPHY ==================== */
+        /* ==================== SECTION TITLES & DESCRIPTIONS ==================== */
         .footer-section-title {
             font-family: var(--font-heading, 'Manrope', sans-serif);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            margin: 0 0 24px 0;
-            color: #ffffff;
+            margin-bottom: 16px;
+            color: #8a8a8a;
             position: relative;
+            padding-bottom: 0;
+        }
+        
+        .footer-section-desc {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            margin-top: -12px;
+            margin-bottom: 16px;
+            font-style: italic;
+            display: block;
         }
 
+        /* ==================== 3 & 4. MENUS ==================== */
         .footer-links-list {
             list-style: none;
             padding: 0;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
         }
         
         .footer-links-list > li {
-            font-size: 0.9rem;
-            color: #a1a1aa;
+            margin-bottom: 10px;
+            font-size: 0.8125rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
         }
-
-        .footer-links-list a {
-            position: relative;
-        }
-        /* মিনিমালিস্টি আন্ডারলাইন অ্যানিমেশন */
-        .footer-links-list a::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 1px;
-            bottom: -2px;
-            left: 0;
-            background-color: #ffffff;
-            transform-origin: bottom right;
-            transition: transform 0.25s ease-out;
-        }
-        .footer-links-list a:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
+        
+        .footer-links-list > li:hover {
+            opacity: 1;
         }
         
         .footer-link-desc {
             display: block;
-            font-size: 0.75rem;
-            color: #71717a;
-            margin-top: 4px;
+            font-size: 0.6875rem;
+            opacity: 0.5;
+            margin-top: 2px;
+            font-style: italic;
         }
 
         .footer-nested-links {
             list-style: none;
-            padding-left: 12px;
-            margin: 8px 0 0 0;
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            padding-left: 14px;
+            margin-top: 8px;
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
         }
         
         .footer-nested-links > li {
-            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            opacity: 0.7;
         }
 
-        /* ==================== 5. INTERNATIONAL PAYMENT GRID ==================== */
-        .footer-payment-section {
-            margin-top: 28px;
-        }
-
+        /* ==================== 5. PAYMENT METHODS ==================== */
         .footer-payment-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 8px;
-            margin-top: 12px;
+            margin-bottom: 16px;
         }
         
         .footer-payment-item {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            /* বিশ্ববিখ্যাত স্ট্যান্ডার্ড কার্ড গেটওয়ে ডাইমেনশন */
-            width: 54px;
-            height: 34px;
-            border-radius: 4px;
+            padding: 8px 6px;
+            border-radius: 6px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            text-align: center;
             position: relative;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: background 0.25s, border-color 0.25s;
         }
         
         .footer-payment-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
         }
         
-        .footer-payment-icon { 
-            width: 100%;
-            height: 100%; 
-            object-fit: contain; 
-            padding: 4px;
-        }
+        .footer-payment-icon { height: 20px; margin-bottom: 4px; object-fit: contain; }
+        .footer-payment-name { font-size: 0.65rem; font-weight: 500; opacity: 0.8; }
+        .footer-payment-account { font-size: 0.6rem; opacity: 0.5; margin-top: 2px; }
         
         .footer-qr-tooltip {
             position: absolute;
-            bottom: 125%;
+            bottom: 110%;
             left: 50%;
             transform: translateX(-50%);
             background: #ffffff;
-            padding: 6px;
+            padding: 4px;
             border-radius: 6px;
             display: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
             z-index: 20;
         }
         .footer-payment-item:hover .footer-qr-tooltip { display: block; }
-        .footer-qr-tooltip img { width: 90px; height: 90px; display: block; }
+        .footer-qr-tooltip img { width: 70px; height: 70px; }
 
-        /* ==================== 6, 7 & 10. PREMIUM BADGES ==================== */
+        /* ==================== 6, 7 & 10. BADGES ==================== */
         .footer-mini-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-
-        @media (max-width: 480px) {
-            .footer-mini-grid {
-                grid-template-columns: 1fr;
-            }
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
         }
         
         .footer-badge-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 10px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
+            font-size: 0.7rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .footer-badge-box img { 
-            /* গ্লোবাল ট্রাস্ট ব্যাজ অপটিমাইজড সাইজ */
-            width: 32px; 
-            height: 32px; 
-            object-fit: contain; 
-        }
+        .footer-badge-box img { max-height: 20px; object-fit: contain; }
+        .badge-text-wrapper { display: flex; flex-direction: column; }
+        .badge-subtitle { font-size: 0.6rem; opacity: 0.5; }
 
-        .badge-text-wrapper { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 2px;
-        }
-        .badge-text-wrapper strong {
-            color: #ffffff;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .badge-subtitle { 
-            font-size: 0.7rem; 
-            color: #71717a; 
-        }
-
-        /* ==================== 8. ECOMMERCE APP STORE BUTTONS ==================== */
+        /* ==================== 8. APP LINKS ==================== */
         .footer-app-grid {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
         }
         
         .footer-app-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: #000000;
-            border: 1px solid #27272a;
-            /* অ্যাপলের অফিসিয়াল ডাউনলোড ব্যাজ মেজারমেন্ট রেশিও */
-            width: 140px;
-            height: 42px;
-            padding: 0 12px;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 14px;
             border-radius: 6px;
-            transition: all 0.25s ease;
-        }
-
-        .footer-app-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            font-weight: 500;
+            font-size: 0.75rem;
+            transition: background 0.25s;
         }
         
-        .footer-app-btn:hover { 
-            border-color: #52525b;
-            background: #18181b;
-        }
+        .footer-app-btn:hover { background: rgba(255, 255, 255, 0.12); }
+        .footer-app-btn img { width: 18px; height: 18px; }
 
-        /* ==================== 9. MODERN COUNTRY SELECTOR ==================== */
+        /* ==================== 9. COUNTRY SELECTOR ==================== */
         .footer-country-wrapper {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            margin-top: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 16px;
+            display: block; 
             width: 100%;
             max-width: 280px;
         }
         
         .footer-country-select {
             width: 100%;
-            background: #18181b;
-            color: #ffffff;
-            border: 1px solid #27272a;
-            padding: 10px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.04);
+            color: #d0d0d0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
             outline: none;
+            margin-bottom: 6px;
             cursor: pointer;
-            font-family: inherit;
-            transition: border-color 0.2s ease;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 14px;
         }
         
         .footer-country-select:focus {
-            border-color: #52525b;
+            border-color: rgba(255, 255, 255, 0.4);
         }
         
         .footer-country-select option { 
-            background: #09090b; 
-            color: #ffffff; 
+            background: #1a1a1a; 
+            color: #e0e0e0; 
+            padding: 8px;
         }
         
         .footer-exchange-rate { 
-            font-size: 0.75rem; 
-            color: #71717a;
+            font-size: 0.65rem; 
+            opacity: 0.6; 
+            color: #909090;
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-top: 10px;
+            gap: 4px;
         }
 
-        /* ==================== CONTACT METRICS ==================== */
-        .footer-contact-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 28px;
-        }
-
+        /* ==================== CONTACT INFO ==================== */
         .footer-contact-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            font-size: 0.9rem;
-            color: #e4e4e7;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.8125rem;
+            opacity: 0.8;
         }
         .footer-contact-item a {
-            display: inline;
+            font-weight: 400;
         }
         .footer-contact-icon {
-            font-size: 1rem;
-            color: #a1a1aa;
-            flex-shrink: 0;
-            line-height: 1.4;
+            font-size: 0.9rem;
+            margin-top: 1px;
+            opacity: 0.7;
         }
 
-        /* ==================== 11. LUXURY BOTTOM BAR ==================== */
+        /* ==================== 11. BOTTOM BAR ==================== */
         .footer-bottom-bar {
             border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 32px;
+            padding-top: 20px;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            font-size: 0.8rem;
-            color: #71717a;
+            gap: 8px;
+            font-size: 0.75rem;
+            opacity: 0.5;
         }
         
-        @media (max-width: 768px) {
-            .footer-bottom-bar { 
-                flex-direction: column; 
-                text-align: center;
-                gap: 16px;
-            }
+        @media (min-width: 768px) {
+            .footer-bottom-bar { flex-direction: row; }
         }
 
-        /* Center Layout Alignment */
         .footer-layout-centered .footer-grid { text-align: center; }
-        .footer-layout-centered .footer-brand-container { align-items: center; }
-        .footer-layout-centered .footer-brand-desc { margin: 0 auto; }
-        .footer-layout-centered .social-icons-grid { justify-content: center; }
-        .footer-layout-centered .footer-app-grid { align-items: center; }
-        .footer-layout-centered .footer-country-wrapper { margin: 12px auto 0; }
-        .footer-layout-centered .footer-contact-list { align-items: center; }
+        .footer-layout-centered .footer-section-title::after { left: 50%; transform: translateX(-50%); }
+        .footer-layout-centered .footer-country-wrapper { margin: 16px auto 0; }
         .footer-layout-centered .footer-contact-item { justify-content: center; }
-        .footer-layout-centered .footer-mini-grid { justify-content: center; }
-        .footer-layout-centered .footer-payment-grid { justify-content: center; }
+        .footer-layout-centered .footer-brand-desc { margin-left: auto; margin-right: auto; }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
@@ -462,7 +374,7 @@ function getSocialIconHTML(platform, link) {
         'instagram': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.908 12.2384 16.0396 11.4077 15.9059C10.5771 15.7722 9.80971 15.3801 9.21479 14.7851C8.61987 14.1902 8.2278 13.4228 8.09412 12.5922C7.96044 11.7615 8.092 10.9098 8.47026 10.1583C8.84852 9.40678 9.45418 8.7937 10.2009 8.4062C10.9477 8.0187 11.7978 7.87652 12.63 8C13.4789 8.12583 14.2648 8.52151 14.8716 9.12836C15.4785 9.73521 15.8742 10.5211 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>`,
         'youtube': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1792 5.51057 21.8387 5.15941C21.4982 4.80824 21.0708 4.55518 20.6 4.43C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92916 4.58518 2.50178 4.83824 2.16132 5.18941C1.82085 5.54057 1.57882 5.97541 1.46 6.45C1.14521 8.17418 0.991095 9.92534 1 11.68C0.991095 13.4347 1.14521 15.1858 1.46 16.91C1.57882 17.3846 1.82085 17.8194 2.16132 18.1706C2.50178 18.5218 2.92916 18.7748 3.4 18.9C5.12 19.36 12 19.36 12 19.36C12 19.36 18.88 19.36 20.6 18.9C21.0708 18.7748 21.4982 18.5218 21.8387 18.1706C22.1792 17.8194 22.4212 17.3846 22.54 16.91C22.8548 15.1858 23.0089 13.4347 23 11.68C23.0089 9.92534 22.8548 8.17418 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.68L9.75 8.34V15.02Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         'x': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z" fill="currentColor"/></svg>`,
-        'linkedin': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>`
+        'linkedin': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 12V21H18V12C18 10.5 17.5 9 16 9C14.5 9 14 10.5 14 12V21H10V9H14V11C14 11 14.5 9.5 16.5 9.5C18.5 9.5 22 10.5 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>`
     };
     return icons[platform] || '';
 }
@@ -484,8 +396,8 @@ async function renderFooter() {
         } = footerData;
         
         // --- Table 11: Settings ---
-        const bgColor = settings.background_color || '#0d0d0d';
-        const textColor = settings.text_color || '#a3a3a3';
+        const bgColor = settings.background_color || '#0a0a0a';
+        const textColor = settings.text_color || '#b0b0b0';
         const layoutStyle = settings.layout_style || 'standard';
         const customCSS = settings.custom_css || '';
         
@@ -525,9 +437,9 @@ async function renderFooter() {
             appsHTML = `<div class="footer-app-grid">` + 
                 appLinks.sort((a, b) => a.sort_order - b.sort_order).map(app => {
                     let btnHTML = '';
-                    const icon = app.icon_url ? `<img src="${app.icon_url}" alt="App Icon">` : '';
-                    if(app.app_store_url) btnHTML += `<a href="${app.app_store_url}" class="footer-app-btn" target="_blank">${icon}</a>`;
-                    if(app.play_store_url) btnHTML += `<a href="${app.play_store_url}" class="footer-app-btn" target="_blank">${icon}</a>`;
+                    const icon = app.icon_url ? `<img src="${app.icon_url}" alt="app icon">` : '📱';
+                    if(app.app_store_url) btnHTML += `<a href="${app.app_store_url}" class="footer-app-btn" target="_blank">${icon} App Store</a>`;
+                    if(app.play_store_url) btnHTML += `<a href="${app.play_store_url}" class="footer-app-btn" target="_blank">${icon} Play Store</a>`;
                     return btnHTML;
                 }).join('') + `</div>`;
         }
@@ -543,15 +455,16 @@ async function renderFooter() {
             let exchangeRateHTML = '';
             if (defaultCountry && defaultCountry.exchange_rate && defaultCountry.exchange_rate !== 1) {
                 const symbol = defaultCountry.currency_symbol || defaultCountry.currency_code || '';
-                exchangeRateHTML = `<div class="footer-exchange-rate"><span>💱</span> Exchange: 1 USD = ${symbol}${defaultCountry.exchange_rate}</div>`;
+                exchangeRateHTML = `<div class="footer-exchange-rate"><span>💱</span> 1 USD = ${symbol}${defaultCountry.exchange_rate}</div>`;
             }
             
             countryHTML = `
             <div class="footer-country-wrapper">
+                <span class="footer-section-desc">Select your region</span>
                 <select class="footer-country-select" onchange="window.location.href=this.value">
                     ${countries.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)).map(c => `
                         <option value="?country=${c.country_code || ''}&lang=${c.language_code || ''}" ${c.is_default ? 'selected' : ''}>
-                            ${c.country_name || 'Unknown'} - ${c.currency_code || ''} (${c.currency_symbol || ''})
+                            ${c.country_name || 'Unknown'} - ${c.currency_code || ''} (${c.currency_symbol || ''}) ${c.language_name ? `| ${c.language_name}` : ''}
                         </option>
                     `).join('')}
                 </select>
@@ -569,6 +482,7 @@ async function renderFooter() {
                 menusHTML += `
                 <div>
                     <h5 class="footer-section-title">${menu.title}</h5>
+                    <span class="footer-section-desc">${menu.description || 'Explore our ' + menu.title.toLowerCase()}</span>
                     <ul class="footer-links-list">
                         ${parents.map(parent => {
                             const target = parent.open_in_new_tab ? 'target="_blank"' : '';
@@ -577,11 +491,11 @@ async function renderFooter() {
                             let childHTML = '';
                             if(children.length > 0) {
                                 childHTML = `<ul class="footer-nested-links">
-                                    ${children.map(child => `<li><a href="${child.link_url || '#'}" ${child.open_in_new_tab ? 'target="_blank"' : ''}>${child.title}</a>${child.description ? `<span class="footer-link-desc">${child.description}</span>` : ''}</li>`).join('')}
+                                    ${children.map(child => `<li><a href="${child.link_url || '#'}" ${child.open_in_new_tab ? 'target="_blank"' : ''}>${child.icon_class ? `<i class="${child.icon_class}"></i> ` : ''}${child.title}</a>${child.description ? `<span class="footer-link-desc">${child.description}</span>` : ''}</li>`).join('')}
                                 </ul>`;
                             }
                             return `<li>
-                                <a href="${parent.link_url || '#'}" ${target}>${parent.title}</a>
+                                <a href="${parent.link_url || '#'}" ${target}>${parent.icon_class ? `<i class="${parent.icon_class}"></i> ` : ''}${parent.title}</a>
                                 ${parent.description ? `<span class="footer-link-desc">${parent.description}</span>` : ''}
                                 ${childHTML}
                             </li>`;
@@ -595,12 +509,14 @@ async function renderFooter() {
         let paymentsHTML = '';
         if (paymentMethods && paymentMethods.length > 0) {
             paymentsHTML = `
-            <div class="footer-payment-section">
-                <h5 class="footer-section-title" style="margin-bottom:12px; font-size:0.75rem;">Accepted Payments</h5>
+            <div class="footer-section">
+                <h5 class="footer-section-title">Secure Payments</h5>
+                <span class="footer-section-desc">We accept</span>
                 <div class="footer-payment-grid">
                     ${paymentMethods.sort((a, b) => a.sort_order - b.sort_order).map(pm => `
                         <div class="footer-payment-item" title="${pm.name}">
-                            ${pm.icon_url ? `<img src="${pm.icon_url}" alt="${pm.name}" class="footer-payment-icon">` : `<span style="font-size:0.6rem; font-weight:600;">${pm.name}</span>`}
+                            ${pm.icon_url ? `<img src="${pm.icon_url}" alt="${pm.name}" class="footer-payment-icon">` : `<span class="footer-payment-name">${pm.name}</span>`}
+                            ${pm.account_number ? `<span class="footer-payment-account">${pm.account_number}</span>` : ''}
                             ${pm.qr_code_url ? `<div class="footer-qr-tooltip"><img src="${pm.qr_code_url}" alt="QR Code"></div>` : ''}
                         </div>
                     `).join('')}
@@ -611,7 +527,8 @@ async function renderFooter() {
         // --- Table 6, 7 & 10: Trust Badges, Certs, Shipping ---
         let trustHTML = '';
         if (trustBadges && trustBadges.length > 0) {
-            trustHTML += trustBadges.sort((a, b) => a.sort_order - b.sort_order).map(badge => `
+            trustHTML += `<div style="margin-bottom: 12px;"><h5 class="footer-section-title" style="margin-bottom: 8px;">Trust & Security</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
+                trustBadges.sort((a, b) => a.sort_order - b.sort_order).map(badge => `
                 <div class="footer-badge-box">
                     ${badge.badge_url ? `<img src="${badge.badge_url}" alt="${badge.title}">` : ''}
                     <div class="badge-text-wrapper">
@@ -619,44 +536,49 @@ async function renderFooter() {
                         ${badge.subtitle ? `<span class="badge-subtitle">${badge.subtitle}</span>` : ''}
                     </div>
                 </div>
-            `).join('');
+            `).join('') + `</div></div>`;
         }
         
         let certsHTML = '';
         if (certifications && certifications.length > 0) {
-            certsHTML += certifications.sort((a, b) => a.sort_order - b.sort_order).map(cert => `
+            certsHTML += `<div style="margin-bottom: 12px;"><h5 class="footer-section-title" style="margin-bottom: 8px;">Certifications</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
+                certifications.sort((a, b) => a.sort_order - b.sort_order).map(cert => `
                 <div class="footer-badge-box">
                     ${cert.link_url ? `<a href="${cert.link_url}" target="_blank">` : ''}
-                    ${cert.badge_url ? `<img src="${cert.badge_url}" alt="${cert.name}">` : '<strong>' + cert.name + '</strong>'}
+                    ${cert.badge_url ? `<img src="${cert.badge_url}" alt="${cert.name}">` : `<strong>${cert.name}</strong>`}
                     ${cert.link_url ? `</a>` : ''}
                 </div>
-            `).join('');
+            `).join('') + `</div></div>`;
         }
 
         let shippingHTML = '';
         if (shippingPartners && shippingPartners.length > 0) {
-            shippingHTML += shippingPartners.sort((a, b) => a.sort_order - b.sort_order).map(ship => `
+            shippingHTML += `<div style="margin-bottom: 12px;"><h5 class="footer-section-title" style="margin-bottom: 8px;">Shipping Partners</h5><div class="footer-mini-grid" style="margin-bottom: 8px;">` +
+                shippingPartners.sort((a, b) => a.sort_order - b.sort_order).map(ship => `
                 <div class="footer-badge-box" title="${ship.name}">
-                    ${ship.icon_url ? `<img src="${ship.icon_url}" alt="${ship.name}">` : `<strong>${ship.name}</strong>`}
+                    ${ship.icon_url ? `<img src="${ship.icon_url}" alt="${ship.name}">` : `<span>${ship.name}</span>`}
                 </div>
-            `).join('');
+            `).join('') + `</div></div>`;
         }
 
         // --- Build Final HTML ---
         const layoutClass = layoutStyle === 'centered' ? 'footer-layout-centered' : '';
         
         const footerHTML = `
-        <footer id="main-footer" class="${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor};" dir="${dirAttribute}">
+        <footer id="main-footer" class="pt-12 pb-6 ${layoutClass}" style="--footer-bg: ${bgColor}; --footer-text: ${textColor}; padding: 40px 20px 20px;" dir="${dirAttribute}">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
-            <div class="footer-container">
+            <div style="width: 100%; max-width: 1200px; margin: 0 auto;">
                 <div class="footer-grid">
                     
-                    <div class="footer-brand-container">
-                        ${logoUrl ? `<img src="${logoUrl}" alt="${brandTitle || 'Brand'}" class="footer-brand-logo">` : ''}
+                    <div>
+                        ${logoUrl ? `<img src="${logoUrl}" alt="${brandTitle || 'Brand Logo'}" class="footer-brand-logo">` : ''}
                         ${brandTitle ? `<h4 class="footer-brand-title">${brandTitle}</h4>` : ''}
                         ${brandDesc ? `<p class="footer-brand-desc">${brandDesc}</p>` : ''}
                         
+                        <h5 class="footer-section-title">Connect</h5>
                         ${socialsHTML}
+                        
+                        <h5 class="footer-section-title">Download App</h5>
                         ${appsHTML}
                         ${countryHTML}
                     </div>
@@ -664,28 +586,26 @@ async function renderFooter() {
                     ${menusHTML}
                     
                     <div>
-                        <h5 class="footer-section-title">Contact & Trust</h5>
-                        <div class="footer-contact-list">
-                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${address}</span></div>` : ''}
-                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
-                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
-                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${workingHours}</span></div>` : ''}
+                        <h5 class="footer-section-title">Get in Touch</h5>
+                        <span class="footer-section-desc">We're here to help</span>
+                        <div style="margin-bottom: 20px;">
+                            ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span> <span>${address}</span></div>` : ''}
+                            ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
+                            ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
+                            ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span> <span>${workingHours}</span></div>` : ''}
                         </div>
                         
-                        ${(trustHTML || certsHTML || shippingHTML) ? `
-                        <div class="footer-mini-grid">
-                            ${trustHTML}
-                            ${certsHTML}
-                            ${shippingHTML}
-                        </div>` : ''}
+                        ${trustHTML}
+                        ${certsHTML}
+                        ${shippingHTML}
                         
                         ${paymentsHTML}
                     </div>
                 </div>
                 
                 <div class="footer-bottom-bar">
+                    <p>Infrastructure by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ccc; font-weight: 500;">BINZEO</a> v${settings.version || '2.3'}</p>
                     <p>${defaultCopyright}</p>
-                    <p>Powered by <a href="https://binzeo.vercel.app" target="_blank" style="color: #ffffff; font-weight: 500;">BINZEO Infrastructure</a> v${settings.version || '2.3'}</p>
                 </div>
             </div>
         </footer>
