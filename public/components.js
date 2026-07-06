@@ -1,6 +1,6 @@
 // ============================================================================
 // components.js - Shared Header, Footer, Common Functions & Glassmorphism UI
-// Version: 10.1 (Mobile-Friendly Premium Footer + Fixed Country Selector + Enhanced Design)
+// Version: 10.2 (All Tables Fixed - Country Selector, Payment, Shipping, Cert, Badges, App Links)
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
@@ -59,7 +59,7 @@ async function fetchAnnouncement() {
 }
 
 // ============================================================================
-// SHARED CSS STYLES - PREMIUM MOBILE-FRIENDLY FOOTER DESIGN
+// SHARED CSS STYLES - COMPLETE PREMIUM MOBILE-FRIENDLY FOOTER
 // ============================================================================
 function injectSharedStyles() {
     if (document.getElementById("shared-components-style")) return;
@@ -534,7 +534,7 @@ function injectSharedStyles() {
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
 
         /* ================================================================ */
-        /* FOOTER - PREMIUM MOBILE-FRIENDLY PROFESSIONAL DESIGN              */
+        /* FOOTER - COMPLETE PREMIUM SYSTEM (ALL 11 TABLES)                 */
         /* ================================================================ */
         
         #main-footer {
@@ -545,67 +545,29 @@ function injectSharedStyles() {
             overflow: hidden;
             padding: 40px 0 20px 0;
         }
-        @media (min-width: 768px) {
-            #main-footer {
-                padding: 56px 0 24px 0;
-            }
-        }
-        @media (min-width: 1024px) {
-            #main-footer {
-                padding: 64px 0 28px 0;
-            }
-        }
+        @media (min-width: 768px) { #main-footer { padding: 56px 0 24px 0; } }
+        @media (min-width: 1024px) { #main-footer { padding: 64px 0 28px 0; } }
         
         #main-footer .footer-container {
             width: 100%;
             padding: 0 16px;
             max-width: 100%;
         }
-        @media (min-width: 640px) {
-            #main-footer .footer-container {
-                padding: 0 24px;
-            }
-        }
-        @media (min-width: 1024px) {
-            #main-footer .footer-container {
-                padding: 0 40px;
-                max-width: 1280px;
-                margin: 0 auto;
-            }
-        }
+        @media (min-width: 640px) { #main-footer .footer-container { padding: 0 24px; } }
+        @media (min-width: 1024px) { #main-footer .footer-container { padding: 0 40px; max-width: 1280px; margin: 0 auto; } }
         
-        /* Footer Grid - Mobile First */
         #main-footer .footer-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 28px;
             margin-bottom: 32px;
         }
-        @media (min-width: 640px) {
-            #main-footer .footer-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 24px;
-            }
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-grid {
-                grid-template-columns: 1.3fr 0.9fr 0.9fr 1fr;
-                gap: 20px;
-                margin-bottom: 40px;
-            }
-        }
-        @media (min-width: 1024px) {
-            #main-footer .footer-grid {
-                gap: 32px;
-            }
-        }
+        @media (min-width: 640px) { #main-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; } }
+        @media (min-width: 768px) { #main-footer .footer-grid { grid-template-columns: 1.3fr 0.9fr 0.9fr 1fr; gap: 20px; margin-bottom: 40px; } }
+        @media (min-width: 1024px) { #main-footer .footer-grid { gap: 32px; } }
         
-        /* Footer Columns */
-        #main-footer .footer-col {
-            min-width: 0;
-        }
+        #main-footer .footer-col { min-width: 0; }
         
-        /* Section Title */
         #main-footer .footer-section-title {
             font-family: var(--font-heading);
             font-size: 10px;
@@ -618,12 +580,7 @@ function injectSharedStyles() {
             display: inline-block;
             padding-bottom: 8px;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-section-title {
-                font-size: 11px;
-                margin-bottom: 16px;
-            }
-        }
+        @media (min-width: 768px) { #main-footer .footer-section-title { font-size: 11px; margin-bottom: 16px; } }
         #main-footer .footer-section-title::after {
             content: '';
             position: absolute;
@@ -635,12 +592,8 @@ function injectSharedStyles() {
             opacity: 0.3;
             border-radius: 1px;
         }
-        .footer-layout-centered .footer-section-title::after {
-            left: 50%;
-            transform: translateX(-50%);
-        }
+        .footer-layout-centered .footer-section-title::after { left: 50%; transform: translateX(-50%); }
         
-        /* Brand Logo */
         #main-footer .footer-brand-logo {
             height: 28px;
             width: auto;
@@ -650,16 +603,9 @@ function injectSharedStyles() {
             object-fit: contain;
             max-width: 120px;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-brand-logo {
-                height: 32px;
-                max-width: 140px;
-                margin-bottom: 12px;
-            }
-        }
+        @media (min-width: 768px) { #main-footer .footer-brand-logo { height: 32px; max-width: 140px; margin-bottom: 12px; } }
         #main-footer .footer-brand-logo:hover { opacity: 1; }
         
-        /* Brand Title */
         #main-footer .footer-brand-title {
             font-family: var(--font-heading);
             font-size: 14px;
@@ -668,14 +614,8 @@ function injectSharedStyles() {
             margin-bottom: 8px;
             color: inherit;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-brand-title {
-                font-size: 15px;
-                margin-bottom: 10px;
-            }
-        }
+        @media (min-width: 768px) { #main-footer .footer-brand-title { font-size: 15px; margin-bottom: 10px; } }
         
-        /* Brand Description */
         #main-footer .footer-brand-desc {
             font-size: 10px;
             line-height: 1.6;
@@ -683,25 +623,11 @@ function injectSharedStyles() {
             margin-bottom: 14px;
             max-width: 100%;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-brand-desc {
-                max-width: 280px;
-                margin-bottom: 16px;
-            }
-        }
+        @media (min-width: 768px) { #main-footer .footer-brand-desc { max-width: 280px; margin-bottom: 16px; } }
         
-        /* Footer Links */
-        #main-footer .footer-links-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        #main-footer .footer-links-list li {
-            margin-bottom: 5px;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-links-list li { margin-bottom: 6px; }
-        }
+        #main-footer .footer-links-list { list-style: none; padding: 0; margin: 0; }
+        #main-footer .footer-links-list li { margin-bottom: 5px; }
+        @media (min-width: 768px) { #main-footer .footer-links-list li { margin-bottom: 6px; } }
         #main-footer .footer-links-list a {
             font-size: 10px;
             text-decoration: none;
@@ -713,532 +639,154 @@ function injectSharedStyles() {
             padding: 3px 0;
             touch-action: manipulation;
         }
-        #main-footer .footer-links-list a:active {
-            opacity: 0.9;
-            transform: scale(0.97);
-        }
-        @media (hover: hover) {
-            #main-footer .footer-links-list a:hover {
-                opacity: 1;
-                transform: translateX(3px);
-            }
-        }
-        #main-footer .footer-links-list a i {
-            font-size: 8px;
-            opacity: 0.4;
-            width: 12px;
-            text-align: center;
-        }
-        #main-footer .footer-link-desc {
-            display: block;
-            font-size: 8px;
-            opacity: 0.35;
-            margin-top: 1px;
-            padding-left: 18px;
-        }
+        #main-footer .footer-links-list a:active { opacity: 0.9; transform: scale(0.97); }
+        @media (hover: hover) { #main-footer .footer-links-list a:hover { opacity: 1; transform: translateX(3px); } }
+        #main-footer .footer-links-list a i { font-size: 8px; opacity: 0.4; width: 12px; text-align: center; }
+        #main-footer .footer-link-desc { display: block; font-size: 8px; opacity: 0.35; margin-top: 1px; padding-left: 18px; }
         
-        /* Nested Links */
-        #main-footer .footer-nested-links {
-            list-style: none;
-            padding: 0 0 0 14px;
-            margin: 3px 0 6px 0;
-            border-left: 1px solid rgba(255,255,255,0.06);
-        }
+        #main-footer .footer-nested-links { list-style: none; padding: 0 0 0 14px; margin: 3px 0 6px 0; border-left: 1px solid rgba(255,255,255,0.06); }
         #main-footer .footer-nested-links li { margin-bottom: 3px; }
-        #main-footer .footer-nested-links a {
-            font-size: 9px;
-            opacity: 0.45;
-            padding: 2px 0;
-        }
-        @media (hover: hover) {
-            #main-footer .footer-nested-links a:hover {
-                opacity: 0.8;
-                transform: translateX(2px);
-            }
-        }
-        #main-footer .footer-nested-desc {
-            font-size: 7px;
-            opacity: 0.28;
-            padding-left: 14px;
-        }
+        #main-footer .footer-nested-links a { font-size: 9px; opacity: 0.45; padding: 2px 0; }
+        @media (hover: hover) { #main-footer .footer-nested-links a:hover { opacity: 0.8; transform: translateX(2px); } }
+        #main-footer .footer-nested-desc { font-size: 7px; opacity: 0.28; padding-left: 14px; }
         
-        /* ==================== SOCIAL ICONS ==================== */
-        #main-footer .social-icons-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: flex-start;
-        }
-        @media (min-width: 768px) {
-            #main-footer .social-icons-grid { gap: 7px; }
-        }
+        /* Social Icons */
+        #main-footer .social-icons-grid { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
+        @media (min-width: 768px) { #main-footer .social-icons-grid { gap: 7px; } }
         .footer-layout-centered .social-icons-grid { justify-content: center; }
-        
         #main-footer .social-icon-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.5);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            touch-action: manipulation;
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.5); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none; position: relative; overflow: hidden; touch-action: manipulation;
         }
-        @media (min-width: 768px) {
-            #main-footer .social-icon-link {
-                width: 38px;
-                height: 38px;
-            }
-        }
-        #main-footer .social-icon-link:active {
-            transform: scale(0.9);
-            background: rgba(255,255,255,0.1);
-            color: #ffffff;
-        }
-        @media (hover: hover) {
-            #main-footer .social-icon-link:hover {
-                transform: translateY(-3px) scale(1.05);
-                background: rgba(255,255,255,0.08);
-                border-color: rgba(255,255,255,0.18);
-                color: #ffffff;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            }
-        }
-        #main-footer .social-icon-link svg,
-        #main-footer .social-icon-link img {
-            width: 14px;
-            height: 14px;
-            position: relative;
-            z-index: 1;
-            transition: transform 0.3s ease;
-            object-fit: contain;
-        }
-        @media (min-width: 768px) {
-            #main-footer .social-icon-link svg,
-            #main-footer .social-icon-link img {
-                width: 15px;
-                height: 15px;
-            }
-        }
-        @media (hover: hover) {
-            #main-footer .social-icon-link:hover svg,
-            #main-footer .social-icon-link:hover img {
-                transform: scale(1.1);
-            }
-        }
+        @media (min-width: 768px) { #main-footer .social-icon-link { width: 38px; height: 38px; } }
+        #main-footer .social-icon-link:active { transform: scale(0.9); background: rgba(255,255,255,0.1); color: #ffffff; }
+        @media (hover: hover) { #main-footer .social-icon-link:hover { transform: translateY(-3px) scale(1.05); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #ffffff; box-shadow: 0 8px 25px rgba(0,0,0,0.3); } }
+        #main-footer .social-icon-link svg, #main-footer .social-icon-link img { width: 14px; height: 14px; position: relative; z-index: 1; transition: transform 0.3s ease; object-fit: contain; }
+        @media (min-width: 768px) { #main-footer .social-icon-link svg, #main-footer .social-icon-link img { width: 15px; height: 15px; } }
+        @media (hover: hover) { #main-footer .social-icon-link:hover svg, #main-footer .social-icon-link:hover img { transform: scale(1.1); } }
         
-        /* ==================== PAYMENT METHODS ==================== */
+        /* Footer Sections */
         #main-footer .footer-section { margin-top: 14px; }
         @media (min-width: 768px) { #main-footer .footer-section { margin-top: 16px; } }
         #main-footer .footer-section:first-child { margin-top: 0; }
         
-        #main-footer .footer-payment-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            align-items: center;
-        }
+        /* Payment Methods */
+        #main-footer .footer-payment-grid { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
         @media (min-width: 768px) { #main-footer .footer-payment-grid { gap: 8px; } }
-        
-        #main-footer .footer-payment-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-        #main-footer .footer-payment-icon {
-            height: 18px;
-            width: auto;
-            max-width: 44px;
-            object-fit: contain;
-            opacity: 0.5;
-            transition: all 0.3s ease;
-            filter: grayscale(30%);
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-payment-icon {
-                height: 22px;
-                max-width: 50px;
-            }
-        }
-        @media (hover: hover) {
-            #main-footer .footer-payment-icon:hover {
-                opacity: 0.9;
-                filter: grayscale(0%);
-                transform: translateY(-1px);
-            }
-        }
-        #main-footer .footer-payment-name {
-            font-size: 7px;
-            opacity: 0.4;
-            text-align: center;
-        }
+        #main-footer .footer-payment-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        #main-footer .footer-payment-icon { height: 18px; width: auto; max-width: 44px; object-fit: contain; opacity: 0.5; transition: all 0.3s ease; filter: grayscale(30%); }
+        @media (min-width: 768px) { #main-footer .footer-payment-icon { height: 22px; max-width: 50px; } }
+        @media (hover: hover) { #main-footer .footer-payment-icon:hover { opacity: 0.9; filter: grayscale(0%); transform: translateY(-1px); } }
+        #main-footer .footer-payment-name { font-size: 7px; opacity: 0.4; text-align: center; }
         @media (min-width: 768px) { #main-footer .footer-payment-name { font-size: 8px; } }
+        #main-footer .footer-payment-account { font-family: 'SF Mono', 'Courier New', monospace; font-size: 7px; letter-spacing: 0.04em; opacity: 0.35; background: rgba(255,255,255,0.03); padding: 2px 7px; border-radius: 3px; margin-top: 1px; word-break: break-all; max-width: 100px; }
+        #main-footer .footer-payment-qr { width: 44px; height: 44px; object-fit: contain; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); background: #ffffff; padding: 3px; transition: all 0.3s ease; cursor: pointer; }
+        @media (min-width: 768px) { #main-footer .footer-payment-qr { width: 50px; height: 50px; } }
+        @media (hover: hover) { #main-footer .footer-payment-qr:hover { transform: scale(1.08); box-shadow: 0 4px 15px rgba(0,0,0,0.2); } }
         
-        #main-footer .footer-payment-account {
-            font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: 7px;
-            letter-spacing: 0.04em;
-            opacity: 0.35;
-            background: rgba(255,255,255,0.03);
-            padding: 2px 7px;
-            border-radius: 3px;
-            margin-top: 1px;
-            word-break: break-all;
-            max-width: 100px;
-        }
-        #main-footer .footer-payment-qr {
-            width: 44px;
-            height: 44px;
-            object-fit: contain;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.06);
-            background: #ffffff;
-            padding: 3px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-payment-qr {
-                width: 50px;
-                height: 50px;
-            }
-        }
-        @media (hover: hover) {
-            #main-footer .footer-payment-qr:hover {
-                transform: scale(1.08);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            }
-        }
-        
-        /* ==================== SHIPPING PARTNERS ==================== */
-        #main-footer .footer-shipping-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            align-items: center;
-        }
+        /* Shipping Partners */
+        #main-footer .footer-shipping-grid { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
         @media (min-width: 768px) { #main-footer .footer-shipping-grid { gap: 8px; } }
-        #main-footer .footer-shipping-icon {
-            height: 16px;
-            width: auto;
-            max-width: 55px;
-            object-fit: contain;
-            opacity: 0.4;
-            transition: all 0.3s ease;
-            filter: grayscale(50%);
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-shipping-icon {
-                height: 18px;
-                max-width: 60px;
-            }
-        }
-        @media (hover: hover) {
-            #main-footer .footer-shipping-icon:hover {
-                opacity: 0.75;
-                filter: grayscale(0%);
-            }
-        }
-        #main-footer .footer-shipping-name {
-            font-size: 7px;
-            opacity: 0.35;
-        }
+        #main-footer .footer-shipping-icon { height: 16px; width: auto; max-width: 55px; object-fit: contain; opacity: 0.4; transition: all 0.3s ease; filter: grayscale(50%); }
+        @media (min-width: 768px) { #main-footer .footer-shipping-icon { height: 18px; max-width: 60px; } }
+        @media (hover: hover) { #main-footer .footer-shipping-icon:hover { opacity: 0.75; filter: grayscale(0%); } }
+        #main-footer .footer-shipping-name { font-size: 7px; opacity: 0.35; }
         @media (min-width: 768px) { #main-footer .footer-shipping-name { font-size: 8px; } }
         
-        /* ==================== CERTIFICATIONS ==================== */
-        #main-footer .footer-cert-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            align-items: center;
-        }
+        /* Certifications */
+        #main-footer .footer-cert-grid { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
         @media (min-width: 768px) { #main-footer .footer-cert-grid { gap: 6px; } }
-        #main-footer .footer-cert-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 8px;
-            padding: 5px 9px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-            touch-action: manipulation;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-cert-item { padding: 6px 10px; }
-        }
-        @media (hover: hover) {
-            #main-footer .footer-cert-item:hover {
-                background: rgba(255,255,255,0.05);
-                border-color: rgba(255,255,255,0.1);
-                transform: translateY(-1px);
-            }
-        }
-        #main-footer .footer-cert-icon {
-            height: 20px;
-            width: auto;
-            max-width: 44px;
-            object-fit: contain;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-cert-icon {
-                height: 24px;
-                max-width: 50px;
-            }
-        }
-        @media (hover: hover) {
-            #main-footer .footer-cert-item:hover .footer-cert-icon { opacity: 0.85; }
-        }
-        #main-footer .footer-cert-name {
-            font-size: 7px;
-            font-weight: 600;
-            opacity: 0.45;
-            letter-spacing: 0.03em;
-        }
+        #main-footer .footer-cert-item { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 5px 9px; text-decoration: none; color: inherit; transition: all 0.3s ease; touch-action: manipulation; }
+        @media (min-width: 768px) { #main-footer .footer-cert-item { padding: 6px 10px; } }
+        @media (hover: hover) { #main-footer .footer-cert-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); transform: translateY(-1px); } }
+        #main-footer .footer-cert-icon { height: 20px; width: auto; max-width: 44px; object-fit: contain; opacity: 0.5; transition: opacity 0.3s ease; }
+        @media (min-width: 768px) { #main-footer .footer-cert-icon { height: 24px; max-width: 50px; } }
+        @media (hover: hover) { #main-footer .footer-cert-item:hover .footer-cert-icon { opacity: 0.85; } }
+        #main-footer .footer-cert-name { font-size: 7px; font-weight: 600; opacity: 0.45; letter-spacing: 0.03em; }
         @media (min-width: 768px) { #main-footer .footer-cert-name { font-size: 8px; } }
         
-        /* ==================== APP BUTTONS ==================== */
-        #main-footer .footer-app-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+        /* App Buttons */
+        #main-footer .footer-app-grid { display: flex; flex-wrap: wrap; gap: 6px; }
         @media (min-width: 768px) { #main-footer .footer-app-grid { gap: 7px; } }
-        #main-footer .footer-app-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.06);
-            color: inherit;
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 8px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-family: var(--font-subtitle);
-            letter-spacing: 0.03em;
-            opacity: 0.65;
-            touch-action: manipulation;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-app-btn {
-                padding: 7px 14px;
-                font-size: 9px;
-            }
-        }
-        #main-footer .footer-app-btn:active {
-            background: rgba(255,255,255,0.12);
-            transform: scale(0.96);
-        }
-        @media (hover: hover) {
-            #main-footer .footer-app-btn:hover {
-                background: rgba(255,255,255,0.12);
-                border-color: rgba(255,255,255,0.15);
-                opacity: 1;
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            }
-        }
-        #main-footer .footer-app-btn svg {
-            width: 11px;
-            height: 11px;
-            flex-shrink: 0;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-app-btn svg { width: 13px; height: 13px; }
-        }
-        #main-footer .footer-app-btn img {
-            width: 13px;
-            height: 13px;
-            object-fit: contain;
-        }
-        @media (min-width: 768px) {
-            #main-footer .footer-app-btn img { width: 15px; height: 15px; }
-        }
+        #main-footer .footer-app-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); color: inherit; padding: 6px 12px; border-radius: 10px; font-size: 8px; font-weight: 700; text-decoration: none; transition: all 0.3s ease; font-family: var(--font-subtitle); letter-spacing: 0.03em; opacity: 0.65; touch-action: manipulation; }
+        @media (min-width: 768px) { #main-footer .footer-app-btn { padding: 7px 14px; font-size: 9px; } }
+        #main-footer .footer-app-btn:active { background: rgba(255,255,255,0.12); transform: scale(0.96); }
+        @media (hover: hover) { #main-footer .footer-app-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.15); opacity: 1; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); } }
+        #main-footer .footer-app-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
+        @media (min-width: 768px) { #main-footer .footer-app-btn svg { width: 13px; height: 13px; } }
+        #main-footer .footer-app-btn img { width: 13px; height: 13px; object-fit: contain; }
+        @media (min-width: 768px) { #main-footer .footer-app-btn img { width: 15px; height: 15px; } }
         
-        /* ==================== COUNTRY SELECTOR - FIXED ==================== */
+        /* Country Selector - FULLY FIXED */
         #main-footer .footer-country-select-wrapper {
             position: relative;
-            display: inline-block;
-            min-width: 150px;
-            max-width: 100%;
+            display: block;
+            width: 100%;
+            max-width: 260px;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-country-select-wrapper { min-width: 170px; }
-        }
-        
         #main-footer .footer-country-select {
             font-family: var(--font-body);
             font-size: 10px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: inherit;
+            background: rgba(255,255,255,0.05) !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            color: inherit !important;
             border-radius: 8px;
-            padding: 8px 36px 8px 12px;
+            padding: 10px 40px 10px 14px;
             cursor: pointer;
             transition: all 0.3s ease;
             outline: none;
-            opacity: 0.7;
+            opacity: 0.75;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
             width: 100%;
-            min-height: 38px;
+            min-height: 42px;
             line-height: 1.4;
             touch-action: manipulation;
+            display: block;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-country-select {
-                font-size: 10px;
-                padding: 7px 32px 7px 12px;
-                min-height: auto;
-            }
-        }
-        #main-footer .footer-country-select:hover {
-            background: rgba(255,255,255,0.07);
-            border-color: rgba(255,255,255,0.15);
-            opacity: 0.85;
-        }
-        #main-footer .footer-country-select:focus {
-            border-color: rgba(255,255,255,0.25);
-            opacity: 0.9;
-        }
-        #main-footer .footer-country-select option {
-            background: #1a1a1a;
-            color: #ffffff;
-            padding: 10px;
-            font-size: 10px;
-        }
-        
-        /* Custom dropdown arrow */
+        @media (min-width: 768px) { #main-footer .footer-country-select { padding: 8px 36px 8px 12px; min-height: auto; } }
+        #main-footer .footer-country-select:focus { border-color: rgba(255,255,255,0.3) !important; opacity: 0.9; }
+        #main-footer .footer-country-select option { background: #1a1a1a; color: #ffffff; padding: 10px 12px; font-size: 10px; }
         #main-footer .footer-country-select-arrow {
             position: absolute;
-            right: 10px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             pointer-events: none;
-            opacity: 0.4;
-            transition: opacity 0.3s ease;
-        }
-        #main-footer .footer-country-select-wrapper:hover .footer-country-select-arrow {
-            opacity: 0.6;
-        }
-        
-        #main-footer .footer-country-flag {
-            width: 16px;
-            height: 11px;
-            object-fit: cover;
-            border-radius: 2px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 5px;
-            flex-shrink: 0;
-        }
-        #main-footer .footer-exchange-rate {
-            font-size: 7px;
-            opacity: 0.28;
-            margin-top: 4px;
-            font-family: var(--font-subtitle);
-        }
-        
-        /* ==================== TRUST BADGES ==================== */
-        #main-footer .footer-badges-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        @media (min-width: 768px) { #main-footer .footer-badges-grid { gap: 8px; } }
-        #main-footer .footer-badge-item {
-            text-align: center;
-            transition: all 0.3s ease;
-            padding: 4px;
-            border-radius: 6px;
-        }
-        @media (hover: hover) {
-            #main-footer .footer-badge-item:hover {
-                transform: translateY(-2px);
-                background: rgba(255,255,255,0.02);
-            }
-        }
-        #main-footer .footer-badge-icon {
-            height: 22px;
-            width: auto;
-            max-width: 55px;
-            object-fit: contain;
             opacity: 0.5;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
-        @media (min-width: 768px) {
-            #main-footer .footer-badge-icon {
-                height: 28px;
-                max-width: 60px;
-            }
-        }
-        @media (hover: hover) {
-            #main-footer .footer-badge-item:hover .footer-badge-icon { opacity: 0.85; }
-        }
-        #main-footer .footer-badge-title {
-            font-size: 6px;
-            font-weight: 600;
-            opacity: 0.35;
-            margin-top: 2px;
-            letter-spacing: 0.03em;
-        }
+        @media (min-width: 768px) { #main-footer .footer-country-select-arrow { right: 10px; } }
+        #main-footer .footer-country-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 6px; flex-shrink: 0; }
+        #main-footer .footer-exchange-rate { font-size: 7px; opacity: 0.3; margin-top: 5px; font-family: var(--font-subtitle); }
+        
+        /* Trust Badges */
+        #main-footer .footer-badges-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+        @media (min-width: 768px) { #main-footer .footer-badges-grid { gap: 8px; } }
+        #main-footer .footer-badge-item { text-align: center; transition: all 0.3s ease; padding: 4px; border-radius: 6px; }
+        @media (hover: hover) { #main-footer .footer-badge-item:hover { transform: translateY(-2px); background: rgba(255,255,255,0.02); } }
+        #main-footer .footer-badge-icon { height: 22px; width: auto; max-width: 55px; object-fit: contain; opacity: 0.5; transition: opacity 0.3s ease; }
+        @media (min-width: 768px) { #main-footer .footer-badge-icon { height: 28px; max-width: 60px; } }
+        @media (hover: hover) { #main-footer .footer-badge-item:hover .footer-badge-icon { opacity: 0.85; } }
+        #main-footer .footer-badge-title { font-size: 6px; font-weight: 600; opacity: 0.35; margin-top: 2px; letter-spacing: 0.03em; }
         @media (min-width: 768px) { #main-footer .footer-badge-title { font-size: 7px; } }
-        #main-footer .footer-badge-subtitle {
-            font-size: 5px;
-            opacity: 0.25;
-            margin-top: 1px;
-        }
+        #main-footer .footer-badge-subtitle { font-size: 5px; opacity: 0.25; margin-top: 1px; }
         @media (min-width: 768px) { #main-footer .footer-badge-subtitle { font-size: 6px; } }
         
-        /* ==================== CONTACT INFO ==================== */
-        #main-footer .footer-contact-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            margin-bottom: 7px;
-            font-size: 10px;
-        }
+        /* Contact Info */
+        #main-footer .footer-contact-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; font-size: 10px; }
         @media (min-width: 768px) { #main-footer .footer-contact-item { margin-bottom: 8px; } }
-        #main-footer .footer-contact-icon {
-            width: 14px;
-            text-align: center;
-            flex-shrink: 0;
-            opacity: 0.4;
-            font-size: 10px;
-            line-height: 1.5;
-            padding-top: 1px;
-        }
-        #main-footer .footer-contact-text {
-            opacity: 0.55;
-            line-height: 1.5;
-            transition: opacity 0.3s ease;
-            word-break: break-word;
-        }
-        @media (hover: hover) {
-            #main-footer .footer-contact-text:hover { opacity: 0.8; }
-        }
-        #main-footer .footer-contact-text a {
-            text-decoration: none;
-            color: inherit;
-            touch-action: manipulation;
-        }
+        #main-footer .footer-contact-icon { width: 14px; text-align: center; flex-shrink: 0; opacity: 0.4; font-size: 10px; line-height: 1.5; padding-top: 1px; }
+        #main-footer .footer-contact-text { opacity: 0.55; line-height: 1.5; transition: opacity 0.3s ease; word-break: break-word; }
+        @media (hover: hover) { #main-footer .footer-contact-text:hover { opacity: 0.8; } }
+        #main-footer .footer-contact-text a { text-decoration: none; color: inherit; touch-action: manipulation; }
         
-        /* ==================== BOTTOM BAR ==================== */
+        /* Bottom Bar */
         #main-footer .footer-bottom-bar {
             border-top: 1px solid rgba(255,255,255,0.05);
             padding-top: 18px;
@@ -1255,119 +803,39 @@ function injectSharedStyles() {
             font-family: var(--font-subtitle);
             text-align: center;
         }
-        @media (min-width: 640px) {
-            #main-footer .footer-bottom-bar {
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 10px;
-                font-size: 8px;
-                text-align: left;
-                padding-top: 20px;
-                margin-top: 12px;
-            }
-        }
-        #main-footer .footer-bottom-bar a {
-            font-weight: 700;
-            text-decoration: none;
-            color: inherit;
-            transition: opacity 0.3s ease;
-        }
-        @media (hover: hover) {
-            #main-footer .footer-bottom-bar a:hover { opacity: 0.7; }
-        }
+        @media (min-width: 640px) { #main-footer .footer-bottom-bar { flex-direction: row; justify-content: space-between; gap: 10px; font-size: 8px; text-align: left; padding-top: 20px; margin-top: 12px; } }
+        #main-footer .footer-bottom-bar a { font-weight: 700; text-decoration: none; color: inherit; transition: opacity 0.3s ease; }
+        @media (hover: hover) { #main-footer .footer-bottom-bar a:hover { opacity: 0.7; } }
         
-        /* ==================== RTL SUPPORT ==================== */
-        [dir="rtl"] #main-footer {
-            direction: rtl;
-            text-align: right;
-        }
-        [dir="rtl"] #main-footer .footer-section-title::after {
-            left: auto;
-            right: 0;
-        }
-        [dir="rtl"] .footer-layout-centered .footer-section-title::after {
-            left: 50%;
-            right: auto;
-            transform: translateX(50%);
-        }
-        [dir="rtl"] #main-footer .footer-bottom-bar {
-            direction: rtl;
-        }
-        @media (min-width: 640px) {
-            [dir="rtl"] #main-footer .footer-bottom-bar { text-align: right; }
-        }
-        [dir="rtl"] #main-footer .footer-links-list a:hover {
-            transform: translateX(-3px);
-        }
-        [dir="rtl"] #main-footer .footer-nested-links {
-            border-left: none;
-            border-right: 1px solid rgba(255,255,255,0.06);
-            padding: 0 14px 0 0;
-        }
-        [dir="rtl"] #main-footer .footer-nested-links a:hover {
-            transform: translateX(-2px);
-        }
-        [dir="rtl"] #main-footer .footer-country-select {
-            padding: 8px 12px 8px 36px;
-        }
-        @media (min-width: 768px) {
-            [dir="rtl"] #main-footer .footer-country-select {
-                padding: 7px 12px 7px 32px;
-            }
-        }
-        [dir="rtl"] #main-footer .footer-country-select-arrow {
-            right: auto;
-            left: 10px;
-        }
-        [dir="rtl"] #main-footer .footer-country-flag {
-            margin-right: 0;
-            margin-left: 5px;
-        }
-        [dir="rtl"] #main-footer .footer-link-desc {
-            padding-left: 0;
-            padding-right: 18px;
-        }
-        [dir="rtl"] #main-footer .footer-nested-desc {
-            padding-left: 0;
-            padding-right: 14px;
-        }
+        /* RTL Support */
+        [dir="rtl"] #main-footer { direction: rtl; text-align: right; }
+        [dir="rtl"] #main-footer .footer-section-title::after { left: auto; right: 0; }
+        [dir="rtl"] .footer-layout-centered .footer-section-title::after { left: 50%; right: auto; transform: translateX(50%); }
+        [dir="rtl"] #main-footer .footer-bottom-bar { direction: rtl; }
+        @media (min-width: 640px) { [dir="rtl"] #main-footer .footer-bottom-bar { text-align: right; } }
+        [dir="rtl"] #main-footer .footer-links-list a:hover { transform: translateX(-3px); }
+        [dir="rtl"] #main-footer .footer-nested-links { border-left: none; border-right: 1px solid rgba(255,255,255,0.06); padding: 0 14px 0 0; }
+        [dir="rtl"] #main-footer .footer-nested-links a:hover { transform: translateX(-2px); }
+        [dir="rtl"] #main-footer .footer-country-select { padding: 10px 14px 10px 40px; }
+        @media (min-width: 768px) { [dir="rtl"] #main-footer .footer-country-select { padding: 8px 12px 8px 36px; } }
+        [dir="rtl"] #main-footer .footer-country-select-arrow { right: auto; left: 12px; }
+        @media (min-width: 768px) { [dir="rtl"] #main-footer .footer-country-select-arrow { left: 10px; } }
+        [dir="rtl"] #main-footer .footer-country-flag { margin-right: 0; margin-left: 6px; }
+        [dir="rtl"] #main-footer .footer-link-desc { padding-left: 0; padding-right: 18px; }
+        [dir="rtl"] #main-footer .footer-nested-desc { padding-left: 0; padding-right: 14px; }
         
-        /* ==================== LAYOUT VARIATIONS ==================== */
-        .footer-layout-centered {
-            text-align: center;
-        }
-        .footer-layout-centered .footer-brand-desc {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .footer-layout-centered .footer-contact-item {
-            justify-content: center;
-        }
-        @media (min-width: 768px) {
-            .footer-layout-centered .footer-contact-item { justify-content: center; }
-        }
-        .footer-layout-minimal {
-            padding: 24px 0 !important;
-        }
-        .footer-layout-minimal .footer-grid {
-            gap: 16px;
-        }
-        .footer-layout-expanded {
-            padding: 48px 0 24px 0 !important;
-        }
-        @media (min-width: 768px) {
-            .footer-layout-expanded {
-                padding: 72px 0 32px 0 !important;
-            }
-        }
-        .footer-layout-expanded .footer-grid {
-            gap: 32px;
-        }
-        @media (min-width: 1024px) {
-            .footer-layout-expanded .footer-grid { gap: 48px; }
-        }
+        /* Layout Variations */
+        .footer-layout-centered { text-align: center; }
+        .footer-layout-centered .footer-brand-desc { margin-left: auto; margin-right: auto; }
+        .footer-layout-centered .footer-contact-item { justify-content: center; }
+        .footer-layout-minimal { padding: 24px 0 !important; }
+        .footer-layout-minimal .footer-grid { gap: 16px; }
+        .footer-layout-expanded { padding: 48px 0 24px 0 !important; }
+        @media (min-width: 768px) { .footer-layout-expanded { padding: 72px 0 32px 0 !important; } }
+        .footer-layout-expanded .footer-grid { gap: 32px; }
+        @media (min-width: 1024px) { .footer-layout-expanded .footer-grid { gap: 48px; } }
         
-        /* ==================== MOBILE ACCORDION FOR MENUS ==================== */
+        /* Mobile Accordion */
         @media (max-width: 639px) {
             #main-footer .footer-col-menu .footer-section-title {
                 cursor: pointer;
@@ -1378,35 +846,13 @@ function injectSharedStyles() {
                 padding-bottom: 12px;
                 margin-bottom: 0;
             }
-            #main-footer .footer-col-menu .footer-section-title::after {
-                display: none;
-            }
-            #main-footer .footer-col-menu .footer-section-title .footer-menu-arrow {
-                display: inline-block;
-                transition: transform 0.3s ease;
-                opacity: 0.4;
-                font-size: 8px;
-            }
-            #main-footer .footer-col-menu.open .footer-section-title .footer-menu-arrow {
-                transform: rotate(180deg);
-            }
-            #main-footer .footer-col-menu .footer-links-list {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin 0.3s ease;
-                opacity: 0;
-                margin-top: 0;
-            }
-            #main-footer .footer-col-menu.open .footer-links-list {
-                max-height: 600px;
-                opacity: 1;
-                margin-top: 6px;
-                margin-bottom: 12px;
-            }
+            #main-footer .footer-col-menu .footer-section-title::after { display: none; }
+            #main-footer .footer-col-menu .footer-section-title .footer-menu-arrow { display: inline-block; transition: transform 0.3s ease; opacity: 0.4; font-size: 8px; }
+            #main-footer .footer-col-menu.open .footer-section-title .footer-menu-arrow { transform: rotate(180deg); }
+            #main-footer .footer-col-menu .footer-links-list { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin 0.3s ease; opacity: 0; margin-top: 0; }
+            #main-footer .footer-col-menu.open .footer-links-list { max-height: 600px; opacity: 1; margin-top: 6px; margin-bottom: 12px; }
         }
-        @media (min-width: 640px) {
-            #main-footer .footer-menu-arrow { display: none !important; }
-        }
+        @media (min-width: 640px) { #main-footer .footer-menu-arrow { display: none !important; } }
         
         .btn-primary {
             font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -1423,39 +869,18 @@ function injectSharedStyles() {
             padding: 0 4px !important;
         }
 
-        /* ==================== CART EMPTY STATE ==================== */
-        .cart-empty-state {
-            text-align: center;
-            padding: 40px 20px;
-        }
+        .cart-empty-state { text-align: center; padding: 40px 20px; }
         .cart-empty-state i { font-size: 44px; color: rgba(255,255,255,0.05); margin-bottom: 16px; }
         .cart-empty-state h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
         .cart-empty-state p { font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.15); }
 
-        /* ==================== CART CHECKOUT SUMMARY ==================== */
-        .cart-summary-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 4px 0;
-        }
+        .cart-summary-row { display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 0; }
         .cart-summary-row .label { color: rgba(255,255,255,0.35); }
         .cart-summary-row .value { font-weight: 700; color: rgba(255,255,255,0.85); }
-        .cart-summary-total {
-            border-top: 1px solid rgba(255,255,255,0.06);
-            padding-top: 10px;
-            margin-top: 4px;
-        }
+        .cart-summary-total { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px; margin-top: 4px; }
         .cart-summary-total .label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); }
         .cart-summary-total .value { font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: -0.01em; }
-        .cart-checkout-btn {
-            padding: 14px !important;
-            font-size: 10px !important;
-            border-radius: 14px !important;
-            letter-spacing: 0.08em !important;
-        }
+        .cart-checkout-btn { padding: 14px !important; font-size: 10px !important; border-radius: 14px !important; letter-spacing: 0.08em !important; }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
@@ -1627,15 +1052,10 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 // HEADER SYSTEM
 // ============================================================================
 async function renderHeader() {
-    if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) {
-        return;
-    }
+    if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) return;
 
     const [menuItems, categories, subcategories, announcement] = await Promise.all([
-        fetchMenuItems(),
-        fetchCategories(),
-        fetchSubcategories(),
-        fetchAnnouncement()
+        fetchMenuItems(), fetchCategories(), fetchSubcategories(), fetchAnnouncement()
     ]);
     
     allCategories = categories;
@@ -1646,7 +1066,6 @@ async function renderHeader() {
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
     const hasAnnouncement = announcementData && announcementData.message;
     const shouldShowBar = hasAnnouncement && !isBarDismissed;
-    
     if (isBarDismissed) document.body.classList.add('announcement-dismissed');
 
     let announcementHTML = '';
@@ -1658,73 +1077,36 @@ async function renderHeader() {
         const linkTitle = announcementData.link_title || '';
         let linkHTML = linkUrl && linkTitle ? `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkTitle}</a>` : '';
         
-        announcementHTML = `
-        <div class="top-announcement-bar ${shouldShowBar ? '' : 'bar-hidden'}" id="top-announcement-bar" style="background: ${bgColor} !important; color: ${textColor} !important;">
-            <span id="announcement-text">${message} ${linkHTML}</span>
-            <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-        </div>`;
+        announcementHTML = `<div class="top-announcement-bar ${shouldShowBar ? '' : 'bar-hidden'}" id="top-announcement-bar" style="background: ${bgColor} !important; color: ${textColor} !important;"><span id="announcement-text">${message} ${linkHTML}</span><button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
     } else {
         document.body.classList.add('announcement-dismissed');
         announcementHTML = `<div class="top-announcement-bar bar-hidden" id="top-announcement-bar"><span id="announcement-text"></span></div>`;
     }
 
-    const headerHTML = `
-    ${announcementHTML}
+    const headerHTML = `${announcementHTML}
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
-            <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-8 h-8 rounded-xl border border-white/20 shadow-sm" alt="Logo">
-                <span class="font-black text-base sm:text-lg tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
-            </a>
-            <button onclick="closeSideMenu()" class="drawer-close-btn" aria-label="Close menu">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
+            <a href="/" class="flex items-center gap-3 no-underline"><img src="/logo.png" class="w-8 h-8 rounded-xl border border-white/20 shadow-sm" alt="Logo"><span class="font-black text-base sm:text-lg tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span></a>
+            <button onclick="closeSideMenu()" class="drawer-close-btn" aria-label="Close menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
         <div class="side-menu-scroll" id="sideMenuContent">${renderUnifiedDrawerMenu(menuTree)}</div>
-        <div class="side-drawer-footer">
-            <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
-        </div>
+        <div class="side-drawer-footer"><a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a></div>
     </div>
     <nav class="glass-nav" id="main-nav">
         <div class="h-14 lg:h-16 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2.5 shrink-0 no-underline">
-                <img src="/logo.png" class="w-7 h-7 lg:w-9 lg:h-9 rounded-xl" alt="JABIYEN Logo">
-                <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
-            </a>
+            <a href="/" class="flex items-center gap-2.5 shrink-0 no-underline"><img src="/logo.png" class="w-7 h-7 lg:w-9 lg:h-9 rounded-xl" alt="JABIYEN Logo"><span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span></a>
             <div class="flex items-center shrink-0 gap-0.5">
-                <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span id="wish-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-                </a>
-                <a href="/cart" onclick="toggleCart();return false;" class="header-icon-btn" aria-label="Cart">
-                    <svg width="17" height="19" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M5 6C5 3.5 6.5 1 9.5 1C12.5 1 14 3.5 14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                    <span id="cart-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-                </a>
-                <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu">
-                    <svg width="20" height="13" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                </button>
+                <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="wish-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span></a>
+                <a href="/cart" onclick="toggleCart();return false;" class="header-icon-btn" aria-label="Cart"><svg width="17" height="19" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M5 6C5 3.5 6.5 1 9.5 1C12.5 1 14 3.5 14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="cart-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span></a>
+                <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu"><svg width="20" height="13" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
             </div>
         </div>
     </nav>
     <div id="cart-drawer" class="shadow-2xl">
-        <div class="p-4 border-b flex justify-between items-center bg-soft">
-            <h2 class="text-[10px] font-black uppercase tracking-widest">Shopping Vault</h2>
-            <button onclick="toggleCart()" class="drawer-close-btn text-gray-400 hover:text-white">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-        </div>
+        <div class="p-4 border-b flex justify-between items-center bg-soft"><h2 class="text-[10px] font-black uppercase tracking-widest">Shopping Vault</h2><button onclick="toggleCart()" class="drawer-close-btn text-gray-400 hover:text-white"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
         <div id="cart-items" class="flex-grow overflow-y-auto p-4 space-y-3 custom-scroll"></div>
-        <div class="p-4 border-t bg-soft">
-            <div class="space-y-1 mb-4">
-                <div class="cart-summary-row"><span class="label">Subtotal</span><span class="value" id="cart-subtotal">৳ 0.00</span></div>
-                <div class="cart-summary-row"><span class="label">Items</span><span class="value" id="cart-item-count">0</span></div>
-                <div class="cart-summary-row cart-summary-total"><span class="label">Total</span><span class="value" id="cart-total">৳ 0.00</span></div>
-            </div>
-            <a href="/checkout" class="w-full py-3.5 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg cart-checkout-btn">Execute Checkout</a>
-        </div>
+        <div class="p-4 border-t bg-soft"><div class="space-y-1 mb-4"><div class="cart-summary-row"><span class="label">Subtotal</span><span class="value" id="cart-subtotal">৳ 0.00</span></div><div class="cart-summary-row"><span class="label">Items</span><span class="value" id="cart-item-count">0</span></div><div class="cart-summary-row cart-summary-total"><span class="label">Total</span><span class="value" id="cart-total">৳ 0.00</span></div></div><a href="/checkout" class="w-full py-3.5 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg cart-checkout-btn">Execute Checkout</a></div>
     </div>`;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 }
@@ -1761,25 +1143,38 @@ function getSocialIconHTML(platform, link) {
         'linktree': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2V14M12 14L8 10M12 14L16 10M12 22V18M8 18L12 14M16 18L12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="14" r="1" fill="currentColor"/></svg>` },
         'messenger': { svg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 14.5 2.8 16.8 4.2 18.7L3.5 21.5L6.4 20.2C8.1 21.3 10.1 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 13L10 9.5L14 12.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` }
     };
-    
     const iconData = icons[platform];
     if (!iconData) return null;
     return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="${platform.charAt(0).toUpperCase() + platform.slice(1)}">${iconData.svg}</a>`;
 }
 
 // ============================================================================
-// FOOTER - MOBILE-FRIENDLY + FIXED COUNTRY SELECTOR
+// FOOTER - ALL TABLES FULLY WORKING
 // ============================================================================
 async function renderFooter() {
     if (document.getElementById('main-footer')) return;
     
     try {
+        console.log('🔍 Fetching footer data from /api/footer/complete...');
         const response = await fetch('/api/footer/complete');
-        if (!response.ok) throw new Error('Footer API failed');
+        if (!response.ok) throw new Error(`Footer API failed with status: ${response.status}`);
         const footerData = await response.json();
+        console.log('✅ Footer data received:', footerData);
         
         const { content = [], socialLinks = [], menus = [], paymentMethods = [], shippingPartners = [], certifications = [], appLinks = [], countries = [], trustBadges = [], settings = null } = footerData;
         
+        // Debug each table
+        console.log('📊 Countries received:', countries?.length || 0);
+        console.log('📊 Payment Methods received:', paymentMethods?.length || 0);
+        console.log('📊 Shipping Partners received:', shippingPartners?.length || 0);
+        console.log('📊 Certifications received:', certifications?.length || 0);
+        console.log('📊 App Links received:', appLinks?.length || 0);
+        console.log('📊 Trust Badges received:', trustBadges?.length || 0);
+        console.log('📊 Social Links received:', socialLinks?.length || 0);
+        console.log('📊 Menus received:', menus?.length || 0);
+        console.log('📊 Content items received:', content?.length || 0);
+        
+        // Settings
         const bgColor = settings?.background_color || '#1a1a1a';
         const textColor = settings?.text_color || '#ffffff';
         const copyrightText = settings?.copyright_text || '© 2025 JayenWare. All Rights Reserved.';
@@ -1879,11 +1274,12 @@ async function renderFooter() {
             }).join('')}</div></div>`;
         }
         
-        // Country Selector - FIXED with wrapper and custom arrow
+        // Country Selector - FIXED
         let countryHTML = '';
         if (showCountry && countries.length > 0) {
             const sortedCountries = [...countries].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
             const defaultCountry = sortedCountries.find(c => c.is_default) || sortedCountries[0];
+            console.log('🌍 Rendering country selector with', sortedCountries.length, 'countries');
             
             countryHTML = `
             <div class="footer-section">
@@ -1905,6 +1301,8 @@ async function renderFooter() {
                 </div>
                 ${defaultCountry?.exchange_rate && defaultCountry.exchange_rate !== 1 ? `<p class="footer-exchange-rate">Exchange Rate: 1 USD = ${defaultCountry.currency_symbol || ''}${defaultCountry.exchange_rate}</p>` : ''}
             </div>`;
+        } else if (showCountry && countries.length === 0) {
+            console.warn('⚠️ Country selector is enabled but no countries data received');
         }
         
         // Trust Badges
@@ -1917,7 +1315,7 @@ async function renderFooter() {
             }).join('')}</div></div>`;
         }
         
-        // Menus & Quick Links - Mobile Accordion
+        // Menus & Quick Links
         let menuColumnsHTML = '';
         if (menus.length > 0) {
             const sortedMenus = [...menus].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
@@ -1930,28 +1328,23 @@ async function renderFooter() {
                 
                 return `
                 <div class="footer-col footer-col-menu" id="${menuId}">
-                    <h5 class="footer-section-title" onclick="toggleFooterMenu('${menuId}')">
-                        ${menu.title || 'Links'}
-                        <span class="footer-menu-arrow">▼</span>
-                    </h5>
-                    <ul class="footer-links-list">
-                        ${topLevelLinks.map(link => {
-                            const target = link.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
-                            const iconHTML = link.icon_class ? `<i class="${link.icon_class}"></i>` : '';
-                            const descHTML = link.description ? `<span class="footer-link-desc">${link.description}</span>` : '';
-                            const children = childLinks.filter(cl => cl.parent_id === link.id);
-                            let childrenHTML = '';
-                            if (children.length > 0) {
-                                childrenHTML = `<ul class="footer-nested-links">${children.map(child => {
-                                    const childTarget = child.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
-                                    const childIcon = child.icon_class ? `<i class="${child.icon_class}"></i>` : '';
-                                    const childDesc = child.description ? `<span class="footer-nested-desc">${child.description}</span>` : '';
-                                    return `<li><a href="${child.link_url || '#'}" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
-                                }).join('')}</ul>`;
-                            }
-                            return `<li><a href="${link.link_url || '#'}" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}${childrenHTML}</li>`;
-                        }).join('')}
-                    </ul>
+                    <h5 class="footer-section-title" onclick="window.toggleFooterMenu('${menuId}')">${menu.title || 'Links'}<span class="footer-menu-arrow">▼</span></h5>
+                    <ul class="footer-links-list">${topLevelLinks.map(link => {
+                        const target = link.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
+                        const iconHTML = link.icon_class ? `<i class="${link.icon_class}"></i>` : '';
+                        const descHTML = link.description ? `<span class="footer-link-desc">${link.description}</span>` : '';
+                        const children = childLinks.filter(cl => cl.parent_id === link.id);
+                        let childrenHTML = '';
+                        if (children.length > 0) {
+                            childrenHTML = `<ul class="footer-nested-links">${children.map(child => {
+                                const childTarget = child.open_in_new_tab ? 'target="_blank" rel="noopener noreferrer"' : '';
+                                const childIcon = child.icon_class ? `<i class="${child.icon_class}"></i>` : '';
+                                const childDesc = child.description ? `<span class="footer-nested-desc">${child.description}</span>` : '';
+                                return `<li><a href="${child.link_url || '#'}" ${childTarget}>${childIcon}${child.title || ''}</a>${childDesc}</li>`;
+                            }).join('')}</ul>`;
+                        }
+                        return `<li><a href="${link.link_url || '#'}" ${target}>${iconHTML}${link.title || ''}</a>${descHTML}${childrenHTML}</li>`;
+                    }).join('')}</ul>
                 </div>`;
             }).join('');
         }
@@ -1965,14 +1358,14 @@ async function renderFooter() {
             default: layoutClass = '';
         }
         
-        // Build footer HTML
+        // Build complete footer
         const footerHTML = `
         <footer class="${layoutClass}" id="main-footer" style="background: ${bgColor} !important; color: ${textColor} !important;">
             ${customCSS ? `<style>${customCSS}</style>` : ''}
             <div class="footer-container">
                 <div class="footer-grid">
                     <div class="footer-col">
-                        ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="footer-brand-logo">` : ''}
+                        ${brandLogo ? `<img src="${brandLogo}" alt="${brandTitle}" class="footer-brand-logo" onerror="this.style.display='none'">` : ''}
                         <h4 class="footer-brand-title">${brandTitle}</h4>
                         <p class="footer-brand-desc">${brandDesc}</p>
                         ${showSocial && socialIconsHTML ? `<div class="social-icons-grid">${socialIconsHTML}</div>` : ''}
@@ -2000,6 +1393,7 @@ async function renderFooter() {
         </footer>`;
         
         document.body.insertAdjacentHTML('beforeend', footerHTML);
+        console.log('✅ Footer rendered successfully');
         
         // RTL support
         if (countries.length > 0) {
@@ -2011,7 +1405,7 @@ async function renderFooter() {
         }
         
     } catch (error) {
-        console.error('Footer render error:', error);
+        console.error('❌ Footer render error:', error);
         const fallbackHTML = `<footer id="main-footer" style="background:#1a1a1a!important;color:#ffffff!important;padding:40px 16px;text-align:center;"><p style="font-size:10px;opacity:0.5;">© ${new Date().getFullYear()} JayenWare. All Rights Reserved.</p><p style="font-size:8px;opacity:0.3;margin-top:4px;">Powered by BINZEO Infrastructure</p></footer>`;
         document.body.insertAdjacentHTML('beforeend', fallbackHTML);
     }
@@ -2023,7 +1417,7 @@ async function renderFooter() {
 window.toggleFooterMenu = function(menuId) {
     const menu = document.getElementById(menuId);
     if (!menu) return;
-    if (window.innerWidth >= 640) return; // Only on mobile
+    if (window.innerWidth >= 640) return;
     menu.classList.toggle('open');
 };
 
@@ -2040,8 +1434,7 @@ function showToast(text, type = 'success') {
         document.body.appendChild(toast);
     }
     document.getElementById('toast-text').innerText = text;
-    const iconEl = document.getElementById('toast-icon');
-    iconEl.innerHTML = type === 'success' ? '✓' : '!';
+    document.getElementById('toast-icon').innerHTML = type === 'success' ? '✓' : '!';
     toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
@@ -2049,7 +1442,7 @@ function showToast(text, type = 'success') {
 function hideToast() { const toast = document.getElementById('toast'); if (toast) toast.style.transform = 'translateX(120%)'; }
 
 // ============================================================================
-// SIDE DRAWER CONTROLLER
+// SIDE DRAWER
 // ============================================================================
 function openSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
@@ -2140,7 +1533,7 @@ function updateCounts() {
     const cartCount = document.getElementById('cart-count');
     const wishCount = document.getElementById('wish-count');
     const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    if (cartCount) { cartCount.innerText = totalItems; }
+    if (cartCount) cartCount.innerText = totalItems;
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 function saveCart() { localStorage.setItem('jabiyen_cart', JSON.stringify(cart)); updateCounts(); }
