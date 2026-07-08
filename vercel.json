@@ -64,8 +64,8 @@
       "dest": "/public/faq.html"
     },
     {
-      "src": "/about-us",
-      "dest": "/public/about-us.html"
+      "src": "/about",
+      "dest": "/public/about.html"
     },
     {
       "src": "/shipping-policy",
