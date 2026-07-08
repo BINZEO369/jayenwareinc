@@ -1,1 +1,981 @@
-h
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title id="page-title">Blog | JAYENWARE</title>
+  <meta name="description" content="Read our latest blog posts, articles, news and updates from Jayenware." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" id="canonical-url" href="https://www.jayenware.shop/blog" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <script src="/fonts.js"></script>
+  <script src="/footer.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#007aff'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      image-rendering: auto;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* HEADER SLIDER */
+    .page-header {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100vh;
+      min-height: 100dvh;
+      max-height: none;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 48px;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      left: 0;
+      right: 0;
+      display: none;
+    }
+    .page-header.visible { display: block; }
+    @media (max-width: 768px) {
+      .page-header { 
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        margin-bottom: 36px; 
+      }
+    }
+    @media (max-width: 480px) {
+      .page-header { 
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        margin-bottom: 28px; 
+      }
+    }
+
+    /* Header Slides Container */
+    .header-slides-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .header-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+    .header-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+    .header-slide .header-bg-img {
+      position: absolute; 
+      inset: 0; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      object-position: center;
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+    .header-slide.active .header-bg-img {
+      animation: headerZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes headerZoom { from { transform: scale(1) translateZ(0); } to { transform: scale(1.03) translateZ(0); } }
+
+    .page-header .header-overlay {
+      position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.75) 100%);
+    }
+    .page-header .header-content {
+      position: absolute; bottom: clamp(40px, 10vh, 80px); left: 50%; transform: translateX(-50%); z-index: 3;
+      text-align: center; width: 88%; max-width: 680px; padding: 0 16px;
+    }
+    .page-header .header-label {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(14px, 2vw, 20px);
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 8px;
+      margin-bottom: 0;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .page-header .header-label.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .page-header .header-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(28px, 5vw, 56px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .page-header .header-title.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Header Dots Navigation */
+    .header-dots-nav {
+      position: absolute;
+      bottom: clamp(16px, 3vh, 28px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .header-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      outline: none;
+      padding: 0;
+    }
+    .header-dot:hover {
+      background: rgba(255,255,255,0.7);
+      transform: scale(1.2);
+    }
+    .header-dot.active {
+      background: #ffffff;
+      width: 24px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Header Arrow Navigation */
+    .header-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 4;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .page-header:hover .header-arrow {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .header-arrow:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .header-arrow:active { transform: translateY(-50%) scale(0.9); }
+    .header-arrow-prev { left: clamp(12px, 2vw, 24px); }
+    .header-arrow-next { right: clamp(12px, 2vw, 24px); }
+    @media (max-width: 768px) {
+      .header-arrow { width: 36px; height: 36px; font-size: 12px; }
+      .header-arrow { opacity: 1; pointer-events: auto; }
+    }
+
+    /* Progress bar */
+    .header-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.6);
+      z-index: 4;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .blog-card {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      margin-bottom: 80px;
+      will-change: transform, opacity;
+    }
+    .blog-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 768px) {
+      .blog-card { margin-bottom: 48px; }
+    }
+    @media (max-width: 480px) {
+      .blog-card { margin-bottom: 36px; }
+    }
+
+    .blog-card .blog-full-image-wrap {
+      position: relative;
+      width: 100vw;
+      height: 90vh;
+      height: 90dvh;
+      min-height: 500px;
+      max-height: 900px;
+      overflow: hidden;
+      background: #f0f0f0;
+      margin-bottom: 48px;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      display: none;
+    }
+    .blog-card .blog-full-image-wrap.has-image { display: block; }
+    @media (max-width: 768px) {
+      .blog-card .blog-full-image-wrap { 
+        height: 80vh;
+        height: 80dvh;
+        min-height: 400px; 
+        max-height: 700px; 
+        margin-bottom: 36px; 
+      }
+    }
+    @media (max-width: 480px) {
+      .blog-card .blog-full-image-wrap { 
+        height: 70vh;
+        height: 70dvh;
+        min-height: 350px; 
+        max-height: 600px; 
+        margin-bottom: 28px; 
+      }
+    }
+    .blog-card .blog-full-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      will-change: transform;
+      transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+    @media (hover: hover) {
+      .blog-card:hover .blog-full-image-wrap img {
+        transform: scale(1.02) translateZ(0);
+      }
+    }
+
+    .blog-card .blog-content-wrap {
+      display: flex;
+      flex-direction: row;
+      gap: 48px;
+      align-items: flex-start;
+    }
+    @media (max-width: 768px) {
+      .blog-card .blog-content-wrap { flex-direction: column; gap: 24px; }
+    }
+    .blog-card .blog-text-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .blog-card .blog-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .blog-card .blog-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--primary);
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+      display: block;
+    }
+    .blog-card .blog-section-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: #666;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
+    .blog-card .blog-description {
+      font-size: 15px;
+      line-height: 1.85;
+      color: #4a4a4f;
+      font-weight: 400;
+    }
+    .blog-card .blog-description p {
+      margin-bottom: 16px;
+    }
+    .blog-card .blog-description p:last-child {
+      margin-bottom: 0;
+    }
+
+    .blog-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 12px 28px;
+      background: var(--primary);
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+      border: none;
+      cursor: pointer;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+    .blog-cta:hover {
+      background: #333;
+      transform: translateY(-2px) translateZ(0);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      gap: 12px;
+    }
+    .blog-cta .cta-arrow {
+      transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .blog-cta:hover .cta-arrow {
+      transform: translateX(4px);
+    }
+    @media (max-width: 480px) {
+      .blog-cta { width: 100%; justify-content: center; padding: 14px 24px; font-size: 14px; }
+    }
+
+    .blog-divider {
+      width: 100%;
+      height: 1px;
+      background: #e5e5ea;
+      margin: 0 0 64px 0;
+    }
+    @media (max-width: 768px) {
+      .blog-divider { margin-bottom: 40px; }
+    }
+    @media (max-width: 480px) {
+      .blog-divider { margin-bottom: 28px; }
+    }
+
+    .blog-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .blog-date i {
+      font-size: 13px;
+    }
+
+    .error-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
+    .error-state i { font-size: 64px; color: #d1d1d6; margin-bottom: 24px; }
+    .error-state h2 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
+    .error-state p { font-size: 15px; color: var(--accent); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; }
+    .error-state .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; will-change: transform; transform: translateZ(0); }
+    .error-state .btn-primary:hover { background: #333; transform: translateY(-2px) translateZ(0); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+    .empty-state { text-align: center; padding: 80px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
+    .empty-state i { font-size: 56px; color: #d1d1d6; margin-bottom: 24px; }
+    .empty-state h3 { font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-family: 'Manrope', sans-serif; }
+    .empty-state p { font-size: 15px; color: var(--accent); max-width: 420px; margin: 0 auto 20px; line-height: 1.6; }
+
+    .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; opacity: 0; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 6px 24px rgba(0,0,0,0.2); pointer-events: none; will-change: transform, opacity; }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .back-to-top:active { transform: scale(0.9); }
+    @media (hover: hover) { .back-to-top:hover { background: #333; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.25); } }
+    @media (max-width: 768px) { .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; } }
+  </style>
+</head>
+<body class="antialiased">
+
+  <div id="dynamic-header"></div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" style="margin-bottom: 0; padding-bottom: 0; padding-top: 0;">
+
+    <div class="error-state" id="error-state">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <h2>Something went wrong</h2>
+      <p>Failed to load blog posts. Please try again.</p>
+      <button class="btn-primary" onclick="loadBlog()">
+        <i class="fa-solid fa-rotate"></i> <span>Try Again</span>
+      </button>
+    </div>
+
+    <div class="empty-state" id="empty-state">
+      <i class="fa-solid fa-newspaper"></i>
+      <h3>No blog posts found</h3>
+      <p>No blog posts have been published yet. Check back soon for new content.</p>
+    </div>
+
+    <div class="page-header" id="page-header">
+      <div class="header-slides-container" id="header-slides"></div>
+      <div class="header-overlay"></div>
+      <div class="header-content">
+        <h1 class="header-title" id="header-main-title"></h1>
+        <p class="header-label" id="header-label" style="display:none;"></p>
+      </div>
+      <div class="header-dots-nav" id="header-dots"></div>
+      <div class="header-progress-bar" id="header-progress"></div>
+      <button class="header-arrow header-arrow-prev" id="header-arrow-prev" onclick="window.blogSlider.prev()" aria-label="Previous slide">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button class="header-arrow header-arrow-next" id="header-arrow-next" onclick="window.blogSlider.next()" aria-label="Next slide">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div id="blog-container">
+      <div id="skeleton-container">
+        <div class="blog-card">
+          <div class="blog-full-image-wrap skeleton"></div>
+          <div class="blog-content-wrap">
+            <div class="blog-text-col">
+              <div class="skeleton" style="height:10px;width:25%;margin-bottom:16px;"></div>
+              <div class="skeleton" style="height:32px;width:60%;margin-bottom:12px;"></div>
+              <div class="skeleton" style="height:16px;width:40%;margin-bottom:20px;"></div>
+              <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:14px;width:75%;margin-bottom:8px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="blog-divider"></div>
+        <div class="blog-card">
+          <div class="blog-full-image-wrap skeleton"></div>
+          <div class="blog-content-wrap">
+            <div class="blog-text-col">
+              <div class="skeleton" style="height:10px;width:25%;margin-bottom:16px;"></div>
+              <div class="skeleton" style="height:32px;width:60%;margin-bottom:12px;"></div>
+              <div class="skeleton" style="height:16px;width:40%;margin-bottom:20px;"></div>
+              <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:14px;width:100%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:14px;width:75%;margin-bottom:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="blog-content" style="display:none;"></div>
+    </div>
+
+  </main>
+
+  <div id="dynamic-footer"></div>
+
+  <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <script src="/components.js"></script>
+
+  <script>
+    (function() {
+      var API_BASE = window.location.origin;
+
+      function formatDate(dateString) {
+        if (!dateString) return '';
+        try {
+          var date = new Date(dateString);
+          var options = { year: 'numeric', month: 'long', day: 'numeric' };
+          return date.toLocaleDateString('en-US', options);
+        } catch (e) {
+          return dateString;
+        }
+      }
+
+      function escapeHTML(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      async function fetchBlog() {
+        var response = await fetch(API_BASE + '/api/blog/all', {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        var data = await response.json();
+        return data || [];
+      }
+
+      function showSkeleton() {
+        document.getElementById('skeleton-container').style.display = 'block';
+        document.getElementById('blog-content').style.display = 'none';
+        document.getElementById('error-state').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('page-header').classList.remove('visible');
+      }
+
+      function showError() {
+        document.getElementById('skeleton-container').style.display = 'none';
+        document.getElementById('blog-content').style.display = 'none';
+        document.getElementById('error-state').style.display = 'flex';
+        document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('page-header').classList.remove('visible');
+      }
+
+      function showEmpty() {
+        document.getElementById('skeleton-container').style.display = 'none';
+        document.getElementById('blog-content').style.display = 'none';
+        document.getElementById('error-state').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'flex';
+        document.getElementById('page-header').classList.remove('visible');
+      }
+
+      // ==================== HEADER SLIDER ====================
+      function createHeaderSlider(headerEntries) {
+        var slidesContainer = document.getElementById('header-slides');
+        var dotsContainer = document.getElementById('header-dots');
+        var titleEl = document.getElementById('header-main-title');
+        var labelEl = document.getElementById('header-label');
+        var progressBar = document.getElementById('header-progress');
+        var pageHeader = document.getElementById('page-header');
+
+        if (!headerEntries || headerEntries.length === 0) {
+          pageHeader.classList.add('visible');
+          return;
+        }
+
+        slidesContainer.innerHTML = headerEntries.map(function(entry, i) {
+          return '<div class="header-slide ' + (i === 0 ? 'active' : '') + '" data-index="' + i + '">' +
+            '<img class="header-bg-img" src="' + escapeHTML(entry.header_image) + '" alt="' + escapeHTML(entry.header_title || '') + '" onerror="this.style.display=none;" />' +
+          '</div>';
+        }).join('');
+
+        if (headerEntries.length > 1) {
+          dotsContainer.innerHTML = headerEntries.map(function(_, i) {
+            return '<button class="header-dot ' + (i === 0 ? 'active' : '') + '" data-index="' + i + '" aria-label="Slide ' + (i + 1) + '"></button>';
+          }).join('');
+          dotsContainer.style.display = 'flex';
+
+          dotsContainer.querySelectorAll('.header-dot').forEach(function(dot) {
+            dot.addEventListener('click', function() {
+              var index = parseInt(this.getAttribute('data-index'));
+              goToSlide(index);
+            });
+          });
+        } else {
+          dotsContainer.style.display = 'none';
+        }
+
+        var prevArrow = document.getElementById('header-arrow-prev');
+        var nextArrow = document.getElementById('header-arrow-next');
+        if (headerEntries.length <= 1) {
+          if (prevArrow) prevArrow.style.display = 'none';
+          if (nextArrow) nextArrow.style.display = 'none';
+        }
+
+        var currentIndex = 0;
+        var totalSlides = headerEntries.length;
+        var autoplayInterval = null;
+        var progressInterval = null;
+        var slideDuration = 6000;
+        var isTransitioning = false;
+
+        function updateContent(index) {
+          var entry = headerEntries[index];
+          
+          titleEl.classList.remove('visible');
+          labelEl.classList.remove('visible');
+          
+          setTimeout(function() {
+            titleEl.textContent = entry.header_title || '';
+            if (entry.header_subtitle) {
+              labelEl.textContent = entry.header_subtitle;
+              labelEl.style.display = 'block';
+            } else {
+              labelEl.textContent = '';
+              labelEl.style.display = 'none';
+            }
+            
+            requestAnimationFrame(function() {
+              titleEl.classList.add('visible');
+              if (entry.header_subtitle) labelEl.classList.add('visible');
+            });
+          }, 300);
+        }
+
+        function goToSlide(index) {
+          if (isTransitioning || index === currentIndex) return;
+          if (index < 0 || index >= totalSlides) return;
+
+          isTransitioning = true;
+
+          var currentSlide = slidesContainer.querySelector('.header-slide.active');
+          if (currentSlide) currentSlide.classList.remove('active');
+
+          var newSlide = slidesContainer.querySelector('.header-slide[data-index="' + index + '"]');
+          if (newSlide) newSlide.classList.add('active');
+
+          var dots = dotsContainer.querySelectorAll('.header-dot');
+          dots.forEach(function(dot) { dot.classList.remove('active'); });
+          var activeDot = dotsContainer.querySelector('.header-dot[data-index="' + index + '"]');
+          if (activeDot) activeDot.classList.add('active');
+
+          updateContent(index);
+          resetProgress();
+
+          currentIndex = index;
+          clearAutoplay();
+          startAutoplay();
+
+          setTimeout(function() {
+            isTransitioning = false;
+          }, 600);
+        }
+
+        function startAutoplay() {
+          if (totalSlides <= 1) return;
+          clearAutoplay();
+          autoplayInterval = setInterval(function() {
+            var nextIndex = (currentIndex + 1) % totalSlides;
+            goToSlide(nextIndex);
+          }, slideDuration);
+          startProgress();
+        }
+
+        function clearAutoplay() {
+          if (autoplayInterval) {
+            clearInterval(autoplayInterval);
+            autoplayInterval = null;
+          }
+          clearProgress();
+        }
+
+        function startProgress() {
+          clearProgress();
+          if (!progressBar) return;
+          
+          progressBar.style.transition = 'none';
+          progressBar.style.width = '0%';
+          
+          var startTime = Date.now();
+          progressInterval = setInterval(function() {
+            var elapsed = Date.now() - startTime;
+            var percentage = (elapsed / slideDuration) * 100;
+            progressBar.style.transition = 'width 0.1s linear';
+            progressBar.style.width = Math.min(percentage, 100) + '%';
+          }, 50);
+        }
+
+        function clearProgress() {
+          if (progressInterval) {
+            clearInterval(progressInterval);
+            progressInterval = null;
+          }
+        }
+
+        function resetProgress() {
+          clearProgress();
+          if (progressBar) {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+          }
+          startProgress();
+        }
+
+        updateContent(0);
+        pageHeader.classList.add('visible');
+        startAutoplay();
+
+        pageHeader.addEventListener('mouseenter', function() {
+          clearAutoplay();
+        });
+        pageHeader.addEventListener('mouseleave', function() {
+          startAutoplay();
+        });
+
+        var touchStartX = 0;
+        var touchEndX = 0;
+        pageHeader.addEventListener('touchstart', function(e) {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        pageHeader.addEventListener('touchend', function(e) {
+          touchEndX = e.changedTouches[0].screenX;
+          var diff = touchStartX - touchEndX;
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              goToSlide((currentIndex + 1) % totalSlides);
+            } else {
+              goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
+            }
+          }
+        });
+
+        window.blogSlider = {
+          next: function() { goToSlide((currentIndex + 1) % totalSlides); },
+          prev: function() { goToSlide((currentIndex - 1 + totalSlides) % totalSlides); },
+          goTo: function(index) { goToSlide(index); },
+          getCurrent: function() { return currentIndex; },
+          getTotal: function() { return totalSlides; },
+          pause: function() { clearAutoplay(); },
+          resume: function() { startAutoplay(); }
+        };
+      }
+
+      function renderBlog(entries) {
+        document.getElementById('skeleton-container').style.display = 'none';
+        document.getElementById('error-state').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('blog-content').style.display = 'block';
+
+        var headerEntries = entries.filter(function(e) { return !!e.header_image; });
+        createHeaderSlider(headerEntries);
+
+        var container = document.getElementById('blog-content');
+        container.innerHTML = '';
+
+        for (var i = 0; i < entries.length; i++) {
+          var wrapper = createBlogCard(entries[i], i);
+          container.appendChild(wrapper);
+        }
+
+        requestAnimationFrame(function() {
+          initScrollAnimations();
+        });
+
+        var dividers = container.querySelectorAll('.blog-divider');
+        if (dividers.length > 0) {
+          dividers[dividers.length - 1].style.display = 'none';
+        }
+      }
+
+      function createBlogCard(entry, index) {
+        var card = document.createElement('div');
+        card.className = 'blog-card';
+        card.setAttribute('data-blog-index', index);
+        card.setAttribute('data-animate', 'true');
+
+        var hasSectionImage = !!entry.section_image;
+        var hasCTA = !!(entry.cta_text && entry.cta_link);
+
+        var html = '';
+
+        if (hasSectionImage) {
+          html += '<div class="blog-full-image-wrap has-image">';
+          html += '<img src="' + escapeHTML(entry.section_image) + '" alt="' + escapeHTML(entry.section_title || '') + '" loading="' + (index < 2 ? 'eager' : 'lazy') + '" onerror="this.parentElement.classList.remove(\'has-image\');" style="opacity:0;transition:opacity 0.6s ease;" onload="this.style.opacity=1;" />';
+          html += '</div>';
+        }
+
+        html += '<div class="blog-content-wrap">';
+        html += '<div class="blog-text-col">';
+
+        if (entry.created_at) {
+          html += '<div class="blog-date"><i class="fa-regular fa-calendar"></i><span>' + formatDate(entry.created_at) + '</span></div>';
+        }
+
+        if (entry.section_title) {
+          html += '<h2 class="blog-title">' + escapeHTML(entry.section_title) + '</h2>';
+        }
+
+        if (entry.section_subtitle) {
+          html += '<p class="blog-section-subtitle">' + escapeHTML(entry.section_subtitle) + '</p>';
+        }
+
+        if (entry.section_description) {
+          var paragraphs = entry.section_description.split('\n').filter(function(p) { return p.trim(); }).map(function(p) {
+            return '<p>' + escapeHTML(p.trim()) + '</p>';
+          }).join('');
+          html += '<div class="blog-description">' + paragraphs + '</div>';
+        }
+
+        if (hasCTA) {
+          html += '<a href="' + escapeHTML(entry.cta_link) + '" class="blog-cta">' + escapeHTML(entry.cta_text) + '<span class="cta-arrow"><i class="fa-solid fa-arrow-right"></i></span></a>';
+        }
+
+        html += '</div>';
+        html += '</div>';
+
+        card.innerHTML = html;
+
+        var divider = document.createElement('div');
+        divider.className = 'blog-divider';
+
+        var wrapper = document.createElement('div');
+        wrapper.appendChild(card);
+        wrapper.appendChild(divider);
+
+        return wrapper;
+      }
+
+      function initScrollAnimations() {
+        var observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -20px 0px'
+        };
+
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll('[data-animate="true"]').forEach(function(card, index) {
+          card.style.transitionDelay = (index * 0.08) + 's';
+          observer.observe(card);
+        });
+      }
+
+      function initBackToTop() {
+        var btn = document.getElementById('back-to-top');
+        var ticking = false;
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            requestAnimationFrame(function() {
+              if (window.scrollY > 500) {
+                btn.classList.add('visible');
+              } else {
+                btn.classList.remove('visible');
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      }
+
+      async function loadBlog() {
+        showSkeleton();
+        try {
+          var entries = await fetchBlog();
+          if (!entries || entries.length === 0) {
+            showEmpty();
+            return;
+          }
+          renderBlog(entries);
+        } catch (error) {
+          console.error('Failed to load blog:', error);
+          showError();
+        }
+      }
+
+      window.loadBlog = loadBlog;
+
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.JAYENWARE_FONTS) {
+          var root = document.documentElement;
+          var vars = window.JAYENWARE_FONTS.cssVariables;
+          for (var key in vars) {
+            if (vars.hasOwnProperty(key)) {
+              root.style.setProperty(key, vars[key]);
+            }
+          }
+        }
+        initBackToTop();
+        loadBlog();
+      });
+    })();
+  </script>
+</body>
+</html>
