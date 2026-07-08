@@ -767,6 +767,50 @@ app.get('/api/about-us/:id', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+// ============================================
+// FAQ API (প্রশ্ন ও উত্তর)
+// ============================================
+
+// Get all active FAQs (sorted by sort_order)
+app.get('/api/faqs', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('faq')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single FAQ by ID
+app.get('/api/faqs/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('faq')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'FAQ not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 // ============================================
 // FOOTER API (Complete Footer System)
 // ============================================
