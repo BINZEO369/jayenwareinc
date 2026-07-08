@@ -810,7 +810,349 @@ app.get('/api/faqs/:id', async (req, res) => {
     }
 });
 
+// ============================================
+// SHIPPING POLICY API (শিপিং নীতি)
+// ============================================
 
+// Get all active shipping policy entries (sorted by sort_order)
+app.get('/api/shipping-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('shipping_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single shipping policy entry by ID
+app.get('/api/shipping-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('shipping_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Shipping policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// RETURN POLICY API (রিটার্ন নীতি)
+// ============================================
+
+// Get all active return policy entries (sorted by sort_order)
+app.get('/api/return-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('return_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single return policy entry by ID
+app.get('/api/return-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('return_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Return policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// BLOG API (ব্লগ)
+// ============================================
+
+// Get all active blog entries (sorted by sort_order)
+app.get('/api/blog/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('blog')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single blog entry by ID
+app.get('/api/blog/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('blog')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Blog entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// PRIVACY POLICY API (গোপনীয়তা নীতি)
+// ============================================
+
+// Get all active privacy policy entries (sorted by sort_order)
+app.get('/api/privacy-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('privacy_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single privacy policy entry by ID
+app.get('/api/privacy-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('privacy_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Privacy policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// TERMS & CONDITIONS API (শর্তাবলী)
+// ============================================
+
+// Get all active terms entries (sorted by sort_order)
+app.get('/api/terms/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('terms_conditions')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single terms entry by ID
+app.get('/api/terms/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('terms_conditions')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Terms entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// REFUND POLICY API (ফেরত নীতি)
+// ============================================
+
+// Get all active refund policy entries (sorted by sort_order)
+app.get('/api/refund-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('refund_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single refund policy entry by ID
+app.get('/api/refund-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('refund_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Refund policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// COOKIE POLICY API (কুকি নীতি)
+// ============================================
+
+// Get all active cookie policy entries (sorted by sort_order)
+app.get('/api/cookie-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('cookie_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single cookie policy entry by ID
+app.get('/api/cookie-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('cookie_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Cookie policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// STORE LOCATOR API (স্টোর লোকেটর)
+// ============================================
+
+// Get all active store locator entries (sorted by sort_order)
+app.get('/api/store-locator/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('store_locator')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single store locator entry by ID
+app.get('/api/store-locator/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('store_locator')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Store locator entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 // ============================================
 // FOOTER API (Complete Footer System)
 // ============================================
