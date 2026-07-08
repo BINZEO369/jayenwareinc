@@ -724,8 +724,12 @@ app.get('/api/announcements', async (req, res) => {
 // ABOUT US API (আমাদের সম্পর্কে)
 // ============================================
 
+// ============================================
+// ABOUT US API (আমাদের সম্পর্কে)
+// ============================================
+
 // Get all active about us entries (sorted by sort_order)
-app.get('/api/about-us', async (req, res) => {
+app.get('/api/about-us/all', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('about_us')
@@ -744,6 +748,9 @@ app.get('/api/about-us', async (req, res) => {
 app.get('/api/about-us/:id', async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Skip if id is "all" (handled by route above)
+        if (id === 'all') return;
 
         const { data, error } = await supabase
             .from('about_us')
@@ -756,30 +763,6 @@ app.get('/api/about-us/:id', async (req, res) => {
         if (!data) return res.status(404).json({ error: 'About Us entry not found' });
 
         res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Get about us entry with header and section data combined
-app.get('/api/about-us-page', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('about_us')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-
-        if (error) return res.status(500).json({ error: error.message });
-        
-        // Combine all entries into a structured page response
-        const aboutPage = {
-            header: data.find(item => item.header_title) || null,
-            sections: data.filter(item => item.section_title),
-            cta: data.find(item => item.cta_text) || null
-        };
-        
-        res.json(aboutPage);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
