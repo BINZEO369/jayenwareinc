@@ -68,6 +68,38 @@
       "dest": "/public/about-us.html"
     },
     {
+      "src": "/shipping-policy",
+      "dest": "/public/shipping-policy.html"
+    },
+    {
+      "src": "/return-policy",
+      "dest": "/public/return-policy.html"
+    },
+    {
+      "src": "/blog",
+      "dest": "/public/blog.html"
+    },
+    {
+      "src": "/privacy-policy",
+      "dest": "/public/privacy-policy.html"
+    },
+    {
+      "src": "/terms-and-conditions",
+      "dest": "/public/terms-and-conditions.html"
+    },
+    {
+      "src": "/refund-policy",
+      "dest": "/public/refund-policy.html"
+    },
+    {
+      "src": "/cookie-policy",
+      "dest": "/public/cookie-policy.html"
+    },
+    {
+      "src": "/store-locator",
+      "dest": "/public/store-locator.html"
+    },
+    {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
       "dest": "/public/$1"
     },
