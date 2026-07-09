@@ -5,122 +5,28 @@
       "maxDuration": 30
     }
   },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/components.js",
-      "dest": "/public/components.js"
-    },
-    {
-      "src": "/fonts.js",
-      "dest": "/public/fonts.js"
-    },
-    {
-      "src": "/hero-banner.js",
-      "dest": "/public/hero-banner.js"
-    },
-    {
-      "src": "/hero-video.js",
-      "dest": "/public/hero-video.js"
-    },
-    {
-      "src": "/hero-secondary-banner.js",
-      "dest": "/public/hero-secondary-banner.js"
-    },
-    {
-      "src": "/logo.png",
-      "dest": "/public/logo.png"
-    },
-    {
-      "src": "/signup",
-      "dest": "/public/signup.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/public/login.html"
-    },
-    {
-      "src": "/product/(.*)",
-      "dest": "/public/product.html"
-    },
-    {
-      "src": "/category/(.*)",
-      "dest": "/public/category.html"
-    },
-    {
-      "src": "/story",
-      "dest": "/public/story.html"
-    },
-    {
-      "src": "/faq",
-      "dest": "/public/faq.html"
-    },
-    {
-      "src": "/about",
-      "dest": "/public/about.html"
-    },
-    {
-      "src": "/shipping-policy",
-      "dest": "/public/shipping-policy.html"
-    },
-    {
-      "src": "/return-policy",
-      "dest": "/public/return-policy.html"
-    },
-    {
-      "src": "/blog",
-      "dest": "/public/blog.html"
-    },
-    {
-      "src": "/privacy-policy",
-      "dest": "/public/privacy-policy.html"
-    },
-    {
-      "src": "/terms-and-conditions",
-      "dest": "/public/terms-and-conditions.html"
-    },
-    {
-      "src": "/refund-policy",
-      "dest": "/public/refund-policy.html"
-    },
-    {
-      "src": "/cookie-policy",
-      "dest": "/public/cookie-policy.html"
-    },
-    {
-      "src": "/store-locator",
-      "dest": "/public/store-locator.html"
-    },
-    {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/products",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/wishlist",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/journal",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/search",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/index.html"
-    }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/story", "destination": "/public/story.html" },
+    { "source": "/signup", "destination": "/public/signup.html" },
+    { "source": "/login", "destination": "/public/login.html" },
+    { "source": "/faq", "destination": "/public/faq.html" },
+    { "source": "/about", "destination": "/public/about.html" },
+    { "source": "/blog", "destination": "/public/blog.html" },
+    { "source": "/shipping-policy", "destination": "/public/shipping-policy.html" },
+    { "source": "/return-policy", "destination": "/public/return-policy.html" },
+    { "source": "/privacy-policy", "destination": "/public/privacy-policy.html" },
+    { "source": "/terms-and-conditions", "destination": "/public/terms-and-conditions.html" },
+    { "source": "/refund-policy", "destination": "/public/refund-policy.html" },
+    { "source": "/cookie-policy", "destination": "/public/cookie-policy.html" },
+    { "source": "/store-locator", "destination": "/public/store-locator.html" },
+    { "source": "/product/:id", "destination": "/public/product.html" },
+    { "source": "/category/:id", "destination": "/public/category.html" },
+    { "source": "/products", "destination": "/public/index.html" },
+    { "source": "/wishlist", "destination": "/public/index.html" },
+    { "source": "/journal", "destination": "/public/index.html" },
+    { "source": "/search", "destination": "/public/index.html" },
+    { "source": "/", "destination": "/public/index.html" },
+    { "source": "/(.*)", "destination": "/public/index.html" }
   ]
 }
