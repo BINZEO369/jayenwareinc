@@ -1453,5 +1453,296 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
+
+// ============================================
+// CUSTOMER ORDERS API (অর্ডার সিস্টেম)
+// ============================================
+
+// Create new order (with items)
+app.post('/api/orders', async (req, res) => {
+    try {
+        const { 
+            customer_name, 
+            customer_email, 
+            customer_phone, 
+            country, 
+            street_address, 
+            apartment, 
+            city, 
+            state_region, 
+            zip_code,
+            billing_same_as_shipping,
+            billing_country,
+            billing_street,
+            billing_apartment,
+            billing_city,
+            billing_state,
+            billing_zip,
+            shipping_method,
+            notes,
+            items 
+        } = req.body;
+
+        // Validate required fields
+        if (!customer_name || !customer_email || !customer_phone || !country || 
+            !street_address || !city || !state_region) {
+            return res.status(400).json({ 
+                error: 'Missing required fields: customer_name, customer_email, customer_phone, country, street_address, city, state_region' 
+            });
+        }
+
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ error: 'At least one order item is required' });
+        }
+
+        // Create order
+        const { data: order, error: orderError } = await supabase
+            .from('customer_orders')
+            .insert([{
+                customer_name,
+                customer_email,
+                customer_phone,
+                country,
+                street_address,
+                apartment,
+                city,
+                state_region,
+                zip_code,
+                billing_same_as_shipping: billing_same_as_shipping ?? true,
+                billing_country,
+                billing_street,
+                billing_apartment,
+                billing_city,
+                billing_state,
+                billing_zip,
+                shipping_method: shipping_method || 'standard',
+                notes
+            }])
+            .select()
+            .single();
+
+        if (orderError) return res.status(500).json({ error: orderError.message });
+
+        // Create order items
+        const orderItems = items.map(item => ({
+            order_id: order.id,
+            product_id: item.product_id,
+            variant_id: item.variant_id,
+            color_id: item.color_id,
+            size_id: item.size_id,
+            color_name: item.color_name,
+            size_name: item.size_name,
+            product_title: item.product_title,
+            variant_sku: item.variant_sku,
+            variant_barcode: item.variant_barcode,
+            quantity: item.quantity || 1,
+            price: item.price
+        }));
+
+        const { data: itemsData, error: itemsError } = await supabase
+            .from('order_items')
+            .insert(orderItems)
+            .select();
+
+        if (itemsError) return res.status(500).json({ error: itemsError.message });
+
+        res.json({ 
+            success: true, 
+            order: { ...order, items: itemsData }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all orders (Admin only - RLS protected)
+app.get('/api/orders', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .select(`
+                *,
+                items:order_items(*)
+            `)
+            .order('created_at', { ascending: false });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single order by order_number
+app.get('/api/orders/:orderNumber', async (req, res) => {
+    try {
+        const { orderNumber } = req.params;
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .select(`
+                *,
+                items:order_items(*)
+            `)
+            .eq('order_number', orderNumber)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Order not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update order status
+app.patch('/api/orders/:orderNumber/status', async (req, res) => {
+    try {
+        const { orderNumber } = req.params;
+        const { order_status } = req.body;
+
+        if (!order_status) {
+            return res.status(400).json({ error: 'order_status is required' });
+        }
+
+        const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+        if (!validStatuses.includes(order_status)) {
+            return res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
+        }
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .update({ order_status })
+            .eq('order_number', orderNumber)
+            .select()
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Order not found' });
+
+        res.json({ success: true, order: data });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update order details
+app.patch('/api/orders/:orderNumber', async (req, res) => {
+    try {
+        const { orderNumber } = req.params;
+        const updateData = req.body;
+
+        // Don't allow updating certain fields
+        delete updateData.order_number;
+        delete updateData.id;
+        delete updateData.created_at;
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .update(updateData)
+            .eq('order_number', orderNumber)
+            .select()
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Order not found' });
+
+        res.json({ success: true, order: data });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete order
+app.delete('/api/orders/:orderNumber', async (req, res) => {
+    try {
+        const { orderNumber } = req.params;
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .delete()
+            .eq('order_number', orderNumber)
+            .select()
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Order not found' });
+
+        res.json({ success: true, message: 'Order deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get orders by customer email
+app.get('/api/orders/customer/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .select(`
+                *,
+                items:order_items(*)
+            `)
+            .eq('customer_email', email)
+            .order('created_at', { ascending: false });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get orders by phone
+app.get('/api/orders/phone/:phone', async (req, res) => {
+    try {
+        const { phone } = req.params;
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .select(`
+                *,
+                items:order_items(*)
+            `)
+            .eq('customer_phone', phone)
+            .order('created_at', { ascending: false });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get orders by status
+app.get('/api/orders/status/:status', async (req, res) => {
+    try {
+        const { status } = req.params;
+
+        const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ error: 'Invalid status' });
+        }
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .select(`
+                *,
+                items:order_items(*)
+            `)
+            .eq('order_status', status)
+            .order('created_at', { ascending: false });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 module.exports = app;
 
