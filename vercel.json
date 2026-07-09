@@ -6,27 +6,75 @@
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/story", "destination": "/public/story.html" },
-    { "source": "/signup", "destination": "/public/signup.html" },
-    { "source": "/login", "destination": "/public/login.html" },
-    { "source": "/faq", "destination": "/public/faq.html" },
-    { "source": "/about", "destination": "/public/about.html" },
-    { "source": "/blog", "destination": "/public/blog.html" },
-    { "source": "/shipping-policy", "destination": "/public/shipping-policy.html" },
-    { "source": "/return-policy", "destination": "/public/return-policy.html" },
-    { "source": "/privacy-policy", "destination": "/public/privacy-policy.html" },
-    { "source": "/terms-and-conditions", "destination": "/public/terms-and-conditions.html" },
-    { "source": "/refund-policy", "destination": "/public/refund-policy.html" },
-    { "source": "/cookie-policy", "destination": "/public/cookie-policy.html" },
-    { "source": "/store-locator", "destination": "/public/store-locator.html" },
-    { "source": "/product/:id", "destination": "/public/product.html" },
-    { "source": "/category/:id", "destination": "/public/category.html" },
-    { "source": "/products", "destination": "/public/index.html" },
-    { "source": "/wishlist", "destination": "/public/index.html" },
-    { "source": "/journal", "destination": "/public/index.html" },
-    { "source": "/search", "destination": "/public/index.html" },
-    { "source": "/", "destination": "/public/index.html" },
-    { "source": "/(.*)", "destination": "/public/index.html" }
+    // API রুট
+    { 
+      "source": "/api/(.*)", 
+      "destination": "/api/index.js" 
+    },
+    
+    // স্ট্যাটিক পেজ রুট (HTML ফাইল)
+    { "source": "/story", "destination": "/story.html" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/blog", "destination": "/blog.html" },
+    
+    // পলিসি পেজ
+    { "source": "/shipping-policy", "destination": "/shipping-policy.html" },
+    { "source": "/return-policy", "destination": "/return-policy.html" },
+    { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
+    { "source": "/terms-and-conditions", "destination": "/terms-and-conditions.html" },
+    { "source": "/refund-policy", "destination": "/refund-policy.html" },
+    { "source": "/cookie-policy", "destination": "/cookie-policy.html" },
+    
+    // অন্যান্য পেজ
+    { "source": "/store-locator", "destination": "/store-locator.html" },
+    
+    // ডাইনামিক রুট
+    { "source": "/product/:id", "destination": "/product.html" },
+    { "source": "/category/:slug", "destination": "/category.html" },
+    
+    // SPA রুট (index.html এ রিডাইরেক্ট)
+    { "source": "/products", "destination": "/index.html" },
+    { "source": "/wishlist", "destination": "/index.html" },
+    { "source": "/journal", "destination": "/index.html" },
+    { "source": "/search", "destination": "/index.html" },
+    
+    // হোমপেজ
+    { "source": "/", "destination": "/index.html" },
+    
+    // ফলব্যাক - সব অজানা রুট index.html এ
+    { "source": "/:path*", "destination": "/index.html" }
+  ],
+  
+  // স্ট্যাটিক ফাইল হ্যান্ডলিং
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
   ]
 }
