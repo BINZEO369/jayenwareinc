@@ -115,10 +115,6 @@
       "dest": "/public/checkout.html"
     },
     {
-      "src": "/journal",
-      "dest": "/public/index.html"
-    },
-    {
       "src": "/search",
       "dest": "/public/index.html"
     },
