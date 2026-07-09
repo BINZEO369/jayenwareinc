@@ -104,7 +104,7 @@
       "dest": "/public/$1"
     },
     {
-      "src": "/products",
+      "src": "/productss",
       "dest": "/public/index.html"
     },
     {
