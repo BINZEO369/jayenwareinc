@@ -1459,6 +1459,10 @@ app.get('*', (req, res) => {
 // CUSTOMER ORDERS API
 // ============================================
 
+// ============================================
+// CUSTOMER ORDERS API - TIMEOUT FIXED VERSION
+// ============================================
+
 // Submit new order
 app.post('/api/orders', async (req, res) => {
     try {
@@ -1488,8 +1492,7 @@ app.post('/api/orders', async (req, res) => {
             !country || !street_address || !city || !state_region) {
             return res.status(400).json({ 
                 success: false,
-                error: 'Missing required fields',
-                required: ['customer_name', 'customer_email', 'customer_phone', 'country', 'street_address', 'city', 'state_region']
+                error: 'Missing required fields'
             });
         }
 
@@ -1502,7 +1505,7 @@ app.post('/api/orders', async (req, res) => {
             });
         }
 
-        // Phone validation (basic)
+        // Phone validation
         if (customer_phone.length < 7) {
             return res.status(400).json({ 
                 success: false,
@@ -1510,90 +1513,119 @@ app.post('/api/orders', async (req, res) => {
             });
         }
 
-        // Insert order
-        const { data, error } = await supabase
-            .from('customer_orders')
-            .insert([{
-                customer_name,
-                customer_email,
-                customer_phone,
-                country,
-                street_address,
-                apartment: apartment || null,
-                city,
-                state_region,
-                zip_code: zip_code || null,
-                billing_same_as_shipping: billing_same_as_shipping !== undefined ? billing_same_as_shipping : true,
-                billing_country: billing_country || null,
-                billing_street: billing_street || null,
-                billing_apartment: billing_apartment || null,
-                billing_city: billing_city || null,
-                billing_state: billing_state || null,
-                billing_zip: billing_zip || null,
-                shipping_method: shipping_method || 'standard',
-                notes: notes || null
-            }])
-            .select()
-            .single();
+        // Direct insert with abort controller for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-        if (error) {
-            console.error('Order insert error:', error);
-            return res.status(500).json({ 
+        try {
+            const { data, error } = await supabase
+                .from('customer_orders')
+                .insert([{
+                    customer_name,
+                    customer_email,
+                    customer_phone,
+                    country,
+                    street_address,
+                    apartment: apartment || null,
+                    city,
+                    state_region,
+                    zip_code: zip_code || null,
+                    billing_same_as_shipping: billing_same_as_shipping !== undefined ? billing_same_as_shipping : true,
+                    billing_country: billing_country || null,
+                    billing_street: billing_street || null,
+                    billing_apartment: billing_apartment || null,
+                    billing_city: billing_city || null,
+                    billing_state: billing_state || null,
+                    billing_zip: billing_zip || null,
+                    shipping_method: shipping_method || 'standard',
+                    notes: notes || null
+                }])
+                .select('order_number, order_status, customer_name, created_at')
+                .single();
+
+            clearTimeout(timeoutId);
+
+            if (error) {
+                console.error('Insert error:', error);
+                return res.status(500).json({ 
+                    success: false,
+                    error: 'Failed to create order. Please try again.'
+                });
+            }
+
+            res.status(201).json({
+                success: true,
+                message: 'Order created successfully',
+                order: {
+                    order_number: data.order_number,
+                    order_status: data.order_status,
+                    customer_name: data.customer_name,
+                    created_at: data.created_at
+                }
+            });
+
+        } catch (insertErr) {
+            clearTimeout(timeoutId);
+            console.error('Insert timeout/error:', insertErr);
+            
+            return res.status(504).json({ 
                 success: false,
-                error: error.message 
+                error: 'Server timeout. Please try again in a moment.'
             });
         }
-
-        // Success response
-        res.status(201).json({
-            success: true,
-            message: 'Order created successfully',
-            order: {
-                order_number: data.order_number,
-                order_status: data.order_status,
-                customer_name: data.customer_name,
-                created_at: data.created_at
-            }
-        });
 
     } catch (err) {
         console.error('Order API error:', err);
         res.status(500).json({ 
             success: false,
-            error: 'Internal server error' 
+            error: 'Internal server error'
         });
     }
 });
 
-// Get order by order number (optional - for customer tracking)
+// Get order by order number
 app.get('/api/orders/track/:order_number', async (req, res) => {
     try {
         const { order_number } = req.params;
 
-        const { data, error } = await supabase
-            .from('customer_orders')
-            .select('order_number, order_status, customer_name, shipping_method, created_at, updated_at')
-            .eq('order_number', order_number)
-            .single();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-        if (error) {
-            return res.status(500).json({ 
+        try {
+            const { data, error } = await supabase
+                .from('customer_orders')
+                .select('order_number, order_status, customer_name, shipping_method, created_at, updated_at')
+                .eq('order_number', order_number)
+                .maybeSingle();
+
+            clearTimeout(timeoutId);
+
+            if (error) {
+                return res.status(500).json({ 
+                    success: false,
+                    error: 'Failed to fetch order'
+                });
+            }
+
+            if (!data) {
+                return res.status(404).json({ 
+                    success: false,
+                    error: 'Order not found' 
+                });
+            }
+
+            res.json({
+                success: true,
+                order: data
+            });
+
+        } catch (trackErr) {
+            clearTimeout(timeoutId);
+            return res.status(504).json({ 
                 success: false,
-                error: error.message 
+                error: 'Timeout fetching order. Please try again.'
             });
         }
-
-        if (!data) {
-            return res.status(404).json({ 
-                success: false,
-                error: 'Order not found' 
-            });
-        }
-
-        res.json({
-            success: true,
-            order: data
-        });
 
     } catch (err) {
         console.error('Order tracking error:', err);
@@ -1603,8 +1635,6 @@ app.get('/api/orders/track/:order_number', async (req, res) => {
         });
     }
 });
-
-
 
 
 module.exports = app;
