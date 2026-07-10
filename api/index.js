@@ -1446,67 +1446,7 @@ app.get('/category/:slug*', (req, res) => {
 
 
 
-// ============================================
-// CUSTOMER ORDER API (অর্ডার প্লেস করার জন্য)
-// ============================================
 
-app.post('/api/create-order', async (req, res) => {
-    try {
-        // ফ্রন্টএন্ড থেকে ৩টি অবজেক্ট/অ্যারে আশা করা হচ্ছে
-        const { customerInfo, items, summary } = req.body;
-
-        if (!customerInfo || !items || !summary) {
-            return res.status(400).json({ error: 'Missing order details' });
-        }
-
-        // ১. Customer Order ইনসার্ট করা
-        const { data: orderData, error: orderError } = await supabase
-            .from('customer_orders')
-            .insert([customerInfo])
-            .select()
-            .single();
-
-        if (orderError) throw orderError;
-
-        const orderId = orderData.id;
-
-        // ২. Order Items ইনসার্ট করা (orderId যুক্ত করে)
-        const orderItemsToInsert = items.map(item => ({
-            ...item,
-            order_id: orderId
-        }));
-        
-        const { error: itemsError } = await supabase
-            .from('order_items')
-            .insert(orderItemsToInsert);
-        
-        if (itemsError) throw itemsError;
-
-        // ৩. Order Summary ইনসার্ট করা (orderId যুক্ত করে)
-        const summaryToInsert = {
-            ...summary,
-            order_id: orderId
-        };
-
-        const { error: summaryError } = await supabase
-            .from('order_summary')
-            .insert([summaryToInsert]);
-
-        if (summaryError) throw summaryError;
-
-        // সবকিছু সফল হলে রেসপন্স পাঠানো
-        res.status(201).json({ 
-            success: true, 
-            message: 'Order created successfully',
-            order_number: orderData.order_number, // ট্রিগার দিয়ে জেনারেট হওয়া অর্ডার নাম্বার
-            order_id: orderId
-        });
-
-    } catch (err) {
-        console.error('Order Submission Error:', err);
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
 
 
 
