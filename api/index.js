@@ -1446,65 +1446,31 @@ app.get('/category/:slug*', (req, res) => {
 
 
 
+
+
+
+
+
+
 // ============================================
 // CUSTOMER ORDER API (Public Order Placement)
 // ============================================
-
-// Helper: Server-side validation for order submission
-function validateOrderData(body) {
-    const errors = [];
-    
-    // Required fields check
-    if (!body.customer_name?.trim()) errors.push('Customer name is required');
-    if (!body.customer_email?.trim()) errors.push('Customer email is required');
-    if (!body.customer_phone?.trim()) errors.push('Customer phone is required');
-    if (!body.country?.trim()) errors.push('Country is required');
-    if (!body.street_address?.trim()) errors.push('Street address is required');
-    if (!body.city?.trim()) errors.push('City is required');
-    if (!body.state_region?.trim()) errors.push('State/Region is required');
-    
-    // Items validation
-    if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
-        errors.push('At least one order item is required');
-    } else {
-        body.items.forEach((item, index) => {
-            if (!item.product_id) errors.push(`Item ${index + 1}: Product ID is missing`);
-            if (!item.title) errors.push(`Item ${index + 1}: Product title is missing`);
-            if (!item.quantity || item.quantity < 1) errors.push(`Item ${index + 1}: Quantity must be at least 1`);
-            if (item.price === undefined || item.price === null) errors.push(`Item ${index + 1}: Price is missing`);
-        });
-    }
-    
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (body.customer_email && !emailRegex.test(body.customer_email)) {
-        errors.push('Invalid email format');
-    }
-    
-    // Billing address validation if not same as shipping
-    // Billing address validation if not same as shipping
-// Check if billing_same_as_shipping is explicitly set to false
-if (body.billing_same_as_shipping === false || body.billing_same_as_shipping === 'false') {
-    if (!body.billing_country?.trim()) errors.push('Billing country is required');
-    if (!body.billing_street?.trim()) errors.push('Billing street address is required');
-    if (!body.billing_city?.trim()) errors.push('Billing city is required');
-    if (!body.billing_state?.trim()) errors.push('Billing state/region is required');
-}
-
-return errors;
-}
-
 // POST: Submit a new order
 app.post('/api/orders', async (req, res) => {
+    console.log('📥 Order request received');
+    
     try {
         // Validate incoming data
         const validationErrors = validateOrderData(req.body);
         if (validationErrors.length > 0) {
+            console.log('❌ Validation failed:', validationErrors);
             return res.status(400).json({ 
                 error: 'Validation failed', 
                 details: validationErrors 
             });
         }
+
+        console.log('✅ Validation passed');
 
         // Extract data from request body
         const {
@@ -1536,7 +1502,7 @@ app.post('/api/orders', async (req, res) => {
             notes = null
         } = req.body;
 
-        // Prepare billing info: if same as shipping, use shipping fields
+        // Prepare billing info
         const finalBilling = billing_same_as_shipping ? {
             billing_country: country,
             billing_street: street_address,
@@ -1553,7 +1519,7 @@ app.post('/api/orders', async (req, res) => {
             billing_zip
         };
 
-        // Construct the final order object for insertion
+        // Construct the order object
         const orderData = {
             customer_name,
             customer_email,
@@ -1567,7 +1533,7 @@ app.post('/api/orders', async (req, res) => {
             billing_same_as_shipping,
             ...finalBilling,
             shipping_method,
-            items: typeof items === 'string' ? JSON.parse(items) : items, // Ensure it's JSON
+            items: typeof items === 'string' ? JSON.parse(items) : items,
             subtotal,
             shipping_charge,
             discount,
@@ -1575,23 +1541,55 @@ app.post('/api/orders', async (req, res) => {
             discount_type,
             discount_value,
             total,
-            order_status: 'pending', // Always start as pending
+            order_status: 'pending',
             notes
         };
 
-        // Insert into Supabase
-        const { data, error } = await supabase
-            .from('customer_orders')
-            .insert([orderData])
-            .select() // Return the created record
-            .single(); // Since we're inserting one record
-
-        if (error) {
-            console.error('Supabase insert error:', error);
-            return res.status(500).json({ error: 'Failed to create order', details: error.message });
+        console.log('💾 Attempting to save order...');
+        
+        // Insert with retry logic
+        let data, error;
+        let retries = 3;
+        
+        while (retries > 0) {
+            try {
+                const result = await supabase
+                    .from('customer_orders')
+                    .insert([orderData])
+                    .select()
+                    .single();
+                
+                data = result.data;
+                error = result.error;
+                
+                if (!error) break;
+                
+                console.log(`⚠️ Attempt ${4-retries} failed:`, error.message);
+                retries--;
+                
+                if (retries > 0) {
+                    console.log(`🔄 Retrying in 2 seconds...`);
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            } catch (insertErr) {
+                console.log(`⚠️ Attempt ${4-retries} error:`, insertErr.message);
+                retries--;
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            }
         }
 
-        // Return success response with created order
+        if (error) {
+            console.error('❌ Final insert error:', error);
+            return res.status(500).json({ 
+                error: 'Failed to create order', 
+                details: error.message 
+            });
+        }
+
+        console.log('✅ Order created successfully:', data.order_number);
+        
         res.status(201).json({
             success: true,
             message: 'Order placed successfully',
@@ -1599,38 +1597,16 @@ app.post('/api/orders', async (req, res) => {
         });
 
     } catch (err) {
-        console.error('Order submission error:', err);
-        res.status(500).json({ error: 'An unexpected error occurred', details: err.message });
-    }
-});
-
-// GET: Track order by order number (Public)
-app.get('/api/orders/track/:orderNumber', async (req, res) => {
-    try {
-        const { orderNumber } = req.params;
-
-        const { data, error } = await supabase
-            .from('customer_orders')
-            .select('*')
-            .eq('order_number', orderNumber)
-            .single();
-
-        if (error) return res.status(500).json({ error: error.message });
-        if (!data) return res.status(404).json({ error: 'Order not found' });
-
-        // Return only non-sensitive tracking info
-        res.json({
-            order_number: data.order_number,
-            status: data.order_status,
-            total: data.total,
-            items_count: data.items.length,
-            created_at: data.created_at,
-            shipping_method: data.shipping_method
+        console.error('❌ Unexpected error:', err);
+        res.status(500).json({ 
+            error: 'An unexpected error occurred', 
+            details: err.message 
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
 });
+
+
+
 
 
 
