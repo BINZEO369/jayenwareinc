@@ -3,449 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JABIYEN - Secure Checkout</title>
+    <title>Checkout | JAYENWARE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        /* =========================================================
-           Premium Apple-like UI Variables & Resets
-           ========================================================= */
-        :root {
-            --primary: #000000;
-            --accent: #ffffff;
-            --bg-body: #f5f5f7;
-            --text-main: #1d1d1f;
-            --text-muted: #86868b;
-            --border-color: #d2d2d7;
-            --focus-ring: rgba(0, 102, 204, 0.15);
-            --focus-border: #0066cc;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F7;
+            color: #1d1d1f;
         }
-
-        /* =========================================================
-           Glassmorphism & Component Styles
-           ========================================================= */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-            padding: 32px;
-            transition: all 0.4s ease;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .apple-input {
+        .input-field {
             width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: #ffffff;
-            font-size: 15px;
-            color: var(--text-main);
-            transition: all 0.25s ease;
-            box-sizing: border-box;
-        }
-
-        .apple-input:focus {
+            padding: 0.75rem 1rem;
+            border: 1px solid #d2d2d7;
+            border-radius: 0.5rem;
             outline: none;
-            border-color: var(--focus-border);
-            box-shadow: 0 0 0 4px var(--focus-ring);
-        }
-
-        .apple-btn {
-            width: 100%;
-            background: var(--primary);
-            color: var(--accent);
-            padding: 16px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            letter-spacing: 0.02em;
-            cursor: pointer;
-            border: none;
             transition: all 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.95rem;
         }
-
-        .apple-btn:hover {
-            transform: scale(0.98);
-            background: #1c1c1e;
+        .input-field:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
         }
-
-        .apple-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* Step Transitions */
-        .step-container {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease;
-        }
-
-        .step-container.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Cart Item Styling */
-        .cart-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .cart-item:last-child { border-bottom: none; }
-        .cart-img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: #eee; }
-        
-        .loader {
-            border: 2px solid rgba(255,255,255,0.2);
-            border-top: 2px solid #fff;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="py-12 px-4 sm:px-6 lg:px-8">
+<body class="antialiased min-h-screen pb-12">
 
-    <div class="max-w-2xl mx-auto">
-        
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold tracking-tight text-black mb-2">JABIYEN Secure Checkout</h1>
-            <p id="step-indicator" class="text-sm text-gray-500 font-medium">Step 1 of 2: Shipping & Billing</p>
+    <header class="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-semibold tracking-widest uppercase">JAYENWARE</h1>
+            <span class="text-sm text-gray-500 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                Secure Checkout
+            </span>
         </div>
+    </header>
 
-        <div id="step-1" class="step-container active glass-card">
-            <form id="checkout-form">
-                <h2 class="text-xl font-bold mb-6 border-b pb-2">Contact & Shipping</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="input-group">
-                        <label class="input-label">Full Name</label>
-                        <input type="text" id="customer_name" class="apple-input" required placeholder="e.g. Yasin">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Email Address</label>
-                        <input type="email" id="customer_email" class="apple-input" required placeholder="yasin@example.com">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Phone Number</label>
-                        <input type="tel" id="customer_phone" class="apple-input" required placeholder="+880 1XXX XXXXXX">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Country</label>
-                        <input type="text" id="country" class="apple-input" required value="Bangladesh">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Street Address</label>
-                    <input type="text" id="street_address" class="apple-input" required placeholder="House, Road, Area">
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="input-group">
-                        <label class="input-label">Apartment/Suite (Optional)</label>
-                        <input type="text" id="apartment" class="apple-input">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">City</label>
-                        <input type="text" id="city" class="apple-input" required placeholder="Dhaka">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">State/Region</label>
-                        <input type="text" id="state_region" class="apple-input" required>
-                    </div>
-                </div>
-
-                <label class="checkbox-container">
-                    <input type="checkbox" id="billing_same" checked onchange="toggleBilling()">
-                    Billing address is the same as shipping
-                </label>
-
-                <div id="billing-section" style="display: none;">
-                    <h2 class="text-xl font-bold mb-4 mt-6 border-b pb-2">Billing Address</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="input-group">
-                            <label class="input-label">Billing Country</label>
-                            <input type="text" id="billing_country" class="apple-input">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Billing City</label>
-                            <input type="text" id="billing_city" class="apple-input">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Billing Street</label>
-                        <input type="text" id="billing_street" class="apple-input">
-                    </div>
-                </div>
-
-                <button type="submit" class="apple-btn mt-6" id="btn-continue">
-                    <span>Continue to Product Items</span>
-                    <div class="loader" id="loader-1"></div>
-                </button>
-            </form>
-        </div>
-
-        <div id="step-2" class="step-container glass-card">
-            <h2 class="text-xl font-bold mb-6 border-b pb-2">Your Vault Items</h2>
+    <main class="max-w-6xl mx-auto px-6 mt-8">
+        <form id="checkoutForm" class="flex flex-col lg:flex-row gap-10">
             
-            <div id="cart-review-container" class="mb-6">
+            <div class="flex-1 space-y-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-medium mb-6">Contact Information</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <input type="email" id="email" required placeholder="Email Address" class="input-field">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="fullName" required placeholder="Full Name" class="input-field">
+                            <input type="tel" id="phone" required placeholder="Phone Number" class="input-field">
+                        </div>
+                    </div>
                 </div>
 
-            <div class="flex justify-between items-center py-4 border-t font-bold text-lg">
-                <span>Total Amount:</span>
-                <span id="final-total">৳ 0.00</span>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-medium mb-6">Shipping Address</h2>
+                    <div class="space-y-4">
+                        <select id="country" required class="input-field bg-white">
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="United States">United States</option>
+                        </select>
+                        <div class="grid grid-cols-3 gap-4">
+                            <input type="text" id="street" required placeholder="Street Address" class="input-field col-span-2">
+                            <input type="text" id="apartment" placeholder="Apt, Suite (Opt)" class="input-field">
+                        </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <input type="text" id="city" required placeholder="City" class="input-field">
+                            <input type="text" id="state" required placeholder="State / Region" class="input-field">
+                            <input type="text" id="zip" required placeholder="Zip Code" class="input-field">
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <button onclick="confirmOrder()" class="apple-btn mt-4" id="btn-confirm">
-                <span>Confirm & Place Order</span>
-                <div class="loader" id="loader-2"></div>
-            </button>
-        </div>
+            <div class="w-full lg:w-[400px]">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
+                    <h2 class="text-xl font-medium mb-6">Order Summary</h2>
+                    
+                    <div class="space-y-4 mb-6 border-b border-gray-100 pb-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                    Img
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-sm">Premium Custom T-Shirt</h3>
+                                    <p class="text-xs text-gray-500">Color: Midnight Black | Size: L</p>
+                                    <p class="text-xs text-gray-500 mt-1">Qty: 1</p>
+                                </div>
+                            </div>
+                            <span class="font-medium text-sm">৳1,500</span>
+                        </div>
+                    </div>
 
-        <div id="success-message" class="step-container glass-card text-center py-10">
-            <svg class="w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <h2 class="text-2xl font-bold mb-2">Order Successful!</h2>
-            <p class="text-gray-500 mb-6">Your order has been placed securely into the system.</p>
-            <p class="font-bold bg-gray-100 py-3 rounded-xl inline-block px-6 mb-6">Order ID: <span id="display-order-id" class="text-blue-600"></span></p>
-            <br>
-            <a href="/" class="text-sm font-bold uppercase tracking-wider underline">Return to Store</a>
-        </div>
+                    <div class="space-y-3 text-sm text-gray-600 mb-6">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>৳1,500</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Shipping (Standard)</span>
+                            <span>৳60</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between font-semibold text-lg border-t border-gray-100 pt-4 mb-8">
+                        <span>Total</span>
+                        <span>৳1,560</span>
+                    </div>
 
-    </div>
+                    <button type="submit" id="submitBtn" class="w-full bg-[#1d1d1f] hover:bg-black text-white py-4 rounded-xl font-medium transition-colors flex justify-center items-center gap-2">
+                        <span>Place Order</span>
+                    </button>
+                    
+                    <p id="statusMessage" class="text-center text-sm mt-4 hidden"></p>
+                </div>
+            </div>
+        </form>
+    </main>
 
     <script>
-        // ==========================================
-        // 1. SUPABASE INITIALIZATION
-        // ==========================================
+        // আপনার দেওয়া Supabase ক্রেডেনশিয়াল
         const SUPABASE_URL = "https://kfncdapeswlnwsackkdy.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbmNkYXBlc3dsbndzYWNra2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzY5NjgsImV4cCI6MjA5NTYxMjk2OH0.w0JCxkp0GHhwBboSQXYjA3lqUKEWtgbOgq07D554wK8";
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Global state for current order
-        let currentOrderId = null;
-        let cartItems = [];
+        const form = document.getElementById('checkoutForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
 
-        // ==========================================
-        // 2. UI & LOGIC FUNCTIONS
-        // ==========================================
+        // ডেমো কার্ট ডেটা (বাস্তবে এটি আপনার লোকাল স্টোরেজ বা স্টেট থেকে আসবে)
+        const cartItems = [
+            {
+                product_title: 'Premium Custom T-Shirt',
+                color_name: 'Midnight Black',
+                size_name: 'L',
+                quantity: 1,
+                price: 1500
+            }
+        ];
         
-        // Load cart from LocalStorage on mount
-        document.addEventListener('DOMContentLoaded', () => {
-            const storedCart = localStorage.getItem('jabiyen_cart');
-            if (storedCart) {
-                cartItems = JSON.parse(storedCart);
-            }
-            if(cartItems.length === 0) {
-                alert("Your cart is empty. Redirecting to home.");
-                window.location.href = '/';
-            }
-        });
+        const summaryData = {
+            subtotal: 1500,
+            shipping_charge: 60,
+            discount: 0,
+            total: 1560
+        };
 
-        // Toggle Billing Section
-        function toggleBilling() {
-            const isSame = document.getElementById('billing_same').checked;
-            document.getElementById('billing-section').style.display = isSame ? 'none' : 'block';
-        }
-
-        // Handle Step 1 Submission (Save User Info)
-        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const btn = document.getElementById('btn-continue');
-            const loader = document.getElementById('loader-1');
-            btn.disabled = true;
-            loader.style.display = 'block';
-
-            // Gather Data
-            const isBillingSame = document.getElementById('billing_same').checked;
-            
-            const orderData = {
-                customer_name: document.getElementById('customer_name').value,
-                customer_email: document.getElementById('customer_email').value,
-                customer_phone: document.getElementById('customer_phone').value,
-                country: document.getElementById('country').value,
-                street_address: document.getElementById('street_address').value,
-                apartment: document.getElementById('apartment').value || null,
-                city: document.getElementById('city').value,
-                state_region: document.getElementById('state_region').value,
-                billing_same_as_shipping: isBillingSame,
-                order_status: 'pending' // Default from schema
-            };
-
-            if (!isBillingSame) {
-                orderData.billing_country = document.getElementById('billing_country').value;
-                orderData.billing_street = document.getElementById('billing_street').value;
-                orderData.billing_city = document.getElementById('billing_city').value;
-            }
+            // UI Update: Loading State
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                Processing...
+            `;
+            submitBtn.disabled = true;
+            statusMessage.classList.add('hidden');
 
             try {
-                // Insert into customer_orders
-                const { data, error } = await supabase
+                // ১. Customer Orders টেবিলে ডেটা ইনসার্ট
+                const orderPayload = {
+                    customer_name: document.getElementById('fullName').value,
+                    customer_email: document.getElementById('email').value,
+                    customer_phone: document.getElementById('phone').value,
+                    country: document.getElementById('country').value,
+                    street_address: document.getElementById('street').value,
+                    apartment: document.getElementById('apartment').value,
+                    city: document.getElementById('city').value,
+                    state_region: document.getElementById('state').value,
+                    zip_code: document.getElementById('zip').value,
+                    shipping_method: 'standard',
+                    order_status: 'pending'
+                };
+
+                // .select().single() ব্যবহার করে ইনসার্ট হওয়া row-এর id বের করে আনছি
+                const { data: insertedOrder, error: orderError } = await supabase
                     .from('customer_orders')
-                    .insert([orderData])
-                    .select();
+                    .insert([orderPayload])
+                    .select()
+                    .single();
 
-                if (error) throw error;
+                if (orderError) throw orderError;
 
-                if (data && data.length > 0) {
-                    currentOrderId = data[0].id; // Saving the generated Order ID
-                    
-                    // Transition to Step 2
-                    document.getElementById('step-1').classList.remove('active');
-                    document.getElementById('step-2').classList.add('active');
-                    document.getElementById('step-indicator').innerText = 'Step 2 of 2: Products Confirmation';
-                    
-                    renderCartReview(); // Show products
-                }
-            } catch (err) {
-                console.error("Error creating order:", err);
-                alert("Failed to create order. Please try again.");
+                const newOrderId = insertedOrder.id;
+
+                // ২. Order Items টেবিলে ডেটা ইনসার্ট
+                const itemsPayload = cartItems.map(item => ({
+                    order_id: newOrderId,
+                    product_title: item.product_title,
+                    color_name: item.color_name,
+                    size_name: item.size_name,
+                    quantity: item.quantity,
+                    price: item.price
+                }));
+
+                const { error: itemsError } = await supabase
+                    .from('order_items')
+                    .insert(itemsPayload);
+
+                if (itemsError) throw itemsError;
+
+                // ৩. Order Summary টেবিলে ডেটা ইনসার্ট
+                const summaryPayload = {
+                    order_id: newOrderId,
+                    subtotal: summaryData.subtotal,
+                    shipping_charge: summaryData.shipping_charge,
+                    discount: summaryData.discount,
+                    total: summaryData.total
+                };
+
+                const { error: summaryError } = await supabase
+                    .from('order_summary')
+                    .insert([summaryPayload]);
+
+                if (summaryError) throw summaryError;
+
+                // Success Message
+                statusMessage.textContent = `Order placed successfully! Order No: ${insertedOrder.order_number}`;
+                statusMessage.className = "text-center text-sm mt-4 text-green-600 font-medium block";
+                form.reset();
+
+            } catch (error) {
+                console.error("Error saving order:", error);
+                statusMessage.textContent = "Failed to place order. Please check the console.";
+                statusMessage.className = "text-center text-sm mt-4 text-red-600 font-medium block";
             } finally {
-                btn.disabled = false;
-                loader.style.display = 'none';
+                // UI Update: Reset Button
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
             }
         });
-
-        // Render Cart Items in Step 2
-        function renderCartReview() {
-            const container = document.getElementById('cart-review-container');
-            let total = 0;
-            let html = '';
-
-            cartItems.forEach(item => {
-                const itemTotal = (item.price || 0) * (item.quantity || 1);
-                total += itemTotal;
-                
-                let variantText = [];
-                if(item.color_name) variantText.push(item.color_name);
-                if(item.size_name) variantText.push(item.size_name);
-
-                html += `
-                    <div class="cart-item">
-                        <img src="${item.img || '/logo.png'}" class="cart-img" alt="${item.title}">
-                        <div class="flex-grow">
-                            <h4 class="font-bold text-sm">${item.title}</h4>
-                            <p class="text-xs text-gray-500">${variantText.join(' • ')} | Qty: ${item.quantity || 1}</p>
-                        </div>
-                        <div class="font-bold text-sm">৳${itemTotal.toFixed(2)}</div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-            document.getElementById('final-total').innerText = `৳${total.toFixed(2)}`;
-        }
-
-        // Handle Step 2 Submission (Save Product Items)
-        async function confirmOrder() {
-            if (!currentOrderId) {
-                alert("Order reference lost. Please refresh.");
-                return;
-            }
-
-            const btn = document.getElementById('btn-confirm');
-            const loader = document.getElementById('loader-2');
-            btn.disabled = true;
-            loader.style.display = 'block';
-
-            // Map cart items to DB schema format
-            const dbItems = cartItems.map(item => ({
-                order_id: currentOrderId,
-                product_id: item.product_id || null,
-                variant_id: item.variant_id || null,
-                color_id: item.color_id || null,
-                size_id: item.size_id || null,
-                color_name: item.color_name || null,
-                size_name: item.size_name || null,
-                product_title: item.title,
-                variant_sku: item.sku || null,
-                variant_barcode: item.main_barcode || null,
-                quantity: item.quantity || 1,
-                price: item.price || 0
-            }));
-
-            try {
-                // Insert into order_items
-                const { error } = await supabase
-                    .from('order_items')
-                    .insert(dbItems);
-
-                if (error) throw error;
-
-                // Success Phase
-                localStorage.removeItem('jabiyen_cart'); // Clear cart
-                
-                document.getElementById('step-2').classList.remove('active');
-                document.getElementById('success-message').classList.add('active');
-                document.getElementById('step-indicator').style.display = 'none';
-                
-                // Fetch the generated order_number to display (from customer_orders)
-                const { data: orderInfo } = await supabase
-                    .from('customer_orders')
-                    .select('order_number')
-                    .eq('id', currentOrderId)
-                    .single();
-                    
-                document.getElementById('display-order-id').innerText = orderInfo?.order_number || `#${currentOrderId}`;
-
-            } catch (err) {
-                console.error("Error saving order items:", err);
-                alert("Payment / Configuration failed. Please contact support.");
-                btn.disabled = false;
-                loader.style.display = 'none';
-            }
-        }
     </script>
 </body>
 </html>
