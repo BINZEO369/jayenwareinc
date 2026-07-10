@@ -890,10 +890,10 @@ async function renderFooter() {
                         <div>
                             <h5 class="footer-section-title">Contact</h5>
                             <div style="margin-bottom: 16px;">
-                                ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon">📍</span> <span>${address}</span></div>` : ''}
-                                ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon">☎</span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
-                                ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon">✉</span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
-                                ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon">🕐</span> <span>${workingHours}</span></div>` : ''}
+                                ${address ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${address}</span></div>` : ''}
+                                ${phone ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="tel:${phone}">${phone}</a></span></div>` : ''}
+                                ${email ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span><a href="mailto:${email}">${email}</a></span></div>` : ''}
+                                ${workingHours ? `<div class="footer-contact-item"><span class="footer-contact-icon"></span> <span>${workingHours}</span></div>` : ''}
                             </div>
                         </div>
                         
