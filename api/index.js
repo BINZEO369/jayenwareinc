@@ -1482,14 +1482,16 @@ function validateOrderData(body) {
     }
     
     // Billing address validation if not same as shipping
-    if (!body.billing_same_as_shipping) {
-        if (!body.billing_country?.trim()) errors.push('Billing country is required');
-        if (!body.billing_street?.trim()) errors.push('Billing street address is required');
-        if (!body.billing_city?.trim()) errors.push('Billing city is required');
-        if (!body.billing_state?.trim()) errors.push('Billing state/region is required');
-    }
+    // Billing address validation if not same as shipping
+// Check if billing_same_as_shipping is explicitly set to false
+if (body.billing_same_as_shipping === false || body.billing_same_as_shipping === 'false') {
+    if (!body.billing_country?.trim()) errors.push('Billing country is required');
+    if (!body.billing_street?.trim()) errors.push('Billing street address is required');
+    if (!body.billing_city?.trim()) errors.push('Billing city is required');
+    if (!body.billing_state?.trim()) errors.push('Billing state/region is required');
+}
 
-    return errors;
+return errors;
 }
 
 // POST: Submit a new order
