@@ -1446,7 +1446,189 @@ app.get('/category/:slug*', (req, res) => {
 
 
 
+// ============================================
+// CUSTOMER ORDER API (Public Order Placement)
+// ============================================
 
+// Helper: Server-side validation for order submission
+function validateOrderData(body) {
+    const errors = [];
+    
+    // Required fields check
+    if (!body.customer_name?.trim()) errors.push('Customer name is required');
+    if (!body.customer_email?.trim()) errors.push('Customer email is required');
+    if (!body.customer_phone?.trim()) errors.push('Customer phone is required');
+    if (!body.country?.trim()) errors.push('Country is required');
+    if (!body.street_address?.trim()) errors.push('Street address is required');
+    if (!body.city?.trim()) errors.push('City is required');
+    if (!body.state_region?.trim()) errors.push('State/Region is required');
+    
+    // Items validation
+    if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
+        errors.push('At least one order item is required');
+    } else {
+        body.items.forEach((item, index) => {
+            if (!item.product_id) errors.push(`Item ${index + 1}: Product ID is missing`);
+            if (!item.title) errors.push(`Item ${index + 1}: Product title is missing`);
+            if (!item.quantity || item.quantity < 1) errors.push(`Item ${index + 1}: Quantity must be at least 1`);
+            if (item.price === undefined || item.price === null) errors.push(`Item ${index + 1}: Price is missing`);
+        });
+    }
+    
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (body.customer_email && !emailRegex.test(body.customer_email)) {
+        errors.push('Invalid email format');
+    }
+    
+    // Billing address validation if not same as shipping
+    if (!body.billing_same_as_shipping) {
+        if (!body.billing_country?.trim()) errors.push('Billing country is required');
+        if (!body.billing_street?.trim()) errors.push('Billing street address is required');
+        if (!body.billing_city?.trim()) errors.push('Billing city is required');
+        if (!body.billing_state?.trim()) errors.push('Billing state/region is required');
+    }
+
+    return errors;
+}
+
+// POST: Submit a new order
+app.post('/api/orders', async (req, res) => {
+    try {
+        // Validate incoming data
+        const validationErrors = validateOrderData(req.body);
+        if (validationErrors.length > 0) {
+            return res.status(400).json({ 
+                error: 'Validation failed', 
+                details: validationErrors 
+            });
+        }
+
+        // Extract data from request body
+        const {
+            customer_name,
+            customer_email,
+            customer_phone,
+            country,
+            street_address,
+            apartment = null,
+            city,
+            state_region,
+            zip_code = null,
+            billing_same_as_shipping = true,
+            billing_country = null,
+            billing_street = null,
+            billing_apartment = null,
+            billing_city = null,
+            billing_state = null,
+            billing_zip = null,
+            shipping_method = 'standard',
+            items,
+            subtotal = 0,
+            shipping_charge = 0,
+            discount = 0,
+            promo_code = null,
+            discount_type = null,
+            discount_value = 0,
+            total = 0,
+            notes = null
+        } = req.body;
+
+        // Prepare billing info: if same as shipping, use shipping fields
+        const finalBilling = billing_same_as_shipping ? {
+            billing_country: country,
+            billing_street: street_address,
+            billing_apartment: apartment,
+            billing_city: city,
+            billing_state: state_region,
+            billing_zip: zip_code
+        } : {
+            billing_country,
+            billing_street,
+            billing_apartment,
+            billing_city,
+            billing_state,
+            billing_zip
+        };
+
+        // Construct the final order object for insertion
+        const orderData = {
+            customer_name,
+            customer_email,
+            customer_phone,
+            country,
+            street_address,
+            apartment,
+            city,
+            state_region,
+            zip_code,
+            billing_same_as_shipping,
+            ...finalBilling,
+            shipping_method,
+            items: typeof items === 'string' ? JSON.parse(items) : items, // Ensure it's JSON
+            subtotal,
+            shipping_charge,
+            discount,
+            promo_code,
+            discount_type,
+            discount_value,
+            total,
+            order_status: 'pending', // Always start as pending
+            notes
+        };
+
+        // Insert into Supabase
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .insert([orderData])
+            .select() // Return the created record
+            .single(); // Since we're inserting one record
+
+        if (error) {
+            console.error('Supabase insert error:', error);
+            return res.status(500).json({ error: 'Failed to create order', details: error.message });
+        }
+
+        // Return success response with created order
+        res.status(201).json({
+            success: true,
+            message: 'Order placed successfully',
+            data: data
+        });
+
+    } catch (err) {
+        console.error('Order submission error:', err);
+        res.status(500).json({ error: 'An unexpected error occurred', details: err.message });
+    }
+});
+
+// GET: Track order by order number (Public)
+app.get('/api/orders/track/:orderNumber', async (req, res) => {
+    try {
+        const { orderNumber } = req.params;
+
+        const { data, error } = await supabase
+            .from('customer_orders')
+            .select('*')
+            .eq('order_number', orderNumber)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Order not found' });
+
+        // Return only non-sensitive tracking info
+        res.json({
+            order_number: data.order_number,
+            status: data.order_status,
+            total: data.total,
+            items_count: data.items.length,
+            created_at: data.created_at,
+            shipping_method: data.shipping_method
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 
 
