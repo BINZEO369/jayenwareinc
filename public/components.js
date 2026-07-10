@@ -1220,8 +1220,8 @@ function renderCartItems() {
                     ` : ''}
                     <div class="cart-item-extra-details" id="cart-details-${idx}">
                         <div class="cart-item-extra-details-inner">
-                            ${categoryText ? `<span>📁 ${categoryText}</span>` : ''}
-                            ${barcodeText ? `<span>🔲 ${barcodeText}</span>` : ''}
+                            ${categoryText ? `<span> ${categoryText}</span>` : ''}
+                            ${barcodeText ? `<span> ${barcodeText}</span>` : ''}
                             ${extraDetails.map(d => `<span>${d}</span>`).join('')}
                         </div>
                     </div>
