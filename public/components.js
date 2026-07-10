@@ -159,10 +159,11 @@ function injectSharedStyles() {
             left: 0 !important; 
             right: 0 !important;
             width: 100% !important; 
-            background: var(--glass-white);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--glass-border-light);
+            /* Initial state: Transparent, no background */
+            background: transparent !important;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-bottom: 1px solid transparent;
             box-shadow: none;
             transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, top 0.4s ease;
             z-index: 50;
@@ -171,10 +172,11 @@ function injectSharedStyles() {
         }
         .glass-nav.nav-scrolled {
             top: 0 !important; 
-            background: rgba(255,255,255,0.85) !important;
-            backdrop-filter: blur(30px) saturate(190%);
-            -webkit-backdrop-filter: blur(30px) saturate(190%);
-            border-bottom: 1px solid var(--glass-border-dark);
+            /* Scrolled state: Light white background with blur */
+            background: rgba(255,255,255,0.92) !important;
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
             box-shadow: 0 4px 30px rgba(0,0,0,0.03);
         }
         body.announcement-dismissed .glass-nav:not(.nav-scrolled) { top: 0 !important; }
@@ -879,7 +881,7 @@ async function renderHeader() {
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
-                <img src="/logo.png" class="w-8 h-8 rounded-xl border border-white/20 shadow-sm" alt="Logo">
+                <img src="/logo.png" class="w-10 h-10 rounded-md border border-black/10 shadow-sm object-cover" alt="Logo">
                 <span class="font-black text-base sm:text-lg tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
             <button onclick="closeSideMenu()" class="drawer-close-btn" aria-label="Close menu">
@@ -897,7 +899,7 @@ async function renderHeader() {
     <nav class="glass-nav" id="main-nav">
         <div class="h-14 lg:h-16 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2.5 shrink-0 no-underline">
-                <img src="/logo.png" class="w-7 h-7 lg:w-9 lg:h-9 rounded-xl" alt="JABIYEN Logo">
+                <img src="/logo.png" class="w-10 h-10 lg:w-12 lg:h-12 rounded-md object-cover" alt="JABIYEN Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
             
