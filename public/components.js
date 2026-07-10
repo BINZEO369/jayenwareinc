@@ -1,7 +1,6 @@
 // ============================================================================
-// components.js - Unified Shared Header, Premium Glassmorphism UI & Core Logic
+// components.js - Shared Header, Common Functions & Glassmorphism UI
 // Brand: JABIYEN (Premium Apparel)
-// Precision Engineering & Ultra-Luxury Responsive Interfaces
 // ============================================================================
 
 let cart = JSON.parse(localStorage.getItem('jabiyen_cart') || '[]');
@@ -59,7 +58,7 @@ async function fetchAnnouncement() {
 }
 
 // ============================================================================
-// SHARED PREMIUM CSS STYLES (Dynamic Luxury Layering)
+// SHARED CSS STYLES - Header, Navigation, Drawers, Cart, Toast ONLY
 // ============================================================================
 function injectSharedStyles() {
     if (document.getElementById("shared-components-style")) return;
@@ -69,18 +68,15 @@ function injectSharedStyles() {
         :root {
             --primary: #000000;
             --accent: #ffffff;
-            --glass-white: rgba(255, 255, 255, 0.45);
-            --glass-white-thick: rgba(255, 255, 255, 0.85);
-            --glass-black: rgba(10, 10, 10, 0.75);
-            --glass-black-thick: rgba(0, 0, 0, 0.93);
-            --glass-border-light: rgba(255, 255, 255, 0.3);
-            --glass-border-dark: rgba(0, 0, 0, 0.04);
-            --glass-border-inline: rgba(255, 255, 255, 0.09);
-            --luxury-blur: blur(35px) saturate(210%);
-            --bar-height: 40px;
-            --nav-height-desktop: 76px;
-            --nav-height-mobile: 64px;
-            --spring-transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+            --glass-white: rgba(255, 255, 255, 0.15);
+            --glass-white-thick: rgba(255, 255, 255, 0.7);
+            --glass-black: rgba(0, 0, 0, 0.6);
+            --glass-black-thick: rgba(0, 0, 0, 0.82);
+            --glass-border-light: rgba(255, 255, 255, 0.2);
+            --glass-border-dark: rgba(0, 0, 0, 0.06);
+            --glass-border-inline: rgba(255, 255, 255, 0.15);
+            --glass-blur: blur(25px) saturate(200%);
+            --bar-height: 36px;
         }
         
         html, body {
@@ -90,330 +86,562 @@ function injectSharedStyles() {
             margin: 0 !important; 
             padding: 0 !important;
             box-sizing: border-box;
-            background-color: #ffffff;
-            color: var(--primary);
-            font-family: var(--font-body);
-            -webkit-font-smoothing: antialiased;
         }
         
         *, *:before, *:after { box-sizing: inherit; }
         
-        /* Typography System */
+        /* ==================== TYPOGRAPHY ==================== */
         .text-heading-hero { font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
         .text-heading-xl { font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: var(--primary); }
         .text-heading-lg { font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.5rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; color: var(--primary); }
         .text-heading-md { font-family: var(--font-heading); font-size: clamp(1.25rem, 3vw, 2rem); line-height: 1.2; font-weight: 600; color: var(--primary); }
         .text-heading-sm { font-family: var(--font-heading); font-size: clamp(1rem, 2.5vw, 1.5rem); line-height: 1.25; font-weight: 600; color: var(--primary); }
-        .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #1c1c1e; }
-        .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #2c2c2e; }
+        .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
+        .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #3a3a3c; }
         
-        /* Layout Fixes to prevent dynamic layout shifts */
-        body {
-            padding-top: calc(var(--bar-height) + var(--nav-height-mobile)) !important;
-            transition: padding-top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @media (min-width: 1024px) {
-            body { padding-top: calc(var(--bar-height) + var(--nav-height-desktop)) !important; }
-        }
-        body.announcement-dismissed {
-            padding-top: var(--nav-height-mobile) !important;
-        }
-        @media (min-width: 1024px) {
-            body.announcement-dismissed { padding-top: var(--nav-height-desktop) !important; }
-        }
-
-        /* Unique & High-End Announcement Bar */
+        /* ==================== TOP ANNOUNCEMENT BAR - DYNAMIC ==================== */
         .top-announcement-bar {
-            background: var(--primary) !important;
-            color: var(--accent) !important;
+            background: #000000 !important;
+            color: #ffffff !important;
             font-family: var(--font-body);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             height: var(--bar-height);
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100% !important;
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            z-index: 100;
-            padding: 0 48px 0 24px;
+            z-index: 60;
+            padding: 0 45px 0 16px;
             text-align: center;
             overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, height 0.4s ease;
         }
         .top-announcement-bar.bar-hidden {
             transform: translateY(-100%);
             opacity: 0;
+            height: 0 !important;
             pointer-events: none;
         }
         .top-announcement-bar a {
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 1.5px solid var(--accent);
+            color: rgba(255,255,255,0.7);
+            text-decoration: underline;
             font-weight: 700;
-            margin-left: 8px;
-            transition: opacity 0.2s ease;
+            margin-left: 6px;
+            transition: color 0.2s ease;
         }
-        .top-announcement-bar a:hover { opacity: 0.7; }
+        .top-announcement-bar a:hover {
+            color: #ffffff;
+        }
         .announcement-close-btn {
             position: absolute;
-            right: 20px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--accent);
-            opacity: 0.6;
+            color: rgba(255,255,255,0.6);
             cursor: pointer;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.25s ease, transform 0.25s ease;
+            padding: 4px;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
-        .announcement-close-btn:hover { opacity: 1; transform: translateY(-50%) rotate(90deg); }
+        .announcement-close-btn:hover { color: #ffffff; transform: translateY(-50%) scale(1.1); }
 
-        /* Stable Luxury Glass Navigation */
+        /* ==================== GLASS NAVIGATION ==================== */
         .glass-nav {
             position: fixed;
             top: var(--bar-height); 
-            left: 0; 
-            right: 0;
+            left: 0 !important; 
+            right: 0 !important;
             width: 100% !important; 
-            height: var(--nav-height-mobile);
-            background: rgba(255, 255, 255, 0.7) !important;
-            backdrop-filter: var(--luxury-blur);
-            -webkit-backdrop-filter: var(--luxury-blur);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.01);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, top 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 90;
-        }
-        @media (min-width: 1024px) {
-            .glass-nav { height: var(--nav-height-desktop); }
+            /* Initial state: Transparent, no background */
+            background: transparent !important;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-bottom: 1px solid transparent;
+            box-shadow: none;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, top 0.4s ease;
+            z-index: 50;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         .glass-nav.nav-scrolled {
             top: 0 !important; 
-            background: rgba(255,255,255,0.85) !important;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-            height: 64px;
+            /* Scrolled state: Light white background with blur */
+            background: rgba(255,255,255,0.92) !important;
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
         }
-        body.announcement-dismissed .glass-nav { top: 0 !important; }
-        
+        body.announcement-dismissed .glass-nav:not(.nav-scrolled) { top: 0 !important; }
         .glass-nav > div {
-            padding-left: 24px !important;
-            padding-right: 24px !important;
+            padding-left: 16px !important;
+            padding-right: 12px !important;
             max-width: 100% !important;
             width: 100% !important;
-            height: 100%;
             margin: 0 !important;
         }
         @media (min-width: 1024px) {
             .glass-nav > div {
-                padding-left: 60px !important;
-                padding-right: 60px !important;
+                padding-left: 40px !important;
+                padding-right: 28px !important;
             }
         }
+        body { 
+            padding-top: 0 !important;
+            font-family: var(--font-body);
+            background-color: #ffffff;
+            color: var(--primary);
+        }
 
-        /* Micro-interactions & Icons */
+        /* ==================== HEADER ICONS ==================== */
         .header-icon-btn {
             background: none;
             border: none;
-            padding: 8px;
-            margin: 0 4px;
+            padding: 4px;
+            margin: 0 1px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: var(--primary);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+            transition: opacity 0.25s ease;
             position: relative;
         }
-        .header-icon-btn:hover { opacity: 0.6; transform: scale(1.05); }
-        .header-icon-btn:active { transform: scale(0.95); }
-        
-        #wish-count, #cart-count {
-            background: var(--primary) !important;
-            color: var(--accent) !important;
-            font-size: 8px !important; 
-            font-weight: 800; 
-            border: 1.5px solid #ffffff;
-            top: 0px !important; 
-            right: 0px !important;
-            min-width: 18px !important;
-            height: 18px !important;
-            padding: 0 4px !important;
-            border-radius: 99px;
-            display: flex;
+        .header-icon-btn:hover { opacity: 0.6; }
+        .drawer-close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            color: currentColor;
+            transition: opacity 0.25s ease;
         }
+        .drawer-close-btn:hover { opacity: 0.5; }
 
-        /* Advanced Blurred Overlays */
+        /* ==================== SIDE DRAWER ==================== */
         .side-menu-overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(0,0,0,0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 199; opacity: 0; visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .side-menu-overlay.active { opacity: 1; visibility: visible; }
-
-        /* Architectural Side Menu Drawer */
         .side-menu-drawer {
             position: fixed; top: 0; right: 0;
-            width: 100%; max-width: 440px;
+            width: 100%; max-width: 400px;
             height: 100vh; height: 100dvh;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(40px) saturate(220%);
-            -webkit-backdrop-filter: blur(40px) saturate(220%);
-            border-left: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.45);
+            backdrop-filter: blur(40px) saturate(250%);
+            -webkit-backdrop-filter: blur(40px) saturate(250%);
+            border-left: 1px solid rgba(255,255,255,0.55);
             z-index: 200;
-            transform: translateX(100%); 
+            transform: translateX(105%); 
             visibility: hidden; 
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
-            box-shadow: -30px 0 70px rgba(0,0,0,0.05);
+            box-shadow: -20px 0 60px rgba(0,0,0,0.03);
         }
         .side-menu-drawer.open { transform: translateX(0); visibility: visible; }
         .side-menu-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 24px 32px; border-bottom: 1px solid rgba(0,0,0,0.04);
+            padding: 20px 24px; border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .side-menu-scroll { flex-grow: 1; overflow-y: auto; padding: 24px 32px; }
-        
-        /* Premium Menu Nodes */
+        .side-menu-scroll { flex-grow: 1; overflow-y: auto; padding: 20px 24px; }
         .menu-node-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 4px; border-bottom: 1px solid rgba(0,0,0,0.03);
+            padding: 14px 4px; border-bottom: 1px solid rgba(0,0,0,0.04);
             font-family: var(--font-heading);
-            font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+            font-size: 14px; font-weight: 700; letter-spacing: 0.03em;
             color: var(--primary); text-decoration: none; cursor: pointer;
-            transition: var(--spring-transition);
+            transition: all 0.3s ease;
         }
-        .menu-node-item:hover { padding-left: 12px; color: rgba(0,0,0,0.5); }
-        .menu-node-submenu { 
-            max-height: 0; overflow: hidden; visibility: hidden;
-            padding-left: 18px; border-left: 1.5px solid var(--primary); 
-            margin: 0 0 0 4px; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
-        }
-        .menu-node-submenu.open { max-height: 1200px; visibility: visible; padding-top: 6px; padding-bottom: 10px; }
+        .menu-node-item:hover { padding-left: 10px; opacity: 0.7; }
+        .menu-node-submenu { display: none; padding-left: 16px; border-left: 1.5px solid var(--primary); margin: 4px 0 8px 4px; }
+        .menu-node-submenu.open { display: block; }
         .menu-node-sub-item {
-            display: block; padding: 12px 14px; font-family: var(--font-subtitle); font-size: 13px; font-weight: 600;
-            color: #3a3a3c; text-decoration: none; transition: var(--spring-transition);
+            display: block; padding: 10px 12px; font-family: var(--font-subtitle); font-size: 12px; font-weight: 600;
+            color: #3a3a3c; text-decoration: none; transition: all 0.2s ease;
         }
-        .menu-node-sub-item:hover { color: var(--primary); transform: translateX(6px); }
-        .side-drawer-footer { padding: 32px; border-top: 1px solid rgba(0,0,0,0.04); background: rgba(255,255,255,0.15); flex-shrink: 0; }
+        .menu-node-sub-item:hover { color: var(--primary); padding-left: 4px; }
+        .side-drawer-footer { padding: 24px; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(255,255,255,0.2); flex-shrink: 0; }
 
-        /* Luxury Deep-Black Cart Drawer */
+        /* ==================== CART DRAWER - MOBILE OPTIMIZED ==================== */
         #cart-drawer {
-            position: fixed; top: 0; right: 0; width: 100%; max-width: 450px; height: 100vh; height: 100dvh;
-            background: var(--glass-black-thick) !important; backdrop-filter: blur(40px) saturate(190%) !important;
-            -webkit-backdrop-filter: blur(40px) saturate(190%) !important; border-left: 1px solid var(--glass-border-inline); z-index: 210;
-            transform: translateX(100%) !important; visibility: hidden;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important, visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; height: 100dvh;
+            background: var(--glass-black-thick) !important; backdrop-filter: var(--glass-blur) !important;
+            -webkit-backdrop-filter: var(--glass-blur) !important; border-left: 1px solid var(--glass-border-inline); z-index: 210;
+            transform: translateX(105%) !important; visibility: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important, visibility 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform; color: var(--accent) !important; display: flex; flex-direction: column;
-            box-shadow: -40px 0 80px rgba(0,0,0,0.3);
         }
         #cart-drawer.open { transform: translateX(0) !important; visibility: visible !important; }
         #cart-drawer h2, #cart-drawer span, #cart-drawer p, #cart-drawer h4, #cart-drawer div { color: var(--accent); }
-        #cart-drawer .bg-soft { background: rgba(255,255,255,0.04) !important; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        
-        /* Exquisite Cart Cards */
+        #cart-drawer .bg-soft { background: rgba(255,255,255,0.06) !important; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #cart-items > div { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(12px); border-radius: 16px; }
+        .custom-scroll::-webkit-scrollbar { width: 2px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+        /* ==================== CART ITEM - MOBILE FRIENDLY ==================== */
         .cart-item-card {
-            background: rgba(255,255,255,0.03) !important;
-            border: 1px solid rgba(255,255,255,0.05) !important;
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            border-radius: 20px !important;
-            padding: 16px !important;
-            transition: var(--spring-transition) !important;
+            background: rgba(255,255,255,0.04) !important;
+            border: 1px solid rgba(255,255,255,0.06) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-radius: 16px !important;
+            padding: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
             position: relative;
+            overflow: hidden;
+        }
+        .cart-item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+            pointer-events: none;
         }
         .cart-item-card:hover {
-            background: rgba(255,255,255,0.06) !important;
-            border-color: rgba(255,255,255,0.1) !important;
-            transform: translateY(-2px);
+            background: rgba(255,255,255,0.07) !important;
+            border-color: rgba(255,255,255,0.12) !important;
         }
         
         .cart-item-image {
-            width: 76px; height: 76px; object-fit: cover; border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; background: rgba(255,255,255,0.02);
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.03);
         }
-        .cart-item-title { font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: #ffffff; line-height: 1.4; }
-        .cart-item-variant { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+        
+        .cart-item-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 12px;
+            color: #ffffff;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+        
+        .cart-item-variant {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 2px;
+        }
         
         .cart-item-variant-badge {
-            display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.07);
-            padding: 3px 12px; border-radius: 20px; font-size: 8px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.7); font-family: var(--font-subtitle);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.06);
+            padding: 1px 10px 1px 6px;
+            border-radius: 14px;
+            font-size: 7px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: rgba(255,255,255,0.65);
+            font-family: var(--font-subtitle);
+            border: 1px solid rgba(255,255,255,0.03);
         }
-        .cart-item-variant-badge .color-dot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
-        .cart-item-price { font-family: var(--font-body); font-weight: 800; font-size: 15px; color: #ffffff; }
-        .cart-item-old-price { font-family: var(--font-body); font-size: 11px; text-decoration: line-through; color: rgba(255,255,255,0.3); }
+        .cart-item-variant-badge .color-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            flex-shrink: 0;
+        }
         
-        /* Modernized Interactive Quantity Controller */
+        .cart-item-barcode {
+            font-family: 'Courier New', monospace;
+            font-size: 6px;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.2);
+            margin-top: 1px;
+            background: rgba(255,255,255,0.02);
+            padding: 1px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        
+        .cart-item-price {
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 14px;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+        .cart-item-old-price {
+            font-family: var(--font-body);
+            font-size: 9px;
+            text-decoration: line-through;
+            color: rgba(255,255,255,0.25);
+        }
+        
+        /* ==================== QUANTITY CONTROLS - MOBILE OPTIMIZED ==================== */
         .cart-item-quantity-control {
-            display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.07);
-            border-radius: 12px; padding: 2px; border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 1px 2px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
         .cart-item-quantity-control button {
-            background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer;
-            padding: 4px 10px; font-size: 14px; font-weight: 600; transition: all 0.2s;
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            padding: 2px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            min-width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            touch-action: manipulation;
         }
-        .cart-item-quantity-control button:hover { color: #ffffff; background: rgba(255,255,255,0.08); }
-        .cart-item-quantity-control .qty-num { font-size: 12px; font-weight: 700; min-width: 24px; text-align: center; color: #ffffff; }
+        .cart-item-quantity-control button:active {
+            transform: scale(0.85);
+            background: rgba(255,255,255,0.1);
+        }
+        .cart-item-quantity-control button:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.06);
+        }
+        .cart-item-quantity-control .qty-num {
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-family: var(--font-body);
+            user-select: none;
+        }
         
-        /* Extra Details Toggle Dropdown */
+        .cart-item-remove-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.12);
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            line-height: 1;
+            touch-action: manipulation;
+        }
+        .cart-item-remove-btn:active { transform: scale(0.85); }
+        .cart-item-remove-btn:hover {
+            color: #ef4444;
+            background: rgba(239,68,68,0.08);
+        }
+        
+        .cart-item-sku-badge {
+            font-family: var(--font-subtitle);
+            font-size: 7px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: rgba(255,255,255,0.02);
+            padding: 1px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        
+        /* ==================== DETAILS TOGGLE ==================== */
         .cart-item-details-toggle {
-            background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer;
-            padding: 4px 0; font-size: 8px; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.08em; transition: color 0.2s; font-family: var(--font-subtitle);
-            display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.2);
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 7px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: all 0.3s ease;
+            font-family: var(--font-subtitle);
+            touch-action: manipulation;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
-        .cart-item-details-toggle:hover { color: rgba(255,255,255,0.7); }
-        .cart-item-details-toggle .toggle-icon { transition: transform 0.3s ease; font-size: 7px; }
-        .cart-item-details-toggle .toggle-icon.open { transform: rotate(180deg); }
+        .cart-item-details-toggle:active { transform: scale(0.9); }
+        .cart-item-details-toggle:hover {
+            color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.04);
+        }
+        .cart-item-details-toggle .toggle-icon {
+            transition: transform 0.3s ease;
+            font-size: 6px;
+        }
+        .cart-item-details-toggle .toggle-icon.open {
+            transform: rotate(180deg);
+        }
         
-        .cart-item-extra-details { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; }
-        .cart-item-extra-details.open { max-height: 250px; opacity: 1; margin-top: 8px; }
-        .cart-item-extra-details-inner {
-            display: flex; flex-direction: column; gap: 4px; padding: 10px 12px;
-            background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid rgba(255,255,255,0.03);
+        .cart-item-extra-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin 0.3s ease;
+            opacity: 0;
+            margin-top: 0;
         }
-        .cart-item-extra-details-inner span { font-size: 8px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); font-family: var(--font-subtitle); }
+        .cart-item-extra-details.open {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 6px;
+        }
+        .cart-item-extra-details-inner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px 8px;
+            padding: 6px 8px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .cart-item-extra-details-inner span {
+            font-size: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.3);
+            font-family: var(--font-subtitle);
+            font-weight: 500;
+        }
+        .cart-item-extra-details-inner span::before {
+            content: '•';
+            margin-right: 4px;
+            color: rgba(255,255,255,0.08);
+        }
+        .cart-item-extra-details-inner span:first-child::before { display: none; }
+        
+        .cart-item-category-tag {
+            font-size: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.12);
+            font-family: var(--font-body);
+            font-weight: 500;
+            background: rgba(255,255,255,0.02);
+            padding: 1px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.02);
+            display: inline-block;
+        }
+        
+        .cart-item-bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
 
-        /* Cinematic Premium Toast */
+        /* ==================== TOAST ==================== */
         #toast > div {
-            background: rgba(255,255,255,0.85) !important; backdrop-filter: blur(30px) saturate(210%) !important;
-            -webkit-backdrop-filter: blur(30px) saturate(210%) !important; border: 1px solid rgba(255,255,255,0.4) !important;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.08) !important; border-radius: 24px !important; color: var(--primary) !important;
+            background: rgba(255,255,255,0.85) !important; backdrop-filter: blur(40px) saturate(250%) !important;
+            -webkit-backdrop-filter: blur(40px) saturate(250%) !important; border: 1px solid rgba(255,255,255,0.55) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important; border-radius: 20px !important; color: var(--primary) !important;
         }
         #toast-icon { background: var(--primary) !important; color: var(--accent) !important; }
 
-        .custom-scroll::-webkit-scrollbar { width: 3px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
-        .cart-summary-row { display: flex; justify-content: space-between; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 0; }
-        .cart-summary-row .label { color: rgba(255,255,255,0.4); }
-        .cart-summary-row .value { font-weight: 700; color: rgba(255,255,255,0.9); }
-        .cart-summary-total { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 8px; }
-        .cart-summary-total .label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.6); }
-        .cart-summary-total .value { font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; }
-        
-        .btn-primary {
-            font-family: var(--font-body); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-            background: var(--primary) !important; color: var(--accent) !important; border-radius: 14px !important;
-            transition: var(--spring-transition) !important;
+        /* ==================== CART EMPTY STATE ==================== */
+        .cart-empty-state {
+            text-align: center;
+            padding: 40px 20px;
         }
-        .btn-primary:hover { background: #1c1c1e !important; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .cart-empty-state i {
+            font-size: 44px;
+            color: rgba(255,255,255,0.05);
+            margin-bottom: 16px;
+        }
+        .cart-empty-state h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 4px;
+        }
+        .cart-empty-state p {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: rgba(255,255,255,0.15);
+        }
+
+        /* ==================== CART CHECKOUT SUMMARY ==================== */
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 0;
+        }
+        .cart-summary-row .label { color: rgba(255,255,255,0.35); }
+        .cart-summary-row .value { font-weight: 700; color: rgba(255,255,255,0.85); }
+        .cart-summary-total {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 10px;
+            margin-top: 4px;
+        }
+        .cart-summary-total .label {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
+        }
+        .cart-summary-total .value {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+        .cart-checkout-btn {
+            padding: 14px !important;
+            font-size: 10px !important;
+            border-radius: 14px !important;
+            letter-spacing: 0.08em !important;
+        }
+
+        .btn-primary {
+            font-family: var(--font-body); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            background: var(--primary) !important; color: var(--accent) !important; border-radius: 12px !important;
+            transition: all 0.3s ease !important;
+        }
+        .btn-primary:hover { background: #1c1c1e !important; transform: translateY(-1px); }
+        #wish-count, #cart-count {
+            background: var(--primary) !important; color: var(--accent) !important;
+            font-size: 7px !important; font-weight: 700; border: 1px solid rgba(255,255,255,0.55);
+            top: -2px !important; right: -2px !important;
+            min-width: 16px !important;
+            height: 16px !important;
+            padding: 0 4px !important;
+        }
     </style>
     `;
     document.head.insertAdjacentHTML('beforeend', styles);
@@ -491,7 +719,7 @@ function getMenuLinkUrl(item) {
 function renderUnifiedDrawerMenu(rootItems) {
     let html = '';
     rootItems.forEach((item, index) => {
-        const hasChildren = (item.children && item.children.length > 0) || (item.menu_type === 'category' && item.show_categories_from_db);
+        const hasChildren = item.children && item.children.length > 0;
         const linkUrl = getMenuLinkUrl(item);
         const uniqueId = `drawer-node-${index}-${Date.now()}`;
         
@@ -500,7 +728,7 @@ function renderUnifiedDrawerMenu(rootItems) {
             <div>
                 <div class="menu-node-item" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${item.title || item.name || ''}</span>
-                    <svg width="12" height="8" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-50 transition-transform duration-300 transform"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <div class="menu-node-submenu" id="${uniqueId}">
                     ${renderDrawerSubItems(item, uniqueId)}
@@ -510,13 +738,16 @@ function renderUnifiedDrawerMenu(rootItems) {
             html += `
             <a href="${linkUrl}" class="menu-node-item no-underline">
                 <span>${item.title || item.name || ''}</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>`;
         }
     });
     return html;
 }
 
+// ============================================================================
+// DRAWER INNER LOGICS
+// ============================================================================
 function renderDrawerSubItems(item, parentId) {
     if (item.menu_type === 'category' && item.show_categories_from_db) {
         return renderDatabaseCategoriesToDrawer(parentId);
@@ -533,7 +764,7 @@ function renderDrawerSubItems(item, parentId) {
                 <div>
                     <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                         <span>${child.title || child.name || ''}</span>
-                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-50"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="menu-node-submenu" id="${uniqueId}">
                         ${child.children.map(gc => `<a href="${getMenuLinkUrl(gc)}" class="menu-node-sub-item">${gc.title || gc.name || ''}</a>`).join('')}
@@ -564,7 +795,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
             <div>
                 <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold text-black" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
                     <span>${cat.name}</span>
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-50"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <div class="menu-node-submenu" id="${uniqueId}">
                     <a href="${catUrl}" class="menu-node-sub-item font-black underline decoration-black/10">All ${cat.name}</a>
@@ -582,7 +813,7 @@ function renderDatabaseCategoriesToDrawer(parentId) {
 }
 
 // ============================================================================
-// HEADER ARCHITECTURE INJECTOR
+// HEADER SYSTEM
 // ============================================================================
 async function renderHeader() {
     if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) {
@@ -628,7 +859,7 @@ async function renderHeader() {
              style="background: ${bgColor} !important; color: ${textColor} !important;">
             <span id="announcement-text">${message} ${linkHTML}</span>
             <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
@@ -636,88 +867,91 @@ async function renderHeader() {
         `;
     } else {
         document.body.classList.add('announcement-dismissed');
-        announcementHTML = `<div class="top-announcement-bar bar-hidden" id="top-announcement-bar"><span id="announcement-text"></span></div>`;
+        announcementHTML = `
+        <div class="top-announcement-bar bar-hidden" id="top-announcement-bar">
+            <span id="announcement-text"></span>
+        </div>
+        `;
     }
 
     const headerHTML = `
     ${announcementHTML}
 
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
-    
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
             <a href="/" class="flex items-center gap-3 no-underline">
                 <img src="/logo.png" class="w-10 h-10 rounded-md border border-black/10 shadow-sm object-cover" alt="Logo">
                 <span class="font-black text-base sm:text-lg tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
-            <button onclick="closeSideMenu()" class="drawer-close-btn" style="background:none; border:none; cursor:pointer;" aria-label="Close menu">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <button onclick="closeSideMenu()" class="drawer-close-btn" aria-label="Close menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
         <div class="side-menu-scroll" id="sideMenuContent">
             ${renderUnifiedDrawerMenu(menuTree)}
         </div>
         <div class="side-drawer-footer">
-            <a href="/login" class="block w-full py-4 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
+            <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
         </div>
     </div>
     
     <nav class="glass-nav" id="main-nav">
-        <div class="flex justify-between items-center">
-            <a href="/" class="flex items-center gap-3 shrink-0 no-underline">
-                <img src="/logo.png" class="w-10 h-10 lg:w-11 lg:h-11 rounded-md object-cover border border-black/5" alt="JABIYEN Logo">
+        <div class="h-14 lg:h-16 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-2.5 shrink-0 no-underline">
+                <img src="/logo.png" class="w-10 h-10 lg:w-12 lg:h-12 rounded-md object-cover" alt="JABIYEN Logo">
                 <span class="text-base sm:text-lg lg:text-xl font-black tracking-widest" style="font-family: var(--font-heading); color: var(--primary);">JABIYEN</span>
             </a>
             
-            <div class="flex items-center shrink-0 gap-1">
+            <div class="flex items-center shrink-0 gap-0.5">
                 <a href="/wishlist" class="header-icon-btn" aria-label="Wishlist">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span id="wish-count" class="absolute">0</span>
+                    <span id="wish-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
                 <a href="/cart" onclick="toggleCart();return false;" class="header-icon-btn" aria-label="Cart">
-                    <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="17" height="19" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 6H18V18C18 19.1046 17.1046 20 16 20H3C1.89543 20 1 19.1046 1 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
                         <path d="M5 6C5 3.5 6.5 1 9.5 1C12.5 1 14 3.5 14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                     </svg>
-                    <span id="cart-count" class="absolute">0</span>
+                    <span id="cart-count" class="absolute text-[7px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                 </a>
                 
                 <button onclick="openSideMenu()" class="header-icon-btn" aria-label="Open Navigation Menu">
-                    <svg width="22" height="14" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <svg width="20" height="13" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1H21M1 7.5H21M1 14H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                     </svg>
                 </button>
             </div>
         </div>
     </nav>
     
-    <div id="cart-drawer">
-        <div class="p-5 border-b flex justify-between items-center bg-soft">
-            <h2 class="text-[11px] font-black uppercase tracking-widest text-white">Shopping Vault</h2>
-            <button onclick="toggleCart()" class="drawer-close-btn text-gray-400 hover:text-white" style="background:none; border:none; cursor:pointer;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div id="cart-drawer" class="shadow-2xl">
+        <div class="p-4 border-b flex justify-between items-center bg-soft">
+            <h2 class="text-[10px] font-black uppercase tracking-widest">Shopping Vault</h2>
+            <button onclick="toggleCart()" class="drawer-close-btn text-gray-400 hover:text-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto p-5 space-y-4 custom-scroll"></div>
-        <div class="p-5 border-t bg-soft">
-            <div class="space-y-1 mb-5">
+        <div id="cart-items" class="flex-grow overflow-y-auto p-4 space-y-3 custom-scroll"></div>
+        <div class="p-4 border-t bg-soft">
+            <div class="space-y-1 mb-4">
                 <div class="cart-summary-row">
                     <span class="label">Subtotal</span>
                     <span class="value" id="cart-subtotal">৳ 0.00</span>
                 </div>
                 <div class="cart-summary-row">
-                    <span class="label">Items Subtotal</span>
+                    <span class="label">Items</span>
                     <span class="value" id="cart-item-count">0</span>
                 </div>
                 <div class="cart-summary-row cart-summary-total">
-                    <span class="label">Total Amount</span>
+                    <span class="label">Total</span>
                     <span class="value" id="cart-total">৳ 0.00</span>
                 </div>
             </div>
-            <a href="/checkout" class="w-full py-4 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[11px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg cart-checkout-btn">Execute Checkout</a>
+            <a href="/checkout" class="w-full py-3.5 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] transition text-center block hover:bg-neutral-100 no-underline shadow-lg cart-checkout-btn">Execute Checkout</a>
         </div>
     </div>
     `;
@@ -725,27 +959,31 @@ async function renderHeader() {
 }
 
 // ============================================================================
-// LOGICAL RE-ENGINEERING (Interactions & UI States)
+// ANNOUNCEMENT LOGIC
 // ============================================================================
 function dismissAnnouncementBar() {
     const bar = document.getElementById('top-announcement-bar');
+    const nav = document.getElementById('main-nav');
     if (bar) bar.classList.add('bar-hidden');
     localStorage.setItem('jabiyen_announcement_hidden', 'true');
     document.body.classList.add('announcement-dismissed');
-    handleNavScroll();
+    if (nav && !nav.classList.contains('nav-scrolled')) nav.style.top = '0px';
 }
 
+// ============================================================================
+// TOAST SYSTEM
+// ============================================================================
 function showToast(text, type = 'success') {
     let toast = document.getElementById('toast');
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'toast';
-        toast.className = 'fixed bottom-6 right-6 z-[300] transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) translate-x-[150%]';
+        toast.className = 'fixed bottom-5 right-5 z-[100] transition-transform duration-300 translate-x-[120%]';
         toast.innerHTML = `
-            <div class="shadow-2xl p-4 flex items-center gap-3 min-w-[280px]">
-                <span id="toast-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"></span>
-                <p id="toast-text" class="text-[11px] font-bold flex-grow tracking-wide" style="font-family: var(--font-body); margin:0;"></p>
-                <button onclick="hideToast()" class="drawer-close-btn text-gray-400 hover:text-black shrink-0" style="background:none; border:none; cursor:pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="shadow-xl p-3.5 flex items-center gap-3 min-w-[240px]">
+                <span id="toast-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0"></span>
+                <p id="toast-text" class="text-[10px] font-bold flex-grow tracking-wide" style="font-family: var(--font-body);"></p>
+                <button onclick="hideToast()" class="drawer-close-btn text-gray-400 hover:text-black shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             </div>
         `;
         document.body.appendChild(toast);
@@ -753,50 +991,44 @@ function showToast(text, type = 'success') {
     document.getElementById('toast-text').innerText = text;
     const iconEl = document.getElementById('toast-icon');
     iconEl.innerHTML = type === 'success' ? '✓' : '!';
-    
-    // Smooth insertion trigger
-    setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 50);
-    
+    toast.style.transform = 'translateX(0)';
     clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => { hideToast(); }, 4000);
+    toast._timeout = setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
 }
 
 function hideToast() {
     const toast = document.getElementById('toast');
-    if (toast) toast.style.transform = 'translateX(150%)';
+    if (toast) toast.style.transform = 'translateX(120%)';
 }
 
+// ============================================================================
+// SIDE DRAWER CONTROLLER
+// ============================================================================
 function openSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
-    const overlay = document.getElementById('sideMenuOverlay');
     if (drawer) drawer.classList.add('open');
+    const overlay = document.getElementById('sideMenuOverlay');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeSideMenu() {
     const drawer = document.getElementById('sideMenuDrawer');
-    const overlay = document.getElementById('sideMenuOverlay');
     if (drawer) drawer.classList.remove('open');
+    const overlay = document.getElementById('sideMenuOverlay');
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
+    document.querySelectorAll('.menu-node-submenu.open').forEach(sub => sub.classList.remove('open'));
 }
 
+// ============================================================================
+// ENHANCED CART SYSTEM
+// ============================================================================
 function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
-    const overlay = document.getElementById('sideMenuOverlay');
     if (drawer) {
         drawer.classList.toggle('open');
-        if (drawer.classList.contains('open')) {
-            renderCartItems();
-            if(overlay) overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        } else {
-            if(!document.getElementById('sideMenuDrawer').classList.contains('open')) {
-                if(overlay) overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
+        if (drawer.classList.contains('open')) renderCartItems();
     }
 }
 
@@ -810,28 +1042,40 @@ window.toggleCartItemDetails = function(idx) {
 };
 
 window.addToCart = function(productId, options = {}) {
-    if (!productId || !options.title) return;
+    if (!productId || !options.title) {
+        console.error('Product ID and Title are required');
+        return;
+    }
     
     const existingIndex = cart.findIndex(item => {
         if (item.product_id !== productId) return false;
         if (options.variant_id && item.variant_id === options.variant_id) return true;
         if (!options.variant_id && !item.variant_id) {
-            return item.color_id === (options.color_id || null) && item.size_id === (options.size_id || null);
+            return item.color_id === (options.color_id || null) && 
+                   item.size_id === (options.size_id || null);
         }
         return false;
     });
     
     if (existingIndex > -1) {
         cart[existingIndex].quantity += (options.quantity || 1);
-        showToast(`Updated Collection Amount: × ${cart[existingIndex].quantity}`, 'success');
+        const variantName = options.color_name ? ` ${options.color_name}` : '';
+        showToast(`Updated: ${cart[existingIndex].title}${variantName} × ${cart[existingIndex].quantity}`, 'success');
     } else {
+        let variantParts = [];
+        if (options.color_name) variantParts.push(options.color_name);
+        if (options.size_name) variantParts.push(options.size_name);
+        const variantDisplay = variantParts.length ? ` (${variantParts.join(' • ')})` : '';
+        
+        const displayImage = options.color_image || options.img || '/logo.png';
+        
         const newItem = {
             id: Date.now(),
             product_id: productId,
             title: options.title,
             price: options.price || 0,
             old_price: options.old_price || null,
-            img: options.color_image || options.img || '/logo.png',
+            img: displayImage,
             variant_id: options.variant_id || null,
             variant_name: options.variant_name || null,
             color_id: options.color_id || null,
@@ -854,9 +1098,11 @@ window.addToCart = function(productId, options = {}) {
             print_type: options.print_type || null,
             quantity: options.quantity || 1
         };
+        
         cart.push(newItem);
-        showToast(`Added to Luxury Vault`, 'success');
+        showToast(`Added: ${options.title}${variantDisplay}`, 'success');
     }
+    
     saveCart();
     renderCartItems();
 };
@@ -864,11 +1110,14 @@ window.addToCart = function(productId, options = {}) {
 window.removeFromCart = function(idx) {
     const item = cart[idx];
     if (!item) return;
-    if (cart.length === 1 || window.confirm(`Purge standard item "${item.title}"?`)) {
+    let itemName = item.title;
+    if (item.color_name) itemName += ` (${item.color_name})`;
+    if (item.size_name) itemName += ` ${item.size_name}`;
+    if (cart.length === 1 || window.confirm(`Remove "${itemName}" from bag?`)) {
         cart.splice(idx, 1);
         saveCart();
         renderCartItems();
-        showToast('Item Cleared', 'info');
+        showToast('Removed from Bag', 'info');
     }
 };
 
@@ -891,10 +1140,12 @@ function renderCartItems() {
     
     if (!cart.length) {
         container.innerHTML = `
-            <div style="text-align:center; padding: 60px 24px;">
-                <h3 style="font-family: var(--font-heading); font-size:15px; font-weight:700; color:rgba(255,255,255,0.4); margin-bottom:6px;">Your Vault is Empty</h3>
-                <p style="font-size:11px; color:rgba(255,255,255,0.2); margin:0;">Incorporate exclusive items to system pipeline.</p>
-            </div>`;
+            <div class="cart-empty-state">
+                <i class="fa-regular fa-bag-shopping"></i>
+                <h3>Your Vault is Empty</h3>
+                <p>Start shopping to fill your collection</p>
+            </div>
+        `;
         if (subtotalEl) subtotalEl.innerText = '৳ 0.00';
         if (totalEl) totalEl.innerText = '৳ 0.00';
         if (itemCountEl) itemCountEl.innerText = '0';
@@ -910,48 +1161,77 @@ function renderCartItems() {
         sub += itemTotal;
         totalItems += (item.quantity || 1);
         
-        let badges = [];
-        if (item.color_name) badges.push(`<span class="cart-item-variant-badge">${item.color_code ? `<span class="color-dot" style="background:${item.color_code}"></span>`:''}${item.color_name}</span>`);
-        if (item.size_name) badges.push(`<span class="cart-item-variant-badge">${item.size_name}</span>`);
-        if (item.sku) badges.push(`<span style="font-size:8px; opacity:0.3; background:rgba(255,255,255,0.03); padding:2px 8px; border-radius:10px;">SKU: ${item.sku}</span>`);
+        let variantBadges = [];
+        if (item.color_name) {
+            const colorDot = item.color_code ? 
+                `<span class="color-dot" style="background:${item.color_code};"></span>` : '';
+            variantBadges.push(`<span class="cart-item-variant-badge">${colorDot}${item.color_name}</span>`);
+        }
+        if (item.size_name) {
+            variantBadges.push(`<span class="cart-item-variant-badge">${item.size_name}</span>`);
+        }
+        if (item.sku) {
+            variantBadges.push(`<span class="cart-item-sku-badge">SKU: ${item.sku}</span>`);
+        }
         
-        let extras = [];
-        if (item.fabric_type) extras.push(`Fabric: ${item.fabric_type}`);
-        if (item.fit_type) extras.push(`Fit: ${item.fit_type}`);
-        if (item.gsm_type) extras.push(`GSM: ${item.gsm_type}`);
+        let barcodeParts = [];
+        if (item.main_barcode) barcodeParts.push(`Main: ${item.main_barcode}`);
+        if (item.variant_barcode) barcodeParts.push(`Var: ${item.variant_barcode}`);
+        const barcodeText = barcodeParts.length ? barcodeParts.join(' | ') : '';
+        
+        let extraDetails = [];
+        if (item.fabric_type) extraDetails.push(`Fabric: ${item.fabric_type}`);
+        if (item.fit_type) extraDetails.push(`Fit: ${item.fit_type}`);
+        if (item.gsm_type) extraDetails.push(`GSM: ${item.gsm_type}`);
+        if (item.weight) extraDetails.push(`Weight: ${item.weight}g`);
+        if (item.gender) extraDetails.push(`Gender: ${item.gender}`);
+        if (item.print_type) extraDetails.push(`Print: ${item.print_type}`);
+        
+        let categoryText = '';
+        if (item.category) {
+            categoryText = item.category;
+            if (item.subcategory) categoryText += ` / ${item.subcategory}`;
+        }
+        
+        const hasExtraDetails = extraDetails.length > 0 || categoryText || barcodeText;
         
         return `
         <div class="cart-item-card">
-            <div class="flex gap-4">
-                <img src="${item.img}" class="cart-item-image" onerror="this.src='/logo.png'">
+            <div class="flex gap-3">
+                <img src="${item.img}" class="cart-item-image" alt="${item.title}" onerror="this.src='/logo.png'">
                 <div class="flex-grow min-w-0">
-                    <h4 class="cart-item-title m-0 truncate">${item.title}</h4>
-                    <div class="cart-item-variant">${badges.join('')}</div>
-                    
-                    <div class="flex items-center justify-between mt-3 gap-2">
+                    <div class="flex items-start justify-between gap-1">
+                        <h4 class="cart-item-title">${item.title}</h4>
+                    </div>
+                    <div class="cart-item-variant">${variantBadges.join('')}</div>
+                    <div class="cart-item-bottom-row">
                         <div class="flex items-center gap-2">
                             <span class="cart-item-price">৳${itemTotal.toFixed(2)}</span>
+                            ${item.old_price ? `<span class="cart-item-old-price">৳${(item.old_price * item.quantity).toFixed(2)}</span>` : ''}
                         </div>
                         <div class="cart-item-quantity-control">
-                            <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) - 1})">−</button>
+                            <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) - 1})" aria-label="Decrease">−</button>
                             <span class="qty-num">${item.quantity || 1}</span>
-                            <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) + 1})">+</button>
+                            <button onclick="updateCartQuantity(${idx}, ${(item.quantity || 1) + 1})" aria-label="Increase">+</button>
                         </div>
                     </div>
-                    
-                    ${extras.length ? `
+                    ${hasExtraDetails ? `
                         <button class="cart-item-details-toggle" onclick="toggleCartItemDetails(${idx})">
-                            Specifications <span class="toggle-icon" id="cart-toggle-icon-${idx}">▼</span>
+                            Details <span class="toggle-icon" id="cart-toggle-icon-${idx}">▼</span>
                         </button>
-                        <div class="cart-item-extra-details" id="cart-details-${idx}">
-                            <div class="cart-item-extra-details-inner">
-                                ${extras.map(e => `<span>${e}</span>`).join('')}
-                            </div>
+                    ` : ''}
+                    <div class="cart-item-extra-details" id="cart-details-${idx}">
+                        <div class="cart-item-extra-details-inner">
+                            ${categoryText ? `<span> ${categoryText}</span>` : ''}
+                            ${barcodeText ? `<span> ${barcodeText}</span>` : ''}
+                            ${extraDetails.map(d => `<span>${d}</span>`).join('')}
                         </div>
-                    `:''}
+                    </div>
                 </div>
-                <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;" class="hover:text-red-400 self-start pt-1">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <button onclick="removeFromCart(${idx})" class="cart-item-remove-btn" aria-label="Remove">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </button>
             </div>
         </div>`;
@@ -963,40 +1243,87 @@ function renderCartItems() {
     updateCounts();
 }
 
-window.getCartItemDetails = (productId, variantId = null) => cart.find(i => i.product_id === productId && (!variantId || i.variant_id === variantId)) || null;
-window.isVariantInCart = (productId, colorId, sizeId) => cart.some(i => i.product_id === productId && (!colorId || i.color_id === colorId) && (!sizeId || i.size_id === sizeId));
-window.getProductQuantityInCart = (productId) => cart.filter(i => i.product_id === productId).reduce((t, i) => t + (i.quantity || 0), 0);
-window.getVariantQuantityInCart = (productId, variantId) => { const i = cart.find(x => x.product_id === productId && x.variant_id === variantId); return i ? i.quantity : 0; };
+window.getCartItemDetails = function(productId, variantId = null) {
+    return cart.find(item => {
+        if (item.product_id !== productId) return false;
+        if (variantId && item.variant_id !== variantId) return false;
+        return true;
+    }) || null;
+};
+
+window.isVariantInCart = function(productId, colorId, sizeId) {
+    return cart.some(item => {
+        if (item.product_id !== productId) return false;
+        if (colorId && item.color_id !== colorId) return false;
+        if (sizeId && item.size_id !== sizeId) return false;
+        return true;
+    });
+};
+
+window.getProductQuantityInCart = function(productId) {
+    return cart.filter(item => item.product_id === productId)
+               .reduce((total, item) => total + (item.quantity || 0), 0);
+};
+
+window.getVariantQuantityInCart = function(productId, variantId) {
+    const item = cart.find(item => item.product_id === productId && item.variant_id === variantId);
+    return item ? item.quantity : 0;
+};
 
 window.clearCart = function() {
-    if (!cart.length) return;
-    if (window.confirm('Purge structural pipeline components?')) {
+    if (cart.length === 0) return;
+    if (window.confirm('Clear all items from your bag?')) {
         cart = [];
         saveCart();
         renderCartItems();
-        showToast('Vault Cleared', 'info');
+        showToast('Bag Cleared', 'info');
     }
 };
 
 window.getCartSummary = function() {
     return {
-        items: cart,
-        subtotal: cart.reduce((s, i) => s + (i.price * i.quantity), 0),
-        total_items: cart.reduce((s, i) => s + (i.quantity || 0), 0)
+        items: cart.map(item => ({
+            id: item.id,
+            product_id: item.product_id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+            variant: {
+                color: item.color_name,
+                color_code: item.color_code,
+                color_image: item.color_image,
+                size: item.size_name,
+                sku: item.sku,
+                main_barcode: item.main_barcode,
+                variant_barcode: item.variant_barcode
+            },
+            extra: {
+                fabric: item.fabric_type,
+                fit: item.fit_type,
+                gsm: item.gsm_type,
+                weight: item.weight,
+                gender: item.gender,
+                print: item.print_type
+            },
+            total: item.price * item.quantity
+        })),
+        subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        total_items: cart.reduce((sum, item) => sum + (item.quantity || 0), 0),
+        item_count: cart.length
     };
 };
 
 function updateCounts() {
-    const cCount = document.getElementById('cart-count');
-    const wCount = document.getElementById('wish-count');
-    const total = cart.reduce((s, i) => s + (i.quantity || 0), 0);
-    
-    if (cCount) {
-        cCount.innerText = total;
-        cCount.style.transform = 'scale(1.3)';
-        setTimeout(() => { cCount.style.transform = 'scale(1)'; }, 140);
+    const cartCount = document.getElementById('cart-count');
+    const wishCount = document.getElementById('wish-count');
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    if (cartCount) {
+        cartCount.innerText = totalItems;
+        cartCount.style.transition = 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        cartCount.style.transform = 'scale(1.4)';
+        setTimeout(() => { cartCount.style.transform = 'scale(1)'; }, 150);
     }
-    if (wCount) wCount.innerText = wishlist.length;
+    if (wishCount) wishCount.innerText = wishlist.length;
 }
 
 function saveCart() {
@@ -1020,8 +1347,6 @@ function toggleDrawerSubmenu(submenuId, element) {
     const submenu = document.getElementById(submenuId);
     if (!submenu) return;
     submenu.classList.toggle('open');
-    const svg = element.querySelector('svg');
-    if(svg) svg.classList.toggle('rotate-180');
 }
 
 function handleNavScroll() {
@@ -1029,10 +1354,11 @@ function handleNavScroll() {
     if (!nav) return;
     const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
     const hasAnnouncement = announcementData && announcementData.message;
-    const barHeight = (hasAnnouncement && !isBarDismissed) ? '40px' : '0px';
+    const barHeight = (hasAnnouncement && !isBarDismissed) ? '36px' : '0px';
     
-    if (window.scrollY > 15) {
+    if (window.scrollY > 20) {
         nav.classList.add('nav-scrolled');
+        nav.style.top = '0px';
     } else {
         nav.classList.remove('nav-scrolled');
         nav.style.top = barHeight;
@@ -1040,7 +1366,7 @@ function handleNavScroll() {
 }
 
 // ============================================================================
-// SYSTEM INITIALIZATION LOGIC
+// APIS & INITIALIZATION
 // ============================================================================
 window.showToast = showToast;
 window.hideToast = hideToast;
@@ -1086,5 +1412,6 @@ async function initSharedComponents() {
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSharedComponents);
 } else {
-    setTimeout(initSharedComponents, 30);
+    setTimeout(initSharedComponents, 60);
 }
+
