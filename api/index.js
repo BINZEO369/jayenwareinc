@@ -1444,43 +1444,63 @@ app.get('/api/footer/complete', async (req, res) => {
 // ============================================
 // AUTH API (Final Clean Version)
 // ============================================
+
+// ============================================
+// AUTH API (Updated with new fields)
+// ============================================
+
+// SIGNUP
 app.post('/api/auth/signup', async (req, res) => {
     try {
-        const { email, password, full_name, phone, address } = req.body;
+        const {
+            email, password,
+            first_name, last_name,
+            phone,
+            address_line1, address_line2,
+            city, state, postal_code, country
+        } = req.body;
 
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
-                data: { full_name, phone, address }
+                data: {
+                    first_name: first_name || '',
+                    last_name: last_name || '',
+                    phone: phone || '',
+                    address_line1: address_line1 || '',
+                    address_line2: address_line2 || '',
+                    city: city || '',
+                    state: state || '',
+                    postal_code: postal_code || '',
+                    country: country || ''
+                }
             }
         });
 
-        // ⚡ এটাই মেইন ফিক্স - error কে চেক করো properly
         if (error && Object.keys(error).length > 0 && error.message) {
             throw error;
         }
 
-        // ইউজার থাকলেই সাকসেস
         if (data.user) {
-            res.json({ 
-                success: true, 
+            res.json({
+                success: true,
                 user: data.user,
-                session: data.session 
+                session: data.session
             });
         } else {
             throw new Error("User not created");
         }
 
     } catch (err) {
-        res.status(400).json({ 
-            success: false, 
-            error: err.message || "Signup failed" 
+        res.status(400).json({
+            success: false,
+            error: err.message || "Signup failed"
         });
     }
 });
 
-
+// LOGIN
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -1492,20 +1512,21 @@ app.post('/api/auth/login', async (req, res) => {
 
         if (error) throw error;
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             user: data.user,
-            session: data.session 
+            session: data.session
         });
 
     } catch (err) {
-        res.status(401).json({ 
-            success: false, 
-            error: err.message 
+        res.status(401).json({
+            success: false,
+            error: err.message
         });
     }
 });
 
+// GET PROFILE
 app.get('/api/user/profile', async (req, res) => {
     try {
         const token = req.headers.authorization?.replace('Bearer ', '');
@@ -1514,26 +1535,27 @@ app.get('/api/user/profile', async (req, res) => {
         const { data: { user }, error: authError } = await supabase.auth.getUser(token);
         if (authError || !user) throw new Error('Invalid token');
 
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', user.id)
             .single();
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             user,
-            profile 
+            profile
         });
 
     } catch (err) {
-        res.status(401).json({ 
-            success: false, 
-            error: err.message 
+        res.status(401).json({
+            success: false,
+            error: err.message
         });
     }
 });
 
+// UPDATE PROFILE
 app.put('/api/user/profile', async (req, res) => {
     try {
         const token = req.headers.authorization?.replace('Bearer ', '');
@@ -1542,15 +1564,25 @@ app.put('/api/user/profile', async (req, res) => {
         const { data: { user }, error: authError } = await supabase.auth.getUser(token);
         if (authError || !user) throw new Error('Invalid token');
 
-        const { name, phone, address } = req.body;
+        const {
+            first_name, last_name, phone,
+            address_line1, address_line2,
+            city, state, postal_code, country
+        } = req.body;
 
         const { data: profile, error } = await supabase
             .from('profiles')
             .upsert({
                 id: user.id,
-                name,
+                first_name,
+                last_name,
                 phone,
-                address,
+                address_line1,
+                address_line2,
+                city,
+                state,
+                postal_code,
+                country,
                 updated_at: new Date()
             })
             .select()
@@ -1558,19 +1590,20 @@ app.put('/api/user/profile', async (req, res) => {
 
         if (error) throw error;
 
-        res.json({ 
-            success: true, 
-            profile 
+        res.json({
+            success: true,
+            profile
         });
 
     } catch (err) {
-        res.status(400).json({ 
-            success: false, 
-            error: err.message 
+        res.status(400).json({
+            success: false,
+            error: err.message
         });
     }
 });
 
+// LOGOUT
 app.post('/api/auth/logout', async (req, res) => {
     try {
         await supabase.auth.signOut();
@@ -1579,7 +1612,6 @@ app.post('/api/auth/logout', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
-
 
 
 // ============================================
