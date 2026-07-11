@@ -645,6 +645,17 @@
         }
       }
 
+      // ✅ Save session to localStorage
+      function saveSession(session) {
+        if (session && session.access_token) {
+          localStorage.setItem('jayenware_session', JSON.stringify({
+            access_token: session.access_token,
+            expires_at: session.expires_at || null,
+            user_id: session.user?.id || null
+          }));
+        }
+      }
+
       // Password toggle
       passwordToggle.addEventListener('click', function() {
         var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -687,7 +698,6 @@
         setLoading(true);
 
         try {
-          // ✅ FIXED: Use /api/auth/login (matching server route)
           var response = await fetch(API_BASE + '/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -698,6 +708,11 @@
 
           if (!response.ok) {
             throw new Error(result.error || result.message || 'Invalid email or password');
+          }
+
+          // ✅ Save session token to localStorage
+          if (result.session) {
+            saveSession(result.session);
           }
 
           // Success
