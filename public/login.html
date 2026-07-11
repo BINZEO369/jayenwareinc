@@ -681,14 +681,14 @@
         // Collect form data
         var formData = {
           email: emailInput.value.trim(),
-          password: passwordInput.value,
-          remember: document.getElementById('remember').checked
+          password: passwordInput.value
         };
 
         setLoading(true);
 
         try {
-          var response = await fetch(API_BASE + '/api/auth/signin', {
+          // ✅ FIXED: Use /api/auth/login (matching server route)
+          var response = await fetch(API_BASE + '/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
@@ -697,7 +697,7 @@
           var result = await response.json();
 
           if (!response.ok) {
-            throw new Error(result.message || result.error || 'Invalid email or password');
+            throw new Error(result.error || result.message || 'Invalid email or password');
           }
 
           // Success
@@ -717,15 +717,16 @@
           console.error('Login error:', error);
           
           // Show inline alert for auth errors
-          if (error.message.toLowerCase().includes('invalid') || 
-              error.message.toLowerCase().includes('credentials') ||
-              error.message.toLowerCase().includes('password') ||
-              error.message.toLowerCase().includes('email')) {
-            showAlert(error.message);
+          var errorMsg = error.message || 'Something went wrong';
+          if (errorMsg.toLowerCase().includes('invalid') || 
+              errorMsg.toLowerCase().includes('credentials') ||
+              errorMsg.toLowerCase().includes('password') ||
+              errorMsg.toLowerCase().includes('email')) {
+            showAlert(errorMsg);
             showFieldError('email', '');
             showFieldError('password', '');
           } else {
-            showToast(error.message || 'Something went wrong. Please try again.', 'error');
+            showToast(errorMsg, 'error');
           }
         } finally {
           setLoading(false);
