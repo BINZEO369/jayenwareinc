@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>My Account | JAYENWARE</title>
-  <meta name="description" content="Manage your JAYENWARE account and profile" />
+  <meta name="description" content="Manage your JAYENWARE account, orders, and profile" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
@@ -48,7 +48,6 @@
       --soft: #f5f5f7;
       --blue: #007aff;
       --error: #ff3b30;
-      --success: #34c759;
     }
     * {
       -webkit-tap-highlight-color: transparent;
@@ -66,218 +65,416 @@
       padding: 0;
     }
 
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
     .account-container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 20px;
-      min-height: calc(100vh - 180px);
+      padding: 32px 16px 48px;
     }
 
     .account-header {
-      margin-bottom: 40px;
-      animation: fadeInUp 0.6s ease-out;
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
-
+    @keyframes fadeSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
     .account-header h1 {
       font-family: 'Manrope', sans-serif;
-      font-size: 32px;
+      font-size: clamp(28px, 4vw, 40px);
       font-weight: 800;
       color: var(--primary);
-      margin: 0 0 8px 0;
+      margin: 0 0 6px 0;
       letter-spacing: -0.02em;
     }
-
     .account-header p {
-      font-size: 16px;
+      font-size: 15px;
       color: var(--accent);
       margin: 0;
     }
 
-    .profile-card {
-      background: white;
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
-      animation: fadeInUp 0.8s ease-out;
+    .account-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .account-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .profile-section {
-      margin-bottom: 40px;
+    .account-sidebar {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 24px;
+      opacity: 0;
+      transform: translateX(-16px);
+      animation: fadeSlideLeft 0.5s 0.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes fadeSlideLeft {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @media (max-width: 768px) {
+      .account-sidebar {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+        padding: 6px;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .account-sidebar::-webkit-scrollbar { display: none; }
     }
 
-    .profile-section:last-child {
-      margin-bottom: 0;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 2px solid #f5f5f7;
-    }
-
-    .section-title {
+    .sidebar-nav-item {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      text-decoration: none;
+      margin-bottom: 2px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+    }
+    @media (max-width: 768px) {
+      .sidebar-nav-item {
+        flex-shrink: 0;
+        width: auto;
+        padding: 10px 16px;
+        font-size: 13px;
+        gap: 8px;
+      }
+    }
+    .sidebar-nav-item:hover {
+      background: var(--soft);
+    }
+    .sidebar-nav-item.active {
+      background: #1d1d1f;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .sidebar-nav-item i {
+      width: 20px;
+      text-align: center;
+      font-size: 15px;
+    }
+    .sidebar-nav-item .badge {
+      margin-left: auto;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 50px;
+      min-width: 20px;
+      text-align: center;
+    }
+    .sidebar-nav-item.active .badge {
+      background: #ffffff;
+      color: #1d1d1f;
     }
 
-    .section-title i {
-      font-size: 24px;
-      color: var(--blue);
-      width: 40px;
-      height: 40px;
+    .account-content {
+      min-height: 500px;
+    }
+
+    .content-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .content-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .info-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+    .info-card-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      background: rgba(0, 122, 255, 0.1);
-      border-radius: 12px;
+      justify-content: space-between;
+      margin-bottom: 20px;
     }
-
-    .section-title h2 {
+    .info-card-header h2 {
       font-family: 'Manrope', sans-serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--primary);
       margin: 0;
-      letter-spacing: -0.01em;
     }
-
-    .edit-btn {
-      padding: 8px 20px;
-      background: var(--soft);
-      color: var(--primary);
+    .info-card-header .edit-btn {
+      font-size: 13px;
+      color: var(--blue);
+      background: none;
       border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-weight: 600;
       font-family: 'Inter', sans-serif;
+      padding: 6px 14px;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+    }
+    .info-card-header .edit-btn:hover {
+      background: rgba(0,122,255,0.08);
     }
 
-    .edit-btn:hover {
-      background: #e5e5ea;
-      transform: translateY(-1px);
-    }
-
-    .edit-btn.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    .profile-grid {
+    .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+    }
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+    .info-item label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .info-item span {
+      font-size: 15px;
+      color: var(--primary);
+      font-weight: 500;
     }
 
-    .profile-field {
-      background: #f9f9fb;
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 380px) {
+      .stats-row { grid-template-columns: 1fr; }
+    }
+    .stat-card {
+      background: #ffffff;
       border-radius: 16px;
       padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+    .stat-card .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 18px;
+    }
+    .stat-card .stat-icon.orders { background: #e8f4fd; color: #007aff; }
+    .stat-card .stat-icon.wishlist { background: #fde8e8; color: #ff3b30; }
+    .stat-card .stat-icon.reviews { background: #e8fde8; color: #34c759; }
+    .stat-card .stat-value {
+      font-family: 'Manrope', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+    .stat-card .stat-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .order-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f5;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .order-item:last-child { border-bottom: none; }
+    .order-info h4 {
+      font-weight: 600;
+      font-size: 15px;
+      margin: 0 0 4px 0;
+      color: var(--primary);
+    }
+    .order-info p {
+      font-size: 13px;
+      color: var(--accent);
+      margin: 0;
+    }
+    .order-status {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .order-status.delivered { background: #e8fde8; color: #1b7a1b; }
+    .order-status.processing { background: #fff3cd; color: #856404; }
+    .order-status.shipped { background: #e8f4fd; color: #0056b3; }
+
+    .order-total {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--primary);
+    }
+
+    .address-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      border: 1.5px solid transparent;
       transition: all 0.3s ease;
       position: relative;
     }
-
-    .profile-field:hover {
-      background: #f0f0f5;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .address-card.default {
+      border-color: var(--blue);
     }
-
-    .field-label {
+    .address-card .default-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .address-card h4 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      color: var(--primary);
+    }
+    .address-card p {
+      font-size: 14px;
+      color: #4a4a4f;
+      margin: 0 0 4px 0;
+      line-height: 1.5;
+    }
+    .address-card .address-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .address-card .address-actions button {
       font-size: 12px;
       font-weight: 600;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .btn-outline {
+      background: none;
+      border: 1.5px solid #e5e5ea !important;
+      color: var(--primary);
+    }
+    .btn-outline:hover { background: var(--soft); }
+    .btn-outline.danger { color: #ff3b30; border-color: #ffd1cf !important; }
+    .btn-outline.danger:hover { background: #fff0ef; }
+
+    .logout-btn {
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .field-label i {
-      font-size: 14px;
-      color: var(--blue);
-    }
-
-    .field-value {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--primary);
-      word-break: break-word;
-    }
-
-    .field-value.empty {
-      color: #c7c7cc;
-      font-style: italic;
-      font-weight: 400;
-    }
-
-    .field-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid #e5e5ea;
-      border-radius: 10px;
-      font-size: 15px;
-      font-family: 'Inter', sans-serif;
-      color: var(--primary);
-      background: white;
-      transition: all 0.3s ease;
-      display: none;
-    }
-
-    .field-input:focus {
-      outline: none;
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-    }
-
-    .profile-field.editing .field-value {
-      display: none;
-    }
-
-    .profile-field.editing .field-input {
-      display: block;
-    }
-
-    .save-btn {
-      width: 100%;
-      padding: 14px 24px;
-      background: var(--blue);
-      color: white;
-      border: none;
+      gap: 8px;
+      padding: 10px 16px;
       border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+      color: #ff3b30;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
       font-family: 'Inter', sans-serif;
+      margin-top: 4px;
+      transition: all 0.2s ease;
+    }
+    .logout-btn:hover { background: #fff0ef; }
+    @media (max-width: 768px) {
+      .logout-btn {
+        flex-shrink: 0;
+        width: auto;
+      }
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 60px 20px;
       display: none;
-      margin-top: 32px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-
-    .save-btn:hover {
-      background: #0056b3;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 122, 255, 0.25);
-    }
-
-    .save-btn:disabled {
-      background: #a1a1a6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .save-btn.visible {
-      display: block;
+    .error-state.visible { display: flex; }
+    .error-state i { font-size: 48px; color: #ff3b30; margin-bottom: 16px; }
+    .error-state h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .error-state p { font-size: 14px; color: var(--accent); max-width: 400px; }
+    .error-state button {
+      margin-top: 16px;
+      padding: 10px 24px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
     }
 
     .toast {
@@ -297,53 +494,19 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      max-width: 90vw;
     }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { background: #ff3b30; }
+    .toast i { font-size: 16px; }
 
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
+    .skeleton-text {
+      height: 14px;
+      margin-bottom: 8px;
+      border-radius: 4px;
     }
-
-    .toast.error {
-      background: #ff3b30;
-    }
-
-    .toast.success {
-      background: #34c759;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .account-container {
-        padding: 20px 16px;
-      }
-      
-      .profile-card {
-        padding: 24px 20px;
-        border-radius: 16px;
-      }
-
-      .profile-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .account-header h1 {
-        font-size: 28px;
-      }
-
-      .section-title h2 {
-        font-size: 18px;
-      }
-    }
+    .skeleton-text.short { width: 60%; }
+    .skeleton-text.medium { width: 80%; }
   </style>
 </head>
 <body class="antialiased">
@@ -352,154 +515,180 @@
 
   <main>
     <div class="account-container">
-      <!-- Account Header -->
+
+      <!-- Page Header -->
       <div class="account-header">
         <h1>My Account</h1>
-        <p>Manage your profile and personal information</p>
+        <p id="welcome-message">Welcome back</p>
       </div>
 
-      <!-- Profile Card -->
-      <div class="profile-card" id="profile-card">
-        
-        <!-- Personal Information Section -->
-        <div class="profile-section">
-          <div class="section-header">
-            <div class="section-title">
-              <i class="fa-solid fa-user"></i>
-              <h2>Personal Information</h2>
+      <!-- Error State -->
+      <div class="error-state" id="error-state">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h3>Failed to load account</h3>
+        <p>Please sign in again to access your account.</p>
+        <button onclick="window.location.href='/signin'">Go to Sign In</button>
+      </div>
+
+      <!-- Grid Layout -->
+      <div class="account-grid" id="account-grid" style="display:none;">
+
+        <!-- Sidebar -->
+        <aside class="account-sidebar" id="account-sidebar">
+          <button class="sidebar-nav-item active" data-panel="overview">
+            <i class="fa-solid fa-grid-2"></i> Overview
+          </button>
+          <button class="sidebar-nav-item" data-panel="orders">
+            <i class="fa-solid fa-box"></i> Orders
+            <span class="badge" id="order-count-badge" style="display:none;">0</span>
+          </button>
+          <button class="sidebar-nav-item" data-panel="profile">
+            <i class="fa-solid fa-user"></i> Profile
+          </button>
+          <button class="sidebar-nav-item" data-panel="addresses">
+            <i class="fa-solid fa-location-dot"></i> Addresses
+          </button>
+          <button class="sidebar-nav-item" data-panel="settings">
+            <i class="fa-solid fa-gear"></i> Settings
+          </button>
+          <button class="logout-btn" id="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+          </button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="account-content">
+
+          <!-- OVERVIEW PANEL -->
+          <div class="content-panel active" id="panel-overview">
+            <div id="skeleton-overview">
+              <div class="stats-row">
+                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
+                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
+                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
+              </div>
+              <div class="info-card">
+                <div class="skeleton skeleton-text medium" style="height:20px;"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text short"></div>
+                <div class="skeleton skeleton-text medium"></div>
+              </div>
             </div>
-            <button class="edit-btn" id="edit-profile-btn" onclick="toggleEditMode()">
-              <i class="fa-solid fa-pen-to-square"></i>
-              <span>Edit Profile</span>
-            </button>
+            <div id="content-overview" style="display:none;">
+              <div class="stats-row">
+                <div class="stat-card">
+                  <div class="stat-icon orders"><i class="fa-solid fa-box"></i></div>
+                  <div class="stat-value" id="stat-orders">0</div>
+                  <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon wishlist"><i class="fa-solid fa-heart"></i></div>
+                  <div class="stat-value" id="stat-wishlist">0</div>
+                  <div class="stat-label">Wishlist Items</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon reviews"><i class="fa-solid fa-star"></i></div>
+                  <div class="stat-value" id="stat-reviews">0</div>
+                  <div class="stat-label">Reviews</div>
+                </div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>Recent Orders</h2>
+                  <button class="edit-btn" onclick="switchPanel('orders')">View All <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i></button>
+                </div>
+                <div id="recent-orders-list">
+                  <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders yet</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="profile-grid" id="profile-grid">
-            <!-- First Name -->
-            <div class="profile-field" data-field="first_name">
-              <div class="field-label">
-                <i class="fa-solid fa-signature"></i>
-                First Name
-              </div>
-              <div class="field-value empty" id="display-first_name">Not provided</div>
-              <input type="text" class="field-input" id="input-first_name" placeholder="Enter first name" maxlength="50" />
+          <!-- ORDERS PANEL -->
+          <div class="content-panel" id="panel-orders">
+            <div id="skeleton-orders">
+              <div class="info-card"><div class="skeleton" style="height:60px;margin-bottom:12px;"></div><div class="skeleton" style="height:60px;"></div></div>
             </div>
-
-            <!-- Last Name -->
-            <div class="profile-field" data-field="last_name">
-              <div class="field-label">
-                <i class="fa-solid fa-signature"></i>
-                Last Name
+            <div id="content-orders" style="display:none;">
+              <div class="info-card">
+                <div class="info-card-header"><h2>All Orders</h2></div>
+                <div id="all-orders-list">
+                  <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>
+                </div>
               </div>
-              <div class="field-value empty" id="display-last_name">Not provided</div>
-              <input type="text" class="field-input" id="input-last_name" placeholder="Enter last name" maxlength="50" />
-            </div>
-
-            <!-- Phone -->
-            <div class="profile-field" data-field="phone">
-              <div class="field-label">
-                <i class="fa-solid fa-phone"></i>
-                Phone Number
-              </div>
-              <div class="field-value empty" id="display-phone">Not provided</div>
-              <input type="tel" class="field-input" id="input-phone" placeholder="+1 (555) 123-4567" />
-            </div>
-
-            <!-- Email (Read-only, from auth) -->
-            <div class="profile-field">
-              <div class="field-label">
-                <i class="fa-solid fa-envelope"></i>
-                Email Address
-              </div>
-              <div class="field-value empty" id="display-email">Loading...</div>
             </div>
           </div>
+
+          <!-- PROFILE PANEL -->
+          <div class="content-panel" id="panel-profile">
+            <div id="skeleton-profile">
+              <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
+            </div>
+            <div id="content-profile" style="display:none;">
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>Personal Information</h2>
+                  <button class="edit-btn" id="edit-profile-btn"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
+                </div>
+                <div class="info-grid" id="profile-info-grid"></div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-header"><h2>Account Details</h2></div>
+                <div class="info-grid" id="account-info-grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADDRESSES PANEL -->
+          <div class="content-panel" id="panel-addresses">
+            <div id="skeleton-addresses">
+              <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
+            </div>
+            <div id="content-addresses" style="display:none;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;">Saved Addresses</h2>
+                <button class="edit-btn" onmouseover="this.style.background='rgba(0,122,255,0.08)'" onmouseout="this.style.background='none'" style="font-size:13px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;font-family:'Inter',sans-serif;padding:8px 16px;border-radius:50px;transition:all 0.2s ease;">
+                  <i class="fa-solid fa-plus" style="margin-right:4px;"></i> Add New
+                </button>
+              </div>
+              <div id="addresses-list">
+                <p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SETTINGS PANEL -->
+          <div class="content-panel" id="panel-settings">
+            <div class="info-card">
+              <div class="info-card-header"><h2>Preferences</h2></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f5;">
+                <span style="font-size:14px;font-weight:500;">Email Notifications</span>
+                <span style="font-size:13px;color:var(--accent);">Enabled</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f5;">
+                <span style="font-size:14px;font-weight:500;">SMS Notifications</span>
+                <span style="font-size:13px;color:var(--accent);">Disabled</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                <span style="font-size:14px;font-weight:500;">Language</span>
+                <span style="font-size:13px;color:var(--accent);">English</span>
+              </div>
+            </div>
+            <div class="info-card" style="border:1.5px solid #ffd1cf;">
+              <div class="info-card-header"><h2 style="color:#ff3b30;">Danger Zone</h2></div>
+              <p style="font-size:13px;color:var(--accent);margin-bottom:16px;">Once you delete your account, there is no going back. Please be certain.</p>
+              <button class="btn-outline danger" style="padding:10px 20px;font-size:13px;">Delete Account</button>
+            </div>
+          </div>
+
         </div>
-
-        <!-- Address Information Section -->
-        <div class="profile-section">
-          <div class="section-header">
-            <div class="section-title">
-              <i class="fa-solid fa-location-dot"></i>
-              <h2>Address Information</h2>
-            </div>
-          </div>
-
-          <div class="profile-grid" id="address-grid">
-            <!-- Address Line 1 -->
-            <div class="profile-field" data-field="address_line1">
-              <div class="field-label">
-                <i class="fa-solid fa-road"></i>
-                Address Line 1
-              </div>
-              <div class="field-value empty" id="display-address_line1">Not provided</div>
-              <input type="text" class="field-input" id="input-address_line1" placeholder="Street address" maxlength="200" />
-            </div>
-
-            <!-- Address Line 2 -->
-            <div class="profile-field" data-field="address_line2">
-              <div class="field-label">
-                <i class="fa-solid fa-building"></i>
-                Address Line 2
-              </div>
-              <div class="field-value empty" id="display-address_line2">Not provided</div>
-              <input type="text" class="field-input" id="input-address_line2" placeholder="Apt, suite, unit, etc." maxlength="200" />
-            </div>
-
-            <!-- City -->
-            <div class="profile-field" data-field="city">
-              <div class="field-label">
-                <i class="fa-solid fa-city"></i>
-                City
-              </div>
-              <div class="field-value empty" id="display-city">Not provided</div>
-              <input type="text" class="field-input" id="input-city" placeholder="City" maxlength="100" />
-            </div>
-
-            <!-- State -->
-            <div class="profile-field" data-field="state">
-              <div class="field-label">
-                <i class="fa-solid fa-map-pin"></i>
-                State/Province
-              </div>
-              <div class="field-value empty" id="display-state">Not provided</div>
-              <input type="text" class="field-input" id="input-state" placeholder="State or province" maxlength="100" />
-            </div>
-
-            <!-- Postal Code -->
-            <div class="profile-field" data-field="postal_code">
-              <div class="field-label">
-                <i class="fa-solid fa-mailbox"></i>
-                Postal Code
-              </div>
-              <div class="field-value empty" id="display-postal_code">Not provided</div>
-              <input type="text" class="field-input" id="input-postal_code" placeholder="Postal/ZIP code" maxlength="20" />
-            </div>
-
-            <!-- Country -->
-            <div class="profile-field" data-field="country">
-              <div class="field-label">
-                <i class="fa-solid fa-globe"></i>
-                Country
-              </div>
-              <div class="field-value empty" id="display-country">Not provided</div>
-              <input type="text" class="field-input" id="input-country" placeholder="Country" maxlength="100" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Save Button -->
-        <button class="save-btn" id="save-profile-btn" onclick="saveProfile()">
-          <i class="fa-solid fa-check"></i>
-          Save Changes
-        </button>
       </div>
     </div>
   </main>
 
-  <!-- Toast Notification -->
+  <!-- Toast -->
   <div class="toast" id="toast">
-    <i class="fa-solid" id="toast-icon"></i>
+    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
     <span id="toast-message"></span>
   </div>
 
@@ -510,267 +699,269 @@
   <script>
     (function() {
       var API_BASE = window.location.origin;
-      var isEditing = false;
-      var currentProfile = null;
-      var currentSession = null;
+      var currentPanel = 'overview';
+      var userData = null;
+      var authToken = null;
 
-      // DOM Elements
-      var editBtn = document.getElementById('edit-profile-btn');
-      var saveBtn = document.getElementById('save-profile-btn');
-      var profileGrid = document.getElementById('profile-grid');
-      var addressGrid = document.getElementById('address-grid');
-      var toast = document.getElementById('toast');
-      var toastIcon = document.getElementById('toast-icon');
-      var toastMessage = document.getElementById('toast-message');
-
-      // Check authentication
-      function getSession() {
-        try {
-          var sessionData = localStorage.getItem('jayenware_session');
-          if (sessionData) {
-            currentSession = JSON.parse(sessionData);
-            return currentSession;
-          }
-        } catch (e) {
-          console.error('Session parse error:', e);
+      // Get token from localStorage
+      function getToken() {
+        if (authToken) return authToken;
+        // Try to get from localStorage (set during login)
+        var stored = localStorage.getItem('jayenware_session');
+        if (stored) {
+          try {
+            var parsed = JSON.parse(stored);
+            authToken = parsed.access_token || null;
+          } catch(e) {}
         }
-        return null;
+        return authToken;
       }
 
-      // Show toast notification
+      // Show toast
       function showToast(message, type) {
+        var toast = document.getElementById('toast');
+        var toastIcon = document.getElementById('toast-icon');
+        var toastMessage = document.getElementById('toast-message');
         toastMessage.textContent = message;
-        toast.className = 'toast ' + type + ' show';
-        
-        if (type === 'success') {
-          toastIcon.className = 'fa-solid fa-circle-check';
-        } else {
-          toastIcon.className = 'fa-solid fa-circle-exclamation';
-        }
-
+        toast.className = 'toast ' + (type || '') + ' show';
+        toastIcon.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
         clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(function() {
-          toast.classList.remove('show');
-        }, 4000);
+        window._toastTimeout = setTimeout(function() { toast.classList.remove('show'); }, 4000);
       }
 
-      // Load profile data
-      async function loadProfile() {
-        var session = getSession();
-        if (!session || !session.access_token) {
-          window.location.href = '/signin?message=session_expired';
-          return;
-        }
-
-        try {
-          var response = await fetch(API_BASE + '/api/profile', {
-            method: 'GET',
-            headers: {
-              'Authorization': 'Bearer ' + session.access_token,
-              'Content-Type': 'application/json'
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to load profile');
-          }
-
-          var data = await response.json();
-          currentProfile = data.profile || data;
-          
-          // Display profile data
-          displayProfile(currentProfile);
-          
-          // Display email from session or auth
-          displayEmail(session);
-
-        } catch (error) {
-          console.error('Profile load error:', error);
-          showToast('Failed to load profile data', 'error');
-        }
-      }
-
-      // Display profile data in the UI
-      function displayProfile(profile) {
-        var fields = [
-          'first_name', 'last_name', 'phone',
-          'address_line1', 'address_line2',
-          'city', 'state', 'postal_code', 'country'
-        ];
-
-        fields.forEach(function(field) {
-          var displayEl = document.getElementById('display-' + field);
-          var inputEl = document.getElementById('input-' + field);
-          
-          if (displayEl && inputEl) {
-            var value = profile[field] || '';
-            
-            if (value.trim()) {
-              displayEl.textContent = value;
-              displayEl.classList.remove('empty');
-            } else {
-              displayEl.textContent = 'Not provided';
-              displayEl.classList.add('empty');
-            }
-            
-            inputEl.value = value;
-          }
+      // Panel Switching
+      function switchPanel(panelName) {
+        currentPanel = panelName;
+        document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
+          item.classList.remove('active');
+          if (item.getAttribute('data-panel') === panelName) item.classList.add('active');
         });
+        document.querySelectorAll('.content-panel').forEach(function(panel) {
+          panel.classList.remove('active');
+        });
+        var targetPanel = document.getElementById('panel-' + panelName);
+        if (targetPanel) targetPanel.classList.add('active');
+        loadPanelData(panelName);
       }
 
-      // Display email
-      function displayEmail(session) {
-        var emailDisplay = document.getElementById('display-email');
-        if (emailDisplay) {
-          // Try to get email from session
-          if (session.user_id) {
-            // You might need to decode JWT or fetch user email
-            fetch(API_BASE + '/api/auth/user', {
-              method: 'GET',
-              headers: {
-                'Authorization': 'Bearer ' + session.access_token
-              }
-            })
-            .then(function(response) {
-              if (response.ok) return response.json();
-              throw new Error('Failed to fetch user');
-            })
-            .then(function(data) {
-              if (data.email) {
-                emailDisplay.textContent = data.email;
-                emailDisplay.classList.remove('empty');
-              } else {
-                emailDisplay.textContent = 'Email not available';
-                emailDisplay.classList.add('empty');
-              }
-            })
-            .catch(function() {
-              emailDisplay.textContent = 'Email not available';
-              emailDisplay.classList.add('empty');
-            });
-          } else {
-            emailDisplay.textContent = 'Email not available';
-            emailDisplay.classList.add('empty');
-          }
+      document.getElementById('account-sidebar').addEventListener('click', function(e) {
+        var navItem = e.target.closest('.sidebar-nav-item');
+        if (navItem) {
+          var panel = navItem.getAttribute('data-panel');
+          if (panel) switchPanel(panel);
+        }
+      });
+
+      function loadPanelData(panel) {
+        if (!userData) return;
+        switch(panel) {
+          case 'profile': renderProfile(userData); break;
+          case 'addresses': renderAddresses(userData); break;
+          case 'orders': renderAllOrders(userData); break;
+          case 'overview': renderOverview(userData); break;
         }
       }
 
-      // Toggle edit mode
-      window.toggleEditMode = function() {
-        isEditing = !isEditing;
-        
-        var allFields = document.querySelectorAll('.profile-field');
-        var editBtnText = editBtn.querySelector('span');
-        
-        allFields.forEach(function(field) {
-          if (isEditing) {
-            field.classList.add('editing');
-          } else {
-            field.classList.remove('editing');
-          }
-        });
+      function renderProfile(data) {
+        document.getElementById('skeleton-profile').style.display = 'none';
+        document.getElementById('content-profile').style.display = 'block';
+        document.getElementById('profile-info-grid').innerHTML =
+          '<div class="info-item"><label>First Name</label><span>' + escapeHTML(data.first_name || '—') + '</span></div>' +
+          '<div class="info-item"><label>Last Name</label><span>' + escapeHTML(data.last_name || '—') + '</span></div>' +
+          '<div class="info-item"><label>Phone</label><span>' + escapeHTML(data.phone || '—') + '</span></div>' +
+          '<div class="info-item"><label>Email</label><span>' + escapeHTML(data.email || '—') + '</span></div>';
+        document.getElementById('account-info-grid').innerHTML =
+          '<div class="info-item"><label>Member Since</label><span>' + formatDate(data.created_at) + '</span></div>' +
+          '<div class="info-item"><label>Last Updated</label><span>' + formatDate(data.updated_at) + '</span></div>';
+      }
 
-        if (isEditing) {
-          editBtn.classList.add('active');
-          editBtnText.textContent = 'Cancel';
-          saveBtn.classList.add('visible');
+      function renderAddresses(data) {
+        document.getElementById('skeleton-addresses').style.display = 'none';
+        document.getElementById('content-addresses').style.display = 'block';
+        var container = document.getElementById('addresses-list');
+        if (data.address_line1) {
+          container.innerHTML =
+            '<div class="address-card default">' +
+              '<div class="default-badge">Default</div>' +
+              '<h4>' + escapeHTML((data.first_name || '') + ' ' + (data.last_name || '')) + '</h4>' +
+              '<p>' + escapeHTML(data.address_line1) + (data.address_line2 ? ', ' + escapeHTML(data.address_line2) : '') + '</p>' +
+              '<p>' + escapeHTML(data.city) + ', ' + escapeHTML(data.state) + ' ' + escapeHTML(data.postal_code) + '</p>' +
+              '<p>' + escapeHTML(data.country) + '</p>' +
+              '<p style="margin-top:8px;font-weight:500;">' + escapeHTML(data.phone) + '</p>' +
+              '<div class="address-actions">' +
+                '<button class="btn-outline"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>' +
+              '</div>' +
+            '</div>';
         } else {
-          editBtn.classList.remove('active');
-          editBtnText.textContent = 'Edit Profile';
-          saveBtn.classList.remove('visible');
+          container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>';
         }
-      };
+      }
 
-      // Save profile
-      window.saveProfile = async function() {
-        if (!currentSession || !currentSession.access_token) {
-          showToast('Session expired. Please sign in again.', 'error');
+      function renderOverview(data) {
+        document.getElementById('skeleton-overview').style.display = 'none';
+        document.getElementById('content-overview').style.display = 'block';
+        document.getElementById('stat-orders').textContent = data.order_count || 0;
+        document.getElementById('stat-wishlist').textContent = data.wishlist_count || 0;
+        document.getElementById('stat-reviews').textContent = data.review_count || 0;
+        var recentContainer = document.getElementById('recent-orders-list');
+        if (data.recent_orders && data.recent_orders.length > 0) {
+          recentContainer.innerHTML = data.recent_orders.slice(0, 3).map(function(order) {
+            return '<div class="order-item">' +
+              '<div class="order-info"><h4>Order #' + order.id + '</h4><p>' + formatDate(order.date) + '</p></div>' +
+              '<span class="order-status ' + order.status + '">' + order.status + '</span>' +
+              '<span class="order-total">$' + order.total + '</span>' +
+            '</div>';
+          }).join('');
+        } else {
+          recentContainer.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders yet</p>';
+        }
+      }
+
+      function renderAllOrders(data) {
+        document.getElementById('skeleton-orders').style.display = 'none';
+        document.getElementById('content-orders').style.display = 'block';
+        var container = document.getElementById('all-orders-list');
+        if (data.orders && data.orders.length > 0) {
+          container.innerHTML = data.orders.map(function(order) {
+            return '<div class="order-item">' +
+              '<div class="order-info"><h4>Order #' + order.id + '</h4><p>' + formatDate(order.date) + '</p></div>' +
+              '<span class="order-status ' + order.status + '">' + order.status + '</span>' +
+              '<span class="order-total">$' + order.total + '</span>' +
+            '</div>';
+          }).join('');
+        } else {
+          container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>';
+        }
+        var badge = document.getElementById('order-count-badge');
+        if (data.order_count > 0) {
+          badge.textContent = data.order_count;
+          badge.style.display = 'inline';
+        }
+      }
+
+      // ✅ FIXED: Fetch user data with correct endpoint + token
+      async function fetchUserData() {
+        var token = getToken();
+        if (!token) {
+          showErrorState('Please sign in to view your account.');
           return;
         }
 
-        // Collect form data
-        var profileData = {
-          first_name: document.getElementById('input-first_name').value.trim(),
-          last_name: document.getElementById('input-last_name').value.trim(),
-          phone: document.getElementById('input-phone').value.trim(),
-          address_line1: document.getElementById('input-address_line1').value.trim(),
-          address_line2: document.getElementById('input-address_line2').value.trim(),
-          city: document.getElementById('input-city').value.trim(),
-          state: document.getElementById('input-state').value.trim(),
-          postal_code: document.getElementById('input-postal_code').value.trim(),
-          country: document.getElementById('input-country').value.trim()
-        };
-
-        // Disable save button during save
-        saveBtn.disabled = true;
-        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-
         try {
-          var response = await fetch(API_BASE + '/api/profile', {
-            method: 'PUT',
+          // ✅ Use /api/user/profile instead of /api/auth/user
+          var response = await fetch(API_BASE + '/api/user/profile', {
             headers: {
-              'Authorization': 'Bearer ' + currentSession.access_token,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(profileData)
+              'Accept': 'application/json',
+              'Authorization': 'Bearer ' + token
+            }
           });
 
           if (!response.ok) {
-            var errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to update profile');
+            if (response.status === 401) {
+              localStorage.removeItem('jayenware_session');
+              showErrorState('Session expired. Please sign in again.');
+              return;
+            }
+            throw new Error('Failed to load user data');
           }
 
           var result = await response.json();
-          currentProfile = result.profile || profileData;
           
-          // Update display
-          displayProfile(currentProfile);
+          // Extract data from response structure
+          var profile = result.profile || {};
+          var user = result.user || {};
           
-          // Exit edit mode
-          isEditing = true;
-          toggleEditMode();
+          // Merge data
+          userData = {
+            email: user.email || profile.email || '',
+            first_name: profile.first_name || user.user_metadata?.first_name || '',
+            last_name: profile.last_name || user.user_metadata?.last_name || '',
+            phone: profile.phone || user.user_metadata?.phone || '',
+            address_line1: profile.address_line1 || user.user_metadata?.address_line1 || '',
+            address_line2: profile.address_line2 || user.user_metadata?.address_line2 || '',
+            city: profile.city || user.user_metadata?.city || '',
+            state: profile.state || user.user_metadata?.state || '',
+            postal_code: profile.postal_code || user.user_metadata?.postal_code || '',
+            country: profile.country || user.user_metadata?.country || '',
+            created_at: profile.created_at || user.created_at || '',
+            updated_at: profile.updated_at || user.updated_at || '',
+            order_count: 0,
+            wishlist_count: 0,
+            review_count: 0,
+            orders: [],
+            recent_orders: []
+          };
+
+          // Show grid
+          document.getElementById('account-grid').style.display = 'grid';
+          document.getElementById('error-state').classList.remove('visible');
           
-          showToast('Profile updated successfully!', 'success');
+          // Update welcome message
+          document.getElementById('welcome-message').textContent = 
+            'Welcome back, ' + (userData.first_name || 'User');
+          
+          // Render overview
+          renderOverview(userData);
 
         } catch (error) {
-          console.error('Profile update error:', error);
-          showToast(error.message || 'Failed to update profile', 'error');
-        } finally {
-          // Reset save button
-          saveBtn.disabled = false;
-          saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Changes';
+          console.error('Error loading user data:', error);
+          showErrorState('Failed to load account data. Please try again.');
         }
-      };
+      }
 
-      // Initialize on load
+      function showErrorState(message) {
+        document.getElementById('account-grid').style.display = 'none';
+        var errorState = document.getElementById('error-state');
+        errorState.classList.add('visible');
+        if (message) {
+          errorState.querySelector('p').textContent = message;
+        }
+      }
+
+      // ✅ FIXED: Logout with correct endpoint
+      document.getElementById('logout-btn').addEventListener('click', async function() {
+        try {
+          // ✅ Use /api/auth/logout instead of /api/auth/signout
+          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
+        } catch(e) {
+          console.error('Logout error:', e);
+        }
+        localStorage.removeItem('jayenware_session');
+        window.location.href = '/';
+      });
+
+      // Helpers
+      function escapeHTML(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return '—';
+        try {
+          var date = new Date(dateString);
+          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        } catch(e) {
+          return dateString;
+        }
+      }
+
+      // Expose switchPanel globally
+      window.switchPanel = switchPanel;
+
+      // Init
       document.addEventListener('DOMContentLoaded', function() {
         // Load fonts if available
         if (window.JAYENWARE_FONTS) {
           var root = document.documentElement;
           var vars = window.JAYENWARE_FONTS.cssVariables;
           for (var key in vars) {
-            if (vars.hasOwnProperty(key)) {
-              root.style.setProperty(key, vars[key]);
-            }
+            if (vars.hasOwnProperty(key)) root.style.setProperty(key, vars[key]);
           }
         }
-
-        loadProfile();
-      });
-
-      // Keyboard shortcut to save (Ctrl+S or Cmd+S)
-      document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-          if (isEditing) {
-            e.preventDefault();
-            saveProfile();
-          }
-        }
-        
-        // Escape to cancel editing
-        if (e.key === 'Escape' && isEditing) {
-          toggleEditMode();
-        }
+        fetchUserData();
       });
 
     })();
