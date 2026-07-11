@@ -66,198 +66,219 @@
       padding: 0;
     }
 
-    .skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 8px;
-    }
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
     .account-container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 32px 16px 48px;
+      padding: 40px 20px;
+      min-height: calc(100vh - 180px);
     }
 
     .account-header {
-      margin-bottom: 32px;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+      margin-bottom: 40px;
+      animation: fadeInUp 0.6s ease-out;
     }
-    @keyframes fadeSlideUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
+
     .account-header h1 {
       font-family: 'Manrope', sans-serif;
-      font-size: clamp(28px, 4vw, 40px);
+      font-size: 32px;
       font-weight: 800;
       color: var(--primary);
-      margin: 0 0 6px 0;
+      margin: 0 0 8px 0;
       letter-spacing: -0.02em;
     }
+
     .account-header p {
-      font-size: 15px;
+      font-size: 16px;
       color: var(--accent);
       margin: 0;
     }
 
-    .info-card {
-      background: #ffffff;
+    .profile-card {
+      background: white;
       border-radius: 20px;
-      padding: 32px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 8px 24px rgba(0,0,0,0.05);
-      margin-bottom: 24px;
-      opacity: 0;
-      transform: translateY(12px);
-      animation: cardIn 0.5s 0.15s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-    }
-    @keyframes cardIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 480px) {
-      .info-card { padding: 24px 20px; }
+      padding: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+      animation: fadeInUp 0.8s ease-out;
     }
 
-    .info-card-header {
+    .profile-section {
+      margin-bottom: 40px;
+    }
+
+    .profile-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       padding-bottom: 16px;
-      border-bottom: 1px solid #f0f0f5;
+      border-bottom: 2px solid #f5f5f7;
     }
-    .info-card-header h2 {
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title i {
+      font-size: 24px;
+      color: var(--blue);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 122, 255, 0.1);
+      border-radius: 12px;
+    }
+
+    .section-title h2 {
       font-family: 'Manrope', sans-serif;
       font-size: 20px;
       font-weight: 700;
       color: var(--primary);
       margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .edit-btn {
+      padding: 8px 20px;
+      background: var(--soft);
+      color: var(--primary);
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-    .info-card-header h2 i {
-      font-size: 18px;
-      color: var(--blue);
-    }
-    .edit-btn {
-      font-size: 13px;
-      color: var(--blue);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
+      gap: 8px;
       font-family: 'Inter', sans-serif;
-      padding: 8px 16px;
-      border-radius: 50px;
-      transition: all 0.2s ease;
+    }
+
+    .edit-btn:hover {
+      background: #e5e5ea;
+      transform: translateY(-1px);
+    }
+
+    .edit-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .profile-field {
+      background: #f9f9fb;
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .profile-field:hover {
+      background: #f0f0f5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .edit-btn:hover {
-      background: rgba(0,122,255,0.08);
+
+    .field-label i {
+      font-size: 14px;
+      color: var(--blue);
     }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 28px;
-    }
-    @media (max-width: 600px) {
-      .info-grid { grid-template-columns: 1fr; gap: 16px; }
-    }
-    .info-item {
-      padding: 8px 0;
-    }
-    .info-item label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-    .info-item .info-value {
-      font-size: 15px;
-      color: var(--primary);
+    .field-value {
+      font-size: 16px;
       font-weight: 500;
+      color: var(--primary);
       word-break: break-word;
     }
-    .info-item .info-value.empty {
+
+    .field-value.empty {
       color: #c7c7cc;
       font-style: italic;
       font-weight: 400;
     }
 
-    .info-item.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .logout-section {
-      display: flex;
-      justify-content: center;
-      margin-top: 32px;
-      opacity: 0;
-      transform: translateY(12px);
-      animation: cardIn 0.5s 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-    }
-    .logout-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 28px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      color: #ff3b30;
-      background: #ffffff;
-      border: 1.5px solid #ffd1cf;
+    .field-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 10px;
+      font-size: 15px;
       font-family: 'Inter', sans-serif;
+      color: var(--primary);
+      background: white;
       transition: all 0.3s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-    .logout-btn:hover {
-      background: #fff0ef;
-      border-color: #ffb3ad;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(255,59,48,0.12);
-    }
-    .logout-btn:active { transform: scale(0.97); }
-
-    .error-state {
-      text-align: center;
-      padding: 80px 20px;
       display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 50vh;
     }
-    .error-state.visible { display: flex; }
-    .error-state i { font-size: 56px; color: #ff3b30; margin-bottom: 20px; }
-    .error-state h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
-    .error-state p { font-size: 14px; color: var(--accent); max-width: 400px; margin-bottom: 24px; }
-    .error-state button {
-      padding: 12px 28px;
-      background: var(--primary);
-      color: #fff;
+
+    .field-input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+
+    .profile-field.editing .field-value {
+      display: none;
+    }
+
+    .profile-field.editing .field-input {
+      display: block;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--blue);
+      color: white;
       border: none;
-      border-radius: 50px;
-      cursor: pointer;
+      border-radius: 12px;
+      font-size: 15px;
       font-weight: 600;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
+      cursor: pointer;
       transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      display: none;
+      margin-top: 32px;
     }
-    .error-state button:hover { background: #333; }
+
+    .save-btn:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 122, 255, 0.25);
+    }
+
+    .save-btn:disabled {
+      background: #a1a1a6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .save-btn.visible {
+      display: block;
+    }
 
     .toast {
       position: fixed;
@@ -276,25 +297,52 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      max-width: 90vw;
     }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.error { background: #ff3b30; }
-    .toast i { font-size: 16px; }
 
-    .profile-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      color: var(--accent);
-      margin: 0 auto 20px;
-      font-weight: 700;
-      font-family: 'Manrope', sans-serif;
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error {
+      background: #ff3b30;
+    }
+
+    .toast.success {
+      background: #34c759;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .account-container {
+        padding: 20px 16px;
+      }
+      
+      .profile-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .account-header h1 {
+        font-size: 28px;
+      }
+
+      .section-title h2 {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -304,93 +352,154 @@
 
   <main>
     <div class="account-container">
-
+      <!-- Account Header -->
       <div class="account-header">
         <h1>My Account</h1>
-        <p id="welcome-message">Loading your profile...</p>
+        <p>Manage your profile and personal information</p>
       </div>
 
-      <div class="error-state" id="error-state">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <h3>Unable to load account</h3>
-        <p id="error-message">Please sign in again to access your account.</p>
-        <button onclick="window.location.href='/signin'">Go to Sign In</button>
-      </div>
-
-      <div id="skeleton-loader">
-        <div class="info-card">
-          <div class="skeleton" style="height:24px;width:40%;margin-bottom:24px;"></div>
-          <div class="info-grid">
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:70%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:70%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:70%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:70%;"></div></div>
-          </div>
-        </div>
-        <div class="info-card">
-          <div class="skeleton" style="height:24px;width:40%;margin-bottom:24px;"></div>
-          <div class="info-grid">
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:90%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:90%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:60%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:70%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:50%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:30%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:80%;"></div></div>
-          </div>
-        </div>
-        <div class="info-card">
-          <div class="skeleton" style="height:24px;width:40%;margin-bottom:24px;"></div>
-          <div class="info-grid">
-            <div><div class="skeleton" style="height:12px;width:40%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:60%;"></div></div>
-            <div><div class="skeleton" style="height:12px;width:40%;margin-bottom:8px;"></div><div class="skeleton" style="height:18px;width:60%;"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="content-container" style="display:none;">
-
-        <div class="info-card" style="text-align:center;">
-          <div class="profile-avatar" id="profile-avatar">U</div>
-          <h2 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;margin:0 0 4px;" id="profile-fullname">—</h2>
-          <p style="font-size:14px;color:var(--accent);margin:0;" id="profile-email-display">—</p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-card-header">
-            <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
-            <button class="edit-btn" id="edit-profile-btn">
-              <i class="fa-solid fa-pen"></i> Edit
+      <!-- Profile Card -->
+      <div class="profile-card" id="profile-card">
+        
+        <!-- Personal Information Section -->
+        <div class="profile-section">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-user"></i>
+              <h2>Personal Information</h2>
+            </div>
+            <button class="edit-btn" id="edit-profile-btn" onclick="toggleEditMode()">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>Edit Profile</span>
             </button>
           </div>
-          <div class="info-grid" id="personal-info-grid"></div>
-        </div>
 
-        <div class="info-card">
-          <div class="info-card-header">
-            <h2><i class="fa-solid fa-address-book"></i> Contact & Address</h2>
+          <div class="profile-grid" id="profile-grid">
+            <!-- First Name -->
+            <div class="profile-field" data-field="first_name">
+              <div class="field-label">
+                <i class="fa-solid fa-signature"></i>
+                First Name
+              </div>
+              <div class="field-value empty" id="display-first_name">Not provided</div>
+              <input type="text" class="field-input" id="input-first_name" placeholder="Enter first name" maxlength="50" />
+            </div>
+
+            <!-- Last Name -->
+            <div class="profile-field" data-field="last_name">
+              <div class="field-label">
+                <i class="fa-solid fa-signature"></i>
+                Last Name
+              </div>
+              <div class="field-value empty" id="display-last_name">Not provided</div>
+              <input type="text" class="field-input" id="input-last_name" placeholder="Enter last name" maxlength="50" />
+            </div>
+
+            <!-- Phone -->
+            <div class="profile-field" data-field="phone">
+              <div class="field-label">
+                <i class="fa-solid fa-phone"></i>
+                Phone Number
+              </div>
+              <div class="field-value empty" id="display-phone">Not provided</div>
+              <input type="tel" class="field-input" id="input-phone" placeholder="+1 (555) 123-4567" />
+            </div>
+
+            <!-- Email (Read-only, from auth) -->
+            <div class="profile-field">
+              <div class="field-label">
+                <i class="fa-solid fa-envelope"></i>
+                Email Address
+              </div>
+              <div class="field-value empty" id="display-email">Loading...</div>
+            </div>
           </div>
-          <div class="info-grid" id="address-info-grid"></div>
         </div>
 
-        <div class="info-card">
-          <div class="info-card-header">
-            <h2><i class="fa-solid fa-circle-info"></i> Account Details</h2>
+        <!-- Address Information Section -->
+        <div class="profile-section">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-location-dot"></i>
+              <h2>Address Information</h2>
+            </div>
           </div>
-          <div class="info-grid" id="account-info-grid"></div>
+
+          <div class="profile-grid" id="address-grid">
+            <!-- Address Line 1 -->
+            <div class="profile-field" data-field="address_line1">
+              <div class="field-label">
+                <i class="fa-solid fa-road"></i>
+                Address Line 1
+              </div>
+              <div class="field-value empty" id="display-address_line1">Not provided</div>
+              <input type="text" class="field-input" id="input-address_line1" placeholder="Street address" maxlength="200" />
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="profile-field" data-field="address_line2">
+              <div class="field-label">
+                <i class="fa-solid fa-building"></i>
+                Address Line 2
+              </div>
+              <div class="field-value empty" id="display-address_line2">Not provided</div>
+              <input type="text" class="field-input" id="input-address_line2" placeholder="Apt, suite, unit, etc." maxlength="200" />
+            </div>
+
+            <!-- City -->
+            <div class="profile-field" data-field="city">
+              <div class="field-label">
+                <i class="fa-solid fa-city"></i>
+                City
+              </div>
+              <div class="field-value empty" id="display-city">Not provided</div>
+              <input type="text" class="field-input" id="input-city" placeholder="City" maxlength="100" />
+            </div>
+
+            <!-- State -->
+            <div class="profile-field" data-field="state">
+              <div class="field-label">
+                <i class="fa-solid fa-map-pin"></i>
+                State/Province
+              </div>
+              <div class="field-value empty" id="display-state">Not provided</div>
+              <input type="text" class="field-input" id="input-state" placeholder="State or province" maxlength="100" />
+            </div>
+
+            <!-- Postal Code -->
+            <div class="profile-field" data-field="postal_code">
+              <div class="field-label">
+                <i class="fa-solid fa-mailbox"></i>
+                Postal Code
+              </div>
+              <div class="field-value empty" id="display-postal_code">Not provided</div>
+              <input type="text" class="field-input" id="input-postal_code" placeholder="Postal/ZIP code" maxlength="20" />
+            </div>
+
+            <!-- Country -->
+            <div class="profile-field" data-field="country">
+              <div class="field-label">
+                <i class="fa-solid fa-globe"></i>
+                Country
+              </div>
+              <div class="field-value empty" id="display-country">Not provided</div>
+              <input type="text" class="field-input" id="input-country" placeholder="Country" maxlength="100" />
+            </div>
+          </div>
         </div>
 
-        <div class="logout-section">
-          <button class="logout-btn" id="logout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-          </button>
-        </div>
-
+        <!-- Save Button -->
+        <button class="save-btn" id="save-profile-btn" onclick="saveProfile()">
+          <i class="fa-solid fa-check"></i>
+          Save Changes
+        </button>
       </div>
     </div>
   </main>
 
+  <!-- Toast Notification -->
   <div class="toast" id="toast">
-    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+    <i class="fa-solid" id="toast-icon"></i>
     <span id="toast-message"></span>
   </div>
 
@@ -401,187 +510,267 @@
   <script>
     (function() {
       var API_BASE = window.location.origin;
+      var isEditing = false;
+      var currentProfile = null;
+      var currentSession = null;
 
-      function showToast(message, type) {
-        var toast = document.getElementById('toast');
-        var toastIcon = document.getElementById('toast-icon');
-        var toastMessage = document.getElementById('toast-message');
-        toastMessage.textContent = message;
-        toast.className = 'toast ' + (type || '') + ' show';
-        toastIcon.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
-        clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(function() { toast.classList.remove('show'); }, 4000);
-      }
+      // DOM Elements
+      var editBtn = document.getElementById('edit-profile-btn');
+      var saveBtn = document.getElementById('save-profile-btn');
+      var profileGrid = document.getElementById('profile-grid');
+      var addressGrid = document.getElementById('address-grid');
+      var toast = document.getElementById('toast');
+      var toastIcon = document.getElementById('toast-icon');
+      var toastMessage = document.getElementById('toast-message');
 
-      function getToken() {
+      // Check authentication
+      function getSession() {
         try {
-          var stored = localStorage.getItem('jayenware_session');
-          if (stored) {
-            var parsed = JSON.parse(stored);
-            return parsed.access_token || null;
+          var sessionData = localStorage.getItem('jayenware_session');
+          if (sessionData) {
+            currentSession = JSON.parse(sessionData);
+            return currentSession;
           }
-        } catch(e) {}
+        } catch (e) {
+          console.error('Session parse error:', e);
+        }
         return null;
       }
 
-      function showError(message) {
-        document.getElementById('skeleton-loader').style.display = 'none';
-        document.getElementById('content-container').style.display = 'none';
-        var errorState = document.getElementById('error-state');
-        errorState.classList.add('visible');
-        if (message) {
-          document.getElementById('error-message').textContent = message;
-        }
-      }
-
-      function renderProfile(profile) {
-        document.getElementById('skeleton-loader').style.display = 'none';
-        document.getElementById('content-container').style.display = 'block';
-        document.getElementById('error-state').classList.remove('visible');
-
-        var firstName = profile.first_name || '';
-        var lastName = profile.last_name || '';
-        var fullName = (firstName + ' ' + lastName).trim() || 'User';
-        var initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'U';
+      // Show toast notification
+      function showToast(message, type) {
+        toastMessage.textContent = message;
+        toast.className = 'toast ' + type + ' show';
         
-        document.getElementById('profile-avatar').textContent = initials;
-        document.getElementById('profile-fullname').textContent = fullName;
-        document.getElementById('profile-email-display').textContent = profile.email || '';
-        document.getElementById('welcome-message').textContent = 'Welcome back, ' + (firstName || 'User');
+        if (type === 'success') {
+          toastIcon.className = 'fa-solid fa-circle-check';
+        } else {
+          toastIcon.className = 'fa-solid fa-circle-exclamation';
+        }
 
-        // Personal Information
-        var personalGrid = document.getElementById('personal-info-grid');
-        personalGrid.innerHTML =
-          buildInfoItem('First Name', profile.first_name) +
-          buildInfoItem('Last Name', profile.last_name) +
-          buildInfoItem('Phone', profile.phone) +
-          buildInfoItem('Email', profile.email);
-
-        // Contact & Address
-        var addressGrid = document.getElementById('address-info-grid');
-        addressGrid.innerHTML =
-          buildInfoItem('Address Line 1', profile.address_line1) +
-          buildInfoItem('Address Line 2', profile.address_line2) +
-          buildInfoItem('City', profile.city) +
-          buildInfoItem('State / Division', profile.state) +
-          buildInfoItem('Postal Code', profile.postal_code) +
-          buildInfoItem('Country', profile.country);
-
-        // Account Details
-        var accountGrid = document.getElementById('account-info-grid');
-        accountGrid.innerHTML =
-          buildInfoItem('Member Since', formatDate(profile.created_at)) +
-          buildInfoItem('Last Updated', formatDate(profile.updated_at));
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(function() {
+          toast.classList.remove('show');
+        }, 4000);
       }
 
-      function buildInfoItem(label, value) {
-        var displayValue = (value !== undefined && value !== null && value !== '') ? value : 'Not provided';
-        var emptyClass = (value !== undefined && value !== null && value !== '') ? '' : ' empty';
-        return '<div class="info-item">' +
-          '<label>' + escapeHTML(label) + '</label>' +
-          '<span class="info-value' + emptyClass + '">' + escapeHTML(displayValue) + '</span>' +
-        '</div>';
-      }
-
-      async function fetchUserData() {
-        var token = getToken();
-        if (!token) {
-          showError('No active session found. Please sign in.');
+      // Load profile data
+      async function loadProfile() {
+        var session = getSession();
+        if (!session || !session.access_token) {
+          window.location.href = '/signin?message=session_expired';
           return;
         }
 
         try {
-          var response = await fetch(API_BASE + '/api/user/profile', {
+          var response = await fetch(API_BASE + '/api/profile', {
+            method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Authorization': 'Bearer ' + token
+              'Authorization': 'Bearer ' + session.access_token,
+              'Content-Type': 'application/json'
             }
           });
 
           if (!response.ok) {
-            if (response.status === 401) {
-              localStorage.removeItem('jayenware_session');
-              showError('Session expired. Please sign in again.');
-              return;
-            }
             throw new Error('Failed to load profile');
           }
 
-          var result = await response.json();
+          var data = await response.json();
+          currentProfile = data.profile || data;
           
-          var user = result.user || {};
-          var profileData = result.profile || {};
-          var meta = user.user_metadata || {};
-
-          var profile = {
-            email: user.email || '',
-            first_name: profileData.first_name || meta.first_name || '',
-            last_name: profileData.last_name || meta.last_name || '',
-            phone: profileData.phone || meta.phone || '',
-            address_line1: profileData.address_line1 || meta.address_line1 || '',
-            address_line2: profileData.address_line2 || meta.address_line2 || '',
-            city: profileData.city || meta.city || '',
-            state: profileData.state || meta.state || '',
-            postal_code: profileData.postal_code || meta.postal_code || '',
-            country: profileData.country || meta.country || '',
-            created_at: profileData.created_at || user.created_at || '',
-            updated_at: profileData.updated_at || user.updated_at || ''
-          };
-
-          renderProfile(profile);
+          // Display profile data
+          displayProfile(currentProfile);
+          
+          // Display email from session or auth
+          displayEmail(session);
 
         } catch (error) {
-          console.error('Error loading profile:', error);
-          showError('Failed to load account data. Please try again.');
+          console.error('Profile load error:', error);
+          showToast('Failed to load profile data', 'error');
         }
       }
 
-      document.getElementById('logout-btn').addEventListener('click', async function() {
-        try {
-          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
-        } catch(e) {
-          console.error('Logout error:', e);
-        }
-        localStorage.removeItem('jayenware_session');
-        window.location.href = '/';
-      });
+      // Display profile data in the UI
+      function displayProfile(profile) {
+        var fields = [
+          'first_name', 'last_name', 'phone',
+          'address_line1', 'address_line2',
+          'city', 'state', 'postal_code', 'country'
+        ];
 
-      document.getElementById('edit-profile-btn').addEventListener('click', function() {
-        showToast('Edit profile feature coming soon', '');
-      });
-
-      function escapeHTML(str) {
-        if (!str) return '';
-        var div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
+        fields.forEach(function(field) {
+          var displayEl = document.getElementById('display-' + field);
+          var inputEl = document.getElementById('input-' + field);
+          
+          if (displayEl && inputEl) {
+            var value = profile[field] || '';
+            
+            if (value.trim()) {
+              displayEl.textContent = value;
+              displayEl.classList.remove('empty');
+            } else {
+              displayEl.textContent = 'Not provided';
+              displayEl.classList.add('empty');
+            }
+            
+            inputEl.value = value;
+          }
+        });
       }
 
-      function formatDate(dateString) {
-        if (!dateString) return 'Not available';
+      // Display email
+      function displayEmail(session) {
+        var emailDisplay = document.getElementById('display-email');
+        if (emailDisplay) {
+          // Try to get email from session
+          if (session.user_id) {
+            // You might need to decode JWT or fetch user email
+            fetch(API_BASE + '/api/auth/user', {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer ' + session.access_token
+              }
+            })
+            .then(function(response) {
+              if (response.ok) return response.json();
+              throw new Error('Failed to fetch user');
+            })
+            .then(function(data) {
+              if (data.email) {
+                emailDisplay.textContent = data.email;
+                emailDisplay.classList.remove('empty');
+              } else {
+                emailDisplay.textContent = 'Email not available';
+                emailDisplay.classList.add('empty');
+              }
+            })
+            .catch(function() {
+              emailDisplay.textContent = 'Email not available';
+              emailDisplay.classList.add('empty');
+            });
+          } else {
+            emailDisplay.textContent = 'Email not available';
+            emailDisplay.classList.add('empty');
+          }
+        }
+      }
+
+      // Toggle edit mode
+      window.toggleEditMode = function() {
+        isEditing = !isEditing;
+        
+        var allFields = document.querySelectorAll('.profile-field');
+        var editBtnText = editBtn.querySelector('span');
+        
+        allFields.forEach(function(field) {
+          if (isEditing) {
+            field.classList.add('editing');
+          } else {
+            field.classList.remove('editing');
+          }
+        });
+
+        if (isEditing) {
+          editBtn.classList.add('active');
+          editBtnText.textContent = 'Cancel';
+          saveBtn.classList.add('visible');
+        } else {
+          editBtn.classList.remove('active');
+          editBtnText.textContent = 'Edit Profile';
+          saveBtn.classList.remove('visible');
+        }
+      };
+
+      // Save profile
+      window.saveProfile = async function() {
+        if (!currentSession || !currentSession.access_token) {
+          showToast('Session expired. Please sign in again.', 'error');
+          return;
+        }
+
+        // Collect form data
+        var profileData = {
+          first_name: document.getElementById('input-first_name').value.trim(),
+          last_name: document.getElementById('input-last_name').value.trim(),
+          phone: document.getElementById('input-phone').value.trim(),
+          address_line1: document.getElementById('input-address_line1').value.trim(),
+          address_line2: document.getElementById('input-address_line2').value.trim(),
+          city: document.getElementById('input-city').value.trim(),
+          state: document.getElementById('input-state').value.trim(),
+          postal_code: document.getElementById('input-postal_code').value.trim(),
+          country: document.getElementById('input-country').value.trim()
+        };
+
+        // Disable save button during save
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
         try {
-          var date = new Date(dateString);
-          return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+          var response = await fetch(API_BASE + '/api/profile', {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'Bearer ' + currentSession.access_token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(profileData)
           });
-        } catch(e) {
-          return dateString;
-        }
-      }
 
+          if (!response.ok) {
+            var errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to update profile');
+          }
+
+          var result = await response.json();
+          currentProfile = result.profile || profileData;
+          
+          // Update display
+          displayProfile(currentProfile);
+          
+          // Exit edit mode
+          isEditing = true;
+          toggleEditMode();
+          
+          showToast('Profile updated successfully!', 'success');
+
+        } catch (error) {
+          console.error('Profile update error:', error);
+          showToast(error.message || 'Failed to update profile', 'error');
+        } finally {
+          // Reset save button
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Changes';
+        }
+      };
+
+      // Initialize on load
       document.addEventListener('DOMContentLoaded', function() {
+        // Load fonts if available
         if (window.JAYENWARE_FONTS) {
           var root = document.documentElement;
           var vars = window.JAYENWARE_FONTS.cssVariables;
           for (var key in vars) {
-            if (vars.hasOwnProperty(key)) root.style.setProperty(key, vars[key]);
+            if (vars.hasOwnProperty(key)) {
+              root.style.setProperty(key, vars[key]);
+            }
           }
         }
-        fetchUserData();
+
+        loadProfile();
+      });
+
+      // Keyboard shortcut to save (Ctrl+S or Cmd+S)
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          if (isEditing) {
+            e.preventDefault();
+            saveProfile();
+          }
+        }
+        
+        // Escape to cancel editing
+        if (e.key === 'Escape' && isEditing) {
+          toggleEditMode();
+        }
       });
 
     })();
