@@ -1444,7 +1444,6 @@ app.get('/api/footer/complete', async (req, res) => {
 // ============================================
 // AUTH API (Final Clean Version)
 // ============================================
-
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { email, password, full_name, phone, address } = req.body;
@@ -1457,13 +1456,21 @@ app.post('/api/auth/signup', async (req, res) => {
             }
         });
 
-        if (error) throw error;
+        // ⚡ এটাই মেইন ফিক্স - error কে চেক করো properly
+        if (error && Object.keys(error).length > 0 && error.message) {
+            throw error;
+        }
 
-        res.json({ 
-            success: true, 
-            user: data.user,
-            session: data.session 
-        });
+        // ইউজার থাকলেই সাকসেস
+        if (data.user) {
+            res.json({ 
+                success: true, 
+                user: data.user,
+                session: data.session 
+            });
+        } else {
+            throw new Error("User not created");
+        }
 
     } catch (err) {
         res.status(400).json({ 
@@ -1472,6 +1479,7 @@ app.post('/api/auth/signup', async (req, res) => {
         });
     }
 });
+
 
 app.post('/api/auth/login', async (req, res) => {
     try {
