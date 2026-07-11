@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>My Account | JAYENWARE</title>
+  <meta name="description" content="Manage your JAYENWARE account, orders, and profile" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <script src="/fonts.js"></script>
+  <script src="/footer.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#007aff'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Account Layout */
+    .account-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 16px 48px;
+    }
+
+    /* Page Header */
+    .account-header {
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes fadeSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .account-header h1 {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0 0 6px 0;
+      letter-spacing: -0.02em;
+    }
+    .account-header p {
+      font-size: 15px;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    /* Two Column Layout */
+    .account-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .account-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar Navigation */
+    .account-sidebar {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 24px;
+      opacity: 0;
+      transform: translateX(-16px);
+      animation: fadeSlideLeft 0.5s 0.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes fadeSlideLeft {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @media (max-width: 768px) {
+      .account-sidebar {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+        padding: 6px;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .account-sidebar::-webkit-scrollbar { display: none; }
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      text-decoration: none;
+      margin-bottom: 2px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+    }
+    @media (max-width: 768px) {
+      .sidebar-nav-item {
+        flex-shrink: 0;
+        width: auto;
+        padding: 10px 16px;
+        font-size: 13px;
+        gap: 8px;
+      }
+    }
+    .sidebar-nav-item:hover {
+      background: var(--soft);
+    }
+    .sidebar-nav-item.active {
+      background: #1d1d1f;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .sidebar-nav-item i {
+      width: 20px;
+      text-align: center;
+      font-size: 15px;
+    }
+    .sidebar-nav-item .badge {
+      margin-left: auto;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 50px;
+      min-width: 20px;
+      text-align: center;
+    }
+    .sidebar-nav-item.active .badge {
+      background: #ffffff;
+      color: #1d1d1f;
+    }
+
+    /* Main Content Area */
+    .account-content {
+      min-height: 500px;
+    }
+
+    /* Content Panels */
+    .content-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .content-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Cards */
+    .info-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+    .info-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .info-card-header h2 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+    }
+    .info-card-header .edit-btn {
+      font-size: 13px;
+      color: var(--blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      padding: 6px 14px;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+    }
+    .info-card-header .edit-btn:hover {
+      background: rgba(0,122,255,0.08);
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+    }
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+    .info-item label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .info-item span {
+      font-size: 15px;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 380px) {
+      .stats-row { grid-template-columns: 1fr; }
+    }
+    .stat-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+    .stat-card .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 18px;
+    }
+    .stat-card .stat-icon.orders { background: #e8f4fd; color: #007aff; }
+    .stat-card .stat-icon.wishlist { background: #fde8e8; color: #ff3b30; }
+    .stat-card .stat-icon.reviews { background: #e8fde8; color: #34c759; }
+    .stat-card .stat-value {
+      font-family: 'Manrope', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+    .stat-card .stat-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Order Table Style */
+    .order-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f5;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .order-item:last-child { border-bottom: none; }
+    .order-info h4 {
+      font-weight: 600;
+      font-size: 15px;
+      margin: 0 0 4px 0;
+      color: var(--primary);
+    }
+    .order-info p {
+      font-size: 13px;
+      color: var(--accent);
+      margin: 0;
+    }
+    .order-status {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .order-status.delivered { background: #e8fde8; color: #1b7a1b; }
+    .order-status.processing { background: #fff3cd; color: #856404; }
+    .order-status.shipped { background: #e8f4fd; color: #0056b3; }
+
+    .order-total {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--primary);
+    }
+
+    /* Address Card */
+    .address-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      border: 1.5px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .address-card.default {
+      border-color: var(--blue);
+    }
+    .address-card .default-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .address-card h4 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      color: var(--primary);
+    }
+    .address-card p {
+      font-size: 14px;
+      color: #4a4a4f;
+      margin: 0 0 4px 0;
+      line-height: 1.5;
+    }
+    .address-card .address-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .address-card .address-actions button {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .btn-outline {
+      background: none;
+      border: 1.5px solid #e5e5ea !important;
+      color: var(--primary);
+    }
+    .btn-outline:hover { background: var(--soft); }
+    .btn-outline.danger { color: #ff3b30; border-color: #ffd1cf !important; }
+    .btn-outline.danger:hover { background: #fff0ef; }
+
+    /* Logout button */
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #ff3b30;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      margin-top: 4px;
+      transition: all 0.2s ease;
+    }
+    .logout-btn:hover { background: #fff0ef; }
+    @media (max-width: 768px) {
+      .logout-btn {
+        flex-shrink: 0;
+        width: auto;
+      }
+    }
+
+    /* Skeleton States */
+    .skeleton-text {
+      height: 14px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+    }
+    .skeleton-text.short { width: 60%; }
+    .skeleton-text.medium { width: 80%; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <div id="dynamic-header"></div>
+
+  <main>
+    <div class="account-container">
+
+      <!-- Page Header -->
+      <div class="account-header">
+        <h1>My Account</h1>
+        <p id="welcome-message">Welcome back</p>
+      </div>
+
+      <!-- Grid Layout -->
+      <div class="account-grid">
+
+        <!-- Sidebar -->
+        <aside class="account-sidebar" id="account-sidebar">
+          <button class="sidebar-nav-item active" data-panel="overview">
+            <i class="fa-solid fa-grid-2"></i> Overview
+          </button>
+          <button class="sidebar-nav-item" data-panel="orders">
+            <i class="fa-solid fa-box"></i> Orders
+            <span class="badge" id="order-count-badge" style="display:none;">0</span>
+          </button>
+          <button class="sidebar-nav-item" data-panel="profile">
+            <i class="fa-solid fa-user"></i> Profile
+          </button>
+          <button class="sidebar-nav-item" data-panel="addresses">
+            <i class="fa-solid fa-location-dot"></i> Addresses
+          </button>
+          <button class="sidebar-nav-item" data-panel="settings">
+            <i class="fa-solid fa-gear"></i> Settings
+          </button>
+          <button class="logout-btn" id="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+          </button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="account-content">
+
+          <!-- ========== OVERVIEW PANEL ========== -->
+          <div class="content-panel active" id="panel-overview">
+            <!-- Skeleton -->
+            <div id="skeleton-overview">
+              <div class="stats-row">
+                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
+                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
+                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
+              </div>
+              <div class="info-card">
+                <div class="skeleton skeleton-text medium" style="height:20px;"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text short"></div>
+                <div class="skeleton skeleton-text medium"></div>
+              </div>
+            </div>
+            <!-- Real Content -->
+            <div id="content-overview" style="display:none;">
+              <div class="stats-row">
+                <div class="stat-card">
+                  <div class="stat-icon orders"><i class="fa-solid fa-box"></i></div>
+                  <div class="stat-value" id="stat-orders">0</div>
+                  <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon wishlist"><i class="fa-solid fa-heart"></i></div>
+                  <div class="stat-value" id="stat-wishlist">0</div>
+                  <div class="stat-label">Wishlist Items</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon reviews"><i class="fa-solid fa-star"></i></div>
+                  <div class="stat-value" id="stat-reviews">0</div>
+                  <div class="stat-label">Reviews</div>
+                </div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>Recent Orders</h2>
+                  <button class="edit-btn" onclick="switchPanel('orders')">View All <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i></button>
+                </div>
+                <div id="recent-orders-list">
+                  <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders yet</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== ORDERS PANEL ========== -->
+          <div class="content-panel" id="panel-orders">
+            <div id="skeleton-orders">
+              <div class="info-card"><div class="skeleton" style="height:60px;margin-bottom:12px;"></div><div class="skeleton" style="height:60px;"></div></div>
+            </div>
+            <div id="content-orders" style="display:none;">
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>All Orders</h2>
+                </div>
+                <div id="all-orders-list">
+                  <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== PROFILE PANEL ========== -->
+          <div class="content-panel" id="panel-profile">
+            <div id="skeleton-profile">
+              <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
+            </div>
+            <div id="content-profile" style="display:none;">
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>Personal Information</h2>
+                  <button class="edit-btn" id="edit-profile-btn"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
+                </div>
+                <div class="info-grid" id="profile-info-grid">
+                  <!-- Filled by JS -->
+                </div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>Account Details</h2>
+                </div>
+                <div class="info-grid" id="account-info-grid">
+                  <!-- Filled by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== ADDRESSES PANEL ========== -->
+          <div class="content-panel" id="panel-addresses">
+            <div id="skeleton-addresses">
+              <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
+            </div>
+            <div id="content-addresses" style="display:none;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;">Saved Addresses</h2>
+                <button class="edit-btn" style="font-size:13px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;font-family:'Inter',sans-serif;padding:8px 16px;border-radius:50px;transition:all 0.2s ease;" onmouseover="this.style.background='rgba(0,122,255,0.08)'" onmouseout="this.style.background='none'">
+                  <i class="fa-solid fa-plus" style="margin-right:4px;"></i> Add New
+                </button>
+              </div>
+              <div id="addresses-list">
+                <p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== SETTINGS PANEL ========== -->
+          <div class="content-panel" id="panel-settings">
+            <div class="info-card">
+              <div class="info-card-header"><h2>Preferences</h2></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f5;">
+                <span style="font-size:14px;font-weight:500;">Email Notifications</span>
+                <span style="font-size:13px;color:var(--accent);">Enabled</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f5;">
+                <span style="font-size:14px;font-weight:500;">SMS Notifications</span>
+                <span style="font-size:13px;color:var(--accent);">Disabled</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                <span style="font-size:14px;font-weight:500;">Language</span>
+                <span style="font-size:13px;color:var(--accent);">English</span>
+              </div>
+            </div>
+            <div class="info-card" style="border:1.5px solid #ffd1cf;">
+              <div class="info-card-header"><h2 style="color:#ff3b30;">Danger Zone</h2></div>
+              <p style="font-size:13px;color:var(--accent);margin-bottom:16px;">Once you delete your account, there is no going back. Please be certain.</p>
+              <button class="btn-outline danger" style="padding:10px 20px;font-size:13px;">Delete Account</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="dynamic-footer"></div>
+
+  <script src="/components.js"></script>
+
+  <script>
+    (function() {
+      var API_BASE = window.location.origin;
+      var currentPanel = 'overview';
+
+      // Sample user data (would come from API)
+      var userData = null;
+
+      // Panel Switching
+      function switchPanel(panelName) {
+        currentPanel = panelName;
+        
+        // Update sidebar
+        document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
+          item.classList.remove('active');
+          if (item.getAttribute('data-panel') === panelName) {
+            item.classList.add('active');
+          }
+        });
+
+        // Show panel
+        document.querySelectorAll('.content-panel').forEach(function(panel) {
+          panel.classList.remove('active');
+        });
+        var targetPanel = document.getElementById('panel-' + panelName);
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+        }
+
+        // Load data if needed
+        loadPanelData(panelName);
+      }
+
+      // Sidebar click handlers
+      document.getElementById('account-sidebar').addEventListener('click', function(e) {
+        var navItem = e.target.closest('.sidebar-nav-item');
+        if (navItem) {
+          var panel = navItem.getAttribute('data-panel');
+          if (panel) switchPanel(panel);
+        }
+      });
+
+      // Load panel specific data
+      function loadPanelData(panel) {
+        if (!userData) return;
+        
+        switch(panel) {
+          case 'profile':
+            renderProfile(userData);
+            break;
+          case 'addresses':
+            renderAddresses(userData);
+            break;
+          case 'orders':
+            renderAllOrders(userData);
+            break;
+          case 'overview':
+            renderOverview(userData);
+            break;
+        }
+      }
+
+      function renderProfile(data) {
+        document.getElementById('skeleton-profile').style.display = 'none';
+        document.getElementById('content-profile').style.display = 'block';
+        
+        var profileGrid = document.getElementById('profile-info-grid');
+        profileGrid.innerHTML = 
+          '<div class="info-item"><label>First Name</label><span>' + escapeHTML(data.first_name || '—') + '</span></div>' +
+          '<div class="info-item"><label>Last Name</label><span>' + escapeHTML(data.last_name || '—') + '</span></div>' +
+          '<div class="info-item"><label>Phone</label><span>' + escapeHTML(data.phone || '—') + '</span></div>' +
+          '<div class="info-item"><label>Email</label><span>' + escapeHTML(data.email || '—') + '</span></div>';
+        
+        var accountGrid = document.getElementById('account-info-grid');
+        accountGrid.innerHTML =
+          '<div class="info-item"><label>Member Since</label><span>' + formatDate(data.created_at) + '</span></div>' +
+          '<div class="info-item"><label>Last Updated</label><span>' + formatDate(data.updated_at) + '</span></div>';
+      }
+
+      function renderAddresses(data) {
+        document.getElementById('skeleton-addresses').style.display = 'none';
+        document.getElementById('content-addresses').style.display = 'block';
+        
+        var container = document.getElementById('addresses-list');
+        var addr = data;
+        
+        if (addr.address_line1) {
+          container.innerHTML = 
+            '<div class="address-card default">' +
+              '<div class="default-badge">Default</div>' +
+              '<h4>' + escapeHTML(addr.first_name + ' ' + addr.last_name) + '</h4>' +
+              '<p>' + escapeHTML(addr.address_line1) + (addr.address_line2 ? ', ' + escapeHTML(addr.address_line2) : '') + '</p>' +
+              '<p>' + escapeHTML(addr.city) + ', ' + escapeHTML(addr.state) + ' ' + escapeHTML(addr.postal_code) + '</p>' +
+              '<p>' + escapeHTML(addr.country) + '</p>' +
+              '<p style="margin-top:8px;font-weight:500;">' + escapeHTML(addr.phone) + '</p>' +
+              '<div class="address-actions">' +
+                '<button class="btn-outline"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>' +
+              '</div>' +
+            '</div>';
+        } else {
+          container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>';
+        }
+      }
+
+      function renderOverview(data) {
+        document.getElementById('skeleton-overview').style.display = 'none';
+        document.getElementById('content-overview').style.display = 'block';
+        
+        document.getElementById('stat-orders').textContent = data.order_count || 0;
+        document.getElementById('stat-wishlist').textContent = data.wishlist_count || 0;
+        document.getElementById('stat-reviews').textContent = data.review_count || 0;
+        
+        // Recent orders
+        var recentContainer = document.getElementById('recent-orders-list');
+        if (data.recent_orders && data.recent_orders.length > 0) {
+          recentContainer.innerHTML = data.recent_orders.slice(0, 3).map(function(order) {
+            return '<div class="order-item">' +
+              '<div class="order-info"><h4>Order #' + order.id + '</h4><p>' + formatDate(order.date) + '</p></div>' +
+              '<span class="order-status ' + order.status + '">' + order.status + '</span>' +
+              '<span class="order-total">$' + order.total + '</span>' +
+            '</div>';
+          }).join('');
+        } else {
+          recentContainer.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders yet</p>';
+        }
+      }
+
+      function renderAllOrders(data) {
+        document.getElementById('skeleton-orders').style.display = 'none';
+        document.getElementById('content-orders').style.display = 'block';
+        
+        var container = document.getElementById('all-orders-list');
+        if (data.orders && data.orders.length > 0) {
+          container.innerHTML = data.orders.map(function(order) {
+            return '<div class="order-item">' +
+              '<div class="order-info"><h4>Order #' + order.id + '</h4><p>' + formatDate(order.date) + '</p></div>' +
+              '<span class="order-status ' + order.status + '">' + order.status + '</span>' +
+              '<span class="order-total">$' + order.total + '</span>' +
+            '</div>';
+          }).join('');
+        } else {
+          container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>';
+        }
+
+        var badge = document.getElementById('order-count-badge');
+        if (data.order_count > 0) {
+          badge.textContent = data.order_count;
+          badge.style.display = 'inline';
+        }
+      }
+
+      // Fetch user data
+      async function fetchUserData() {
+        try {
+          var response = await fetch(API_BASE + '/api/auth/user', {
+            headers: { 'Accept': 'application/json' }
+          });
+          if (!response.ok) throw new Error('Failed to load user data');
+          var data = await response.json();
+          userData = data;
+          
+          // Update welcome message
+          document.getElementById('welcome-message').textContent = 'Welcome back, ' + (data.first_name || 'User');
+          
+          // Render overview initially
+          renderOverview(data);
+          
+          // Update order badge
+          var badge = document.getElementById('order-count-badge');
+          if (data.order_count > 0) {
+            badge.textContent = data.order_count;
+            badge.style.display = 'inline';
+          }
+        } catch (error) {
+          console.error('Error loading user data:', error);
+          // Show skeleton still or error
+        }
+      }
+
+      // Logout
+      document.getElementById('logout-btn').addEventListener('click', async function() {
+        try {
+          await fetch(API_BASE + '/api/auth/signout', { method: 'POST' });
+        } catch(e) {}
+        window.location.href = '/';
+      });
+
+      // Helpers
+      function escapeHTML(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return '—';
+        try {
+          var date = new Date(dateString);
+          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        } catch(e) {
+          return dateString;
+        }
+      }
+
+      // Expose switchPanel globally
+      window.switchPanel = switchPanel;
+
+      // Init
+      document.addEventListener('DOMContentLoaded', function() {
+        fetchUserData();
+      });
+    })();
+  </script>
+</body>
+</html>
