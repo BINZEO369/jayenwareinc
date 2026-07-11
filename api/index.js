@@ -1443,16 +1443,19 @@ app.get('/api/footer/complete', async (req, res) => {
 
 
 // ============================================
-// AUTH & ACCOUNT API (Phase 1)
+// AUTH SYSTEM API (Profiles + Signup/Login)
 // ============================================
 
-// User Signup
+// Signup
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { email, password, full_name, phone, address } = req.body;
         
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Email and password are required' 
+            });
         }
         
         const { data, error } = await supabase.auth.signUp({
@@ -1467,25 +1470,40 @@ app.post('/api/auth/signup', async (req, res) => {
             }
         });
         
-        if (error) return res.status(400).json({ error: error.message });
+        if (error) {
+            return res.status(400).json({ 
+                success: false, 
+                error: error.message 
+            });
+        }
         
         res.json({
             success: true,
-            user: data.user,
-            message: 'Signup successful! Please check your email for verification.'
+            user: {
+                id: data.user.id,
+                email: data.user.email
+            },
+            message: 'Signup successful! Please verify your email.'
         });
+        
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server error' 
+        });
     }
 });
 
-// User Login
+// Login
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Email and password are required' 
+            });
         }
         
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -1493,7 +1511,12 @@ app.post('/api/auth/login', async (req, res) => {
             password
         });
         
-        if (error) return res.status(401).json({ error: error.message });
+        if (error) {
+            return res.status(401).json({ 
+                success: false, 
+                error: error.message 
+            });
+        }
         
         res.json({
             success: true,
@@ -1507,95 +1530,139 @@ app.post('/api/auth/login', async (req, res) => {
                 expires_at: data.session.expires_at
             }
         });
+        
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server error' 
+        });
     }
 });
 
-// Get current user profile
+// Get Profile
 app.get('/api/user/profile', async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
-        if (!authHeader) return res.status(401).json({ error: 'No authorization token' });
+        if (!authHeader) {
+            return res.status(401).json({ 
+                success: false, 
+                error: 'Authorization token required' 
+            });
+        }
         
         const token = authHeader.replace('Bearer ', '');
         const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-        if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
         
-        // Get full profile
-        const { data: profile, error } = await supabase
+        if (authError || !user) {
+            return res.status(401).json({ 
+                success: false, 
+                error: 'Invalid token' 
+            });
+        }
+        
+        const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', user.id)
             .single();
         
+        res.json({
+            success: true,
+            user: {
+                id: user.id,
+                email: user.email
+            },
+            profile: profile || null
+        });
+        
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server error' 
+        });
+    }
+});
+
+// Update Profile
+app.put('/api/user/profile', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ 
+                success: false, 
+                error: 'Authorization token required' 
+            });
+        }
+        
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        
+        if (authError || !user) {
+            return res.status(401).json({ 
+                success: false, 
+                error: 'Invalid token' 
+            });
+        }
+        
+        const { name, phone, address } = req.body;
+        
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .upsert({
+                id: user.id,
+                name: name,
+                phone: phone,
+                address: address,
+                updated_at: new Date().toISOString()
+            })
+            .select()
+            .single();
+        
         if (error) {
-            return res.json({
-                user: { id: user.id, email: user.email },
-                profile: null
+            return res.status(400).json({ 
+                success: false, 
+                error: error.message 
             });
         }
         
         res.json({
-            user: { id: user.id, email: user.email },
-            profile: profile
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Update user profile
-app.put('/api/user/profile', async (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) return res.status(401).json({ error: 'No authorization token' });
-        
-        const token = authHeader.replace('Bearer ', '');
-        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-        if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
-        
-        const { name, phone, address } = req.body;
-        
-        const updateData = {
-            id: user.id,
-            updated_at: new Date().toISOString()
-        };
-        
-        if (name) updateData.name = name;
-        if (phone) updateData.phone = phone;
-        if (address) updateData.address = address;
-        
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .upsert(updateData)
-            .select()
-            .single();
-        
-        if (error) return res.status(500).json({ error: error.message });
-        
-        res.json({
             success: true,
             profile: profile,
-            message: 'Profile updated successfully!'
+            message: 'Profile updated!'
         });
+        
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server error' 
+        });
     }
 });
 
-// Logout (optional - just for session management)
+// Logout
 app.post('/api/auth/logout', async (req, res) => {
     try {
         const { error } = await supabase.auth.signOut();
-        if (error) return res.status(500).json({ error: error.message });
         
-        res.json({ success: true, message: 'Logged out successfully!' });
+        if (error) {
+            return res.status(400).json({ 
+                success: false, 
+                error: error.message 
+            });
+        }
+        
+        res.json({ 
+            success: true, 
+            message: 'Logged out!' 
+        });
+        
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server error' 
+        });
     }
 });
-
 
 
 
