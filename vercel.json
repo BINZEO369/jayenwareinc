@@ -48,6 +48,10 @@
       "dest": "/public/login.html"
     },
     {
+      "src": "/account",
+      "dest": "/public/account.html"
+    },
+    {
       "src": "/product/(.*)",
       "dest": "/public/product.html"
     },
