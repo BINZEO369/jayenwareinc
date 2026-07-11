@@ -1441,6 +1441,164 @@ app.get('/api/footer/complete', async (req, res) => {
 
 
 
+
+// ============================================
+// AUTH & ACCOUNT API (Phase 1)
+// ============================================
+
+// User Signup
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { email, password, full_name, phone, address } = req.body;
+        
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+        
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: full_name || '',
+                    phone: phone || '',
+                    address: address || ''
+                }
+            }
+        });
+        
+        if (error) return res.status(400).json({ error: error.message });
+        
+        res.json({
+            success: true,
+            user: data.user,
+            message: 'Signup successful! Please check your email for verification.'
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// User Login
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+        
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+        
+        if (error) return res.status(401).json({ error: error.message });
+        
+        res.json({
+            success: true,
+            user: {
+                id: data.user.id,
+                email: data.user.email
+            },
+            session: {
+                access_token: data.session.access_token,
+                refresh_token: data.session.refresh_token,
+                expires_at: data.session.expires_at
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get current user profile
+app.get('/api/user/profile', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) return res.status(401).json({ error: 'No authorization token' });
+        
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
+        
+        // Get full profile
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+        
+        if (error) {
+            return res.json({
+                user: { id: user.id, email: user.email },
+                profile: null
+            });
+        }
+        
+        res.json({
+            user: { id: user.id, email: user.email },
+            profile: profile
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update user profile
+app.put('/api/user/profile', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) return res.status(401).json({ error: 'No authorization token' });
+        
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
+        
+        const { name, phone, address } = req.body;
+        
+        const updateData = {
+            id: user.id,
+            updated_at: new Date().toISOString()
+        };
+        
+        if (name) updateData.name = name;
+        if (phone) updateData.phone = phone;
+        if (address) updateData.address = address;
+        
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .upsert(updateData)
+            .select()
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json({
+            success: true,
+            profile: profile,
+            message: 'Profile updated successfully!'
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Logout (optional - just for session management)
+app.post('/api/auth/logout', async (req, res) => {
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json({ success: true, message: 'Logged out successfully!' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
+
 // ============================================
 // PAGE ROUTES
 // ============================================
