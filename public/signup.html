@@ -1,674 +1,799 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Create Your Account</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Sign Up | JAYENWARE</title>
+  <meta name="description" content="Create your JAYENWARE account" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <script src="/fonts.js"></script>
+  <script src="/footer.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#007aff'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
         }
+      }
+    }
+  </script>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+      --error: #ff3b30;
+      --success: #34c759;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
 
-        .signup-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 480px;
-            padding: 40px;
-            animation: slideUp 0.5s ease-out;
-        }
+    /* Auth Container */
+    .auth-container {
+      min-height: calc(100vh - 180px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .auth-card {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: cardSlideUp 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes cardSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (max-width: 480px) {
+      .auth-card {
+        padding: 28px 20px;
+        border-radius: 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.05);
+      }
+    }
 
-        .signup-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    /* Branding */
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .auth-brand img {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      border-radius: 12px;
+    }
+    .auth-brand h1 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0 0 4px 0;
+      letter-spacing: -0.02em;
+    }
+    .auth-brand p {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 0;
+      font-weight: 400;
+    }
 
-        .signup-header h1 {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+    .form-group label .required-star {
+      color: var(--error);
+      margin-left: 2px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: var(--primary);
+      background: #ffffff;
+      transition: all 0.25s ease;
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    .form-group input::placeholder {
+      color: #c7c7cc;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+    .form-group input.error,
+    .form-group select.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.08);
+    }
+    .form-group input.success,
+    .form-group select.success {
+      border-color: var(--success);
+    }
 
-        .signup-header p {
-            color: #666;
-            font-size: 0.95rem;
-        }
+    /* Select wrapper for custom arrow */
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper select {
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    .select-wrapper::after {
+      content: '\f107';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      pointer-events: none;
+      font-size: 14px;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    /* Inline row */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .form-row .form-group {
+        margin-bottom: 18px;
+      }
+    }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+    /* Triple row */
+    .form-row-triple {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 480px) {
+      .form-row-triple {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .form-row-triple .form-group {
+        margin-bottom: 18px;
+      }
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #444;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
+    /* Error message */
+    .field-error {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 4px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+    .field-error.visible {
+      display: flex;
+    }
+    .field-error i {
+      font-size: 11px;
+    }
 
-        input, select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--primary);
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+    .btn-submit:hover {
+      background: #333;
+      transform: translateY(-2px) translateZ(0);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .btn-submit:active {
+      transform: scale(0.98) translateZ(0);
+    }
+    .btn-submit:disabled {
+      background: #a1a1a6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-submit .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    .btn-submit.loading .spinner {
+      display: inline-block;
+    }
+    .btn-submit.loading .btn-text {
+      display: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e5ea;
+    }
+    .auth-divider span {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-        input.error, select.error {
-            border-color: #e74c3c;
-            background: #fff5f5;
-        }
+    /* Footer link */
+    .auth-footer {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .auth-footer p {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 0;
+    }
+    .auth-footer a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .auth-footer a:hover {
+      color: #0056b3;
+    }
 
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-            animation: shake 0.3s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .password-strength {
-            margin-top: 8px;
-            height: 4px;
-            background: #e1e5e9;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        .strength-weak { background: #e74c3c; width: 33%; }
-        .strength-medium { background: #f39c12; width: 66%; }
-        .strength-strong { background: #27ae60; width: 100%; }
-
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .alert {
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.6s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        @media (max-width: 600px) {
-            .signup-container {
-                padding: 25px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    /* Toast / Alert */
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: #1d1d1f;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 999;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 90vw;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.success {
+      background: #1d1d1f;
+    }
+    .toast.error {
+      background: #ff3b30;
+    }
+    .toast i {
+      font-size: 16px;
+    }
+  </style>
 </head>
-<body>
-    <div class="loading-overlay" id="loadingOverlay">
-        <div style="text-align: center;">
-            <div class="spinner" style="border-top-color: #667eea; width: 40px; height: 40px;"></div>
-            <p style="margin-top: 15px; color: #667eea;">Creating your account...</p>
-        </div>
-    </div>
+<body class="antialiased">
 
-    <div class="signup-container">
-        <div class="signup-header">
-            <h1>🚀 Create Account</h1>
-            <p>Join us today! It's quick and easy.</p>
-        </div>
+  <div id="dynamic-header"></div>
 
-        <div id="alertSuccess" class="alert alert-success">
-            ✅ Account created successfully! Redirecting to login...
+  <main>
+    <div class="auth-container">
+      <div class="auth-card" id="auth-card">
+        
+        <!-- Branding -->
+        <div class="auth-brand">
+          <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none';" />
+          <h1>Create Account</h1>
+          <p>Join us and start your journey</p>
         </div>
 
-        <div id="alertError" class="alert alert-error"></div>
-
-        <form id="signupForm" novalidate>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="firstName">First Name *</label>
-                    <input 
-                        type="text" 
-                        id="firstName" 
-                        name="first_name" 
-                        placeholder="Enter first name"
-                        required
-                        minlength="2"
-                        maxlength="100"
-                        autocomplete="given-name"
-                    >
-                    <div class="error-message" id="firstNameError">First name is required (min 2 characters)</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="lastName">Last Name *</label>
-                    <input 
-                        type="text" 
-                        id="lastName" 
-                        name="last_name" 
-                        placeholder="Enter last name"
-                        required
-                        minlength="2"
-                        maxlength="100"
-                        autocomplete="family-name"
-                    >
-                    <div class="error-message" id="lastNameError">Last name is required (min 2 characters)</div>
-                </div>
-            </div>
-
+        <!-- Form -->
+        <form id="signup-form" novalidate autocomplete="on">
+          
+          <!-- Row: First Name + Last Name -->
+          <div class="form-row">
             <div class="form-group">
-                <label for="email">Email Address *</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="you@example.com"
-                    required
-                    autocomplete="email"
-                >
-                <div class="error-message" id="emailError">Please enter a valid email address</div>
+              <label for="first_name">First Name <span class="required-star">*</span></label>
+              <input type="text" id="first_name" name="first_name" placeholder="John" required autocomplete="given-name" />
+              <div class="field-error" id="error-first_name">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>First name is required</span>
+              </div>
             </div>
-
             <div class="form-group">
-                <label for="country">Country *</label>
-                <select id="country" name="country_id" required>
-                    <option value="">-- Select your country --</option>
-                    <!-- Countries will be loaded dynamically -->
+              <label for="last_name">Last Name <span class="required-star">*</span></label>
+              <input type="text" id="last_name" name="last_name" placeholder="Doe" required autocomplete="family-name" />
+              <div class="field-error" id="error-last_name">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>Last name is required</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email Address <span class="required-star">*</span></label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+            <div class="field-error" id="error-email">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Valid email is required</span>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label for="phone">Phone Number <span class="required-star">*</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="+8801XXXXXXXXX" required autocomplete="tel" />
+            <div class="field-error" id="error-phone">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Valid phone number is required</span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password">Password <span class="required-star">*</span></label>
+            <input type="password" id="password" name="password" placeholder="Minimum 8 characters" required autocomplete="new-password" minlength="8" />
+            <div class="field-error" id="error-password">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Password must be at least 8 characters</span>
+            </div>
+          </div>
+
+          <!-- Address Line 1 -->
+          <div class="form-group">
+            <label for="address_line1">Address Line 1 <span class="required-star">*</span></label>
+            <input type="text" id="address_line1" name="address_line1" placeholder="House/Flat, Street" required autocomplete="address-line1" />
+            <div class="field-error" id="error-address_line1">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Address is required</span>
+            </div>
+          </div>
+
+          <!-- Address Line 2 -->
+          <div class="form-group">
+            <label for="address_line2">Address Line 2 <span style="color:var(--accent);font-weight:400;">(optional)</span></label>
+            <input type="text" id="address_line2" name="address_line2" placeholder="Landmark, Area" autocomplete="address-line2" />
+          </div>
+
+          <!-- Row: City + State -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City <span class="required-star">*</span></label>
+              <input type="text" id="city" name="city" placeholder="Dhaka" required autocomplete="address-level2" />
+              <div class="field-error" id="error-city">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>City is required</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="state">State / Division <span class="required-star">*</span></label>
+              <input type="text" id="state" name="state" placeholder="Dhaka Division" required autocomplete="address-level1" />
+              <div class="field-error" id="error-state">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>State is required</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row: Postal Code + Country -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="postal_code">Postal Code <span class="required-star">*</span></label>
+              <input type="text" id="postal_code" name="postal_code" placeholder="1205" required autocomplete="postal-code" />
+              <div class="field-error" id="error-postal_code">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>Postal code is required</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="country">Country <span class="required-star">*</span></label>
+              <div class="select-wrapper">
+                <select id="country" name="country" required autocomplete="country-name">
+                  <option value="">Select country</option>
+                  <option value="Bangladesh">Bangladesh</option>
+                  <option value="India">India</option>
+                  <option value="United States">United States</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Germany">Germany</option>
+                  <option value="France">France</option>
+                  <option value="Japan">Japan</option>
+                  <option value="Other">Other</option>
                 </select>
-                <div class="error-message" id="countryError">Please select your country</div>
+              </div>
+              <div class="field-error" id="error-country">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>Please select a country</span>
+              </div>
             </div>
+          </div>
 
-            <div class="form-group">
-                <label for="password">Password *</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    placeholder="Create a strong password"
-                    required
-                    minlength="6"
-                    autocomplete="new-password"
-                >
-                <div class="password-strength">
-                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
-                </div>
-                <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
-            </div>
-
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password *</label>
-                <input 
-                    type="password" 
-                    id="confirmPassword" 
-                    name="confirm_password" 
-                    placeholder="Confirm your password"
-                    required
-                    autocomplete="new-password"
-                >
-                <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
-            </div>
-
-            <button type="submit" class="btn-submit" id="submitBtn">
-                Create Account
-            </button>
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <span class="btn-text">Create Account</span>
+            <span class="spinner"></span>
+          </button>
         </form>
 
-        <div class="login-link">
-            Already have an account? <a href="/login">Sign in</a>
+        <!-- Divider -->
+        <div class="auth-divider">
+          <span>Already have an account?</span>
         </div>
+
+        <!-- Footer Link -->
+        <div class="auth-footer">
+          <p>
+            <a href="/signin">Sign in to your account</a>
+          </p>
+        </div>
+
+      </div>
     </div>
+  </main>
 
-    <script>
-        // ============================================
-        // API CONFIGURATION
-        // ============================================
-        const API_BASE_URL = window.location.origin;
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+    <span id="toast-message"></span>
+  </div>
 
-        // ============================================
-        // DOM ELEMENTS
-        // ============================================
-        const form = document.getElementById('signupForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const alertSuccess = document.getElementById('alertSuccess');
-        const alertError = document.getElementById('alertError');
-        const countrySelect = document.getElementById('country');
-        const passwordInput = document.getElementById('password');
-        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
+  <div id="dynamic-footer"></div>
 
-        // ============================================
-        // LOAD COUNTRIES
-        // ============================================
-        async function loadCountries() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/countries`);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to load countries');
-                }
+  <script src="/components.js"></script>
 
-                const countries = await response.json();
-                
-                // Clear existing options except the first one
-                countrySelect.innerHTML = '<option value="">-- Select your country --</option>';
-                
-                // Add default countries first (Pakistan, USA)
-                const defaultCountries = countries.filter(c => 
-                    c.code === 'PK' || c.code === 'US'
-                );
-                
-                const otherCountries = countries.filter(c => 
-                    c.code !== 'PK' && c.code !== 'US'
-                );
+  <script>
+    (function() {
+      var API_BASE = window.location.origin;
 
-                // Add default countries with flag emoji
-                [...defaultCountries, ...otherCountries].forEach(country => {
-                    const option = document.createElement('option');
-                    option.value = country.id;
-                    
-                    // Add flag based on country code
-                    const flags = {
-                        'PK': '🇵🇰',
-                        'US': '🇺🇸',
-                        'BD': '🇧🇩',
-                        'IN': '🇮🇳',
-                        'GB': '🇬🇧',
-                        'CA': '🇨🇦',
-                        'AU': '🇦🇺'
-                    };
-                    
-                    const flag = flags[country.code] || '🌍';
-                    option.textContent = `${flag} ${country.name} (${country.code})`;
-                    countrySelect.appendChild(option);
-                });
+      // DOM Elements
+      var form = document.getElementById('signup-form');
+      var submitBtn = document.getElementById('submit-btn');
+      var toast = document.getElementById('toast');
+      var toastIcon = document.getElementById('toast-icon');
+      var toastMessage = document.getElementById('toast-message');
 
-            } catch (error) {
-                console.error('Error loading countries:', error);
-                
-                // Fallback: Add at least Pakistan and USA manually
-                countrySelect.innerHTML = `
-                    <option value="">-- Select your country --</option>
-                    <option value="manual-pk">🇵🇰 Pakistan</option>
-                    <option value="manual-us">🇺🇸 USA</option>
-                `;
-                
-                showAlert('error', 'Failed to load countries. Please try again later.');
-            }
+      // All fields with validation
+      var fields = [
+        { id: 'first_name', name: 'First Name', required: true, minLength: 1, errorMsg: 'First name is required' },
+        { id: 'last_name', name: 'Last Name', required: true, minLength: 1, errorMsg: 'Last name is required' },
+        { id: 'email', name: 'Email', required: true, type: 'email', errorMsg: 'Valid email is required' },
+        { id: 'phone', name: 'Phone', required: true, pattern: /^\+?[\d\s\-()]{7,20}$/, errorMsg: 'Valid phone number is required' },
+        { id: 'password', name: 'Password', required: true, minLength: 8, errorMsg: 'Password must be at least 8 characters' },
+        { id: 'address_line1', name: 'Address Line 1', required: true, minLength: 1, errorMsg: 'Address is required' },
+        { id: 'city', name: 'City', required: true, minLength: 1, errorMsg: 'City is required' },
+        { id: 'state', name: 'State', required: true, minLength: 1, errorMsg: 'State is required' },
+        { id: 'postal_code', name: 'Postal Code', required: true, minLength: 1, errorMsg: 'Postal code is required' },
+        { id: 'country', name: 'Country', required: true, errorMsg: 'Please select a country' }
+      ];
+
+      // Show toast
+      function showToast(message, type) {
+        toastMessage.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        
+        if (type === 'success') {
+          toastIcon.className = 'fa-solid fa-circle-check';
+        } else {
+          toastIcon.className = 'fa-solid fa-circle-exclamation';
         }
 
-        // ============================================
-        // PASSWORD STRENGTH CHECKER
-        // ============================================
-        passwordInput.addEventListener('input', function() {
-            const password = this.value;
-            let strength = 0;
-            
-            if (password.length >= 6) strength++;
-            if (password.length >= 8) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[!@#$%^&*]/.test(password)) strength++;
-            
-            // Update strength bar
-            passwordStrengthBar.className = 'password-strength-bar';
-            
-            if (strength <= 2) {
-                passwordStrengthBar.classList.add('strength-weak');
-            } else if (strength <= 4) {
-                passwordStrengthBar.classList.add('strength-medium');
-            } else {
-                passwordStrengthBar.classList.add('strength-strong');
-            }
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(function() {
+          toast.classList.remove('show');
+        }, 4000);
+      }
+
+      // Show field error
+      function showFieldError(fieldId, message) {
+        var input = document.getElementById(fieldId);
+        var errorEl = document.getElementById('error-' + fieldId);
+        
+        if (input) {
+          input.classList.add('error');
+          input.classList.remove('success');
+        }
+        if (errorEl) {
+          errorEl.querySelector('span').textContent = message;
+          errorEl.classList.add('visible');
+        }
+      }
+
+      // Clear field error
+      function clearFieldError(fieldId) {
+        var input = document.getElementById(fieldId);
+        var errorEl = document.getElementById('error-' + fieldId);
+        
+        if (input) {
+          input.classList.remove('error');
+        }
+        if (errorEl) {
+          errorEl.classList.remove('visible');
+        }
+      }
+
+      // Mark field as success
+      function markFieldSuccess(fieldId) {
+        var input = document.getElementById(fieldId);
+        if (input) {
+          input.classList.remove('error');
+          input.classList.add('success');
+        }
+        var errorEl = document.getElementById('error-' + fieldId);
+        if (errorEl) {
+          errorEl.classList.remove('visible');
+        }
+      }
+
+      // Validate single field
+      function validateField(fieldConfig) {
+        var input = document.getElementById(fieldConfig.id);
+        if (!input) return true;
+
+        var value = input.value.trim();
+
+        // Required check
+        if (fieldConfig.required && !value) {
+          showFieldError(fieldConfig.id, fieldConfig.errorMsg);
+          return false;
+        }
+
+        // Email check
+        if (fieldConfig.type === 'email' && value) {
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            showFieldError(fieldConfig.id, fieldConfig.errorMsg);
+            return false;
+          }
+        }
+
+        // Pattern check
+        if (fieldConfig.pattern && value) {
+          if (!fieldConfig.pattern.test(value)) {
+            showFieldError(fieldConfig.id, fieldConfig.errorMsg);
+            return false;
+          }
+        }
+
+        // Min length check
+        if (fieldConfig.minLength && value && value.length < fieldConfig.minLength) {
+          showFieldError(fieldConfig.id, fieldConfig.errorMsg);
+          return false;
+        }
+
+        // Valid
+        markFieldSuccess(fieldConfig.id);
+        return true;
+      }
+
+      // Validate all fields
+      function validateAll() {
+        var allValid = true;
+        fields.forEach(function(f) {
+          var valid = validateField(f);
+          if (!valid) allValid = false;
+        });
+        return allValid;
+      }
+
+      // Set loading state
+      function setLoading(isLoading) {
+        if (isLoading) {
+          submitBtn.classList.add('loading');
+          submitBtn.disabled = true;
+        } else {
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+        }
+      }
+
+      // Handle form submission
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Validate all
+        if (!validateAll()) {
+          showToast('Please fill in all required fields correctly', 'error');
+          // Scroll to first error
+          var firstError = form.querySelector('.error');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+          }
+          return;
+        }
+
+        // Collect data
+        var formData = {
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value,
+          first_name: document.getElementById('first_name').value.trim(),
+          last_name: document.getElementById('last_name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          address_line1: document.getElementById('address_line1').value.trim(),
+          address_line2: document.getElementById('address_line2').value.trim(),
+          city: document.getElementById('city').value.trim(),
+          state: document.getElementById('state').value.trim(),
+          postal_code: document.getElementById('postal_code').value.trim(),
+          country: document.getElementById('country').value
+        };
+
+        setLoading(true);
+
+        try {
+          var response = await fetch(API_BASE + '/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          var result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.message || result.error || 'Signup failed');
+          }
+
+          // Success
+          showToast('Account created successfully! Redirecting...', 'success');
+          
+          // Mark all fields as success
+          fields.forEach(function(f) {
+            markFieldSuccess(f.id);
+          });
+
+          // Redirect after short delay
+          setTimeout(function() {
+            window.location.href = result.redirect || '/signin';
+          }, 1500);
+
+        } catch (error) {
+          console.error('Signup error:', error);
+          showToast(error.message || 'Something went wrong. Please try again.', 'error');
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      // Real-time validation on blur
+      fields.forEach(function(fieldConfig) {
+        var input = document.getElementById(fieldConfig.id);
+        if (!input) return;
+
+        input.addEventListener('blur', function() {
+          if (input.value.trim()) {
+            validateField(fieldConfig);
+          }
         });
 
-        // ============================================
-        // FORM VALIDATION
-        // ============================================
-        function showError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            const errorDiv = document.getElementById(`${fieldId}Error`);
-            
-            if (field) field.classList.add('error');
-            if (errorDiv) {
-                errorDiv.textContent = message;
-                errorDiv.classList.add('show');
-            }
-        }
-
-        function clearError(fieldId) {
-            const field = document.getElementById(fieldId);
-            const errorDiv = document.getElementById(`${fieldId}Error`);
-            
-            if (field) field.classList.remove('error');
-            if (errorDiv) errorDiv.classList.remove('show');
-        }
-
-        function clearAllErrors() {
-            ['firstName', 'lastName', 'email', 'country', 'password', 'confirmPassword']
-                .forEach(clearError);
-        }
-
-        function validateForm() {
-            let isValid = true;
-            clearAllErrors();
-
-            // Validate first name
-            const firstName = document.getElementById('firstName').value.trim();
-            if (!firstName || firstName.length < 2) {
-                showError('firstName', 'First name is required (min 2 characters)');
-                isValid = false;
-            }
-
-            // Validate last name
-            const lastName = document.getElementById('lastName').value.trim();
-            if (!lastName || lastName.length < 2) {
-                showError('lastName', 'Last name is required (min 2 characters)');
-                isValid = false;
-            }
-
-            // Validate email
-            const email = document.getElementById('email').value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email || !emailRegex.test(email)) {
-                showError('email', 'Please enter a valid email address');
-                isValid = false;
-            }
-
-            // Validate country
-            const country = document.getElementById('country').value;
-            if (!country) {
-                showError('country', 'Please select your country');
-                isValid = false;
-            }
-
-            // Validate password
-            const password = passwordInput.value;
-            if (!password || password.length < 6) {
-                showError('password', 'Password must be at least 6 characters');
-                isValid = false;
-            }
-
-            // Validate confirm password
-            const confirmPassword = confirmPasswordInput.value;
-            if (password !== confirmPassword) {
-                showError('confirmPassword', 'Passwords do not match');
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
-        // ============================================
-        // REAL-TIME VALIDATION
-        // ============================================
-        document.getElementById('firstName').addEventListener('input', () => clearError('firstName'));
-        document.getElementById('lastName').addEventListener('input', () => clearError('lastName'));
-        document.getElementById('email').addEventListener('input', () => clearError('email'));
-        document.getElementById('country').addEventListener('change', () => clearError('country'));
-        passwordInput.addEventListener('input', () => clearError('password'));
-        confirmPasswordInput.addEventListener('input', () => clearError('confirmPassword'));
-
-        // ============================================
-        // ALERT FUNCTIONS
-        // ============================================
-        function showAlert(type, message) {
-            const alertDiv = type === 'success' ? alertSuccess : alertError;
-            
-            alertSuccess.classList.remove('show');
-            alertError.classList.remove('show');
-            
-            alertDiv.textContent = type === 'success' ? `✅ ${message}` : `❌ ${message}`;
-            alertDiv.classList.add('show');
-            
-            // Auto-hide success alert
-            if (type === 'success') {
-                setTimeout(() => {
-                    alertDiv.classList.remove('show');
-                }, 5000);
-            }
-        }
-
-        // ============================================
-        // FORM SUBMISSION
-        // ============================================
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Validate form
-            if (!validateForm()) {
-                return;
-            }
-
-            // Disable submit button and show loading
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span> Creating Account...';
-            loadingOverlay.classList.add('show');
-            
-            // Get form data
-            const formData = {
-                first_name: document.getElementById('firstName').value.trim(),
-                last_name: document.getElementById('lastName').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                password: passwordInput.value,
-                country_id: document.getElementById('country').value
-            };
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Success - Show success message
-                    showAlert('success', data.message || 'Account created successfully!');
-                    
-                    // Reset form
-                    form.reset();
-                    passwordStrengthBar.className = 'password-strength-bar';
-                    
-                    // Redirect to login page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = '/login';
-                    }, 2000);
-                    
-                } else {
-                    // Error from server
-                    const errorMessage = data.error || 'Something went wrong. Please try again.';
-                    showAlert('error', errorMessage);
-                    
-                    // Handle specific errors
-                    if (errorMessage.includes('email')) {
-                        showError('email', errorMessage);
-                    }
-                    if (errorMessage.includes('password')) {
-                        showError('password', errorMessage);
-                    }
-                }
-            } catch (error) {
-                console.error('Signup error:', error);
-                showAlert('error', 'Network error. Please check your connection and try again.');
-            } finally {
-                // Re-enable submit button and hide loading
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Create Account';
-                loadingOverlay.classList.remove('show');
-            }
+        // Clear error on input
+        input.addEventListener('input', function() {
+          clearFieldError(fieldConfig.id);
         });
+      });
 
-        // ============================================
-        // INITIALIZE
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCountries();
-            
-            // Focus on first name field
-            setTimeout(() => {
-                document.getElementById('firstName').focus();
-            }, 500);
-        });
-    </script>
+      // Global error handler for unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        console.error('Unhandled rejection:', event.reason);
+      });
+
+      // Load fonts CSS variables if available
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.JAYENWARE_FONTS) {
+          var root = document.documentElement;
+          var vars = window.JAYENWARE_FONTS.cssVariables;
+          for (var key in vars) {
+            if (vars.hasOwnProperty(key)) {
+              root.style.setProperty(key, vars[key]);
+            }
+          }
+        }
+      });
+
+    })();
+  </script>
 </body>
 </html>
