@@ -14,8 +14,8 @@ const app = express();
 // ============================================
 // SUPABASE CONFIGURATION
 // ============================================
-const SUPABASE_URL = "https://qaxaaqanmvqkjxpgirdp.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFheGFhcWFubXZxa2p4cGdpcmRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MDYyMzQsImV4cCI6MjA5ODI4MjIzNH0.fJ2g4g2dJq9pH8J5Yb39nkFLtYfZFcC4LHjBRvSPDoI";
+const SUPABASE_URL = "https://eiueitoxxqzkolsouuzy.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpdWVpdG94eHF6a29sc291dXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjIxNjIsImV4cCI6MjA5OTMzODE2Mn0.zsmN5P-AXeKT-XLgqkq0Bjx8EfjupJs1mjC26l-g7uA";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
