@@ -47,6 +47,7 @@
       --accent: #86868b;
       --soft: #f5f5f7;
       --blue: #007aff;
+      --error: #ff3b30;
     }
     * {
       -webkit-tap-highlight-color: transparent;
@@ -517,7 +518,6 @@
 
           <!-- ========== OVERVIEW PANEL ========== -->
           <div class="content-panel active" id="panel-overview">
-            <!-- Skeleton -->
             <div id="skeleton-overview">
               <div class="stats-row">
                 <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
@@ -531,7 +531,6 @@
                 <div class="skeleton skeleton-text medium"></div>
               </div>
             </div>
-            <!-- Real Content -->
             <div id="content-overview" style="display:none;">
               <div class="stats-row">
                 <div class="stat-card">
@@ -569,9 +568,7 @@
             </div>
             <div id="content-orders" style="display:none;">
               <div class="info-card">
-                <div class="info-card-header">
-                  <h2>All Orders</h2>
-                </div>
+                <div class="info-card-header"><h2>All Orders</h2></div>
                 <div id="all-orders-list">
                   <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>
                 </div>
@@ -590,17 +587,11 @@
                   <h2>Personal Information</h2>
                   <button class="edit-btn" id="edit-profile-btn"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
                 </div>
-                <div class="info-grid" id="profile-info-grid">
-                  <!-- Filled by JS -->
-                </div>
+                <div class="info-grid" id="profile-info-grid"></div>
               </div>
               <div class="info-card">
-                <div class="info-card-header">
-                  <h2>Account Details</h2>
-                </div>
-                <div class="info-grid" id="account-info-grid">
-                  <!-- Filled by JS -->
-                </div>
+                <div class="info-card-header"><h2>Account Details</h2></div>
+                <div class="info-grid" id="account-info-grid"></div>
               </div>
             </div>
           </div>
@@ -660,36 +651,22 @@
     (function() {
       var API_BASE = window.location.origin;
       var currentPanel = 'overview';
-
-      // Sample user data (would come from API)
       var userData = null;
 
-      // Panel Switching
       function switchPanel(panelName) {
         currentPanel = panelName;
-        
-        // Update sidebar
         document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
           item.classList.remove('active');
-          if (item.getAttribute('data-panel') === panelName) {
-            item.classList.add('active');
-          }
+          if (item.getAttribute('data-panel') === panelName) item.classList.add('active');
         });
-
-        // Show panel
         document.querySelectorAll('.content-panel').forEach(function(panel) {
           panel.classList.remove('active');
         });
         var targetPanel = document.getElementById('panel-' + panelName);
-        if (targetPanel) {
-          targetPanel.classList.add('active');
-        }
-
-        // Load data if needed
+        if (targetPanel) targetPanel.classList.add('active');
         loadPanelData(panelName);
       }
 
-      // Sidebar click handlers
       document.getElementById('account-sidebar').addEventListener('click', function(e) {
         var navItem = e.target.closest('.sidebar-nav-item');
         if (navItem) {
@@ -698,23 +675,13 @@
         }
       });
 
-      // Load panel specific data
       function loadPanelData(panel) {
         if (!userData) return;
-        
         switch(panel) {
-          case 'profile':
-            renderProfile(userData);
-            break;
-          case 'addresses':
-            renderAddresses(userData);
-            break;
-          case 'orders':
-            renderAllOrders(userData);
-            break;
-          case 'overview':
-            renderOverview(userData);
-            break;
+          case 'profile': renderProfile(userData); break;
+          case 'addresses': renderAddresses(userData); break;
+          case 'orders': renderAllOrders(userData); break;
+          case 'overview': renderOverview(userData); break;
         }
       }
 
@@ -740,17 +707,15 @@
         document.getElementById('content-addresses').style.display = 'block';
         
         var container = document.getElementById('addresses-list');
-        var addr = data;
-        
-        if (addr.address_line1) {
+        if (data.address_line1) {
           container.innerHTML = 
             '<div class="address-card default">' +
               '<div class="default-badge">Default</div>' +
-              '<h4>' + escapeHTML(addr.first_name + ' ' + addr.last_name) + '</h4>' +
-              '<p>' + escapeHTML(addr.address_line1) + (addr.address_line2 ? ', ' + escapeHTML(addr.address_line2) : '') + '</p>' +
-              '<p>' + escapeHTML(addr.city) + ', ' + escapeHTML(addr.state) + ' ' + escapeHTML(addr.postal_code) + '</p>' +
-              '<p>' + escapeHTML(addr.country) + '</p>' +
-              '<p style="margin-top:8px;font-weight:500;">' + escapeHTML(addr.phone) + '</p>' +
+              '<h4>' + escapeHTML(data.first_name + ' ' + data.last_name) + '</h4>' +
+              '<p>' + escapeHTML(data.address_line1) + (data.address_line2 ? ', ' + escapeHTML(data.address_line2) : '') + '</p>' +
+              '<p>' + escapeHTML(data.city) + ', ' + escapeHTML(data.state) + ' ' + escapeHTML(data.postal_code) + '</p>' +
+              '<p>' + escapeHTML(data.country) + '</p>' +
+              '<p style="margin-top:8px;font-weight:500;">' + escapeHTML(data.phone) + '</p>' +
               '<div class="address-actions">' +
                 '<button class="btn-outline"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>' +
               '</div>' +
@@ -768,7 +733,6 @@
         document.getElementById('stat-wishlist').textContent = data.wishlist_count || 0;
         document.getElementById('stat-reviews').textContent = data.review_count || 0;
         
-        // Recent orders
         var recentContainer = document.getElementById('recent-orders-list');
         if (data.recent_orders && data.recent_orders.length > 0) {
           recentContainer.innerHTML = data.recent_orders.slice(0, 3).map(function(order) {
@@ -807,43 +771,98 @@
         }
       }
 
-      // Fetch user data
+      // ✅ FIXED: Fetch user data with session token from Supabase
       async function fetchUserData() {
         try {
-          var response = await fetch(API_BASE + '/api/auth/user', {
-            headers: { 'Accept': 'application/json' }
+          // Get session from Supabase (stored in localStorage)
+          var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpdWVpdG94eHF6a29sc291dXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjIxNjIsImV4cCI6MjA5OTMzODE2Mn0.zsmN5P-AXeKT-XLgqkq0Bjx8EfjupJs1mjC26l-g7uA';
+          var supabaseUrl = 'https://eiueitoxxqzkolsouuzy.supabase.co';
+          
+          // Try to get stored session
+          var sessionStr = localStorage.getItem('sb-' + supabaseUrl.split('//')[1].split('.')[0] + '-auth-token');
+          var session = null;
+          
+          if (sessionStr) {
+            try {
+              var parsed = JSON.parse(sessionStr);
+              session = parsed;
+            } catch(e) {}
+          }
+
+          if (!session || !session.access_token) {
+            // No session found, redirect to login
+            window.location.href = '/signin?message=session_expired';
+            return;
+          }
+
+          // Fetch user profile from server
+          var response = await fetch(API_BASE + '/api/user/profile', {
+            headers: { 
+              'Accept': 'application/json',
+              'Authorization': 'Bearer ' + session.access_token
+            }
           });
-          if (!response.ok) throw new Error('Failed to load user data');
-          var data = await response.json();
-          userData = data;
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              window.location.href = '/signin?message=session_expired';
+              return;
+            }
+            throw new Error('Failed to load user data');
+          }
+
+          var result = await response.json();
+          
+          // Merge user and profile data
+          userData = {
+            email: result.user.email,
+            created_at: result.user.created_at,
+            updated_at: result.user.updated_at,
+            order_count: 0,
+            wishlist_count: 0,
+            review_count: 0,
+            orders: [],
+            recent_orders: [],
+            ...result.profile
+          };
           
           // Update welcome message
-          document.getElementById('welcome-message').textContent = 'Welcome back, ' + (data.first_name || 'User');
+          document.getElementById('welcome-message').textContent = 'Welcome back, ' + (userData.first_name || 'User');
           
-          // Render overview initially
-          renderOverview(data);
+          // Render overview
+          renderOverview(userData);
           
           // Update order badge
           var badge = document.getElementById('order-count-badge');
-          if (data.order_count > 0) {
-            badge.textContent = data.order_count;
+          if (userData.order_count > 0) {
+            badge.textContent = userData.order_count;
             badge.style.display = 'inline';
           }
         } catch (error) {
           console.error('Error loading user data:', error);
-          // Show skeleton still or error
+          // Show error state
+          document.getElementById('skeleton-overview').style.display = 'none';
+          document.getElementById('content-overview').style.display = 'block';
+          document.getElementById('recent-orders-list').innerHTML = 
+            '<p style="color:var(--error);font-size:14px;text-align:center;padding:20px;">Failed to load data. <a href="javascript:location.reload()" style="color:var(--blue);">Retry</a></p>';
         }
       }
 
-      // Logout
+      // ✅ FIXED: Logout now properly clears session
       document.getElementById('logout-btn').addEventListener('click', async function() {
         try {
-          await fetch(API_BASE + '/api/auth/signout', { method: 'POST' });
+          // Call server logout
+          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
         } catch(e) {}
+        
+        // Clear local storage
+        var supabaseUrl = 'https://eiueitoxxqzkolsouuzy.supabase.co';
+        var storageKey = 'sb-' + supabaseUrl.split('//')[1].split('.')[0] + '-auth-token';
+        localStorage.removeItem(storageKey);
+        
         window.location.href = '/';
       });
 
-      // Helpers
       function escapeHTML(str) {
         if (!str) return '';
         var div = document.createElement('div');
@@ -861,10 +880,8 @@
         }
       }
 
-      // Expose switchPanel globally
       window.switchPanel = switchPanel;
 
-      // Init
       document.addEventListener('DOMContentLoaded', function() {
         fetchUserData();
       });
