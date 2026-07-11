@@ -145,26 +145,7 @@
       font-size: 18px;
       color: var(--blue);
     }
-    .edit-btn {
-      font-size: 13px;
-      color: var(--blue);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      padding: 8px 16px;
-      border-radius: 50px;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .edit-btn:hover {
-      background: rgba(0,122,255,0.08);
-    }
 
-    /* Profile Grid - 2 columns */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -191,18 +172,11 @@
       font-weight: 500;
       word-break: break-word;
     }
-    .info-item .info-value.empty {
+    .info-item .info-value:empty::after {
+      content: '—';
       color: #c7c7cc;
-      font-style: italic;
-      font-weight: 400;
     }
 
-    /* Single column full width items */
-    .info-item.full-width {
-      grid-column: 1 / -1;
-    }
-
-    /* Logout button */
     .logout-section {
       display: flex;
       justify-content: center;
@@ -235,7 +209,6 @@
     }
     .logout-btn:active { transform: scale(0.97); }
 
-    /* Error state */
     .error-state {
       text-align: center;
       padding: 80px 20px;
@@ -263,31 +236,6 @@
     }
     .error-state button:hover { background: #333; }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-120px);
-      background: #1d1d1f;
-      color: #fff;
-      padding: 14px 24px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 500;
-      z-index: 999;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      max-width: 90vw;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.error { background: #ff3b30; }
-    .toast i { font-size: 16px; }
-
-    /* Profile avatar placeholder */
     .profile-avatar {
       width: 72px;
       height: 72px;
@@ -311,13 +259,11 @@
   <main>
     <div class="account-container">
 
-      <!-- Page Header -->
       <div class="account-header">
         <h1>My Account</h1>
         <p id="welcome-message">Loading your profile...</p>
       </div>
 
-      <!-- Error State -->
       <div class="error-state" id="error-state">
         <i class="fa-solid fa-circle-exclamation"></i>
         <h3>Unable to load account</h3>
@@ -325,7 +271,6 @@
         <button onclick="window.location.href='/signin'">Go to Sign In</button>
       </div>
 
-      <!-- Skeleton Loader -->
       <div id="skeleton-loader">
         <div class="info-card">
           <div class="skeleton" style="height:24px;width:40%;margin-bottom:24px;"></div>
@@ -356,50 +301,35 @@
         </div>
       </div>
 
-      <!-- Real Content -->
       <div id="content-container" style="display:none;">
 
-        <!-- Profile Avatar & Name -->
         <div class="info-card" style="text-align:center;">
           <div class="profile-avatar" id="profile-avatar">U</div>
           <h2 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;margin:0 0 4px;" id="profile-fullname">—</h2>
           <p style="font-size:14px;color:var(--accent);margin:0;" id="profile-email-display">—</p>
         </div>
 
-        <!-- Personal Information -->
         <div class="info-card">
           <div class="info-card-header">
             <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
-            <button class="edit-btn" id="edit-profile-btn">
-              <i class="fa-solid fa-pen"></i> Edit
-            </button>
           </div>
-          <div class="info-grid" id="personal-info-grid">
-            <!-- Filled by JS -->
-          </div>
+          <div class="info-grid" id="personal-info-grid"></div>
         </div>
 
-        <!-- Contact & Address -->
         <div class="info-card">
           <div class="info-card-header">
             <h2><i class="fa-solid fa-address-book"></i> Contact & Address</h2>
           </div>
-          <div class="info-grid" id="address-info-grid">
-            <!-- Filled by JS -->
-          </div>
+          <div class="info-grid" id="address-info-grid"></div>
         </div>
 
-        <!-- Account Details -->
         <div class="info-card">
           <div class="info-card-header">
             <h2><i class="fa-solid fa-circle-info"></i> Account Details</h2>
           </div>
-          <div class="info-grid" id="account-info-grid">
-            <!-- Filled by JS -->
-          </div>
+          <div class="info-grid" id="account-info-grid"></div>
         </div>
 
-        <!-- Logout -->
         <div class="logout-section">
           <button class="logout-btn" id="logout-btn">
             <i class="fa-solid fa-right-from-bracket"></i> Sign Out
@@ -410,12 +340,6 @@
     </div>
   </main>
 
-  <!-- Toast -->
-  <div class="toast" id="toast">
-    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
-    <span id="toast-message"></span>
-  </div>
-
   <div id="dynamic-footer"></div>
 
   <script src="/components.js"></script>
@@ -424,19 +348,6 @@
     (function() {
       var API_BASE = window.location.origin;
 
-      // Show toast
-      function showToast(message, type) {
-        var toast = document.getElementById('toast');
-        var toastIcon = document.getElementById('toast-icon');
-        var toastMessage = document.getElementById('toast-message');
-        toastMessage.textContent = message;
-        toast.className = 'toast ' + (type || '') + ' show';
-        toastIcon.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
-        clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(function() { toast.classList.remove('show'); }, 4000);
-      }
-
-      // Get token from localStorage
       function getToken() {
         try {
           var stored = localStorage.getItem('jayenware_session');
@@ -448,7 +359,6 @@
         return null;
       }
 
-      // Show error state
       function showError(message) {
         document.getElementById('skeleton-loader').style.display = 'none';
         document.getElementById('content-container').style.display = 'none';
@@ -459,13 +369,11 @@
         }
       }
 
-      // Render all profile data
       function renderProfile(profile) {
         document.getElementById('skeleton-loader').style.display = 'none';
         document.getElementById('content-container').style.display = 'block';
         document.getElementById('error-state').classList.remove('visible');
 
-        // Avatar & name
         var firstName = profile.first_name || '';
         var lastName = profile.last_name || '';
         var fullName = (firstName + ' ' + lastName).trim() || 'User';
@@ -473,20 +381,16 @@
         
         document.getElementById('profile-avatar').textContent = initials;
         document.getElementById('profile-fullname').textContent = fullName;
-        document.getElementById('profile-email-display').textContent = profile.email || '—';
+        document.getElementById('profile-email-display').textContent = profile.email || '';
         document.getElementById('welcome-message').textContent = 'Welcome back, ' + (firstName || 'User');
 
-        // Personal Information
-        var personalGrid = document.getElementById('personal-info-grid');
-        personalGrid.innerHTML =
+        document.getElementById('personal-info-grid').innerHTML =
           buildInfoItem('First Name', profile.first_name) +
           buildInfoItem('Last Name', profile.last_name) +
           buildInfoItem('Phone', profile.phone) +
           buildInfoItem('Email', profile.email);
 
-        // Contact & Address
-        var addressGrid = document.getElementById('address-info-grid');
-        addressGrid.innerHTML =
+        document.getElementById('address-info-grid').innerHTML =
           buildInfoItem('Address Line 1', profile.address_line1) +
           buildInfoItem('Address Line 2', profile.address_line2) +
           buildInfoItem('City', profile.city) +
@@ -494,24 +398,18 @@
           buildInfoItem('Postal Code', profile.postal_code) +
           buildInfoItem('Country', profile.country);
 
-        // Account Details
-        var accountGrid = document.getElementById('account-info-grid');
-        accountGrid.innerHTML =
+        document.getElementById('account-info-grid').innerHTML =
           buildInfoItem('Member Since', formatDate(profile.created_at)) +
           buildInfoItem('Last Updated', formatDate(profile.updated_at));
       }
 
       function buildInfoItem(label, value) {
-        var displayValue = value || '';
-        var emptyClass = displayValue ? '' : ' empty';
-        var showValue = displayValue || 'Not provided';
         return '<div class="info-item">' +
           '<label>' + escapeHTML(label) + '</label>' +
-          '<span class="info-value' + emptyClass + '">' + escapeHTML(showValue) + '</span>' +
+          '<span class="info-value">' + escapeHTML(value || '') + '</span>' +
         '</div>';
       }
 
-      // Fetch user data
       async function fetchUserData() {
         var token = getToken();
         if (!token) {
@@ -538,7 +436,6 @@
 
           var result = await response.json();
           
-          // Build unified profile object from response
           var user = result.user || {};
           var profileData = result.profile || {};
           var meta = user.user_metadata || {};
@@ -566,23 +463,14 @@
         }
       }
 
-      // Logout
       document.getElementById('logout-btn').addEventListener('click', async function() {
         try {
           await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
-        } catch(e) {
-          console.error('Logout error:', e);
-        }
+        } catch(e) {}
         localStorage.removeItem('jayenware_session');
         window.location.href = '/';
       });
 
-      // Edit button (placeholder for now)
-      document.getElementById('edit-profile-btn').addEventListener('click', function() {
-        showToast('Edit profile feature coming soon', '');
-      });
-
-      // Helpers
       function escapeHTML(str) {
         if (!str) return '';
         var div = document.createElement('div');
@@ -591,7 +479,7 @@
       }
 
       function formatDate(dateString) {
-        if (!dateString) return '—';
+        if (!dateString) return '';
         try {
           var date = new Date(dateString);
           return date.toLocaleDateString('en-US', { 
@@ -606,7 +494,6 @@
         }
       }
 
-      // Init
       document.addEventListener('DOMContentLoaded', function() {
         if (window.JAYENWARE_FONTS) {
           var root = document.documentElement;
