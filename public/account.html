@@ -145,6 +145,24 @@
       font-size: 18px;
       color: var(--blue);
     }
+    .edit-btn {
+      font-size: 13px;
+      color: var(--blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      padding: 8px 16px;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .edit-btn:hover {
+      background: rgba(0,122,255,0.08);
+    }
 
     .info-grid {
       display: grid;
@@ -172,9 +190,14 @@
       font-weight: 500;
       word-break: break-word;
     }
-    .info-item .info-value:empty::after {
-      content: '—';
+    .info-item .info-value.empty {
       color: #c7c7cc;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .info-item.full-width {
+      grid-column: 1 / -1;
     }
 
     .logout-section {
@@ -235,6 +258,29 @@
       transition: all 0.3s ease;
     }
     .error-state button:hover { background: #333; }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: #1d1d1f;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 999;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 90vw;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { background: #ff3b30; }
+    .toast i { font-size: 16px; }
 
     .profile-avatar {
       width: 72px;
@@ -312,6 +358,9 @@
         <div class="info-card">
           <div class="info-card-header">
             <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
+            <button class="edit-btn" id="edit-profile-btn">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
           </div>
           <div class="info-grid" id="personal-info-grid"></div>
         </div>
@@ -340,6 +389,11 @@
     </div>
   </main>
 
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+    <span id="toast-message"></span>
+  </div>
+
   <div id="dynamic-footer"></div>
 
   <script src="/components.js"></script>
@@ -347,6 +401,17 @@
   <script>
     (function() {
       var API_BASE = window.location.origin;
+
+      function showToast(message, type) {
+        var toast = document.getElementById('toast');
+        var toastIcon = document.getElementById('toast-icon');
+        var toastMessage = document.getElementById('toast-message');
+        toastMessage.textContent = message;
+        toast.className = 'toast ' + (type || '') + ' show';
+        toastIcon.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(function() { toast.classList.remove('show'); }, 4000);
+      }
 
       function getToken() {
         try {
@@ -384,13 +449,17 @@
         document.getElementById('profile-email-display').textContent = profile.email || '';
         document.getElementById('welcome-message').textContent = 'Welcome back, ' + (firstName || 'User');
 
-        document.getElementById('personal-info-grid').innerHTML =
+        // Personal Information
+        var personalGrid = document.getElementById('personal-info-grid');
+        personalGrid.innerHTML =
           buildInfoItem('First Name', profile.first_name) +
           buildInfoItem('Last Name', profile.last_name) +
           buildInfoItem('Phone', profile.phone) +
           buildInfoItem('Email', profile.email);
 
-        document.getElementById('address-info-grid').innerHTML =
+        // Contact & Address
+        var addressGrid = document.getElementById('address-info-grid');
+        addressGrid.innerHTML =
           buildInfoItem('Address Line 1', profile.address_line1) +
           buildInfoItem('Address Line 2', profile.address_line2) +
           buildInfoItem('City', profile.city) +
@@ -398,15 +467,19 @@
           buildInfoItem('Postal Code', profile.postal_code) +
           buildInfoItem('Country', profile.country);
 
-        document.getElementById('account-info-grid').innerHTML =
+        // Account Details
+        var accountGrid = document.getElementById('account-info-grid');
+        accountGrid.innerHTML =
           buildInfoItem('Member Since', formatDate(profile.created_at)) +
           buildInfoItem('Last Updated', formatDate(profile.updated_at));
       }
 
       function buildInfoItem(label, value) {
+        var displayValue = (value !== undefined && value !== null && value !== '') ? value : 'Not provided';
+        var emptyClass = (value !== undefined && value !== null && value !== '') ? '' : ' empty';
         return '<div class="info-item">' +
           '<label>' + escapeHTML(label) + '</label>' +
-          '<span class="info-value">' + escapeHTML(value || '') + '</span>' +
+          '<span class="info-value' + emptyClass + '">' + escapeHTML(displayValue) + '</span>' +
         '</div>';
       }
 
@@ -466,9 +539,15 @@
       document.getElementById('logout-btn').addEventListener('click', async function() {
         try {
           await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
-        } catch(e) {}
+        } catch(e) {
+          console.error('Logout error:', e);
+        }
         localStorage.removeItem('jayenware_session');
         window.location.href = '/';
+      });
+
+      document.getElementById('edit-profile-btn').addEventListener('click', function() {
+        showToast('Edit profile feature coming soon', '');
       });
 
       function escapeHTML(str) {
@@ -479,7 +558,7 @@
       }
 
       function formatDate(dateString) {
-        if (!dateString) return '';
+        if (!dateString) return 'Not available';
         try {
           var date = new Date(dateString);
           return date.toLocaleDateString('en-US', { 
