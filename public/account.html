@@ -186,21 +186,6 @@
       text-align: center;
       font-size: 15px;
     }
-    .sidebar-nav-item .badge {
-      margin-left: auto;
-      background: var(--blue);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 50px;
-      min-width: 20px;
-      text-align: center;
-    }
-    .sidebar-nav-item.active .badge {
-      background: #ffffff;
-      color: #1d1d1f;
-    }
 
     .account-content {
       min-height: 500px;
@@ -277,92 +262,6 @@
       font-weight: 500;
     }
 
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    @media (max-width: 600px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 380px) {
-      .stats-row { grid-template-columns: 1fr; }
-    }
-    .stat-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
-      text-align: center;
-    }
-    .stat-card .stat-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      font-size: 18px;
-    }
-    .stat-card .stat-icon.orders { background: #e8f4fd; color: #007aff; }
-    .stat-card .stat-icon.wishlist { background: #fde8e8; color: #ff3b30; }
-    .stat-card .stat-icon.reviews { background: #e8fde8; color: #34c759; }
-    .stat-card .stat-value {
-      font-family: 'Manrope', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 2px;
-    }
-    .stat-card .stat-label {
-      font-size: 12px;
-      color: var(--accent);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .order-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid #f0f0f5;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .order-item:last-child { border-bottom: none; }
-    .order-info h4 {
-      font-weight: 600;
-      font-size: 15px;
-      margin: 0 0 4px 0;
-      color: var(--primary);
-    }
-    .order-info p {
-      font-size: 13px;
-      color: var(--accent);
-      margin: 0;
-    }
-    .order-status {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 50px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-    .order-status.delivered { background: #e8fde8; color: #1b7a1b; }
-    .order-status.processing { background: #fff3cd; color: #856404; }
-    .order-status.shipped { background: #e8f4fd; color: #0056b3; }
-
-    .order-total {
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--primary);
-    }
-
     .address-card {
       background: #ffffff;
       border-radius: 16px;
@@ -423,8 +322,6 @@
       color: var(--primary);
     }
     .btn-outline:hover { background: var(--soft); }
-    .btn-outline.danger { color: #ff3b30; border-color: #ffd1cf !important; }
-    .btn-outline.danger:hover { background: #fff0ef; }
 
     .logout-btn {
       display: flex;
@@ -535,14 +432,7 @@
 
         <!-- Sidebar -->
         <aside class="account-sidebar" id="account-sidebar">
-          <button class="sidebar-nav-item active" data-panel="overview">
-            <i class="fa-solid fa-grid-2"></i> Overview
-          </button>
-          <button class="sidebar-nav-item" data-panel="orders">
-            <i class="fa-solid fa-box"></i> Orders
-            <span class="badge" id="order-count-badge" style="display:none;">0</span>
-          </button>
-          <button class="sidebar-nav-item" data-panel="profile">
+          <button class="sidebar-nav-item active" data-panel="profile">
             <i class="fa-solid fa-user"></i> Profile
           </button>
           <button class="sidebar-nav-item" data-panel="addresses">
@@ -559,68 +449,8 @@
         <!-- Main Content -->
         <div class="account-content">
 
-          <!-- OVERVIEW PANEL -->
-          <div class="content-panel active" id="panel-overview">
-            <div id="skeleton-overview">
-              <div class="stats-row">
-                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
-                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
-                <div class="stat-card"><div class="skeleton" style="height:80px;"></div></div>
-              </div>
-              <div class="info-card">
-                <div class="skeleton skeleton-text medium" style="height:20px;"></div>
-                <div class="skeleton skeleton-text"></div>
-                <div class="skeleton skeleton-text short"></div>
-                <div class="skeleton skeleton-text medium"></div>
-              </div>
-            </div>
-            <div id="content-overview" style="display:none;">
-              <div class="stats-row">
-                <div class="stat-card">
-                  <div class="stat-icon orders"><i class="fa-solid fa-box"></i></div>
-                  <div class="stat-value" id="stat-orders">0</div>
-                  <div class="stat-label">Total Orders</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-icon wishlist"><i class="fa-solid fa-heart"></i></div>
-                  <div class="stat-value" id="stat-wishlist">0</div>
-                  <div class="stat-label">Wishlist Items</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-icon reviews"><i class="fa-solid fa-star"></i></div>
-                  <div class="stat-value" id="stat-reviews">0</div>
-                  <div class="stat-label">Reviews</div>
-                </div>
-              </div>
-              <div class="info-card">
-                <div class="info-card-header">
-                  <h2>Recent Orders</h2>
-                  <button class="edit-btn" onclick="switchPanel('orders')">View All <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i></button>
-                </div>
-                <div id="recent-orders-list">
-                  <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders yet</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ORDERS PANEL -->
-          <div class="content-panel" id="panel-orders">
-            <div id="skeleton-orders">
-              <div class="info-card"><div class="skeleton" style="height:60px;margin-bottom:12px;"></div><div class="skeleton" style="height:60px;"></div></div>
-            </div>
-            <div id="content-orders" style="display:none;">
-              <div class="info-card">
-                <div class="info-card-header"><h2>All Orders</h2></div>
-                <div id="all-orders-list">
-                  <p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- PROFILE PANEL -->
-          <div class="content-panel" id="panel-profile">
+          <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
               <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
             </div>
@@ -674,11 +504,6 @@
                 <span style="font-size:13px;color:var(--accent);">English</span>
               </div>
             </div>
-            <div class="info-card" style="border:1.5px solid #ffd1cf;">
-              <div class="info-card-header"><h2 style="color:#ff3b30;">Danger Zone</h2></div>
-              <p style="font-size:13px;color:var(--accent);margin-bottom:16px;">Once you delete your account, there is no going back. Please be certain.</p>
-              <button class="btn-outline danger" style="padding:10px 20px;font-size:13px;">Delete Account</button>
-            </div>
           </div>
 
         </div>
@@ -699,7 +524,7 @@
   <script>
     (function() {
       var API_BASE = window.location.origin;
-      var currentPanel = 'overview';
+      var currentPanel = 'profile';
       var userData = null;
       var authToken = null;
 
@@ -757,8 +582,6 @@
         switch(panel) {
           case 'profile': renderProfile(userData); break;
           case 'addresses': renderAddresses(userData); break;
-          case 'orders': renderAllOrders(userData); break;
-          case 'overview': renderOverview(userData); break;
         }
       }
 
@@ -797,49 +620,6 @@
         }
       }
 
-      function renderOverview(data) {
-        document.getElementById('skeleton-overview').style.display = 'none';
-        document.getElementById('content-overview').style.display = 'block';
-        document.getElementById('stat-orders').textContent = data.order_count || 0;
-        document.getElementById('stat-wishlist').textContent = data.wishlist_count || 0;
-        document.getElementById('stat-reviews').textContent = data.review_count || 0;
-        var recentContainer = document.getElementById('recent-orders-list');
-        if (data.recent_orders && data.recent_orders.length > 0) {
-          recentContainer.innerHTML = data.recent_orders.slice(0, 3).map(function(order) {
-            return '<div class="order-item">' +
-              '<div class="order-info"><h4>Order #' + order.id + '</h4><p>' + formatDate(order.date) + '</p></div>' +
-              '<span class="order-status ' + order.status + '">' + order.status + '</span>' +
-              '<span class="order-total">$' + order.total + '</span>' +
-            '</div>';
-          }).join('');
-        } else {
-          recentContainer.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders yet</p>';
-        }
-      }
-
-      function renderAllOrders(data) {
-        document.getElementById('skeleton-orders').style.display = 'none';
-        document.getElementById('content-orders').style.display = 'block';
-        var container = document.getElementById('all-orders-list');
-        if (data.orders && data.orders.length > 0) {
-          container.innerHTML = data.orders.map(function(order) {
-            return '<div class="order-item">' +
-              '<div class="order-info"><h4>Order #' + order.id + '</h4><p>' + formatDate(order.date) + '</p></div>' +
-              '<span class="order-status ' + order.status + '">' + order.status + '</span>' +
-              '<span class="order-total">$' + order.total + '</span>' +
-            '</div>';
-          }).join('');
-        } else {
-          container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:20px;">No orders found</p>';
-        }
-        var badge = document.getElementById('order-count-badge');
-        if (data.order_count > 0) {
-          badge.textContent = data.order_count;
-          badge.style.display = 'inline';
-        }
-      }
-
-      // ✅ FIXED: Fetch user data with correct endpoint + token
       async function fetchUserData() {
         var token = getToken();
         if (!token) {
@@ -848,7 +628,6 @@
         }
 
         try {
-          // ✅ Use /api/user/profile instead of /api/auth/user
           var response = await fetch(API_BASE + '/api/user/profile', {
             headers: {
               'Accept': 'application/json',
@@ -884,12 +663,7 @@
             postal_code: profile.postal_code || user.user_metadata?.postal_code || '',
             country: profile.country || user.user_metadata?.country || '',
             created_at: profile.created_at || user.created_at || '',
-            updated_at: profile.updated_at || user.updated_at || '',
-            order_count: 0,
-            wishlist_count: 0,
-            review_count: 0,
-            orders: [],
-            recent_orders: []
+            updated_at: profile.updated_at || user.updated_at || ''
           };
 
           // Show grid
@@ -900,8 +674,8 @@
           document.getElementById('welcome-message').textContent = 
             'Welcome back, ' + (userData.first_name || 'User');
           
-          // Render overview
-          renderOverview(userData);
+          // Render profile
+          renderProfile(userData);
 
         } catch (error) {
           console.error('Error loading user data:', error);
@@ -918,10 +692,8 @@
         }
       }
 
-      // ✅ FIXED: Logout with correct endpoint
       document.getElementById('logout-btn').addEventListener('click', async function() {
         try {
-          // ✅ Use /api/auth/logout instead of /api/auth/signout
           await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
         } catch(e) {
           console.error('Logout error:', e);
