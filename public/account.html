@@ -90,7 +90,7 @@
 
     /* Layout Containers */
     .account-container {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 100px 16px 48px; 
     }
@@ -118,116 +118,100 @@
       margin: 0;
     }
 
+    /* Changed Layout to Column */
     .account-grid {
-      display: grid;
-      grid-template-columns: 280px 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 28px;
-      align-items: start;
-    }
-    
-    @media (max-width: 768px) {
-      .account-grid {
-        grid-template-columns: 1fr;
-      }
+      align-items: stretch;
     }
 
-    /* Sidebar Navigation */
+    /* Bottom Navigation / Menu */
     .account-sidebar {
       background: #ffffff;
       border-radius: 16px;
-      padding: 8px;
+      padding: 16px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
-      position: sticky;
-      top: 24px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
       opacity: 0;
-      transform: translateX(-16px);
-      animation: fadeSlideLeft 0.5s 0.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+      transform: translateY(16px);
+      animation: fadeSlideUp 0.5s 0.2s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
     
     @media (max-width: 768px) {
       .account-sidebar {
-        position: static;
-        display: flex;
-        overflow-x: auto;
-        gap: 4px;
-        padding: 6px;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
+        flex-direction: column;
+        gap: 8px;
       }
-      .account-sidebar::-webkit-scrollbar { display: none; }
     }
 
     .sidebar-nav-item {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
-      padding: 12px 16px;
+      padding: 14px 24px;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.25s ease;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--primary);
       text-decoration: none;
-      margin-bottom: 2px;
       border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
+      background: #f5f5f7;
+      text-align: center;
       font-family: 'Inter', sans-serif;
-    }
-    
-    @media (max-width: 768px) {
-      .sidebar-nav-item {
-        flex-shrink: 0;
-        width: auto;
-        padding: 10px 16px;
-        font-size: 13px;
-        gap: 8px;
-      }
+      flex: 1;
+      min-width: 180px;
     }
     
     .sidebar-nav-item:hover {
-      background: var(--soft);
+      background: #eaeaed;
     }
     
     .sidebar-nav-item.active {
       background: #1d1d1f;
       color: #ffffff;
-      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .sidebar-nav-item i {
-      width: 20px;
-      text-align: center;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .logout-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 24px;
       border-radius: 12px;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--error);
-      background: none;
+      background: #fff0ef;
       border: none;
-      width: 100%;
-      text-align: left;
+      text-align: center;
       font-family: 'Inter', sans-serif;
-      margin-top: 4px;
       transition: all 0.2s ease;
+      flex: 1;
+      min-width: 180px;
     }
     
-    .logout-btn:hover { background: #fff0ef; }
+    .logout-btn:hover { 
+      background: #ffe3e1; 
+      box-shadow: 0 4px 12px rgba(255, 59, 48, 0.1);
+    }
 
     /* Main Content */
     .account-content {
-      min-height: 500px;
+      min-height: 400px;
     }
 
     .content-panel {
@@ -377,10 +361,9 @@
       font-size: 15px;
       color: var(--primary);
       font-weight: 500;
-      min-height: 22px; /* Prevent collapse if empty */
+      min-height: 22px;
     }
 
-    /* Edit Input Styles */
     .edit-input {
       width: 100%;
       padding: 8px 12px;
@@ -398,12 +381,7 @@
       border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
     }
-
-    .edit-input:disabled {
-      background-color: #f5f5f7;
-      color: var(--accent);
-      cursor: not-allowed;
-    }
+    .edit-input:disabled { background-color: #f5f5f7; color: var(--accent); cursor: not-allowed; }
 
     .address-card {
       background: #ffffff;
@@ -415,25 +393,14 @@
       position: relative;
     }
     
-    .address-card.default {
-      border-color: var(--blue);
-    }
+    .address-card.default { border-color: var(--blue); }
     
     .address-card .default-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: var(--blue);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 50px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      position: absolute; top: 12px; right: 12px; background: var(--blue); color: #fff;
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 50px;
+      text-transform: uppercase; letter-spacing: 0.04em;
     }
 
-    /* Error & Toast */
     .error-state {
       text-align: center;
       padding: 60px 20px;
@@ -449,28 +416,71 @@
     .error-state p { font-size: 14px; color: var(--accent); max-width: 400px; }
 
     .toast {
-      position: fixed;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-120px);
-      background: #1d1d1f;
-      color: #fff;
-      padding: 14px 24px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 500;
-      z-index: 999;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120px);
+      background: #1d1d1f; color: #fff; padding: 14px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 500; z-index: 999; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
       transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      max-width: 90vw;
+      display: flex; align-items: center; gap: 10px; max-width: 90vw;
     }
     
     .toast.show { transform: translateX(-50%) translateY(0); }
     .toast.error { background: var(--error); }
-    .toast i { font-size: 16px; }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 9999;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1; pointer-events: all;
+    }
+
+    .modal-box {
+      background: #fff; border-radius: 24px; padding: 40px 32px; text-align: center;
+      transform: scale(0.9) translateY(20px); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 420px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    .modal-overlay.active .modal-box {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-badge {
+      width: 80px; height: 80px; background: #fff0ef; color: var(--error);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 24px; box-shadow: 0 8px 24px rgba(255,59,48,0.2);
+    }
+
+    .modal-title {
+      font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 800;
+      color: var(--primary); margin: 0 0 12px 0;
+    }
+
+    .modal-text {
+      font-size: 15px; color: var(--accent); margin: 0 0 32px 0; line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex; gap: 12px; justify-content: center;
+    }
+
+    .modal-btn {
+      flex: 1; padding: 14px 20px; border-radius: 12px; font-size: 15px;
+      font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s; border: none;
+    }
+    
+    .btn-cancel {
+      background: #f5f5f7; color: var(--primary);
+    }
+    .btn-cancel:hover { background: #eaeaed; }
+    
+    .btn-confirm {
+      background: var(--error); color: #fff; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+    }
+    .btn-confirm:hover { background: #e6352b; box-shadow: 0 6px 16px rgba(255, 59, 48, 0.3); }
+
   </style>
 </head>
 <body class="antialiased">
@@ -493,42 +503,22 @@
 
       <div class="account-grid" id="account-grid" style="display:none;">
 
-        <aside class="account-sidebar" id="account-sidebar">
-          <button class="sidebar-nav-item active" data-panel="profile">
-            <i class="fa-solid fa-user"></i> Profile
-          </button>
-          
-          <button class="sidebar-nav-item" data-panel="addresses">
-            <i class="fa-solid fa-location-dot"></i> Addresses
-          </button>
-          
-          <button class="logout-btn" id="logout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-          </button>
-        </aside>
-
+        <!-- Main Content Area is now First -->
         <div class="account-content">
-
           <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
               <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
             </div>
             
             <div id="content-profile" style="display:none;">
-              
-              <div class="profile-header-card" id="profile-avatar-card">
-                </div>
-
+              <div class="profile-header-card" id="profile-avatar-card"></div>
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
-                  <div class="action-buttons" id="edit-profile-actions">
-                    </div>
+                  <div class="action-buttons" id="edit-profile-actions"></div>
                 </div>
-                <div class="info-grid" id="profile-info-grid">
-                  </div>
+                <div class="info-grid" id="profile-info-grid"></div>
               </div>
-              
               <div class="info-card">
                 <div class="info-card-header"><h2>Account Details</h2></div>
                 <div class="info-grid" id="account-info-grid"></div>
@@ -540,14 +530,27 @@
             <div id="skeleton-addresses">
               <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
             </div>
-            
             <div id="content-addresses" style="display:none;">
-              <div id="addresses-list">
-                </div>
+              <div id="addresses-list"></div>
             </div>
           </div>
-
         </div>
+
+        <!-- Navigation Menu is now at the Bottom -->
+        <aside class="account-sidebar" id="account-sidebar">
+          <button class="sidebar-nav-item active" data-panel="profile">
+            <i class="fa-solid fa-user"></i> Profile
+          </button>
+          
+          <button class="sidebar-nav-item" data-panel="addresses">
+            <i class="fa-solid fa-location-dot"></i> Location
+          </button>
+          
+          <button class="logout-btn" id="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+          </button>
+        </aside>
+
       </div>
     </div>
   </main>
@@ -555,6 +558,21 @@
   <div class="toast" id="toast">
     <i class="fa-solid fa-circle-check" id="toast-icon"></i>
     <span id="toast-message"></span>
+  </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="modal-overlay" id="logout-modal">
+    <div class="modal-box">
+      <div class="modal-badge">
+        <i class="fa-solid fa-power-off"></i>
+      </div>
+      <h2 class="modal-title">Sign Out</h2>
+      <p class="modal-text">Are you sure you want to sign out of your JAYENWARE account?</p>
+      <div class="modal-actions">
+        <button class="modal-btn btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+        <button class="modal-btn btn-confirm" id="confirm-logout-btn">Yes, Sign Out</button>
+      </div>
+    </div>
   </div>
 
   <div id="dynamic-footer"></div>
@@ -615,13 +633,36 @@
         loadPanelData(panelName);
       }
 
+      // Updated Event Listener to handle bottom Navigation & Modal
       document.getElementById('account-sidebar').addEventListener('click', function(e) {
         var navItem = e.target.closest('.sidebar-nav-item');
+        var logoutBtn = e.target.closest('.logout-btn');
+
         if (navItem) {
           var panel = navItem.getAttribute('data-panel');
           if (panel) switchPanel(panel);
+        } else if (logoutBtn) {
+          document.getElementById('logout-modal').classList.add('active');
         }
       });
+
+      // Modal functions
+      window.closeLogoutModal = function() {
+        document.getElementById('logout-modal').classList.remove('active');
+      };
+
+      document.getElementById('confirm-logout-btn').addEventListener('click', async function() {
+        var btn = document.getElementById('confirm-logout-btn');
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Signing Out...';
+        try {
+          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
+        } catch(e) {
+          console.error('Logout error:', e);
+        }
+        localStorage.removeItem('jayenware_session');
+        window.location.href = '/';
+      });
+
 
       function loadPanelData(panel) {
         if (!userData) return;
@@ -760,7 +801,7 @@
           container.innerHTML = `
             <div class="address-card default">
               <div class="info-card-header" style="margin-bottom: 24px;">
-                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Address</h2>
+                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Location</h2>
                   <div class="action-buttons">
                     <button class="edit-btn cancel-btn" onclick="toggleEditAddress(false)">Cancel</button>
                     <button class="edit-btn save-btn" id="save-address-btn" onclick="saveAddressInfo()">Save</button>
@@ -781,7 +822,7 @@
             <div class="address-card default">
               <div class="default-badge">Primary</div>
               <div class="info-card-header" style="margin-bottom: 24px; align-items: flex-start;">
-                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Address</h2>
+                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Location</h2>
                   <button class="edit-btn" onclick="toggleEditAddress(true)" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: -6px;">
                     <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
                   </button>
@@ -842,7 +883,7 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
-          document.getElementById('account-grid').style.display = 'grid';
+          document.getElementById('account-grid').style.display = 'flex'; // Changed to flex for proper layout rendering
           document.getElementById('error-state').classList.remove('visible');
           
           renderProfile(userData);
@@ -861,16 +902,6 @@
           errorState.querySelector('p').textContent = message;
         }
       }
-
-      document.getElementById('logout-btn').addEventListener('click', async function() {
-        try {
-          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
-        } catch(e) {
-          console.error('Logout error:', e);
-        }
-        localStorage.removeItem('jayenware_session');
-        window.location.href = '/';
-      });
 
       function escapeHTML(str) {
         if (!str) return '';
