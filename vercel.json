@@ -44,8 +44,12 @@
       "dest": "/public/signup.html"
     },
     {
+      "src": "/signin",
+      "dest": "/public/signin.html"
+    },
+    {
       "src": "/login",
-      "dest": "/public/login.html"
+      "dest": "/public/signin.html"
     },
     {
       "src": "/account",
