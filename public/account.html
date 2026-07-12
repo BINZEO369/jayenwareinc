@@ -68,7 +68,6 @@
       padding: 0;
     }
 
-    /* Animations & Skeleton */
     .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
@@ -83,12 +82,7 @@
     @keyframes fadeSlideUp {
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    @keyframes fadeSlideLeft {
-      to { opacity: 1; transform: translateX(0); }
-    }
 
-    /* Layout Containers */
     .account-container {
       max-width: 900px;
       margin: 0 auto;
@@ -118,7 +112,6 @@
       margin: 0;
     }
 
-    /* Changed Layout to Column */
     .account-grid {
       display: flex;
       flex-direction: column;
@@ -126,7 +119,6 @@
       align-items: stretch;
     }
 
-    /* Bottom Navigation / Menu */
     .account-sidebar {
       background: #ffffff;
       border-radius: 16px;
@@ -209,7 +201,6 @@
       box-shadow: 0 4px 12px rgba(255, 59, 48, 0.1);
     }
 
-    /* Main Content */
     .account-content {
       min-height: 400px;
     }
@@ -227,7 +218,6 @@
       transform: translateY(0);
     }
 
-    /* Cards */
     .info-card {
       background: #ffffff;
       border-radius: 16px;
@@ -236,7 +226,6 @@
       margin-bottom: 20px;
     }
 
-    /* Avatar & Profile Card */
     .profile-header-card {
       display: flex;
       flex-direction: column;
@@ -426,7 +415,6 @@
     .toast.show { transform: translateX(-50%) translateY(0); }
     .toast.error { background: var(--error); }
 
-    /* Modal Styles */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
@@ -503,7 +491,6 @@
 
       <div class="account-grid" id="account-grid" style="display:none;">
 
-        <!-- Main Content Area is now First -->
         <div class="account-content">
           <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
@@ -536,7 +523,6 @@
           </div>
         </div>
 
-        <!-- Navigation Menu is now at the Bottom -->
         <aside class="account-sidebar" id="account-sidebar">
           <button class="sidebar-nav-item active" data-panel="profile">
             <i class="fa-solid fa-user"></i> Profile
@@ -560,7 +546,6 @@
     <span id="toast-message"></span>
   </div>
 
-  <!-- Logout Confirmation Modal -->
   <div class="modal-overlay" id="logout-modal">
     <div class="modal-box">
       <div class="modal-badge">
@@ -633,7 +618,6 @@
         loadPanelData(panelName);
       }
 
-      // Updated Event Listener to handle bottom Navigation & Modal
       document.getElementById('account-sidebar').addEventListener('click', function(e) {
         var navItem = e.target.closest('.sidebar-nav-item');
         var logoutBtn = e.target.closest('.logout-btn');
@@ -646,7 +630,6 @@
         }
       });
 
-      // Modal functions
       window.closeLogoutModal = function() {
         document.getElementById('logout-modal').classList.remove('active');
       };
@@ -663,7 +646,6 @@
         window.location.href = '/';
       });
 
-
       function loadPanelData(panel) {
         if (!userData) return;
         switch(panel) {
@@ -678,7 +660,7 @@
         renderProfile(userData);
       };
 
-      window.saveProfileInfo = function() {
+      window.saveProfileInfo = async function() {
         var btn = document.getElementById('save-profile-btn');
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
         btn.disabled = true;
@@ -686,16 +668,57 @@
         var newFname = document.getElementById('edit-fname').value.trim();
         var newLname = document.getElementById('edit-lname').value.trim();
         var newPhone = document.getElementById('edit-phone').value.trim();
+        var token = getToken();
 
-        setTimeout(function() {
-          userData.first_name = newFname;
-          userData.last_name = newLname;
-          userData.phone = newPhone;
+        if (!token) {
+          showToast('Session expired. Please sign in again.', 'error');
+          window.location.href = '/signin';
+          return;
+        }
+
+        try {
+          var response = await fetch(API_BASE + '/api/user/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              first_name: newFname,
+              last_name: newLname,
+              phone: newPhone
+            })
+          });
+
+          if (!response.ok) {
+            var errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to update profile');
+          }
+
+          // Update local data with fresh server response
+          var result = await response.json();
+          if (result.profile) {
+            userData.first_name = result.profile.first_name || newFname;
+            userData.last_name = result.profile.last_name || newLname;
+            userData.phone = result.profile.phone || newPhone;
+            userData.updated_at = result.profile.updated_at || new Date().toISOString();
+          } else {
+            userData.first_name = newFname;
+            userData.last_name = newLname;
+            userData.phone = newPhone;
+            userData.updated_at = new Date().toISOString();
+          }
 
           showToast('Profile updated successfully!');
           isEditingProfile = false;
           renderProfile(userData);
-        }, 1200);
+
+        } catch (error) {
+          console.error('Profile update error:', error);
+          showToast(error.message || 'Failed to update profile', 'error');
+          btn.innerHTML = 'Save';
+          btn.disabled = false;
+        }
       };
 
       // Address Edit Functions
@@ -704,7 +727,7 @@
         renderAddresses(userData);
       };
 
-      window.saveAddressInfo = function() {
+      window.saveAddressInfo = async function() {
         var btn = document.getElementById('save-address-btn');
         if(btn) {
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
@@ -717,19 +740,68 @@
         var newState = document.getElementById('edit-state').value.trim();
         var newZip = document.getElementById('edit-zip').value.trim();
         var newCountry = document.getElementById('edit-country').value.trim();
+        var token = getToken();
 
-        setTimeout(function() {
-          userData.address_line1 = newAddr1;
-          userData.address_line2 = newAddr2;
-          userData.city = newCity;
-          userData.state = newState;
-          userData.postal_code = newZip;
-          userData.country = newCountry;
+        if (!token) {
+          showToast('Session expired. Please sign in again.', 'error');
+          window.location.href = '/signin';
+          return;
+        }
+
+        try {
+          var response = await fetch(API_BASE + '/api/user/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              address_line1: newAddr1,
+              address_line2: newAddr2,
+              city: newCity,
+              state: newState,
+              postal_code: newZip,
+              country: newCountry
+            })
+          });
+
+          if (!response.ok) {
+            var errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to update address');
+          }
+
+          // Update local data with fresh server response
+          var result = await response.json();
+          if (result.profile) {
+            userData.address_line1 = result.profile.address_line1 || newAddr1;
+            userData.address_line2 = result.profile.address_line2 || newAddr2;
+            userData.city = result.profile.city || newCity;
+            userData.state = result.profile.state || newState;
+            userData.postal_code = result.profile.postal_code || newZip;
+            userData.country = result.profile.country || newCountry;
+            userData.updated_at = result.profile.updated_at || new Date().toISOString();
+          } else {
+            userData.address_line1 = newAddr1;
+            userData.address_line2 = newAddr2;
+            userData.city = newCity;
+            userData.state = newState;
+            userData.postal_code = newZip;
+            userData.country = newCountry;
+            userData.updated_at = new Date().toISOString();
+          }
 
           showToast('Address updated successfully!');
           isEditingAddress = false;
           renderAddresses(userData);
-        }, 1200);
+
+        } catch (error) {
+          console.error('Address update error:', error);
+          showToast(error.message || 'Failed to update address', 'error');
+          if (btn) {
+            btn.innerHTML = 'Save';
+            btn.disabled = false;
+          }
+        }
       };
 
       function renderProfile(data) {
@@ -883,8 +955,11 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
-          document.getElementById('account-grid').style.display = 'flex'; // Changed to flex for proper layout rendering
+          document.getElementById('account-grid').style.display = 'flex';
           document.getElementById('error-state').classList.remove('visible');
+          
+          var fName = userData.first_name || 'User';
+          document.getElementById('welcome-message').textContent = 'Welcome back, ' + fName;
           
           renderProfile(userData);
 
@@ -935,7 +1010,3 @@
   </script>
 </body>
 </html>
-
-
-
-
