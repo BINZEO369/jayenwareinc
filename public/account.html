@@ -338,7 +338,7 @@
       background: #ffe3e1;
     }
 
-    /* Fixed Left Label Layout for Data & Inputs */
+    /* Fixed Left Label Layout for Data & Inputs - FIXED HERE */
     .info-grid {
       display: flex;
       flex-direction: column;
@@ -353,6 +353,7 @@
       border-radius: 12px;
       padding: 10px 16px;
       transition: all 0.2s ease;
+      min-height: 48px;
     }
     
     .info-item:focus-within {
@@ -367,27 +368,30 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--accent);
-      width: 140px;
-      min-width: 140px;
-      flex-shrink: 0;
+      flex: 0 0 160px;
+      width: 160px;
+      min-width: 160px;
+      max-width: 160px;
       border-right: 1.5px solid #e5e5ea;
       padding-right: 12px;
       margin: 0;
       user-select: none;
+      line-height: 1.3;
     }
     
     .info-item span {
       font-size: 15px;
       color: var(--primary);
       font-weight: 600;
-      padding-left: 14px;
-      flex-grow: 1;
+      padding-left: 16px;
+      flex: 1 1 0%;
+      min-width: 0;
       word-break: break-word;
     }
 
     .edit-input {
       width: 100%;
-      padding: 4px 0 4px 14px;
+      padding: 4px 0 4px 16px;
       border: none;
       background: transparent;
       font-family: 'Inter', sans-serif;
@@ -395,7 +399,8 @@
       font-weight: 600;
       color: var(--primary);
       outline: none;
-      flex-grow: 1;
+      flex: 1 1 0%;
+      min-width: 0;
     }
     
     .edit-input:disabled { 
@@ -404,14 +409,19 @@
     }
 
     @media (max-width: 480px) {
+      .info-item {
+        padding: 10px 12px;
+      }
       .info-item label {
-        width: 110px;
-        min-width: 110px;
+        flex: 0 0 125px;
+        width: 125px;
+        min-width: 125px;
+        max-width: 125px;
         font-size: 11px;
-        padding-right: 8px;
+        padding-right: 10px;
       }
       .info-item span, .edit-input {
-        padding-left: 10px;
+        padding-left: 12px;
         font-size: 14px;
       }
     }
