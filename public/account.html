@@ -92,13 +92,12 @@
     .account-container {
       max-width: 1100px;
       margin: 0 auto;
-      /* Increased top padding to avoid header overlap */
       padding: 100px 16px 48px; 
     }
 
     .account-header {
       margin-bottom: 40px;
-      text-align: center; /* Centered Text */
+      text-align: center;
       opacity: 0;
       transform: translateY(16px);
       animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
@@ -225,13 +224,6 @@
     }
     
     .logout-btn:hover { background: #fff0ef; }
-    
-    @media (max-width: 768px) {
-      .logout-btn {
-        flex-shrink: 0;
-        width: auto;
-      }
-    }
 
     /* Main Content */
     .account-content {
@@ -318,8 +310,13 @@
       color: var(--primary);
       margin: 0;
     }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
     
-    .info-card-header .edit-btn {
+    .edit-btn {
       font-size: 13px;
       color: var(--blue);
       background: none;
@@ -332,8 +329,27 @@
       transition: all 0.2s ease;
     }
     
-    .info-card-header .edit-btn:hover {
+    .edit-btn:hover:not(:disabled) {
       background: rgba(0,122,255,0.08);
+    }
+
+    .save-btn {
+      background: var(--blue);
+      color: white;
+    }
+    .save-btn:hover:not(:disabled) {
+      background: #0062cc;
+    }
+    .save-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .cancel-btn {
+      color: var(--error);
+    }
+    .cancel-btn:hover {
+      background: rgba(255, 59, 48, 0.08);
     }
 
     .info-grid {
@@ -353,13 +369,38 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--accent);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     
     .info-item span {
       font-size: 15px;
       color: var(--primary);
       font-weight: 500;
+    }
+
+    /* Edit Input Styles */
+    .edit-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .edit-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+    }
+
+    .edit-input:disabled {
+      background-color: #f5f5f7;
+      color: var(--accent);
+      cursor: not-allowed;
     }
 
     .address-card {
@@ -404,32 +445,6 @@
       margin: 0 0 4px 0;
       line-height: 1.5;
     }
-    
-    .address-card .address-actions {
-      margin-top: 14px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    
-    .address-card .address-actions button {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 50px;
-      border: none;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.2s ease;
-    }
-    
-    .btn-outline {
-      background: none;
-      border: 1.5px solid #e5e5ea !important;
-      color: var(--primary);
-    }
-    
-    .btn-outline:hover { background: var(--soft); }
 
     /* Error & Toast */
     .error-state {
@@ -445,18 +460,6 @@
     .error-state i { font-size: 48px; color: var(--error); margin-bottom: 16px; }
     .error-state h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
     .error-state p { font-size: 14px; color: var(--accent); max-width: 400px; }
-    .error-state button {
-      margin-top: 16px;
-      padding: 10px 24px;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-    }
 
     .toast {
       position: fixed;
@@ -489,8 +492,6 @@
 
   <main>
     <div class="account-container">
-
-      <!-- Page Header (Centered with top spacing) -->
       <div class="account-header">
         <h1>My Account</h1>
         <p id="welcome-message">Welcome back</p>
@@ -500,7 +501,7 @@
         <i class="fa-solid fa-circle-exclamation"></i>
         <h3>Failed to load account</h3>
         <p>Please sign in again to access your account.</p>
-        <button onclick="window.location.href='/signin'">Go to Sign In</button>
+        <button onclick="window.location.href='/signin'" style="margin-top: 16px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: 'Inter', sans-serif;">Go to Sign In</button>
       </div>
 
       <div class="account-grid" id="account-grid" style="display:none;">
@@ -521,6 +522,7 @@
 
         <div class="account-content">
 
+          <!-- Profile Panel -->
           <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
               <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
@@ -528,7 +530,6 @@
             
             <div id="content-profile" style="display:none;">
               
-              <!-- Avatar & Name Card -->
               <div class="profile-header-card" id="profile-avatar-card">
                 <!-- Data injected via JS -->
               </div>
@@ -536,11 +537,13 @@
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
-                  <button class="edit-btn" id="edit-profile-btn">
-                    <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
-                  </button>
+                  <div class="action-buttons" id="edit-profile-actions">
+                    <!-- Edit / Save Buttons injected via JS -->
+                  </div>
                 </div>
-                <div class="info-grid" id="profile-info-grid"></div>
+                <div class="info-grid" id="profile-info-grid">
+                  <!-- Inputs or Spans injected via JS -->
+                </div>
               </div>
               
               <div class="info-card">
@@ -550,6 +553,7 @@
             </div>
           </div>
 
+          <!-- Addresses Panel -->
           <div class="content-panel" id="panel-addresses">
             <div id="skeleton-addresses">
               <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
@@ -588,6 +592,7 @@
       var currentPanel = 'profile';
       var userData = null;
       var authToken = null;
+      var isEditingProfile = false; // State to track editing mode
 
       function getToken() {
         if (authToken) return authToken;
@@ -650,31 +655,80 @@
         }
       }
 
+      window.toggleEditProfile = function(state) {
+        isEditingProfile = state;
+        renderProfile(userData);
+      };
+
+      window.saveProfileInfo = function() {
+        var btn = document.getElementById('save-profile-btn');
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
+        btn.disabled = true;
+
+        var newFname = document.getElementById('edit-fname').value.trim();
+        var newLname = document.getElementById('edit-lname').value.trim();
+        var newPhone = document.getElementById('edit-phone').value.trim();
+
+        // Simulate an API Update Request
+        setTimeout(function() {
+          // Update local data variable
+          userData.first_name = newFname;
+          userData.last_name = newLname;
+          userData.phone = newPhone;
+
+          showToast('Profile updated successfully!');
+          isEditingProfile = false;
+          renderProfile(userData); // Re-render with new data
+        }, 1200);
+      };
+
       function renderProfile(data) {
         document.getElementById('skeleton-profile').style.display = 'none';
         document.getElementById('content-profile').style.display = 'block';
 
-        // Profile Avatar Generation Logic
         var fName = data.first_name || '';
         var lName = data.last_name || '';
         
-        // Get first letters and handle fallback
         var initials = (fName.charAt(0) + lName.charAt(0)).toUpperCase() || 'U';
         var fullName = (fName + ' ' + lName).trim() || 'User';
 
+        // Avatar
         document.getElementById('profile-avatar-card').innerHTML = `
           <div class="avatar-circle">${initials}</div>
           <h3 class="profile-name">${escapeHTML(fullName)}</h3>
           <p class="profile-email">${escapeHTML(data.email || 'No email provided')}</p>
         `;
         
-        // Information Grid
-        document.getElementById('profile-info-grid').innerHTML = `
-          <div class="info-item"><label>First Name</label><span>${escapeHTML(fName || '—')}</span></div>
-          <div class="info-item"><label>Last Name</label><span>${escapeHTML(lName || '—')}</span></div>
-          <div class="info-item"><label>Phone</label><span>${escapeHTML(data.phone || '—')}</span></div>
-          <div class="info-item"><label>Email</label><span>${escapeHTML(data.email || '—')}</span></div>
-        `;
+        var grid = document.getElementById('profile-info-grid');
+        var actions = document.getElementById('edit-profile-actions');
+
+        // Check if in edit mode
+        if (isEditingProfile) {
+          grid.innerHTML = `
+            <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(fName)}" placeholder="First Name"></div>
+            <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(lName)}" placeholder="Last Name"></div>
+            <div class="info-item"><label>Phone</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(data.phone || '')}" placeholder="+1 (555) 000-0000"></div>
+            <div class="info-item"><label>Email</label><input type="email" class="edit-input" value="${escapeHTML(data.email || '')}" disabled title="Email address cannot be changed"></div>
+          `;
+          
+          actions.innerHTML = `
+            <button class="edit-btn cancel-btn" onclick="toggleEditProfile(false)">Cancel</button>
+            <button class="edit-btn save-btn" id="save-profile-btn" onclick="saveProfileInfo()">Save</button>
+          `;
+        } else {
+          grid.innerHTML = `
+            <div class="info-item"><label>First Name</label><span>${escapeHTML(fName || '—')}</span></div>
+            <div class="info-item"><label>Last Name</label><span>${escapeHTML(lName || '—')}</span></div>
+            <div class="info-item"><label>Phone</label><span>${escapeHTML(data.phone || '—')}</span></div>
+            <div class="info-item"><label>Email</label><span>${escapeHTML(data.email || '—')}</span></div>
+          `;
+          
+          actions.innerHTML = `
+            <button class="edit-btn" onclick="toggleEditProfile(true)">
+              <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+            </button>
+          `;
+        }
         
         document.getElementById('account-info-grid').innerHTML = `
           <div class="info-item"><label>Member Since</label><span>${formatDate(data.created_at)}</span></div>
@@ -702,7 +756,7 @@
               <p>${escapeHTML(data.country)}</p>
               <p style="margin-top:8px;font-weight:500;">${escapeHTML(data.phone)}</p>
               <div class="address-actions">
-                <button class="btn-outline"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
+                <button class="edit-btn" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: 6px;"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
               </div>
             </div>
           `;
@@ -719,6 +773,7 @@
         }
 
         try {
+          // Mock fetch - change to your real endpoint
           var response = await fetch(API_BASE + '/api/user/profile', {
             headers: {
               'Accept': 'application/json',
@@ -800,8 +855,6 @@
           return dateString;
         }
       }
-
-      window.switchPanel = switchPanel;
 
       document.addEventListener('DOMContentLoaded', function() {
         if (window.JAYENWARE_FONTS) {
