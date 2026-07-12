@@ -6,9 +6,11 @@
   <title>My Account | JAYENWARE</title>
   <meta name="description" content="Manage your JAYENWARE account, orders, and profile" />
   <meta name="theme-color" content="#ffffff" />
+  
   <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
   <link rel="apple-touch-icon" href="/logo.png" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
@@ -17,7 +19,6 @@
   <script src="/footer.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -49,10 +50,12 @@
       --blue: #007aff;
       --error: #ff3b30;
     }
+    
     * {
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
     }
+    
     body {
       background-color: #f5f5f7;
       color: #1d1d1f;
@@ -65,6 +68,7 @@
       padding: 0;
     }
 
+    /* Animations & Skeleton */
     .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
@@ -76,6 +80,15 @@
       100% { background-position: 200% 0; }
     }
 
+    @keyframes fadeSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeSlideLeft {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Layout Containers */
     .account-container {
       max-width: 1100px;
       margin: 0 auto;
@@ -88,9 +101,7 @@
       transform: translateY(16px);
       animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
-    @keyframes fadeSlideUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
+    
     .account-header h1 {
       font-family: 'Manrope', sans-serif;
       font-size: clamp(28px, 4vw, 40px);
@@ -99,6 +110,7 @@
       margin: 0 0 6px 0;
       letter-spacing: -0.02em;
     }
+    
     .account-header p {
       font-size: 15px;
       color: var(--accent);
@@ -111,12 +123,14 @@
       gap: 28px;
       align-items: start;
     }
+    
     @media (max-width: 768px) {
       .account-grid {
         grid-template-columns: 1fr;
       }
     }
 
+    /* Sidebar Navigation */
     .account-sidebar {
       background: #ffffff;
       border-radius: 16px;
@@ -128,9 +142,7 @@
       transform: translateX(-16px);
       animation: fadeSlideLeft 0.5s 0.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
-    @keyframes fadeSlideLeft {
-      to { opacity: 1; transform: translateX(0); }
-    }
+    
     @media (max-width: 768px) {
       .account-sidebar {
         position: static;
@@ -164,6 +176,7 @@
       text-align: left;
       font-family: 'Inter', sans-serif;
     }
+    
     @media (max-width: 768px) {
       .sidebar-nav-item {
         flex-shrink: 0;
@@ -173,20 +186,52 @@
         gap: 8px;
       }
     }
+    
     .sidebar-nav-item:hover {
       background: var(--soft);
     }
+    
     .sidebar-nav-item.active {
       background: #1d1d1f;
       color: #ffffff;
       font-weight: 600;
     }
+    
     .sidebar-nav-item i {
       width: 20px;
       text-align: center;
       font-size: 15px;
     }
 
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--error);
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      margin-top: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .logout-btn:hover { background: #fff0ef; }
+    
+    @media (max-width: 768px) {
+      .logout-btn {
+        flex-shrink: 0;
+        width: auto;
+      }
+    }
+
+    /* Main Content */
     .account-content {
       min-height: 500px;
     }
@@ -197,12 +242,14 @@
       transform: translateY(12px);
       transition: opacity 0.35s ease, transform 0.35s ease;
     }
+    
     .content-panel.active {
       display: block;
       opacity: 1;
       transform: translateY(0);
     }
 
+    /* Cards */
     .info-card {
       background: #ffffff;
       border-radius: 16px;
@@ -210,12 +257,14 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
       margin-bottom: 20px;
     }
+    
     .info-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
     }
+    
     .info-card-header h2 {
       font-family: 'Manrope', sans-serif;
       font-size: 18px;
@@ -223,6 +272,7 @@
       color: var(--primary);
       margin: 0;
     }
+    
     .info-card-header .edit-btn {
       font-size: 13px;
       color: var(--blue);
@@ -235,6 +285,7 @@
       border-radius: 50px;
       transition: all 0.2s ease;
     }
+    
     .info-card-header .edit-btn:hover {
       background: rgba(0,122,255,0.08);
     }
@@ -244,9 +295,11 @@
       grid-template-columns: 1fr 1fr;
       gap: 16px 24px;
     }
+    
     @media (max-width: 480px) {
       .info-grid { grid-template-columns: 1fr; }
     }
+    
     .info-item label {
       display: block;
       font-size: 11px;
@@ -256,6 +309,7 @@
       color: var(--accent);
       margin-bottom: 4px;
     }
+    
     .info-item span {
       font-size: 15px;
       color: var(--primary);
@@ -271,9 +325,11 @@
       transition: all 0.3s ease;
       position: relative;
     }
+    
     .address-card.default {
       border-color: var(--blue);
     }
+    
     .address-card .default-badge {
       position: absolute;
       top: 12px;
@@ -287,6 +343,7 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
+    
     .address-card h4 {
       font-family: 'Manrope', sans-serif;
       font-size: 16px;
@@ -294,18 +351,21 @@
       margin: 0 0 8px 0;
       color: var(--primary);
     }
+    
     .address-card p {
       font-size: 14px;
       color: #4a4a4f;
       margin: 0 0 4px 0;
       line-height: 1.5;
     }
+    
     .address-card .address-actions {
       margin-top: 14px;
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
+    
     .address-card .address-actions button {
       font-size: 12px;
       font-weight: 600;
@@ -316,39 +376,16 @@
       font-family: 'Inter', sans-serif;
       transition: all 0.2s ease;
     }
+    
     .btn-outline {
       background: none;
       border: 1.5px solid #e5e5ea !important;
       color: var(--primary);
     }
+    
     .btn-outline:hover { background: var(--soft); }
 
-    .logout-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      color: #ff3b30;
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      font-family: 'Inter', sans-serif;
-      margin-top: 4px;
-      transition: all 0.2s ease;
-    }
-    .logout-btn:hover { background: #fff0ef; }
-    @media (max-width: 768px) {
-      .logout-btn {
-        flex-shrink: 0;
-        width: auto;
-      }
-    }
-
+    /* Error & Toast */
     .error-state {
       text-align: center;
       padding: 60px 20px;
@@ -357,8 +394,9 @@
       align-items: center;
       justify-content: center;
     }
+    
     .error-state.visible { display: flex; }
-    .error-state i { font-size: 48px; color: #ff3b30; margin-bottom: 16px; }
+    .error-state i { font-size: 48px; color: var(--error); margin-bottom: 16px; }
     .error-state h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
     .error-state p { font-size: 14px; color: var(--accent); max-width: 400px; }
     .error-state button {
@@ -393,17 +431,10 @@
       gap: 10px;
       max-width: 90vw;
     }
+    
     .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.error { background: #ff3b30; }
+    .toast.error { background: var(--error); }
     .toast i { font-size: 16px; }
-
-    .skeleton-text {
-      height: 14px;
-      margin-bottom: 8px;
-      border-radius: 4px;
-    }
-    .skeleton-text.short { width: 60%; }
-    .skeleton-text.medium { width: 80%; }
   </style>
 </head>
 <body class="antialiased">
@@ -413,13 +444,11 @@
   <main>
     <div class="account-container">
 
-      <!-- Page Header -->
       <div class="account-header">
         <h1>My Account</h1>
         <p id="welcome-message">Welcome back</p>
       </div>
 
-      <!-- Error State -->
       <div class="error-state" id="error-state">
         <i class="fa-solid fa-circle-exclamation"></i>
         <h3>Failed to load account</h3>
@@ -427,41 +456,40 @@
         <button onclick="window.location.href='/signin'">Go to Sign In</button>
       </div>
 
-      <!-- Grid Layout -->
       <div class="account-grid" id="account-grid" style="display:none;">
 
-        <!-- Sidebar -->
         <aside class="account-sidebar" id="account-sidebar">
           <button class="sidebar-nav-item active" data-panel="profile">
             <i class="fa-solid fa-user"></i> Profile
           </button>
+          
           <button class="sidebar-nav-item" data-panel="addresses">
             <i class="fa-solid fa-location-dot"></i> Addresses
           </button>
-          <button class="sidebar-nav-item" data-panel="settings">
-            <i class="fa-solid fa-gear"></i> Settings
-          </button>
+          
           <button class="logout-btn" id="logout-btn">
             <i class="fa-solid fa-right-from-bracket"></i> Sign Out
           </button>
         </aside>
 
-        <!-- Main Content -->
         <div class="account-content">
 
-          <!-- PROFILE PANEL -->
           <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
               <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
             </div>
+            
             <div id="content-profile" style="display:none;">
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
-                  <button class="edit-btn" id="edit-profile-btn"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
+                  <button class="edit-btn" id="edit-profile-btn">
+                    <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+                  </button>
                 </div>
                 <div class="info-grid" id="profile-info-grid"></div>
               </div>
+              
               <div class="info-card">
                 <div class="info-card-header"><h2>Account Details</h2></div>
                 <div class="info-grid" id="account-info-grid"></div>
@@ -469,11 +497,11 @@
             </div>
           </div>
 
-          <!-- ADDRESSES PANEL -->
           <div class="content-panel" id="panel-addresses">
             <div id="skeleton-addresses">
               <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
             </div>
+            
             <div id="content-addresses" style="display:none;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                 <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;">Saved Addresses</h2>
@@ -487,31 +515,11 @@
             </div>
           </div>
 
-          <!-- SETTINGS PANEL -->
-          <div class="content-panel" id="panel-settings">
-            <div class="info-card">
-              <div class="info-card-header"><h2>Preferences</h2></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f5;">
-                <span style="font-size:14px;font-weight:500;">Email Notifications</span>
-                <span style="font-size:13px;color:var(--accent);">Enabled</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f5;">
-                <span style="font-size:14px;font-weight:500;">SMS Notifications</span>
-                <span style="font-size:13px;color:var(--accent);">Disabled</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
-                <span style="font-size:14px;font-weight:500;">Language</span>
-                <span style="font-size:13px;color:var(--accent);">English</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Toast -->
   <div class="toast" id="toast">
     <i class="fa-solid fa-circle-check" id="toast-icon"></i>
     <span id="toast-message"></span>
@@ -531,7 +539,6 @@
       // Get token from localStorage
       function getToken() {
         if (authToken) return authToken;
-        // Try to get from localStorage (set during login)
         var stored = localStorage.getItem('jayenware_session');
         if (stored) {
           try {
@@ -542,30 +549,40 @@
         return authToken;
       }
 
-      // Show toast
+      // Show toast notifications
       function showToast(message, type) {
         var toast = document.getElementById('toast');
         var toastIcon = document.getElementById('toast-icon');
         var toastMessage = document.getElementById('toast-message');
+        
         toastMessage.textContent = message;
         toast.className = 'toast ' + (type || '') + ' show';
         toastIcon.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
+        
         clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        window._toastTimeout = setTimeout(function() { 
+          toast.classList.remove('show'); 
+        }, 4000);
       }
 
-      // Panel Switching
+      // Panel Switching Logic
       function switchPanel(panelName) {
         currentPanel = panelName;
+        
+        // Update Sidebar Active State
         document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
           item.classList.remove('active');
           if (item.getAttribute('data-panel') === panelName) item.classList.add('active');
         });
+        
+        // Update Content Visibility
         document.querySelectorAll('.content-panel').forEach(function(panel) {
           panel.classList.remove('active');
         });
+        
         var targetPanel = document.getElementById('panel-' + panelName);
         if (targetPanel) targetPanel.classList.add('active');
+        
         loadPanelData(panelName);
       }
 
@@ -577,6 +594,7 @@
         }
       });
 
+      // Load specific panel data
       function loadPanelData(panel) {
         if (!userData) return;
         switch(panel) {
@@ -585,41 +603,54 @@
         }
       }
 
+      // UI Rendering Logic
       function renderProfile(data) {
         document.getElementById('skeleton-profile').style.display = 'none';
         document.getElementById('content-profile').style.display = 'block';
-        document.getElementById('profile-info-grid').innerHTML =
-          '<div class="info-item"><label>First Name</label><span>' + escapeHTML(data.first_name || '—') + '</span></div>' +
-          '<div class="info-item"><label>Last Name</label><span>' + escapeHTML(data.last_name || '—') + '</span></div>' +
-          '<div class="info-item"><label>Phone</label><span>' + escapeHTML(data.phone || '—') + '</span></div>' +
-          '<div class="info-item"><label>Email</label><span>' + escapeHTML(data.email || '—') + '</span></div>';
-        document.getElementById('account-info-grid').innerHTML =
-          '<div class="info-item"><label>Member Since</label><span>' + formatDate(data.created_at) + '</span></div>' +
-          '<div class="info-item"><label>Last Updated</label><span>' + formatDate(data.updated_at) + '</span></div>';
+        
+        document.getElementById('profile-info-grid').innerHTML = `
+          <div class="info-item"><label>First Name</label><span>${escapeHTML(data.first_name || '—')}</span></div>
+          <div class="info-item"><label>Last Name</label><span>${escapeHTML(data.last_name || '—')}</span></div>
+          <div class="info-item"><label>Phone</label><span>${escapeHTML(data.phone || '—')}</span></div>
+          <div class="info-item"><label>Email</label><span>${escapeHTML(data.email || '—')}</span></div>
+        `;
+        
+        document.getElementById('account-info-grid').innerHTML = `
+          <div class="info-item"><label>Member Since</label><span>${formatDate(data.created_at)}</span></div>
+          <div class="info-item"><label>Last Updated</label><span>${formatDate(data.updated_at)}</span></div>
+        `;
       }
 
       function renderAddresses(data) {
         document.getElementById('skeleton-addresses').style.display = 'none';
         document.getElementById('content-addresses').style.display = 'block';
+        
         var container = document.getElementById('addresses-list');
+        
         if (data.address_line1) {
-          container.innerHTML =
-            '<div class="address-card default">' +
-              '<div class="default-badge">Default</div>' +
-              '<h4>' + escapeHTML((data.first_name || '') + ' ' + (data.last_name || '')) + '</h4>' +
-              '<p>' + escapeHTML(data.address_line1) + (data.address_line2 ? ', ' + escapeHTML(data.address_line2) : '') + '</p>' +
-              '<p>' + escapeHTML(data.city) + ', ' + escapeHTML(data.state) + ' ' + escapeHTML(data.postal_code) + '</p>' +
-              '<p>' + escapeHTML(data.country) + '</p>' +
-              '<p style="margin-top:8px;font-weight:500;">' + escapeHTML(data.phone) + '</p>' +
-              '<div class="address-actions">' +
-                '<button class="btn-outline"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>' +
-              '</div>' +
-            '</div>';
+          var addressStr = escapeHTML(data.address_line1) + (data.address_line2 ? ', ' + escapeHTML(data.address_line2) : '');
+          var cityStateZip = escapeHTML(data.city) + ', ' + escapeHTML(data.state) + ' ' + escapeHTML(data.postal_code);
+          var fullName = escapeHTML((data.first_name || '') + ' ' + (data.last_name || ''));
+          
+          container.innerHTML = `
+            <div class="address-card default">
+              <div class="default-badge">Default</div>
+              <h4>${fullName}</h4>
+              <p>${addressStr}</p>
+              <p>${cityStateZip}</p>
+              <p>${escapeHTML(data.country)}</p>
+              <p style="margin-top:8px;font-weight:500;">${escapeHTML(data.phone)}</p>
+              <div class="address-actions">
+                <button class="btn-outline"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
+              </div>
+            </div>
+          `;
         } else {
           container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>';
         }
       }
 
+      // Fetch User Data from API
       async function fetchUserData() {
         var token = getToken();
         if (!token) {
@@ -645,12 +676,9 @@
           }
 
           var result = await response.json();
-          
-          // Extract data from response structure
           var profile = result.profile || {};
           var user = result.user || {};
           
-          // Merge data
           userData = {
             email: user.email || profile.email || '',
             first_name: profile.first_name || user.user_metadata?.first_name || '',
@@ -666,15 +694,11 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
-          // Show grid
+          // Setup View
           document.getElementById('account-grid').style.display = 'grid';
           document.getElementById('error-state').classList.remove('visible');
+          document.getElementById('welcome-message').textContent = 'Welcome back, ' + (userData.first_name || 'User');
           
-          // Update welcome message
-          document.getElementById('welcome-message').textContent = 
-            'Welcome back, ' + (userData.first_name || 'User');
-          
-          // Render profile
           renderProfile(userData);
 
         } catch (error) {
@@ -692,6 +716,7 @@
         }
       }
 
+      // Logout handler
       document.getElementById('logout-btn').addEventListener('click', async function() {
         try {
           await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
@@ -702,7 +727,7 @@
         window.location.href = '/';
       });
 
-      // Helpers
+      // Utilities
       function escapeHTML(str) {
         if (!str) return '';
         var div = document.createElement('div');
@@ -720,12 +745,10 @@
         }
       }
 
-      // Expose switchPanel globally
       window.switchPanel = switchPanel;
 
-      // Init
+      // Initialization
       document.addEventListener('DOMContentLoaded', function() {
-        // Load fonts if available
         if (window.JAYENWARE_FONTS) {
           var root = document.documentElement;
           var vars = window.JAYENWARE_FONTS.cssVariables;
