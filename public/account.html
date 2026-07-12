@@ -373,9 +373,11 @@
     }
     
     .info-item span {
+      display: block;
       font-size: 15px;
       color: var(--primary);
       font-weight: 500;
+      min-height: 22px; /* Prevent collapse if empty */
     }
 
     /* Edit Input Styles */
@@ -406,7 +408,7 @@
     .address-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 20px;
+      padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
       border: 1.5px solid transparent;
       transition: all 0.3s ease;
@@ -429,21 +431,6 @@
       border-radius: 50px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-    }
-    
-    .address-card h4 {
-      font-family: 'Manrope', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 8px 0;
-      color: var(--primary);
-    }
-    
-    .address-card p {
-      font-size: 14px;
-      color: #4a4a4f;
-      margin: 0 0 4px 0;
-      line-height: 1.5;
     }
 
     /* Error & Toast */
@@ -522,7 +509,6 @@
 
         <div class="account-content">
 
-          <!-- Profile Panel -->
           <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
               <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
@@ -531,19 +517,16 @@
             <div id="content-profile" style="display:none;">
               
               <div class="profile-header-card" id="profile-avatar-card">
-                <!-- Data injected via JS -->
-              </div>
+                </div>
 
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
                   <div class="action-buttons" id="edit-profile-actions">
-                    <!-- Edit / Save Buttons injected via JS -->
-                  </div>
+                    </div>
                 </div>
                 <div class="info-grid" id="profile-info-grid">
-                  <!-- Inputs or Spans injected via JS -->
-                </div>
+                  </div>
               </div>
               
               <div class="info-card">
@@ -553,22 +536,14 @@
             </div>
           </div>
 
-          <!-- Addresses Panel -->
           <div class="content-panel" id="panel-addresses">
             <div id="skeleton-addresses">
               <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
             </div>
             
             <div id="content-addresses" style="display:none;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;">Saved Addresses</h2>
-                <button class="edit-btn" onmouseover="this.style.background='rgba(0,122,255,0.08)'" onmouseout="this.style.background='none'" style="font-size:13px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;font-family:'Inter',sans-serif;padding:8px 16px;border-radius:50px;transition:all 0.2s ease;">
-                  <i class="fa-solid fa-plus" style="margin-right:4px;"></i> Add New
-                </button>
-              </div>
               <div id="addresses-list">
-                <p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>
-              </div>
+                </div>
             </div>
           </div>
 
@@ -592,7 +567,8 @@
       var currentPanel = 'profile';
       var userData = null;
       var authToken = null;
-      var isEditingProfile = false; // State to track editing mode
+      var isEditingProfile = false;
+      var isEditingAddress = false;
 
       function getToken() {
         if (authToken) return authToken;
@@ -655,6 +631,7 @@
         }
       }
 
+      // Profile Edit Functions
       window.toggleEditProfile = function(state) {
         isEditingProfile = state;
         renderProfile(userData);
@@ -669,16 +646,48 @@
         var newLname = document.getElementById('edit-lname').value.trim();
         var newPhone = document.getElementById('edit-phone').value.trim();
 
-        // Simulate an API Update Request
         setTimeout(function() {
-          // Update local data variable
           userData.first_name = newFname;
           userData.last_name = newLname;
           userData.phone = newPhone;
 
           showToast('Profile updated successfully!');
           isEditingProfile = false;
-          renderProfile(userData); // Re-render with new data
+          renderProfile(userData);
+        }, 1200);
+      };
+
+      // Address Edit Functions
+      window.toggleEditAddress = function(state) {
+        isEditingAddress = state;
+        renderAddresses(userData);
+      };
+
+      window.saveAddressInfo = function() {
+        var btn = document.getElementById('save-address-btn');
+        if(btn) {
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
+            btn.disabled = true;
+        }
+
+        var newAddr1 = document.getElementById('edit-addr1').value.trim();
+        var newAddr2 = document.getElementById('edit-addr2').value.trim();
+        var newCity = document.getElementById('edit-city').value.trim();
+        var newState = document.getElementById('edit-state').value.trim();
+        var newZip = document.getElementById('edit-zip').value.trim();
+        var newCountry = document.getElementById('edit-country').value.trim();
+
+        setTimeout(function() {
+          userData.address_line1 = newAddr1;
+          userData.address_line2 = newAddr2;
+          userData.city = newCity;
+          userData.state = newState;
+          userData.postal_code = newZip;
+          userData.country = newCountry;
+
+          showToast('Address updated successfully!');
+          isEditingAddress = false;
+          renderAddresses(userData);
         }, 1200);
       };
 
@@ -692,7 +701,6 @@
         var initials = (fName.charAt(0) + lName.charAt(0)).toUpperCase() || 'U';
         var fullName = (fName + ' ' + lName).trim() || 'User';
 
-        // Avatar
         document.getElementById('profile-avatar-card').innerHTML = `
           <div class="avatar-circle">${initials}</div>
           <h3 class="profile-name">${escapeHTML(fullName)}</h3>
@@ -702,13 +710,12 @@
         var grid = document.getElementById('profile-info-grid');
         var actions = document.getElementById('edit-profile-actions');
 
-        // Check if in edit mode
         if (isEditingProfile) {
           grid.innerHTML = `
-            <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(fName)}" placeholder="First Name"></div>
-            <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(lName)}" placeholder="Last Name"></div>
-            <div class="info-item"><label>Phone</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(data.phone || '')}" placeholder="+1 (555) 000-0000"></div>
-            <div class="info-item"><label>Email</label><input type="email" class="edit-input" value="${escapeHTML(data.email || '')}" disabled title="Email address cannot be changed"></div>
+            <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(fName)}" placeholder="Enter your first name"></div>
+            <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(lName)}" placeholder="Enter your last name"></div>
+            <div class="info-item"><label>Phone Number</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(data.phone || '')}" placeholder="e.g. +1 (555) 000-0000"></div>
+            <div class="info-item"><label>Email Address</label><input type="email" class="edit-input" value="${escapeHTML(data.email || '')}" disabled title="Email address cannot be changed"></div>
           `;
           
           actions.innerHTML = `
@@ -719,8 +726,8 @@
           grid.innerHTML = `
             <div class="info-item"><label>First Name</label><span>${escapeHTML(fName || '—')}</span></div>
             <div class="info-item"><label>Last Name</label><span>${escapeHTML(lName || '—')}</span></div>
-            <div class="info-item"><label>Phone</label><span>${escapeHTML(data.phone || '—')}</span></div>
-            <div class="info-item"><label>Email</label><span>${escapeHTML(data.email || '—')}</span></div>
+            <div class="info-item"><label>Phone Number</label><span>${escapeHTML(data.phone || '—')}</span></div>
+            <div class="info-item"><label>Email Address</label><span>${escapeHTML(data.email || '—')}</span></div>
           `;
           
           actions.innerHTML = `
@@ -742,26 +749,53 @@
         
         var container = document.getElementById('addresses-list');
         
-        if (data.address_line1) {
-          var addressStr = escapeHTML(data.address_line1) + (data.address_line2 ? ', ' + escapeHTML(data.address_line2) : '');
-          var cityStateZip = escapeHTML(data.city) + ', ' + escapeHTML(data.state) + ' ' + escapeHTML(data.postal_code);
-          var fullName = escapeHTML((data.first_name || '') + ' ' + (data.last_name || ''));
-          
+        var addr1 = data.address_line1 || '';
+        var addr2 = data.address_line2 || '';
+        var city = data.city || '';
+        var state = data.state || '';
+        var zip = data.postal_code || '';
+        var country = data.country || '';
+
+        if (isEditingAddress) {
           container.innerHTML = `
             <div class="address-card default">
-              <div class="default-badge">Default</div>
-              <h4>${fullName}</h4>
-              <p>${addressStr}</p>
-              <p>${cityStateZip}</p>
-              <p>${escapeHTML(data.country)}</p>
-              <p style="margin-top:8px;font-weight:500;">${escapeHTML(data.phone)}</p>
-              <div class="address-actions">
-                <button class="edit-btn" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: 6px;"><i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit</button>
+              <div class="info-card-header" style="margin-bottom: 24px;">
+                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Address</h2>
+                  <div class="action-buttons">
+                    <button class="edit-btn cancel-btn" onclick="toggleEditAddress(false)">Cancel</button>
+                    <button class="edit-btn save-btn" id="save-address-btn" onclick="saveAddressInfo()">Save</button>
+                  </div>
+              </div>
+              <div class="info-grid">
+                <div class="info-item"><label>Address Line 1</label><input type="text" id="edit-addr1" class="edit-input" value="${escapeHTML(addr1)}" placeholder="Street Address, P.O. Box"></div>
+                <div class="info-item"><label>Address Line 2</label><input type="text" id="edit-addr2" class="edit-input" value="${escapeHTML(addr2)}" placeholder="Apartment, suite, building, floor, etc."></div>
+                <div class="info-item"><label>City</label><input type="text" id="edit-city" class="edit-input" value="${escapeHTML(city)}" placeholder="Enter your city"></div>
+                <div class="info-item"><label>State / Province</label><input type="text" id="edit-state" class="edit-input" value="${escapeHTML(state)}" placeholder="Enter state or province"></div>
+                <div class="info-item"><label>Postal / Zip Code</label><input type="text" id="edit-zip" class="edit-input" value="${escapeHTML(zip)}" placeholder="Enter postal code"></div>
+                <div class="info-item"><label>Country</label><input type="text" id="edit-country" class="edit-input" value="${escapeHTML(country)}" placeholder="Enter country"></div>
               </div>
             </div>
           `;
         } else {
-          container.innerHTML = '<p style="color:var(--accent);font-size:14px;text-align:center;padding:40px;">No saved addresses</p>';
+          container.innerHTML = `
+            <div class="address-card default">
+              <div class="default-badge">Primary</div>
+              <div class="info-card-header" style="margin-bottom: 24px; align-items: flex-start;">
+                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Address</h2>
+                  <button class="edit-btn" onclick="toggleEditAddress(true)" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: -6px;">
+                    <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+                  </button>
+              </div>
+              <div class="info-grid">
+                <div class="info-item"><label>Address Line 1</label><span>${escapeHTML(addr1 || '—')}</span></div>
+                <div class="info-item"><label>Address Line 2</label><span>${escapeHTML(addr2 || '—')}</span></div>
+                <div class="info-item"><label>City</label><span>${escapeHTML(city || '—')}</span></div>
+                <div class="info-item"><label>State / Province</label><span>${escapeHTML(state || '—')}</span></div>
+                <div class="info-item"><label>Postal / Zip Code</label><span>${escapeHTML(zip || '—')}</span></div>
+                <div class="info-item"><label>Country</label><span>${escapeHTML(country || '—')}</span></div>
+              </div>
+            </div>
+          `;
         }
       }
 
@@ -773,7 +807,6 @@
         }
 
         try {
-          // Mock fetch - change to your real endpoint
           var response = await fetch(API_BASE + '/api/user/profile', {
             headers: {
               'Accept': 'application/json',
