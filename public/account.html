@@ -83,10 +83,6 @@
     @keyframes fadeSlideUp {
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    @keyframes fadeSlideLeft {
-      to { opacity: 1; transform: translateX(0); }
-    }
 
     /* Layout Containers */
     .account-container {
@@ -118,7 +114,6 @@
       margin: 0;
     }
 
-    /* Changed Layout to Column */
     .account-grid {
       display: flex;
       flex-direction: column;
@@ -231,9 +226,10 @@
     .info-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 24px;
+      padding: 28px 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
       margin-bottom: 20px;
+      border: 1px solid rgba(0,0,0,0.04);
     }
 
     /* Avatar & Profile Card */
@@ -248,6 +244,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
       margin-bottom: 20px;
       text-align: center;
+      border: 1px solid rgba(0,0,0,0.04);
     }
 
     .avatar-circle {
@@ -284,7 +281,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     
     .info-card-header h2 {
@@ -303,23 +300,26 @@
     .edit-btn {
       font-size: 13px;
       color: var(--blue);
-      background: none;
-      border: none;
+      background: #f0f7ff;
+      border: 1px solid rgba(0,122,255,0.15);
       cursor: pointer;
       font-weight: 600;
       font-family: 'Inter', sans-serif;
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 50px;
       transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
     }
     
     .edit-btn:hover:not(:disabled) {
-      background: rgba(0,122,255,0.08);
+      background: rgba(0,122,255,0.12);
     }
 
     .save-btn {
       background: var(--blue);
       color: white;
+      border-color: var(--blue);
     }
     .save-btn:hover:not(:disabled) {
       background: #0062cc;
@@ -331,74 +331,113 @@
 
     .cancel-btn {
       color: var(--error);
+      background: #fff0ef;
+      border-color: rgba(255,59,48,0.15);
     }
     .cancel-btn:hover {
-      background: rgba(255, 59, 48, 0.08);
+      background: #ffe3e1;
     }
 
+    /* Fixed Left Label Layout for Data & Inputs */
     .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     
-    @media (max-width: 480px) {
-      .info-grid { grid-template-columns: 1fr; }
+    .info-item {
+      display: flex;
+      align-items: center;
+      background: #f9f9fb;
+      border: 1.5px solid #eaeaea;
+      border-radius: 12px;
+      padding: 10px 16px;
+      transition: all 0.2s ease;
     }
     
+    .info-item:focus-within {
+      border-color: var(--blue);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+
     .info-item label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       color: var(--accent);
-      margin-bottom: 6px;
+      width: 140px;
+      min-width: 140px;
+      flex-shrink: 0;
+      border-right: 1.5px solid #e5e5ea;
+      padding-right: 12px;
+      margin: 0;
+      user-select: none;
     }
     
     .info-item span {
-      display: block;
       font-size: 15px;
       color: var(--primary);
-      font-weight: 500;
-      min-height: 22px;
+      font-weight: 600;
+      padding-left: 14px;
+      flex-grow: 1;
+      word-break: break-word;
     }
 
     .edit-input {
       width: 100%;
-      padding: 8px 12px;
-      border: 1.5px solid #e5e5ea;
-      border-radius: 8px;
+      padding: 4px 0 4px 14px;
+      border: none;
+      background: transparent;
       font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--primary);
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      flex-grow: 1;
     }
     
-    .edit-input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+    .edit-input:disabled { 
+      color: var(--accent); 
+      cursor: not-allowed; 
     }
-    .edit-input:disabled { background-color: #f5f5f7; color: var(--accent); cursor: not-allowed; }
 
+    @media (max-width: 480px) {
+      .info-item label {
+        width: 110px;
+        min-width: 110px;
+        font-size: 11px;
+        padding-right: 8px;
+      }
+      .info-item span, .edit-input {
+        padding-left: 10px;
+        font-size: 14px;
+      }
+    }
+
+    /* Beautified Address Card */
     .address-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 24px;
+      padding: 28px 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
-      border: 1.5px solid transparent;
+      border: 1px solid rgba(0,0,0,0.04);
       transition: all 0.3s ease;
       position: relative;
     }
-    
-    .address-card.default { border-color: var(--blue); }
-    
-    .address-card .default-badge {
-      position: absolute; top: 12px; right: 12px; background: var(--blue); color: #fff;
-      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 50px;
-      text-transform: uppercase; letter-spacing: 0.04em;
+
+    .address-header-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #f0f7ff;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
     }
 
     .error-state {
@@ -503,7 +542,6 @@
 
       <div class="account-grid" id="account-grid" style="display:none;">
 
-        <!-- Main Content Area is now First -->
         <div class="account-content">
           <div class="content-panel active" id="panel-profile">
             <div id="skeleton-profile">
@@ -512,6 +550,7 @@
             
             <div id="content-profile" style="display:none;">
               <div class="profile-header-card" id="profile-avatar-card"></div>
+              
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
@@ -519,6 +558,7 @@
                 </div>
                 <div class="info-grid" id="profile-info-grid"></div>
               </div>
+
               <div class="info-card">
                 <div class="info-card-header"><h2>Account Details</h2></div>
                 <div class="info-grid" id="account-info-grid"></div>
@@ -536,7 +576,6 @@
           </div>
         </div>
 
-        <!-- Navigation Menu is now at the Bottom -->
         <aside class="account-sidebar" id="account-sidebar">
           <button class="sidebar-nav-item active" data-panel="profile">
             <i class="fa-solid fa-user"></i> Profile
@@ -560,7 +599,6 @@
     <span id="toast-message"></span>
   </div>
 
-  <!-- Logout Confirmation Modal -->
   <div class="modal-overlay" id="logout-modal">
     <div class="modal-box">
       <div class="modal-badge">
@@ -633,7 +671,6 @@
         loadPanelData(panelName);
       }
 
-      // Updated Event Listener to handle bottom Navigation & Modal
       document.getElementById('account-sidebar').addEventListener('click', function(e) {
         var navItem = e.target.closest('.sidebar-nav-item');
         var logoutBtn = e.target.closest('.logout-btn');
@@ -646,7 +683,6 @@
         }
       });
 
-      // Modal functions
       window.closeLogoutModal = function() {
         document.getElementById('logout-modal').classList.remove('active');
       };
@@ -663,7 +699,6 @@
         window.location.href = '/';
       });
 
-
       function loadPanelData(panel) {
         if (!userData) return;
         switch(panel) {
@@ -672,7 +707,6 @@
         }
       }
 
-      // Profile Edit Functions
       window.toggleEditProfile = function(state) {
         isEditingProfile = state;
         renderProfile(userData);
@@ -698,7 +732,6 @@
         }, 1200);
       };
 
-      // Address Edit Functions
       window.toggleEditAddress = function(state) {
         isEditingAddress = state;
         renderAddresses(userData);
@@ -773,7 +806,7 @@
           
           actions.innerHTML = `
             <button class="edit-btn" onclick="toggleEditProfile(true)">
-              <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+              <i class="fa-solid fa-pen" style="margin-right:6px;"></i> Edit
             </button>
           `;
         }
@@ -799,9 +832,17 @@
 
         if (isEditingAddress) {
           container.innerHTML = `
-            <div class="address-card default">
+            <div class="address-card">
               <div class="info-card-header" style="margin-bottom: 24px;">
-                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Location</h2>
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div class="address-header-badge">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                      <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Location</h2>
+                      <p style="font-size:13px;color:var(--accent);margin:2px 0 0 0;">Update your default shipping address</p>
+                    </div>
+                  </div>
                   <div class="action-buttons">
                     <button class="edit-btn cancel-btn" onclick="toggleEditAddress(false)">Cancel</button>
                     <button class="edit-btn save-btn" id="save-address-btn" onclick="saveAddressInfo()">Save</button>
@@ -812,19 +853,26 @@
                 <div class="info-item"><label>Address Line 2</label><input type="text" id="edit-addr2" class="edit-input" value="${escapeHTML(addr2)}" placeholder="Apartment, suite, building, floor, etc."></div>
                 <div class="info-item"><label>City</label><input type="text" id="edit-city" class="edit-input" value="${escapeHTML(city)}" placeholder="Enter your city"></div>
                 <div class="info-item"><label>State / Province</label><input type="text" id="edit-state" class="edit-input" value="${escapeHTML(state)}" placeholder="Enter state or province"></div>
-                <div class="info-item"><label>Postal / Zip Code</label><input type="text" id="edit-zip" class="edit-input" value="${escapeHTML(zip)}" placeholder="Enter postal code"></div>
+                <div class="info-item"><label>Postal Code</label><input type="text" id="edit-zip" class="edit-input" value="${escapeHTML(zip)}" placeholder="Enter postal code"></div>
                 <div class="info-item"><label>Country</label><input type="text" id="edit-country" class="edit-input" value="${escapeHTML(country)}" placeholder="Enter country"></div>
               </div>
             </div>
           `;
         } else {
           container.innerHTML = `
-            <div class="address-card default">
-              <div class="default-badge">Primary</div>
-              <div class="info-card-header" style="margin-bottom: 24px; align-items: flex-start;">
-                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Location</h2>
-                  <button class="edit-btn" onclick="toggleEditAddress(true)" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: -6px;">
-                    <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+            <div class="address-card">
+              <div class="info-card-header" style="margin-bottom: 24px;">
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div class="address-header-badge">
+                      <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <div>
+                      <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Location</h2>
+                      <p style="font-size:13px;color:var(--accent);margin:2px 0 0 0;">Your default address for deliveries</p>
+                    </div>
+                  </div>
+                  <button class="edit-btn" onclick="toggleEditAddress(true)">
+                    <i class="fa-solid fa-pen" style="margin-right:6px;"></i> Edit
                   </button>
               </div>
               <div class="info-grid">
@@ -832,7 +880,7 @@
                 <div class="info-item"><label>Address Line 2</label><span>${escapeHTML(addr2 || '—')}</span></div>
                 <div class="info-item"><label>City</label><span>${escapeHTML(city || '—')}</span></div>
                 <div class="info-item"><label>State / Province</label><span>${escapeHTML(state || '—')}</span></div>
-                <div class="info-item"><label>Postal / Zip Code</label><span>${escapeHTML(zip || '—')}</span></div>
+                <div class="info-item"><label>Postal Code</label><span>${escapeHTML(zip || '—')}</span></div>
                 <div class="info-item"><label>Country</label><span>${escapeHTML(country || '—')}</span></div>
               </div>
             </div>
@@ -883,7 +931,7 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
-          document.getElementById('account-grid').style.display = 'flex'; // Changed to flex for proper layout rendering
+          document.getElementById('account-grid').style.display = 'flex';
           document.getElementById('error-state').classList.remove('visible');
           
           renderProfile(userData);
