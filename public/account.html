@@ -92,11 +92,13 @@
     .account-container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 32px 16px 48px;
+      /* Increased top padding to avoid header overlap */
+      padding: 100px 16px 48px; 
     }
 
     .account-header {
-      margin-bottom: 32px;
+      margin-bottom: 40px;
+      text-align: center; /* Centered Text */
       opacity: 0;
       transform: translateY(16px);
       animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
@@ -256,6 +258,50 @@
       padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
       margin-bottom: 20px;
+    }
+
+    /* Avatar & Profile Card */
+    .profile-header-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .avatar-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #005bb5);
+      color: white;
+      font-size: 28px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-family: 'Manrope', sans-serif;
+      box-shadow: 0 8px 16px rgba(0, 122, 255, 0.2);
+    }
+
+    .profile-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0 0 4px 0;
+    }
+
+    .profile-email {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 0;
     }
     
     .info-card-header {
@@ -444,6 +490,7 @@
   <main>
     <div class="account-container">
 
+      <!-- Page Header (Centered with top spacing) -->
       <div class="account-header">
         <h1>My Account</h1>
         <p id="welcome-message">Welcome back</p>
@@ -480,6 +527,12 @@
             </div>
             
             <div id="content-profile" style="display:none;">
+              
+              <!-- Avatar & Name Card -->
+              <div class="profile-header-card" id="profile-avatar-card">
+                <!-- Data injected via JS -->
+              </div>
+
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
@@ -536,7 +589,6 @@
       var userData = null;
       var authToken = null;
 
-      // Get token from localStorage
       function getToken() {
         if (authToken) return authToken;
         var stored = localStorage.getItem('jayenware_session');
@@ -549,7 +601,6 @@
         return authToken;
       }
 
-      // Show toast notifications
       function showToast(message, type) {
         var toast = document.getElementById('toast');
         var toastIcon = document.getElementById('toast-icon');
@@ -565,17 +616,14 @@
         }, 4000);
       }
 
-      // Panel Switching Logic
       function switchPanel(panelName) {
         currentPanel = panelName;
         
-        // Update Sidebar Active State
         document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
           item.classList.remove('active');
           if (item.getAttribute('data-panel') === panelName) item.classList.add('active');
         });
         
-        // Update Content Visibility
         document.querySelectorAll('.content-panel').forEach(function(panel) {
           panel.classList.remove('active');
         });
@@ -594,7 +642,6 @@
         }
       });
 
-      // Load specific panel data
       function loadPanelData(panel) {
         if (!userData) return;
         switch(panel) {
@@ -603,14 +650,28 @@
         }
       }
 
-      // UI Rendering Logic
       function renderProfile(data) {
         document.getElementById('skeleton-profile').style.display = 'none';
         document.getElementById('content-profile').style.display = 'block';
+
+        // Profile Avatar Generation Logic
+        var fName = data.first_name || '';
+        var lName = data.last_name || '';
         
+        // Get first letters and handle fallback
+        var initials = (fName.charAt(0) + lName.charAt(0)).toUpperCase() || 'U';
+        var fullName = (fName + ' ' + lName).trim() || 'User';
+
+        document.getElementById('profile-avatar-card').innerHTML = `
+          <div class="avatar-circle">${initials}</div>
+          <h3 class="profile-name">${escapeHTML(fullName)}</h3>
+          <p class="profile-email">${escapeHTML(data.email || 'No email provided')}</p>
+        `;
+        
+        // Information Grid
         document.getElementById('profile-info-grid').innerHTML = `
-          <div class="info-item"><label>First Name</label><span>${escapeHTML(data.first_name || '—')}</span></div>
-          <div class="info-item"><label>Last Name</label><span>${escapeHTML(data.last_name || '—')}</span></div>
+          <div class="info-item"><label>First Name</label><span>${escapeHTML(fName || '—')}</span></div>
+          <div class="info-item"><label>Last Name</label><span>${escapeHTML(lName || '—')}</span></div>
           <div class="info-item"><label>Phone</label><span>${escapeHTML(data.phone || '—')}</span></div>
           <div class="info-item"><label>Email</label><span>${escapeHTML(data.email || '—')}</span></div>
         `;
@@ -650,7 +711,6 @@
         }
       }
 
-      // Fetch User Data from API
       async function fetchUserData() {
         var token = getToken();
         if (!token) {
@@ -694,10 +754,8 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
-          // Setup View
           document.getElementById('account-grid').style.display = 'grid';
           document.getElementById('error-state').classList.remove('visible');
-          document.getElementById('welcome-message').textContent = 'Welcome back, ' + (userData.first_name || 'User');
           
           renderProfile(userData);
 
@@ -716,7 +774,6 @@
         }
       }
 
-      // Logout handler
       document.getElementById('logout-btn').addEventListener('click', async function() {
         try {
           await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
@@ -727,7 +784,6 @@
         window.location.href = '/';
       });
 
-      // Utilities
       function escapeHTML(str) {
         if (!str) return '';
         var div = document.createElement('div');
@@ -747,7 +803,6 @@
 
       window.switchPanel = switchPanel;
 
-      // Initialization
       document.addEventListener('DOMContentLoaded', function() {
         if (window.JAYENWARE_FONTS) {
           var root = document.documentElement;
