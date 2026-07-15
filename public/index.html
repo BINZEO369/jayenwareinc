@@ -48,8 +48,10 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
+    <!-- Fonts Configuration -->
     <script src="/fonts.js"></script>
-
+    
+    <!-- Google Fonts Dynamic Loading -->
     <script>
         if (window.JAYENWARE_FONTS) {
             const link = document.createElement('link');
@@ -60,6 +62,7 @@
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script src="/components.js"></script>
@@ -69,7 +72,7 @@
     <script src="/hero-secondary-banner.js"></script>
 
     <script type="application/ld+json">
-        { "@context": "https://schema.org", "@type": "Website", "name": "Jayenware", "alternateName": "JAYENWARE SHOP", "url": "https://www.jayenware.shop", "logo": "https://www.jayenware.shop/logo.png", "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO. Shop authentic apparel with fast delivery across World.", "priceRange": "â‚´450 - â‚´5000", "image": "https://www.jayenware.shop/logo.png", "address": { "@type": "PostalAddress", "addressLocality": "Dhaka", "addressRegion": "Dhaka Division", "addressCountry": "BD" }, "geo": { "@type": "GeoCoordinates", "latitude": "23.8103", "longitude": "90.4125" }, "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "url": "https://m.me/861762253694814", "availableLanguage": ["English", "Bengali"] }, "sameAs": ["https://www.facebook.com/jayenware", "https://www.instagram.com/jayenware", "https://www.twitter.com/jayenware"], "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "09:00", "closes": "21:00" }, "parentOrganization": { "@type": "Organization", "name": "BINZEO", "url": "https://binzeo.vercel.app" }
+        { "@context": "https://schema.org", "@type": "Website", "name": "Jayenware", "alternateName": "JAYENWARE SHOP", "url": "https://www.jayenware.shop", "logo": "https://www.jayenware.shop/logo.png", "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO. Shop authentic apparel with fast delivery across World.", "priceRange": "৳450 - ৳5000", "image": "https://www.jayenware.shop/logo.png", "address": { "@type": "PostalAddress", "addressLocality": "Dhaka", "addressRegion": "Dhaka Division", "addressCountry": "BD" }, "geo": { "@type": "GeoCoordinates", "latitude": "23.8103", "longitude": "90.4125" }, "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "url": "https://m.me/861762253694814", "availableLanguage": ["English", "Bengali"] }, "sameAs": ["https://www.facebook.com/jayenware", "https://www.instagram.com/jayenware", "https://www.twitter.com/jayenware"], "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "09:00", "closes": "21:00" }, "parentOrganization": { "@type": "Organization", "name": "BINZEO", "url": "https://binzeo.vercel.app" }
         }
     </script>
 
@@ -105,13 +108,11 @@
             --accent: #86868b;
             --soft: #f5f5f7;
             --blue: #007aff;
-            --card-width: 280px;
-            --card-gap: 20px;
-            --touch-feedback: cubic-bezier(0.22, 0.61, 0.36, 1);
+            --card-width: 260px;
+            --card-gap: 16px;
+            --touch-feedback: cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --skeleton-base: #e5e5ea;
             --skeleton-shine: #f0f0f5;
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
         }
 
         * {
@@ -147,12 +148,12 @@
             max-width: 100%;
             height: auto;
             pointer-events: none;
-            display: block;
         }
 
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -161,19 +162,33 @@
         .page-section {
             display: none;
             opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+            transform: translateY(8px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
             min-height: 60vh;
         }
+
         .page-section.active-page {
             display: block;
         }
+
         .page-section.fade-in {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* ==================== SKELETON LOADER ==================== */
+        /* ==================== SKELETON LOADER STYLES ==================== */
+        @keyframes skeletonPulse {
+            0% {
+                background-color: var(--skeleton-base);
+            }
+            50% {
+                background-color: var(--skeleton-shine);
+            }
+            100% {
+                background-color: var(--skeleton-base);
+            }
+        }
+
         @keyframes skeletonShimmer {
             0% {
                 background-position: -468px 0;
@@ -182,222 +197,271 @@
                 background-position: 468px 0;
             }
         }
-        @keyframes skeletonPulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
+
         .skeleton {
             background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-shine) 40%, var(--skeleton-base) 80%);
             background-size: 800px 100%;
-            animation: skeletonShimmer 1.6s infinite linear;
+            animation: skeletonShimmer 1.8s infinite linear;
             border-radius: 4px;
             position: relative;
             overflow: hidden;
         }
+
+        .skeleton-circle {
+            border-radius: 50%;
+        }
+
         .skeleton-text {
             height: 14px;
             margin-bottom: 8px;
-            border-radius: 4px;
         }
+
         .skeleton-text-sm {
             height: 10px;
             margin-bottom: 6px;
-            border-radius: 4px;
         }
+
+        .skeleton-text-lg {
+            height: 18px;
+            margin-bottom: 10px;
+        }
+
         .skeleton-title {
             height: 24px;
             margin-bottom: 12px;
-            width: 55%;
-            border-radius: 6px;
+            width: 60%;
         }
+
+        .skeleton-card {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         .skeleton-card-image {
             width: 100%;
             aspect-ratio: 3/4;
-            animation: skeletonPulse 1.6s infinite ease-in-out;
-            border-radius: 0;
+            animation: skeletonPulse 1.8s infinite ease-in-out;
         }
+
+        .skeleton-card-body {
+            padding: 12px 8px;
+        }
+
         .skeleton-hidden {
             display: none !important;
         }
+
         .skeleton-visible {
             display: block !important;
         }
 
-        /* Hero Skeleton */
+        .content-loaded {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .content-loading {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        /* ==================== HERO SKELETON ==================== */
         .hero-skeleton {
             width: 100%;
             height: 100vh;
-            max-height: 750px;
+            max-height: 700px;
             background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
             background-size: 800px 100%;
-            animation: skeletonShimmer 1.6s infinite linear;
+            animation: skeletonShimmer 1.8s infinite linear;
             position: relative;
             overflow: hidden;
         }
+
         @media (max-width: 768px) {
             .hero-skeleton {
-                height: 55vh;
-                max-height: 480px;
+                height: 60vh;
+                max-height: 500px;
             }
         }
+
         .hero-skeleton-content {
             position: absolute;
             bottom: 80px;
             left: 40px;
             right: 40px;
-            max-width: 560px;
+            max-width: 600px;
         }
+
         @media (max-width: 768px) {
             .hero-skeleton-content {
-                bottom: 36px;
+                bottom: 40px;
                 left: 20px;
                 right: 20px;
             }
         }
+
         .hero-skeleton-line {
-            height: 44px;
-            width: 75%;
+            height: 48px;
+            width: 80%;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
-            margin-bottom: 14px;
-            animation: skeletonPulse 1.6s infinite ease-in-out;
-        }
-        .hero-skeleton-line-sm {
-            height: 18px;
-            width: 45%;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            margin-bottom: 22px;
-            animation: skeletonPulse 1.6s infinite ease-in-out;
-        }
-        .hero-skeleton-btn {
-            height: 46px;
-            width: 150px;
-            background: rgba(255, 255, 255, 0.35);
-            border-radius: 50px;
-            animation: skeletonPulse 1.6s infinite ease-in-out;
+            margin-bottom: 16px;
+            animation: skeletonPulse 1.8s infinite ease-in-out;
         }
 
-        /* Category Skeleton */
+        .hero-skeleton-line-sm {
+            height: 20px;
+            width: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-bottom: 24px;
+            animation: skeletonPulse 1.8s infinite ease-in-out;
+        }
+
+        .hero-skeleton-btn {
+            height: 48px;
+            width: 160px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            animation: skeletonPulse 1.8s infinite ease-in-out;
+        }
+
+        /* ==================== CATEGORY CARDS SKELETON ==================== */
         .category-skeleton-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2px;
+            gap: 0;
         }
+
         @media (min-width: 1024px) {
             .category-skeleton-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 3px;
+                gap: 2px;
             }
         }
+
         .category-skeleton-card {
-            aspect-ratio: 4/5;
-            animation: skeletonPulse 1.6s infinite ease-in-out;
+            aspect-ratio: 1/1;
+            animation: skeletonPulse 1.8s infinite ease-in-out;
         }
-        @media (max-width: 767px) {
+
+        @media (min-width: 768px) {
             .category-skeleton-card {
                 aspect-ratio: 3/4;
             }
         }
 
-        /* Carousel Skeleton */
+        @media (min-width: 1024px) {
+            .category-skeleton-card {
+                aspect-ratio: 4/3;
+            }
+        }
+
+        /* ==================== CAROUSEL SKELETON ==================== */
         .carousel-skeleton-grid {
             display: flex;
             gap: var(--card-gap);
             padding: 4px;
             overflow: hidden;
         }
+
         .carousel-skeleton-card {
             flex: 0 0 auto;
             width: var(--card-width);
         }
+
         @media (max-width: 767px) {
             .carousel-skeleton-card {
-                width: 200px;
+                width: 220px;
             }
         }
 
-        /* Products Skeleton */
+        /* ==================== PRODUCTS PAGE SKELETON ==================== */
         .products-skeleton-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
+            gap: 12px;
         }
+
         @media (min-width: 1024px) {
             .products-skeleton-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 22px;
+                gap: 20px;
             }
         }
 
-        /* News Skeleton */
+        /* ==================== NEWS SKELETON ==================== */
         .news-skeleton-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 18px;
+            gap: 16px;
         }
+
         @media (min-width: 768px) {
             .news-skeleton-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 22px;
-            }
-        }
-        @media (min-width: 1024px) {
-            .news-skeleton-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 26px;
+                gap: 20px;
             }
         }
 
-        /* ==================== ENHANCED CAROUSEL ==================== */
+        @media (min-width: 1024px) {
+            .news-skeleton-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+        }
+
+        /* ==================== ENHANCED MOBILE TOUCH CAROUSEL ==================== */
         .carousel-section {
-            padding: 56px 0;
+            padding: 48px 0;
             background: #ffffff;
             touch-action: pan-y pinch-zoom;
         }
+
         .carousel-container {
-            max-width: 1440px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 44px;
+            padding: 0 40px;
         }
+
         .carousel-header {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             justify-content: space-between;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
         }
+
         .carousel-header .section-title {
-            font-size: 30px;
+            font-size: 28px;
             color: var(--primary);
             font-family: var(--font-heading);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.15;
+            letter-spacing: var(--tracking-tight);
         }
+
         .carousel-header .section-link {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             color: var(--blue);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 5px;
-            transition: gap 0.25s var(--ease-out-expo);
+            gap: 4px;
+            transition: gap 0.2s ease;
             font-family: var(--font-body);
-            letter-spacing: 0.02em;
         }
+
         .carousel-header .section-link:hover {
-            gap: 10px;
+            gap: 8px;
         }
+
         .carousel-wrapper {
             position: relative;
             overflow: hidden;
         }
+
         .carousel-track {
             display: flex;
             gap: var(--card-gap);
@@ -407,21 +471,24 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             cursor: grab;
-            padding: 6px 2px;
+            padding: 4px;
             scroll-snap-type: none;
             touch-action: pan-x pan-y;
         }
+
         .carousel-track::-webkit-scrollbar {
             display: none;
         }
+
         .carousel-track:active {
             cursor: grabbing;
         }
+
         .carousel-track.dragging {
             scroll-behavior: auto;
         }
 
-        /* Product Card */
+        /* Product Card - Enhanced Touch Feedback */
         .carousel-card {
             flex: 0 0 auto;
             width: var(--card-width);
@@ -431,50 +498,56 @@
             color: inherit;
             display: flex;
             flex-direction: column;
-            transition: transform 0.35s var(--ease-out-expo);
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             position: relative;
             background: transparent;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
+
         .carousel-card:active {
-            transform: scale(0.965);
-            transition: transform 0.12s var(--touch-feedback);
+            transform: scale(0.96);
+            transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
         @media (hover: hover) {
             .carousel-card:hover {
-                transform: translateY(-4px);
+                transform: translateY(-2px);
             }
             .carousel-card:active {
-                transform: scale(0.975);
+                transform: scale(0.98);
             }
         }
+
         .carousel-card .card-img {
             position: relative;
             aspect-ratio: 3/4;
             background: #fafafa;
             overflow: hidden;
-            margin-bottom: 14px;
-            border-radius: 2px;
+            margin-bottom: 12px;
+            border-radius: 0;
         }
+
         .carousel-card .card-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.55s var(--ease-out-expo);
-            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
         @media (hover: hover) {
             .carousel-card:hover .card-img img {
-                transform: scale(1.04);
+                transform: scale(1.03);
             }
         }
+
         .carousel-card .card-body {
-            padding: 0 2px;
+            padding: 0 4px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
+
         .carousel-card .card-title {
             font-size: 14px;
             font-weight: 500;
@@ -485,14 +558,15 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             font-family: var(--font-body);
-            letter-spacing: -0.01em;
         }
+
         .carousel-card .card-price {
             font-size: 14px;
             font-weight: 600;
             color: var(--primary);
             font-family: var(--font-body);
         }
+
         .carousel-card .card-old-price {
             font-size: 13px;
             color: #b0b0b5;
@@ -501,40 +575,44 @@
             font-weight: 400;
             font-family: var(--font-body);
         }
+
         .carousel-card .card-category {
-            font-size: 10px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 500;
             text-transform: uppercase;
             color: var(--accent);
             font-family: var(--font-accent);
-            letter-spacing: 0.06em;
+            letter-spacing: var(--tracking-wide);
         }
+
+        /* Badges - Clean & Modern */
         .carousel-card .card-badge {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 8px;
+            left: 8px;
             z-index: 2;
-            padding: 3px 10px;
+            padding: 2px 8px;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             background: #ffffff;
             color: var(--primary);
             pointer-events: none;
             font-family: var(--font-body);
-            letter-spacing: 0.05em;
+            letter-spacing: var(--tracking-wide);
         }
+
         .badge-sale {
             color: #d70015 !important;
         }
 
-        /* Quick Add */
+        /* Quick Add Button - Mobile Optimized */
         .carousel-card .card-add-btn {
             position: absolute;
-            bottom: 64px;
-            right: 10px;
-            width: 38px;
-            height: 38px;
+            bottom: 60px;
+            right: 8px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: #ffffff;
             border: none;
@@ -542,18 +620,19 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s var(--touch-feedback);
+            transition: all 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
             color: var(--primary);
             font-size: 14px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             z-index: 3;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
+
         @media (hover: hover) {
             .carousel-card .card-add-btn {
                 opacity: 0;
-                transform: translateY(6px);
+                transform: translateY(4px);
             }
             .carousel-card:hover .card-add-btn {
                 opacity: 1;
@@ -562,44 +641,48 @@
             .carousel-card .card-add-btn:hover {
                 background: var(--primary);
                 color: #fff;
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
         }
+
         .carousel-card .card-add-btn:active {
-            transform: scale(0.88);
+            transform: scale(0.9);
             background: var(--primary);
             color: #fff;
-            transition: transform 0.1s var(--touch-feedback);
+            transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
+        /* Sold Out Overlay */
         .carousel-card .card-soldout-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.55);
+            background: rgba(255, 255, 255, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 5;
             pointer-events: none;
         }
+
         .carousel-card .card-soldout-overlay span {
             background: var(--primary);
             color: #fff;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
-            padding: 7px 18px;
+            padding: 6px 16px;
             font-family: var(--font-body);
-            letter-spacing: 0.07em;
+            letter-spacing: var(--tracking-wider);
         }
 
-        /* Carousel Nav */
+        /* Navigation Arrows - Simple & Elegant */
         .carousel-nav {
             position: absolute;
-            top: 38%;
+            top: 35%;
             transform: translateY(-50%);
             z-index: 20;
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: #ffffff;
             border: none;
@@ -607,13 +690,14 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.25s var(--ease-out-expo);
+            transition: all 0.2s ease;
             color: var(--primary);
             font-size: 14px;
-            box-shadow: 0 3px 16px rgba(0, 0, 0, 0.07);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
+
         @media (hover: hover) {
             .carousel-nav {
                 opacity: 0;
@@ -622,36 +706,102 @@
                 opacity: 1;
             }
             .carousel-nav:hover {
-                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13);
-                transform: translateY(-50%) scale(1.06);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                transform: translateY(-50%) scale(1.05);
             }
         }
+
         .carousel-nav:active {
             transform: translateY(-50%) scale(0.9);
-            transition: transform 0.1s var(--touch-feedback);
+            transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
             background: #f5f5f7;
         }
+
         .carousel-nav.prev {
-            left: -22px;
-        }
-        .carousel-nav.next {
-            right: -22px;
+            left: -20px;
         }
 
-        /* Scroll Progress */
+        .carousel-nav.next {
+            right: -20px;
+        }
+
+        /* Scroll Progress Indicator - Mobile Only */
         .scroll-progress {
             display: none;
             height: 2px;
             background: #e5e5ea;
-            margin-top: 18px;
+            margin-top: 16px;
             border-radius: 2px;
             overflow: hidden;
         }
+
         .scroll-progress-bar {
             height: 100%;
             background: var(--primary);
             border-radius: 2px;
-            transition: width 0.08s linear;
+            transition: width 0.1s ease;
+        }
+
+        /* ==================== LIMITED EDITION DARK SECTION FIX ==================== */
+        #limited-edition-section .carousel-card .card-title {
+            color: #ffffff;
+        }
+
+        #limited-edition-section .carousel-card .card-price {
+            color: #ffffff;
+        }
+
+        #limited-edition-section .carousel-card .card-old-price {
+            color: #a1a1a6;
+        }
+
+        #limited-edition-section .carousel-card .card-category {
+            color: #a1a1a6;
+        }
+
+        #limited-edition-section .carousel-card .card-badge {
+            background: #2d2d2f;
+            color: #ffffff;
+        }
+
+        #limited-edition-section .carousel-card .card-badge.badge-sale {
+            color: #ff6b6b !important;
+        }
+
+        #limited-edition-section .carousel-card .card-soldout-overlay span {
+            background: #ffffff;
+            color: #1d1d1f;
+        }
+
+        #limited-edition-section .carousel-card .card-img {
+            background: #2d2d2f;
+        }
+
+        #limited-edition-section .carousel-card .card-add-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (hover: hover) {
+            #limited-edition-section .carousel-card .card-add-btn:hover {
+                background: #ffffff;
+                color: #1d1d1f;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        #limited-edition-section .carousel-card .card-add-btn:active {
+            background: #ffffff;
+            color: #1d1d1f;
+        }
+
+        #limited-edition-section .scroll-progress {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #limited-edition-section .scroll-progress-bar {
+            background: #ffffff;
         }
 
         /* ==================== WORLD-CLASS CATEGORY SECTION ==================== */
@@ -659,22 +809,33 @@
             padding: 0;
             background: #ffffff;
         }
+
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2px;
+            gap: 0;
             max-width: 100%;
             margin: 0;
         }
+
+        @media (min-width: 768px) {
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2px;
+                background: #ffffff;
+            }
+        }
+
         @media (min-width: 1024px) {
             .categories-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 3px;
+                gap: 2px;
             }
         }
+
         .category-card {
             position: relative;
-            aspect-ratio: 4/5;
+            aspect-ratio: 1/1;
             overflow: hidden;
             cursor: pointer;
             text-decoration: none;
@@ -683,243 +844,221 @@
             isolation: isolate;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            border-radius: 0;
         }
-        @media (max-width: 767px) {
+
+        @media (min-width: 768px) {
             .category-card {
                 aspect-ratio: 3/4;
             }
         }
-        @media (min-width: 768px) and (max-width: 1023px) {
+
+        @media (min-width: 1024px) {
             .category-card {
-                aspect-ratio: 4/5;
+                aspect-ratio: 4/3;
             }
         }
+
         .category-card::after {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0) 35%,
-                    rgba(0, 0, 0, 0.08) 55%,
-                    rgba(0, 0, 0, 0.45) 78%,
-                    rgba(0, 0, 0, 0.65) 100%);
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(0, 0, 0, 0.15) 40%,
+                    rgba(0, 0, 0, 0.55) 80%,
+                    rgba(0, 0, 0, 0.7) 100%);
             z-index: 2;
-            transition: background 0.7s var(--ease-out-expo);
+            transition: background 0.6s ease;
         }
+
         .category-card:active::after {
             background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0.02) 35%,
-                    rgba(0, 0, 0, 0.15) 55%,
-                    rgba(0, 0, 0, 0.55) 78%,
-                    rgba(0, 0, 0, 0.75) 100%);
+                    rgba(0, 0, 0, 0.05) 0%,
+                    rgba(0, 0, 0, 0.25) 40%,
+                    rgba(0, 0, 0, 0.65) 80%,
+                    rgba(0, 0, 0, 0.8) 100%);
         }
+
         @media (hover: hover) {
             .category-card:hover::after {
                 background: linear-gradient(180deg,
-                        rgba(0, 0, 0, 0.02) 35%,
-                        rgba(0, 0, 0, 0.2) 55%,
-                        rgba(0, 0, 0, 0.6) 78%,
-                        rgba(0, 0, 0, 0.8) 100%);
+                        rgba(0, 0, 0, 0.05) 0%,
+                        rgba(0, 0, 0, 0.3) 40%,
+                        rgba(0, 0, 0, 0.7) 80%,
+                        rgba(0, 0, 0, 0.85) 100%);
             }
         }
+
         .category-card .cat-image {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.9s var(--ease-out-expo);
+            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
             z-index: 1;
             will-change: transform;
         }
+
         @media (hover: hover) {
             .category-card:hover .cat-image {
-                transform: scale(1.07);
+                transform: scale(1.06);
             }
         }
+
         .category-card:active .cat-image {
-            transform: scale(1.025);
-            transition: transform 0.35s var(--ease-out-expo);
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
         }
+
         .category-card .cat-content {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 3;
-            padding: 28px;
-            transition: transform 0.55s var(--ease-out-expo);
+            padding: 24px;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
         @media (min-width: 768px) {
             .category-card .cat-content {
-                padding: 36px;
+                padding: 32px;
             }
         }
+
         @media (min-width: 1024px) {
             .category-card .cat-content {
-                padding: 44px;
+                padding: 40px;
             }
         }
+
         @media (hover: hover) {
             .category-card:hover .cat-content {
-                transform: translateY(-10px);
+                transform: translateY(-8px);
             }
         }
+
         .category-card .cat-title {
-            font-size: 24px;
+            font-size: 22px;
             line-height: 1.1;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             color: #fff;
-            text-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             font-family: var(--font-heading);
             font-weight: 700;
-            letter-spacing: -0.02em;
+            letter-spacing: var(--tracking-tight);
         }
+
         @media (min-width: 768px) {
             .category-card .cat-title {
-                font-size: 30px;
-                margin-bottom: 22px;
+                font-size: 28px;
+                margin-bottom: 20px;
             }
         }
+
         @media (min-width: 1024px) {
             .category-card .cat-title {
-                font-size: 36px;
+                font-size: 32px;
             }
         }
+
         .category-card .cat-link {
             display: inline-flex;
             align-items: center;
-            gap: 9px;
+            gap: 8px;
             color: #fff;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             text-decoration: none;
             position: relative;
-            padding-bottom: 3px;
+            padding-bottom: 2px;
             font-family: var(--font-body);
-            letter-spacing: 0.08em;
+            letter-spacing: var(--tracking-widest);
         }
+
         .category-card .cat-link::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             width: 0;
-            height: 1.5px;
+            height: 1px;
             background: #fff;
-            transition: width 0.45s var(--ease-out-expo);
+            transition: width 0.4s ease;
         }
+
         @media (hover: hover) {
             .category-card:hover .cat-link::after {
                 width: 100%;
             }
         }
+
         .category-card .cat-link .arrow-icon {
-            transition: transform 0.45s var(--ease-out-expo);
+            transition: transform 0.4s ease;
         }
+
         @media (hover: hover) {
             .category-card:hover .cat-link .arrow-icon {
-                transform: translateX(5px);
+                transform: translateX(4px);
             }
         }
+
         .category-card:active .cat-link .arrow-icon {
-            transform: translateX(7px);
-            transition: transform 0.2s var(--touch-feedback);
+            transform: translateX(6px);
+            transition: transform 0.2s ease;
         }
 
-        /* ==================== DARK SECTION OVERRIDES ==================== */
-        #limited-edition-section .carousel-card .card-title {
-            color: #ffffff;
-        }
-        #limited-edition-section .carousel-card .card-price {
-            color: #ffffff;
-        }
-        #limited-edition-section .carousel-card .card-old-price {
-            color: #a1a1a6;
-        }
-        #limited-edition-section .carousel-card .card-category {
-            color: #a1a1a6;
-        }
-        #limited-edition-section .carousel-card .card-badge {
-            background: #2d2d2f;
-            color: #ffffff;
-        }
-        #limited-edition-section .carousel-card .card-badge.badge-sale {
-            color: #ff6b6b !important;
-        }
-        #limited-edition-section .carousel-card .card-soldout-overlay span {
-            background: #ffffff;
-            color: #1d1d1f;
-        }
-        #limited-edition-section .carousel-card .card-img {
-            background: #2d2d2f;
-        }
-        #limited-edition-section .carousel-card .card-add-btn {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1d1d1f;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-        }
-        @media (hover: hover) {
-            #limited-edition-section .carousel-card .card-add-btn:hover {
-                background: #ffffff;
-                color: #1d1d1f;
-                box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
-            }
-        }
-        #limited-edition-section .carousel-card .card-add-btn:active {
-            background: #ffffff;
-            color: #1d1d1f;
-        }
-        #limited-edition-section .scroll-progress {
-            background: rgba(255, 255, 255, 0.18);
-        }
-        #limited-edition-section .scroll-progress-bar {
-            background: #ffffff;
-        }
-
-        /* ==================== RESPONSIVE ==================== */
         @media (max-width: 767px) {
             .carousel-container {
-                padding: 0 18px;
+                padding: 0 20px;
             }
+
             .carousel-section {
-                padding: 36px 0;
+                padding: 32px 0;
             }
+
             .carousel-header .section-title {
                 font-size: 22px;
             }
+
             .carousel-nav {
                 display: none;
             }
+
             :root {
-                --card-width: 200px;
-                --card-gap: 14px;
+                --card-width: 220px;
+                --card-gap: 12px;
             }
+
             .scroll-progress {
                 display: block;
             }
+
             .carousel-card .card-add-btn {
-                width: 34px;
-                height: 34px;
-                bottom: 54px;
-                right: 8px;
+                width: 32px;
+                height: 32px;
+                bottom: 50px;
+                right: 6px;
                 opacity: 1;
                 transform: translateY(0);
             }
+
             .category-card .cat-content {
-                padding: 22px;
+                padding: 20px;
             }
+
             .category-card .cat-title {
-                font-size: 20px;
-                margin-bottom: 14px;
+                font-size: 18px;
+                margin-bottom: 12px;
             }
         }
-        @media (min-width: 1440px) {
+
+        @media (min-width: 1400px) {
             :root {
-                --card-width: 320px;
-                --card-gap: 24px;
+                --card-width: 300px;
+                --card-gap: 20px;
             }
         }
 
@@ -929,42 +1068,47 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(29, 29, 31, 0.96);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
+            background: rgba(29, 29, 31, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
             transform: translateY(100%);
-            transition: transform 0.5s var(--ease-out-expo);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.5s;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .cookie-consent-overlay.show {
             transform: translateY(0);
         }
+
         .cookie-banner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 18px 28px;
+            padding: 16px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 22px;
+            gap: 20px;
             flex-wrap: wrap;
         }
+
         .cookie-icon {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             background: #007aff;
-            border-radius: 13px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
+
         .cookie-text {
             flex: 1;
             min-width: 200px;
             color: white;
         }
+
         .cookie-text h4 {
             font-size: 14px;
             font-weight: 700;
@@ -972,6 +1116,7 @@
             color: #fff;
             font-family: var(--font-body);
         }
+
         .cookie-text p {
             font-size: 11px;
             color: #a1a1a6;
@@ -979,48 +1124,56 @@
             margin: 0;
             font-family: var(--font-body);
         }
+
         .cookie-text a {
             color: #007aff;
             text-decoration: underline;
         }
+
         .cookie-buttons {
             display: flex;
             gap: 10px;
             flex-shrink: 0;
         }
+
         .cookie-btn {
-            padding: 11px 26px;
+            padding: 10px 24px;
             border-radius: 50px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s var(--ease-out-expo);
+            transition: all 0.3s;
             border: none;
             outline: none;
             font-family: var(--font-body);
-            letter-spacing: 0.04em;
+            letter-spacing: var(--tracking-wide);
             -webkit-tap-highlight-color: transparent;
         }
+
         .cookie-btn.accept {
             background: #007aff;
             color: white;
         }
+
         .cookie-btn.decline {
             background: transparent;
             color: #a1a1a6;
             border: 1px solid #48484a;
         }
+
         @media (max-width: 768px) {
             .cookie-banner {
                 flex-direction: column;
-                padding: 18px;
+                padding: 16px;
                 text-align: center;
             }
+
             .cookie-buttons {
                 width: 100%;
                 flex-direction: column;
             }
+
             .cookie-btn {
                 width: 100%;
                 text-align: center;
@@ -1031,18 +1184,20 @@
 <body class="antialiased">
 
     <div id="header-container">
-        <div id="header-skeleton" class="skeleton-visible" style="height:64px;background:#ffffff;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;padding:0 22px;">
-            <div class="skeleton" style="width:42px;height:42px;border-radius:50%;margin-right:18px;"></div>
-            <div class="skeleton skeleton-text" style="width:110px;margin-bottom:0;"></div>
+        <!-- HEADER SKELETON -->
+        <div id="header-skeleton" class="skeleton-visible" style="height:64px;background:#ffffff;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;padding:0 20px;">
+            <div class="skeleton" style="width:40px;height:40px;border-radius:50%;margin-right:16px;"></div>
+            <div class="skeleton skeleton-text" style="width:120px;margin-bottom:0;"></div>
             <div style="flex:1;"></div>
-            <div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;margin-right:14px;"></div>
-            <div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;margin-right:14px;"></div>
-            <div class="skeleton skeleton-text" style="width:55px;margin-bottom:0;"></div>
+            <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;margin-right:12px;"></div>
+            <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;margin-right:12px;"></div>
+            <div class="skeleton skeleton-text" style="width:60px;margin-bottom:0;"></div>
         </div>
     </div>
 
     <main class="pt-0">
 
+        <!-- HERO SKELETON -->
         <div id="hero-skeleton" class="hero-skeleton skeleton-visible">
             <div class="hero-skeleton-content">
                 <div class="hero-skeleton-line"></div>
@@ -1051,10 +1206,12 @@
             </div>
         </div>
 
-        <div id="hero-secondary-skeleton" class="skeleton-hidden" style="width:100%;height:110px;animation:skeletonPulse 1.6s infinite ease-in-out;background:var(--skeleton-base);margin-bottom:0;"></div>
+        <!-- HERO SECONDARY SKELETON -->
+        <div id="hero-secondary-skeleton" class="skeleton-hidden" style="width:100%;height:120px;animation:skeletonPulse 1.8s infinite ease-in-out;background:var(--skeleton-base);margin-bottom:0;"></div>
 
         <section id="home" class="page-section active-page fade-in">
 
+            <!-- CATEGORIES SKELETON -->
             <div id="categories-skeleton" class="categories-section skeleton-visible">
                 <div class="category-skeleton-grid" id="categories-skeleton-grid">
                     <div class="category-skeleton-card skeleton"></div>
@@ -1063,152 +1220,257 @@
                 </div>
             </div>
 
+            <!-- WORLD-CLASS CATEGORIES SECTION (ACTUAL) -->
             <section id="categories-section" class="categories-section skeleton-hidden">
-                <div id="categories-grid" class="categories-grid"></div>
+
+                <div id="categories-grid" class="categories-grid">
+                    <!-- Dynamically populated by JS -->
+                </div>
             </section>
 
+            <!-- Carousel: New Arrivals -->
             <section id="new-arrivals-section" class="carousel-section skeleton-hidden">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <h2 class="section-title">New Arrivals</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All →</a>
+                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
+                            View All →
+                        </a>
                     </div>
                     <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('new-arrivals-carousel','prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
                         <div id="new-arrivals-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('new-arrivals-carousel','next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                        <button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
                     </div>
-                    <div class="scroll-progress" id="new-arrivals-progress"><div class="scroll-progress-bar" id="new-arrivals-progress-bar"></div></div>
+                    <div class="scroll-progress" id="new-arrivals-progress">
+                        <div class="scroll-progress-bar" id="new-arrivals-progress-bar"></div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Carousel Skeleton: New Arrivals -->
             <div id="new-arrivals-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
-                    <div class="carousel-header"><div class="skeleton skeleton-title" style="margin-bottom:0;"></div><div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;"></div></div>
+                    <div class="carousel-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                    </div>
                     <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                     </div>
                 </div>
             </div>
 
+            <!-- Carousel: Trending Now -->
             <section id="hot-products-section" class="carousel-section skeleton-hidden">
                 <div class="carousel-container">
-                    <div class="carousel-header"><h2 class="section-title">Trending Now</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All →</a></div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('hot-products-carousel','prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="hot-products-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('hot-products-carousel','next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="carousel-header">
+                        <h2 class="section-title">Trending Now</h2>
+                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
+                            View All →
+                        </a>
                     </div>
-                    <div class="scroll-progress" id="hot-products-progress"><div class="scroll-progress-bar" id="hot-products-progress-bar"></div></div>
+                    <div class="carousel-wrapper">
+                        <button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="hot-products-carousel" class="carousel-track no-scrollbar"></div>
+                        <button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="scroll-progress" id="hot-products-progress">
+                        <div class="scroll-progress-bar" id="hot-products-progress-bar"></div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Carousel Skeleton: Trending Now -->
             <div id="hot-products-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
-                    <div class="carousel-header"><div class="skeleton skeleton-title" style="margin-bottom:0;"></div><div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;"></div></div>
+                    <div class="carousel-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                    </div>
                     <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                     </div>
                 </div>
             </div>
 
-            <section id="featured-products-section" class="carousel-section skeleton-hidden" style="background:#fafafa;">
+            <!-- Carousel: Featured Products -->
+            <section id="featured-products-section" class="carousel-section skeleton-hidden" style="background: #fafafa;">
                 <div class="carousel-container">
-                    <div class="carousel-header"><h2 class="section-title">Featured Products</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All →</a></div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('featured-products-carousel','prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="featured-products-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('featured-products-carousel','next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="carousel-header">
+                        <h2 class="section-title">Featured Products</h2>
+                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
+                            View All →
+                        </a>
                     </div>
-                    <div class="scroll-progress" id="featured-products-progress"><div class="scroll-progress-bar" id="featured-products-progress-bar"></div></div>
+                    <div class="carousel-wrapper">
+                        <button onclick="slideCarousel('featured-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="featured-products-carousel" class="carousel-track no-scrollbar"></div>
+                        <button onclick="slideCarousel('featured-products-carousel', 'next')" class="carousel-nav next" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="scroll-progress" id="featured-products-progress">
+                        <div class="scroll-progress-bar" id="featured-products-progress-bar"></div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Carousel Skeleton: Featured -->
             <div id="featured-products-skeleton" class="carousel-section skeleton-visible" style="background:#fafafa;">
                 <div class="carousel-container">
-                    <div class="carousel-header"><div class="skeleton skeleton-title" style="margin-bottom:0;"></div><div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;"></div></div>
+                    <div class="carousel-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                    </div>
                     <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                     </div>
                 </div>
             </div>
 
+            <!-- Carousel: Best Sellers -->
             <section id="best-selling-section" class="carousel-section skeleton-hidden">
                 <div class="carousel-container">
-                    <div class="carousel-header"><h2 class="section-title">Best Sellers</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All →</a></div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('best-selling-carousel','prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="best-selling-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('best-selling-carousel','next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="carousel-header">
+                        <h2 class="section-title">Best Sellers</h2>
+                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
+                            View All →
+                        </a>
                     </div>
-                    <div class="scroll-progress" id="best-selling-progress"><div class="scroll-progress-bar" id="best-selling-progress-bar"></div></div>
+                    <div class="carousel-wrapper">
+                        <button onclick="slideCarousel('best-selling-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="best-selling-carousel" class="carousel-track no-scrollbar"></div>
+                        <button onclick="slideCarousel('best-selling-carousel', 'next')" class="carousel-nav next" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="scroll-progress" id="best-selling-progress">
+                        <div class="scroll-progress-bar" id="best-selling-progress-bar"></div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Carousel Skeleton: Best Sellers -->
             <div id="best-selling-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
-                    <div class="carousel-header"><div class="skeleton skeleton-title" style="margin-bottom:0;"></div><div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;"></div></div>
+                    <div class="carousel-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                    </div>
                     <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                     </div>
                 </div>
             </div>
 
-            <section id="on-sale-section" class="carousel-section skeleton-hidden" style="background:#fafafa;">
+            <!-- Carousel: On Sale -->
+            <section id="on-sale-section" class="carousel-section skeleton-hidden" style="background: #fafafa;">
                 <div class="carousel-container">
-                    <div class="carousel-header"><h2 class="section-title">On Sale</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">View All →</a></div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('on-sale-carousel','prev')" class="carousel-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="on-sale-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('on-sale-carousel','next')" class="carousel-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="carousel-header">
+                        <h2 class="section-title">On Sale</h2>
+                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
+                            View All →
+                        </a>
                     </div>
-                    <div class="scroll-progress" id="on-sale-progress"><div class="scroll-progress-bar" id="on-sale-progress-bar"></div></div>
+                    <div class="carousel-wrapper">
+                        <button onclick="slideCarousel('on-sale-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="on-sale-carousel" class="carousel-track no-scrollbar"></div>
+                        <button onclick="slideCarousel('on-sale-carousel', 'next')" class="carousel-nav next" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="scroll-progress" id="on-sale-progress">
+                        <div class="scroll-progress-bar" id="on-sale-progress-bar"></div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Carousel Skeleton: On Sale -->
             <div id="on-sale-skeleton" class="carousel-section skeleton-visible" style="background:#fafafa;">
                 <div class="carousel-container">
-                    <div class="carousel-header"><div class="skeleton skeleton-title" style="margin-bottom:0;"></div><div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;"></div></div>
+                    <div class="carousel-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                    </div>
                     <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;"></div><div class="skeleton skeleton-text" style="width:75%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                     </div>
                 </div>
             </div>
 
-            <section id="limited-edition-section" class="carousel-section skeleton-hidden" style="background:#1d1d1f;">
+            <!-- Carousel: Limited Edition -->
+            <section id="limited-edition-section" class="carousel-section skeleton-hidden" style="background: #1d1d1f;">
                 <div class="carousel-container">
-                    <div class="carousel-header"><h2 class="section-title" style="color:#fff;">Limited Edition</h2><a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color:#007aff;">View All →</a></div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('limited-edition-carousel','prev')" class="carousel-nav prev" style="background:rgba(255,255,255,0.14);color:#fff;border:none;" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
-                        <div id="limited-edition-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('limited-edition-carousel','next')" class="carousel-nav next" style="background:rgba(255,255,255,0.14);color:#fff;border:none;" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="carousel-header">
+                        <h2 class="section-title" style="color: #fff;">Limited Edition</h2>
+                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link" style="color: #007aff;">
+                            View All →
+                        </a>
                     </div>
-                    <div class="scroll-progress" id="limited-edition-progress" style="background:rgba(255,255,255,0.18);"><div class="scroll-progress-bar" id="limited-edition-progress-bar" style="background:#fff;"></div></div>
+                    <div class="carousel-wrapper">
+                        <button onclick="slideCarousel('limited-edition-carousel', 'prev')" class="carousel-nav prev" style="background: rgba(255,255,255,0.15); color: #fff; border: none;" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="limited-edition-carousel" class="carousel-track no-scrollbar"></div>
+                        <button onclick="slideCarousel('limited-edition-carousel', 'next')" class="carousel-nav next" style="background: rgba(255,255,255,0.15); color: #fff; border: none;" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="scroll-progress" id="limited-edition-progress" style="background: rgba(255,255,255,0.2);">
+                        <div class="scroll-progress-bar" id="limited-edition-progress-bar" style="background: #fff;"></div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Carousel Skeleton: Limited Edition -->
             <div id="limited-edition-skeleton" class="carousel-section skeleton-visible" style="background:#1d1d1f;">
                 <div class="carousel-container">
-                    <div class="carousel-header"><div class="skeleton skeleton-title" style="margin-bottom:0;background:rgba(255,255,255,0.13);"></div><div class="skeleton skeleton-text" style="width:70px;margin-bottom:0;background:rgba(255,255,255,0.13);"></div></div>
+                    <div class="carousel-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;background:rgba(255,255,255,0.15);"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;background:rgba(255,255,255,0.15);"></div>
+                    </div>
                     <div class="carousel-skeleton-grid">
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.08);"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:75%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:28%;background:rgba(255,255,255,0.08);"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.08);"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:75%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:28%;background:rgba(255,255,255,0.08);"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.08);"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:75%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:28%;background:rgba(255,255,255,0.08);"></div></div></div>
-                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.08);"></div><div style="padding:8px 2px;"><div class="skeleton skeleton-text-sm" style="width:35%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:75%;background:rgba(255,255,255,0.08);"></div><div class="skeleton skeleton-text" style="width:28%;background:rgba(255,255,255,0.08);"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.1);"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:80%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:30%;background:rgba(255,255,255,0.1);"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.1);"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:80%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:30%;background:rgba(255,255,255,0.1);"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.1);"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:80%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:30%;background:rgba(255,255,255,0.1);"></div></div></div>
+                        <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image" style="background:rgba(255,255,255,0.1);"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:80%;background:rgba(255,255,255,0.1);"></div><div class="skeleton skeleton-text" style="width:30%;background:rgba(255,255,255,0.1);"></div></div></div>
                     </div>
                 </div>
             </div>
+
         </section>
 
+        <!-- PRODUCTS PAGE -->
         <section id="products" class="page-section py-6 sm:py-8 lg:py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-col lg:flex-row gap-4 lg:gap-8">
@@ -1216,31 +1478,44 @@
                         <div class="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="font-semibold text-sm uppercase tracking-wider text-primary">Categories</h3>
-                                <button onclick="toggleMobileFilters()" class="lg:hidden text-accent"><i class="fa-solid fa-sliders text-sm"></i></button>
+                                <button onclick="toggleMobileFilters()" class="lg:hidden text-accent">
+                                    <i class="fa-solid fa-sliders text-sm"></i>
+                                </button>
                             </div>
                             <div id="sidebar-categories" class="space-y-1 hidden lg:block" style="max-height:60vh;overflow-y:auto"></div>
+                            <!-- SIDEBAR SKELETON -->
                             <div id="sidebar-categories-skeleton" class="space-y-1 skeleton-visible">
-                                <div class="skeleton skeleton-text" style="width:78%;"></div>
-                                <div class="skeleton skeleton-text" style="width:62%;"></div>
-                                <div class="skeleton skeleton-text" style="width:68%;"></div>
-                                <div class="skeleton skeleton-text" style="width:52%;"></div>
-                                <div class="skeleton skeleton-text" style="width:72%;"></div>
-                                <div class="skeleton skeleton-text" style="width:58%;"></div>
+                                <div class="skeleton skeleton-text" style="width:80%;"></div>
+                                <div class="skeleton skeleton-text" style="width:65%;"></div>
+                                <div class="skeleton skeleton-text" style="width:70%;"></div>
+                                <div class="skeleton skeleton-text" style="width:55%;"></div>
+                                <div class="skeleton skeleton-text" style="width:75%;"></div>
+                                <div class="skeleton skeleton-text" style="width:60%;"></div>
                             </div>
                             <div id="mobile-filters" class="hidden lg:hidden mt-4 pt-4 border-t border-gray-100">
                                 <div class="space-y-3">
-                                    <div><label class="text-[10px] font-semibold uppercase text-accent block mb-1">Min Price</label><input type="number" id="filter-min-price" placeholder="â‚´ Min" class="w-full p-2 rounded-xl bg-gray-50 border border-gray-100 text-xs"></div>
-                                    <div><label class="text-[10px] font-semibold uppercase text-accent block mb-1">Max Price</label><input type="number" id="filter-max-price" placeholder="â‚´ Max" class="w-full p-2 rounded-xl bg-gray-50 border border-gray-100 text-xs"></div>
+                                    <div>
+                                        <label class="text-[10px] font-semibold uppercase text-accent block mb-1">Min Price</label>
+                                        <input type="number" id="filter-min-price" placeholder="৳ Min" class="w-full p-2 rounded-xl bg-gray-50 border border-gray-100 text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-semibold uppercase text-accent block mb-1">Max Price</label>
+                                        <input type="number" id="filter-max-price" placeholder="৳ Max" class="w-full p-2 rounded-xl bg-gray-50 border border-gray-100 text-xs">
+                                    </div>
                                     <button onclick="applyMobileFilters()" class="w-full py-2 bg-primary text-white rounded-xl text-xs font-semibold">Apply</button>
                                 </div>
                             </div>
                         </div>
                     </aside>
+
                     <div class="flex-1">
                         <div class="flex items-center justify-between mb-4 sm:mb-6">
                             <p id="product-count" class="text-xs font-medium text-accent"></p>
                             <div id="sort-container" class="relative">
-                                <button onclick="toggleSortMenu()" class="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-gray-100 text-xs font-semibold text-primary"><span id="current-sort-label">Newest</span><i class="fa-solid fa-chevron-down text-[10px]"></i></button>
+                                <button onclick="toggleSortMenu()" class="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-gray-100 text-xs font-semibold text-primary">
+                                    <span id="current-sort-label">Newest</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </button>
                                 <div id="sort-dropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-lg border border-gray-100 z-50 overflow-hidden">
                                     <button onclick="handleSorting('newest','Newest')" class="block w-full text-left px-4 py-3 text-xs font-semibold hover:bg-gray-50 transition">Newest</button>
                                     <button onclick="handleSorting('price-low','Price: Low to High')" class="block w-full text-left px-4 py-3 text-xs font-semibold hover:bg-gray-50 transition">Price: Low to High</button>
@@ -1248,13 +1523,14 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- PRODUCTS SKELETON -->
                         <div id="products-grid-skeleton" class="products-skeleton-grid skeleton-visible">
-                            <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                            <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                            <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                            <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                            <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                            <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                            <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                         </div>
                         <div id="products-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6"></div>
                     </div>
@@ -1266,42 +1542,61 @@
 
         <section id="wishlist" class="page-section py-6 sm:py-8 lg:py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-8 sm:mb-12"><h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold font-serif text-primary">Your Wishlist</h2></div>
+                <div class="text-center mb-8 sm:mb-12">
+                    <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold font-serif text-primary">Your Wishlist</h2>
+                </div>
+                <!-- WISHLIST SKELETON -->
                 <div id="wishlist-grid-skeleton" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 skeleton-visible">
-                    <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                    <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                    <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
-                    <div><div class="skeleton skeleton-card-image"></div><div style="padding:10px 4px;"><div class="skeleton skeleton-text-sm" style="width:38%;"></div><div class="skeleton skeleton-text" style="width:78%;"></div><div class="skeleton skeleton-text" style="width:28%;"></div></div></div>
+                    <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                    <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                    <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                    <div class="skeleton-card"><div class="skeleton skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
                 </div>
                 <div id="wishlist-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"></div>
                 <div id="empty-wishlist" class="hidden text-center py-20">
                     <i class="fa-regular fa-heart text-5xl sm:text-7xl text-gray-200 mb-6 block"></i>
                     <p class="text-lg sm:text-xl text-accent font-medium">Your wishlist is empty</p>
-                    <button onclick="navigate('products')" class="mt-6 px-8 py-3 bg-primary text-white rounded-full font-semibold uppercase text-xs tracking-wider hover:bg-blue transition inline-block">Explore Products</button>
+                    <button onclick="navigate('products')" class="mt-6 px-8 py-3 bg-primary text-white rounded-full font-semibold uppercase text-xs tracking-wider hover:bg-blue transition inline-block">
+                        Explore Products
+                    </button>
                 </div>
             </div>
         </section>
 
         <section id="news" class="page-section py-6 sm:py-8 lg:py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-8 sm:mb-12"><h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold font-serif text-primary">The Journal</h2></div>
+                <div class="text-center mb-8 sm:mb-12">
+                    <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold font-serif text-primary">The Journal</h2>
+                </div>
+                <!-- NEWS SKELETON -->
                 <div id="news-grid-skeleton" class="news-skeleton-grid skeleton-visible">
-                    <div class="skeleton" style="height:320px;border-radius:16px;"></div>
-                    <div class="skeleton" style="height:320px;border-radius:16px;"></div>
-                    <div class="skeleton" style="height:320px;border-radius:16px;"></div>
+                    <div class="skeleton" style="height:300px;border-radius:16px;"></div>
+                    <div class="skeleton" style="height:300px;border-radius:16px;"></div>
+                    <div class="skeleton" style="height:300px;border-radius:16px;"></div>
                 </div>
                 <div id="news-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"></div>
             </div>
         </section>
+
     </main>
 
     <div id="footer-container">
-        <div id="footer-skeleton" class="skeleton-visible" style="background:#1d1d1f;padding:44px 22px;margin-top:44px;">
+        <!-- FOOTER SKELETON -->
+        <div id="footer-skeleton" class="skeleton-visible" style="background:#1d1d1f;padding:40px 20px;margin-top:40px;">
             <div style="max-width:1200px;margin:0 auto;">
-                <div class="skeleton" style="width:110px;height:28px;margin-bottom:26px;background:rgba(255,255,255,0.1);"></div>
-                <div style="display:flex;gap:44px;flex-wrap:wrap;">
-                    <div style="flex:1;min-width:150px;"><div class="skeleton skeleton-text" style="width:58%;background:rgba(255,255,255,0.1);margin-bottom:14px;"></div><div class="skeleton skeleton-text-sm" style="width:78%;background:rgba(255,255,255,0.07);margin-bottom:8px;"></div><div class="skeleton skeleton-text-sm" style="width:68%;background:rgba(255,255,255,0.07);margin-bottom:8px;"></div><div class="skeleton skeleton-text-sm" style="width:72%;background:rgba(255,255,255,0.07);margin-bottom:8px;"></div></div>
-                    <div style="flex:1;min-width:150px;"><div class="skeleton skeleton-text" style="width:58%;background:rgba(255,255,255,0.1);margin-bottom:14px;"></div><div class="skeleton skeleton-text-sm" style="width:78%;background:rgba(255,255,255,0.07);margin-bottom:8px;"></div><div class="skeleton skeleton-text-sm" style="width:68%;background:rgba(255,255,255,0.07);margin-bottom:8px;"></div></div>
+                <div class="skeleton" style="width:120px;height:30px;margin-bottom:24px;background:rgba(255,255,255,0.1);"></div>
+                <div style="display:flex;gap:40px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:150px;">
+                        <div class="skeleton skeleton-text" style="width:60%;background:rgba(255,255,255,0.1);margin-bottom:12px;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width:80%;background:rgba(255,255,255,0.08);margin-bottom:8px;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width:70%;background:rgba(255,255,255,0.08);margin-bottom:8px;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width:75%;background:rgba(255,255,255,0.08);margin-bottom:8px;"></div>
+                    </div>
+                    <div style="flex:1;min-width:150px;">
+                        <div class="skeleton skeleton-text" style="width:60%;background:rgba(255,255,255,0.1);margin-bottom:12px;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width:80%;background:rgba(255,255,255,0.08);margin-bottom:8px;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width:70%;background:rgba(255,255,255,0.08);margin-bottom:8px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1309,16 +1604,28 @@
 
     <div id="cookieConsent" class="cookie-consent-overlay">
         <div class="cookie-banner">
-            <div class="cookie-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
-            <div class="cookie-text"><h4>We Value Your Privacy</h4><p>We use cookies. <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a></p></div>
-            <div class="cookie-buttons"><button class="cookie-btn decline" onclick="handleCookieDecline()">Decline</button><button class="cookie-btn accept" onclick="handleCookieAccept()">Accept</button></div>
+            <div class="cookie-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                </svg>
+            </div>
+            <div class="cookie-text">
+                <h4>We Value Your Privacy</h4>
+                <p>We use cookies. <a href="#" onclick="event.preventDefault();openPolicy('privacy')">Privacy Policy</a></p>
+            </div>
+            <div class="cookie-buttons">
+                <button class="cookie-btn decline" onclick="handleCookieDecline()">Decline</button>
+                <button class="cookie-btn accept" onclick="handleCookieAccept()">Accept</button>
+            </div>
         </div>
     </div>
 
     <script>
         // ============================================================
-        // JAYENWARE — COMPLETE APPLICATION WITH SKELETON SYSTEM
+        // JAYENWARE MAIN APPLICATION – SKELETON LOADER SYSTEM
         // ============================================================
+
+        // SKELETON MANAGEMENT
         const SKELETON_MAP = {
             'header': 'header-skeleton',
             'hero': 'hero-skeleton',
@@ -1335,87 +1642,147 @@
 
         function showSkeleton(key) {
             const id = SKELETON_MAP[key];
-            if (id) { const el = document.getElementById(id); if (el) { el.classList.add('skeleton-visible');
-                    el.classList.remove('skeleton-hidden'); } }
-            if (key === 'sidebar-categories') { const s = document.getElementById('sidebar-categories-skeleton'); if (
-                    s) { s.classList.add('skeleton-visible');
-                    s.classList.remove('skeleton-hidden'); } }
-            if (key === 'products-grid') { const s = document.getElementById('products-grid-skeleton'); if (s) { s
-                        .classList.add('skeleton-visible');
-                    s.classList.remove('skeleton-hidden'); } }
-            if (key === 'wishlist-grid') { const s = document.getElementById('wishlist-grid-skeleton'); if (s) { s
-                        .classList.add('skeleton-visible');
-                    s.classList.remove('skeleton-hidden'); } }
-            if (key === 'news-grid') { const s = document.getElementById('news-grid-skeleton'); if (s) { s.classList.add(
-                        'skeleton-visible');
-                    s.classList.remove('skeleton-hidden'); } }
+            if (id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('skeleton-visible');
+                    el.classList.remove('skeleton-hidden');
+                }
+            }
+            // Special cases for inline skeletons
+            if (key === 'sidebar-categories') {
+                const skel = document.getElementById('sidebar-categories-skeleton');
+                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+            }
+            if (key === 'products-grid') {
+                const skel = document.getElementById('products-grid-skeleton');
+                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+            }
+            if (key === 'wishlist-grid') {
+                const skel = document.getElementById('wishlist-grid-skeleton');
+                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+            }
+            if (key === 'news-grid') {
+                const skel = document.getElementById('news-grid-skeleton');
+                if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
+            }
         }
 
         function hideSkeleton(key) {
             const id = SKELETON_MAP[key];
-            if (id) { const el = document.getElementById(id); if (el) { el.classList.add('skeleton-hidden');
-                    el.classList.remove('skeleton-visible'); } }
-            if (key === 'sidebar-categories') { const s = document.getElementById('sidebar-categories-skeleton'); if (
-                    s) { s.classList.add('skeleton-hidden');
-                    s.classList.remove('skeleton-visible'); } }
-            if (key === 'products-grid') { const s = document.getElementById('products-grid-skeleton'); if (s) { s
-                        .classList.add('skeleton-hidden');
-                    s.classList.remove('skeleton-visible'); } }
-            if (key === 'wishlist-grid') { const s = document.getElementById('wishlist-grid-skeleton'); if (s) { s
-                        .classList.add('skeleton-hidden');
-                    s.classList.remove('skeleton-visible'); } }
-            if (key === 'news-grid') { const s = document.getElementById('news-grid-skeleton'); if (s) { s.classList.add(
-                        'skeleton-hidden');
-                    s.classList.remove('skeleton-visible'); } }
+            if (id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('skeleton-hidden');
+                    el.classList.remove('skeleton-visible');
+                }
+            }
+            // Special cases for inline skeletons
+            if (key === 'sidebar-categories') {
+                const skel = document.getElementById('sidebar-categories-skeleton');
+                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+            }
+            if (key === 'products-grid') {
+                const skel = document.getElementById('products-grid-skeleton');
+                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+            }
+            if (key === 'wishlist-grid') {
+                const skel = document.getElementById('wishlist-grid-skeleton');
+                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+            }
+            if (key === 'news-grid') {
+                const skel = document.getElementById('news-grid-skeleton');
+                if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
+            }
         }
 
         function hideAllSkeletons() {
-            Object.keys(SKELETON_MAP).concat(['sidebar-categories', 'products-grid', 'wishlist-grid', 'news-grid'])
-                .forEach(k => hideSkeleton(k));
+            const allSkeletonKeys = Object.keys(SKELETON_MAP).concat([
+                'sidebar-categories', 'products-grid', 'wishlist-grid', 'news-grid'
+            ]);
+            allSkeletonKeys.forEach(key => hideSkeleton(key));
         }
 
-        let currentData = { products: [], categories: [], news: [], hero: [], heroVideos: [], hero_secondary: [] };
+        let currentData = {
+            products: [],
+            categories: [],
+            news: [],
+            hero: [],
+            heroVideos: [],
+            hero_secondary: []
+        };
+
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
         let productsDisplayLimit = 12;
         const productsLoadMoreIncrement = 12;
 
         async function fetchAPI(endpoint) {
-            try { const res = await fetch(endpoint); if (!res.ok) throw new Error(`HTTP ${res.status}`); return await res
-                    .json(); } catch (e) { console.error('Fetch error:', e); return []; }
+            try {
+                const res = await fetch(endpoint);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (e) {
+                console.error('Fetch error:', e);
+                return [];
+            }
         }
 
-        function getCategorySlug(c) { return c ? c.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(
-                /^-+|-+$/g, '') : ''; }
+        function getCategorySlug(c) {
+            if (!c) return '';
+            return c.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+        }
 
-        function getProductSlug(p) { return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(
-                /[\s_]+/g, '-').replace(/^-+|-+$/g, ''); }
+        function getProductSlug(p) {
+            return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(
+                /^-+|-+$/g, '');
+        }
 
-        function updateURL(path, title = '') { window.history.pushState({ path }, title || 'JAYENWARE', path);
-            document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE'; }
+        function updateURL(path, title = '') {
+            window.history.pushState({ path }, title || 'JAYENWARE', path);
+            document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE';
+        }
 
         function navigate(pageId, params = null) {
-            if (pageId !== 'home' && window.JAYENWARE?.heroVideo) { window.JAYENWARE.heroVideo.pause(); }
-            document.querySelectorAll('.page-section').forEach(s => { s.classList.remove('active-page', 'fade-in');
-                s.style.display = 'none'; });
+            if (pageId !== 'home' && window.JAYENWARE?.heroVideo) {
+                window.JAYENWARE.heroVideo.pause();
+            }
+
+            document.querySelectorAll('.page-section').forEach(s => {
+                s.classList.remove('active-page', 'fade-in');
+                s.style.display = 'none';
+            });
+
             const target = document.getElementById(pageId);
             if (!target) return;
+
             target.style.display = 'block';
+
             let urlPath = '/' + pageId;
-            if (params?.category) { urlPath = '/category/' + getCategorySlug(params.category);
-                updateURL(urlPath, params.category); } else if (params?.search) { urlPath = '/search?q=' + encodeURIComponent(
-                    params.search);
-                updateURL(urlPath, 'Search: ' + params.search); } else updateURL(urlPath);
-            if (pageId === 'home') { if (currentData.products?.length > 0) renderHomepageSections(); if (window.JAYENWARE
-                    ?.heroVideo?.isInitialized) window.JAYENWARE.heroVideo.resume(); }
+            if (params?.category) {
+                urlPath = '/category/' + getCategorySlug(params.category);
+                updateURL(urlPath, params.category);
+            } else if (params?.search) {
+                urlPath = '/search?q=' + encodeURIComponent(params.search);
+                updateURL(urlPath, 'Search: ' + params.search);
+            } else updateURL(urlPath);
+
+            if (pageId === 'home') {
+                if (currentData.products?.length > 0) renderHomepageSections();
+                if (window.JAYENWARE?.heroVideo?.isInitialized) window.JAYENWARE.heroVideo.resume();
+            }
             if (pageId === 'wishlist') renderWishlist();
             if (pageId === 'products') renderProducts(getFilteredProducts());
-            requestAnimationFrame(() => { target.classList.add('active-page', 'fade-in');
-                window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+            requestAnimationFrame(() => {
+                target.classList.add('active-page', 'fade-in');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         }
 
         function renderCategories() {
             const container = document.getElementById('sidebar-categories');
             if (!container) return;
+
             let html =
                 `<a href="/products" onclick="event.preventDefault();filterByCategory('all')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</a>`;
             html += currentData.categories.map(c =>
@@ -1425,244 +1792,533 @@
             hideSkeleton('sidebar-categories');
         }
 
+        // ============================================================
+        // WORLD-CLASS CATEGORY CARDS – DIRECT DB LINKS, NO HARDCODED PREFIXES
+        // ============================================================
         function renderCategoryCards() {
             const grid = document.getElementById('categories-grid');
             const section = document.getElementById('categories-section');
             if (!grid || !section) return;
-            if (!currentData.categories || currentData.categories.length === 0) { section.classList.add('hidden');
-                hideSkeleton('categories'); return; }
-            section.classList.remove('hidden', 'skeleton-hidden');
+
+            if (!currentData.categories || currentData.categories.length === 0) {
+                section.classList.add('hidden');
+                hideSkeleton('categories');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            section.classList.remove('skeleton-hidden');
+
             grid.innerHTML = currentData.categories.map((cat, index) => {
                 const catName = cat.name || '';
                 const imgSrc = cat.image_url || '';
                 let ctaLink = cat.image_cta_link || '';
-                if (!ctaLink) ctaLink = '/category/' + getCategorySlug(catName);
+                
+                if (!ctaLink) {
+                    ctaLink = '/category/' + getCategorySlug(catName);
+                }
+
                 const isExternal = ctaLink.startsWith('http');
                 const externalAttrs = isExternal ? ' target="_blank" rel="noopener"' : '';
                 const ctaTitle = cat.image_cta_title || '';
-                const ctaHTML = ctaTitle ? `<span class="cat-link">${ctaTitle}<svg class="arrow-icon" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5H12M12 6.5L6.5 1M12 6.5L6.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>` :
-                    '';
+
+                const ctaHTML = ctaTitle ? `
+                <span class="cat-link">
+                    ${ctaTitle}
+                    <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>` : '';
+
                 let onClickAttr = '';
-                if (!isExternal && ctaLink.startsWith('/category/')) { const catSlug = ctaLink.replace('/category/', '');
-                    onClickAttr = `onclick="event.preventDefault();navigateToCategory('${catSlug.replace(/'/g,"\\'")}')"`; }
-                return `<a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="category-card">${imgSrc?`<img src="${imgSrc}" alt="${catName}" class="cat-image" loading="${index<2?'eager':'lazy'}" onerror="this.style.opacity='0'">`:''}<div class="cat-content"><h3 class="cat-title">${catName}</h3>${ctaHTML}</div></a>`;
+                if (!isExternal) {
+                    if (ctaLink.startsWith('/category/')) {
+                        const catSlug = ctaLink.replace('/category/', '');
+                        onClickAttr = `onclick="event.preventDefault();navigateToCategory('${catSlug.replace(/'/g, "\\'")}')"`;
+                    }
+                }
+
+                return `
+                <a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="category-card">
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${catName}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
+                    <div class="cat-content">
+                        <h3 class="cat-title">${catName}</h3>
+                        ${ctaHTML}
+                    </div>
+                </a>`;
             }).join('');
+
             hideSkeleton('categories');
         }
 
-        function navigateToCategory(categorySlug) { if (categorySlug) window.location.href = '/category/' + categorySlug; }
+        function navigateToCategory(categorySlug) {
+            if (!categorySlug) return;
+            window.location.href = '/category/' + categorySlug;
+        }
 
-        function getFilteredProducts() { let list = currentData.products; if (currentFilters.cat !== 'all') list = list
-                .filter(p => p.category === currentFilters.cat); if (currentFilters.minPrice) list = list.filter(p => p
-                .price >= currentFilters.minPrice); if (currentFilters.maxPrice) list = list.filter(p => p.price <=
-                currentFilters.maxPrice); return list; }
+        function getFilteredProducts() {
+            let list = currentData.products;
+            if (currentFilters.cat !== 'all') list = list.filter(p => p.category === currentFilters.cat);
+            if (currentFilters.minPrice) list = list.filter(p => p.price >= currentFilters.minPrice);
+            if (currentFilters.maxPrice) list = list.filter(p => p.price <= currentFilters.maxPrice);
+            return list;
+        }
 
-        function filterByCategory(cat) { currentFilters.cat = cat;
+        function filterByCategory(cat) {
+            currentFilters.cat = cat;
             productsDisplayLimit = 12;
             renderProducts(getFilteredProducts());
-            updateURL(cat === 'all' ? '/products' : '/products?category=' + getCategorySlug(cat), cat === 'all' ?
-                'All Products' : cat); }
+            updateURL(cat === 'all' ? '/products' : '/products?category=' + getCategorySlug(cat), cat === 'all' ? 'All Products' :
+                cat);
+        }
 
-        function applyPriceFilter() { currentFilters.minPrice = parseFloat(document.getElementById('filter-min-price')
-                .value) || null;
+        function applyPriceFilter() {
+            currentFilters.minPrice = parseFloat(document.getElementById('filter-min-price').value) || null;
             currentFilters.maxPrice = parseFloat(document.getElementById('filter-max-price').value) || null;
             productsDisplayLimit = 12;
-            renderProducts(getFilteredProducts()); }
+            renderProducts(getFilteredProducts());
+        }
 
-        function loadMoreProducts() { productsDisplayLimit += productsLoadMoreIncrement;
-            renderProducts(getFilteredProducts()); }
+        function loadMoreProducts() {
+            productsDisplayLimit += productsLoadMoreIncrement;
+            renderProducts(getFilteredProducts());
+        }
 
-        function toggleMobileFilters() { document.getElementById('mobile-filters')?.classList.toggle('hidden'); }
+        function toggleMobileFilters() {
+            document.getElementById('mobile-filters')?.classList.toggle('hidden');
+        }
 
-        function applyMobileFilters() { applyPriceFilter();
-            toggleMobileFilters(); }
+        function applyMobileFilters() {
+            applyPriceFilter();
+            toggleMobileFilters();
+        }
 
-        function toggleSortMenu() { document.getElementById('sort-dropdown')?.classList.toggle('hidden'); }
+        function toggleSortMenu() {
+            document.getElementById('sort-dropdown')?.classList.toggle('hidden');
+        }
 
-        function handleSorting(type, label) { const labelEl = document.getElementById('current-sort-label'); const dropdown =
-                document.getElementById('sort-dropdown'); if (labelEl) labelEl.innerText = label; if (
-                dropdown) dropdown.classList.add('hidden'); let sorted = [...getFilteredProducts()]; if (type ===
-                'price-low') sorted.sort((a, b) => a.price - b.price); else if (type === 'price-high') sorted.sort((a, b) =>
-                b.price - a.price); else sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        function handleSorting(type, label) {
+            const labelEl = document.getElementById('current-sort-label');
+            const dropdown = document.getElementById('sort-dropdown');
+            if (labelEl) labelEl.innerText = label;
+            if (dropdown) dropdown.classList.add('hidden');
+
+            let sorted = [...getFilteredProducts()];
+            if (type === 'price-low') sorted.sort((a, b) => a.price - b.price);
+            else if (type === 'price-high') sorted.sort((a, b) => b.price - a.price);
+            else sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             productsDisplayLimit = 12;
-            renderProducts(sorted); }
+            renderProducts(sorted);
+        }
 
-        function productCard(p) { const isOut = p.stock <= 0; const slug = getProductSlug(p); return `
+        function productCard(p) {
+            const isOut = p.stock <= 0;
+            const slug = getProductSlug(p);
+
+            return `
             <a href="/product/${slug}" class="carousel-card" style="width:100%;">
-                <div class="card-img" style="aspect-ratio:3/4;"><img src="${p.img}" alt="${p.title}" loading="lazy">${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}${p.is_new_arrival&&!isOut?'<span class="card-badge">New</span>':''}${p.is_on_sale&&!isOut?'<span class="card-badge badge-sale">Sale</span>':''}</div>
-                <div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div><span class="card-price">â‚´${p.price}</span>${p.old_price?`<span class="card-old-price">â‚´${p.old_price}</span>`:''}</div></div>
-            </a>`; }
+                <div class="card-img" style="aspect-ratio:3/4;">
+                    <img src="${p.img}" alt="${p.title}" loading="lazy">
+                    ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
+                    ${p.is_new_arrival && !isOut ? '<span class="card-badge">New</span>' : ''}
+                    ${p.is_on_sale && !isOut ? '<span class="card-badge badge-sale">Sale</span>' : ''}
+                </div>
+                <div class="card-body">
+                    <span class="card-category">${p.category}</span>
+                    <h3 class="card-title">${p.title}</h3>
+                    <div>
+                        <span class="card-price">৳ ${p.price}</span>
+                        ${p.old_price ? `<span class="card-old-price">৳${p.old_price}</span>` : ''}
+                    </div>
+                </div>
+            </a>`;
+        }
 
-        function renderProducts(list) { const grid = document.getElementById('products-grid'); if (!grid) return; const
-                total = list.length; const display = list.slice(0, productsDisplayLimit); const countEl = document
-                .getElementById('product-count'); if (countEl) countEl.innerText =
-                `Showing ${Math.min(productsDisplayLimit,total)} of ${total} products`; let html = display.length ? display
-                .map(p => productCard(p)).join('') :
-                '<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No products found</p></div>'; if (
-                    total > productsDisplayLimit) { html +=
-                    `<div class="col-span-full mt-8 text-center"><button onclick="loadMoreProducts()" class="px-8 py-3 bg-primary text-white rounded-full font-semibold uppercase text-xs tracking-wider hover:bg-blue transition">Load More (${total-productsDisplayLimit} remaining)</button></div>`; }
+        function renderProducts(list) {
+            const grid = document.getElementById('products-grid');
+            if (!grid) return;
+
+            const total = list.length;
+            const display = list.slice(0, productsDisplayLimit);
+
+            const countEl = document.getElementById('product-count');
+            if (countEl) countEl.innerText = `Showing ${Math.min(productsDisplayLimit, total)} of ${total} products`;
+
+            let html = display.length ?
+                display.map(p => productCard(p)).join('') :
+                '<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No products found</p></div>';
+
+            if (total > productsDisplayLimit) {
+                html += `
+                <div class="col-span-full mt-8 text-center">
+                    <button onclick="loadMoreProducts()" class="px-8 py-3 bg-primary text-white rounded-full font-semibold uppercase text-xs tracking-wider hover:bg-blue transition">
+                        Load More (${total - productsDisplayLimit} remaining)
+                    </button>
+                </div>`;
+            }
+
             grid.innerHTML = html;
-            hideSkeleton('products-grid'); }
+            hideSkeleton('products-grid');
+        }
 
-        function renderWishlist() { const grid = document.getElementById('wishlist-grid'); const empty = document
-                .getElementById('empty-wishlist'); if (!grid) return; const list = (window.wishlist || []).map(id => currentData
-                    .products.find(p => p.id == id)).filter(Boolean); if (!list.length) { grid.innerHTML = ''; if (
-                    empty) empty.classList.remove('hidden');
-                hideSkeleton('wishlist-grid'); return; } if (empty) empty.classList.add('hidden');
+        function renderWishlist() {
+            const grid = document.getElementById('wishlist-grid');
+            const empty = document.getElementById('empty-wishlist');
+            if (!grid) return;
+
+            const list = (window.wishlist || []).map(id => currentData.products.find(p => p.id == id)).filter(Boolean);
+
+            if (!list.length) {
+                grid.innerHTML = '';
+                if (empty) empty.classList.remove('hidden');
+                hideSkeleton('wishlist-grid');
+                return;
+            }
+
+            if (empty) empty.classList.add('hidden');
             grid.innerHTML = list.map(p => productCard(p)).join('');
-            hideSkeleton('wishlist-grid'); }
+            hideSkeleton('wishlist-grid');
+        }
 
-        function renderNews(list) { const grid = document.getElementById('news-grid'); if (!grid) return; if (!list || !list
-                .length) { grid.innerHTML =
-                '<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No articles yet</p></div>';
-                hideSkeleton('news-grid'); return; }
+        function renderNews(list) {
+            const grid = document.getElementById('news-grid');
+            if (!grid) return;
+
+            if (!list || !list.length) {
+                grid.innerHTML =
+                    '<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No articles yet</p></div>';
+                hideSkeleton('news-grid');
+                return;
+            }
+
             grid.innerHTML = list.map(n => `
             <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition">
-                <img src="${n.img}" alt="${n.title}" class="w-full h-52 object-cover" loading="lazy">
-                <div class="p-5 sm:p-6"><time class="text-[10px] font-semibold uppercase text-accent">${new Date(n.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</time><h3 class="font-bold text-lg mt-2 mb-3 text-primary">${n.title}</h3><p class="text-xs text-accent line-clamp-3">${n.excerpt}</p><a href="${n.link||'#'}" class="inline-flex items-center gap-2 mt-4 text-xs font-semibold text-blue no-underline hover:gap-3 transition">Read More <i class="fa-solid fa-arrow-right text-[10px]"></i></a></div>
+                <img src="${n.img}" alt="${n.title}" class="w-full h-48 object-cover" loading="lazy">
+                <div class="p-4 sm:p-6">
+                    <time class="text-[10px] font-semibold uppercase text-accent">${new Date(n.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</time>
+                    <h3 class="font-bold text-lg mt-2 mb-3 text-primary">${n.title}</h3>
+                    <p class="text-xs text-accent line-clamp-3">${n.excerpt}</p>
+                    <a href="${n.link||'#'}" class="inline-flex items-center gap-2 mt-4 text-xs font-semibold text-blue no-underline hover:gap-3 transition">
+                        Read More <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
             </article>`).join('');
-            hideSkeleton('news-grid'); }
+            hideSkeleton('news-grid');
+        }
 
-        function slideCarousel(carouselId, direction) { const carousel = document.getElementById(carouselId); if (!carousel)
-                return; const cardWidth = carousel.querySelector('.carousel-card')?.offsetWidth || 280; const gap = parseInt(
-                    getComputedStyle(carousel).gap) || 20; const scrollAmount = (cardWidth + gap) * 2;
-            carousel.scrollBy({ left: direction === 'next' ? scrollAmount : -scrollAmount, behavior: 'smooth' }); }
+        // -------------------------------------------------------
+        // SMOOTH CAROUSEL SLIDING
+        // -------------------------------------------------------
+        function slideCarousel(carouselId, direction) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
 
-        function updateScrollProgress(carouselId) { const carousel = document.getElementById(carouselId); const
-                progressBar = document.getElementById(carouselId.replace('carousel', 'progress-bar')); if (!carousel || !
-                    progressBar) return; const scrollLeft = carousel.scrollLeft; const scrollWidth = carousel.scrollWidth -
-                carousel.clientWidth; const progress = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
-            progressBar.style.width = `${Math.min(progress,100)}%`; }
+            const cardWidth = carousel.querySelector('.carousel-card')?.offsetWidth || 260;
+            const gap = parseInt(getComputedStyle(carousel).gap) || 16;
+            const scrollAmount = (cardWidth + gap) * 2;
 
-        function renderCarouselProducts(carouselId, products) { const carousel = document.getElementById(carouselId); if (!
-                carousel) return; if (!products || !products.length) { carousel.innerHTML =
-                '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>'; return; }
-            carousel.innerHTML = products.map(p => { const isOut = p.stock <= 0; const slug = getProductSlug(p); let
-                    badge = ''; if (!isOut) { if (p.is_new_arrival) badge = '<span class="card-badge">New</span>';
-                    else if (p.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>'; else if (p
-                        .is_limited_edition) badge = '<span class="card-badge">Limited</span>'; } return `
+            carousel.scrollBy({
+                left: direction === 'next' ? scrollAmount : -scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        function updateScrollProgress(carouselId) {
+            const carousel = document.getElementById(carouselId);
+            const progressBar = document.getElementById(carouselId.replace('carousel', 'progress-bar'));
+            if (!carousel || !progressBar) return;
+
+            const scrollLeft = carousel.scrollLeft;
+            const scrollWidth = carousel.scrollWidth - carousel.clientWidth;
+            const progress = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
+            progressBar.style.width = `${Math.min(progress, 100)}%`;
+        }
+
+        function renderCarouselProducts(carouselId, products) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
+
+            if (!products || !products.length) {
+                carousel.innerHTML =
+                    '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>';
+                return;
+            }
+
+            carousel.innerHTML = products.map(p => {
+                const isOut = p.stock <= 0;
+                const slug = getProductSlug(p);
+                let badge = '';
+                if (!isOut) {
+                    if (p.is_new_arrival) badge = '<span class="card-badge">New</span>';
+                    else if (p.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>';
+                    else if (p.is_limited_edition) badge = '<span class="card-badge">Limited</span>';
+                }
+
+                return `
                 <a href="/product/${slug}" class="carousel-card" draggable="false">
-                    <div class="card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">${badge}${isOut?'<div class="card-soldout-overlay"><span>Sold Out</span></div>':''}<button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn" ${isOut?'disabled':''} aria-label="Add to cart"><i class="fa-solid fa-plus"></i></button></div>
-                    <div class="card-body"><span class="card-category">${p.category}</span><h3 class="card-title">${p.title}</h3><div><span class="card-price">â‚´${p.price}</span>${p.old_price?`<span class="card-old-price">â‚´${p.old_price}</span>`:''}</div></div>
-                </a>`; }).join('');
+                    <div class="card-img">
+                        <img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">
+                        ${badge}
+                        ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
+                        <button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn" ${isOut ? 'disabled' : ''} aria-label="Add to cart">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">${p.category}</span>
+                        <h3 class="card-title">${p.title}</h3>
+                        <div>
+                            <span class="card-price">৳${p.price}</span>
+                            ${p.old_price ? `<span class="card-old-price">৳${p.old_price}</span>` : ''}
+                        </div>
+                    </div>
+                </a>`;
+            }).join('');
+
             carousel.addEventListener('scroll', () => updateScrollProgress(carouselId), { passive: true });
-            updateScrollProgress(carouselId); }
+            updateScrollProgress(carouselId);
+        }
 
-        function renderHomepageSections() { if (!currentData.products || currentData.products.length === 0) return;
-            renderCategoryCards(); const sections = [{ id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
-                    products: currentData.products.filter(p => p.is_new_arrival === true), skeletonKey: 'new-arrivals'
-                }, { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(
-                    p => p.is_hot === true), skeletonKey: 'hot-products' }, { id: 'featured-products-section',
-                    carousel: 'featured-products-carousel', products: currentData.products.filter(p => p.is_featured ===
-                        true), skeletonKey: 'featured-products' }, { id: 'best-selling-section',
-                    carousel: 'best-selling-carousel', products: currentData.products.filter(p => p.is_best === true),
-                    skeletonKey: 'best-selling' }, { id: 'on-sale-section', carousel: 'on-sale-carousel',
-                    products: currentData.products.filter(p => p.is_on_sale === true), skeletonKey: 'on-sale'
-                }, { id: 'limited-edition-section', carousel: 'limited-edition-carousel', products: currentData
-                    .products.filter(p => p.is_limited_edition === true), skeletonKey: 'limited-edition' } ];
-            sections.forEach(sec => { const el = document.getElementById(sec.id); if (!el) return; if (sec.products && sec
-                    .products.length > 0) { el.classList.remove('hidden', 'skeleton-hidden');
+        function renderHomepageSections() {
+            if (!currentData.products || currentData.products.length === 0) return;
+
+            renderCategoryCards();
+
+            const sections = [
+                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
+                products: currentData.products.filter(p => p.is_new_arrival === true), skeletonKey: 'new-arrivals' },
+                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(
+                        p => p.is_hot === true), skeletonKey: 'hot-products' },
+                { id: 'featured-products-section', carousel: 'featured-products-carousel',
+                    products: currentData.products.filter(p => p.is_featured === true), skeletonKey: 'featured-products' },
+                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(
+                        p => p.is_best === true), skeletonKey: 'best-selling' },
+                { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p =>
+                        p.is_on_sale === true), skeletonKey: 'on-sale' },
+                { id: 'limited-edition-section', carousel: 'limited-edition-carousel',
+                    products: currentData.products.filter(p => p.is_limited_edition === true), skeletonKey: 'limited-edition' }
+            ];
+
+            sections.forEach((sec) => {
+                const el = document.getElementById(sec.id);
+                if (!el) return;
+                if (sec.products && sec.products.length > 0) {
+                    el.classList.remove('hidden', 'skeleton-hidden');
                     renderCarouselProducts(sec.carousel, sec.products);
-                    hideSkeleton(sec.skeletonKey); } else { el.classList.add('hidden');
-                    hideSkeleton(sec.skeletonKey); } }); }
+                    hideSkeleton(sec.skeletonKey);
+                } else {
+                    el.classList.add('hidden');
+                    hideSkeleton(sec.skeletonKey);
+                }
+            });
+        }
 
-        function initCarouselTouchSupport() { document.querySelectorAll('.carousel-track').forEach(carousel => { let
-                isDown = false,
-                startX, scrollLeft, startTime, velocity = 0,
-                momentumID, lastMoveX = 0,
-                lastMoveTime = 0; const endMomentum = () => { if (momentumID) { cancelAnimationFrame(
-                    momentumID);
-                    momentumID = null; } }; const beginMomentum = () => { endMomentum(); if (Math.abs(
-                        velocity) > 0.5) { momentumID = requestAnimationFrame(() => { carousel
-                        .scrollLeft -= velocity * 16;
-                        velocity *= 0.95; if (Math.abs(velocity) > 0.1) { beginMomentum(); } else { velocity =
-                            0;
-                            updateScrollProgress(carousel.id); } }); } };
-            carousel.addEventListener('touchstart', (e) => { endMomentum();
-                isDown = true;
-                startX = e.touches[0].pageX - carousel.offsetLeft;
-                scrollLeft = carousel.scrollLeft;
-                startTime = Date.now();
-                velocity = 0;
-                carousel.style.scrollBehavior = 'auto'; }, { passive: true });
-            carousel.addEventListener('touchmove', (e) => { if (!isDown) return; const x = e.touches[0].pageX -
-                    carousel.offsetLeft; const walk = (x - startX) * 1.2; const now = Date.now(); const dt = now -
-                    startTime; if (dt > 0 && lastMoveTime > 0) { const dx = x - lastMoveX; const dt2 = now -
-                        lastMoveTime;
-                    velocity = dt2 > 0 ? (dx / dt2) * 16 : velocity; }
-                carousel.scrollLeft = scrollLeft - walk;
-                lastMoveX = x;
-                lastMoveTime = now;
-                startTime = now; }, { passive: true });
-            carousel.addEventListener('touchend', () => { isDown = false;
-                carousel.style.scrollBehavior = 'smooth';
-                lastMoveX = 0;
-                lastMoveTime = 0;
-                beginMomentum(); });
-            carousel.addEventListener('mousedown', (e) => { endMomentum();
-                isDown = true;
-                startX = e.pageX - carousel.offsetLeft;
-                scrollLeft = carousel.scrollLeft;
-                startTime = Date.now();
-                velocity = 0;
-                carousel.style.scrollBehavior = 'auto'; });
-            window.addEventListener('mousemove', (e) => { if (!isDown) return; const x = e.pageX - carousel
-                    .offsetLeft; const walk = (x - startX) * 1.2; const now = Date.now(); const dt = now -
-                    startTime; if (dt > 0 && lastMoveTime > 0) { const dx = x - lastMoveX; const dt2 = now -
-                        lastMoveTime;
-                    velocity = dt2 > 0 ? (dx / dt2) * 16 : velocity; }
-                carousel.scrollLeft = scrollLeft - walk;
-                lastMoveX = x;
-                lastMoveTime = now;
-                startTime = now; });
-            window.addEventListener('mouseup', () => { if (isDown) { isDown = false;
+        // -------------------------------------------------------
+        // MOMENTUM-BASED DRAG (no snapping, buttery smooth)
+        // -------------------------------------------------------
+        function initCarouselTouchSupport() {
+            document.querySelectorAll('.carousel-track').forEach(carousel => {
+                let isDown = false;
+                let startX, scrollLeft, startTime;
+                let velocity = 0;
+                let momentumID;
+                let lastMoveX = 0;
+                let lastMoveTime = 0;
+
+                const endMomentum = () => {
+                    if (momentumID) {
+                        cancelAnimationFrame(momentumID);
+                        momentumID = null;
+                    }
+                };
+
+                const beginMomentum = () => {
+                    endMomentum();
+                    if (Math.abs(velocity) > 0.5) {
+                        momentumID = requestAnimationFrame(() => {
+                            carousel.scrollLeft -= velocity * 16;
+                            velocity *= 0.95;
+                            if (Math.abs(velocity) > 0.1) {
+                                beginMomentum();
+                            } else {
+                                velocity = 0;
+                                updateScrollProgress(carousel.id);
+                            }
+                        });
+                    }
+                };
+
+                carousel.addEventListener('touchstart', (e) => {
+                    endMomentum();
+                    isDown = true;
+                    startX = e.touches[0].pageX - carousel.offsetLeft;
+                    scrollLeft = carousel.scrollLeft;
+                    startTime = Date.now();
+                    velocity = 0;
+                    carousel.style.scrollBehavior = 'auto';
+                }, { passive: true });
+
+                carousel.addEventListener('touchmove', (e) => {
+                    if (!isDown) return;
+                    const x = e.touches[0].pageX - carousel.offsetLeft;
+                    const walk = (x - startX) * 1.2;
+                    const now = Date.now();
+                    const dt = now - startTime;
+                    if (dt > 0 && lastMoveTime > 0) {
+                        const dx = x - lastMoveX;
+                        const dt2 = now - lastMoveTime;
+                        velocity = dt2 > 0 ? (dx / dt2) * 16 : velocity;
+                    }
+                    carousel.scrollLeft = scrollLeft - walk;
+                    lastMoveX = x;
+                    lastMoveTime = now;
+                    startTime = now;
+                }, { passive: true });
+
+                carousel.addEventListener('touchend', () => {
+                    isDown = false;
                     carousel.style.scrollBehavior = 'smooth';
                     lastMoveX = 0;
                     lastMoveTime = 0;
-                    beginMomentum(); } });
-            carousel.addEventListener('scroll', () => { if (carousel.id) updateScrollProgress(carousel.id); }, {
-                passive: true }); }); }
+                    beginMomentum();
+                });
 
-        function handleCookieAccept() { localStorage.setItem('jayenware_consent', 'accepted');
-            document.getElementById('cookieConsent')?.classList.remove('show'); }
+                carousel.addEventListener('mousedown', (e) => {
+                    endMomentum();
+                    isDown = true;
+                    startX = e.pageX - carousel.offsetLeft;
+                    scrollLeft = carousel.scrollLeft;
+                    startTime = Date.now();
+                    velocity = 0;
+                    carousel.style.scrollBehavior = 'auto';
+                });
 
-        function handleCookieDecline() { localStorage.setItem('jayenware_consent', 'declined');
-            document.getElementById('cookieConsent')?.classList.remove('show'); }
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    const x = e.pageX - carousel.offsetLeft;
+                    const walk = (x - startX) * 1.2;
+                    const now = Date.now();
+                    const dt = now - startTime;
+                    if (dt > 0 && lastMoveTime > 0) {
+                        const dx = x - lastMoveX;
+                        const dt2 = now - lastMoveTime;
+                        velocity = dt2 > 0 ? (dx / dt2) * 16 : velocity;
+                    }
+                    carousel.scrollLeft = scrollLeft - walk;
+                    lastMoveX = x;
+                    lastMoveTime = now;
+                    startTime = now;
+                });
 
-        document.addEventListener('click', e => { if (!e.target.closest('#sort-container')) { document.getElementById(
-                'sort-dropdown')?.classList.add('hidden'); } });
+                window.addEventListener('mouseup', () => {
+                    if (isDown) {
+                        isDown = false;
+                        carousel.style.scrollBehavior = 'smooth';
+                        lastMoveX = 0;
+                        lastMoveTime = 0;
+                        beginMomentum();
+                    }
+                });
+
+                carousel.addEventListener('scroll', () => {
+                    if (carousel.id) updateScrollProgress(carousel.id);
+                }, { passive: true });
+            });
+        }
+
+        function handleCookieAccept() {
+            localStorage.setItem('jayenware_consent', 'accepted');
+            document.getElementById('cookieConsent')?.classList.remove('show');
+        }
+
+        function handleCookieDecline() {
+            localStorage.setItem('jayenware_consent', 'declined');
+            document.getElementById('cookieConsent')?.classList.remove('show');
+        }
+
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#sort-container')) {
+                document.getElementById('sort-dropdown')?.classList.add('hidden');
+            }
+        });
+
         window.addEventListener('popstate', () => { handleInitialRoute(); });
 
-        async function loadData() { try { const [hero, cats, prods, newsData, heroVideosData, heroSecondaryData] = await Promise
-                .all([fetchAPI('/api/hero'), fetchAPI('/api/categories'), fetchAPI('/api/products'), fetchAPI('/api/news'),
-                    fetchAPI('/api/hero-videos'), fetchAPI('/api/hero-secondary')
-                ]); if (hero?.length) currentData.hero = hero; if (cats?.length) currentData.categories = cats; if (prods
-                    ?.length) currentData.products = prods; if (newsData) currentData.news = newsData; if (heroVideosData
-                    ?.length) currentData.heroVideos = heroVideosData; if (heroSecondaryData?.length) currentData
-                .hero_secondary = heroSecondaryData;
-            hideSkeleton('hero');
-            hideSkeleton('hero-secondary');
-            window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', { detail: { hero: currentData.hero,
-                    heroVideos: currentData.heroVideos, hero_secondary: currentData.hero_secondary } }));
-            renderCategories();
-            renderProducts(currentData.products);
-            renderNews(currentData.news);
-            renderHomepageSections();
-            handleInitialRoute();
-            hideSkeleton('header');
-            hideSkeleton('footer');
-            console.log('[App] Data loaded, skeletons hidden'); } catch (err) { console.error('[App] Error:', err);
-            hideAllSkeletons(); } }
+        async function loadData() {
+            try {
+                const [hero, cats, prods, newsData, heroVideosData, heroSecondaryData] = await Promise.all([
+                    fetchAPI('/api/hero'),
+                    fetchAPI('/api/categories'),
+                    fetchAPI('/api/products'),
+                    fetchAPI('/api/news'),
+                    fetchAPI('/api/hero-videos'),
+                    fetchAPI('/api/hero-secondary')
+                ]);
 
-        function handleInitialRoute() { const path = window.location.pathname; const sp = new URLSearchParams(window.location
-                .search); if (path.startsWith('/category/')) { window.location.href = path; return; } if (path.startsWith(
-                '/product/')) return; if (path === '/search' && sp.get('q')) { navigate('products');
-            renderProducts(currentData.products.filter(p => p.title.toLowerCase().includes(sp.get('q').toLowerCase()))); return; }
-            navigate({ '/': 'home', '/products': 'products', '/wishlist': 'wishlist', '/journal': 'news' }[path] || 'home'); }
+                if (hero?.length) currentData.hero = hero;
+                if (cats?.length) currentData.categories = cats;
+                if (prods?.length) currentData.products = prods;
+                if (newsData) currentData.news = newsData;
+                if (heroVideosData?.length) currentData.heroVideos = heroVideosData;
+                if (heroSecondaryData?.length) currentData.hero_secondary = heroSecondaryData;
 
-        window.onload = async () => { const consent = localStorage.getItem('jayenware_consent'); if (!consent) setTimeout(
-                () => document.getElementById('cookieConsent')?.classList.add('show'), 2000); await loadData();
-            setTimeout(initCarouselTouchSupport, 400); };
+                // Hide hero skeleton when data is loaded
+                hideSkeleton('hero');
+                if (heroSecondaryData?.length) {
+                    hideSkeleton('hero-secondary');
+                } else {
+                    hideSkeleton('hero-secondary');
+                }
+
+                window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', {
+                    detail: { hero: currentData.hero, heroVideos: currentData.heroVideos,
+                        hero_secondary: currentData.hero_secondary }
+                }));
+
+                renderCategories();
+                renderProducts(currentData.products);
+                renderNews(currentData.news);
+                renderHomepageSections();
+                handleInitialRoute();
+
+                // Hide header and footer skeletons
+                hideSkeleton('header');
+                hideSkeleton('footer');
+
+                console.log('[App] Data loaded, skeletons hidden');
+            } catch (err) {
+                console.error('[App] Error:', err);
+                // Hide skeletons even on error to show whatever loaded
+                hideAllSkeletons();
+            }
+        }
+
+        function handleInitialRoute() {
+            const path = window.location.pathname;
+            const sp = new URLSearchParams(window.location.search);
+            
+            if (path.startsWith('/category/')) {
+                window.location.href = path;
+                return;
+            }
+            
+            if (path.startsWith('/product/')) return;
+            
+            if (path === '/search' && sp.get('q')) {
+                navigate('products');
+                renderProducts(currentData.products.filter(p => p.title.toLowerCase().includes(sp.get('q')
+                    .toLowerCase())));
+                return;
+            }
+            navigate({ '/': 'home', '/products': 'products', '/wishlist': 'wishlist', '/journal': 'news' }[path] || 'home');
+        }
+
+        window.onload = async () => {
+            const consent = localStorage.getItem('jayenware_consent');
+            if (!consent) setTimeout(() => document.getElementById('cookieConsent')?.classList.add('show'), 2000);
+            await loadData();
+            setTimeout(initCarouselTouchSupport, 300);
+        };
     </script>
 </body>
 </html>
