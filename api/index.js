@@ -1630,4 +1630,104 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
+
+
+// ============================================
+// HOME CATEGORY SHOWCASE API
+// ============================================
+
+// Get all active showcase categories (grouped by gender)
+app.get('/api/home-showcase', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('home_category_showcase')
+            .select(`
+                *,
+                categories:category_id (
+                    id,
+                    name,
+                    slug,
+                    image_url,
+                    description
+                )
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // Group by gender
+        const grouped = {
+            Men: [],
+            Women: []
+        };
+        
+        (data || []).forEach(item => {
+            const formatted = {
+                ...item,
+                category_slug: item.categories?.slug ? 
+                    item.categories.slug.replace(/^category\//, '') : 
+                    createSlug(item.categories?.name || ''),
+                category_name: item.categories?.name || null,
+                category_image: item.categories?.image_url || null,
+                category_description: item.categories?.description || null
+            };
+            
+            if (grouped[item.gender]) {
+                grouped[item.gender].push(formatted);
+            }
+        });
+        
+        res.json(grouped);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get showcase categories by gender
+app.get('/api/home-showcase/:gender', async (req, res) => {
+    try {
+        const { gender } = req.params;
+        
+        if (!['Men', 'Women'].includes(gender)) {
+            return res.status(400).json({ error: 'Gender must be Men or Women' });
+        }
+        
+        const { data, error } = await supabase
+            .from('home_category_showcase')
+            .select(`
+                *,
+                categories:category_id (
+                    id,
+                    name,
+                    slug,
+                    image_url,
+                    description
+                )
+            `)
+            .eq('gender', gender)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const formatted = (data || []).map(item => ({
+            ...item,
+            category_slug: item.categories?.slug ? 
+                item.categories.slug.replace(/^category\//, '') : 
+                createSlug(item.categories?.name || ''),
+            category_name: item.categories?.name || null,
+            category_image: item.categories?.image_url || null,
+            category_description: item.categories?.description || null
+        }));
+        
+        res.json(formatted);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
+
 module.exports = app;
