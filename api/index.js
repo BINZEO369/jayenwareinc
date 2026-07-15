@@ -1629,4 +1629,125 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
+
+
+// ============================================
+// HOME SHOWCASE API (হোম শোকেস)
+// ============================================
+
+// Get showcase header
+app.get('/api/home-showcase/header', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('home_showcase_header')
+            .select('*')
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get showcase items with categories (Men/Women)
+app.get('/api/home-showcase/items', async (req, res) => {
+    try {
+        const { gender } = req.query;
+        
+        let query = supabase
+            .from('home_showcase_items')
+            .select(`
+                *,
+                categories:category_id (
+                    id,
+                    name,
+                    slug,
+                    image,
+                    description
+                )
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (gender && ['Men', 'Women'].includes(gender)) {
+            query = query.eq('gender', gender);
+        }
+        
+        const { data, error } = await query;
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // Format data with slugs
+        const formattedData = data.map(item => ({
+            ...item,
+            category_slug: item.categories?.slug || createSlug(item.categories?.name || ''),
+            category_name: item.categories?.name || '',
+            category_image: item.categories?.image || '',
+            category_description: item.categories?.description || ''
+        }));
+        
+        res.json(formattedData);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get showcase items grouped by gender
+app.get('/api/home-showcase/grouped', async (req, res) => {
+    try {
+        const { data: header } = await supabase
+            .from('home_showcase_header')
+            .select('*')
+            .eq('is_active', true)
+            .single();
+        
+        const { data: items } = await supabase
+            .from('home_showcase_items')
+            .select(`
+                *,
+                categories:category_id (
+                    id,
+                    name,
+                    slug,
+                    image,
+                    description
+                )
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        const menItems = (items || [])
+            .filter(item => item.gender === 'Men')
+            .map(item => ({
+                ...item,
+                category_slug: item.categories?.slug || createSlug(item.categories?.name || ''),
+                category_name: item.categories?.name || '',
+                category_image: item.categories?.image || '',
+                category_description: item.categories?.description || ''
+            }));
+        
+        const womenItems = (items || [])
+            .filter(item => item.gender === 'Women')
+            .map(item => ({
+                ...item,
+                category_slug: item.categories?.slug || createSlug(item.categories?.name || ''),
+                category_name: item.categories?.name || '',
+                category_image: item.categories?.image || '',
+                category_description: item.categories?.description || ''
+            }));
+        
+        res.json({
+            header: header || null,
+            men: menItems,
+            women: womenItems
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
 module.exports = app;
