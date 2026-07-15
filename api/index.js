@@ -1622,13 +1622,6 @@ app.get('/category/:slug*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
 
-// ============================================
-// SPA FALLBACK (Must be last)
-// ============================================
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-});
-
 
 
 // ============================================
@@ -1748,6 +1741,14 @@ app.get('/api/home-showcase/grouped', async (req, res) => {
     }
 });
 
+
+
+// ============================================
+// SPA FALLBACK (Must be last)
+// ============================================
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
 
 
 module.exports = app;
