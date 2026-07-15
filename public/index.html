@@ -328,34 +328,31 @@
             animation: skeletonPulse 1.8s infinite ease-in-out;
         }
 
-        /* ==================== CATEGORY CARDS SKELETON ==================== */
-        .category-skeleton-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0;
+        /* ==================== CATEGORY SECTIONS SKELETON ==================== */
+        .category-section-skeleton {
+            width: 100%;
+            padding: 60px 0;
         }
 
-        @media (min-width: 1024px) {
-            .category-skeleton-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 2px;
-            }
+        .category-section-skeleton .skeleton-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto 32px;
+            padding: 0 40px;
         }
 
-        .category-skeleton-card {
-            aspect-ratio: 1/1;
+        .category-skeleton-banner {
+            width: 100%;
+            height: 400px;
             animation: skeletonPulse 1.8s infinite ease-in-out;
+            border-radius: 0;
         }
 
-        @media (min-width: 768px) {
-            .category-skeleton-card {
-                aspect-ratio: 3/4;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .category-skeleton-card {
-                aspect-ratio: 4/3;
+        @media (max-width: 768px) {
+            .category-skeleton-banner {
+                height: 300px;
             }
         }
 
@@ -742,275 +739,207 @@
             transition: width 0.1s ease;
         }
 
-        /* ==================== LIMITED EDITION DARK SECTION FIX ==================== */
-        #limited-edition-section .carousel-card .card-title {
-            color: #ffffff;
-        }
-
-        #limited-edition-section .carousel-card .card-price {
-            color: #ffffff;
-        }
-
-        #limited-edition-section .carousel-card .card-old-price {
-            color: #a1a1a6;
-        }
-
-        #limited-edition-section .carousel-card .card-category {
-            color: #a1a1a6;
-        }
-
-        #limited-edition-section .carousel-card .card-badge {
-            background: #2d2d2f;
-            color: #ffffff;
-        }
-
-        #limited-edition-section .carousel-card .card-badge.badge-sale {
-            color: #ff6b6b !important;
-        }
-
-        #limited-edition-section .carousel-card .card-soldout-overlay span {
-            background: #ffffff;
-            color: #1d1d1f;
-        }
-
-        #limited-edition-section .carousel-card .card-img {
-            background: #2d2d2f;
-        }
-
-        #limited-edition-section .carousel-card .card-add-btn {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1d1d1f;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        @media (hover: hover) {
-            #limited-edition-section .carousel-card .card-add-btn:hover {
-                background: #ffffff;
-                color: #1d1d1f;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-            }
-        }
-
-        #limited-edition-section .carousel-card .card-add-btn:active {
-            background: #ffffff;
-            color: #1d1d1f;
-        }
-
-        #limited-edition-section .scroll-progress {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        #limited-edition-section .scroll-progress-bar {
+        /* ==================== FULL-WIDTH CATEGORY SECTION (APPLE-STYLE) ==================== */
+        .category-full-section {
+            padding: 60px 0;
             background: #ffffff;
         }
 
-        /* ==================== WORLD-CLASS CATEGORY SECTION ==================== */
-        .categories-section {
-            padding: 0;
-            background: #ffffff;
+        .category-full-section:nth-child(even) {
+            background: #fafafa;
         }
 
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0;
-            max-width: 100%;
-            margin: 0;
+        .category-full-section .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 40px;
         }
 
-        @media (min-width: 768px) {
-            .categories-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2px;
-                background: #ffffff;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .categories-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 2px;
-            }
-        }
-
-        .category-card {
-            position: relative;
-            aspect-ratio: 1/1;
-            overflow: hidden;
-            cursor: pointer;
-            text-decoration: none;
-            color: #fff;
-            background: #1d1d1f;
-            isolation: isolate;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-
-        @media (min-width: 768px) {
-            .category-card {
-                aspect-ratio: 3/4;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .category-card {
-                aspect-ratio: 4/3;
-            }
-        }
-
-        .category-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0) 0%,
-                    rgba(0, 0, 0, 0.15) 40%,
-                    rgba(0, 0, 0, 0.55) 80%,
-                    rgba(0, 0, 0, 0.7) 100%);
-            z-index: 2;
-            transition: background 0.6s ease;
-        }
-
-        .category-card:active::after {
-            background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0.05) 0%,
-                    rgba(0, 0, 0, 0.25) 40%,
-                    rgba(0, 0, 0, 0.65) 80%,
-                    rgba(0, 0, 0, 0.8) 100%);
-        }
-
-        @media (hover: hover) {
-            .category-card:hover::after {
-                background: linear-gradient(180deg,
-                        rgba(0, 0, 0, 0.05) 0%,
-                        rgba(0, 0, 0, 0.3) 40%,
-                        rgba(0, 0, 0, 0.7) 80%,
-                        rgba(0, 0, 0, 0.85) 100%);
-            }
-        }
-
-        .category-card .cat-image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
-            z-index: 1;
-            will-change: transform;
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-image {
-                transform: scale(1.06);
-            }
-        }
-
-        .category-card:active .cat-image {
-            transform: scale(1.02);
-            transition: transform 0.3s ease;
-        }
-
-        .category-card .cat-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 3;
-            padding: 24px;
-            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        @media (min-width: 768px) {
-            .category-card .cat-content {
-                padding: 32px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .category-card .cat-content {
-                padding: 40px;
-            }
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-content {
-                transform: translateY(-8px);
-            }
-        }
-
-        .category-card .cat-title {
-            font-size: 22px;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        .category-full-section .section-header .cat-section-title {
+            font-size: 32px;
+            color: var(--primary);
             font-family: var(--font-heading);
             font-weight: 700;
             letter-spacing: var(--tracking-tight);
         }
 
+        .category-full-section .section-header .cat-section-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .category-full-section .section-header .cat-section-link:hover {
+            gap: 8px;
+        }
+
+        .category-banner {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 48px;
+            isolation: isolate;
+        }
+
+        .category-banner .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+            will-change: transform;
+        }
+
+        @media (hover: hover) {
+            .category-banner:hover .banner-img {
+                transform: scale(1.05);
+            }
+        }
+
+        .category-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(0, 0, 0, 0.1) 50%,
+                    rgba(0, 0, 0, 0.5) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .category-banner .banner-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 3;
+            padding: 40px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .category-banner .banner-text h3 {
+            font-size: 36px;
+            color: #fff;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-banner .banner-text p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: var(--font-body);
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-banner .banner-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: #ffffff;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+            letter-spacing: var(--tracking-wide);
+            white-space: nowrap;
+        }
+
+        @media (hover: hover) {
+            .category-banner .banner-cta:hover {
+                background: var(--primary);
+                color: #fff;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .category-products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
         @media (min-width: 768px) {
-            .category-card .cat-title {
-                font-size: 28px;
-                margin-bottom: 20px;
+            .category-products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
             }
         }
 
         @media (min-width: 1024px) {
-            .category-card .cat-title {
-                font-size: 32px;
+            .category-products-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
             }
-        }
-
-        .category-card .cat-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #fff;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            text-decoration: none;
-            position: relative;
-            padding-bottom: 2px;
-            font-family: var(--font-body);
-            letter-spacing: var(--tracking-widest);
-        }
-
-        .category-card .cat-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: #fff;
-            transition: width 0.4s ease;
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-link::after {
-                width: 100%;
-            }
-        }
-
-        .category-card .cat-link .arrow-icon {
-            transition: transform 0.4s ease;
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-link .arrow-icon {
-                transform: translateX(4px);
-            }
-        }
-
-        .category-card:active .cat-link .arrow-icon {
-            transform: translateX(6px);
-            transition: transform 0.2s ease;
         }
 
         @media (max-width: 767px) {
+            .category-full-section {
+                padding: 40px 0;
+            }
+
+            .category-full-section .section-header {
+                padding: 0 20px;
+                margin-bottom: 24px;
+            }
+
+            .category-full-section .section-header .cat-section-title {
+                font-size: 22px;
+            }
+
+            .category-banner {
+                height: 300px;
+                margin-bottom: 32px;
+            }
+
+            .category-banner .banner-content {
+                padding: 24px;
+            }
+
+            .category-banner .banner-text h3 {
+                font-size: 24px;
+            }
+
+            .category-banner .banner-text p {
+                font-size: 13px;
+            }
+
+            .category-banner .banner-cta {
+                padding: 10px 20px;
+                font-size: 10px;
+            }
+
+            .category-products-grid {
+                padding: 0 20px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
             .carousel-container {
                 padding: 0 20px;
             }
@@ -1044,21 +973,15 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-
-            .category-card .cat-content {
-                padding: 20px;
-            }
-
-            .category-card .cat-title {
-                font-size: 18px;
-                margin-bottom: 12px;
-            }
         }
 
         @media (min-width: 1400px) {
             :root {
                 --card-width: 300px;
                 --card-gap: 20px;
+            }
+            .category-banner {
+                height: 600px;
             }
         }
 
@@ -1211,22 +1134,25 @@
 
         <section id="home" class="page-section active-page fade-in">
 
-            <!-- CATEGORIES SKELETON -->
-            <div id="categories-skeleton" class="categories-section skeleton-visible">
-                <div class="category-skeleton-grid" id="categories-skeleton-grid">
-                    <div class="category-skeleton-card skeleton"></div>
-                    <div class="category-skeleton-card skeleton"></div>
-                    <div class="category-skeleton-card skeleton" style="display:none;" data-lg-only></div>
+            <!-- DYNAMIC CATEGORY SECTIONS CONTAINER -->
+            <div id="category-sections-container">
+                <!-- CATEGORY SECTION SKELETON -->
+                <div id="category-section-skeleton-1" class="category-section-skeleton skeleton-visible">
+                    <div class="skeleton-header">
+                        <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
+                        <div class="skeleton skeleton-text" style="width:80px;margin-bottom:0;"></div>
+                    </div>
+                    <div class="category-skeleton-banner skeleton"></div>
+                    <div style="max-width:1400px;margin:32px auto 0;padding:0 40px;">
+                        <div class="carousel-skeleton-grid">
+                            <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                            <div class="carousel-skeleton-card"><div class="skeleton skeleton-card-image"></div><div style="padding:8px 4px;"><div class="skeleton skeleton-text-sm" style="width:40%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:30%;"></div></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- WORLD-CLASS CATEGORIES SECTION (ACTUAL) -->
-            <section id="categories-section" class="categories-section skeleton-hidden">
-
-                <div id="categories-grid" class="categories-grid">
-                    <!-- Dynamically populated by JS -->
-                </div>
-            </section>
 
             <!-- Carousel: New Arrivals -->
             <section id="new-arrivals-section" class="carousel-section skeleton-hidden">
@@ -1622,7 +1548,7 @@
 
     <script>
         // ============================================================
-        // JAYENWARE MAIN APPLICATION – SKELETON LOADER SYSTEM
+        // JAYENWARE MAIN APPLICATION – FULL-WIDTH CATEGORY SECTIONS
         // ============================================================
 
         // SKELETON MANAGEMENT
@@ -1630,7 +1556,6 @@
             'header': 'header-skeleton',
             'hero': 'hero-skeleton',
             'hero-secondary': 'hero-secondary-skeleton',
-            'categories': 'categories-skeleton',
             'new-arrivals': 'new-arrivals-skeleton',
             'hot-products': 'hot-products-skeleton',
             'featured-products': 'featured-products-skeleton',
@@ -1649,7 +1574,6 @@
                     el.classList.remove('skeleton-hidden');
                 }
             }
-            // Special cases for inline skeletons
             if (key === 'sidebar-categories') {
                 const skel = document.getElementById('sidebar-categories-skeleton');
                 if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
@@ -1677,7 +1601,6 @@
                     el.classList.remove('skeleton-visible');
                 }
             }
-            // Special cases for inline skeletons
             if (key === 'sidebar-categories') {
                 const skel = document.getElementById('sidebar-categories-skeleton');
                 if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
@@ -1793,62 +1716,68 @@
         }
 
         // ============================================================
-        // WORLD-CLASS CATEGORY CARDS – DIRECT DB LINKS, NO HARDCODED PREFIXES
+        // FULL-WIDTH CATEGORY SECTIONS (APPLE / NIKE STYLE)
         // ============================================================
-        function renderCategoryCards() {
-            const grid = document.getElementById('categories-grid');
-            const section = document.getElementById('categories-section');
-            if (!grid || !section) return;
+        function renderCategorySections() {
+            const container = document.getElementById('category-sections-container');
+            if (!container) return;
 
             if (!currentData.categories || currentData.categories.length === 0) {
-                section.classList.add('hidden');
-                hideSkeleton('categories');
+                container.innerHTML = '';
                 return;
             }
 
-            section.classList.remove('hidden');
-            section.classList.remove('skeleton-hidden');
-
-            grid.innerHTML = currentData.categories.map((cat, index) => {
+            let html = '';
+            currentData.categories.forEach((cat, index) => {
                 const catName = cat.name || '';
+                const catSlug = getCategorySlug(catName);
                 const imgSrc = cat.image_url || '';
+                const ctaTitle = cat.image_cta_title || 'Shop Now';
                 let ctaLink = cat.image_cta_link || '';
                 
                 if (!ctaLink) {
-                    ctaLink = '/category/' + getCategorySlug(catName);
+                    ctaLink = '/category/' + catSlug;
                 }
 
                 const isExternal = ctaLink.startsWith('http');
                 const externalAttrs = isExternal ? ' target="_blank" rel="noopener"' : '';
-                const ctaTitle = cat.image_cta_title || '';
-
-                const ctaHTML = ctaTitle ? `
-                <span class="cat-link">
-                    ${ctaTitle}
-                    <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>` : '';
-
                 let onClickAttr = '';
-                if (!isExternal) {
-                    if (ctaLink.startsWith('/category/')) {
-                        const catSlug = ctaLink.replace('/category/', '');
-                        onClickAttr = `onclick="event.preventDefault();navigateToCategory('${catSlug.replace(/'/g, "\\'")}')"`;
-                    }
+                if (!isExternal && ctaLink.startsWith('/category/')) {
+                    const slug = ctaLink.replace('/category/', '');
+                    onClickAttr = `onclick="event.preventDefault();navigateToCategory('${slug.replace(/'/g, "\\'")}')"`;
                 }
 
-                return `
-                <a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="category-card">
-                    ${imgSrc ? `<img src="${imgSrc}" alt="${catName}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
-                    <div class="cat-content">
-                        <h3 class="cat-title">${catName}</h3>
-                        ${ctaHTML}
-                    </div>
-                </a>`;
-            }).join('');
+                const catProducts = currentData.products.filter(p => p.category === catName).slice(0, 4);
 
-            hideSkeleton('categories');
+                const bgClass = index % 2 === 0 ? '' : 'style="background: #fafafa;"';
+
+                html += `
+                <section class="category-full-section" ${index % 2 !== 0 ? 'style="background: #fafafa;"' : ''}>
+                    <div class="section-header">
+                        <h2 class="cat-section-title">${catName}</h2>
+                        <a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="cat-section-link">
+                            View All →
+                        </a>
+                    </div>
+                    ${imgSrc ? `
+                    <a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="category-banner">
+                        <img src="${imgSrc}" alt="${catName}" class="banner-img" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">
+                        <div class="banner-content">
+                            <div class="banner-text">
+                                <h3>${catName}</h3>
+                                <p>Discover our ${catName.toLowerCase()} collection</p>
+                            </div>
+                            <span class="banner-cta">${ctaTitle} →</span>
+                        </div>
+                    </a>` : ''}
+                    <div class="category-products-grid">
+                        ${catProducts.map(p => productCard(p)).join('')}
+                        ${catProducts.length === 0 ? '<div class="col-span-full text-center py-8"><p class="text-sm text-accent">No products in this category yet</p></div>' : ''}
+                    </div>
+                </section>`;
+            });
+
+            container.innerHTML = html;
         }
 
         function navigateToCategory(categorySlug) {
@@ -2082,7 +2011,8 @@
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
 
-            renderCategoryCards();
+            // Render full-width category sections
+            renderCategorySections();
 
             const sections = [
                 { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
@@ -2262,13 +2192,8 @@
                 if (heroVideosData?.length) currentData.heroVideos = heroVideosData;
                 if (heroSecondaryData?.length) currentData.hero_secondary = heroSecondaryData;
 
-                // Hide hero skeleton when data is loaded
                 hideSkeleton('hero');
-                if (heroSecondaryData?.length) {
-                    hideSkeleton('hero-secondary');
-                } else {
-                    hideSkeleton('hero-secondary');
-                }
+                hideSkeleton('hero-secondary');
 
                 window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', {
                     detail: { hero: currentData.hero, heroVideos: currentData.heroVideos,
@@ -2281,14 +2206,12 @@
                 renderHomepageSections();
                 handleInitialRoute();
 
-                // Hide header and footer skeletons
                 hideSkeleton('header');
                 hideSkeleton('footer');
 
                 console.log('[App] Data loaded, skeletons hidden');
             } catch (err) {
                 console.error('[App] Error:', err);
-                // Hide skeletons even on error to show whatever loaded
                 hideAllSkeletons();
             }
         }
