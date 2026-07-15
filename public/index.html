@@ -328,34 +328,225 @@
             animation: skeletonPulse 1.8s infinite ease-in-out;
         }
 
-        /* ==================== CATEGORY CARDS SKELETON ==================== */
-        .category-skeleton-grid {
+        /* ==================== HOME SHOWCASE SKELETON ==================== */
+        .showcase-skeleton {
+            padding: 60px 0;
+            background: #ffffff;
+        }
+
+        .showcase-skeleton-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .showcase-skeleton-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0;
-        }
-
-        @media (min-width: 1024px) {
-            .category-skeleton-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 2px;
-            }
-        }
-
-        .category-skeleton-card {
-            aspect-ratio: 1/1;
-            animation: skeletonPulse 1.8s infinite ease-in-out;
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         @media (min-width: 768px) {
-            .category-skeleton-card {
-                aspect-ratio: 3/4;
+            .showcase-skeleton-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
             }
         }
 
         @media (min-width: 1024px) {
-            .category-skeleton-card {
-                aspect-ratio: 4/3;
+            .showcase-skeleton-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+        }
+
+        .showcase-skeleton-card {
+            text-align: center;
+        }
+
+        .showcase-skeleton-card .skeleton-circle {
+            width: 100%;
+            aspect-ratio: 1/1;
+            margin-bottom: 12px;
+        }
+
+        /* ==================== HOME SHOWCASE SECTION ==================== */
+        .home-showcase-section {
+            padding: 60px 0;
+            background: #ffffff;
+        }
+
+        @media (max-width: 767px) {
+            .home-showcase-section {
+                padding: 40px 0;
+            }
+        }
+
+        .showcase-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        @media (max-width: 767px) {
+            .showcase-container {
+                padding: 0 20px;
+            }
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .showcase-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-family: var(--font-body);
+        }
+
+        .showcase-subtitle {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-family: var(--font-heading);
+            letter-spacing: var(--tracking-tight);
+        }
+
+        @media (max-width: 767px) {
+            .showcase-subtitle {
+                font-size: 22px;
+            }
+        }
+
+        .showcase-gender-tabs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .showcase-gender-btn {
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-family: var(--font-body);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .showcase-gender-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .showcase-gender-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .showcase-gender-btn:active {
+            transform: translateY(0);
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .showcase-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .showcase-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+        }
+
+        .showcase-grid.fade-out {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .showcase-grid.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .showcase-item {
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .showcase-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .showcase-item:active {
+            transform: scale(0.96);
+        }
+
+        .showcase-item-image-wrapper {
+            position: relative;
+            aspect-ratio: 1/1;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: #f5f5f7;
+        }
+
+        .showcase-item-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .showcase-item:hover .showcase-item-image {
+            transform: scale(1.05);
+        }
+
+        .showcase-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 0;
+            line-height: 1.3;
+            font-family: var(--font-body);
+        }
+
+        @media (max-width: 767px) {
+            .showcase-item-title {
+                font-size: 12px;
             }
         }
 
@@ -804,212 +995,6 @@
             background: #ffffff;
         }
 
-        /* ==================== WORLD-CLASS CATEGORY SECTION ==================== */
-        .categories-section {
-            padding: 0;
-            background: #ffffff;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0;
-            max-width: 100%;
-            margin: 0;
-        }
-
-        @media (min-width: 768px) {
-            .categories-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2px;
-                background: #ffffff;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .categories-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 2px;
-            }
-        }
-
-        .category-card {
-            position: relative;
-            aspect-ratio: 1/1;
-            overflow: hidden;
-            cursor: pointer;
-            text-decoration: none;
-            color: #fff;
-            background: #1d1d1f;
-            isolation: isolate;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-
-        @media (min-width: 768px) {
-            .category-card {
-                aspect-ratio: 3/4;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .category-card {
-                aspect-ratio: 4/3;
-            }
-        }
-
-        .category-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0) 0%,
-                    rgba(0, 0, 0, 0.15) 40%,
-                    rgba(0, 0, 0, 0.55) 80%,
-                    rgba(0, 0, 0, 0.7) 100%);
-            z-index: 2;
-            transition: background 0.6s ease;
-        }
-
-        .category-card:active::after {
-            background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0.05) 0%,
-                    rgba(0, 0, 0, 0.25) 40%,
-                    rgba(0, 0, 0, 0.65) 80%,
-                    rgba(0, 0, 0, 0.8) 100%);
-        }
-
-        @media (hover: hover) {
-            .category-card:hover::after {
-                background: linear-gradient(180deg,
-                        rgba(0, 0, 0, 0.05) 0%,
-                        rgba(0, 0, 0, 0.3) 40%,
-                        rgba(0, 0, 0, 0.7) 80%,
-                        rgba(0, 0, 0, 0.85) 100%);
-            }
-        }
-
-        .category-card .cat-image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
-            z-index: 1;
-            will-change: transform;
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-image {
-                transform: scale(1.06);
-            }
-        }
-
-        .category-card:active .cat-image {
-            transform: scale(1.02);
-            transition: transform 0.3s ease;
-        }
-
-        .category-card .cat-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 3;
-            padding: 24px;
-            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        @media (min-width: 768px) {
-            .category-card .cat-content {
-                padding: 32px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .category-card .cat-content {
-                padding: 40px;
-            }
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-content {
-                transform: translateY(-8px);
-            }
-        }
-
-        .category-card .cat-title {
-            font-size: 22px;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            font-family: var(--font-heading);
-            font-weight: 700;
-            letter-spacing: var(--tracking-tight);
-        }
-
-        @media (min-width: 768px) {
-            .category-card .cat-title {
-                font-size: 28px;
-                margin-bottom: 20px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .category-card .cat-title {
-                font-size: 32px;
-            }
-        }
-
-        .category-card .cat-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #fff;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            text-decoration: none;
-            position: relative;
-            padding-bottom: 2px;
-            font-family: var(--font-body);
-            letter-spacing: var(--tracking-widest);
-        }
-
-        .category-card .cat-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: #fff;
-            transition: width 0.4s ease;
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-link::after {
-                width: 100%;
-            }
-        }
-
-        .category-card .cat-link .arrow-icon {
-            transition: transform 0.4s ease;
-        }
-
-        @media (hover: hover) {
-            .category-card:hover .cat-link .arrow-icon {
-                transform: translateX(4px);
-            }
-        }
-
-        .category-card:active .cat-link .arrow-icon {
-            transform: translateX(6px);
-            transition: transform 0.2s ease;
-        }
-
         @media (max-width: 767px) {
             .carousel-container {
                 padding: 0 20px;
@@ -1043,15 +1028,6 @@
                 right: 6px;
                 opacity: 1;
                 transform: translateY(0);
-            }
-
-            .category-card .cat-content {
-                padding: 20px;
-            }
-
-            .category-card .cat-title {
-                font-size: 18px;
-                margin-bottom: 12px;
             }
         }
 
@@ -1211,20 +1187,42 @@
 
         <section id="home" class="page-section active-page fade-in">
 
-            <!-- CATEGORIES SKELETON -->
-            <div id="categories-skeleton" class="categories-section skeleton-visible">
-                <div class="category-skeleton-grid" id="categories-skeleton-grid">
-                    <div class="category-skeleton-card skeleton"></div>
-                    <div class="category-skeleton-card skeleton"></div>
-                    <div class="category-skeleton-card skeleton" style="display:none;" data-lg-only></div>
+            <!-- HOME SHOWCASE SKELETON -->
+            <div id="home-showcase-skeleton" class="showcase-skeleton skeleton-visible">
+                <div class="showcase-skeleton-header">
+                    <div class="skeleton skeleton-text" style="width:200px;margin:0 auto 12px;"></div>
+                    <div class="skeleton skeleton-title" style="width:300px;margin:0 auto 16px;"></div>
+                    <div style="display:flex;gap:12px;justify-content:center;">
+                        <div class="skeleton" style="width:100px;height:44px;border-radius:50px;"></div>
+                        <div class="skeleton" style="width:100px;height:44px;border-radius:50px;"></div>
+                    </div>
+                </div>
+                <div class="showcase-skeleton-grid">
+                    <div class="showcase-skeleton-card"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div></div>
+                    <div class="showcase-skeleton-card"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div></div>
+                    <div class="showcase-skeleton-card"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div></div>
+                    <div class="showcase-skeleton-card"><div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div></div>
                 </div>
             </div>
 
-            <!-- WORLD-CLASS CATEGORIES SECTION (ACTUAL) -->
-            <section id="categories-section" class="categories-section skeleton-hidden">
-
-                <div id="categories-grid" class="categories-grid">
-                    <!-- Dynamically populated by JS -->
+            <!-- HOME SHOWCASE SECTION (ACTUAL) -->
+            <section id="home-showcase-section" class="home-showcase-section skeleton-hidden">
+                <div class="showcase-container">
+                    <div class="showcase-header">
+                        <p class="showcase-title" id="showcase-title">Discover Our Collection</p>
+                        <h2 class="showcase-subtitle" id="showcase-subtitle">Shop by Category</h2>
+                        <div class="showcase-gender-tabs">
+                            <button class="showcase-gender-btn active" data-gender="Men" onclick="switchShowcaseGender('Men')">
+                                Men
+                            </button>
+                            <button class="showcase-gender-btn" data-gender="Women" onclick="switchShowcaseGender('Women')">
+                                Women
+                            </button>
+                        </div>
+                    </div>
+                    <div id="showcase-grid" class="showcase-grid fade-in">
+                        <!-- Dynamically populated by JS -->
+                    </div>
                 </div>
             </section>
 
@@ -1630,7 +1628,7 @@
             'header': 'header-skeleton',
             'hero': 'hero-skeleton',
             'hero-secondary': 'hero-secondary-skeleton',
-            'categories': 'categories-skeleton',
+            'home-showcase': 'home-showcase-skeleton',
             'new-arrivals': 'new-arrivals-skeleton',
             'hot-products': 'hot-products-skeleton',
             'featured-products': 'featured-products-skeleton',
@@ -1709,9 +1707,11 @@
             news: [],
             hero: [],
             heroVideos: [],
-            hero_secondary: []
+            hero_secondary: [],
+            homeShowcase: { header: null, men: [], women: [] }
         };
 
+        let currentShowcaseGender = 'Men';
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
         let productsDisplayLimit = 12;
         const productsLoadMoreIncrement = 12;
@@ -1793,62 +1793,58 @@
         }
 
         // ============================================================
-        // WORLD-CLASS CATEGORY CARDS – DIRECT DB LINKS, NO HARDCODED PREFIXES
+        // HOME SHOWCASE SECTION
         // ============================================================
-        function renderCategoryCards() {
-            const grid = document.getElementById('categories-grid');
-            const section = document.getElementById('categories-section');
+        function switchShowcaseGender(gender) {
+            currentShowcaseGender = gender;
+            
+            // Update button states
+            document.querySelectorAll('.showcase-gender-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.gender === gender);
+            });
+            
+            renderShowcaseGrid();
+        }
+
+        function renderShowcaseGrid() {
+            const grid = document.getElementById('showcase-grid');
+            const section = document.getElementById('home-showcase-section');
             if (!grid || !section) return;
 
-            if (!currentData.categories || currentData.categories.length === 0) {
+            const items = currentShowcaseGender === 'Men' 
+                ? currentData.homeShowcase.men 
+                : currentData.homeShowcase.women;
+
+            if (!items || items.length === 0) {
                 section.classList.add('hidden');
-                hideSkeleton('categories');
                 return;
             }
 
-            section.classList.remove('hidden');
-            section.classList.remove('skeleton-hidden');
+            section.classList.remove('hidden', 'skeleton-hidden');
 
-            grid.innerHTML = currentData.categories.map((cat, index) => {
-                const catName = cat.name || '';
-                const imgSrc = cat.image_url || '';
-                let ctaLink = cat.image_cta_link || '';
+            // Add fade effect
+            grid.classList.add('fade-out');
+            grid.classList.remove('fade-in');
+            
+            setTimeout(() => {
+                grid.innerHTML = items.map(item => {
+                    const catSlug = item.category_slug || getCategorySlug(item.category_name || '');
+                    const imgSrc = item.category_image || item.image_url || '';
+                    
+                    return `
+                    <a href="/category/${catSlug}" onclick="event.preventDefault();navigateToCategory('${catSlug.replace(/'/g, "\\'")}')" class="showcase-item">
+                        <div class="showcase-item-image-wrapper">
+                            <img src="${imgSrc}" alt="${item.category_name}" class="showcase-item-image" loading="lazy" onerror="this.style.opacity='0.3'">
+                        </div>
+                        <h3 class="showcase-item-title">${item.category_name}</h3>
+                    </a>`;
+                }).join('');
                 
-                if (!ctaLink) {
-                    ctaLink = '/category/' + getCategorySlug(catName);
-                }
+                grid.classList.remove('fade-out');
+                grid.classList.add('fade-in');
+            }, 150);
 
-                const isExternal = ctaLink.startsWith('http');
-                const externalAttrs = isExternal ? ' target="_blank" rel="noopener"' : '';
-                const ctaTitle = cat.image_cta_title || '';
-
-                const ctaHTML = ctaTitle ? `
-                <span class="cat-link">
-                    ${ctaTitle}
-                    <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>` : '';
-
-                let onClickAttr = '';
-                if (!isExternal) {
-                    if (ctaLink.startsWith('/category/')) {
-                        const catSlug = ctaLink.replace('/category/', '');
-                        onClickAttr = `onclick="event.preventDefault();navigateToCategory('${catSlug.replace(/'/g, "\\'")}')"`;
-                    }
-                }
-
-                return `
-                <a href="${ctaLink}" ${externalAttrs} ${onClickAttr} class="category-card">
-                    ${imgSrc ? `<img src="${imgSrc}" alt="${catName}" class="cat-image" loading="${index < 2 ? 'eager' : 'lazy'}" onerror="this.style.opacity='0'">` : ''}
-                    <div class="cat-content">
-                        <h3 class="cat-title">${catName}</h3>
-                        ${ctaHTML}
-                    </div>
-                </a>`;
-            }).join('');
-
-            hideSkeleton('categories');
+            hideSkeleton('home-showcase');
         }
 
         function navigateToCategory(categorySlug) {
@@ -2082,7 +2078,16 @@
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
 
-            renderCategoryCards();
+            // Render Home Showcase
+            renderShowcaseGrid();
+
+            // Update showcase header if available
+            if (currentData.homeShowcase.header) {
+                const titleEl = document.getElementById('showcase-title');
+                const subtitleEl = document.getElementById('showcase-subtitle');
+                if (titleEl) titleEl.textContent = currentData.homeShowcase.header.title || 'Discover Our Collection';
+                if (subtitleEl) subtitleEl.textContent = currentData.homeShowcase.header.subtitle || 'Shop by Category';
+            }
 
             const sections = [
                 { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
@@ -2246,13 +2251,14 @@
 
         async function loadData() {
             try {
-                const [hero, cats, prods, newsData, heroVideosData, heroSecondaryData] = await Promise.all([
+                const [hero, cats, prods, newsData, heroVideosData, heroSecondaryData, homeShowcaseData] = await Promise.all([
                     fetchAPI('/api/hero'),
                     fetchAPI('/api/categories'),
                     fetchAPI('/api/products'),
                     fetchAPI('/api/news'),
                     fetchAPI('/api/hero-videos'),
-                    fetchAPI('/api/hero-secondary')
+                    fetchAPI('/api/hero-secondary'),
+                    fetchAPI('/api/home-showcase/grouped')
                 ]);
 
                 if (hero?.length) currentData.hero = hero;
@@ -2261,6 +2267,7 @@
                 if (newsData) currentData.news = newsData;
                 if (heroVideosData?.length) currentData.heroVideos = heroVideosData;
                 if (heroSecondaryData?.length) currentData.hero_secondary = heroSecondaryData;
+                if (homeShowcaseData) currentData.homeShowcase = homeShowcaseData;
 
                 // Hide hero skeleton when data is loaded
                 hideSkeleton('hero');
