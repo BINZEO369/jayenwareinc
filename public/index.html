@@ -178,14 +178,24 @@
 
         /* ==================== SKELETON LOADER STYLES ==================== */
         @keyframes skeletonPulse {
-            0% { background-color: var(--skeleton-base); }
-            50% { background-color: var(--skeleton-shine); }
-            100% { background-color: var(--skeleton-base); }
+            0% {
+                background-color: var(--skeleton-base);
+            }
+            50% {
+                background-color: var(--skeleton-shine);
+            }
+            100% {
+                background-color: var(--skeleton-base);
+            }
         }
 
         @keyframes skeletonShimmer {
-            0% { background-position: -468px 0; }
-            100% { background-position: 468px 0; }
+            0% {
+                background-position: -468px 0;
+            }
+            100% {
+                background-position: 468px 0;
+            }
         }
 
         .skeleton {
@@ -197,12 +207,31 @@
             overflow: hidden;
         }
 
-        .skeleton-circle { border-radius: 50%; }
-        .skeleton-text { height: 14px; margin-bottom: 8px; }
-        .skeleton-text-sm { height: 10px; margin-bottom: 6px; }
-        .skeleton-text-lg { height: 18px; margin-bottom: 10px; }
-        .skeleton-title { height: 24px; margin-bottom: 12px; width: 60%; }
-        
+        .skeleton-circle {
+            border-radius: 50%;
+        }
+
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-text-sm {
+            height: 10px;
+            margin-bottom: 6px;
+        }
+
+        .skeleton-text-lg {
+            height: 18px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            margin-bottom: 12px;
+            width: 60%;
+        }
+
         .skeleton-card {
             background: #ffffff;
             border-radius: 8px;
@@ -215,9 +244,17 @@
             animation: skeletonPulse 1.8s infinite ease-in-out;
         }
 
-        .skeleton-card-body { padding: 12px 8px; }
-        .skeleton-hidden { display: none !important; }
-        .skeleton-visible { display: block !important; }
+        .skeleton-card-body {
+            padding: 12px 8px;
+        }
+
+        .skeleton-hidden {
+            display: none !important;
+        }
+
+        .skeleton-visible {
+            display: block !important;
+        }
 
         .content-loaded {
             visibility: visible;
@@ -292,70 +329,305 @@
         }
 
         /* ==================== SHOWCASE SKELETON ==================== */
-        .showcase-skeleton {
-            padding: 40px 20px;
+        .showcase-skeleton-section {
+            padding: 60px 0;
             background: #ffffff;
         }
 
         .showcase-skeleton-header {
             text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .showcase-skeleton-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .showcase-skeleton-tab {
-            width: 100px;
-            height: 40px;
-            border-radius: 50px;
-            animation: skeletonPulse 1.8s infinite ease-in-out;
+            margin-bottom: 48px;
+            padding: 0 20px;
         }
 
         .showcase-skeleton-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            max-width: 1200px;
+            gap: 16px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         @media (min-width: 768px) {
             .showcase-skeleton-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
+                gap: 20px;
+                padding: 0 40px;
             }
         }
 
         @media (min-width: 1024px) {
             .showcase-skeleton-grid {
                 grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
+                gap: 24px;
+                padding: 0 60px;
             }
         }
 
         .showcase-skeleton-card {
-            border-radius: 12px;
+            aspect-ratio: 3/4;
+            animation: skeletonPulse 1.8s infinite ease-in-out;
+            border-radius: 8px;
+        }
+
+        /* ==================== SHOWCASE SECTION STYLES ==================== */
+        .showcase-section {
+            padding: 80px 0;
+            background: #ffffff;
+        }
+
+        .showcase-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .showcase-header .showcase-title {
+            font-size: 36px;
+            color: var(--primary);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: var(--tracking-tight);
+            margin-bottom: 12px;
+        }
+
+        .showcase-header .showcase-subtitle {
+            font-size: 16px;
+            color: var(--accent);
+            font-family: var(--font-body);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .showcase-gender-section {
+            margin-bottom: 60px;
+        }
+
+        .showcase-gender-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .showcase-gender-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin-bottom: 32px;
+            text-align: center;
+            font-family: var(--font-body);
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .showcase-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .showcase-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+        }
+
+        .showcase-card {
+            position: relative;
+            aspect-ratio: 3/4;
             overflow: hidden;
-            background: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+            background: #1d1d1f;
+            border-radius: 8px;
+            isolation: isolate;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.4s ease;
         }
 
-        .showcase-skeleton-card-image {
+        @media (hover: hover) {
+            .showcase-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        .showcase-card:active {
+            transform: scale(0.97);
+            transition: transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .showcase-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(0, 0, 0, 0.1) 35%,
+                    rgba(0, 0, 0, 0.5) 75%,
+                    rgba(0, 0, 0, 0.7) 100%);
+            z-index: 2;
+            transition: background 0.5s ease;
+        }
+
+        @media (hover: hover) {
+            .showcase-card:hover::after {
+                background: linear-gradient(180deg,
+                        rgba(0, 0, 0, 0.05) 0%,
+                        rgba(0, 0, 0, 0.25) 35%,
+                        rgba(0, 0, 0, 0.6) 75%,
+                        rgba(0, 0, 0, 0.8) 100%);
+            }
+        }
+
+        .showcase-card .showcase-image {
+            position: absolute;
+            inset: 0;
             width: 100%;
-            aspect-ratio: 1/1;
-            animation: skeletonPulse 1.8s infinite ease-in-out;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 1;
+            will-change: transform;
         }
 
-        .showcase-skeleton-card-text {
-            height: 14px;
-            width: 60%;
-            margin: 10px auto;
-            animation: skeletonPulse 1.8s infinite ease-in-out;
-            border-radius: 4px;
+        @media (hover: hover) {
+            .showcase-card:hover .showcase-image {
+                transform: scale(1.08);
+            }
+        }
+
+        .showcase-card .showcase-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 3;
+            padding: 24px;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        @media (hover: hover) {
+            .showcase-card:hover .showcase-content {
+                transform: translateY(-6px);
+            }
+        }
+
+        .showcase-card .showcase-category-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            display: block;
+            opacity: 0.9;
+        }
+
+        .showcase-card .showcase-category-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            font-family: var(--font-heading);
+            letter-spacing: var(--tracking-tight);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (min-width: 768px) {
+            .showcase-card .showcase-category-name {
+                font-size: 20px;
+            }
+        }
+
+        .showcase-card .showcase-explore {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: var(--font-body);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease 0.1s;
+        }
+
+        @media (hover: hover) {
+            .showcase-card:hover .showcase-explore {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .showcase-card .showcase-explore .explore-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        @media (hover: hover) {
+            .showcase-card:hover .showcase-explore .explore-arrow {
+                transform: translateX(3px);
+            }
+        }
+
+        .showcase-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--accent);
+            font-size: 14px;
+            font-family: var(--font-body);
+        }
+
+        @media (max-width: 767px) {
+            .showcase-section {
+                padding: 48px 0;
+            }
+
+            .showcase-header {
+                margin-bottom: 36px;
+            }
+
+            .showcase-header .showcase-title {
+                font-size: 26px;
+            }
+
+            .showcase-header .showcase-subtitle {
+                font-size: 14px;
+                padding: 0 10px;
+            }
+
+            .showcase-card .showcase-content {
+                padding: 16px;
+            }
+
+            .showcase-card .showcase-category-name {
+                font-size: 16px;
+            }
+
+            .showcase-card .showcase-explore {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .showcase-container {
+                padding: 0 60px;
+            }
         }
 
         /* ==================== CAROUSEL SKELETON ==================== */
@@ -475,9 +747,17 @@
             touch-action: pan-x pan-y;
         }
 
-        .carousel-track::-webkit-scrollbar { display: none; }
-        .carousel-track:active { cursor: grabbing; }
-        .carousel-track.dragging { scroll-behavior: auto; }
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-track:active {
+            cursor: grabbing;
+        }
+
+        .carousel-track.dragging {
+            scroll-behavior: auto;
+        }
 
         /* Product Card - Enhanced Touch Feedback */
         .carousel-card {
@@ -502,8 +782,12 @@
         }
 
         @media (hover: hover) {
-            .carousel-card:hover { transform: translateY(-2px); }
-            .carousel-card:active { transform: scale(0.98); }
+            .carousel-card:hover {
+                transform: translateY(-2px);
+            }
+            .carousel-card:active {
+                transform: scale(0.98);
+            }
         }
 
         .carousel-card .card-img {
@@ -523,7 +807,9 @@
         }
 
         @media (hover: hover) {
-            .carousel-card:hover .card-img img { transform: scale(1.03); }
+            .carousel-card:hover .card-img img {
+                transform: scale(1.03);
+            }
         }
 
         .carousel-card .card-body {
@@ -587,7 +873,9 @@
             letter-spacing: var(--tracking-wide);
         }
 
-        .badge-sale { color: #d70015 !important; }
+        .badge-sale {
+            color: #d70015 !important;
+        }
 
         /* Quick Add Button - Mobile Optimized */
         .carousel-card .card-add-btn {
@@ -682,8 +970,12 @@
         }
 
         @media (hover: hover) {
-            .carousel-nav { opacity: 0; }
-            .carousel-wrapper:hover .carousel-nav { opacity: 1; }
+            .carousel-nav {
+                opacity: 0;
+            }
+            .carousel-wrapper:hover .carousel-nav {
+                opacity: 1;
+            }
             .carousel-nav:hover {
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                 transform: translateY(-50%) scale(1.05);
@@ -696,8 +988,13 @@
             background: #f5f5f7;
         }
 
-        .carousel-nav.prev { left: -20px; }
-        .carousel-nav.next { right: -20px; }
+        .carousel-nav.prev {
+            left: -20px;
+        }
+
+        .carousel-nav.next {
+            right: -20px;
+        }
 
         /* Scroll Progress Indicator - Mobile Only */
         .scroll-progress {
@@ -716,211 +1013,47 @@
             transition: width 0.1s ease;
         }
 
-        /* ==================== SHOWCASE SECTION STYLES ==================== */
-        .showcase-section {
-            padding: 40px 0 60px;
-            background: #ffffff;
-        }
-
-        .showcase-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .showcase-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .showcase-header .showcase-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: var(--font-body);
-        }
-
-        .showcase-header .showcase-subtitle {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 8px;
-            font-family: var(--font-heading);
-            letter-spacing: var(--tracking-tight);
-        }
-
-        @media (min-width: 768px) {
-            .showcase-header .showcase-subtitle {
-                font-size: 36px;
-            }
-        }
-
-        /* Gender Tabs */
-        .showcase-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 36px;
-        }
-
-        .showcase-tab {
-            padding: 12px 36px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid #e5e5ea;
-            background: #ffffff;
-            color: var(--accent);
-            font-family: var(--font-body);
-            letter-spacing: 0.5px;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .showcase-tab.active {
-            background: var(--primary);
-            color: #ffffff;
-            border-color: var(--primary);
-        }
-
-        .showcase-tab:hover:not(.active) {
-            border-color: #c5c5ca;
-            color: var(--primary);
-        }
-
-        .showcase-tab:active {
-            transform: scale(0.96);
-            transition: transform 0.1s ease;
-        }
-
-        @media (max-width: 480px) {
-            .showcase-tab {
-                padding: 10px 28px;
-                font-size: 13px;
-            }
-        }
-
-        /* Category Cards Grid */
-        .showcase-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        @media (min-width: 640px) {
-            .showcase-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .showcase-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
-            }
-        }
-
-        @media (min-width: 1400px) {
-            .showcase-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 24px;
-            }
-        }
-
-        .showcase-card {
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #fafafa;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        @media (hover: hover) {
-            .showcase-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            }
-        }
-
-        .showcase-card:active {
-            transform: scale(0.97);
-            transition: transform 0.1s ease;
-        }
-
-        .showcase-card-image {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            display: block;
-            background: #f0f0f0;
-        }
-
-        .showcase-card-body {
-            padding: 12px 10px;
-            text-align: center;
-            background: #ffffff;
-        }
-
-        .showcase-card-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary);
-            margin: 0;
-            line-height: 1.3;
-            font-family: var(--font-body);
-        }
-
-        @media (max-width: 480px) {
-            .showcase-card-body {
-                padding: 10px 8px;
-            }
-            .showcase-card-title {
-                font-size: 12px;
-            }
-        }
-
-        /* Empty State */
-        .showcase-empty {
-            text-align: center;
-            padding: 48px 20px;
-            color: var(--accent);
-        }
-
-        .showcase-empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.4;
-        }
-
-        .showcase-empty-text {
-            font-size: 14px;
-            font-family: var(--font-body);
-        }
-
         /* ==================== LIMITED EDITION DARK SECTION FIX ==================== */
-        #limited-edition-section .carousel-card .card-title { color: #ffffff; }
-        #limited-edition-section .carousel-card .card-price { color: #ffffff; }
-        #limited-edition-section .carousel-card .card-old-price { color: #a1a1a6; }
-        #limited-edition-section .carousel-card .card-category { color: #a1a1a6; }
-        #limited-edition-section .carousel-card .card-badge { background: #2d2d2f; color: #ffffff; }
-        #limited-edition-section .carousel-card .card-badge.badge-sale { color: #ff6b6b !important; }
-        #limited-edition-section .carousel-card .card-soldout-overlay span { background: #ffffff; color: #1d1d1f; }
-        #limited-edition-section .carousel-card .card-img { background: #2d2d2f; }
+        #limited-edition-section .carousel-card .card-title {
+            color: #ffffff;
+        }
+
+        #limited-edition-section .carousel-card .card-price {
+            color: #ffffff;
+        }
+
+        #limited-edition-section .carousel-card .card-old-price {
+            color: #a1a1a6;
+        }
+
+        #limited-edition-section .carousel-card .card-category {
+            color: #a1a1a6;
+        }
+
+        #limited-edition-section .carousel-card .card-badge {
+            background: #2d2d2f;
+            color: #ffffff;
+        }
+
+        #limited-edition-section .carousel-card .card-badge.badge-sale {
+            color: #ff6b6b !important;
+        }
+
+        #limited-edition-section .carousel-card .card-soldout-overlay span {
+            background: #ffffff;
+            color: #1d1d1f;
+        }
+
+        #limited-edition-section .carousel-card .card-img {
+            background: #2d2d2f;
+        }
+
         #limited-edition-section .carousel-card .card-add-btn {
             background: rgba(255, 255, 255, 0.9);
             color: #1d1d1f;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         @media (hover: hover) {
             #limited-edition-section .carousel-card .card-add-btn:hover {
                 background: #ffffff;
@@ -928,17 +1061,46 @@
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
             }
         }
-        #limited-edition-section .carousel-card .card-add-btn:active { background: #ffffff; color: #1d1d1f; }
-        #limited-edition-section .scroll-progress { background: rgba(255, 255, 255, 0.2); }
-        #limited-edition-section .scroll-progress-bar { background: #ffffff; }
+
+        #limited-edition-section .carousel-card .card-add-btn:active {
+            background: #ffffff;
+            color: #1d1d1f;
+        }
+
+        #limited-edition-section .scroll-progress {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #limited-edition-section .scroll-progress-bar {
+            background: #ffffff;
+        }
 
         @media (max-width: 767px) {
-            .carousel-container { padding: 0 20px; }
-            .carousel-section { padding: 32px 0; }
-            .carousel-header .section-title { font-size: 22px; }
-            .carousel-nav { display: none; }
-            :root { --card-width: 220px; --card-gap: 12px; }
-            .scroll-progress { display: block; }
+            .carousel-container {
+                padding: 0 20px;
+            }
+
+            .carousel-section {
+                padding: 32px 0;
+            }
+
+            .carousel-header .section-title {
+                font-size: 22px;
+            }
+
+            .carousel-nav {
+                display: none;
+            }
+
+            :root {
+                --card-width: 220px;
+                --card-gap: 12px;
+            }
+
+            .scroll-progress {
+                display: block;
+            }
+
             .carousel-card .card-add-btn {
                 width: 32px;
                 height: 32px;
@@ -947,13 +1109,13 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-            .showcase-section { padding: 32px 0 48px; }
-            .showcase-header .showcase-subtitle { font-size: 22px; }
-            .showcase-tabs { margin-bottom: 24px; }
         }
 
         @media (min-width: 1400px) {
-            :root { --card-width: 300px; --card-gap: 20px; }
+            :root {
+                --card-width: 300px;
+                --card-gap: 20px;
+            }
         }
 
         /* Cookie Consent */
@@ -971,7 +1133,9 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .cookie-consent-overlay.show { transform: translateY(0); }
+        .cookie-consent-overlay.show {
+            transform: translateY(0);
+        }
 
         .cookie-banner {
             max-width: 1200px;
@@ -995,11 +1159,38 @@
             flex-shrink: 0;
         }
 
-        .cookie-text { flex: 1; min-width: 200px; color: white; }
-        .cookie-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: #fff; font-family: var(--font-body); }
-        .cookie-text p { font-size: 11px; color: #a1a1a6; line-height: 1.4; margin: 0; font-family: var(--font-body); }
-        .cookie-text a { color: #007aff; text-decoration: underline; }
-        .cookie-buttons { display: flex; gap: 10px; flex-shrink: 0; }
+        .cookie-text {
+            flex: 1;
+            min-width: 200px;
+            color: white;
+        }
+
+        .cookie-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+            font-family: var(--font-body);
+        }
+
+        .cookie-text p {
+            font-size: 11px;
+            color: #a1a1a6;
+            line-height: 1.4;
+            margin: 0;
+            font-family: var(--font-body);
+        }
+
+        .cookie-text a {
+            color: #007aff;
+            text-decoration: underline;
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
 
         .cookie-btn {
             padding: 10px 24px;
@@ -1016,13 +1207,33 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .cookie-btn.accept { background: #007aff; color: white; }
-        .cookie-btn.decline { background: transparent; color: #a1a1a6; border: 1px solid #48484a; }
+        .cookie-btn.accept {
+            background: #007aff;
+            color: white;
+        }
+
+        .cookie-btn.decline {
+            background: transparent;
+            color: #a1a1a6;
+            border: 1px solid #48484a;
+        }
 
         @media (max-width: 768px) {
-            .cookie-banner { flex-direction: column; padding: 16px; text-align: center; }
-            .cookie-buttons { width: 100%; flex-direction: column; }
-            .cookie-btn { width: 100%; text-align: center; }
+            .cookie-banner {
+                flex-direction: column;
+                padding: 16px;
+                text-align: center;
+            }
+
+            .cookie-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .cookie-btn {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -1056,66 +1267,41 @@
 
         <section id="home" class="page-section active-page fade-in">
 
-            <!-- ==================== SHOWCASE SKELETON ==================== -->
-            <div id="showcase-skeleton" class="showcase-skeleton skeleton-visible">
+            <!-- SHOWCASE SKELETON -->
+            <div id="showcase-skeleton" class="showcase-skeleton-section skeleton-visible">
                 <div class="showcase-skeleton-header">
-                    <div class="skeleton skeleton-text-sm" style="width:120px;margin:0 auto 8px;"></div>
-                    <div class="skeleton skeleton-title" style="width:200px;margin:0 auto;"></div>
-                </div>
-                <div class="showcase-skeleton-tabs">
-                    <div class="showcase-skeleton-tab"></div>
-                    <div class="showcase-skeleton-tab"></div>
+                    <div class="skeleton skeleton-title" style="width:200px;margin:0 auto 8px;"></div>
+                    <div class="skeleton skeleton-text" style="width:300px;margin:0 auto;"></div>
                 </div>
                 <div class="showcase-skeleton-grid">
-                    <div class="showcase-skeleton-card">
-                        <div class="showcase-skeleton-card-image"></div>
-                        <div class="showcase-skeleton-card-text"></div>
-                    </div>
-                    <div class="showcase-skeleton-card">
-                        <div class="showcase-skeleton-card-image"></div>
-                        <div class="showcase-skeleton-card-text"></div>
-                    </div>
-                    <div class="showcase-skeleton-card">
-                        <div class="showcase-skeleton-card-image"></div>
-                        <div class="showcase-skeleton-card-text"></div>
-                    </div>
-                    <div class="showcase-skeleton-card">
-                        <div class="showcase-skeleton-card-image"></div>
-                        <div class="showcase-skeleton-card-text"></div>
-                    </div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
+                    <div class="showcase-skeleton-card skeleton"></div>
                 </div>
             </div>
 
-            <!-- ==================== SHOWCASE SECTION (ACTUAL) ==================== -->
+            <!-- SHOWCASE SECTION (ACTUAL) -->
             <section id="showcase-section" class="showcase-section skeleton-hidden">
                 <div class="showcase-container">
-                    <!-- Header -->
-                    <div class="showcase-header" id="showcase-header">
-                        <span class="showcase-title" id="showcase-header-title">Discover</span>
-                        <h2 class="showcase-subtitle" id="showcase-header-subtitle">Shop by Category</h2>
-                    </div>
-
-                    <!-- Gender Tabs -->
-                    <div class="showcase-tabs" id="showcase-tabs">
-                        <button class="showcase-tab active" data-gender="men" onclick="switchShowcaseTab('men')">
-                            Men
-                        </button>
-                        <button class="showcase-tab" data-gender="women" onclick="switchShowcaseTab('women')">
-                            Women
-                        </button>
-                    </div>
-
-                    <!-- Category Cards Grid -->
-                    <div class="showcase-grid" id="showcase-grid">
+                    <div id="showcase-header-content" class="showcase-header">
                         <!-- Dynamically populated -->
                     </div>
-
-                    <!-- Empty State -->
-                    <div class="showcase-empty hidden" id="showcase-empty">
-                        <div class="showcase-empty-icon">
-                            <i class="fa-solid fa-cubes"></i>
+                    <div id="showcase-men-section" class="showcase-gender-section">
+                        <h3 id="showcase-men-title" class="showcase-gender-title">Men</h3>
+                        <div id="showcase-men-grid" class="showcase-grid">
+                            <!-- Dynamically populated -->
                         </div>
-                        <p class="showcase-empty-text">No categories available</p>
+                    </div>
+                    <div id="showcase-women-section" class="showcase-gender-section">
+                        <h3 id="showcase-women-title" class="showcase-gender-title">Women</h3>
+                        <div id="showcase-women-grid" class="showcase-grid">
+                            <!-- Dynamically populated -->
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1498,7 +1684,7 @@
         <div class="cookie-banner">
             <div class="cookie-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                 </svg>
             </div>
             <div class="cookie-text">
@@ -1541,6 +1727,7 @@
                     el.classList.remove('skeleton-hidden');
                 }
             }
+            // Special cases for inline skeletons
             if (key === 'sidebar-categories') {
                 const skel = document.getElementById('sidebar-categories-skeleton');
                 if (skel) { skel.classList.add('skeleton-visible'); skel.classList.remove('skeleton-hidden'); }
@@ -1568,6 +1755,7 @@
                     el.classList.remove('skeleton-visible');
                 }
             }
+            // Special cases for inline skeletons
             if (key === 'sidebar-categories') {
                 const skel = document.getElementById('sidebar-categories-skeleton');
                 if (skel) { skel.classList.add('skeleton-hidden'); skel.classList.remove('skeleton-visible'); }
@@ -1600,13 +1788,12 @@
             hero: [],
             heroVideos: [],
             hero_secondary: [],
-            showcase: { header: null, men: [], women: [] }
+            showcaseData: null
         };
 
         let currentFilters = { cat: 'all', minPrice: null, maxPrice: null };
         let productsDisplayLimit = 12;
         const productsLoadMoreIncrement = 12;
-        let currentShowcaseGender = 'men';
 
         async function fetchAPI(endpoint) {
             try {
@@ -1615,17 +1802,19 @@
                 return await res.json();
             } catch (e) {
                 console.error('Fetch error:', e);
-                return [];
+                return null;
             }
         }
 
         function getCategorySlug(c) {
             if (!c) return '';
-            return c.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+            if (typeof c === 'string') return c.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+            return (c.slug || c.name || '').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
         }
 
         function getProductSlug(p) {
-            return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+            return (p.slug || p.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(
+                /^-+|-+$/g, '');
         }
 
         function updateURL(path, title = '') {
@@ -1674,92 +1863,111 @@
             const container = document.getElementById('sidebar-categories');
             if (!container) return;
 
-            let html = `<a href="/products" onclick="event.preventDefault();filterByCategory('all')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</a>`;
+            let html =
+                `<a href="/products" onclick="event.preventDefault();filterByCategory('all')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat==='all'?'bg-primary text-white':''}">All</a>`;
             html += currentData.categories.map(c =>
-                `<a href="/products?category=${getCategorySlug(c.name)}" onclick="event.preventDefault();filterByCategory('${c.name}')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</a>`
+                `<a href="/products?category=${getCategorySlug(c)}" onclick="event.preventDefault();filterByCategory('${c.name}')" class="block w-full text-left py-2 px-3 rounded-lg text-[10px] sm:text-xs font-semibold hover:bg-gray-50 transition no-underline text-primary ${currentFilters.cat===c.name?'bg-primary text-white':''}">${c.name}</a>`
             ).join('');
             container.innerHTML = html;
             hideSkeleton('sidebar-categories');
         }
 
         // ============================================================
-        // NEW SHOWCASE SECTION RENDERING (MEN/WOMEN TABS)
+        // SHOWCASE RENDERER – Uses /api/showcase endpoint
         // ============================================================
         function renderShowcase() {
             const section = document.getElementById('showcase-section');
-            const grid = document.getElementById('showcase-grid');
-            const empty = document.getElementById('showcase-empty');
-            const headerTitle = document.getElementById('showcase-header-title');
-            const headerSubtitle = document.getElementById('showcase-header-subtitle');
-            const tabsContainer = document.getElementById('showcase-tabs');
+            const headerContent = document.getElementById('showcase-header-content');
+            const menGrid = document.getElementById('showcase-men-grid');
+            const womenGrid = document.getElementById('showcase-women-grid');
+            const menSection = document.getElementById('showcase-men-section');
+            const womenSection = document.getElementById('showcase-women-section');
 
-            if (!section || !grid) return;
+            if (!section || !menGrid || !womenGrid) return;
 
-            // Update header from showcase data
-            if (currentData.showcase.header) {
-                if (headerTitle) headerTitle.textContent = currentData.showcase.header.title || 'Discover';
-                if (headerSubtitle) headerSubtitle.textContent = currentData.showcase.header.subtitle || 'Shop by Category';
-                if (tabsContainer) tabsContainer.style.display = 'flex';
-            } else {
-                if (headerTitle) headerTitle.textContent = 'Discover';
-                if (headerSubtitle) headerSubtitle.textContent = 'Shop by Category';
-            }
+            const showcase = currentData.showcaseData;
 
-            // Show the section
-            section.classList.remove('hidden', 'skeleton-hidden');
-            hideSkeleton('showcase');
-
-            // Render current tab
-            renderShowcaseTab(currentShowcaseGender);
-        }
-
-        function renderShowcaseTab(gender) {
-            const grid = document.getElementById('showcase-grid');
-            const empty = document.getElementById('showcase-empty');
-            if (!grid || !empty) return;
-
-            const items = gender === 'men' ? currentData.showcase.men : currentData.showcase.women;
-
-            if (!items || items.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
+            if (!showcase || (!showcase.men?.length && !showcase.women?.length)) {
+                section.classList.add('hidden');
+                hideSkeleton('showcase');
                 return;
             }
 
-            empty.classList.add('hidden');
+            section.classList.remove('hidden', 'skeleton-hidden');
 
-            grid.innerHTML = items.map(item => {
-                const catName = item.category_name || 'Category';
-                const catSlug = item.category_slug || getCategorySlug(catName);
-                const catImage = item.category_image || '';
-                const catIcon = item.category_icon || '';
+            // Render header
+            if (showcase.header && headerContent) {
+                headerContent.innerHTML = `
+                    <h2 class="showcase-title">${showcase.header.title || 'Shop by Category'}</h2>
+                    ${showcase.header.subtitle ? `<p class="showcase-subtitle">${showcase.header.subtitle}</p>` : ''}
+                `;
+            } else if (headerContent) {
+                headerContent.innerHTML = `
+                    <h2 class="showcase-title">Shop by Category</h2>
+                    <p class="showcase-subtitle">Discover our curated collections for Men & Women</p>
+                `;
+            }
 
-                return `
-                <a href="/category/${catSlug}" class="showcase-card" onclick="event.preventDefault();navigateToShowcaseCategory('${catSlug.replace(/'/g, "\\'")}')">
-                    ${catImage ? `<img src="${catImage}" alt="${catName}" class="showcase-card-image" loading="lazy" onerror="this.style.opacity='0.3'">` : `
-                    <div class="showcase-card-image" style="display:flex;align-items:center;justify-content:center;background:#f5f5f7;">
-                        ${catIcon ? `<img src="${catIcon}" alt="${catName}" style="width:40%;height:40%;object-fit:contain;opacity:0.6;">` : `<i class="fa-solid fa-folder-open" style="font-size:40px;color:#ccc;"></i>`}
-                    </div>`}
-                    <div class="showcase-card-body">
-                        <h3 class="showcase-card-title">${catName}</h3>
-                    </div>
-                </a>`;
-            }).join('');
+            // Render Men
+            if (showcase.men?.length) {
+                menSection.classList.remove('hidden');
+                menGrid.innerHTML = showcase.men.map(item => {
+                    const imgSrc = item.category_image || '';
+                    const catName = item.category_name || '';
+                    const catSlug = item.category_slug || getCategorySlug(catName);
+                    const icon = item.category_icon || '';
+                    
+                    return `
+                    <a href="/category/${catSlug}" onclick="event.preventDefault();navigateToCategory('${catSlug}')" class="showcase-card">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${catName}" class="showcase-image" loading="lazy" onerror="this.style.opacity='0'">` : ''}
+                        <div class="showcase-content">
+                            ${icon ? `<span class="showcase-category-icon">${icon}</span>` : ''}
+                            <h3 class="showcase-category-name">${catName}</h3>
+                            <span class="showcase-explore">
+                                Explore
+                                <svg class="explore-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                    <path d="M1 5H9M9 5L5 1M9 5L5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>`;
+                }).join('');
+            } else {
+                menSection.classList.add('hidden');
+            }
+
+            // Render Women
+            if (showcase.women?.length) {
+                womenSection.classList.remove('hidden');
+                womenGrid.innerHTML = showcase.women.map(item => {
+                    const imgSrc = item.category_image || '';
+                    const catName = item.category_name || '';
+                    const catSlug = item.category_slug || getCategorySlug(catName);
+                    const icon = item.category_icon || '';
+                    
+                    return `
+                    <a href="/category/${catSlug}" onclick="event.preventDefault();navigateToCategory('${catSlug}')" class="showcase-card">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${catName}" class="showcase-image" loading="lazy" onerror="this.style.opacity='0'">` : ''}
+                        <div class="showcase-content">
+                            ${icon ? `<span class="showcase-category-icon">${icon}</span>` : ''}
+                            <h3 class="showcase-category-name">${catName}</h3>
+                            <span class="showcase-explore">
+                                Explore
+                                <svg class="explore-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                    <path d="M1 5H9M9 5L5 1M9 5L5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>`;
+                }).join('');
+            } else {
+                womenSection.classList.add('hidden');
+            }
+
+            hideSkeleton('showcase');
         }
 
-        function switchShowcaseTab(gender) {
-            currentShowcaseGender = gender;
-
-            // Update tab active states
-            document.querySelectorAll('.showcase-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.gender === gender);
-            });
-
-            // Render the selected tab
-            renderShowcaseTab(gender);
-        }
-
-        function navigateToShowcaseCategory(categorySlug) {
+        function navigateToCategory(categorySlug) {
             if (!categorySlug) return;
             window.location.href = '/category/' + categorySlug;
         }
@@ -1776,7 +1984,8 @@
             currentFilters.cat = cat;
             productsDisplayLimit = 12;
             renderProducts(getFilteredProducts());
-            updateURL(cat === 'all' ? '/products' : '/products?category=' + getCategorySlug(cat), cat === 'all' ? 'All Products' : cat);
+            updateURL(cat === 'all' ? '/products' : '/products?category=' + getCategorySlug(cat), cat === 'all' ? 'All Products' :
+                cat);
         }
 
         function applyPriceFilter() {
@@ -1892,7 +2101,8 @@
             if (!grid) return;
 
             if (!list || !list.length) {
-                grid.innerHTML = '<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No articles yet</p></div>';
+                grid.innerHTML =
+                    '<div class="col-span-full text-center py-20"><p class="text-accent text-lg">No articles yet</p></div>';
                 hideSkeleton('news-grid');
                 return;
             }
@@ -1945,7 +2155,8 @@
             if (!carousel) return;
 
             if (!products || !products.length) {
-                carousel.innerHTML = '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>';
+                carousel.innerHTML =
+                    '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>';
                 return;
             }
 
@@ -1987,16 +2198,22 @@
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
 
-            // Render the new showcase section
+            // Render showcase from /api/showcase
             renderShowcase();
 
             const sections = [
-                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel', products: currentData.products.filter(p => p.is_new_arrival === true), skeletonKey: 'new-arrivals' },
-                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(p => p.is_hot === true), skeletonKey: 'hot-products' },
-                { id: 'featured-products-section', carousel: 'featured-products-carousel', products: currentData.products.filter(p => p.is_featured === true), skeletonKey: 'featured-products' },
-                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(p => p.is_best === true), skeletonKey: 'best-selling' },
-                { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p => p.is_on_sale === true), skeletonKey: 'on-sale' },
-                { id: 'limited-edition-section', carousel: 'limited-edition-carousel', products: currentData.products.filter(p => p.is_limited_edition === true), skeletonKey: 'limited-edition' }
+                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
+                products: currentData.products.filter(p => p.is_new_arrival === true), skeletonKey: 'new-arrivals' },
+                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(
+                        p => p.is_hot === true), skeletonKey: 'hot-products' },
+                { id: 'featured-products-section', carousel: 'featured-products-carousel',
+                    products: currentData.products.filter(p => p.is_featured === true), skeletonKey: 'featured-products' },
+                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(
+                        p => p.is_best === true), skeletonKey: 'best-selling' },
+                { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p =>
+                        p.is_on_sale === true), skeletonKey: 'on-sale' },
+                { id: 'limited-edition-section', carousel: 'limited-edition-carousel',
+                    products: currentData.products.filter(p => p.is_limited_edition === true), skeletonKey: 'limited-edition' }
             ];
 
             sections.forEach((sec) => {
@@ -2014,7 +2231,7 @@
         }
 
         // -------------------------------------------------------
-        // MOMENTUM-BASED DRAG
+        // MOMENTUM-BASED DRAG (no snapping, buttery smooth)
         // -------------------------------------------------------
         function initCarouselTouchSupport() {
             document.querySelectorAll('.carousel-track').forEach(carousel => {
@@ -2162,26 +2379,19 @@
                 if (newsData) currentData.news = newsData;
                 if (heroVideosData?.length) currentData.heroVideos = heroVideosData;
                 if (heroSecondaryData?.length) currentData.hero_secondary = heroSecondaryData;
-
-                // Load showcase data
-                if (showcaseData) {
-                    currentData.showcase = {
-                        header: showcaseData.header || null,
-                        men: showcaseData.men || [],
-                        women: showcaseData.women || []
-                    };
-                }
+                if (showcaseData) currentData.showcaseData = showcaseData;
 
                 // Hide hero skeleton when data is loaded
                 hideSkeleton('hero');
-                hideSkeleton('hero-secondary');
+                if (heroSecondaryData?.length) {
+                    hideSkeleton('hero-secondary');
+                } else {
+                    hideSkeleton('hero-secondary');
+                }
 
                 window.dispatchEvent(new CustomEvent('jayenware:dataLoaded', {
-                    detail: {
-                        hero: currentData.hero,
-                        heroVideos: currentData.heroVideos,
-                        hero_secondary: currentData.hero_secondary
-                    }
+                    detail: { hero: currentData.hero, heroVideos: currentData.heroVideos,
+                        hero_secondary: currentData.hero_secondary }
                 }));
 
                 renderCategories();
@@ -2197,6 +2407,7 @@
                 console.log('[App] Data loaded, skeletons hidden');
             } catch (err) {
                 console.error('[App] Error:', err);
+                // Hide skeletons even on error to show whatever loaded
                 hideAllSkeletons();
             }
         }
@@ -2214,7 +2425,8 @@
             
             if (path === '/search' && sp.get('q')) {
                 navigate('products');
-                renderProducts(currentData.products.filter(p => p.title.toLowerCase().includes(sp.get('q').toLowerCase())));
+                renderProducts(currentData.products.filter(p => p.title.toLowerCase().includes(sp.get('q')
+                    .toLowerCase())));
                 return;
             }
             navigate({ '/': 'home', '/products': 'products', '/wishlist': 'wishlist', '/journal': 'news' }[path] || 'home');
