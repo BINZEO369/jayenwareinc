@@ -1624,7 +1624,190 @@ app.get('/category/:slug*', (req, res) => {
 
 
 
+// ============================================
+// HOME SHOWCASE API (হোম শোকেস সেকশন)
+// ============================================
 
+// Get showcase header (একটি মাত্র হেডার)
+app.get('/api/showcase/header', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('home_showcase_header')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+        
+        if (error) {
+            // যদি কোনো ডাটা না থাকে
+            if (error.code === 'PGRST116') {
+                return res.json(null);
+            }
+            return res.status(500).json({ error: error.message });
+        }
+        
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Men showcase categories (শুধু ক্যাটাগরি ইমেজ, টাইটেল, স্লাগ)
+app.get('/api/showcase/men', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('home_showcase_items')
+            .select(`
+                id,
+                gender,
+                sort_order,
+                is_active,
+                category:category_id (
+                    id, 
+                    name, 
+                    slug, 
+                    image_url, 
+                    icon,
+                    is_active
+                )
+            `)
+            .eq('gender', 'Men')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // Filter only active categories and format
+        const formatted = data
+            .filter(item => item.category && item.category.is_active)
+            .map(item => ({
+                id: item.id,
+                gender: item.gender,
+                sort_order: item.sort_order,
+                category_id: item.category.id,
+                category_name: item.category.name,
+                category_slug: item.category.slug ? item.category.slug.replace(/^category\//, '') : createSlug(item.category.name),
+                category_image: item.category.image_url,
+                category_icon: item.category.icon
+            }));
+        
+        res.json(formatted);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get Women showcase categories (শুধু ক্যাটাগরি ইমেজ, টাইটেল, স্লাগ)
+app.get('/api/showcase/women', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('home_showcase_items')
+            .select(`
+                id,
+                gender,
+                sort_order,
+                is_active,
+                category:category_id (
+                    id, 
+                    name, 
+                    slug, 
+                    image_url, 
+                    icon,
+                    is_active
+                )
+            `)
+            .eq('gender', 'Women')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // Filter only active categories and format
+        const formatted = data
+            .filter(item => item.category && item.category.is_active)
+            .map(item => ({
+                id: item.id,
+                gender: item.gender,
+                sort_order: item.sort_order,
+                category_id: item.category.id,
+                category_name: item.category.name,
+                category_slug: item.category.slug ? item.category.slug.replace(/^category\//, '') : createSlug(item.category.name),
+                category_image: item.category.image_url,
+                category_icon: item.category.icon
+            }));
+        
+        res.json(formatted);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all showcase items (both genders with header)
+app.get('/api/showcase', async (req, res) => {
+    try {
+        // Get header
+        const { data: header, error: headerError } = await supabase
+            .from('home_showcase_header')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+        
+        if (headerError && headerError.code !== 'PGRST116') {
+            return res.status(500).json({ error: headerError.message });
+        }
+        
+        // Get all showcase items
+        const { data: items, error: itemsError } = await supabase
+            .from('home_showcase_items')
+            .select(`
+                id,
+                gender,
+                sort_order,
+                category:category_id (
+                    id, 
+                    name, 
+                    slug, 
+                    image_url, 
+                    icon,
+                    is_active
+                )
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (itemsError) return res.status(500).json({ error: itemsError.message });
+        
+        // Filter active categories and format
+        const formatItem = (item) => ({
+            id: item.id,
+            gender: item.gender,
+            sort_order: item.sort_order,
+            category_id: item.category?.id,
+            category_name: item.category?.name,
+            category_slug: item.category?.slug ? item.category.slug.replace(/^category\//, '') : (item.category ? createSlug(item.category.name) : ''),
+            category_image: item.category?.image_url,
+            category_icon: item.category?.icon
+        });
+        
+        const activeItems = items
+            .filter(item => item.category && item.category.is_active)
+            .map(formatItem);
+        
+        const menItems = activeItems.filter(item => item.gender === 'Men');
+        const womenItems = activeItems.filter(item => item.gender === 'Women');
+        
+        res.json({
+            header: header || null,
+            men: menItems,
+            women: womenItems
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 
 // ============================================
