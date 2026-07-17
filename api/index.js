@@ -1623,7 +1623,86 @@ app.get('/category/:slug*', (req, res) => {
 });
 
 
+// ============================================
+// HOME SHOWCASE API
+// ============================================
 
+// Get showcase header
+app.get('/api/home-showcase/header', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('home_showcase_header')
+            .select('*')
+            .eq('is_active', true)
+            .single();
+
+        if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get showcase items with category details
+app.get('/api/home-showcase/items', async (req, res) => {
+    try {
+        const { gender } = req.query;
+        
+        let query = supabase
+            .from('home_showcase_items')
+            .select(`
+                *,
+                categories:category_id (
+                    id, name, slug, image_url, icon
+                )
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (gender) {
+            query = query.eq('gender', gender);
+        }
+        
+        const { data, error } = await query;
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get complete showcase data (header + items grouped by gender)
+app.get('/api/home-showcase/complete', async (req, res) => {
+    try {
+        const [headerResult, itemsResult] = await Promise.all([
+            supabase.from('home_showcase_header').select('*').eq('is_active', true).single(),
+            supabase.from('home_showcase_items')
+                .select(`
+                    *,
+                    categories:category_id (
+                        id, name, slug, image_url, icon
+                    )
+                `)
+                .eq('is_active', true)
+                .order('sort_order', { ascending: true })
+        ]);
+
+        const header = headerResult.data || null;
+        const items = itemsResult.data || [];
+
+        const menCategories = items.filter(item => item.gender === 'Men');
+        const womenCategories = items.filter(item => item.gender === 'Women');
+
+        res.json({
+            header,
+            menCategories,
+            womenCategories
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
        
 // SPA FALLBACK (Must be last)
