@@ -36,6 +36,10 @@
       "dest": "/public/hero-secondary-banner.js"
     },
     {
+      "src": "/categoryshow.js",
+      "dest": "/public/categoryshow.js"
+    },
+    {
       "src": "/logo.png",
       "dest": "/public/logo.png"
     },
