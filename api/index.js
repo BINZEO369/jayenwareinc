@@ -1665,8 +1665,7 @@ app.get('/api/home-showcase/items', async (req, res) => {
                     id, 
                     name, 
                     slug, 
-                    image_url,
-                    description
+                    image_url
                 )
             `)
             .eq('is_active', true)
@@ -1718,8 +1717,7 @@ app.get('/api/home-showcase/complete', async (req, res) => {
                         id, 
                         name, 
                         slug, 
-                        image_url,
-                        description
+                        image_url
                     )
                 `)
                 .eq('is_active', true)
