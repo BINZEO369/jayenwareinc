@@ -1665,8 +1665,7 @@ app.get('/api/home-showcase/items', async (req, res) => {
                     id, 
                     name, 
                     slug, 
-                    image_url, 
-                    icon,
+                    image_url,
                     description
                 )
             `)
@@ -1719,8 +1718,7 @@ app.get('/api/home-showcase/complete', async (req, res) => {
                         id, 
                         name, 
                         slug, 
-                        image_url, 
-                        icon,
+                        image_url,
                         description
                     )
                 `)
