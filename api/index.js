@@ -1624,7 +1624,7 @@ app.get('/category/:slug*', (req, res) => {
 
 
 // ============================================
-// HOME SHOWCASE API
+// HOME SHOWCASE API (Complete)
 // ============================================
 
 // Get showcase header
@@ -1636,7 +1636,10 @@ app.get('/api/home-showcase/header', async (req, res) => {
             .eq('is_active', true)
             .single();
 
-        if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
+        if (error && error.code !== 'PGRST116') {
+            return res.status(500).json({ error: error.message });
+        }
+        
         res.json(data || null);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -1651,37 +1654,74 @@ app.get('/api/home-showcase/items', async (req, res) => {
         let query = supabase
             .from('home_showcase_items')
             .select(`
-                *,
+                id,
+                gender,
+                category_id,
+                sort_order,
+                is_active,
+                created_at,
+                updated_at,
                 categories:category_id (
-                    id, name, slug, image_url, icon
+                    id, 
+                    name, 
+                    slug, 
+                    image_url, 
+                    icon,
+                    description
                 )
             `)
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
         
-        if (gender) {
+        if (gender && ['Men', 'Women'].includes(gender)) {
             query = query.eq('gender', gender);
         }
         
         const { data, error } = await query;
-        if (error) return res.status(500).json({ error: error.message });
         
-        res.json(data || []);
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+        
+        // Add slugs to categories if not present
+        const enrichedData = (data || []).map(item => ({
+            ...item,
+            categories: item.categories ? {
+                ...item.categories,
+                slug: item.categories.slug || createSlug(item.categories.name)
+            } : null
+        }));
+        
+        res.json(enrichedData);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Get complete showcase data (header + items grouped by gender)
+// Get complete showcase data
 app.get('/api/home-showcase/complete', async (req, res) => {
     try {
         const [headerResult, itemsResult] = await Promise.all([
-            supabase.from('home_showcase_header').select('*').eq('is_active', true).single(),
-            supabase.from('home_showcase_items')
+            supabase
+                .from('home_showcase_header')
+                .select('*')
+                .eq('is_active', true)
+                .single(),
+            
+            supabase
+                .from('home_showcase_items')
                 .select(`
-                    *,
+                    id,
+                    gender,
+                    category_id,
+                    sort_order,
                     categories:category_id (
-                        id, name, slug, image_url, icon
+                        id, 
+                        name, 
+                        slug, 
+                        image_url, 
+                        icon,
+                        description
                     )
                 `)
                 .eq('is_active', true)
@@ -1691,13 +1731,23 @@ app.get('/api/home-showcase/complete', async (req, res) => {
         const header = headerResult.data || null;
         const items = itemsResult.data || [];
 
-        const menCategories = items.filter(item => item.gender === 'Men');
-        const womenCategories = items.filter(item => item.gender === 'Women');
+        // Enrich and group items
+        const enrichedItems = items.map(item => ({
+            ...item,
+            categories: item.categories ? {
+                ...item.categories,
+                slug: item.categories.slug || createSlug(item.categories.name)
+            } : null
+        }));
+
+        const menCategories = enrichedItems.filter(item => item.gender === 'Men');
+        const womenCategories = enrichedItems.filter(item => item.gender === 'Women');
 
         res.json({
             header,
             menCategories,
-            womenCategories
+            womenCategories,
+            totalCategories: items.length
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
