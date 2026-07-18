@@ -1,430 +1,753 @@
 // ============================================================
-// JAYENWARE – NEW ARRIVALS SECTION (2×2 Grid Layout)
-// Loaded from newarrival.js
+// JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // ============================================================
 
-(function () {
-  const STYLES = `
-    #new-arrivals-section {
-      display: block;
-      padding: 48px 0;
-      background: #ffffff;
+(function() {
+    'use strict';
+
+    // API Endpoint Configuration
+    const API_CONFIG = {
+        baseURL: window.location.origin,
+        endpoints: {
+            newArrivals: '/api/products?filter=new_arrival&limit=8',
+            products: '/api/products',
+            addToCart: '/api/cart/add',
+            wishlist: '/api/wishlist'
+        },
+        timeout: 10000,
+        retryAttempts: 2
+    };
+
+    // Section Configuration
+    const CONFIG = {
+        containerId: 'new-arrivals-container',
+        skeletonId: 'new-arrivals-skeleton',
+        sectionClass: 'new-arrivals-grid-section',
+        gridClass: 'new-arrivals-grid',
+        title: 'New Arrivals',
+        viewAllLink: '/products?filter=new_arrival',
+        maxProducts: 8,
+        columns: {
+            mobile: 2,
+            tablet: 3,
+            desktop: 4
+        },
+        cardAspectRatio: '3/4',
+        animationDuration: 400
+    };
+
+    // Product Card Template
+    function createProductCard(product) {
+        const isOutOfStock = product.stock <= 0;
+        const slug = (product.slug || product.title || 'product')
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        let badgeHTML = '';
+        if (!isOutOfStock) {
+            if (product.is_new_arrival) {
+                badgeHTML = '<span class="new-arrival-badge">New</span>';
+            } else if (product.is_on_sale) {
+                badgeHTML = '<span class="new-arrival-badge new-arrival-badge-sale">Sale</span>';
+            }
+        }
+
+        const card = document.createElement('div');
+        card.className = 'new-arrival-card';
+        card.setAttribute('data-product-id', product.id);
+        
+        card.innerHTML = `
+            <a href="/product/${slug}" class="new-arrival-card-link">
+                <div class="new-arrival-card-image-wrapper">
+                    <img 
+                        src="${product.img || '/placeholder.png'}" 
+                        alt="${product.title}" 
+                        class="new-arrival-card-image"
+                        loading="lazy"
+                        onerror="this.src='/placeholder.png'"
+                    >
+                    ${badgeHTML}
+                    ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
+                    ${!isOutOfStock ? `
+                        <button 
+                            class="new-arrival-add-btn" 
+                            onclick="event.preventDefault();event.stopPropagation();window.addToCart && window.addToCart(${product.id})"
+                            aria-label="Add to cart"
+                        >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    ` : ''}
+                </div>
+                <div class="new-arrival-card-body">
+                    <span class="new-arrival-card-category">${product.category || 'New'}</span>
+                    <h3 class="new-arrival-card-title">${product.title}</h3>
+                    <div class="new-arrival-card-price-row">
+                        <span class="new-arrival-card-price">৳${parseFloat(product.price).toLocaleString('en-BD')}</span>
+                        ${product.old_price ? `<span class="new-arrival-card-old-price">৳${parseFloat(product.old_price).toLocaleString('en-BD')}</span>` : ''}
+                    </div>
+                </div>
+            </a>
+        `;
+
+        return card;
     }
 
-    #new-arrivals-section .na-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 40px;
+    // Create Empty State
+    function createEmptyState() {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'new-arrival-empty';
+        emptyDiv.innerHTML = `
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+            <p>No new arrivals at the moment</p>
+            <p class="new-arrival-empty-sub">Check back soon for fresh styles</p>
+        `;
+        return emptyDiv;
     }
 
-    #new-arrivals-section .na-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
+    // Create Loading Skeleton
+    function createSkeletonCard() {
+        const card = document.createElement('div');
+        card.className = 'new-arrival-card new-arrival-skeleton-card';
+        card.innerHTML = `
+            <div class="new-arrival-card-image-wrapper">
+                <div class="skeleton-pulse" style="width:100%;aspect-ratio:${CONFIG.cardAspectRatio};"></div>
+            </div>
+            <div class="new-arrival-card-body">
+                <div class="skeleton-pulse skeleton-text-sm" style="width:40%;"></div>
+                <div class="skeleton-pulse skeleton-text" style="width:80%;"></div>
+                <div class="skeleton-pulse skeleton-text" style="width:30%;"></div>
+            </div>
+        `;
+        return card;
     }
 
-    #new-arrivals-section .na-title {
-      font-size: 28px;
-      color: #1d1d1f;
-      font-family: var(--font-heading, 'Inter', sans-serif);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      margin: 0;
+    // Fetch API with retry logic
+    async function fetchWithRetry(url, options = {}, retries = API_CONFIG.retryAttempts) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
+
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    ...options.headers
+                }
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            clearTimeout(timeoutId);
+            
+            if (retries > 0 && error.name !== 'AbortError') {
+                console.warn(`[NewArrivals] Retrying fetch... (${retries} attempts left)`);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return fetchWithRetry(url, options, retries - 1);
+            }
+            
+            throw error;
+        }
     }
 
-    #new-arrivals-section .na-link {
-      font-size: 14px;
-      font-weight: 500;
-      color: #007aff;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: gap 0.2s ease;
-      font-family: var(--font-body, 'Inter', sans-serif);
+    // Fetch New Arrivals from API
+    async function fetchNewArrivals() {
+        try {
+            // Try dedicated endpoint first
+            const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
+            
+            if (Array.isArray(data) && data.length > 0) {
+                return data.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
+            }
+            
+            // Fallback: fetch all products and filter
+            const allProducts = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.products}`);
+            if (Array.isArray(allProducts)) {
+                return allProducts
+                    .filter(p => p.is_new_arrival === true || p.is_new_arrival === 1)
+                    .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date))
+                    .slice(0, CONFIG.maxProducts);
+            }
+            
+            return [];
+        } catch (error) {
+            console.error('[NewArrivals] Failed to fetch products:', error);
+            return [];
+        }
     }
 
-    #new-arrivals-section .na-link:hover {
-      gap: 8px;
+    // Render Section Header
+    function createSectionHeader() {
+        const header = document.createElement('div');
+        header.className = 'new-arrival-header';
+        header.innerHTML = `
+            <h2 class="new-arrival-title">${CONFIG.title}</h2>
+            <a href="${CONFIG.viewAllLink}" class="new-arrival-view-all" onclick="event.preventDefault();window.navigate && window.navigate('products', {filter: 'new_arrival'})">
+                View All
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        `;
+        return header;
     }
 
-    #new-arrivals-section .na-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+    // Create Grid Container
+    function createGridContainer() {
+        const grid = document.createElement('div');
+        grid.className = CONFIG.gridClass;
+        return grid;
     }
 
-    @media (min-width: 768px) {
-      #new-arrivals-section .na-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-      }
+    // Render the complete section
+    async function renderNewArrivals(products) {
+        const container = document.getElementById(CONFIG.containerId);
+        const skeleton = document.getElementById(CONFIG.skeletonId);
+        
+        if (!container) {
+            console.warn('[NewArrivals] Container not found:', CONFIG.containerId);
+            return;
+        }
+
+        // Show loading skeleton
+        if (skeleton) {
+            skeleton.style.display = 'block';
+        }
+
+        try {
+            // Fetch products if not provided
+            const arrivals = Array.isArray(products) && products.length > 0 
+                ? products 
+                : await fetchNewArrivals();
+
+            // Clear container
+            container.innerHTML = '';
+
+            // Create wrapper section
+            const section = document.createElement('section');
+            section.className = CONFIG.sectionClass;
+
+            // Add header
+            section.appendChild(createSectionHeader());
+
+            // Create grid
+            const grid = createGridContainer();
+
+            if (arrivals && arrivals.length > 0) {
+                // Add product cards
+                arrivals.slice(0, CONFIG.maxProducts).forEach(product => {
+                    grid.appendChild(createProductCard(product));
+                });
+            } else {
+                // Show empty state
+                section.classList.add('new-arrival-empty-section');
+                grid.appendChild(createEmptyState());
+            }
+
+            section.appendChild(grid);
+            container.appendChild(section);
+
+        } catch (error) {
+            console.error('[NewArrivals] Render error:', error);
+            container.innerHTML = `
+                <div class="new-arrival-error">
+                    <p>Unable to load new arrivals</p>
+                    <button onclick="window.renderNewArrival && window.renderNewArrival()" class="new-arrival-retry-btn">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        } finally {
+            // Hide skeleton
+            if (skeleton) {
+                skeleton.style.display = 'none';
+            }
+        }
     }
 
-    @media (min-width: 1024px) {
-      #new-arrivals-section .na-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 28px;
-      }
+    // Expose to window for external calls
+    window.renderNewArrival = renderNewArrivals;
+
+    // Inject Dynamic Styles
+    function injectStyles() {
+        const styleId = 'new-arrival-dynamic-styles';
+        
+        if (document.getElementById(styleId)) return;
+
+        const styles = `
+            <style id="${styleId}">
+                /* ==================== NEW ARRIVAL SECTION ==================== */
+                .new-arrivals-grid-section {
+                    padding: 40px 0;
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                }
+
+                @media (max-width: 767px) {
+                    .new-arrivals-grid-section {
+                        padding: 24px 16px;
+                    }
+                }
+
+                @media (min-width: 768px) and (max-width: 1023px) {
+                    .new-arrivals-grid-section {
+                        padding: 32px 32px;
+                    }
+                }
+
+                @media (min-width: 1024px) {
+                    .new-arrivals-grid-section {
+                        padding: 48px 40px;
+                    }
+                }
+
+                /* Section Header */
+                .new-arrival-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 28px;
+                    padding: 0 4px;
+                }
+
+                .new-arrival-title {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #1d1d1f;
+                    letter-spacing: -0.3px;
+                    font-family: var(--font-heading, 'Manrope', sans-serif);
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-title {
+                        font-size: 28px;
+                    }
+                }
+
+                @media (min-width: 1024px) {
+                    .new-arrival-title {
+                        font-size: 32px;
+                    }
+                }
+
+                .new-arrival-view-all {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #007aff;
+                    text-decoration: none;
+                    transition: gap 0.25s ease;
+                    font-family: var(--font-body, 'Inter', sans-serif);
+                }
+
+                .new-arrival-view-all:hover {
+                    gap: 10px;
+                }
+
+                .new-arrival-view-all svg {
+                    transition: transform 0.25s ease;
+                }
+
+                .new-arrival-view-all:hover svg {
+                    transform: translateX(2px);
+                }
+
+                /* Grid Layout - 2x2 on Mobile */
+                .new-arrivals-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 12px;
+                    width: 100%;
+                }
+
+                @media (min-width: 640px) {
+                    .new-arrivals-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 16px;
+                    }
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrivals-grid {
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 20px;
+                    }
+                }
+
+                @media (min-width: 1024px) {
+                    .new-arrivals-grid {
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 24px;
+                    }
+                }
+
+                /* Product Card */
+                .new-arrival-card {
+                    position: relative;
+                    background: transparent;
+                    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+                    cursor: pointer;
+                }
+
+                .new-arrival-card:active {
+                    transform: scale(0.97);
+                    transition: transform 0.1s ease;
+                }
+
+                @media (hover: hover) {
+                    .new-arrival-card:hover {
+                        transform: translateY(-3px);
+                    }
+                }
+
+                .new-arrival-card-link {
+                    text-decoration: none;
+                    color: inherit;
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                }
+
+                /* Card Image */
+                .new-arrival-card-image-wrapper {
+                    position: relative;
+                    aspect-ratio: 3 / 4;
+                    background: #f5f5f7;
+                    overflow: hidden;
+                    margin-bottom: 10px;
+                    border-radius: 4px;
+                }
+
+                .new-arrival-card-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+                }
+
+                @media (hover: hover) {
+                    .new-arrival-card:hover .new-arrival-card-image {
+                        transform: scale(1.04);
+                    }
+                }
+
+                /* Badge */
+                .new-arrival-badge {
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    z-index: 2;
+                    padding: 3px 10px;
+                    font-size: 10px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    background: #ffffff;
+                    color: #1d1d1f;
+                    letter-spacing: 0.5px;
+                    border-radius: 2px;
+                    pointer-events: none;
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                }
+
+                .new-arrival-badge-sale {
+                    color: #d70015 !important;
+                }
+
+                /* Sold Out Overlay */
+                .new-arrival-soldout-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(255, 255, 255, 0.65);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 5;
+                    pointer-events: none;
+                }
+
+                .new-arrival-soldout-overlay span {
+                    background: #1d1d1f;
+                    color: #ffffff;
+                    font-size: 10px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    padding: 6px 18px;
+                    letter-spacing: 1px;
+                    border-radius: 2px;
+                }
+
+                /* Add to Cart Button */
+                .new-arrival-add-btn {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 8px;
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 50%;
+                    background: #ffffff;
+                    border: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    color: #1d1d1f;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    z-index: 3;
+                    -webkit-tap-highlight-color: transparent;
+                }
+
+                @media (hover: hover) {
+                    .new-arrival-add-btn {
+                        opacity: 0;
+                        transform: translateY(5px);
+                    }
+                    .new-arrival-card:hover .new-arrival-add-btn {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    .new-arrival-add-btn:hover {
+                        background: #1d1d1f;
+                        color: #ffffff;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                    }
+                }
+
+                .new-arrival-add-btn:active {
+                    transform: scale(0.88);
+                    background: #1d1d1f;
+                    color: #ffffff;
+                    transition: transform 0.1s ease;
+                }
+
+                @media (max-width: 767px) {
+                    .new-arrival-add-btn {
+                        width: 30px;
+                        height: 30px;
+                        bottom: 8px;
+                        right: 6px;
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Card Body */
+                .new-arrival-card-body {
+                    padding: 0 4px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+                }
+
+                .new-arrival-card-category {
+                    font-size: 10px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    color: #86868b;
+                    letter-spacing: 0.8px;
+                    font-family: var(--font-accent, 'Sora', sans-serif);
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-card-category {
+                        font-size: 11px;
+                    }
+                }
+
+                .new-arrival-card-title {
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: #1d1d1f;
+                    line-height: 1.4;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    font-family: var(--font-body, 'Inter', sans-serif);
+                    margin: 0;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-card-title {
+                        font-size: 14px;
+                    }
+                }
+
+                .new-arrival-card-price-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    margin-top: 2px;
+                }
+
+                .new-arrival-card-price {
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #1d1d1f;
+                    font-family: var(--font-body, 'Inter', sans-serif);
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-card-price {
+                        font-size: 14px;
+                    }
+                }
+
+                .new-arrival-card-old-price {
+                    font-size: 12px;
+                    color: #b0b0b5;
+                    text-decoration: line-through;
+                    font-weight: 400;
+                }
+
+                /* Empty State */
+                .new-arrival-empty-section .new-arrivals-grid {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                .new-arrival-empty {
+                    text-align: center;
+                    padding: 48px 20px;
+                    max-width: 400px;
+                }
+
+                .new-arrival-empty svg {
+                    margin: 0 auto 16px;
+                    opacity: 0.4;
+                }
+
+                .new-arrival-empty p {
+                    font-size: 15px;
+                    color: #86868b;
+                    margin: 0;
+                    font-weight: 500;
+                }
+
+                .new-arrival-empty-sub {
+                    font-size: 12px !important;
+                    color: #b0b0b5 !important;
+                    margin-top: 6px !important;
+                    font-weight: 400 !important;
+                }
+
+                /* Error State */
+                .new-arrival-error {
+                    text-align: center;
+                    padding: 48px 20px;
+                }
+
+                .new-arrival-error p {
+                    font-size: 14px;
+                    color: #86868b;
+                    margin-bottom: 16px;
+                }
+
+                .new-arrival-retry-btn {
+                    padding: 10px 24px;
+                    background: #1d1d1f;
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 50px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.2s ease;
+                }
+
+                .new-arrival-retry-btn:hover {
+                    background: #007aff;
+                }
+
+                /* Skeleton Styles */
+                .new-arrival-skeleton-card {
+                    pointer-events: none;
+                }
+
+                .skeleton-pulse {
+                    background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
+                    background-size: 800px 100%;
+                    animation: skeletonShimmer 1.8s infinite linear;
+                    border-radius: 4px;
+                }
+
+                .skeleton-text {
+                    height: 13px;
+                    margin-bottom: 6px;
+                }
+
+                .skeleton-text-sm {
+                    height: 9px;
+                    margin-bottom: 5px;
+                }
+
+                @keyframes skeletonShimmer {
+                    0% {
+                        background-position: -468px 0;
+                    }
+                    100% {
+                        background-position: 468px 0;
+                    }
+                }
+            </style>
+        `;
+
+        document.head.insertAdjacentHTML('beforeend', styles);
     }
 
-    /* Product Card – New Arrival Grid */
-    #new-arrivals-section .na-card {
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      color: inherit;
-      transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-      position: relative;
-      background: transparent;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+    // Initialize
+    function init() {
+        injectStyles();
+
+        // Listen for data loaded event to auto-render
+        window.addEventListener('jayenware:dataLoaded', (event) => {
+            const { products } = event.detail || {};
+            if (products && Array.isArray(products)) {
+                const newArrivals = products.filter(
+                    p => p.is_new_arrival === true || p.is_new_arrival === 1
+                );
+                if (newArrivals.length > 0) {
+                    renderNewArrivals(newArrivals);
+                }
+            }
+        });
+
+        // If data already exists in window, try to render
+        if (window.currentData?.products) {
+            const newArrivals = window.currentData.products.filter(
+                p => p.is_new_arrival === true || p.is_new_arrival === 1
+            );
+            if (newArrivals.length > 0) {
+                renderNewArrivals(newArrivals);
+            }
+        }
+
+        console.log('[NewArrivals] Module initialized');
     }
 
-    #new-arrivals-section .na-card:active {
-      transform: scale(0.97);
-      transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
+    // Auto-initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 
-    @media (hover: hover) {
-      #new-arrivals-section .na-card:hover {
-        transform: translateY(-4px);
-      }
-    }
-
-    #new-arrivals-section .na-card-img {
-      position: relative;
-      aspect-ratio: 3 / 4;
-      background: #fafafa;
-      overflow: hidden;
-      margin-bottom: 14px;
-      border-radius: 0;
-    }
-
-    #new-arrivals-section .na-card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-
-    @media (hover: hover) {
-      #new-arrivals-section .na-card:hover .na-card-img img {
-        transform: scale(1.04);
-      }
-    }
-
-    #new-arrivals-section .na-card-body {
-      padding: 0 4px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    #new-arrivals-section .na-card-category {
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      color: #86868b;
-      font-family: var(--font-accent, 'Inter', sans-serif);
-      letter-spacing: 0.5px;
-    }
-
-    #new-arrivals-section .na-card-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: #1d1d1f;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      font-family: var(--font-body, 'Inter', sans-serif);
-      margin: 0;
-    }
-
-    #new-arrivals-section .na-card-price-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    #new-arrivals-section .na-card-price {
-      font-size: 15px;
-      font-weight: 600;
-      color: #1d1d1f;
-      font-family: var(--font-body, 'Inter', sans-serif);
-    }
-
-    #new-arrivals-section .na-card-old-price {
-      font-size: 13px;
-      color: #b0b0b5;
-      text-decoration: line-through;
-      font-weight: 400;
-      font-family: var(--font-body, 'Inter', sans-serif);
-    }
-
-    /* Badges */
-    #new-arrivals-section .na-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 2;
-      padding: 4px 10px;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      background: #ffffff;
-      color: #1d1d1f;
-      pointer-events: none;
-      font-family: var(--font-body, 'Inter', sans-serif);
-      letter-spacing: 0.5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-
-    #new-arrivals-section .na-badge-sale {
-      color: #d70015 !important;
-    }
-
-    /* Quick Add Button */
-    #new-arrivals-section .na-add-btn {
-      position: absolute;
-      bottom: 70px;
-      right: 10px;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
-      color: #1d1d1f;
-      font-size: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      z-index: 3;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-
-    @media (hover: hover) {
-      #new-arrivals-section .na-add-btn {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      #new-arrivals-section .na-card:hover .na-add-btn {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      #new-arrivals-section .na-add-btn:hover {
-        background: #1d1d1f;
-        color: #ffffff;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-      }
-    }
-
-    #new-arrivals-section .na-add-btn:active {
-      transform: scale(0.88);
-      background: #1d1d1f;
-      color: #ffffff;
-      transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-
-    /* Sold Out Overlay */
-    #new-arrivals-section .na-soldout-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.65);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    #new-arrivals-section .na-soldout-overlay span {
-      background: #1d1d1f;
-      color: #ffffff;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      padding: 6px 18px;
-      font-family: var(--font-body, 'Inter', sans-serif);
-      letter-spacing: 1px;
-    }
-
-    /* Empty State */
-    #new-arrivals-section .na-empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 40px 0;
-      color: #86868b;
-      font-size: 14px;
-      font-family: var(--font-body, 'Inter', sans-serif);
-    }
-
-    /* Responsive */
-    @media (max-width: 767px) {
-      #new-arrivals-section {
-        padding: 32px 0;
-      }
-
-      #new-arrivals-section .na-container {
-        padding: 0 20px;
-      }
-
-      #new-arrivals-section .na-header {
-        margin-bottom: 24px;
-      }
-
-      #new-arrivals-section .na-title {
-        font-size: 22px;
-      }
-
-      #new-arrivals-section .na-grid {
-        gap: 16px;
-      }
-
-      #new-arrivals-section .na-card-body {
-        padding: 0 2px;
-      }
-
-      #new-arrivals-section .na-card-title {
-        font-size: 13px;
-      }
-
-      #new-arrivals-section .na-add-btn {
-        width: 34px;
-        height: 34px;
-        bottom: 58px;
-        right: 8px;
-        opacity: 1;
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-
-      #new-arrivals-section .na-badge {
-        top: 8px;
-        left: 8px;
-        padding: 3px 8px;
-        font-size: 9px;
-      }
-    }
-
-    @media (min-width: 1400px) {
-      #new-arrivals-section .na-title {
-        font-size: 32px;
-      }
-
-      #new-arrivals-section .na-card-title {
-        font-size: 16px;
-      }
-    }
-  `;
-
-  function injectStyles() {
-    if (document.getElementById('na-styles')) return;
-    const styleTag = document.createElement('style');
-    styleTag.id = 'na-styles';
-    styleTag.textContent = STYLES;
-    document.head.appendChild(styleTag);
-  }
-
-  function getProductSlug(p) {
-    return (p.slug || p.title || 'product')
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  }
-
-  function buildCard(product) {
-    const isOut = product.stock <= 0;
-    const slug = getProductSlug(product);
-
-    let badgeHTML = '';
-    if (!isOut) {
-      if (product.is_on_sale) {
-        badgeHTML = '<span class="na-badge na-badge-sale">Sale</span>';
-      } else {
-        badgeHTML = '<span class="na-badge">New</span>';
-      }
-    }
-
-    const soldOutHTML = isOut
-      ? '<div class="na-soldout-overlay"><span>Sold Out</span></div>'
-      : '';
-
-    const addBtnHTML = !isOut
-      ? `<button class="na-add-btn" onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${product.id},null)" aria-label="Add to cart">
-           <i class="fa-solid fa-plus"></i>
-         </button>`
-      : '';
-
-    return `
-      <a href="/product/${slug}" class="na-card">
-        <div class="na-card-img">
-          <img src="${product.img}" alt="${product.title}" loading="lazy" />
-          ${badgeHTML}
-          ${soldOutHTML}
-          ${addBtnHTML}
-        </div>
-        <div class="na-card-body">
-          <span class="na-card-category">${product.category}</span>
-          <h3 class="na-card-title">${product.title}</h3>
-          <div class="na-card-price-wrapper">
-            <span class="na-card-price">৳${product.price}</span>
-            ${product.old_price ? `<span class="na-card-old-price">৳${product.old_price}</span>` : ''}
-          </div>
-        </div>
-      </a>`;
-  }
-
-  window.renderNewArrival = function (products = []) {
-    injectStyles();
-
-    const section = document.getElementById('new-arrivals-section');
-    if (!section) {
-      console.warn('[NewArrival] #new-arrivals-section not found in DOM.');
-      return;
-    }
-
-    // Hide skeleton
-    const skeleton = document.getElementById('new-arrivals-skeleton');
-    if (skeleton) {
-      skeleton.classList.add('skeleton-hidden');
-      skeleton.classList.remove('skeleton-visible');
-    }
-
-    if (!products || products.length === 0) {
-      section.innerHTML = `
-        <div class="na-container">
-          <div class="na-header">
-            <h2 class="na-title">New Arrivals</h2>
-            <a href="/products" class="na-link" onclick="event.preventDefault();navigate('products')">View All →</a>
-          </div>
-          <div class="na-grid">
-            <div class="na-empty">No new arrivals at the moment. Check back soon!</div>
-          </div>
-        </div>`;
-      section.classList.remove('skeleton-hidden');
-      return;
-    }
-
-    section.innerHTML = `
-      <div class="na-container">
-        <div class="na-header">
-          <h2 class="na-title">New Arrivals</h2>
-          <a href="/products" class="na-link" onclick="event.preventDefault();navigate('products')">View All →</a>
-        </div>
-        <div class="na-grid">
-          ${products.map(p => buildCard(p)).join('')}
-        </div>
-      </div>`;
-
-    section.classList.remove('skeleton-hidden');
-  };
 })();
