@@ -1,5 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
+// FIXED: stock → is_out_of_stock, image loading, lazy load
 // ============================================================
 
 (function() {
@@ -36,20 +37,89 @@
         animationDuration: 400
     };
 
+    // FIX: Helper function for safe image URL
+    function getImageUrl(product) {
+        // Check all possible image fields
+        if (product.img && product.img.trim() !== '') {
+            return product.img;
+        }
+        if (product.image && product.image.trim() !== '') {
+            return product.image;
+        }
+        if (product.image_url && product.image_url.trim() !== '') {
+            return product.image_url;
+        }
+        if (product.images && product.images.trim() !== '') {
+            // If images is comma-separated, take the first one
+            const imagesArray = product.images.split(',');
+            if (imagesArray[0] && imagesArray[0].trim() !== '') {
+                return imagesArray[0].trim();
+            }
+        }
+        // Fallback placeholder
+        return '/placeholder.png';
+    }
+
+    // FIX: Global image load handler
+    function handleImageLoad(img) {
+        if (img && img.classList) {
+            img.classList.add('loaded');
+            img.style.opacity = '1';
+        }
+    }
+
+    // FIX: Global image error handler
+    function handleImageError(img) {
+        if (img && img.classList) {
+            img.style.display = 'none';
+            // Show placeholder background
+            const wrapper = img.closest('.new-arrival-card-image-wrapper');
+            if (wrapper) {
+                wrapper.style.background = '#f5f5f7';
+                // Add a placeholder icon
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = `
+                    position: absolute;
+                    inset: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #ccc;
+                    font-size: 40px;
+                `;
+                placeholder.innerHTML = '📷';
+                wrapper.appendChild(placeholder);
+            }
+        }
+    }
+
+    // Expose handlers to window for inline onload/onerror
+    window.handleNewArrivalImageLoad = handleImageLoad;
+    window.handleNewArrivalImageError = handleImageError;
+
     // Product Card Template
     function createProductCard(product) {
-        const isOutOfStock = product.stock <= 0;
-        const slug = (product.slug || product.title || 'product')
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[\s_]+/g, '-')
-            .replace(/^-+|-+$/g, '');
+        // FIX: Use is_out_of_stock instead of stock
+        const isOutOfStock = product.is_out_of_stock === true || 
+                             product.is_out_of_stock === 1 ||
+                             product.stock === 0 ||
+                             product.stock === '0';
+        
+        const slug = product.slug || 
+                     (product.title || 'product')
+                        .toLowerCase()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/[\s_]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
 
+        const imageUrl = getImageUrl(product);
+        
+        // FIX: Better badge logic
         let badgeHTML = '';
         if (!isOutOfStock) {
-            if (product.is_new_arrival) {
+            if (product.is_new_arrival === true || product.is_new_arrival === 1) {
                 badgeHTML = '<span class="new-arrival-badge">New</span>';
-            } else if (product.is_on_sale) {
+            } else if (product.is_on_sale === true || product.is_on_sale === 1) {
                 badgeHTML = '<span class="new-arrival-badge new-arrival-badge-sale">Sale</span>';
             }
         }
@@ -58,15 +128,23 @@
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
         
+        // FIX: Safe price formatting
+        const price = product.price != null ? parseFloat(product.price) : 0;
+        const oldPrice = product.old_price != null ? parseFloat(product.old_price) : null;
+        const priceFormatted = price.toLocaleString('en-BD');
+        const oldPriceFormatted = oldPrice ? oldPrice.toLocaleString('en-BD') : null;
+        const category = product.category || product.categories?.name || 'New';
+
         card.innerHTML = `
-            <a href="/product/${slug}" class="new-arrival-card-link">
+            <a href="/product/${slug}" class="new-arrival-card-link" onclick="event.preventDefault();if(window.navigate)window.navigate('product-details',{id:${product.id},slug:'${slug}'})">
                 <div class="new-arrival-card-image-wrapper">
                     <img 
-                        src="${product.img || '/placeholder.png'}" 
-                        alt="${product.title}" 
+                        src="${imageUrl}" 
+                        alt="${product.title || 'Product'}" 
                         class="new-arrival-card-image"
                         loading="lazy"
-                        onerror="this.src='/placeholder.png'"
+                        onload="window.handleNewArrivalImageLoad && window.handleNewArrivalImageLoad(this)"
+                        onerror="window.handleNewArrivalImageError && window.handleNewArrivalImageError(this)"
                     >
                     ${badgeHTML}
                     ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
@@ -84,11 +162,11 @@
                     ` : ''}
                 </div>
                 <div class="new-arrival-card-body">
-                    <span class="new-arrival-card-category">${product.category || 'New'}</span>
-                    <h3 class="new-arrival-card-title">${product.title}</h3>
+                    <span class="new-arrival-card-category">${category}</span>
+                    <h3 class="new-arrival-card-title">${product.title || 'Untitled'}</h3>
                     <div class="new-arrival-card-price-row">
-                        <span class="new-arrival-card-price">৳${parseFloat(product.price).toLocaleString('en-BD')}</span>
-                        ${product.old_price ? `<span class="new-arrival-card-old-price">৳${parseFloat(product.old_price).toLocaleString('en-BD')}</span>` : ''}
+                        <span class="new-arrival-card-price">৳${priceFormatted}</span>
+                        ${oldPrice && oldPrice > price ? `<span class="new-arrival-card-old-price">৳${oldPriceFormatted}</span>` : ''}
                     </div>
                 </div>
             </a>
@@ -150,7 +228,21 @@
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            return await response.json();
+            const data = await response.json();
+            
+            // FIX: Handle wrapped API responses
+            if (data && data.data && Array.isArray(data.data)) {
+                return data.data;
+            }
+            if (data && data.products && Array.isArray(data.products)) {
+                return data.products;
+            }
+            if (Array.isArray(data)) {
+                return data;
+            }
+            
+            console.warn('[NewArrivals] Unexpected API response structure:', data);
+            return [];
         } catch (error) {
             clearTimeout(timeoutId);
             
@@ -171,15 +263,28 @@
             const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
             
             if (Array.isArray(data) && data.length > 0) {
-                return data.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
+                // FIX: Filter using proper boolean/int comparison
+                return data.filter(p => 
+                    p.is_new_arrival === true || 
+                    p.is_new_arrival === 1 || 
+                    p.is_new_arrival === 'true'
+                );
             }
             
             // Fallback: fetch all products and filter
             const allProducts = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.products}`);
-            if (Array.isArray(allProducts)) {
+            if (Array.isArray(allProducts) && allProducts.length > 0) {
                 return allProducts
-                    .filter(p => p.is_new_arrival === true || p.is_new_arrival === 1)
-                    .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date))
+                    .filter(p => 
+                        p.is_new_arrival === true || 
+                        p.is_new_arrival === 1 || 
+                        p.is_new_arrival === 'true'
+                    )
+                    .sort((a, b) => {
+                        const dateA = new Date(b.created_at || b.date || 0);
+                        const dateB = new Date(a.created_at || a.date || 0);
+                        return dateA - dateB;
+                    })
                     .slice(0, CONFIG.maxProducts);
             }
             
@@ -214,6 +319,33 @@
         return grid;
     }
 
+    // FIX: Initialize lazy loading with IntersectionObserver
+    function initLazyLoading() {
+        if (!('IntersectionObserver' in window)) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.tagName === 'IMG') {
+                        // Force image to load
+                        if (img.src && img.src !== window.location.href) {
+                            img.style.opacity = '1';
+                            observer.unobserve(img);
+                        }
+                    }
+                }
+            });
+        }, {
+            rootMargin: '200px 0px',
+            threshold: 0.01
+        });
+
+        document.querySelectorAll('.new-arrival-card-image').forEach(img => {
+            observer.observe(img);
+        });
+    }
+
     // Render the complete section
     async function renderNewArrivals(products) {
         const container = document.getElementById(CONFIG.containerId);
@@ -231,9 +363,16 @@
 
         try {
             // Fetch products if not provided
-            const arrivals = Array.isArray(products) && products.length > 0 
-                ? products 
-                : await fetchNewArrivals();
+            let arrivals;
+            if (Array.isArray(products) && products.length > 0) {
+                arrivals = products.filter(p => 
+                    p.is_new_arrival === true || 
+                    p.is_new_arrival === 1 || 
+                    p.is_new_arrival === 'true'
+                );
+            } else {
+                arrivals = await fetchNewArrivals();
+            }
 
             // Clear container
             container.innerHTML = '';
@@ -250,17 +389,26 @@
 
             if (arrivals && arrivals.length > 0) {
                 // Add product cards
-                arrivals.slice(0, CONFIG.maxProducts).forEach(product => {
-                    grid.appendChild(createProductCard(product));
+                const displayProducts = arrivals.slice(0, CONFIG.maxProducts);
+                displayProducts.forEach(product => {
+                    const card = createProductCard(product);
+                    grid.appendChild(card);
                 });
+                
+                // FIX: Log successful render
+                console.log(`[NewArrivals] Rendered ${displayProducts.length} products`);
             } else {
                 // Show empty state
                 section.classList.add('new-arrival-empty-section');
                 grid.appendChild(createEmptyState());
+                console.log('[NewArrivals] No products to display');
             }
 
             section.appendChild(grid);
             container.appendChild(section);
+
+            // FIX: Initialize lazy loading after DOM update
+            setTimeout(initLazyLoading, 100);
 
         } catch (error) {
             console.error('[NewArrivals] Render error:', error);
@@ -426,7 +574,7 @@
                     height: 100%;
                 }
 
-                /* Card Image */
+                /* Card Image - FIXED */
                 .new-arrival-card-image-wrapper {
                     position: relative;
                     aspect-ratio: 3 / 4;
@@ -434,13 +582,26 @@
                     overflow: hidden;
                     margin-bottom: 10px;
                     border-radius: 4px;
+                    /* FIX: Ensure wrapper has dimensions */
+                    min-height: 0;
+                    width: 100%;
                 }
 
                 .new-arrival-card-image {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+                    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;
+                    /* FIX: Ensure image is visible initially */
+                    opacity: 1;
+                    display: block;
+                    /* FIX: Prevent alt text flash */
+                    color: transparent;
+                }
+
+                /* FIX: Loaded state for smooth transition */
+                .new-arrival-card-image.loaded {
+                    opacity: 1;
                 }
 
                 @media (hover: hover) {
@@ -716,27 +877,34 @@
     // Initialize
     function init() {
         injectStyles();
+        
+        console.log('[NewArrivals] Module initializing...');
 
         // Listen for data loaded event to auto-render
         window.addEventListener('jayenware:dataLoaded', (event) => {
-            const { products } = event.detail || {};
-            if (products && Array.isArray(products)) {
-                const newArrivals = products.filter(
+            console.log('[NewArrivals] Data loaded event received');
+            const detail = event.detail || {};
+            
+            // Check for products in event detail
+            if (detail.products && Array.isArray(detail.products)) {
+                const newArrivals = detail.products.filter(
                     p => p.is_new_arrival === true || p.is_new_arrival === 1
                 );
                 if (newArrivals.length > 0) {
+                    console.log(`[NewArrivals] Auto-rendering ${newArrivals.length} products from event`);
                     renderNewArrivals(newArrivals);
                 }
             }
         });
 
         // If data already exists in window, try to render
-        if (window.currentData?.products) {
+        if (window.currentData?.products && Array.isArray(window.currentData.products)) {
             const newArrivals = window.currentData.products.filter(
                 p => p.is_new_arrival === true || p.is_new_arrival === 1
             );
             if (newArrivals.length > 0) {
-                renderNewArrivals(newArrivals);
+                console.log(`[NewArrivals] Auto-rendering ${newArrivals.length} products from window.currentData`);
+                setTimeout(() => renderNewArrivals(newArrivals), 50);
             }
         }
 
