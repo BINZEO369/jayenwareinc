@@ -963,7 +963,20 @@
 
     <main class="pt-0">
 
+
+        <!-- CATEGORY SHOW SECTION (Loaded from categoryshow.js, placed below video section) -->
+            <div id="categoryshow-container"></div>
+            <!-- CATEGORY SHOW SKELETON -->
+            <div id="categoryshow-skeleton" class="skeleton-visible" style="padding:0;">
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0;" id="categoryshow-skeleton-grid">
+                    <div class="skeleton" style="aspect-ratio:1/1;"></div>
+                    <div class="skeleton" style="aspect-ratio:1/1;"></div>
+                    <div class="skeleton" style="aspect-ratio:1/1;display:none;" data-lg-only></div>
+                </div>
+            </div>
+
         <!-- HERO SKELETON -->
+        
         <div id="hero-skeleton" class="hero-skeleton skeleton-visible">
             <div class="hero-skeleton-content">
                 <div class="hero-skeleton-line"></div>
@@ -977,16 +990,7 @@
 
         <section id="home" class="page-section active-page fade-in">
 
-            <!-- CATEGORY SHOW SECTION (Loaded from categoryshow.js, placed below video section) -->
-            <div id="categoryshow-container"></div>
-            <!-- CATEGORY SHOW SKELETON -->
-            <div id="categoryshow-skeleton" class="skeleton-visible" style="padding:0;">
-                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0;" id="categoryshow-skeleton-grid">
-                    <div class="skeleton" style="aspect-ratio:1/1;"></div>
-                    <div class="skeleton" style="aspect-ratio:1/1;"></div>
-                    <div class="skeleton" style="aspect-ratio:1/1;display:none;" data-lg-only></div>
-                </div>
-            </div>
+           
 
             <!-- Carousel: New Arrivals (Loaded from newarrival.js) -->
             <div id="new-arrivals-container"></div>
