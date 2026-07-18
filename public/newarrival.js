@@ -1,6 +1,7 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // FIXED: stock → is_out_of_stock, image loading, lazy load
+// UPDATED: Taller images, tighter gap, removed add button
 // ============================================================
 
 (function() {
@@ -33,13 +34,12 @@
             tablet: 3,
             desktop: 4
         },
-        cardAspectRatio: '3/4',
+        cardAspectRatio: '4/5',
         animationDuration: 400
     };
 
     // FIX: Helper function for safe image URL
     function getImageUrl(product) {
-        // Check all possible image fields
         if (product.img && product.img.trim() !== '') {
             return product.img;
         }
@@ -50,13 +50,11 @@
             return product.image_url;
         }
         if (product.images && product.images.trim() !== '') {
-            // If images is comma-separated, take the first one
             const imagesArray = product.images.split(',');
             if (imagesArray[0] && imagesArray[0].trim() !== '') {
                 return imagesArray[0].trim();
             }
         }
-        // Fallback placeholder
         return '/placeholder.png';
     }
 
@@ -72,11 +70,9 @@
     function handleImageError(img) {
         if (img && img.classList) {
             img.style.display = 'none';
-            // Show placeholder background
             const wrapper = img.closest('.new-arrival-card-image-wrapper');
             if (wrapper) {
                 wrapper.style.background = '#f5f5f7';
-                // Add a placeholder icon
                 const placeholder = document.createElement('div');
                 placeholder.style.cssText = `
                     position: absolute;
@@ -148,18 +144,6 @@
                     >
                     ${badgeHTML}
                     ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
-                    ${!isOutOfStock ? `
-                        <button 
-                            class="new-arrival-add-btn" 
-                            onclick="event.preventDefault();event.stopPropagation();window.addToCart && window.addToCart(${product.id})"
-                            aria-label="Add to cart"
-                        >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                        </button>
-                    ` : ''}
                 </div>
                 <div class="new-arrival-card-body">
                     <span class="new-arrival-card-category">${category}</span>
@@ -230,7 +214,6 @@
             
             const data = await response.json();
             
-            // FIX: Handle wrapped API responses
             if (data && data.data && Array.isArray(data.data)) {
                 return data.data;
             }
@@ -259,11 +242,9 @@
     // Fetch New Arrivals from API
     async function fetchNewArrivals() {
         try {
-            // Try dedicated endpoint first
             const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
             
             if (Array.isArray(data) && data.length > 0) {
-                // FIX: Filter using proper boolean/int comparison
                 return data.filter(p => 
                     p.is_new_arrival === true || 
                     p.is_new_arrival === 1 || 
@@ -271,7 +252,6 @@
                 );
             }
             
-            // Fallback: fetch all products and filter
             const allProducts = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.products}`);
             if (Array.isArray(allProducts) && allProducts.length > 0) {
                 return allProducts
@@ -328,7 +308,6 @@
                 if (entry.isIntersecting) {
                     const img = entry.target;
                     if (img.tagName === 'IMG') {
-                        // Force image to load
                         if (img.src && img.src !== window.location.href) {
                             img.style.opacity = '1';
                             observer.unobserve(img);
@@ -356,13 +335,11 @@
             return;
         }
 
-        // Show loading skeleton
         if (skeleton) {
             skeleton.style.display = 'block';
         }
 
         try {
-            // Fetch products if not provided
             let arrivals;
             if (Array.isArray(products) && products.length > 0) {
                 arrivals = products.filter(p => 
@@ -374,31 +351,24 @@
                 arrivals = await fetchNewArrivals();
             }
 
-            // Clear container
             container.innerHTML = '';
 
-            // Create wrapper section
             const section = document.createElement('section');
             section.className = CONFIG.sectionClass;
 
-            // Add header
             section.appendChild(createSectionHeader());
 
-            // Create grid
             const grid = createGridContainer();
 
             if (arrivals && arrivals.length > 0) {
-                // Add product cards
                 const displayProducts = arrivals.slice(0, CONFIG.maxProducts);
                 displayProducts.forEach(product => {
                     const card = createProductCard(product);
                     grid.appendChild(card);
                 });
                 
-                // FIX: Log successful render
                 console.log(`[NewArrivals] Rendered ${displayProducts.length} products`);
             } else {
-                // Show empty state
                 section.classList.add('new-arrival-empty-section');
                 grid.appendChild(createEmptyState());
                 console.log('[NewArrivals] No products to display');
@@ -407,7 +377,6 @@
             section.appendChild(grid);
             container.appendChild(section);
 
-            // FIX: Initialize lazy loading after DOM update
             setTimeout(initLazyLoading, 100);
 
         } catch (error) {
@@ -421,7 +390,6 @@
                 </div>
             `;
         } finally {
-            // Hide skeleton
             if (skeleton) {
                 skeleton.style.display = 'none';
             }
@@ -449,13 +417,13 @@
 
                 @media (max-width: 767px) {
                     .new-arrivals-grid-section {
-                        padding: 24px 16px;
+                        padding: 24px 12px;
                     }
                 }
 
                 @media (min-width: 768px) and (max-width: 1023px) {
                     .new-arrivals-grid-section {
-                        padding: 32px 32px;
+                        padding: 32px 24px;
                     }
                 }
 
@@ -470,8 +438,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    margin-bottom: 28px;
-                    padding: 0 4px;
+                    margin-bottom: 24px;
+                    padding: 0 2px;
                 }
 
                 .new-arrival-title {
@@ -518,32 +486,32 @@
                     transform: translateX(2px);
                 }
 
-                /* Grid Layout - 2x2 on Mobile */
+                /* Grid Layout - 2x2 on Mobile with tighter gap */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
-                    gap: 12px;
+                    gap: 8px;
                     width: 100%;
                 }
 
                 @media (min-width: 640px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(2, 1fr);
-                        gap: 16px;
+                        gap: 10px;
                     }
                 }
 
                 @media (min-width: 768px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 20px;
+                        gap: 14px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(4, 1fr);
-                        gap: 24px;
+                        gap: 16px;
                     }
                 }
 
@@ -574,15 +542,14 @@
                     height: 100%;
                 }
 
-                /* Card Image - FIXED */
+                /* Card Image - TALLER (4:5 ratio) */
                 .new-arrival-card-image-wrapper {
                     position: relative;
-                    aspect-ratio: 3 / 4;
+                    aspect-ratio: 4 / 5;
                     background: #f5f5f7;
                     overflow: hidden;
-                    margin-bottom: 10px;
-                    border-radius: 4px;
-                    /* FIX: Ensure wrapper has dimensions */
+                    margin-bottom: 8px;
+                    border-radius: 2px;
                     min-height: 0;
                     width: 100%;
                 }
@@ -592,14 +559,11 @@
                     height: 100%;
                     object-fit: cover;
                     transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;
-                    /* FIX: Ensure image is visible initially */
                     opacity: 1;
                     display: block;
-                    /* FIX: Prevent alt text flash */
                     color: transparent;
                 }
 
-                /* FIX: Loaded state for smooth transition */
                 .new-arrival-card-image.loaded {
                     opacity: 1;
                 }
@@ -613,11 +577,11 @@
                 /* Badge */
                 .new-arrival-badge {
                     position: absolute;
-                    top: 8px;
-                    left: 8px;
+                    top: 6px;
+                    left: 6px;
                     z-index: 2;
-                    padding: 3px 10px;
-                    font-size: 10px;
+                    padding: 2px 8px;
+                    font-size: 9px;
                     font-weight: 700;
                     text-transform: uppercase;
                     background: #ffffff;
@@ -655,71 +619,16 @@
                     border-radius: 2px;
                 }
 
-                /* Add to Cart Button */
-                .new-arrival-add-btn {
-                    position: absolute;
-                    bottom: 10px;
-                    right: 8px;
-                    width: 34px;
-                    height: 34px;
-                    border-radius: 50%;
-                    background: #ffffff;
-                    border: none;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                    color: #1d1d1f;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                    z-index: 3;
-                    -webkit-tap-highlight-color: transparent;
-                }
-
-                @media (hover: hover) {
-                    .new-arrival-add-btn {
-                        opacity: 0;
-                        transform: translateY(5px);
-                    }
-                    .new-arrival-card:hover .new-arrival-add-btn {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                    .new-arrival-add-btn:hover {
-                        background: #1d1d1f;
-                        color: #ffffff;
-                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-                    }
-                }
-
-                .new-arrival-add-btn:active {
-                    transform: scale(0.88);
-                    background: #1d1d1f;
-                    color: #ffffff;
-                    transition: transform 0.1s ease;
-                }
-
-                @media (max-width: 767px) {
-                    .new-arrival-add-btn {
-                        width: 30px;
-                        height: 30px;
-                        bottom: 8px;
-                        right: 6px;
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
                 /* Card Body */
                 .new-arrival-card-body {
-                    padding: 0 4px;
+                    padding: 0 2px;
                     display: flex;
                     flex-direction: column;
-                    gap: 3px;
+                    gap: 2px;
                 }
 
                 .new-arrival-card-category {
-                    font-size: 10px;
+                    font-size: 9px;
                     font-weight: 600;
                     text-transform: uppercase;
                     color: #86868b;
@@ -729,15 +638,15 @@
 
                 @media (min-width: 768px) {
                     .new-arrival-card-category {
-                        font-size: 11px;
+                        font-size: 10px;
                     }
                 }
 
                 .new-arrival-card-title {
-                    font-size: 13px;
+                    font-size: 12px;
                     font-weight: 500;
                     color: #1d1d1f;
-                    line-height: 1.4;
+                    line-height: 1.3;
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
@@ -748,19 +657,19 @@
 
                 @media (min-width: 768px) {
                     .new-arrival-card-title {
-                        font-size: 14px;
+                        font-size: 13px;
                     }
                 }
 
                 .new-arrival-card-price-row {
                     display: flex;
                     align-items: center;
-                    gap: 6px;
-                    margin-top: 2px;
+                    gap: 5px;
+                    margin-top: 1px;
                 }
 
                 .new-arrival-card-price {
-                    font-size: 13px;
+                    font-size: 12px;
                     font-weight: 700;
                     color: #1d1d1f;
                     font-family: var(--font-body, 'Inter', sans-serif);
@@ -768,12 +677,12 @@
 
                 @media (min-width: 768px) {
                     .new-arrival-card-price {
-                        font-size: 14px;
+                        font-size: 13px;
                     }
                 }
 
                 .new-arrival-card-old-price {
-                    font-size: 12px;
+                    font-size: 11px;
                     color: #b0b0b5;
                     text-decoration: line-through;
                     font-weight: 400;
@@ -847,17 +756,17 @@
                     background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
                     background-size: 800px 100%;
                     animation: skeletonShimmer 1.8s infinite linear;
-                    border-radius: 4px;
+                    border-radius: 2px;
                 }
 
                 .skeleton-text {
-                    height: 13px;
-                    margin-bottom: 6px;
+                    height: 12px;
+                    margin-bottom: 5px;
                 }
 
                 .skeleton-text-sm {
-                    height: 9px;
-                    margin-bottom: 5px;
+                    height: 8px;
+                    margin-bottom: 4px;
                 }
 
                 @keyframes skeletonShimmer {
@@ -880,12 +789,10 @@
         
         console.log('[NewArrivals] Module initializing...');
 
-        // Listen for data loaded event to auto-render
         window.addEventListener('jayenware:dataLoaded', (event) => {
             console.log('[NewArrivals] Data loaded event received');
             const detail = event.detail || {};
             
-            // Check for products in event detail
             if (detail.products && Array.isArray(detail.products)) {
                 const newArrivals = detail.products.filter(
                     p => p.is_new_arrival === true || p.is_new_arrival === 1
@@ -897,7 +804,6 @@
             }
         });
 
-        // If data already exists in window, try to render
         if (window.currentData?.products && Array.isArray(window.currentData.products)) {
             const newArrivals = window.currentData.products.filter(
                 p => p.is_new_arrival === true || p.is_new_arrival === 1
