@@ -32,6 +32,10 @@
       "dest": "/public/hero-video.js"
     },
     {
+      "src": "/newarrival.js",
+      "dest": "/public/newarrival.js"
+    },
+    {
       "src": "/hero-secondary-banner.js",
       "dest": "/public/hero-secondary-banner.js"
     },
