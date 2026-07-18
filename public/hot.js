@@ -1,7 +1,7 @@
 // ============================================
 // HOT / TRENDING NOW SECTION
 // Complete Client-Side Component
-// Fixed Container IDs & Function Names
+// Fixed: container ID, skeleton ID, function name match index.html
 // ============================================
 
 (function() {
@@ -67,11 +67,11 @@
     };
 
     // ============================================
-    // SECTION CONFIGURATION - FIXED IDs
+    // SECTION CONFIGURATION - MATCHES index.html IDs
     // ============================================
     var CONFIG = {
-        containerId: 'trending-now-container',      // ✅ matches index.html
-        skeletonId: 'trending-now-skeleton',         // ✅ matches index.html
+        containerId: 'trending-now-container',
+        skeletonId: 'trending-now-skeleton',
         sectionClass: 'trending-now-grid-section',
         gridClass: 'trending-now-grid',
         title: 'Trending Now',
@@ -170,6 +170,9 @@
         }
     }
 
+    window.handleTrendingNowImageLoad = handleImageLoad;
+    window.handleTrendingNowImageError = handleImageError;
+
     async function fetchProductColors(slug) {
         if (productColorsCache[slug]) return productColorsCache[slug];
         try {
@@ -218,9 +221,11 @@
         link.href = '/product/' + encodeURIComponent(slug);
         link.className = 'trending-now-card-link';
 
+        // Image wrapper
         var imageWrapper = document.createElement('div');
         imageWrapper.className = 'trending-now-card-image-wrapper';
 
+        // Image slider
         var slider = document.createElement('div');
         slider.className = 'trending-now-image-slider';
         slider.setAttribute('data-slug', slug);
@@ -237,15 +242,19 @@
 
         imageWrapper.appendChild(slider);
 
-        // Badge
+        // Badge (Trending)
         if (!out) {
             var badgeText = '';
-            if (product.is_hot === true || product.is_hot === 1) badgeText = 'Trending';
-            else if (product.is_on_sale === true || product.is_on_sale === 1) badgeText = 'Sale';
-            
+            if (product.is_hot === true || product.is_hot === 1 || 
+                product.is_trending === true || product.is_trending === 1) {
+                badgeText = 'Trending';
+            } else if (product.is_on_sale === true || product.is_on_sale === 1) {
+                badgeText = 'Sale';
+            }
             if (badgeText) {
                 var badgeSpan = document.createElement('span');
-                badgeSpan.className = 'trending-now-badge' + (badgeText === 'Sale' ? ' trending-now-badge-sale' : '');
+                badgeSpan.className = 'trending-now-badge' + 
+                    (badgeText === 'Sale' ? ' trending-now-badge-sale' : '');
                 badgeSpan.textContent = badgeText;
                 imageWrapper.appendChild(badgeSpan);
             }
@@ -288,6 +297,7 @@
         link.appendChild(cardBody);
         card.appendChild(link);
 
+        // Fetch colors and setup
         fetchProductColors(slug).then(function(colors) {
             setupCard(card, product, colors, slug);
         });
@@ -330,7 +340,10 @@
             reset: null,
             md: false,
             msX: 0,
-            mcX: 0
+            mcX: 0,
+            tsX: 0,
+            tcX: 0,
+            dragging: false
         };
 
         function slideTo(to) {
@@ -362,6 +375,7 @@
 
         dragData.slideTo = slideTo;
         dragData.reset = reset;
+
         card._sliderDragData = dragData;
 
         images.forEach(function(src, i) {
@@ -371,7 +385,9 @@
             img.className = 'trending-now-card-image trending-now-slider-image';
             img.setAttribute('data-index', i);
             img.loading = 'lazy';
-            img.style.cssText = 'position:absolute;top:0;left:' + (i === 0 ? '0' : '100%') + ';width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;';
+            img.style.cssText = 'position:absolute;top:0;left:' + 
+                (i === 0 ? '0' : '100%') + 
+                ';width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;';
             img.onload = function() { handleImageLoad(this); };
             img.onerror = function() { handleImageError(this); };
             slider.appendChild(img);
@@ -398,14 +414,18 @@
             var d = card._sliderDragData;
             if (!d || d.transitioning) return;
             d.tsX = e.touches[0].clientX;
+            d.tcX = d.tsX;
             d.dragging = true;
-            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { im.style.transition = 'none'; });
+            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { 
+                im.style.transition = 'none'; 
+            });
         }, { passive: true });
 
         card.addEventListener('touchmove', function(e) {
             var d = card._sliderDragData;
             if (!d || !d.dragging || d.transitioning) return;
-            var diff = e.touches[0].clientX - d.tsX;
+            d.tcX = e.touches[0].clientX;
+            var diff = d.tcX - d.tsX;
             var imgs = card.querySelectorAll('.trending-now-slider-image');
             var cur = imgs[d.idx];
             if (cur) cur.style.left = diff + 'px';
@@ -420,9 +440,11 @@
             var d = card._sliderDragData;
             if (!d || !d.dragging) return;
             d.dragging = false;
-            var diff = d.tsX - (d.mcX || d.tsX);
+            var diff = d.tsX - d.tcX;
             var th = card.offsetWidth * 0.2;
-            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
+            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { 
+                im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; 
+            });
             if (Math.abs(diff) > th) {
                 if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
                 else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
@@ -444,12 +466,17 @@
             d.msX = e.clientX;
             d.mcX = d.msX;
             activeDragData = d;
-            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { im.style.transition = 'none'; });
+            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { 
+                im.style.transition = 'none'; 
+            });
         });
     }
 
     function setupColorDots(container, colors, slug) {
-        if (!colors || !colors.length) { container.style.display = 'none'; return; }
+        if (!colors || !colors.length) {
+            container.style.display = 'none';
+            return;
+        }
         container.innerHTML = '';
         colors.forEach(function(c) {
             var dot = document.createElement('span');
@@ -472,6 +499,8 @@
     function createEmptyState() {
         var d = document.createElement('div');
         d.className = 'trending-now-empty';
+        
+        // Trending icon SVG
         var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('width', '64');
         svg.setAttribute('height', '64');
@@ -483,13 +512,16 @@
         path.setAttribute('d', 'M13 2L3 14h9l-1 8 10-12h-9l1-8z');
         svg.appendChild(path);
         d.appendChild(svg);
+        
         var p1 = document.createElement('p');
         p1.textContent = 'No trending products right now';
         d.appendChild(p1);
+        
         var p2 = document.createElement('p');
         p2.className = 'trending-now-empty-sub';
         p2.textContent = 'Hot picks coming soon — stay tuned';
         d.appendChild(p2);
+        
         return d;
     }
 
@@ -504,7 +536,10 @@
         try {
             var res = await fetch(url, {
                 signal: ctrl.signal,
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json' 
+                }
             });
             clearTimeout(tid);
             if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -526,13 +561,24 @@
     async function fetchTrendingProducts() {
         try {
             var allProducts = await fetchWithRetry(API_CONFIG.baseURL + API_CONFIG.endpoints.products);
+            
             if (allProducts.length) {
                 var trending = allProducts.filter(function(p) {
-                    return p.is_hot === true || p.is_hot === 1 || p.is_hot === 'true';
+                    return p.is_hot === true || 
+                           p.is_hot === 1 || 
+                           p.is_hot === 'true' ||
+                           p.is_trending === true || 
+                           p.is_trending === 1 || 
+                           p.is_trending === 'true';
                 });
+                
                 trending.sort(function(a, b) {
+                    var aHot = (a.is_hot === true || a.is_hot === 1) ? 1 : 0;
+                    var bHot = (b.is_hot === true || b.is_hot === 1) ? 1 : 0;
+                    if (aHot !== bHot) return bHot - aHot;
                     return new Date(b.created_at || 0) - new Date(a.created_at || 0);
                 });
+                
                 return trending.slice(0, CONFIG.maxProducts);
             }
             return [];
@@ -549,10 +595,12 @@
     function createSectionHeader() {
         var h = document.createElement('div');
         h.className = 'trending-now-header';
+        
         var title = document.createElement('h2');
         title.className = 'trending-now-title';
         title.textContent = CONFIG.title;
         h.appendChild(title);
+        
         return h;
     }
 
@@ -575,10 +623,12 @@
                 }
             });
         }, { rootMargin: '200px 0px', threshold: 0.01 });
-        document.querySelectorAll('.trending-now-card-image').forEach(function(img) { obs.observe(img); });
+        document.querySelectorAll('.trending-now-card-image').forEach(function(img) { 
+            obs.observe(img); 
+        });
     }
 
-    // ✅ MAIN FUNCTION - Named renderTrendingNow to match index.html
+    // ✅ MAIN FUNCTION - named renderTrendingNow to match index.html
     async function renderTrendingNow(products) {
         var container = document.getElementById(CONFIG.containerId);
         var skeleton = document.getElementById(CONFIG.skeletonId);
@@ -596,16 +646,23 @@
             var trendingProducts;
             if (Array.isArray(products) && products.length > 0) {
                 trendingProducts = products.filter(function(p) {
-                    return p.is_hot === true || p.is_hot === 1 || p.is_hot === 'true';
+                    return p.is_hot === true || 
+                           p.is_hot === 1 || 
+                           p.is_hot === 'true' ||
+                           p.is_trending === true || 
+                           p.is_trending === 1 || 
+                           p.is_trending === 'true';
                 });
             } else {
                 trendingProducts = await fetchTrendingProducts();
             }
 
             container.innerHTML = '';
+            
             var sec = document.createElement('section');
             sec.className = CONFIG.sectionClass;
             sec.appendChild(createSectionHeader());
+            
             var grid = createGridContainer();
             
             if (trendingProducts && trendingProducts.length) {
@@ -619,20 +676,25 @@
             
             sec.appendChild(grid);
             container.appendChild(sec);
+            
             setTimeout(initLazyLoading, 100);
         } catch (e) {
-            console.error('[TrendingNow] Failed to render:', e);
+            console.error('Failed to render trending section:', e);
             container.innerHTML = '';
+            
             var errDiv = document.createElement('div');
             errDiv.className = 'trending-now-error';
+            
             var errP = document.createElement('p');
             errP.textContent = 'Unable to load trending products';
             errDiv.appendChild(errP);
+            
             var retryBtn = document.createElement('button');
             retryBtn.className = 'trending-now-retry-btn';
             retryBtn.textContent = 'Try Again';
-            retryBtn.onclick = function() { renderTrendingNow(); };
+            retryBtn.onclick = function() { window.renderTrendingNow(); };
             errDiv.appendChild(retryBtn);
+            
             container.appendChild(errDiv);
         } finally {
             if (skeleton) skeleton.style.display = 'none';
@@ -715,20 +777,26 @@
         applyFontsVariables();
         injectStyles();
         ensureGlobalMouseHandlers();
-
+        
         window.addEventListener('jayenware:dataLoaded', function(e) {
             var detail = e.detail || {};
             if (detail.products && Array.isArray(detail.products)) {
                 var trending = detail.products.filter(function(p) {
-                    return p.is_hot === true || p.is_hot === 1;
+                    return p.is_hot === true || 
+                           p.is_hot === 1 || 
+                           p.is_trending === true || 
+                           p.is_trending === 1;
                 });
                 if (trending.length) renderTrendingNow(trending);
             }
         });
-
+        
         if (window.currentData && window.currentData.products && Array.isArray(window.currentData.products)) {
             var trending = window.currentData.products.filter(function(p) {
-                return p.is_hot === true || p.is_hot === 1;
+                return p.is_hot === true || 
+                       p.is_hot === 1 || 
+                       p.is_trending === true || 
+                       p.is_trending === 1;
             });
             if (trending.length) {
                 setTimeout(function() { renderTrendingNow(trending); }, 50);
@@ -736,6 +804,9 @@
         }
     }
 
+    // ============================================
+    // START
+    // ============================================
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
