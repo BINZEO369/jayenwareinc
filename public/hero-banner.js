@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 1.0.2 (Banner positioned AFTER New Arrivals)
+// Version: 1.0.3 (Banner positioned AFTER Category Showcase)
 // ============================================================
 
 (function() {
@@ -626,7 +626,8 @@
 
     /**
      * Inject HTML into DOM at the correct position
-     * Position: AFTER #new-arrivals-section (ভিডিও সেকশনের কোনো পরিবর্তন নেই)
+     * Position: AFTER #categoryshow-container (ক্যাটাগরি সেকশনের পরে ব্যানার)
+     * হিরো ভিডিও সেকশনের কোনো পরিবর্তন নেই
      */
     function injectHTML() {
         // Check if already exists
@@ -646,21 +647,21 @@
         // ভিডিও সেকশনকে সম্পূর্ণ অপরিবর্তিত রাখা হয়েছে
         
         const homeSection = document.getElementById('home');
-        const newArrivalsSection = document.getElementById('new-arrivals-section');
+        const categoryShowContainer = document.getElementById('categoryshow-container');
 
         if (homeSection) {
-            if (newArrivalsSection && newArrivalsSection.nextSibling) {
-                // ✅ PRIMARY: Insert AFTER new arrivals section
-                newArrivalsSection.parentNode.insertBefore(bannerElement, newArrivalsSection.nextSibling);
-                console.log('[HeroBanner] ✅ Inserted AFTER new-arrivals-section');
-            } else if (newArrivalsSection) {
-                // If new arrivals is the last element, append after it
+            if (categoryShowContainer && categoryShowContainer.nextSibling) {
+                // ✅ PRIMARY: Insert AFTER category show section
+                categoryShowContainer.parentNode.insertBefore(bannerElement, categoryShowContainer.nextSibling);
+                console.log('[HeroBanner] ✅ Inserted AFTER categoryshow-container');
+            } else if (categoryShowContainer) {
+                // If category show is the last element, append after it
                 homeSection.appendChild(bannerElement);
-                console.log('[HeroBanner] ✅ Appended after new-arrivals-section');
+                console.log('[HeroBanner] ✅ Appended after categoryshow-container');
             } else {
-                // Fallback: insert at beginning of home (if new arrivals not found)
+                // Fallback: insert at beginning of home (if category show not found)
                 homeSection.insertBefore(bannerElement, homeSection.firstChild);
-                console.log('[HeroBanner] ⚠️ Inserted at beginning of #home (new-arrivals not found)');
+                console.log('[HeroBanner] ⚠️ Inserted at beginning of #home (categoryshow not found)');
             }
         } else {
             // Ultimate fallback
@@ -737,5 +738,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v1.0.2 - Banner after New Arrivals)');
+    console.log('[HeroBanner] 📄 Component script loaded (v1.0.3 - Banner after Category Showcase)');
 })();
