@@ -18,12 +18,11 @@
 
     // State
     let allNewArrivals = [];
-    let scrollPosition = 0;
     let autoScrollInterval = null;
     let isUserInteracting = false;
 
     // ============================================
-    // API Functions
+    // API Functions - FIXED: Better error handling
     // ============================================
     
     async function apiFetch(endpoint) {
@@ -33,7 +32,8 @@
                 if (response.status === 404) return null;
                 throw new Error(`API Error: ${response.status}`);
             }
-            return await response.json();
+            const data = await response.json();
+            return data;
         } catch (e) {
             console.error('NewArrival API Error:', e);
             return null;
@@ -42,7 +42,7 @@
 
     /**
      * Fetch all products and filter new arrivals
-     * Uses is_new_arrival boolean field from products table
+     * FIXED: Better null checking and data validation
      */
     async function fetchNewArrivals() {
         try {
@@ -54,12 +54,19 @@
                 return [];
             }
 
-            // Filter products where is_new_arrival is true
-            const newArrivals = products.filter(product => 
-                product.is_new_arrival === true || 
-                product.is_new_arrival === 'true' || 
-                product.is_new_arrival === 1
-            );
+            console.log(`Total products fetched: ${products.length}`); // Debug log
+
+            // FIXED: Filter products where is_new_arrival is true (handle all possible values)
+            const newArrivals = products.filter(product => {
+                const isNew = product.is_new_arrival;
+                return isNew === true || 
+                       isNew === 'true' || 
+                       isNew === 1 || 
+                       isNew === '1' ||
+                       isNew === 'TRUE';
+            });
+
+            console.log(`New arrivals found: ${newArrivals.length}`); // Debug log
 
             // Sort by created_at descending (newest first)
             newArrivals.sort((a, b) => {
@@ -75,48 +82,45 @@
         }
     }
 
-    /**
-     * Fetch new arrivals directly using a dedicated endpoint if available
-     * Falls back to filtering all products
-     */
-    async function fetchNewArrivalsDirect() {
-        try {
-            // Try dedicated endpoint first (if server supports it)
-            const directResult = await apiFetch('/products/new-arrivals');
-            if (directResult && Array.isArray(directResult) && directResult.length > 0) {
-                return directResult;
-            }
-        } catch (e) {
-            // Endpoint might not exist, fall through to default method
-        }
-        
-        // Fallback: fetch all and filter
-        return await fetchNewArrivals();
-    }
-
     // ============================================
-    // Product Card HTML Generator
+    // FIXED: Product Card HTML Generator with proper image handling
     // ============================================
     
     function generateProductCard(product) {
         if (!product) return '';
         
         const slug = product.slug || generateSlug(product.title);
-        const imageUrl = product.img || '/logo.png';
-        const categoryName = product.category || product.categories?.name || '';
+        
+        // FIXED: Better image URL handling with fallback
+        let imageUrl = '/logo.png'; // Default fallback
+        if (product.img && product.img.trim() !== '') {
+            imageUrl = product.img;
+        } else if (product.images) {
+            // If images field has multiple images, take the first one
+            const imageArray = product.images.split(',').filter(img => img.trim() !== '');
+            if (imageArray.length > 0) {
+                imageUrl = imageArray[0].trim();
+            }
+        }
+        
+        // FIXED: Get category name properly
+        const categoryName = product.category || 
+                            (product.categories && product.categories.name) || 
+                            '';
+        
         const productTitle = product.title || 'Untitled Product';
-        const price = product.price || 0;
-        const oldPrice = product.old_price || null;
+        
+        // FIXED: Proper price handling with number conversion
+        const price = Number(product.price) || 0;
+        const oldPrice = product.old_price ? Number(product.old_price) : null;
         
         // Calculate discount percentage
         let discountBadge = '';
-        if (oldPrice && oldPrice > price) {
+        if (oldPrice && oldPrice > price && price > 0) {
             const discountPercent = Math.round(((oldPrice - price) / oldPrice) * 100);
-            discountBadge = `
-                <div class="na-discount-badge">
-                    -${discountPercent}%
-                </div>
-            `;
+            if (discountPercent > 0 && discountPercent <= 99) {
+                discountBadge = `<div class="na-discount-badge">-${discountPercent}%</div>`;
+            }
         }
         
         // New arrival tag
@@ -127,6 +131,10 @@
             </div>
         `;
         
+        // FIXED: Format price with proper Bangladeshi number formatting
+        const formattedPrice = formatPrice(price);
+        const formattedOldPrice = oldPrice ? formatPrice(oldPrice) : '';
+        
         return `
             <a href="/product/${slug}" class="na-product-card" data-product-id="${product.id}">
                 <div class="na-product-image-wrapper">
@@ -135,24 +143,40 @@
                         alt="${productTitle}" 
                         class="na-product-image" 
                         loading="lazy"
-                        onerror="this.src='/logo.png'"
+                        onerror="this.onerror=null; this.src='/logo.png'; this.style.padding='20px'; this.style.objectFit='contain';"
                     >
                     ${discountBadge}
                     ${newTag}
-                    <div class="na-quick-view-overlay">
-                        <span>Quick View</span>
-                    </div>
                 </div>
                 <div class="na-product-info">
-                    <p class="na-product-category">${categoryName}</p>
-                    <h3 class="na-product-title">${productTitle}</h3>
+                    ${categoryName ? `<p class="na-product-category">${categoryName}</p>` : ''}
+                    <h3 class="na-product-title" title="${productTitle}">${productTitle}</h3>
                     <div class="na-product-price-row">
-                        <span class="na-product-price">৳ ${Number(price).toLocaleString('en-BD')}</span>
-                        ${oldPrice ? `<span class="na-product-old-price">৳ ${Number(oldPrice).toLocaleString('en-BD')}</span>` : ''}
+                        <span class="na-product-price">${formattedPrice}</span>
+                        ${formattedOldPrice ? `<span class="na-product-old-price">${formattedOldPrice}</span>` : ''}
                     </div>
                 </div>
             </a>
         `;
+    }
+
+    // FIXED: Proper price formatting function for Bangladeshi Taka
+    function formatPrice(price) {
+        if (!price || isNaN(price)) return '৳ 0';
+        
+        // Convert to number and format
+        const numPrice = Number(price);
+        
+        // For prices without decimals (whole numbers)
+        if (Number.isInteger(numPrice)) {
+            return '৳ ' + numPrice.toLocaleString('en-IN');
+        }
+        
+        // For prices with decimals
+        return '৳ ' + numPrice.toLocaleString('en-IN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
     }
 
     function generateSlug(title) {
@@ -255,9 +279,13 @@
     
     function renderProducts(products) {
         const container = document.getElementById(CONTAINER_ID);
-        if (!container) return;
+        if (!container) {
+            console.warn('Container not found: ' + CONTAINER_ID);
+            return;
+        }
 
         if (!products || products.length === 0) {
+            console.log('No new arrivals to display'); // Debug log
             container.innerHTML = `
                 <div class="na-empty-state">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -270,12 +298,28 @@
             return;
         }
 
-        container.innerHTML = products.map(product => generateProductCard(product)).join('');
+        console.log(`Rendering ${products.length} new arrival products`); // Debug log
+        
+        const productsHTML = products.map(product => generateProductCard(product)).join('');
+        container.innerHTML = productsHTML;
         
         // Reset scroll position
         container.scrollLeft = 0;
-        scrollPosition = 0;
         updateArrowVisibility();
+        
+        // FIXED: Add error handling for images after render
+        setTimeout(() => {
+            const images = container.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    console.warn('Image failed to load:', this.src);
+                    this.onerror = null;
+                    this.src = '/logo.png';
+                    this.style.padding = '20px';
+                    this.style.objectFit = 'contain';
+                });
+            });
+        }, 100);
     }
 
     function updateArrowVisibility() {
@@ -335,6 +379,8 @@
     
     function startAutoScroll() {
         stopAutoScroll();
+        if (allNewArrivals.length <= 3) return;
+        
         autoScrollInterval = setInterval(() => {
             if (!isUserInteracting && allNewArrivals.length > 3) {
                 const container = document.getElementById(CONTAINER_ID);
@@ -450,7 +496,7 @@
     }
 
     // ============================================
-    // Initialize Section
+    // FIXED: Initialize Section with better error handling
     // ============================================
     
     async function initNewArrivalsSection() {
@@ -461,7 +507,6 @@
         }
 
         // Determine where to insert the section
-        // Try to find the hero section or main content area
         let insertAfterElement = document.querySelector('main > section:last-of-type');
         if (!insertAfterElement) {
             insertAfterElement = document.querySelector('main');
@@ -470,8 +515,9 @@
             insertAfterElement = document.querySelector('#home-page-content');
         }
         if (!insertAfterElement) {
-            console.warn('Could not find insertion point for New Arrivals section');
-            return;
+            // FIXED: Fallback - insert after the first section or at the beginning of body
+            insertAfterElement = document.querySelector('section') || document.body;
+            console.warn('Using fallback insertion point for New Arrivals section');
         }
 
         // Create section wrapper
@@ -479,9 +525,17 @@
         sectionWrapper.innerHTML = generateSectionHTML();
         const sectionElement = sectionWrapper.firstElementChild;
 
-        // Insert into DOM
+        // FIXED: Insert into DOM with better fallback
         if (insertAfterElement.tagName === 'MAIN') {
             insertAfterElement.appendChild(sectionElement);
+        } else if (insertAfterElement === document.body) {
+            // Insert after header if body is the only option
+            const header = document.querySelector('header');
+            if (header) {
+                header.insertAdjacentElement('afterend', sectionElement);
+            } else {
+                document.body.prepend(sectionElement);
+            }
         } else {
             insertAfterElement.insertAdjacentElement('afterend', sectionElement);
         }
@@ -489,15 +543,18 @@
         // Attach event listeners
         attachEventListeners();
 
-        // Fetch and render products
+        // FIXED: Fetch and render products with better error handling
         try {
-            const newArrivals = await fetchNewArrivalsDirect();
+            console.log('Fetching new arrivals...');
+            const newArrivals = await fetchNewArrivals();
             allNewArrivals = newArrivals;
+            
+            console.log(`Rendering ${newArrivals.length} new arrivals`);
             renderProducts(newArrivals);
             
             // Start auto-scroll if we have enough products
             if (newArrivals.length > 3) {
-                startAutoScroll();
+                setTimeout(startAutoScroll, 1000);
             }
         } catch (error) {
             console.error('Failed to load new arrivals:', error);
@@ -516,7 +573,7 @@
             if (container) {
                 container.innerHTML = generateSkeletonCards(8);
             }
-            const newArrivals = await fetchNewArrivalsDirect();
+            const newArrivals = await fetchNewArrivals();
             allNewArrivals = newArrivals;
             renderProducts(newArrivals);
             if (newArrivals.length > 3) {
@@ -544,13 +601,14 @@
         const isHomePage = path === '/' || path === '/index.html' || path === '/home' || path === '';
         
         if (isHomePage) {
+            console.log('Homepage detected, initializing New Arrivals section...');
             // Wait for components to load first
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => {
-                    setTimeout(initNewArrivalsSection, 500);
+                    setTimeout(initNewArrivalsSection, 800);
                 });
             } else {
-                setTimeout(initNewArrivalsSection, 500);
+                setTimeout(initNewArrivalsSection, 800);
             }
         }
     }
@@ -580,7 +638,7 @@
             margin: 60px auto 80px;
             padding: 0 20px;
             position: relative;
-            font-family: var(--font-body, 'Inter', sans-serif);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
         }
         
         /* Section Header */
@@ -624,7 +682,6 @@
         }
         
         .na-section-title {
-            font-family: var(--font-heading, 'Sora', sans-serif);
             font-size: 26px;
             font-weight: 700;
             color: #1d1d1f;
@@ -634,7 +691,6 @@
         }
         
         .na-section-subtitle {
-            font-family: var(--font-body, 'Inter', sans-serif);
             font-size: 14px;
             color: #86868b;
             margin: 0;
@@ -651,7 +707,6 @@
             gap: 6px;
             padding: 10px 20px;
             border-radius: 9999px;
-            font-family: var(--font-accent, 'Manrope', sans-serif);
             font-size: 13px;
             font-weight: 600;
             color: #1d1d1f;
@@ -707,7 +762,7 @@
             display: none;
         }
         
-        /* Product Card */
+        /* FIXED: Product Card styles with better image handling */
         .na-product-card {
             flex: 0 0 auto;
             width: 260px;
@@ -717,6 +772,7 @@
             display: block;
             transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
             cursor: pointer;
+            border-radius: 18px;
         }
         
         .na-product-card:hover {
@@ -726,7 +782,7 @@
         .na-product-card:focus-visible {
             outline: 2px solid #007aff;
             outline-offset: 4px;
-            border-radius: 16px;
+            border-radius: 18px;
         }
         
         /* Product Image Wrapper */
@@ -746,11 +802,13 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
         
+        /* FIXED: Better image styling */
         .na-product-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+            background: #f5f5f7;
         }
         
         .na-product-card:hover .na-product-image {
@@ -764,7 +822,6 @@
             left: 12px;
             background: #ef4444;
             color: white;
-            font-family: var(--font-accent, 'Manrope', sans-serif);
             font-size: 11px;
             font-weight: 700;
             padding: 5px 10px;
@@ -783,7 +840,6 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             color: white;
-            font-family: var(--font-accent, 'Manrope', sans-serif);
             font-size: 10px;
             font-weight: 600;
             padding: 6px 12px;
@@ -802,45 +858,12 @@
             height: 13px;
         }
         
-        /* Quick View Overlay */
-        .na-quick-view-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
-            padding: 40px 16px 16px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .na-product-card:hover .na-quick-view-overlay {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .na-quick-view-overlay span {
-            background: white;
-            color: #1d1d1f;
-            font-family: var(--font-accent, 'Manrope', sans-serif);
-            font-size: 12px;
-            font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 9999px;
-            letter-spacing: 0.3px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
         /* Product Info */
         .na-product-info {
             padding: 0 4px;
         }
         
         .na-product-category {
-            font-family: var(--font-accent, 'Manrope', sans-serif);
             font-size: 10px;
             font-weight: 700;
             color: #86868b;
@@ -851,7 +874,6 @@
         }
         
         .na-product-title {
-            font-family: var(--font-heading, 'Sora', sans-serif);
             font-size: 15px;
             font-weight: 600;
             color: #1d1d1f;
@@ -863,6 +885,7 @@
             overflow: hidden;
         }
         
+        /* FIXED: Better price styling */
         .na-product-price-row {
             display: flex;
             align-items: baseline;
@@ -871,14 +894,12 @@
         }
         
         .na-product-price {
-            font-family: var(--font-body, 'Inter', sans-serif);
             font-size: 17px;
             font-weight: 700;
             color: #1d1d1f;
         }
         
         .na-product-old-price {
-            font-family: var(--font-body, 'Inter', sans-serif);
             font-size: 13px;
             font-weight: 500;
             color: #86868b;
@@ -945,7 +966,6 @@
             background: #1d1d1f;
             color: white;
             border-radius: 9999px;
-            font-family: var(--font-body, 'Inter', sans-serif);
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
@@ -985,7 +1005,6 @@
         }
         
         .na-empty-state p {
-            font-family: var(--font-heading, 'Sora', sans-serif);
             font-size: 18px;
             font-weight: 600;
             color: #86868b;
@@ -993,7 +1012,6 @@
         }
         
         .na-empty-state span {
-            font-family: var(--font-body, 'Inter', sans-serif);
             font-size: 13px;
             color: #a1a1a6;
         }
@@ -1141,10 +1159,6 @@
                 padding: 4px 10px;
             }
             
-            .na-quick-view-overlay {
-                display: none;
-            }
-            
             .na-mobile-view-all {
                 display: block;
                 margin-top: 20px;
@@ -1215,7 +1229,6 @@
             
             .na-product-card,
             .na-product-image,
-            .na-quick-view-overlay,
             .na-view-all-link svg,
             .na-mobile-view-all-btn svg {
                 transition: none;
@@ -1224,51 +1237,6 @@
             .na-skeleton {
                 animation: none;
                 background: #f0f0f0;
-            }
-        }
-        
-        /* Dark Mode Support (Optional) */
-        @media (prefers-color-scheme: dark) {
-            .na-section-title {
-                color: #f5f5f7;
-            }
-            
-            .na-section-subtitle {
-                color: #86868b;
-            }
-            
-            .na-view-all-link {
-                background: rgba(255, 255, 255, 0.05);
-                border-color: rgba(255, 255, 255, 0.1);
-                color: #f5f5f7;
-            }
-            
-            .na-view-all-link:hover {
-                background: rgba(255, 255, 255, 0.1);
-                border-color: rgba(255, 255, 255, 0.2);
-            }
-            
-            .na-slider-arrow {
-                background: rgba(30, 30, 30, 0.8);
-                border-color: rgba(255, 255, 255, 0.1);
-                color: #f5f5f7;
-            }
-            
-            .na-product-title {
-                color: #f5f5f7;
-            }
-            
-            .na-product-price {
-                color: #f5f5f7;
-            }
-            
-            .na-product-image-wrapper {
-                background: #2d2d2f;
-            }
-            
-            .na-skeleton {
-                background: linear-gradient(90deg, #2d2d2f 25%, #3a3a3c 50%, #2d2d2f 75%);
-                background-size: 200% 100%;
             }
         }
     `;
