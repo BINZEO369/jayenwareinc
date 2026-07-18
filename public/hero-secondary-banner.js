@@ -1,7 +1,7 @@
 // ============================================================
 // hero-secondary-banner.js - JAYENWARE Secondary Banner Component
 // Hero Secondary Banner with Auto-Sliding Images
-// Version: 1.0.0 (Secondary Banner positioned AFTER Hero Banner)
+// Version: 1.0.1 - Fixed Heights for All Devices
 // ============================================================
 
 (function() {
@@ -14,17 +14,37 @@
             .hero-secondary-container {
                 position: relative;
                 width: 100%;
-                height: 100vh;
-                min-height: 500px;
                 overflow: hidden;
                 background: #000;
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                
+                /* FIXED HEIGHTS */
+                height: 900px; /* Default Desktop */
             }
-            @media (max-width: 640px) {
-                .hero-secondary-container { height: 80vh; min-height: 450px; }
+            
+            /* Tablet */
+            @media (min-width: 769px) and (max-width: 1024px) {
+                .hero-secondary-container {
+                    height: 700px;
+                }
             }
+            
+            /* Mobile (iPhone 15/16/17 Pro scale) */
+            @media (max-width: 768px) {
+                .hero-secondary-container {
+                    height: 850px;
+                }
+            }
+            
+            /* Small Mobile */
+            @media (max-width: 480px) {
+                .hero-secondary-container {
+                    height: 750px;
+                }
+            }
+            
             .hero-secondary-slide-wrapper {
                 position: absolute;
                 inset: 0;
@@ -72,7 +92,7 @@
             
             .hero-secondary-subtitle {
                 display: inline-block;
-                font-family: 'Inter', sans-serif;
+                font-family: var(--font-body, 'Inter', sans-serif);
                 font-size: clamp(7px, 1vw, 9px);
                 font-weight: 500;
                 letter-spacing: 0.45em;
@@ -85,7 +105,7 @@
             }
             
             .hero-secondary-title {
-                font-family: 'Playfair Display', serif;
+                font-family: var(--font-heading, 'Playfair Display', serif);
                 font-size: clamp(22px, 4.5vw, 60px);
                 font-weight: 900;
                 line-height: 1.1;
@@ -106,7 +126,7 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 4px;
-                font-family: 'Inter', sans-serif;
+                font-family: var(--font-body, 'Inter', sans-serif);
                 font-size: clamp(8px, 1vw, 10px);
                 font-weight: 500;
                 letter-spacing: 0.25em;
@@ -273,10 +293,6 @@
             this.isInitialized = false;
         }
 
-        /**
-         * Initialize the hero secondary banner component
-         * @param {Array} data - Array of hero secondary slide objects [{img, title, subtitle, cta_text, cta_link}]
-         */
         init(data) {
             console.log('[HeroSecondaryBanner] 🚀 Init called with', data?.length, 'slides');
             
@@ -287,7 +303,6 @@
 
             this.heroSecondaryData = data;
             
-            // Find container
             this.container = document.getElementById('hero-secondary-container');
             console.log('[HeroSecondaryBanner] 📦 Container found:', !!this.container);
             
@@ -296,7 +311,6 @@
                 return;
             }
 
-            // Inject inner HTML if needed
             if (!document.getElementById('hero-secondary-banner-slides')) {
                 console.log('[HeroSecondaryBanner] 🔧 Injecting inner HTML template...');
                 this.container.outerHTML = getHeroSecondaryHTML();
@@ -309,12 +323,9 @@
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroSecondaryBanner] ✅ Initialized with', this.heroSecondaryData.length, 'slides');
+            console.log('[HeroSecondaryBanner] ✅ Initialized with', this.heroSecondaryData.length, 'slides - Fixed Heights');
         }
 
-        /**
-         * Render all slides
-         */
         render() {
             const slidesContainer = document.getElementById('hero-secondary-banner-slides');
             if (!slidesContainer || !this.heroSecondaryData.length) return;
@@ -334,9 +345,6 @@
             this.updateContent(0);
         }
 
-        /**
-         * Render navigation dots
-         */
         renderDots() {
             const dotsContainer = document.getElementById('hero-secondary-nav-dots');
             if (!dotsContainer || this.heroSecondaryData.length <= 1) {
@@ -353,9 +361,6 @@
             `).join('');
         }
 
-        /**
-         * Update active slide content (title, subtitle, CTA)
-         */
         updateContent(index) {
             const slide = this.heroSecondaryData[index];
             if (!slide) return;
@@ -364,28 +369,24 @@
             const subtitleEl = document.getElementById('hero-secondary-subtitle');
             const ctaContainer = document.getElementById('hero-secondary-cta-container');
 
-            // Reset animations
             [titleEl, subtitleEl, ctaContainer].forEach(el => {
                 if (el) {
                     el.style.animation = 'none';
-                    el.offsetHeight; // Force reflow
+                    el.offsetHeight;
                     el.style.animation = '';
                 }
             });
 
-            // Update title
             if (titleEl) {
                 titleEl.textContent = slide.title || '';
                 titleEl.style.display = slide.title ? 'block' : 'none';
             }
 
-            // Update subtitle
             if (subtitleEl) {
                 subtitleEl.textContent = slide.subtitle || '';
                 subtitleEl.style.display = slide.subtitle ? 'inline-block' : 'none';
             }
 
-            // Update CTA
             if (ctaContainer) {
                 if (slide.cta_text && slide.cta_link) {
                     ctaContainer.innerHTML = `
@@ -401,9 +402,6 @@
             }
         }
 
-        /**
-         * Switch to a specific slide
-         */
         goToSlide(index) {
             if (this.isTransitioning) return;
             if (index < 0 || index >= this.heroSecondaryData.length) return;
@@ -414,58 +412,41 @@
             const slides = document.querySelectorAll('.hero-secondary-slide-wrapper');
             const dots = document.querySelectorAll('.hero-secondary-nav-dot');
 
-            // Fade out all slides
             slides.forEach(slide => slide.classList.add('fade-out'));
             
-            // Fade in target slide
             if (slides[index]) {
                 slides[index].classList.remove('fade-out');
             }
 
-            // Update active dot
             dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
 
-            // Update content with animation
             this.updateContent(index);
             this.currentSlide = index;
 
-            // Reset transition lock after animation completes
             setTimeout(() => {
                 this.isTransitioning = false;
             }, 800);
         }
 
-        /**
-         * Go to next slide
-         */
         nextSlide() {
             const next = (this.currentSlide + 1) % this.heroSecondaryData.length;
             this.goToSlide(next);
         }
 
-        /**
-         * Go to previous slide
-         */
         prevSlide() {
             const prev = (this.currentSlide - 1 + this.heroSecondaryData.length) % this.heroSecondaryData.length;
             this.goToSlide(prev);
         }
 
-        /**
-         * Start auto-sliding
-         */
         startAutoSlide() {
             this.stopAutoSlide();
             if (this.heroSecondaryData.length > 1) {
                 this.slideInterval = setInterval(() => {
                     this.nextSlide();
-                }, 7000); // 7 seconds per slide
+                }, 7000);
             }
         }
 
-        /**
-         * Stop auto-sliding
-         */
         stopAutoSlide() {
             if (this.slideInterval) {
                 clearInterval(this.slideInterval);
@@ -473,25 +454,15 @@
             }
         }
 
-        /**
-         * Pause auto-slide temporarily (e.g., on hover)
-         */
         pauseAutoSlide() {
             this.stopAutoSlide();
         }
 
-        /**
-         * Resume auto-slide after pause
-         */
         resumeAutoSlide() {
             this.startAutoSlide();
         }
 
-        /**
-         * Bind all event listeners
-         */
         bindEvents() {
-            // Arrow buttons
             const prevBtn = document.getElementById('hero-secondary-prev-btn');
             const nextBtn = document.getElementById('hero-secondary-next-btn');
             
@@ -511,7 +482,6 @@
                 });
             }
 
-            // Navigation dots - event delegation
             const dotsContainer = document.getElementById('hero-secondary-nav-dots');
             if (dotsContainer) {
                 dotsContainer.addEventListener('click', (e) => {
@@ -527,16 +497,13 @@
                 });
             }
 
-            // Pause on hover
             if (this.container) {
                 this.container.addEventListener('mouseenter', () => this.pauseAutoSlide());
                 this.container.addEventListener('mouseleave', () => this.resumeAutoSlide());
             }
 
-            // Touch swipe support
             this.bindTouchEvents();
 
-            // Keyboard navigation
             document.addEventListener('keydown', (e) => {
                 if (!this.container || !this.container.offsetParent) return;
                 
@@ -554,9 +521,6 @@
             });
         }
 
-        /**
-         * Bind touch/swipe events for mobile
-         */
         bindTouchEvents() {
             if (!this.container) return;
 
@@ -584,9 +548,6 @@
             }, { passive: true });
         }
 
-        /**
-         * Refresh the banner with new data
-         */
         refresh(newData) {
             this.stopAutoSlide();
             this.currentSlide = 0;
@@ -594,9 +555,6 @@
             this.init(newData);
         }
 
-        /**
-         * Destroy the component (cleanup)
-         */
         destroy() {
             this.stopAutoSlide();
             this.isInitialized = false;
@@ -605,71 +563,50 @@
     }
 
     // ==================== GLOBAL API ====================
-    // Create singleton instance
     const heroSecondaryBanner = new HeroSecondaryBannerComponent();
 
-    /**
-     * Initialize Hero Secondary Banner - Called from external scripts
-     * @param {Array} heroSecondaryData - Array of hero secondary slide objects
-     * 
-     * Usage: window.JAYENWARE.heroSecondaryBanner.init(heroSecondaryArray);
-     */
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroSecondaryBanner = heroSecondaryBanner;
 
     // ==================== AUTO-INITIALIZATION ====================
-    // Inject styles
     if (!document.getElementById('hero-secondary-banner-styles')) {
         document.head.insertAdjacentHTML('beforeend', HERO_SECONDARY_CSS);
         console.log('[HeroSecondaryBanner] 🎨 Styles injected');
     }
 
-    /**
-     * Inject HTML into DOM at the correct position
-     * Position: AFTER #hero-container (Hero Banner এর পরে)
-     */
     function injectHTML() {
-    let container = document.getElementById('hero-secondary-container');
-    if (container) {
-        console.log('[HeroSecondaryBanner] 📦 Container already exists in DOM');
-        return;
-    }
+        let container = document.getElementById('hero-secondary-container');
+        if (container) {
+            console.log('[HeroSecondaryBanner] 📦 Container already exists in DOM');
+            return;
+        }
 
-    console.log('[HeroSecondaryBanner] 🔧 Creating and injecting container...');
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = getHeroSecondaryHTML();
-    const bannerElement = tempDiv.firstElementChild;
+        console.log('[HeroSecondaryBanner] 🔧 Creating and injecting container...');
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = getHeroSecondaryHTML();
+        const bannerElement = tempDiv.firstElementChild;
 
-    // 🔥 Hot Products সেকশনের পরে বসবে
-    const hotProductsSection = document.getElementById('hot-products-section');
+        const hotProductsSection = document.getElementById('hot-products-section');
 
-    if (hotProductsSection && hotProductsSection.parentNode) {
-        // ✅ PRIMARY: Insert AFTER hot-products-section
-        hotProductsSection.parentNode.insertBefore(bannerElement, hotProductsSection.nextSibling);
-        console.log('[HeroSecondaryBanner] ✅ Inserted AFTER hot-products-section');
-    } else {
-        // Fallback 1: hero-container এর পরে
-        const heroContainer = document.getElementById('hero-container');
-        if (heroContainer && heroContainer.parentNode) {
-            heroContainer.parentNode.insertBefore(bannerElement, heroContainer.nextSibling);
-            console.log('[HeroSecondaryBanner] ⚠️ Inserted AFTER hero-container (fallback)');
+        if (hotProductsSection && hotProductsSection.parentNode) {
+            hotProductsSection.parentNode.insertBefore(bannerElement, hotProductsSection.nextSibling);
+            console.log('[HeroSecondaryBanner] ✅ Inserted AFTER hot-products-section');
         } else {
-            // Fallback 2: body এর শুরুতে
-            document.body.insertBefore(bannerElement, document.body.firstChild);
-            console.log('[HeroSecondaryBanner] ⚠️ Inserted at body start (ultimate fallback)');
+            const heroContainer = document.getElementById('hero-container');
+            if (heroContainer && heroContainer.parentNode) {
+                heroContainer.parentNode.insertBefore(bannerElement, heroContainer.nextSibling);
+                console.log('[HeroSecondaryBanner] ⚠️ Inserted AFTER hero-container (fallback)');
+            } else {
+                document.body.insertBefore(bannerElement, document.body.firstChild);
+                console.log('[HeroSecondaryBanner] ⚠️ Inserted at body start (ultimate fallback)');
+            }
         }
     }
-}
 
-    /**
-     * Try to initialize with available data
-     */
     function tryInit() {
-        // First ensure HTML is injected
         injectHTML();
         
-        // Check for data in window.currentData
         const data = (window.currentData && window.currentData.hero_secondary) || null;
         
         if (data && data.length > 0) {
@@ -680,9 +617,6 @@
         }
     }
 
-    /**
-     * Fetch hero secondary data directly from API
-     */
     async function fetchHeroSecondaryData() {
         try {
             console.log('[HeroSecondaryBanner] 🌐 Fetching from /api/hero-secondary...');
@@ -699,7 +633,6 @@
         }
     }
 
-    // Listen for data loaded event from main app
     window.addEventListener('jayenware:dataLoaded', (e) => {
         console.log('[HeroSecondaryBanner] 📡 Received jayenware:dataLoaded event');
         if (e.detail && e.detail.hero_secondary && e.detail.hero_secondary.length > 0) {
@@ -707,7 +640,6 @@
         }
     });
 
-    // Bootstrap - start the initialization process
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(tryInit, 50);
@@ -716,7 +648,6 @@
         setTimeout(tryInit, 50);
     }
 
-    // Retry mechanism - if data doesn't arrive via event, fetch directly after 3 seconds
     setTimeout(() => {
         if (!heroSecondaryBanner.isInitialized) {
             console.log('[HeroSecondaryBanner] 🔄 Retry - fetching directly...');
@@ -724,5 +655,5 @@
         }
     }, 3000);
 
-    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v1.0.0 - Secondary Banner after Hero Banner)');
+    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v1.0.1 - Fixed Heights for All Devices)');
 })();
