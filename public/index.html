@@ -988,9 +988,9 @@
                 </div>
             </div>
 
-            <!-- New Arrivals Container (Loaded from newarrival.js) -->
+            <!-- Carousel: New Arrivals (Loaded from newarrival.js) -->
             <div id="new-arrivals-container"></div>
-            <!-- New Arrivals Skeleton -->
+            <!-- Carousel Skeleton: New Arrivals -->
             <div id="new-arrivals-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1006,9 +1006,9 @@
                 </div>
             </div>
 
-            <!-- Trending Now Container (Loaded from trendingnow.js) -->
+            <!-- Carousel: Trending Now (Loaded from trendingnow.js) -->
             <div id="trending-now-container"></div>
-            <!-- Trending Now Skeleton -->
+            <!-- Carousel Skeleton: Trending Now -->
             <div id="trending-now-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1024,9 +1024,9 @@
                 </div>
             </div>
 
-            <!-- Featured Products Container (Loaded from featuredproducts.js) -->
+            <!-- Carousel: Featured Products (Loaded from featuredproducts.js) -->
             <div id="featured-products-container"></div>
-            <!-- Featured Products Skeleton -->
+            <!-- Carousel Skeleton: Featured -->
             <div id="featured-products-skeleton" class="carousel-section skeleton-visible" style="background:#fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1042,9 +1042,9 @@
                 </div>
             </div>
 
-            <!-- Best Sellers Container (Loaded from bestseller.js) -->
+            <!-- Carousel: Best Sellers (Loaded from bestseller.js) -->
             <div id="best-sellers-container"></div>
-            <!-- Best Sellers Skeleton -->
+            <!-- Carousel Skeleton: Best Sellers -->
             <div id="best-sellers-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1060,9 +1060,9 @@
                 </div>
             </div>
 
-            <!-- On Sale Container (Loaded from onsale.js) -->
+            <!-- Carousel: On Sale (Loaded from onsale.js) -->
             <div id="on-sale-container"></div>
-            <!-- On Sale Skeleton -->
+            <!-- Carousel Skeleton: On Sale -->
             <div id="on-sale-skeleton" class="carousel-section skeleton-visible" style="background:#fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1078,7 +1078,7 @@
                 </div>
             </div>
 
-            <!-- Carousel: Limited Edition -->
+            <!-- Carousel: Limited Edition (Kept as is) -->
             <section id="limited-edition-section" class="carousel-section skeleton-hidden" style="background: #1d1d1f;">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1620,61 +1620,99 @@
             progressBar.style.width = `${Math.min(progress, 100)}%`;
         }
 
+        function renderCarouselProducts(carouselId, products) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
+
+            if (!products || !products.length) {
+                carousel.innerHTML =
+                    '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>';
+                return;
+            }
+
+            carousel.innerHTML = products.map(p => {
+                const isOut = p.stock <= 0;
+                const slug = getProductSlug(p);
+                let badge = '';
+                if (!isOut) {
+                    if (p.is_new_arrival) badge = '<span class="card-badge">New</span>';
+                    else if (p.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>';
+                    else if (p.is_limited_edition) badge = '<span class="card-badge">Limited</span>';
+                }
+
+                return `
+                <a href="/product/${slug}" class="carousel-card" draggable="false">
+                    <div class="card-img">
+                        <img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">
+                        ${badge}
+                        ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
+                        <button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn" ${isOut ? 'disabled' : ''} aria-label="Add to cart">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">${p.category}</span>
+                        <h3 class="card-title">${p.title}</h3>
+                        <div>
+                            <span class="card-price">৳${p.price}</span>
+                            ${p.old_price ? `<span class="card-old-price">৳${p.old_price}</span>` : ''}
+                        </div>
+                    </div>
+                </a>`;
+            }).join('');
+
+            carousel.addEventListener('scroll', () => updateScrollProgress(carouselId), { passive: true });
+            updateScrollProgress(carouselId);
+        }
+
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
 
             // Category show section is now handled by categoryshow.js
             // It will be rendered in the #categoryshow-container
-            
-            // New Arrivals is now handled by newarrival.js
+
+            // New Arrivals section is now loaded from newarrival.js
             if (typeof window.renderNewArrival === 'function') {
                 window.renderNewArrival(currentData.products.filter(p => p.is_new_arrival === true));
                 hideSkeleton('new-arrivals');
-            } else {
-                hideSkeleton('new-arrivals');
             }
 
-            // Trending Now is now handled by trendingnow.js
+            // Trending Now section is now loaded from trendingnow.js
             if (typeof window.renderTrendingNow === 'function') {
                 window.renderTrendingNow(currentData.products.filter(p => p.is_hot === true));
                 hideSkeleton('trending-now');
-            } else {
-                hideSkeleton('trending-now');
             }
 
-            // Featured Products is now handled by featuredproducts.js
+            // Featured Products section is now loaded from featuredproducts.js
             if (typeof window.renderFeaturedProducts === 'function') {
                 window.renderFeaturedProducts(currentData.products.filter(p => p.is_featured === true));
                 hideSkeleton('featured-products');
-            } else {
-                hideSkeleton('featured-products');
             }
 
-            // Best Sellers is now handled by bestseller.js
+            // Best Sellers section is now loaded from bestseller.js
             if (typeof window.renderBestSeller === 'function') {
                 window.renderBestSeller(currentData.products.filter(p => p.is_best === true));
                 hideSkeleton('best-sellers');
-            } else {
-                hideSkeleton('best-sellers');
             }
 
-            // On Sale is now handled by onsale.js
+            // On Sale section is now loaded from onsale.js
             if (typeof window.renderOnSale === 'function') {
                 window.renderOnSale(currentData.products.filter(p => p.is_on_sale === true));
                 hideSkeleton('on-sale');
-            } else {
-                hideSkeleton('on-sale');
             }
 
-            // Limited Edition remains inline
+            // Limited Edition section - kept as is
             const limitedProducts = currentData.products.filter(p => p.is_limited_edition === true);
-            const limitedSection = document.getElementById('limited-edition-section');
-            if (limitedSection && limitedProducts && limitedProducts.length > 0) {
-                limitedSection.classList.remove('hidden', 'skeleton-hidden');
-                renderCarouselProducts('limited-edition-carousel', limitedProducts);
+            if (limitedProducts.length > 0) {
+                const section = document.getElementById('limited-edition-section');
+                if (section) {
+                    section.classList.remove('hidden', 'skeleton-hidden');
+                    renderCarouselProducts('limited-edition-carousel', limitedProducts);
+                }
                 hideSkeleton('limited-edition');
-            } else if (limitedSection) {
-                limitedSection.classList.add('hidden');
+            } else {
+                const section = document.getElementById('limited-edition-section');
+                if (section) section.classList.add('hidden');
                 hideSkeleton('limited-edition');
             }
         }
