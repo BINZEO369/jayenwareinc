@@ -40,6 +40,22 @@
       "dest": "/public/hot.js"
     },
     {
+      "src": "/featuredproducts.js",
+      "dest": "/public/featuredproducts.js"
+    },
+    {
+      "src": "/bestseller.js",
+      "dest": "/public/bestseller.js"
+    },
+    {
+      "src": "/onsale.js",
+      "dest": "/public/onsale.js"
+    },
+    {
+      "src": "/limitededition.js",
+      "dest": "/public/limitededition.js"
+    },
+    {
       "src": "/hero-secondary-banner.js",
       "dest": "/public/hero-secondary-banner.js"
     },
