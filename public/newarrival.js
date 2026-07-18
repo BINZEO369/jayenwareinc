@@ -69,14 +69,49 @@
 
     var productColorsCache = {};
 
-    function escapeHTML(str) {
-        var div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
-    }
+    var globalMouseMoveHandler = null;
+    var globalMouseUpHandler = null;
+    var activeDragData = null;
 
-    function escapeAttr(str) {
-        return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    function ensureGlobalMouseHandlers() {
+        if (globalMouseMoveHandler && globalMouseUpHandler) return;
+
+        globalMouseMoveHandler = function(e) {
+            if (!activeDragData) return;
+            var d = activeDragData;
+            if (d.transitioning) return;
+            d.mcX = e.clientX;
+            var diff = d.mcX - d.msX;
+            var imgs = d.card.querySelectorAll('.new-arrival-slider-image');
+            var cur = imgs[d.idx];
+            if (cur) cur.style.left = diff + 'px';
+            if (diff < -30 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
+                imgs[d.idx + 1].style.left = (100 + (diff / d.card.offsetWidth * 100)) + '%';
+            } else if (diff > 30 && d.idx > 0 && imgs[d.idx - 1]) {
+                imgs[d.idx - 1].style.left = (-100 + (diff / d.card.offsetWidth * 100)) + '%';
+            }
+        };
+
+        globalMouseUpHandler = function() {
+            if (!activeDragData) return;
+            var d = activeDragData;
+            activeDragData = null;
+            d.md = false;
+            var diff = d.msX - d.mcX;
+            var th = d.card.offsetWidth * 0.2;
+            var imgs = d.card.querySelectorAll('.new-arrival-slider-image');
+            imgs.forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
+            if (Math.abs(diff) > th) {
+                if (diff > 0 && d.idx < d.total - 1) d.slideTo(d.idx + 1);
+                else if (diff < 0 && d.idx > 0) d.slideTo(d.idx - 1);
+                else d.reset();
+            } else {
+                d.reset();
+            }
+        };
+
+        window.addEventListener('mousemove', globalMouseMoveHandler);
+        window.addEventListener('mouseup', globalMouseUpHandler);
     }
 
     function getImageUrl(product) {
@@ -141,11 +176,6 @@
         var out = product.is_out_of_stock === true || product.is_out_of_stock === 1 || product.stock === 0 || product.stock === '0';
         var slug = getProductSlug(product);
         var img = getImageUrl(product);
-        var badge = '';
-        if (!out) {
-            if (product.is_new_arrival === true || product.is_new_arrival === 1) badge = '<span class="new-arrival-badge">New</span>';
-            else if (product.is_on_sale === true || product.is_on_sale === 1) badge = '<span class="new-arrival-badge new-arrival-badge-sale">Sale</span>';
-        }
 
         var card = document.createElement('div');
         card.className = 'new-arrival-card';
@@ -175,10 +205,16 @@
 
         imageWrapper.appendChild(slider);
 
-        if (badge) {
-            var badgeSpan = document.createElement('span');
-            badgeSpan.innerHTML = badge;
-            imageWrapper.appendChild(badgeSpan.firstChild);
+        if (!out) {
+            var badgeText = '';
+            if (product.is_new_arrival === true || product.is_new_arrival === 1) badgeText = 'New';
+            else if (product.is_on_sale === true || product.is_on_sale === 1) badgeText = 'Sale';
+            if (badgeText) {
+                var badgeSpan = document.createElement('span');
+                badgeSpan.className = 'new-arrival-badge' + (badgeText === 'Sale' ? ' new-arrival-badge-sale' : '');
+                badgeSpan.textContent = badgeText;
+                imageWrapper.appendChild(badgeSpan);
+            }
         }
 
         if (out) {
@@ -230,12 +266,61 @@
     }
 
     function setupSlider(card, slider, dotsContainer, images) {
+        ensureGlobalMouseHandlers();
+
         slider.innerHTML = '';
         dotsContainer.innerHTML = '';
         dotsContainer.style.display = 'flex';
-        var idx = 0, transitioning = false;
+
+        var transitioning = false;
         var tsX = 0, tcX = 0, dragging = false;
-        var md = false, msX = 0, mcX = 0;
+
+        var dragData = {
+            card: card,
+            idx: 0,
+            total: images.length,
+            transitioning: false,
+            slideTo: null,
+            reset: null,
+            md: false,
+            msX: 0,
+            mcX: 0,
+            tsX: 0,
+            tcX: 0,
+            dragging: false
+        };
+
+        function slideTo(to) {
+            if (dragData.transitioning || to === dragData.idx) return;
+            dragData.transitioning = true;
+            var imgs = card.querySelectorAll('.new-arrival-slider-image');
+            var dts = card.querySelectorAll('.new-arrival-image-dot');
+            var dir = to > dragData.idx ? 1 : -1;
+            imgs.forEach(function(im, i) {
+                if (i === to) im.style.left = '0';
+                else if (i === dragData.idx) im.style.left = dir > 0 ? '-100%' : '100%';
+                else if (dir > 0 && i < to) im.style.left = '-100%';
+                else if (dir < 0 && i > to) im.style.left = '100%';
+                else im.style.left = dir > 0 ? '100%' : '-100%';
+            });
+            dts.forEach(function(d, i) { d.classList.toggle('active', i === to); });
+            dragData.idx = to;
+            setTimeout(function() { dragData.transitioning = false; }, 450);
+        }
+
+        function reset() {
+            var imgs = card.querySelectorAll('.new-arrival-slider-image');
+            imgs.forEach(function(im, i) {
+                if (i === dragData.idx) im.style.left = '0';
+                else if (i < dragData.idx) im.style.left = '-100%';
+                else im.style.left = '100%';
+            });
+        }
+
+        dragData.slideTo = slideTo;
+        dragData.reset = reset;
+
+        card._sliderDragData = dragData;
 
         images.forEach(function(src, i) {
             var img = document.createElement('img');
@@ -256,7 +341,8 @@
                 dot.addEventListener('click', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    if (!transitioning && index !== idx) { slideTo(index); idx = index; }
+                    if (dragData.transitioning || index === dragData.idx) return;
+                    slideTo(index);
                 });
             })(i);
             dotsContainer.appendChild(dot);
@@ -265,95 +351,58 @@
         var firstDot = dotsContainer.querySelector('[data-index="0"]');
         if (firstDot) firstDot.classList.add('active');
 
-        function slideTo(to) {
-            if (transitioning || to === idx) return;
-            transitioning = true;
-            var imgs = card.querySelectorAll('.new-arrival-slider-image');
-            var dts = card.querySelectorAll('.new-arrival-image-dot');
-            var dir = to > idx ? 1 : -1;
-            imgs.forEach(function(im, i) {
-                if (i === to) im.style.left = '0';
-                else if (i === idx) im.style.left = dir > 0 ? '-100%' : '100%';
-                else if (dir > 0 && i < to) im.style.left = '-100%';
-                else if (dir < 0 && i > to) im.style.left = '100%';
-                else im.style.left = dir > 0 ? '100%' : '-100%';
-            });
-            dts.forEach(function(d, i) { d.classList.toggle('active', i === to); });
-            idx = to;
-            setTimeout(function() { transitioning = false; }, 450);
-        }
-
-        function reset() {
-            var imgs = card.querySelectorAll('.new-arrival-slider-image');
-            imgs.forEach(function(im, i) {
-                if (i === idx) im.style.left = '0';
-                else if (i < idx) im.style.left = '-100%';
-                else im.style.left = '100%';
-            });
-        }
-
         card.addEventListener('touchstart', function(e) {
-            if (transitioning) return;
-            tsX = e.touches[0].clientX;
-            tcX = tsX;
-            dragging = true;
+            var d = card._sliderDragData;
+            if (!d || d.transitioning) return;
+            d.tsX = e.touches[0].clientX;
+            d.tcX = d.tsX;
+            d.dragging = true;
             card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'none'; });
         }, { passive: true });
 
         card.addEventListener('touchmove', function(e) {
-            if (!dragging || transitioning) return;
-            tcX = e.touches[0].clientX;
-            var diff = tcX - tsX;
+            var d = card._sliderDragData;
+            if (!d || !d.dragging || d.transitioning) return;
+            d.tcX = e.touches[0].clientX;
+            var diff = d.tcX - d.tsX;
             var imgs = card.querySelectorAll('.new-arrival-slider-image');
-            var cur = imgs[idx];
+            var cur = imgs[d.idx];
             if (cur) cur.style.left = diff + 'px';
-            if (diff < -30 && idx < images.length - 1 && imgs[idx + 1]) imgs[idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            else if (diff > 30 && idx > 0 && imgs[idx - 1]) imgs[idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
+            if (diff < -30 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
+                imgs[d.idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
+            } else if (diff > 30 && d.idx > 0 && imgs[d.idx - 1]) {
+                imgs[d.idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
+            }
         }, { passive: true });
 
         card.addEventListener('touchend', function() {
-            if (!dragging) return;
-            dragging = false;
-            var diff = tsX - tcX;
+            var d = card._sliderDragData;
+            if (!d || !d.dragging) return;
+            d.dragging = false;
+            var diff = d.tsX - d.tcX;
             var th = card.offsetWidth * 0.2;
             card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
             if (Math.abs(diff) > th) {
-                if (diff > 0 && idx < images.length - 1) slideTo(idx + 1);
-                else if (diff < 0 && idx > 0) slideTo(idx - 1);
+                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
+                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
                 else reset();
-            } else reset();
+            } else {
+                reset();
+            }
         });
 
         card.addEventListener('mousedown', function(e) {
-            if (transitioning) return;
-            md = true;
-            msX = e.clientX;
-            mcX = msX;
+            var d = card._sliderDragData;
+            if (!d || d.transitioning) return;
+            if (activeDragData && activeDragData !== d) {
+                activeDragData.md = false;
+                activeDragData = null;
+            }
+            d.md = true;
+            d.msX = e.clientX;
+            d.mcX = d.msX;
+            activeDragData = d;
             card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'none'; });
-        });
-
-        window.addEventListener('mousemove', function(e) {
-            if (!md || transitioning) return;
-            mcX = e.clientX;
-            var diff = mcX - msX;
-            var imgs = card.querySelectorAll('.new-arrival-slider-image');
-            var cur = imgs[idx];
-            if (cur) cur.style.left = diff + 'px';
-            if (diff < -30 && idx < images.length - 1 && imgs[idx + 1]) imgs[idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            else if (diff > 30 && idx > 0 && imgs[idx - 1]) imgs[idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-        });
-
-        window.addEventListener('mouseup', function() {
-            if (!md) return;
-            md = false;
-            var diff = msX - mcX;
-            var th = card.offsetWidth * 0.2;
-            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && idx < images.length - 1) slideTo(idx + 1);
-                else if (diff < 0 && idx > 0) slideTo(idx - 1);
-                else reset();
-            } else reset();
         });
     }
 
@@ -500,6 +549,9 @@
         var skeleton = document.getElementById(CONFIG.skeletonId);
         if (!container) return;
         if (skeleton) skeleton.style.display = 'block';
+
+        activeDragData = null;
+
         try {
             var arrivals;
             if (Array.isArray(products) && products.length > 0) {
@@ -602,6 +654,7 @@
     function init() {
         applyFontsVariables();
         injectStyles();
+        ensureGlobalMouseHandlers();
         window.addEventListener('jayenware:dataLoaded', function(e) {
             var detail = e.detail || {};
             if (detail.products && Array.isArray(detail.products)) {
