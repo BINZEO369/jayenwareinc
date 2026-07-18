@@ -1,7 +1,6 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT
-// Premium Minimalist Design (Prada Style)
-// Integrated with /api/home-showcase/complete API
+// Prada-style Minimalist Layout Implementation
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -14,7 +13,7 @@ class HomeCategoryShowcase {
             itemsPerRow: {
                 mobile: 2,
                 tablet: 2,
-                desktop: 4
+                desktop: 4 // Changed to 4 for desktop to match clean layout
             }
         };
         
@@ -26,7 +25,6 @@ class HomeCategoryShowcase {
         
         this.isLoaded = false;
         this.gridElement = null;
-        this.currentFilter = 'women'; // Default tab based on the image
         this.init();
     }
 
@@ -58,7 +56,8 @@ class HomeCategoryShowcase {
             
             console.log('[CategoryShowcase] Data loaded:', {
                 men: this.data.menCategories.length,
-                women: this.data.womenCategories.length
+                women: this.data.womenCategories.length,
+                header: !!this.data.header
             });
         } catch (error) {
             console.error('[CategoryShowcase] Fetch error:', error);
@@ -112,13 +111,10 @@ class HomeCategoryShowcase {
 
         // Build header with Tabs
         const headerHTML = this.buildHeaderHTML();
-        container.innerHTML = headerHTML;
+        container.insertAdjacentHTML('afterbegin', headerHTML);
 
-        // Create and append grid
-        this.gridElement = document.createElement('div');
-        this.gridElement.className = this.config.gridClass;
-        this.gridElement.id = 'categoryshow-dynamic-grid';
-        container.appendChild(this.gridElement);
+        this.gridElement = this.createGridElement();
+        if (!this.gridElement) return;
 
         const allCategories = [...this.data.menCategories, ...this.data.womenCategories];
         allCategories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
@@ -132,66 +128,48 @@ class HomeCategoryShowcase {
         this.gridElement.innerHTML = cardsHTML;
 
         this.injectStyles();
-        this.attachTabListeners();
-        
-        // Apply initial filter based on available data
-        if (this.data.womenCategories.length > 0) {
-            this.filterByGender('women');
-        } else {
-            this.filterByGender('men');
-            this.updateTabStyles('men');
-        }
+        this.setupTabs();
+
+        // Default filter set to 'women' as seen in the screenshot
+        this.filterByGender('women');
 
         this.isLoaded = true;
     }
 
     buildHeaderHTML() {
-        const header = this.data.header || { 
-            subtitle: "Essential volumes, natural materials and functional details define the new season, reinterpreting the codes of summer style." 
-        };
+        const header = this.data.header || {};
+        const title = header.title || '';
+        // Using a default text if subtitle is not provided from API, just like the image
+        const subtitle = header.subtitle || 'Essential volumes, natural materials and functional details define the new season, reinterpreting the codes of summer style.';
 
         return `
         <div class="showcase-header" style="
             text-align: center;
-            padding: 30px 20px 20px;
-            max-width: 600px;
+            padding: 30px 15px 10px;
+            max-width: 800px;
             margin: 0 auto;
         ">
-            ${header.subtitle ? `<p style="
-                font-size: 15px;
-                color: #000;
-                margin: 0 0 30px 0;
-                line-height: 1.5;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            ">${header.subtitle}</p>` : ''}
+            ${title ? `<h2 style="font-size: 24px; font-weight: 700; color: #000; margin: 0 0 15px 0;">${title}</h2>` : ''}
             
-            <div class="category-tabs" style="
-                display: flex;
-                justify-content: center;
-                gap: 30px;
-                margin-bottom: 20px;
-            ">
-                <button class="cat-tab active" data-target="women" style="
-                    background: none;
-                    border: none;
-                    font-size: 15px;
-                    font-weight: 600;
-                    color: #000;
-                    padding: 5px 0;
-                    border-bottom: 2px solid #000;
-                    cursor: pointer;
-                    font-family: inherit;
+            <p style="
+                font-size: 14px;
+                color: #222;
+                margin: 0 0 25px 0;
+                line-height: 1.5;
+                font-family: var(--font-body, 'Inter', sans-serif);
+            ">${subtitle}</p>
+            
+            <!-- Gender Tabs -->
+            <div class="gender-tabs" style="display: flex; justify-content: center; gap: 24px; margin-bottom: 20px;">
+                <button class="gender-tab active" data-target="women" style="
+                    background: none; border: none; border-bottom: 2px solid #000; 
+                    padding: 0 0 6px 0; font-size: 14px; font-weight: 600; 
+                    color: #000; cursor: pointer; transition: all 0.3s;
                 ">Women</button>
-                <button class="cat-tab" data-target="men" style="
-                    background: none;
-                    border: none;
-                    font-size: 15px;
-                    font-weight: 400;
-                    color: #666;
-                    padding: 5px 0;
-                    border-bottom: 2px solid transparent;
-                    cursor: pointer;
-                    font-family: inherit;
+                <button class="gender-tab" data-target="men" style="
+                    background: none; border: none; border-bottom: 2px solid transparent; 
+                    padding: 0 0 6px 0; font-size: 14px; font-weight: 400; 
+                    color: #555; cursor: pointer; transition: all 0.3s;
                 ">Men</button>
             </div>
         </div>`;
@@ -210,18 +188,103 @@ class HomeCategoryShowcase {
         <a href="/category/${catSlug}" 
            class="showcase-category-card" 
            data-gender="${gender.toLowerCase()}"
-           data-index="${index}">
+           style="
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+           ">
             
-            <div class="card-image-wrapper">
+            <div class="image-wrapper" style="
+                position: relative;
+                aspect-ratio: 4/5;
+                background: #f4f4f4; /* Light gray background to match the product backdrop */
+                overflow: hidden;
+            ">
                 ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
-                     loading="${index < 4 ? 'eager' : 'lazy'}">` : ''}
+                     loading="${index < 4 ? 'eager' : 'lazy'}"
+                     onerror="this.style.opacity='0'"
+                     style="
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover; /* Change to 'contain' if products are transparent PNGs */
+                        transition: transform 0.5s ease;
+                     ">` : ''}
             </div>
             
-            <div class="card-title">
-                <h3>${catName}</h3>
+            <div class="card-content" style="
+                padding: 16px 8px;
+                text-align: center;
+            ">
+                <h3 style="
+                    font-size: 13px; /* Small font size matching screenshot */
+                    font-weight: 700;
+                    color: #000;
+                    margin: 0;
+                    font-family: var(--font-heading, 'Inter', sans-serif);
+                    letter-spacing: 0.3px;
+                ">${catName}</h3>
+                
+                ${cat.subtitle ? `<span style="
+                    display: block;
+                    font-size: 11px;
+                    color: #666;
+                    margin-top: 4px;
+                ">${cat.subtitle}</span>` : ''}
             </div>
         </a>`;
+    }
+
+    setupTabs() {
+        const tabs = document.querySelectorAll('.gender-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                // Reset all tabs
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.style.borderBottomColor = 'transparent';
+                    t.style.fontWeight = '400';
+                    t.style.color = '#555';
+                });
+
+                // Activate clicked tab
+                const target = e.currentTarget;
+                target.classList.add('active');
+                target.style.borderBottomColor = '#000';
+                target.style.fontWeight = '600';
+                target.style.color = '#000';
+
+                // Filter items
+                const gender = target.getAttribute('data-target');
+                this.filterByGender(gender);
+            });
+        });
+    }
+
+    filterByGender(gender) {
+        if (!this.isLoaded || !this.gridElement) return;
+        
+        const cards = this.gridElement.querySelectorAll('.showcase-category-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const cardGender = card.getAttribute('data-gender');
+            if (cardGender === gender.toLowerCase()) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Hide container if no items found for this tab
+        const container = document.getElementById(this.config.containerId);
+        if (visibleCount === 0) {
+            this.gridElement.style.display = 'none';
+        } else {
+            this.gridElement.style.display = 'grid'; // ensure it's grid, not just visible
+        }
     }
 
     injectStyles() {
@@ -233,68 +296,23 @@ class HomeCategoryShowcase {
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2px;
+                gap: 2px; /* Thin white gap between images like screenshot */
                 max-width: 100%;
                 margin: 0;
-                background: #fff; /* Creates the white lines between items */
+                background: #fff; /* Ensures gap looks white */
             }
             
-            .showcase-category-card {
-                text-decoration: none;
-                display: block;
-                background: #fff;
-                -webkit-tap-highlight-color: transparent;
-            }
-            
-            .card-image-wrapper {
-                background-color: #f2f2f2; /* Light grey background from screenshot */
-                aspect-ratio: 4/5;
-                position: relative;
-                overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .card-image-wrapper img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover; /* Change to contain if you want full product visible without cropping */
-                object-position: center;
-                transition: transform 0.5s ease;
-            }
-            
-            .card-title {
-                padding: 18px 10px 24px;
-                text-align: center;
-            }
-            
-            .card-title h3 {
-                font-size: 14px;
-                margin: 0;
-                color: #000;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                font-weight: 700;
-                letter-spacing: 0.2px;
-            }
-
             @media (min-width: 768px) {
                 #categoryshow-dynamic-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-                .card-title h3 {
-                    font-size: 16px;
-                }
-            }
-            
-            @media (min-width: 1024px) {
-                #categoryshow-dynamic-grid {
                     grid-template-columns: repeat(4, 1fr);
+                    gap: 15px; /* Larger gap on desktop for cleaner look */
+                    padding: 0 20px;
                 }
             }
             
+            /* Hover effects */
             @media (hover: hover) {
-                .showcase-category-card:hover .card-image-wrapper img {
+                #categoryshow-dynamic-grid .showcase-category-card:hover img {
                     transform: scale(1.03);
                 }
             }
@@ -303,35 +321,13 @@ class HomeCategoryShowcase {
         document.head.insertAdjacentHTML('beforeend', styles);
     }
 
-    attachTabListeners() {
-        const tabs = document.querySelectorAll('.cat-tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const targetGender = e.target.getAttribute('data-target');
-                this.updateTabStyles(targetGender);
-                this.filterByGender(targetGender);
-            });
-        });
-    }
-
-    updateTabStyles(activeGender) {
-        const tabs = document.querySelectorAll('.cat-tab');
-        tabs.forEach(tab => {
-            if (tab.getAttribute('data-target') === activeGender) {
-                tab.style.fontWeight = '600';
-                tab.style.color = '#000';
-                tab.style.borderBottom = '2px solid #000';
-            } else {
-                tab.style.fontWeight = '400';
-                tab.style.color = '#666';
-                tab.style.borderBottom = '2px solid transparent';
-            }
-        });
-    }
-
     createSlug(text) {
         if (!text) return '';
-        return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+        return text
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/^-+|-+$/g, '');
     }
 
     async refresh() {
@@ -342,21 +338,6 @@ class HomeCategoryShowcase {
             this.hide();
         }
     }
-
-    filterByGender(gender) {
-        if (!this.isLoaded || !this.gridElement) return;
-        
-        const cards = this.gridElement.querySelectorAll('.showcase-category-card');
-        
-        cards.forEach(card => {
-            const cardGender = card.getAttribute('data-gender');
-            if (cardGender === gender.toLowerCase()) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
 }
 
 // ============================================================
@@ -364,7 +345,9 @@ class HomeCategoryShowcase {
 // ============================================================
 function initCategoryShowcase() {
     const tryInit = () => {
-        if (typeof window.currentData !== 'undefined' && window.currentData.products && window.currentData.products.length > 0) {
+        if (typeof window.currentData !== 'undefined' && 
+            window.currentData.products && 
+            window.currentData.products.length > 0) {
             window.categoryShowcase = new HomeCategoryShowcase();
             return true;
         }
