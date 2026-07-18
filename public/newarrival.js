@@ -1,6 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
-// ENHANCED: Premium dot design like world-class websites
+// ENHANCED: Premium dot design, centered title, no View All
 // ============================================================
 
 (function() {
@@ -69,7 +69,6 @@
         sectionClass: 'new-arrivals-grid-section',
         gridClass: 'new-arrivals-grid',
         title: 'New Arrivals',
-        viewAllLink: '/products?filter=new_arrival',
         maxProducts: 8,
         cardAspectRatio: '4/5'
     };
@@ -213,7 +212,6 @@
             imgs.forEach((im, i) => { im.style.left = i === idx ? '0' : i < idx ? '-100%' : '100%'; });
         }
 
-        // Touch
         card.addEventListener('touchstart', (e) => {
             if (transitioning) return;
             tsX = e.touches[0].clientX; tcX = tsX; dragging = true;
@@ -241,7 +239,6 @@
             } else reset();
         });
 
-        // Mouse
         card.addEventListener('mousedown', (e) => {
             if (transitioning) return;
             md = true; msX = e.clientX; mcX = msX;
@@ -320,8 +317,9 @@
     }
 
     function createSectionHeader() {
-        const h = document.createElement('div'); h.className = 'new-arrival-header';
-        h.innerHTML = `<h2 class="new-arrival-title">${CONFIG.title}</h2><a href="${CONFIG.viewAllLink}" class="new-arrival-view-all">View All<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>`;
+        const h = document.createElement('div');
+        h.className = 'new-arrival-header';
+        h.innerHTML = `<h2 class="new-arrival-title">${CONFIG.title}</h2>`;
         return h;
     }
 
@@ -363,13 +361,13 @@
                 @media (min-width: 768px) and (max-width: 1023px) { .new-arrivals-grid-section { padding: 28px 16px; } }
                 @media (min-width: 1024px) { .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; } }
 
-                .new-arrival-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 0 8px; }
-                @media (min-width: 768px) { .new-arrival-header { margin-bottom: 20px; padding: 0 2px; } }
-                .new-arrival-title { font-family: ${JABIYEN_FONTS.families.heading}; font-weight: ${JABIYEN_FONTS.weights.heading.bold}; font-size: 20px; color: #1d1d1f; letter-spacing: -0.3px; }
-                @media (min-width: 768px) { .new-arrival-title { font-size: 26px; } }
-                @media (min-width: 1024px) { .new-arrival-title { font-size: 30px; } }
-                .new-arrival-view-all { display: inline-flex; align-items: center; gap: 5px; font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 12px; color: #007aff; text-decoration: none; transition: gap 0.25s; }
-                .new-arrival-view-all:hover { gap: 8px; }
+                /* Centered Header */
+                .new-arrival-header { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; padding: 0 8px; }
+                @media (min-width: 768px) { .new-arrival-header { margin-bottom: 24px; } }
+                @media (min-width: 1024px) { .new-arrival-header { margin-bottom: 28px; } }
+                .new-arrival-title { font-family: ${JABIYEN_FONTS.families.heading}; font-weight: ${JABIYEN_FONTS.weights.heading.bold}; font-size: 22px; color: #1d1d1f; letter-spacing: -0.3px; text-align: center; }
+                @media (min-width: 768px) { .new-arrival-title { font-size: 28px; } }
+                @media (min-width: 1024px) { .new-arrival-title { font-size: 32px; } }
 
                 .new-arrivals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; width: 100%; }
                 @media (min-width: 768px) { .new-arrivals-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -384,7 +382,7 @@
                 .new-arrival-slider-image { position: absolute; top: 0; left: 100%; width: 100%; height: 100%; object-fit: cover; transition: left 0.45s cubic-bezier(0.25,0.1,0.25,1); opacity: 1; display: block; color: transparent; will-change: left; }
                 .new-arrival-slider-image:first-child { left: 0; }
 
-                /* Premium Dots - Apple/Zara style */
+                /* Premium Dots */
                 .new-arrival-image-dots {
                     position: absolute;
                     bottom: 10px;
@@ -414,7 +412,6 @@
                     width: 8px;
                     height: 8px;
                     box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-                    transform: scale(1);
                 }
                 .new-arrival-image-dot:hover {
                     background: rgba(255,255,255,0.85);
