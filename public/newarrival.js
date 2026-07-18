@@ -1,6 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
-// ENHANCED: Smooth slide animation, black tiny dots, no active color
+// ENHANCED: Premium dot design like world-class websites
 // ============================================================
 
 (function() {
@@ -50,9 +50,6 @@
         }
     }
 
-    // ============================================================
-    // API ENDPOINT CONFIGURATION
-    // ============================================================
     const API_CONFIG = {
         baseURL: window.location.origin,
         endpoints: {
@@ -66,9 +63,6 @@
         retryAttempts: 2
     };
 
-    // ============================================================
-    // SECTION CONFIGURATION
-    // ============================================================
     const CONFIG = {
         containerId: 'new-arrivals-container',
         skeletonId: 'new-arrivals-skeleton',
@@ -82,602 +76,299 @@
 
     let productColorsCache = {};
 
-    // ============================================================
-    // HELPER FUNCTIONS
-    // ============================================================
     function getImageUrl(product) {
         if (product.img && product.img.trim() !== '') return product.img;
         if (product.image && product.image.trim() !== '') return product.image;
         if (product.image_url && product.image_url.trim() !== '') return product.image_url;
         if (product.images && product.images.trim() !== '') {
-            const imagesArray = product.images.split(',');
-            if (imagesArray[0] && imagesArray[0].trim() !== '') return imagesArray[0].trim();
+            const arr = product.images.split(',');
+            if (arr[0] && arr[0].trim() !== '') return arr[0].trim();
         }
         return '/placeholder.png';
     }
 
     function getProductSlug(product) {
-        return (product.slug || product.title || 'product')
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[\s_]+/g, '-')
-            .replace(/^-+|-+$/g, '');
+        return (product.slug || product.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
     }
 
-    function handleImageLoad(img) {
-        if (img && img.classList) {
-            img.classList.add('loaded');
-            img.style.opacity = '1';
-        }
-    }
-
+    function handleImageLoad(img) { if (img && img.classList) { img.classList.add('loaded'); img.style.opacity = '1'; } }
     function handleImageError(img) {
         if (img && img.classList) {
             img.style.display = 'none';
             const wrapper = img.closest('.new-arrival-card-image-wrapper');
-            if (wrapper) {
-                wrapper.style.background = '#f5f5f7';
-                const placeholder = document.createElement('div');
-                placeholder.style.cssText = `
-                    position: absolute;
-                    inset: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: #ccc;
-                    font-size: 40px;
-                `;
-                placeholder.innerHTML = '📷';
-                wrapper.appendChild(placeholder);
-            }
+            if (wrapper) { wrapper.style.background = '#f5f5f7'; }
         }
     }
-
     window.handleNewArrivalImageLoad = handleImageLoad;
     window.handleNewArrivalImageError = handleImageError;
 
-    // ============================================================
-    // FETCH PRODUCT COLORS
-    // ============================================================
     async function fetchProductColors(slug) {
         if (productColorsCache[slug]) return productColorsCache[slug];
         try {
-            const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.productColors}?slug=${encodeURIComponent(slug)}`);
-            if (!response.ok) return [];
-            const data = await response.json();
+            const res = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.productColors}?slug=${encodeURIComponent(slug)}`);
+            if (!res.ok) return [];
+            const data = await res.json();
             productColorsCache[slug] = data || [];
             return data || [];
-        } catch (error) {
-            console.warn('[NewArrivals] Failed to fetch colors for:', slug, error);
-            return [];
-        }
+        } catch (e) { return []; }
     }
 
-    // ============================================================
-    // GET ALL IMAGES FOR SLIDER
-    // ============================================================
     function getAllImagesForSlider(product, colors) {
         const images = [];
-        const mainImage = getImageUrl(product);
-        if (mainImage && mainImage !== '/placeholder.png') {
-            images.push(mainImage);
-        }
-        if (colors && colors.length > 0) {
-            colors.forEach(color => {
-                if (color.color_image && color.color_image.trim() !== '' && !images.includes(color.color_image)) {
-                    images.push(color.color_image);
-                }
-            });
-        }
+        const main = getImageUrl(product);
+        if (main && main !== '/placeholder.png') images.push(main);
+        if (colors) colors.forEach(c => { if (c.color_image && c.color_image.trim() && !images.includes(c.color_image)) images.push(c.color_image); });
         return images;
     }
 
-    // ============================================================
-    // PRODUCT CARD
-    // ============================================================
     function createProductCard(product) {
-        const isOutOfStock = product.is_out_of_stock === true || 
-                             product.is_out_of_stock === 1 ||
-                             product.stock === 0 ||
-                             product.stock === '0';
-        
+        const out = product.is_out_of_stock === true || product.is_out_of_stock === 1 || product.stock === 0 || product.stock === '0';
         const slug = getProductSlug(product);
-        const imageUrl = getImageUrl(product);
-        
-        let badgeHTML = '';
-        if (!isOutOfStock) {
-            if (product.is_new_arrival === true || product.is_new_arrival === 1) {
-                badgeHTML = '<span class="new-arrival-badge">New</span>';
-            } else if (product.is_on_sale === true || product.is_on_sale === 1) {
-                badgeHTML = '<span class="new-arrival-badge new-arrival-badge-sale">Sale</span>';
-            }
+        const img = getImageUrl(product);
+        let badge = '';
+        if (!out) {
+            if (product.is_new_arrival === true || product.is_new_arrival === 1) badge = '<span class="new-arrival-badge">New</span>';
+            else if (product.is_on_sale === true || product.is_on_sale === 1) badge = '<span class="new-arrival-badge new-arrival-badge-sale">Sale</span>';
         }
-
         const card = document.createElement('div');
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
         card.setAttribute('data-product-slug', slug);
-
         card.innerHTML = `
             <a href="/product/${slug}" class="new-arrival-card-link">
                 <div class="new-arrival-card-image-wrapper">
                     <div class="new-arrival-image-slider" data-slug="${slug}">
-                        <img 
-                            src="${imageUrl}" 
-                            alt="${product.title || 'Product'}" 
-                            class="new-arrival-card-image new-arrival-slider-image active"
-                            data-index="0"
-                            loading="lazy"
-                            onload="window.handleNewArrivalImageLoad && window.handleNewArrivalImageLoad(this)"
-                            onerror="window.handleNewArrivalImageError && window.handleNewArrivalImageError(this)"
-                        >
+                        <img src="${img}" alt="${product.title||'Product'}" class="new-arrival-card-image new-arrival-slider-image active" data-index="0" loading="lazy" onload="window.handleNewArrivalImageLoad&&window.handleNewArrivalImageLoad(this)" onerror="window.handleNewArrivalImageError&&window.handleNewArrivalImageError(this)">
                     </div>
-                    ${badgeHTML}
-                    ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
+                    ${badge}
+                    ${out?'<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>':''}
                     <div class="new-arrival-image-dots" data-slug="${slug}" style="display:none;"></div>
                 </div>
                 <div class="new-arrival-card-body">
-                    <h3 class="new-arrival-card-title">${product.title || 'Untitled'}</h3>
+                    <h3 class="new-arrival-card-title">${product.title||'Untitled'}</h3>
                     <div class="new-arrival-color-dots-below" data-slug="${slug}"></div>
                 </div>
-            </a>
-        `;
-
-        fetchProductColors(slug).then(colors => {
-            setupCardWithSlider(card, product, colors, slug);
-        });
-
+            </a>`;
+        fetchProductColors(slug).then(colors => setupCard(card, product, colors, slug));
         return card;
     }
 
-    function setupCardWithSlider(card, product, colors, slug) {
-        const sliderContainer = card.querySelector('.new-arrival-image-slider');
-        const imageDotsContainer = card.querySelector('.new-arrival-image-dots');
-        const colorDotsBelow = card.querySelector('.new-arrival-color-dots-below');
-        
-        const allImages = getAllImagesForSlider(product, colors);
-        
-        if (allImages.length > 1) {
-            setupEnhancedSlider(card, sliderContainer, imageDotsContainer, allImages);
-        } else {
-            if (imageDotsContainer) imageDotsContainer.style.display = 'none';
-        }
-        
-        if (colors && colors.length > 0 && colorDotsBelow) {
-            setupColorDotsBelow(colorDotsBelow, colors, slug);
-        } else if (colorDotsBelow) {
-            colorDotsBelow.style.display = 'none';
-        }
+    function setupCard(card, product, colors, slug) {
+        const slider = card.querySelector('.new-arrival-image-slider');
+        const dots = card.querySelector('.new-arrival-image-dots');
+        const colorDots = card.querySelector('.new-arrival-color-dots-below');
+        const all = getAllImagesForSlider(product, colors);
+        if (all.length > 1) setupSlider(card, slider, dots, all);
+        else if (dots) dots.style.display = 'none';
+        if (colors && colors.length && colorDots) setupColorDots(colorDots, colors, slug);
+        else if (colorDots) colorDots.style.display = 'none';
     }
 
-    function setupEnhancedSlider(card, sliderContainer, dotsContainer, images) {
-        sliderContainer.innerHTML = '';
+    function setupSlider(card, slider, dotsContainer, images) {
+        slider.innerHTML = '';
         dotsContainer.innerHTML = '';
         dotsContainer.style.display = 'flex';
-        
-        let currentIndex = 0;
-        let isTransitioning = false;
-        let touchStartX = 0;
-        let touchCurrentX = 0;
-        let isDragging = false;
-        
-        images.forEach((imgSrc, index) => {
+        let idx = 0, transitioning = false;
+        let tsX = 0, tcX = 0, dragging = false;
+        let md = false, msX = 0, mcX = 0;
+
+        images.forEach((src, i) => {
             const img = document.createElement('img');
-            img.src = imgSrc;
-            img.alt = `Image ${index + 1}`;
+            img.src = src; img.alt = `Image ${i+1}`;
             img.className = 'new-arrival-card-image new-arrival-slider-image';
-            img.setAttribute('data-index', index);
+            img.setAttribute('data-index', i);
             img.loading = 'lazy';
-            img.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: ${index === 0 ? '0' : '100%'};
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
-                opacity: 1;
-                display: block;
-                color: transparent;
-                will-change: left;
-            `;
+            img.style.cssText = `position:absolute;top:0;left:${i===0?'0':'100%'};width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;`;
             img.onload = function() { handleImageLoad(this); };
             img.onerror = function() { handleImageError(this); };
-            sliderContainer.appendChild(img);
-            
+            slider.appendChild(img);
             const dot = document.createElement('span');
             dot.className = 'new-arrival-image-dot';
-            dot.setAttribute('data-index', index);
-            dot.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                if (!isTransitioning && index !== currentIndex) {
-                    slideToImage(card, currentIndex, index);
-                    currentIndex = index;
-                }
-            });
+            dot.setAttribute('data-index', i);
+            dot.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); if (!transitioning && i !== idx) { slideTo(i); idx = i; } });
             dotsContainer.appendChild(dot);
         });
-        
-        const firstDot = dotsContainer.querySelector('[data-index="0"]');
-        if (firstDot) firstDot.classList.add('active');
-        
-        function slideToImage(card, fromIndex, toIndex) {
-            if (isTransitioning || fromIndex === toIndex) return;
-            isTransitioning = true;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            const allDots = card.querySelectorAll('.new-arrival-image-dot');
-            const direction = toIndex > fromIndex ? 1 : -1;
-            
-            allImages.forEach((img, i) => {
-                if (i === toIndex) {
-                    img.style.left = '0';
-                } else if (i === fromIndex) {
-                    img.style.left = direction > 0 ? '-100%' : '100%';
-                } else if (direction > 0 && i < toIndex) {
-                    img.style.left = '-100%';
-                } else if (direction < 0 && i > toIndex) {
-                    img.style.left = '100%';
-                } else {
-                    img.style.left = direction > 0 ? '100%' : '-100%';
-                }
+        dotsContainer.querySelector('[data-index="0"]')?.classList.add('active');
+
+        function slideTo(to) {
+            if (transitioning || to === idx) return;
+            transitioning = true;
+            const imgs = card.querySelectorAll('.new-arrival-slider-image');
+            const dts = card.querySelectorAll('.new-arrival-image-dot');
+            const dir = to > idx ? 1 : -1;
+            imgs.forEach((im, i) => {
+                if (i === to) im.style.left = '0';
+                else if (i === idx) im.style.left = dir > 0 ? '-100%' : '100%';
+                else if (dir > 0 && i < to) im.style.left = '-100%';
+                else if (dir < 0 && i > to) im.style.left = '100%';
+                else im.style.left = dir > 0 ? '100%' : '-100%';
             });
-            
-            allDots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === toIndex);
-            });
-            
-            setTimeout(() => { isTransitioning = false; }, 450);
+            dts.forEach((d, i) => d.classList.toggle('active', i === to));
+            idx = to;
+            setTimeout(() => { transitioning = false; }, 450);
         }
-        
+
+        function reset() {
+            const imgs = card.querySelectorAll('.new-arrival-slider-image');
+            imgs.forEach((im, i) => { im.style.left = i === idx ? '0' : i < idx ? '-100%' : '100%'; });
+        }
+
+        // Touch
         card.addEventListener('touchstart', (e) => {
-            if (isTransitioning) return;
-            touchStartX = e.touches[0].clientX;
-            touchCurrentX = touchStartX;
-            isDragging = true;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            allImages.forEach(img => { img.style.transition = 'none'; });
+            if (transitioning) return;
+            tsX = e.touches[0].clientX; tcX = tsX; dragging = true;
+            card.querySelectorAll('.new-arrival-slider-image').forEach(im => im.style.transition = 'none');
         }, { passive: true });
-        
         card.addEventListener('touchmove', (e) => {
-            if (!isDragging || isTransitioning) return;
-            touchCurrentX = e.touches[0].clientX;
-            const diff = touchCurrentX - touchStartX;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            const currentImg = allImages[currentIndex];
-            if (currentImg) currentImg.style.left = diff + 'px';
-            
-            if (diff < -30 && currentIndex < images.length - 1) {
-                const nextImg = allImages[currentIndex + 1];
-                if (nextImg) nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            } else if (diff > 30 && currentIndex > 0) {
-                const prevImg = allImages[currentIndex - 1];
-                if (prevImg) prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-            }
+            if (!dragging || transitioning) return;
+            tcX = e.touches[0].clientX;
+            const diff = tcX - tsX;
+            const imgs = card.querySelectorAll('.new-arrival-slider-image');
+            const cur = imgs[idx];
+            if (cur) cur.style.left = diff + 'px';
+            if (diff < -30 && idx < images.length - 1 && imgs[idx+1]) imgs[idx+1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
+            else if (diff > 30 && idx > 0 && imgs[idx-1]) imgs[idx-1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
         }, { passive: true });
-        
         card.addEventListener('touchend', () => {
-            if (!isDragging) return;
-            isDragging = false;
-            
-            const diff = touchStartX - touchCurrentX;
-            const threshold = card.offsetWidth * 0.2;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            allImages.forEach(img => {
-                img.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
-            });
-            
-            if (Math.abs(diff) > threshold) {
-                if (diff > 0 && currentIndex < images.length - 1) {
-                    slideToImage(card, currentIndex, currentIndex + 1);
-                    currentIndex++;
-                } else if (diff < 0 && currentIndex > 0) {
-                    slideToImage(card, currentIndex, currentIndex - 1);
-                    currentIndex--;
-                } else {
-                    resetImagePositions(card, currentIndex);
-                }
-            } else {
-                resetImagePositions(card, currentIndex);
-            }
+            if (!dragging) return; dragging = false;
+            const diff = tsX - tcX;
+            const th = card.offsetWidth * 0.2;
+            card.querySelectorAll('.new-arrival-slider-image').forEach(im => im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)');
+            if (Math.abs(diff) > th) {
+                if (diff > 0 && idx < images.length - 1) slideTo(idx + 1);
+                else if (diff < 0 && idx > 0) slideTo(idx - 1);
+                else reset();
+            } else reset();
         });
-        
-        let mouseDown = false;
-        let mouseStartX = 0;
-        let mouseCurrentX = 0;
-        
+
+        // Mouse
         card.addEventListener('mousedown', (e) => {
-            if (isTransitioning) return;
-            mouseDown = true;
-            mouseStartX = e.clientX;
-            mouseCurrentX = mouseStartX;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            allImages.forEach(img => { img.style.transition = 'none'; });
+            if (transitioning) return;
+            md = true; msX = e.clientX; mcX = msX;
+            card.querySelectorAll('.new-arrival-slider-image').forEach(im => im.style.transition = 'none');
         });
-        
         window.addEventListener('mousemove', (e) => {
-            if (!mouseDown || isTransitioning) return;
-            mouseCurrentX = e.clientX;
-            const diff = mouseCurrentX - mouseStartX;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            const currentImg = allImages[currentIndex];
-            if (currentImg) currentImg.style.left = diff + 'px';
-            
-            if (diff < -30 && currentIndex < images.length - 1) {
-                const nextImg = allImages[currentIndex + 1];
-                if (nextImg) nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            } else if (diff > 30 && currentIndex > 0) {
-                const prevImg = allImages[currentIndex - 1];
-                if (prevImg) prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-            }
+            if (!md || transitioning) return;
+            mcX = e.clientX;
+            const diff = mcX - msX;
+            const imgs = card.querySelectorAll('.new-arrival-slider-image');
+            const cur = imgs[idx];
+            if (cur) cur.style.left = diff + 'px';
+            if (diff < -30 && idx < images.length - 1 && imgs[idx+1]) imgs[idx+1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
+            else if (diff > 30 && idx > 0 && imgs[idx-1]) imgs[idx-1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
         });
-        
         window.addEventListener('mouseup', () => {
-            if (!mouseDown) return;
-            mouseDown = false;
-            
-            const diff = mouseStartX - mouseCurrentX;
-            const threshold = card.offsetWidth * 0.2;
-            
-            const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            allImages.forEach(img => {
-                img.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
-            });
-            
-            if (Math.abs(diff) > threshold) {
-                if (diff > 0 && currentIndex < images.length - 1) {
-                    slideToImage(card, currentIndex, currentIndex + 1);
-                    currentIndex++;
-                } else if (diff < 0 && currentIndex > 0) {
-                    slideToImage(card, currentIndex, currentIndex - 1);
-                    currentIndex--;
-                } else {
-                    resetImagePositions(card, currentIndex);
-                }
-            } else {
-                resetImagePositions(card, currentIndex);
-            }
-        });
-    }
-    
-    function resetImagePositions(card, currentIndex) {
-        const allImages = card.querySelectorAll('.new-arrival-slider-image');
-        allImages.forEach((img, i) => {
-            if (i === currentIndex) img.style.left = '0';
-            else if (i < currentIndex) img.style.left = '-100%';
-            else img.style.left = '100%';
+            if (!md) return; md = false;
+            const diff = msX - mcX;
+            const th = card.offsetWidth * 0.2;
+            card.querySelectorAll('.new-arrival-slider-image').forEach(im => im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)');
+            if (Math.abs(diff) > th) {
+                if (diff > 0 && idx < images.length - 1) slideTo(idx + 1);
+                else if (diff < 0 && idx > 0) slideTo(idx - 1);
+                else reset();
+            } else reset();
         });
     }
 
-    // Setup color dots below title - NO active state, NO hover effect
-    function setupColorDotsBelow(container, colors, slug) {
-        if (!colors || colors.length === 0) {
-            container.style.display = 'none';
-            return;
-        }
-        
-        container.innerHTML = colors.map(color => {
-            const colorCode = color.color_code || '#ccc';
-            const colorName = color.color_name || '';
-            return `
-                <span 
-                    class="new-arrival-color-dot"
-                    style="background-color: ${colorCode};"
-                    data-color-name="${colorName}"
-                    data-color-code="${colorCode}"
-                    title="${colorName}"
-                ></span>
-            `;
-        }).join('');
-        
-        container.querySelectorAll('.new-arrival-color-dot').forEach(dot => {
-            dot.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                window.location.href = `/product/${slug}`;
-            });
+    function setupColorDots(container, colors, slug) {
+        if (!colors || !colors.length) { container.style.display = 'none'; return; }
+        container.innerHTML = colors.map(c => `<span class="new-arrival-color-dot" style="background-color:${c.color_code||'#ccc'};" title="${c.color_name||''}"></span>`).join('');
+        container.querySelectorAll('.new-arrival-color-dot').forEach(d => {
+            d.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); window.location.href = `/product/${slug}`; });
         });
     }
 
-    // ============================================================
-    // EMPTY STATE
-    // ============================================================
     function createEmptyState() {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'new-arrival-empty';
-        emptyDiv.innerHTML = `
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
-                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-            </svg>
-            <p>No new arrivals at the moment</p>
-            <p class="new-arrival-empty-sub">Check back soon for fresh styles</p>
-        `;
-        return emptyDiv;
+        const d = document.createElement('div'); d.className = 'new-arrival-empty';
+        d.innerHTML = `<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><p>No new arrivals at the moment</p><p class="new-arrival-empty-sub">Check back soon for fresh styles</p>`;
+        return d;
     }
 
-    // ============================================================
-    // SKELETON CARD
-    // ============================================================
     function createSkeletonCard() {
-        const card = document.createElement('div');
-        card.className = 'new-arrival-card new-arrival-skeleton-card';
-        card.innerHTML = `
-            <div class="new-arrival-card-image-wrapper">
-                <div class="skeleton-pulse" style="width:100%;aspect-ratio:${CONFIG.cardAspectRatio};"></div>
-            </div>
-            <div class="new-arrival-card-body">
-                <div class="skeleton-pulse skeleton-text" style="width:85%;"></div>
-                <div class="skeleton-pulse skeleton-text" style="width:55%;"></div>
-            </div>
-        `;
-        return card;
+        const d = document.createElement('div'); d.className = 'new-arrival-card new-arrival-skeleton-card';
+        d.innerHTML = `<div class="new-arrival-card-image-wrapper"><div class="skeleton-pulse" style="width:100%;aspect-ratio:${CONFIG.cardAspectRatio};"></div></div><div class="new-arrival-card-body"><div class="skeleton-pulse skeleton-text" style="width:85%;"></div><div class="skeleton-pulse skeleton-text" style="width:55%;"></div></div>`;
+        return d;
     }
 
-    // ============================================================
-    // API FETCH WITH RETRY
-    // ============================================================
-    async function fetchWithRetry(url, options = {}, retries = API_CONFIG.retryAttempts) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
-
+    async function fetchWithRetry(url, opts = {}, retries = 2) {
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 10000);
         try {
-            const response = await fetch(url, {
-                ...options,
-                signal: controller.signal,
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...options.headers }
-            });
-            clearTimeout(timeoutId);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            if (data && data.data && Array.isArray(data.data)) return data.data;
-            if (data && data.products && Array.isArray(data.products)) return data.products;
+            const res = await fetch(url, { ...opts, signal: ctrl.signal, headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...opts.headers } });
+            clearTimeout(tid);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            if (data?.data && Array.isArray(data.data)) return data.data;
+            if (data?.products && Array.isArray(data.products)) return data.products;
             if (Array.isArray(data)) return data;
             return [];
-        } catch (error) {
-            clearTimeout(timeoutId);
-            if (retries > 0 && error.name !== 'AbortError') {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                return fetchWithRetry(url, options, retries - 1);
-            }
-            throw error;
+        } catch (e) {
+            clearTimeout(tid);
+            if (retries > 0 && e.name !== 'AbortError') { await new Promise(r => setTimeout(r, 1000)); return fetchWithRetry(url, opts, retries - 1); }
+            throw e;
         }
     }
 
-    // ============================================================
-    // FETCH NEW ARRIVALS
-    // ============================================================
     async function fetchNewArrivals() {
         try {
             const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
-            if (Array.isArray(data) && data.length > 0) {
-                return data.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true');
-            }
-            const allProducts = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.products}`);
-            if (Array.isArray(allProducts) && allProducts.length > 0) {
-                return allProducts
-                    .filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true')
-                    .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
-                    .slice(0, CONFIG.maxProducts);
-            }
+            if (data.length) return data.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true');
+            const all = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.products}`);
+            if (all.length) return all.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true').sort((a, b) => new Date(b.created_at||0) - new Date(a.created_at||0)).slice(0, CONFIG.maxProducts);
             return [];
-        } catch (error) {
-            console.error('[NewArrivals] Failed to fetch products:', error);
-            return [];
-        }
+        } catch (e) { return []; }
     }
 
-    // ============================================================
-    // SECTION HEADER
-    // ============================================================
     function createSectionHeader() {
-        const header = document.createElement('div');
-        header.className = 'new-arrival-header';
-        header.innerHTML = `
-            <h2 class="new-arrival-title">${CONFIG.title}</h2>
-            <a href="${CONFIG.viewAllLink}" class="new-arrival-view-all">
-                View All
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-        `;
-        return header;
+        const h = document.createElement('div'); h.className = 'new-arrival-header';
+        h.innerHTML = `<h2 class="new-arrival-title">${CONFIG.title}</h2><a href="${CONFIG.viewAllLink}" class="new-arrival-view-all">View All<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>`;
+        return h;
     }
 
-    function createGridContainer() {
-        const grid = document.createElement('div');
-        grid.className = CONFIG.gridClass;
-        return grid;
-    }
+    function createGridContainer() { const g = document.createElement('div'); g.className = CONFIG.gridClass; return g; }
 
     function initLazyLoading() {
         if (!('IntersectionObserver' in window)) return;
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.tagName === 'IMG' && img.src && img.src !== window.location.href) {
-                        img.style.opacity = '1';
-                        observer.unobserve(img);
-                    }
-                }
-            });
-        }, { rootMargin: '200px 0px', threshold: 0.01 });
-
-        document.querySelectorAll('.new-arrival-card-image').forEach(img => observer.observe(img));
+        const obs = new IntersectionObserver((entries) => { entries.forEach(en => { if (en.isIntersecting) { const img = en.target; if (img.tagName === 'IMG' && img.src && img.src !== window.location.href) { img.style.opacity = '1'; obs.unobserve(img); } } }); }, { rootMargin: '200px 0px', threshold: 0.01 });
+        document.querySelectorAll('.new-arrival-card-image').forEach(img => obs.observe(img));
     }
 
-    // ============================================================
-    // RENDER NEW ARRIVALS
-    // ============================================================
     async function renderNewArrivals(products) {
         const container = document.getElementById(CONFIG.containerId);
         const skeleton = document.getElementById(CONFIG.skeletonId);
-        
         if (!container) return;
         if (skeleton) skeleton.style.display = 'block';
-
         try {
-            let arrivals = Array.isArray(products) && products.length > 0 
-                ? products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true')
-                : await fetchNewArrivals();
-
+            let arrivals = Array.isArray(products) && products.length > 0 ? products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true') : await fetchNewArrivals();
             container.innerHTML = '';
-            const section = document.createElement('section');
-            section.className = CONFIG.sectionClass;
-            section.appendChild(createSectionHeader());
+            const sec = document.createElement('section'); sec.className = CONFIG.sectionClass;
+            sec.appendChild(createSectionHeader());
             const grid = createGridContainer();
-
-            if (arrivals && arrivals.length > 0) {
-                arrivals.slice(0, CONFIG.maxProducts).forEach(product => grid.appendChild(createProductCard(product)));
-            } else {
-                section.classList.add('new-arrival-empty-section');
-                grid.appendChild(createEmptyState());
-            }
-
-            section.appendChild(grid);
-            container.appendChild(section);
+            if (arrivals && arrivals.length) arrivals.slice(0, CONFIG.maxProducts).forEach(p => grid.appendChild(createProductCard(p)));
+            else { sec.classList.add('new-arrival-empty-section'); grid.appendChild(createEmptyState()); }
+            sec.appendChild(grid); container.appendChild(sec);
             setTimeout(initLazyLoading, 100);
-        } catch (error) {
-            console.error('[NewArrivals] Render error:', error);
-            container.innerHTML = `<div class="new-arrival-error"><p>Unable to load new arrivals</p><button onclick="window.renderNewArrival()" class="new-arrival-retry-btn">Try Again</button></div>`;
-        } finally {
-            if (skeleton) skeleton.style.display = 'none';
-        }
+        } catch (e) { container.innerHTML = `<div class="new-arrival-error"><p>Unable to load new arrivals</p><button onclick="window.renderNewArrival()" class="new-arrival-retry-btn">Try Again</button></div>`; }
+        finally { if (skeleton) skeleton.style.display = 'none'; }
     }
-
     window.renderNewArrival = renderNewArrivals;
 
-    // ============================================================
-    // INJECT STYLES
-    // ============================================================
     function injectStyles() {
-        const styleId = 'new-arrival-dynamic-styles';
-        if (document.getElementById(styleId)) return;
-
+        const id = 'new-arrival-dynamic-styles';
+        if (document.getElementById(id)) return;
         const styles = `
-            <style id="${styleId}">
-                .new-arrivals-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #ffffff; }
+            <style id="${id}">
+                .new-arrivals-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #fff; }
                 @media (max-width: 767px) { .new-arrivals-grid-section { padding: 20px 0; } }
                 @media (min-width: 768px) and (max-width: 1023px) { .new-arrivals-grid-section { padding: 28px 16px; } }
                 @media (min-width: 1024px) { .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; } }
 
                 .new-arrival-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 0 8px; }
                 @media (min-width: 768px) { .new-arrival-header { margin-bottom: 20px; padding: 0 2px; } }
-                @media (min-width: 1024px) { .new-arrival-header { margin-bottom: 24px; } }
-
                 .new-arrival-title { font-family: ${JABIYEN_FONTS.families.heading}; font-weight: ${JABIYEN_FONTS.weights.heading.bold}; font-size: 20px; color: #1d1d1f; letter-spacing: -0.3px; }
                 @media (min-width: 768px) { .new-arrival-title { font-size: 26px; } }
                 @media (min-width: 1024px) { .new-arrival-title { font-size: 30px; } }
-
-                .new-arrival-view-all { display: inline-flex; align-items: center; gap: 5px; font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 12px; color: #007aff; text-decoration: none; transition: gap 0.25s ease; }
+                .new-arrival-view-all { display: inline-flex; align-items: center; gap: 5px; font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 12px; color: #007aff; text-decoration: none; transition: gap 0.25s; }
                 .new-arrival-view-all:hover { gap: 8px; }
 
                 .new-arrivals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; width: 100%; }
@@ -687,19 +378,48 @@
                 .new-arrival-card { position: relative; background: #fff; transition: transform 0.3s; cursor: pointer; overflow: hidden; }
                 .new-arrival-card:active { transform: scale(0.98); }
                 @media (hover: hover) { .new-arrival-card:hover { transform: translateY(-2px); z-index: 2; box-shadow: 0 8px 25px rgba(0,0,0,0.12); } }
-
                 .new-arrival-card-link { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
                 .new-arrival-card-image-wrapper { position: relative; aspect-ratio: 4/5; background: #f5f5f7; overflow: hidden; margin-bottom: 6px; width: 100%; }
                 .new-arrival-image-slider { position: relative; width: 100%; height: 100%; overflow: hidden; }
-
-                .new-arrival-slider-image { position: absolute; top: 0; left: 100%; width: 100%; height: 100%; object-fit: cover; transition: left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); opacity: 1; display: block; color: transparent; will-change: left; }
+                .new-arrival-slider-image { position: absolute; top: 0; left: 100%; width: 100%; height: 100%; object-fit: cover; transition: left 0.45s cubic-bezier(0.25,0.1,0.25,1); opacity: 1; display: block; color: transparent; will-change: left; }
                 .new-arrival-slider-image:first-child { left: 0; }
 
-                .new-arrival-image-dots { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; gap: 3px; z-index: 4; pointer-events: auto; padding: 2px 0; }
-                .new-arrival-image-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(0,0,0,0.35); cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; }
-                .new-arrival-image-dot.active { background: #000; width: 16px; border-radius: 2px; }
-                .new-arrival-image-dot:hover { background: rgba(0,0,0,0.7); }
-                @media (min-width: 768px) { .new-arrival-image-dot.active { width: 18px; } }
+                /* Premium Dots - Apple/Zara style */
+                .new-arrival-image-dots {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                    gap: 6px;
+                    z-index: 4;
+                    pointer-events: auto;
+                    padding: 4px 8px;
+                    background: transparent;
+                }
+                .new-arrival-image-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.55);
+                    cursor: pointer;
+                    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                    flex-shrink: 0;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+                    backdrop-filter: blur(4px);
+                    -webkit-backdrop-filter: blur(4px);
+                }
+                .new-arrival-image-dot.active {
+                    background: #ffffff;
+                    width: 8px;
+                    height: 8px;
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+                    transform: scale(1);
+                }
+                .new-arrival-image-dot:hover {
+                    background: rgba(255,255,255,0.85);
+                    transform: scale(1.2);
+                }
 
                 .new-arrival-badge { position: absolute; top: 4px; left: 4px; z-index: 5; padding: 2px 7px; font-family: ${JABIYEN_FONTS.families.subtitle}; font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold}; font-size: 8px; text-transform: uppercase; background: #fff; color: #1d1d1f; letter-spacing: 0.5px; border-radius: 1px; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
                 @media (min-width: 768px) { .new-arrival-badge { top: 6px; left: 6px; padding: 2px 8px; font-size: 9px; } }
@@ -711,11 +431,9 @@
 
                 .new-arrival-card-body { padding: 4px 6px 6px; display: flex; flex-direction: column; }
                 @media (min-width: 768px) { .new-arrival-card-body { padding: 6px 8px 8px; } }
-
                 .new-arrival-card-title { font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 13px; color: #1d1d1f; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; text-align: center; }
                 @media (min-width: 768px) { .new-arrival-card-title { font-size: 15px; line-height: 1.4; } }
 
-                /* Color dots - no active, no hover */
                 .new-arrival-color-dots-below { display: flex; gap: 5px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
                 .new-arrival-color-dot { width: 11px; height: 11px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; display: block; }
                 @media (min-width: 768px) { .new-arrival-color-dot { width: 13px; height: 13px; } }
@@ -733,40 +451,28 @@
                 .new-arrival-skeleton-card { pointer-events: none; }
                 .skeleton-pulse { background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%); background-size: 800px 100%; animation: skeletonShimmer 1.8s infinite linear; border-radius: 0; }
                 .skeleton-text { height: 13px; margin-bottom: 5px; }
-
                 @keyframes skeletonShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
-            </style>
-        `;
-
+            </style>`;
         document.head.insertAdjacentHTML('beforeend', styles);
     }
 
-    // ============================================================
-    // INITIALIZATION
-    // ============================================================
     function init() {
         applyFontsVariables();
         injectStyles();
-        console.log('[NewArrivals] Module initializing...');
-
-        window.addEventListener('jayenware:dataLoaded', (event) => {
-            const detail = event.detail || {};
+        window.addEventListener('jayenware:dataLoaded', (e) => {
+            const detail = e.detail || {};
             if (detail.products && Array.isArray(detail.products)) {
-                const newArrivals = detail.products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
-                if (newArrivals.length > 0) renderNewArrivals(newArrivals);
+                const arr = detail.products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
+                if (arr.length) renderNewArrivals(arr);
             }
         });
-
         if (window.currentData?.products && Array.isArray(window.currentData.products)) {
-            const newArrivals = window.currentData.products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
-            if (newArrivals.length > 0) setTimeout(() => renderNewArrivals(newArrivals), 50);
+            const arr = window.currentData.products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
+            if (arr.length) setTimeout(() => renderNewArrivals(arr), 50);
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
 
 })();
