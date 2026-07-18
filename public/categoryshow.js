@@ -249,21 +249,20 @@ class HomeCategoryShowcase {
            class="showcase-category-card"
            style="
             position: relative;
-            text-decoration: none;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            background: #fff;
+            text-decoration: none;
+            background: #ffffff;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
            ">
             
-            <!-- Image Container (Slightly taller with 3/4 aspect ratio) -->
-            <div class="card-image-wrap" style="
+            <div class="card-image-wrapper" style="
+                position: relative;
                 width: 100%;
-                aspect-ratio: 3 / 4;
+                aspect-ratio: 3/4;
                 overflow: hidden;
                 background: #f5f5f7;
-                position: relative;
-                margin-bottom: 12px; /* Gap between image and title */
             ">
                 ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
@@ -278,14 +277,18 @@ class HomeCategoryShowcase {
                      ">` : ''}
             </div>
             
-            <!-- Category Title (Underneath image) -->
-            <div class="card-title-wrap" style="
-                width: 100%;
+            <div class="card-content" style="
+                padding: 16px 0 24px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
                 text-align: center;
-                padding-bottom: 16px; /* Extra gap at the bottom of title */
+                background: #ffffff;
             ">
+                
                 <h3 style="
-                    font-size: clamp(14px, 2vw, 18px);
+                    font-size: clamp(15px, 2vw, 18px);
                     line-height: 1.2;
                     margin: 0;
                     color: #1d1d1f;
@@ -293,6 +296,7 @@ class HomeCategoryShowcase {
                     font-weight: 500;
                     letter-spacing: -0.01em;
                 ">${catName}</h3>
+                
             </div>
         </a>`;
     }
@@ -303,19 +307,27 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* Grid Layout - 2 columns with a very thin gap */
+            /* Grid Layout - 2 columns with ultra thin gaps */
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 1px; /* Very thin gap between images */
+                gap: 2px; /* Thin gap on sides and between cards */
                 max-width: 100%;
                 margin: 0;
-                background: #f0f0f0; /* Background to show thin gap lines */
+                background: #f5f5f7; /* This color shows through the thin 2px gap */
+                padding: 0;
             }
             
             .showcase-category-card {
-                background: #ffffff;
+                border: none;
                 transition: opacity 0.3s ease;
+                background: #ffffff;
+            }
+            
+            /* Card Text Styling */
+            .showcase-category-card h3 {
+                background: transparent;
+                text-shadow: none;
             }
 
             /* Responsive adjustments */
@@ -326,18 +338,28 @@ class HomeCategoryShowcase {
                 .tab-btn {
                     font-size: 14px !important;
                 }
+                #categoryshow-dynamic-grid {
+                    gap: 1px; /* Even thinner gap on mobile */
+                }
+                .card-content {
+                    padding: 12px 0 20px 0 !important;
+                }
             }
 
-            /* Hover effect - Subtle opacity only */
+            /* Hover effect - Subtle opacity only (Prada style) */
             @media (hover: hover) {
                 .showcase-category-card:hover {
-                    opacity: 0.85;
+                    opacity: 0.9;
+                }
+                .showcase-category-card:hover .card-image-wrapper img {
+                    transform: scale(1.02);
+                    transition: transform 0.4s ease;
                 }
             }
             
             /* Active/Tap effect */
             .showcase-category-card:active {
-                opacity: 0.7;
+                opacity: 0.8;
                 transition: opacity 0.1s ease;
             }
         </style>`;
