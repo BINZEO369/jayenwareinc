@@ -298,7 +298,7 @@ class HomeCategoryShowcase {
         
         // Removed individual stagger animation to prevent layout jumping/flickering
         return `
-        <a href="/category/${catSlug}" class="showcase-category-card">
+        <a href="/${catSlug}" class="showcase-category-card">
             <div class="card-image-wrapper">
                 ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
