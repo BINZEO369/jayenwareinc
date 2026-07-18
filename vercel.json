@@ -36,6 +36,10 @@
       "dest": "/public/newarrival.js"
     },
     {
+      "src": "/hot.js",
+      "dest": "/public/hot.js"
+    },
+    {
       "src": "/hero-secondary-banner.js",
       "dest": "/public/hero-secondary-banner.js"
     },
