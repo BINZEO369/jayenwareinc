@@ -1,7 +1,7 @@
 // ============================================================
 // hero-video.js - JAYENWARE Hero Video Section Component
 // Apple-Style Hero Video Section with Auto-Play Videos
-// Version: 1.0.2 - Compact Design Update
+// Version: 1.0.3 - Enhanced Full-Screen Heights
 // ============================================================
 
 (function() {
@@ -103,37 +103,80 @@
             .hero-video-wrapper {
                 position: relative;
                 width: 100%;
-                height: 600px;
+                height: 100vh;
+                height: 100dvh;
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
             }
             
-            /* Desktop: Fixed height */
-            @media (min-width: 1025px) {
+            /* Desktop/Laptop: 1920x1080 standard screens - Full viewport height */
+            @media (min-width: 1441px) {
                 .hero-video-wrapper {
-                    height: 650px;
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 900px;
+                    max-height: 1080px;
                 }
             }
             
-            /* Tablet */
+            /* Standard Desktop: 1366x768 to 1440x900 */
+            @media (min-width: 1025px) and (max-width: 1440px) {
+                .hero-video-wrapper {
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 768px;
+                    max-height: 900px;
+                }
+            }
+            
+            /* Small Desktop/Large Tablet */
             @media (min-width: 769px) and (max-width: 1024px) {
                 .hero-video-wrapper {
-                    height: 550px;
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 700px;
+                    max-height: 850px;
                 }
             }
             
-            /* Mobile */
-            @media (max-width: 768px) {
+            /* Tablet Landscape */
+            @media (min-width: 641px) and (max-width: 768px) {
                 .hero-video-wrapper {
-                    height: 500px;
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 650px;
+                    max-height: 800px;
                 }
             }
             
-            /* Small Mobile */
-            @media (max-width: 480px) {
+            /* Large Mobile: iPhone 17 Pro Max, Samsung S24 Ultra */
+            @media (min-width: 431px) and (max-width: 640px) {
                 .hero-video-wrapper {
-                    height: 450px;
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 850px;
+                    max-height: 950px;
+                }
+            }
+            
+            /* Medium Mobile: iPhone 17, iPhone 16, Google Pixel 9 */
+            @media (min-width: 391px) and (max-width: 430px) {
+                .hero-video-wrapper {
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 844px;
+                    max-height: 932px;
+                }
+            }
+            
+            /* Small Mobile: iPhone SE, older devices */
+            @media (max-width: 390px) {
+                .hero-video-wrapper {
+                    height: 100vh;
+                    height: 100dvh;
+                    min-height: 667px;
+                    max-height: 844px;
                 }
             }
             
@@ -252,7 +295,7 @@
             }
             @media (max-width: 480px) {
                 .hero-video-title {
-                    font-size: 26px;
+                    font-size: 28px;
                     margin: 0 0 10px 0;
                 }
             }
@@ -646,7 +689,7 @@
             this.startAutoplay();
 
             this.isInitialized = true;
-            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Compact Design Mode');
+            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Enhanced Full-Screen Mode');
             console.log('[HeroVideo] Fonts configured:', {
                 heading: JABIYEN_FONTS.families.heading,
                 body: JABIYEN_FONTS.families.body
@@ -1170,7 +1213,15 @@
         setTimeout(tryAutoInit, 150);
     }
 
-    console.log('[HeroVideo] Component loaded and ready - Compact Design Mode with JABIYEN Fonts');
+    console.log('[HeroVideo] Component loaded and ready - Enhanced Full-Screen Mode with JABIYEN Fonts');
+    console.log('[HeroVideo] Height Configuration:');
+    console.log('  🖥️  Desktop 1440p+: 100vh (min: 900px, max: 1080px)');
+    console.log('  💻 Desktop Standard: 100vh (min: 768px, max: 900px)');
+    console.log('  📱 Large Tablet: 100vh (min: 700px, max: 850px)');
+    console.log('  📲 Tablet: 100vh (min: 650px, max: 800px)');
+    console.log('  📱 Large Phone: 100vh (min: 850px, max: 950px)');
+    console.log('  📱 iPhone 17/16: 100vh (min: 844px, max: 932px)');
+    console.log('  📱 Small Phone: 100vh (min: 667px, max: 844px)');
     console.log('[HeroVideo] Font Configuration:', {
         heading: JABIYEN_FONTS.families.heading,
         subtitle: JABIYEN_FONTS.families.subtitle,
