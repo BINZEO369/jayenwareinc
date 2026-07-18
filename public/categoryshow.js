@@ -132,7 +132,7 @@ class HomeCategoryShowcase {
         ">
             ${header.title ? `<h2 style="
                 font-size: clamp(14px, 2vw, 16px);
-                font-weight: 600;
+                font-weight: 500;
                 color: #1d1d1f;
                 margin: 0 0 6px 0;
                 font-family: 'Manrope', sans-serif;
@@ -145,7 +145,6 @@ class HomeCategoryShowcase {
                 margin: 0;
                 line-height: 1.4;
                 font-family: 'Inter', sans-serif;
-                font-weight: 500;
             ">${header.subtitle}</p>` : ''}
         </div>`;
     }
@@ -155,16 +154,16 @@ class HomeCategoryShowcase {
         <div class="showcase-tabs" style="
             display: flex;
             justify-content: center;
-            gap: 16px;
-            padding: 16px 0 24px;
+            gap: 30px;
+            padding: 20px 0 30px;
             border-bottom: 1px solid #e5e5e5;
             margin: 0 20px 0;
         ">
             <button class="tab-btn" data-gender="women" style="
                 background: none;
                 border: none;
-                font-size: 15px;
-                font-weight: 600;
+                font-size: 16px;
+                font-weight: 500;
                 color: #86868b;
                 cursor: pointer;
                 padding: 0 0 8px 0;
@@ -175,8 +174,8 @@ class HomeCategoryShowcase {
             <button class="tab-btn" data-gender="men" style="
                 background: none;
                 border: none;
-                font-size: 15px;
-                font-weight: 600;
+                font-size: 16px;
+                font-weight: 500;
                 color: #86868b;
                 cursor: pointer;
                 padding: 0 0 8px 0;
@@ -230,7 +229,7 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; font-family: 'Inter', sans-serif;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b;">No categories found</div>`;
             return;
         }
 
@@ -295,7 +294,7 @@ class HomeCategoryShowcase {
                     margin: 0;
                     color: #1d1d1f;
                     font-family: 'Sora', sans-serif;
-                    font-weight: 600;
+                    font-weight: 500;
                     letter-spacing: -0.01em;
                 ">${catName}</h3>
                 
@@ -313,10 +312,10 @@ class HomeCategoryShowcase {
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2px; /* Slightly thicker gap between images */
+                gap: 1px; /* Very thin gap between images */
                 max-width: 100%;
                 margin: 0;
-                background: #e5e5e5; /* Slightly darker background for gap visibility */
+                background: #ffffff; /* White background shows through the thin gap */
                 padding: 0; /* No padding on sides */
             }
             
@@ -327,29 +326,25 @@ class HomeCategoryShowcase {
                 background: #ffffff;
             }
             
-            /* Card Text Styling with JABIYEN Fonts - Bolder weight */
+            /* Card Text Styling with JABIYEN Fonts */
             .showcase-category-card h3 {
                 background: transparent;
                 text-shadow: none;
                 font-family: 'Sora', sans-serif !important;
-                font-weight: 600 !important;
             }
             
             /* Tab buttons font consistency */
             .tab-btn {
                 font-family: 'Inter', sans-serif !important;
-                font-weight: 600 !important;
             }
             
             /* Header font consistency */
             .showcase-header h2 {
                 font-family: 'Manrope', sans-serif !important;
-                font-weight: 600 !important;
             }
             
             .showcase-header p {
                 font-family: 'Inter', sans-serif !important;
-                font-weight: 500 !important;
             }
             
             /* Image wrapper - image stays within its boundaries */
@@ -360,14 +355,13 @@ class HomeCategoryShowcase {
             /* Responsive adjustments */
             @media (max-width: 767px) {
                 .showcase-tabs {
-                    gap: 12px !important;
-                    padding: 14px 0 20px !important;
+                    gap: 20px !important;
                 }
                 .tab-btn {
                     font-size: 14px !important;
                 }
                 #categoryshow-dynamic-grid {
-                    gap: 2px; /* Slightly thicker gap on mobile */
+                    gap: 1px; /* Same thin gap on mobile */
                 }
                 .card-content {
                     padding: 12px 0 20px 0 !important;
@@ -471,3 +465,6 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { HomeCategoryShowcase, initCategoryShowcase };
 }
+
+
+ 
