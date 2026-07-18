@@ -1,9 +1,9 @@
 // ============================================================
-// JAYENWARE FONTS CONFIGURATION
+// JABIYEN FONTS CONFIGURATION
 // Centralized font management for the entire website
 // ============================================================
 
-const JAYENWARE_FONTS = {
+const JABIYEN_FONTS = {
     // Google Fonts Family Names (CSS value)
     families: {
         // Main heading font - Titles, hero text, section headers
@@ -150,24 +150,24 @@ const JAYENWARE_FONTS = {
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = JAYENWARE_FONTS;
+    module.exports = JABIYEN_FONTS;
 }
 
 // Auto-initialize when loaded in browser
 if (typeof window !== 'undefined') {
-    window.JAYENWARE_FONTS = JAYENWARE_FONTS;
+    window.JABIYEN_FONTS = JABIYEN_FONTS;
     
     // Apply CSS variables to :root
     document.addEventListener('DOMContentLoaded', () => {
         const root = document.documentElement;
-        const vars = JAYENWARE_FONTS.cssVariables;
+        const vars = JABIYEN_FONTS.cssVariables;
         for (const [key, value] of Object.entries(vars)) {
             root.style.setProperty(key, value);
         }
         
-        console.log('✅ JAYENWARE Fonts Loaded:');
-        console.log('  📝 Headings:', JAYENWARE_FONTS.families.heading);
-        console.log('  📝 Subtitles:', JAYENWARE_FONTS.families.subtitle);
-        console.log('  📝 Body/Description:', JAYENWARE_FONTS.families.body);
+        console.log('✅ JABIYEN Fonts Loaded:');
+        console.log('  📝 Headings:', JABIYEN_FONTS.families.heading);
+        console.log('  📝 Subtitles:', JABIYEN_FONTS.families.subtitle);
+        console.log('  📝 Body/Description:', JABIYEN_FONTS.families.body);
     });
 }
