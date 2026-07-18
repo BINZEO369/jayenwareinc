@@ -1,11 +1,52 @@
 // ============================================================
 // hero-video.js - JAYENWARE Hero Video Section Component
 // Apple-Style Hero Video Section with Auto-Play Videos
-// Version: 1.0.1 - Full Screen Update
+// Version: 1.0.1 - Full Screen Update with JABIYEN Fonts
 // ============================================================
 
 (function() {
     'use strict';
+
+    // ==================== JABIYEN FONTS CONFIGURATION ====================
+    const JABIYEN_FONTS = {
+        families: {
+            heading: "'Manrope', sans-serif",
+            subtitle: "'Sora', sans-serif",
+            body: "'Inter', sans-serif"
+        },
+        weights: {
+            heading: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+            subtitle: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+            body: { light: 300, regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800, black: 900 }
+        },
+        styles: {
+            heroTitle: {
+                fontFamily: "'Manrope', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(36px, 7vw, 90px)',
+                letterSpacing: '-0.5px'
+            },
+            heroLabel: {
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                fontSize: 'clamp(7px, 0.9vw, 9px)',
+                letterSpacing: '1.5px'
+            },
+            heroDescription: {
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                fontSize: 'clamp(10px, 0.9vw, 13px)',
+                letterSpacing: '0',
+                lineHeight: '1.6'
+            },
+            heroCTA: {
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                fontSize: 'clamp(9px, 1vw, 11px)',
+                letterSpacing: '1px'
+            }
+        }
+    };
 
     // ==================== CSS STYLES ====================
     const HERO_VIDEO_CSS = `
@@ -95,13 +136,13 @@
                 margin-bottom: clamp(40px, 10vh, 80px);
             }
             
-            /* Video Text Animations - Enhanced Staggered Reveal */
+            /* Video Label - Using JABIYEN body font */
             .hero-video-label {
                 display: inline-block;
-                font-family: 'Inter', sans-serif;
-                font-size: clamp(7px, 0.9vw, 9px);
-                font-weight: 600;
-                letter-spacing: 0.4em;
+                font-family: ${JABIYEN_FONTS.styles.heroLabel.fontFamily};
+                font-size: ${JABIYEN_FONTS.styles.heroLabel.fontSize};
+                font-weight: ${JABIYEN_FONTS.styles.heroLabel.fontWeight};
+                letter-spacing: ${JABIYEN_FONTS.styles.heroLabel.letterSpacing};
                 text-transform: uppercase;
                 color: rgba(255, 255, 255, 0.55);
                 margin-bottom: clamp(14px, 2.5vh, 22px);
@@ -118,14 +159,15 @@
                 filter: blur(0);
             }
             
+            /* Video Title - Using JABIYEN heading font */
             .hero-video-title {
-                font-family: 'Playfair Display', serif;
-                font-size: clamp(36px, 7vw, 90px);
-                font-weight: 900;
+                font-family: ${JABIYEN_FONTS.styles.heroTitle.fontFamily};
+                font-size: ${JABIYEN_FONTS.styles.heroTitle.fontSize};
+                font-weight: ${JABIYEN_FONTS.styles.heroTitle.fontWeight};
                 line-height: 1.05;
                 color: #ffffff;
                 margin: 0 0 clamp(14px, 2vh, 22px) 0;
-                letter-spacing: -0.02em;
+                letter-spacing: ${JABIYEN_FONTS.styles.heroTitle.letterSpacing};
                 opacity: 0;
                 transform: translateY(18px);
                 filter: blur(6px);
@@ -139,11 +181,12 @@
                 filter: blur(0);
             }
             
+            /* Video Description - Using JABIYEN body font */
             .hero-video-desc {
-                font-family: 'Inter', sans-serif;
-                font-size: clamp(10px, 0.9vw, 13px);
-                font-weight: 400;
-                line-height: 1.5;
+                font-family: ${JABIYEN_FONTS.styles.heroDescription.fontFamily};
+                font-size: ${JABIYEN_FONTS.styles.heroDescription.fontSize};
+                font-weight: ${JABIYEN_FONTS.styles.heroDescription.fontWeight};
+                line-height: ${JABIYEN_FONTS.styles.heroDescription.lineHeight};
                 color: rgba(255, 255, 255, 0.7);
                 max-width: 500px;
                 margin: 0 auto clamp(22px, 3vh, 30px) auto;
@@ -160,14 +203,15 @@
                 filter: blur(0);
             }
             
+            /* Video CTA Button - Using JABIYEN body font */
             .hero-video-cta {
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
-                font-family: 'Inter', sans-serif;
-                font-size: clamp(9px, 1vw, 11px);
-                font-weight: 600;
-                letter-spacing: 0.2em;
+                font-family: ${JABIYEN_FONTS.styles.heroCTA.fontFamily};
+                font-size: ${JABIYEN_FONTS.styles.heroCTA.fontSize};
+                font-weight: ${JABIYEN_FONTS.styles.heroCTA.fontWeight};
+                letter-spacing: ${JABIYEN_FONTS.styles.heroCTA.letterSpacing};
                 text-transform: uppercase;
                 color: #ffffff;
                 text-decoration: none;
@@ -255,6 +299,7 @@
                 cursor: pointer;
                 transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
                 color: rgba(255, 255, 255, 0.75);
+                font-family: ${JABIYEN_FONTS.families.body};
                 font-size: 13px;
                 outline: none;
                 opacity: 0;
@@ -310,6 +355,7 @@
                 border: none;
                 outline: none;
                 padding: 0;
+                font-family: ${JABIYEN_FONTS.families.body};
             }
             .hero-video-dot:hover {
                 background: rgba(255,255,255,0.6);
@@ -344,6 +390,7 @@
                 justify-content: center;
                 z-index: 5;
                 transition: opacity 0.5s ease;
+                font-family: ${JABIYEN_FONTS.families.body};
             }
             .hero-video-loading.hidden {
                 opacity: 0;
@@ -487,6 +534,9 @@
 
             this.isInitialized = true;
             console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Full Screen Mode');
+            console.log('[HeroVideo] JABIYEN Fonts Applied:', 
+                'Heading:', JABIYEN_FONTS.families.heading,
+                '| Body:', JABIYEN_FONTS.families.body);
         }
 
         cacheElements() {
@@ -885,6 +935,7 @@
 
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroVideo = heroVideo;
+    window.JABIYEN_FONTS = JABIYEN_FONTS;
 
     // ==================== AUTO-INITIALIZATION ====================
     if (!document.getElementById('hero-video-styles')) {
@@ -952,6 +1003,5 @@
         setTimeout(tryAutoInit, 150);
     }
 
-    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode');
+    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode with JABIYEN Fonts');
 })();
-
