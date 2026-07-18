@@ -1,6 +1,6 @@
 // ============================================================
-// JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (LUXURY EDITION)
-// World-class design inspired by Gucci, Prada, Louis Vuitton
+// JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
+// Integrated with /api/home-showcase/complete API
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -9,7 +9,12 @@ class HomeCategoryShowcase {
             apiEndpoint: '/api/home-showcase/complete',
             containerId: 'categoryshow-container',
             skeletonId: 'categoryshow-skeleton',
-            gridClass: 'showcase-grid-luxury',
+            gridClass: 'showcase-grid-prada',
+            itemsPerRow: {
+                mobile: 2,
+                tablet: 2,
+                desktop: 2
+            }
         };
         
         this.data = {
@@ -20,7 +25,7 @@ class HomeCategoryShowcase {
         
         this.isLoaded = false;
         this.gridElement = null;
-        this.currentGender = 'women';
+        this.currentGender = 'women'; // Default to Women tab
         this.init();
     }
 
@@ -78,6 +83,7 @@ class HomeCategoryShowcase {
 
         if (!container) return;
 
+        // Show container, hide skeleton
         container.style.display = 'block';
         if (skeleton) {
             skeleton.classList.add('skeleton-hidden');
@@ -86,23 +92,27 @@ class HomeCategoryShowcase {
 
         container.innerHTML = '';
         
-        // Build Components
+        // 1. Build Header
         if (this.data.header) {
             const headerHTML = this.buildHeaderHTML();
             container.insertAdjacentHTML('beforeend', headerHTML);
         }
 
+        // 2. Build Tabs (Men / Women)
         const tabsHTML = this.buildTabsHTML();
         container.insertAdjacentHTML('beforeend', tabsHTML);
 
+        // 3. Create Grid
         this.gridElement = document.createElement('div');
         this.gridElement.className = this.config.gridClass;
         this.gridElement.id = 'categoryshow-dynamic-grid';
         container.appendChild(this.gridElement);
 
+        // 4. Render initial grid (Women by default)
         this.renderGrid('women');
+
+        // 5. Inject Styles
         this.injectStyles();
-        this.setupAnimations();
 
         this.isLoaded = true;
         console.log('[CategoryShowcase] Rendered successfully');
@@ -113,26 +123,65 @@ class HomeCategoryShowcase {
         if (!header) return '';
 
         return `
-        <div class="showcase-header">
-            <div class="header-decoration"></div>
-            ${header.title ? `<h2 class="header-title">${header.title}</h2>` : ''}
-            ${header.subtitle ? `<p class="header-subtitle">${header.subtitle}</p>` : ''}
+        <div class="showcase-header" style="
+            text-align: center;
+            padding: 40px 20px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        ">
+            ${header.title ? `<h2 style="
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: 500;
+                color: #1d1d1f;
+                margin: 0 0 6px 0;
+                font-family: var(--font-heading, sans-serif);
+                letter-spacing: -0.02em;
+            ">${header.title}</h2>` : ''}
+            
+            ${header.subtitle ? `<p style="
+                font-size: clamp(10px, 1.2vw, 11px);
+                color: #86868b;
+                margin: 0;
+                line-height: 1.4;
+                font-family: var(--font-body, sans-serif);
+            ">${header.subtitle}</p>` : ''}
         </div>`;
     }
 
     buildTabsHTML() {
         return `
-        <div class="showcase-tabs">
-            <div class="tabs-container">
-                <button class="tab-btn active" data-gender="women">
-                    <span class="tab-text">Women</span>
-                    <span class="tab-indicator"></span>
-                </button>
-                <button class="tab-btn" data-gender="men">
-                    <span class="tab-text">Men</span>
-                    <span class="tab-indicator"></span>
-                </button>
-            </div>
+        <div class="showcase-tabs" style="
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid #e5e5e5;
+            margin: 0 20px 0;
+        ">
+            <button class="tab-btn" data-gender="women" style="
+                background: none;
+                border: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: #86868b;
+                cursor: pointer;
+                padding: 0 0 8px 0;
+                position: relative;
+                font-family: var(--font-body, sans-serif);
+                transition: color 0.3s ease;
+            ">Women</button>
+            <button class="tab-btn" data-gender="men" style="
+                background: none;
+                border: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: #86868b;
+                cursor: pointer;
+                padding: 0 0 8px 0;
+                position: relative;
+                font-family: var(--font-body, sans-serif);
+                transition: color 0.3s ease;
+            ">Men</button>
         </div>`;
     }
 
@@ -140,30 +189,29 @@ class HomeCategoryShowcase {
         const tabs = document.querySelectorAll('.tab-btn');
         const self = this;
 
+        // Set initial active state (Women)
         const initialTab = document.querySelector('.tab-btn[data-gender="women"]');
-        if (initialTab) initialTab.classList.add('active');
+        if (initialTab) self.setActiveTab(initialTab);
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 const gender = this.getAttribute('data-gender');
                 self.currentGender = gender;
-                
-                // Remove active class from all tabs
-                tabs.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                this.classList.add('active');
-                
-                // Animate grid transition
-                self.gridElement.style.opacity = '0';
-                self.gridElement.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    self.renderGrid(gender);
-                    self.gridElement.style.opacity = '1';
-                    self.gridElement.style.transform = 'translateY(0)';
-                }, 300);
+                self.renderGrid(gender);
+                self.setActiveTab(this);
             });
         });
+    }
+
+    setActiveTab(activeTab) {
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(t => {
+            t.style.color = '#86868b';
+            t.style.borderBottom = 'none';
+        });
+        
+        activeTab.style.color = '#1d1d1f';
+        activeTab.style.borderBottom = '2px solid #1d1d1f';
     }
 
     renderGrid(gender) {
@@ -176,16 +224,11 @@ class HomeCategoryShowcase {
             categories = this.data.womenCategories || [];
         }
 
+        // Sort by sort_order
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `
-                <div class="empty-state">
-                    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
-                    <p>Coming Soon</p>
-                </div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b;">No categories found</div>`;
             return;
         }
 
@@ -200,62 +243,62 @@ class HomeCategoryShowcase {
         const catName = cat.name || 'Category';
         const catSlug = cat.slug || this.createSlug(catName);
         const imgSrc = cat.image_url || cat.image || '';
-        const description = cat.description || '';
         
         return `
         <a href="/category/${catSlug}" 
-           class="luxury-card"
-           style="animation-delay: ${index * 0.1}s">
+           class="showcase-category-card"
+           style="
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            background: #ffffff;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+           ">
             
-            <div class="card-image-container">
-                ${imgSrc ? `
-                <img src="${imgSrc}" 
+            <div class="card-image-wrapper" style="
+                position: relative;
+                width: 100%;
+                aspect-ratio: 3/4;
+                overflow: hidden;
+                background: #f5f5f7;
+            ">
+                ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
                      loading="${index < 4 ? 'eager' : 'lazy'}"
-                     onerror="this.parentElement.classList.add('image-error')"
-                     class="card-image">
-                ` : `
-                <div class="image-placeholder">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                        <polyline points="21,15 16,10 5,21"/>
-                    </svg>
-                </div>`}
-                
-                <div class="image-overlay"></div>
-                <div class="card-badge">New Season</div>
+                     onerror="this.style.display='none'"
+                     style="
+                        position: absolute;
+                        inset: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                     ">` : ''}
             </div>
             
-            <div class="card-info">
-                <h3 class="card-title">${catName}</h3>
-                ${description ? `<p class="card-description">${description}</p>` : ''}
-                <span class="card-cta">
-                    Explore Collection
-                    <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </span>
+            <div class="card-content" style="
+                padding: 16px 0 24px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                background: #ffffff;
+            ">
+                
+                <h3 style="
+                    font-size: clamp(15px, 2vw, 18px);
+                    line-height: 1.2;
+                    margin: 0;
+                    color: #1d1d1f;
+                    font-family: var(--font-heading, sans-serif);
+                    font-weight: 500;
+                    letter-spacing: -0.01em;
+                ">${catName}</h3>
+                
             </div>
         </a>`;
-    }
-
-    setupAnimations() {
-        // Intersection Observer for scroll animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '50px'
-        });
-
-        document.querySelectorAll('.luxury-card').forEach(card => {
-            observer.observe(card);
-        });
     }
 
     injectStyles() {
@@ -264,309 +307,66 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* ============ HEADER STYLES ============ */
-            .showcase-header {
-                text-align: center;
-                padding: 80px 20px 60px;
-                max-width: 600px;
-                margin: 0 auto;
-            }
-            
-            .header-decoration {
-                width: 40px;
-                height: 2px;
-                background: #1a1a1a;
-                margin: 0 auto 24px;
-            }
-            
-            .header-title {
-                font-size: clamp(24px, 4vw, 36px);
-                font-weight: 300;
-                color: #1a1a1a;
-                margin: 0 0 16px 0;
-                font-family: 'Georgia', 'Times New Roman', serif;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-            }
-            
-            .header-subtitle {
-                font-size: clamp(13px, 1.5vw, 15px);
-                color: #666;
-                margin: 0;
-                line-height: 1.6;
-                font-family: 'Helvetica Neue', Arial, sans-serif;
-                font-weight: 300;
-                letter-spacing: 0.5px;
-            }
-            
-            /* ============ TABS STYLES ============ */
-            .showcase-tabs {
-                padding: 0 0 40px;
-                margin: 0;
-            }
-            
-            .tabs-container {
-                display: flex;
-                justify-content: center;
-                gap: 0;
-                border-bottom: 1px solid #e0e0e0;
-                margin: 0 40px;
-            }
-            
-            .tab-btn {
-                background: none;
-                border: none;
-                padding: 16px 32px;
-                cursor: pointer;
-                position: relative;
-                font-family: 'Helvetica Neue', Arial, sans-serif;
-                font-size: 13px;
-                font-weight: 500;
-                color: #999;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            
-            .tab-btn:hover {
-                color: #666;
-            }
-            
-            .tab-btn.active {
-                color: #1a1a1a;
-            }
-            
-            .tab-indicator {
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%) scaleX(0);
-                width: 100%;
-                height: 2px;
-                background: #1a1a1a;
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            
-            .tab-btn.active .tab-indicator {
-                transform: translateX(-50%) scaleX(1);
-            }
-            
-            /* ============ GRID STYLES ============ */
+            /* Grid Container - White background with gap showing through */
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 1px;
-                background: #f5f5f5;
-                padding: 0;
-                max-width: 1400px;
-                margin: 0 auto;
-                transition: opacity 0.3s ease, transform 0.3s ease;
+                gap: 1px; /* Very thin gap between images */
+                max-width: 100%;
+                margin: 0;
+                background: #ffffff; /* White background shows through the thin gap */
+                padding: 0; /* No padding on sides */
             }
             
-            @media (min-width: 1024px) {
-                #categoryshow-dynamic-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-            }
-            
-            /* ============ CARD STYLES ============ */
-            .luxury-card {
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                text-decoration: none;
+            /* Individual Card Styling */
+            .showcase-category-card {
+                border: none;
+                transition: opacity 0.3s ease;
                 background: #ffffff;
-                cursor: pointer;
-                opacity: 0;
-                transform: translateY(30px);
-                transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-                overflow: hidden;
             }
             
-            .luxury-card.visible {
-                opacity: 1;
-                transform: translateY(0);
+            /* Card Text Styling */
+            .showcase-category-card h3 {
+                background: transparent;
+                text-shadow: none;
             }
             
-            .card-image-container {
-                position: relative;
-                width: 100%;
-                aspect-ratio: 3/4;
-                overflow: hidden;
-                background: #fafafa;
+            /* Image wrapper - image stays within its boundaries */
+            .card-image-wrapper {
+                background: #f5f5f7;
             }
-            
-            .card-image {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            
-            .luxury-card:hover .card-image {
-                transform: scale(1.05);
-            }
-            
-            .image-overlay {
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(to top, rgba(0,0,0,0.1) 0%, transparent 50%);
-                opacity: 0;
-                transition: opacity 0.4s ease;
-            }
-            
-            .luxury-card:hover .image-overlay {
-                opacity: 1;
-            }
-            
-            .image-placeholder {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #f5f5f5;
-            }
-            
-            .image-placeholder svg {
-                width: 48px;
-                height: 48px;
-                color: #ccc;
-            }
-            
-            .image-error .card-image {
-                display: none;
-            }
-            
-            .card-badge {
-                position: absolute;
-                top: 16px;
-                left: 16px;
-                background: rgba(255,255,255,0.95);
-                backdrop-filter: blur(10px);
-                padding: 6px 12px;
-                font-size: 10px;
-                font-weight: 500;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-                color: #1a1a1a;
-                border-radius: 2px;
-            }
-            
-            /* ============ CARD INFO STYLES ============ */
-            .card-info {
-                padding: 24px 20px 32px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            
-            .card-title {
-                font-size: clamp(14px, 2vw, 16px);
-                font-weight: 500;
-                color: #1a1a1a;
-                margin: 0 0 8px 0;
-                font-family: 'Helvetica Neue', Arial, sans-serif;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
-            
-            .card-description {
-                font-size: 12px;
-                color: #999;
-                margin: 0 0 16px 0;
-                line-height: 1.5;
-                font-weight: 300;
-            }
-            
-            .card-cta {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 11px;
-                font-weight: 500;
-                color: #1a1a1a;
-                letter-spacing: 1.5px;
-                text-transform: uppercase;
-                border-bottom: 1px solid #1a1a1a;
-                padding-bottom: 4px;
-                transition: all 0.3s ease;
-            }
-            
-            .arrow-icon {
-                width: 14px;
-                height: 14px;
-                transition: transform 0.3s ease;
-            }
-            
-            .luxury-card:hover .arrow-icon {
-                transform: translateX(4px);
-            }
-            
-            .luxury-card:hover .card-cta {
-                gap: 12px;
-            }
-            
-            /* ============ EMPTY STATE ============ */
-            .empty-state {
-                grid-column: 1 / -1;
-                text-align: center;
-                padding: 80px 20px;
-                color: #ccc;
-            }
-            
-            .empty-icon {
-                width: 48px;
-                height: 48px;
-                margin-bottom: 16px;
-            }
-            
-            .empty-state p {
-                font-size: 14px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
-            
-            /* ============ RESPONSIVE ============ */
-            @media (max-width: 768px) {
-                .showcase-header {
-                    padding: 60px 20px 40px;
-                }
-                
+
+            /* Responsive adjustments */
+            @media (max-width: 767px) {
                 .showcase-tabs {
-                    padding-bottom: 30px;
+                    gap: 20px !important;
                 }
-                
-                .tabs-container {
-                    margin: 0 20px;
-                }
-                
                 .tab-btn {
-                    padding: 12px 24px;
-                    font-size: 12px;
+                    font-size: 14px !important;
                 }
-                
-                .card-info {
-                    padding: 16px 12px 24px;
+                #categoryshow-dynamic-grid {
+                    gap: 1px; /* Same thin gap on mobile */
                 }
-                
-                .card-badge {
-                    top: 8px;
-                    left: 8px;
-                    padding: 4px 8px;
-                    font-size: 9px;
+                .card-content {
+                    padding: 12px 0 20px 0 !important;
+                }
+            }
+
+            /* Hover effect - Subtle opacity only (Prada style) */
+            @media (hover: hover) {
+                .showcase-category-card:hover {
+                    opacity: 0.9;
+                }
+                .showcase-category-card:hover .card-image-wrapper img {
+                    transform: scale(1.02);
+                    transition: transform 0.4s ease;
                 }
             }
             
-            @media (max-width: 480px) {
-                #categoryshow-dynamic-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-                
-                .header-title {
-                    font-size: 20px;
-                }
+            /* Active/Tap effect */
+            .showcase-category-card:active {
+                opacity: 0.8;
+                transition: opacity 0.1s ease;
             }
         </style>`;
 
@@ -593,10 +393,10 @@ class HomeCategoryShowcase {
 }
 
 // ============================================================
-// Initialize
+// Initialize Function
 // ============================================================
 function initCategoryShowcase() {
-    console.log('[CategoryShowcase] Initializing luxury showcase...');
+    console.log('[CategoryShowcase] Initializing...');
     
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
@@ -609,7 +409,7 @@ function initCategoryShowcase() {
     };
 
     if (!tryInit()) {
-        window.addEventListener('jayenware:dataLoaded', () => {
+        window.addEventListener('jayenware:dataLoaded', (event) => {
             setTimeout(() => {
                 if (!window.categoryShowcase) {
                     window.categoryShowcase = new HomeCategoryShowcase();
@@ -635,6 +435,9 @@ function initCategoryShowcase() {
     }
 }
 
+// ============================================================
+// Start
+// ============================================================
 if (typeof window !== 'undefined') {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initCategoryShowcase);
