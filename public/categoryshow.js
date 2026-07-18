@@ -1,6 +1,7 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
 // Integrated with /api/home-showcase/complete API
+// Updated with JABIYEN FONTS configuration
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -122,6 +123,9 @@ class HomeCategoryShowcase {
         const header = this.data.header;
         if (!header) return '';
 
+        // Using JABIYEN_FONTS configuration
+        const fonts = window.JABIYEN_FONTS;
+        
         return `
         <div class="showcase-header" style="
             text-align: center;
@@ -130,25 +134,28 @@ class HomeCategoryShowcase {
             margin: 0 auto;
         ">
             ${header.title ? `<h2 style="
+                font-family: ${fonts ? fonts.families.heading : 'var(--font-heading, sans-serif)'};
+                font-weight: ${fonts ? fonts.weights.heading.medium : '500'};
                 font-size: clamp(14px, 2vw, 16px);
-                font-weight: 500;
                 color: #1d1d1f;
                 margin: 0 0 6px 0;
-                font-family: var(--font-heading, sans-serif);
-                letter-spacing: -0.02em;
+                letter-spacing: var(--tracking-tight, -0.5px);
             ">${header.title}</h2>` : ''}
             
             ${header.subtitle ? `<p style="
+                font-family: ${fonts ? fonts.families.body : 'var(--font-body, sans-serif)'};
+                font-weight: ${fonts ? fonts.weights.body.regular : '400'};
                 font-size: clamp(10px, 1.2vw, 11px);
                 color: #86868b;
                 margin: 0;
                 line-height: 1.4;
-                font-family: var(--font-body, sans-serif);
             ">${header.subtitle}</p>` : ''}
         </div>`;
     }
 
     buildTabsHTML() {
+        const fonts = window.JABIYEN_FONTS;
+        
         return `
         <div class="showcase-tabs" style="
             display: flex;
@@ -161,25 +168,25 @@ class HomeCategoryShowcase {
             <button class="tab-btn" data-gender="women" style="
                 background: none;
                 border: none;
+                font-family: ${fonts ? fonts.families.body : 'var(--font-body, sans-serif)'};
+                font-weight: ${fonts ? fonts.weights.body.medium : '500'};
                 font-size: 16px;
-                font-weight: 500;
                 color: #86868b;
                 cursor: pointer;
                 padding: 0 0 8px 0;
                 position: relative;
-                font-family: var(--font-body, sans-serif);
                 transition: color 0.3s ease;
             ">Women</button>
             <button class="tab-btn" data-gender="men" style="
                 background: none;
                 border: none;
+                font-family: ${fonts ? fonts.families.body : 'var(--font-body, sans-serif)'};
+                font-weight: ${fonts ? fonts.weights.body.medium : '500'};
                 font-size: 16px;
-                font-weight: 500;
                 color: #86868b;
                 cursor: pointer;
                 padding: 0 0 8px 0;
                 position: relative;
-                font-family: var(--font-body, sans-serif);
                 transition: color 0.3s ease;
             ">Men</button>
         </div>`;
@@ -243,6 +250,7 @@ class HomeCategoryShowcase {
         const catName = cat.name || 'Category';
         const catSlug = cat.slug || this.createSlug(catName);
         const imgSrc = cat.image_url || cat.image || '';
+        const fonts = window.JABIYEN_FONTS;
         
         return `
         <a href="/category/${catSlug}" 
@@ -288,13 +296,13 @@ class HomeCategoryShowcase {
             ">
                 
                 <h3 style="
+                    font-family: ${fonts ? fonts.families.heading : 'var(--font-heading, sans-serif)'};
+                    font-weight: ${fonts ? fonts.weights.heading.medium : '500'};
                     font-size: clamp(15px, 2vw, 18px);
                     line-height: 1.2;
                     margin: 0;
                     color: #1d1d1f;
-                    font-family: var(--font-heading, sans-serif);
-                    font-weight: 500;
-                    letter-spacing: -0.01em;
+                    letter-spacing: var(--tracking-tight, -0.5px);
                 ">${catName}</h3>
                 
             </div>
@@ -305,8 +313,15 @@ class HomeCategoryShowcase {
         const existingStyles = document.getElementById('showcase-grid-styles');
         if (existingStyles) existingStyles.remove();
 
+        const fonts = window.JABIYEN_FONTS;
+        
         const styles = `
         <style id="showcase-grid-styles">
+            /* CSS Variables from JABIYEN FONTS */
+            :root {
+                ${fonts ? Object.entries(fonts.cssVariables).map(([key, value]) => `${key}: ${value};`).join('\n                ') : ''}
+            }
+            
             /* Grid Container - White background with gap showing through */
             #categoryshow-dynamic-grid {
                 display: grid;
@@ -323,17 +338,32 @@ class HomeCategoryShowcase {
                 border: none;
                 transition: opacity 0.3s ease;
                 background: #ffffff;
+                font-family: ${fonts ? fonts.families.body : 'var(--font-body, sans-serif)'};
             }
             
             /* Card Text Styling */
             .showcase-category-card h3 {
                 background: transparent;
                 text-shadow: none;
+                font-family: ${fonts ? fonts.families.heading : 'var(--font-heading, sans-serif)'} !important;
             }
             
             /* Image wrapper - image stays within its boundaries */
             .card-image-wrapper {
                 background: #f5f5f7;
+            }
+            
+            /* Typography Classes */
+            .text-heading {
+                font-family: ${fonts ? fonts.families.heading : 'var(--font-heading, sans-serif)'};
+            }
+            
+            .text-subtitle {
+                font-family: ${fonts ? fonts.families.subtitle : 'var(--font-subtitle, sans-serif)'};
+            }
+            
+            .text-body {
+                font-family: ${fonts ? fonts.families.body : 'var(--font-body, sans-serif)'};
             }
 
             /* Responsive adjustments */
@@ -368,9 +398,25 @@ class HomeCategoryShowcase {
                 opacity: 0.8;
                 transition: opacity 0.1s ease;
             }
+            
+            /* Font Awesome Icons (if used) */
+            .fas, .far, .fab {
+                font-family: "Font Awesome 6 Free" !important;
+            }
         </style>`;
 
         document.head.insertAdjacentHTML('beforeend', styles);
+        
+        // Apply CSS variables to :root if not already done
+        if (fonts) {
+            const root = document.documentElement;
+            const vars = fonts.cssVariables;
+            for (const [key, value] of Object.entries(vars)) {
+                if (!root.style.getPropertyValue(key)) {
+                    root.style.setProperty(key, value);
+                }
+            }
+        }
     }
 
     createSlug(text) {
@@ -393,10 +439,23 @@ class HomeCategoryShowcase {
 }
 
 // ============================================================
-// Initialize Function
+// Initialize Function with Font Loading
 // ============================================================
 function initCategoryShowcase() {
     console.log('[CategoryShowcase] Initializing...');
+    
+    // Load Google Fonts if JABIYEN_FONTS exists
+    if (window.JABIYEN_FONTS && window.JABIYEN_FONTS.googleFontsURL) {
+        const linkElement = document.createElement('link');
+        linkElement.rel = 'stylesheet';
+        linkElement.href = window.JABIYEN_FONTS.googleFontsURL;
+        linkElement.media = 'print';
+        linkElement.onload = function() {
+            this.media = 'all';
+            console.log('✅ Google Fonts loaded via CategoryShowcase');
+        };
+        document.head.appendChild(linkElement);
+    }
     
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
@@ -431,6 +490,24 @@ function initCategoryShowcase() {
             if (!window.categoryShowcase) {
                 window.categoryShowcase = new HomeCategoryShowcase();
             }
+        });
+    }
+}
+
+// ============================================================
+// Font Configuration Integration
+// ============================================================
+if (typeof window !== 'undefined' && window.JABIYEN_FONTS) {
+    // Add font loading observer
+    if ('fonts' in document) {
+        Promise.all([
+            document.fonts.load('1em Manrope'),
+            document.fonts.load('1em Sora'),
+            document.fonts.load('1em Inter')
+        ]).then(() => {
+            console.log(' All JABIYEN Fonts loaded and ready');
+        }).catch(err => {
+            console.warn(' Font loading issue:', err);
         });
     }
 }
