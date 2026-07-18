@@ -1,6 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
-// INTEGRATED: JABIYEN Fonts, Color Dots Below Title, Image Dot Slider
+// ENHANCED: Smooth slide animation, black tiny dots, premium feel
 // ============================================================
 
 (function() {
@@ -80,7 +80,6 @@
         cardAspectRatio: '4/5'
     };
 
-    // Cache for product colors
     let productColorsCache = {};
 
     // ============================================================
@@ -142,7 +141,6 @@
     // ============================================================
     async function fetchProductColors(slug) {
         if (productColorsCache[slug]) return productColorsCache[slug];
-
         try {
             const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.productColors}?slug=${encodeURIComponent(slug)}`);
             if (!response.ok) return [];
@@ -156,18 +154,14 @@
     }
 
     // ============================================================
-    // GET ALL IMAGES FOR SLIDER (main image + color images)
+    // GET ALL IMAGES FOR SLIDER
     // ============================================================
     function getAllImagesForSlider(product, colors) {
         const images = [];
-        
-        // Add main product image first
         const mainImage = getImageUrl(product);
         if (mainImage && mainImage !== '/placeholder.png') {
             images.push(mainImage);
         }
-        
-        // Add color-specific images
         if (colors && colors.length > 0) {
             colors.forEach(color => {
                 if (color.color_image && color.color_image.trim() !== '' && !images.includes(color.color_image)) {
@@ -175,12 +169,11 @@
                 }
             });
         }
-        
         return images;
     }
 
     // ============================================================
-    // PRODUCT CARD WITH COLOR DOTS & SMOOTH IMAGE SLIDER
+    // PRODUCT CARD WITH ENHANCED SLIDER
     // ============================================================
     function createProductCard(product) {
         const isOutOfStock = product.is_out_of_stock === true || 
@@ -208,7 +201,6 @@
         card.innerHTML = `
             <a href="/product/${slug}" class="new-arrival-card-link">
                 <div class="new-arrival-card-image-wrapper">
-                    <!-- Main image container -->
                     <div class="new-arrival-image-slider" data-slug="${slug}">
                         <img 
                             src="${imageUrl}" 
@@ -222,23 +214,15 @@
                     </div>
                     ${badgeHTML}
                     ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
-                    
-                    <!-- Image navigation dots (hidden initially) -->
-                    <div class="new-arrival-image-dots" data-slug="${slug}" style="display:none;">
-                        <!-- Dots will be injected here -->
-                    </div>
+                    <div class="new-arrival-image-dots" data-slug="${slug}" style="display:none;"></div>
                 </div>
                 <div class="new-arrival-card-body">
                     <h3 class="new-arrival-card-title">${product.title || 'Untitled'}</h3>
-                    <!-- Color dots below title -->
-                    <div class="new-arrival-color-dots-below" data-slug="${slug}">
-                        <!-- Color dots will be injected here -->
-                    </div>
+                    <div class="new-arrival-color-dots-below" data-slug="${slug}"></div>
                 </div>
             </a>
         `;
 
-        // Fetch colors and setup slider
         fetchProductColors(slug).then(colors => {
             setupCardWithSlider(card, product, colors, slug);
         });
@@ -246,122 +230,266 @@
         return card;
     }
 
-    // Setup card with image slider and color dots
+    // Setup card with enhanced image slider
     function setupCardWithSlider(card, product, colors, slug) {
         const sliderContainer = card.querySelector('.new-arrival-image-slider');
         const imageDotsContainer = card.querySelector('.new-arrival-image-dots');
         const colorDotsBelow = card.querySelector('.new-arrival-color-dots-below');
         
-        // Get all images for slider
         const allImages = getAllImagesForSlider(product, colors);
         
-        if (allImages.length <= 1) {
-            // Only one image, no slider needed
-            if (imageDotsContainer) imageDotsContainer.style.display = 'none';
+        if (allImages.length > 1) {
+            setupEnhancedSlider(card, sliderContainer, imageDotsContainer, allImages);
         } else {
-            // Setup slider with multiple images
-            setupImageSlider(card, sliderContainer, imageDotsContainer, allImages, slug);
+            if (imageDotsContainer) imageDotsContainer.style.display = 'none';
         }
         
-        // Setup color dots below title
         if (colors && colors.length > 0 && colorDotsBelow) {
             setupColorDotsBelow(colorDotsBelow, colors, slug);
+        } else if (colorDotsBelow) {
+            colorDotsBelow.style.display = 'none';
         }
     }
 
-    // Setup smooth image slider with dots
-    function setupImageSlider(card, sliderContainer, dotsContainer, images, slug) {
-        // Clear existing
+    // Enhanced smooth slider with slide animation
+    function setupEnhancedSlider(card, sliderContainer, dotsContainer, images) {
         sliderContainer.innerHTML = '';
         dotsContainer.innerHTML = '';
         dotsContainer.style.display = 'flex';
         
-        // Add all images to slider
+        let currentIndex = 0;
+        let isTransitioning = false;
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+        let isDragging = false;
+        
+        // Create image elements
         images.forEach((imgSrc, index) => {
             const img = document.createElement('img');
             img.src = imgSrc;
             img.alt = `Image ${index + 1}`;
-            img.className = `new-arrival-card-image new-arrival-slider-image ${index === 0 ? 'active' : ''}`;
+            img.className = 'new-arrival-card-image new-arrival-slider-image';
             img.setAttribute('data-index', index);
             img.loading = 'lazy';
+            img.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: ${index === 0 ? '0' : '100%'};
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+                opacity: 1;
+                display: block;
+                color: transparent;
+                will-change: left;
+            `;
             img.onload = function() { handleImageLoad(this); };
             img.onerror = function() { handleImageError(this); };
             sliderContainer.appendChild(img);
             
-            // Add dot
+            // Create tiny black dot
             const dot = document.createElement('span');
-            dot.className = `new-arrival-image-dot ${index === 0 ? 'active' : ''}`;
+            dot.className = 'new-arrival-image-dot';
             dot.setAttribute('data-index', index);
             dot.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                goToImage(card, index);
+                if (!isTransitioning && index !== currentIndex) {
+                    slideToImage(card, currentIndex, index);
+                    currentIndex = index;
+                }
             });
             dotsContainer.appendChild(dot);
         });
         
-        // Add touch/swipe support
-        addSwipeSupport(card, images.length);
+        // Set initial active dot
+        const firstDot = dotsContainer.querySelector('[data-index="0"]');
+        if (firstDot) firstDot.classList.add('active');
         
-        // Add hover dot navigation
-        dotsContainer.addEventListener('mouseenter', () => {
-            card.setAttribute('data-show-dots', 'true');
-        });
+        // Slide function with smooth animation
+        function slideToImage(card, fromIndex, toIndex) {
+            if (isTransitioning || fromIndex === toIndex) return;
+            isTransitioning = true;
+            
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            const allDots = card.querySelectorAll('.new-arrival-image-dot');
+            
+            const direction = toIndex > fromIndex ? 1 : -1;
+            
+            allImages.forEach((img, i) => {
+                if (i === toIndex) {
+                    img.style.left = '0';
+                } else if (i === fromIndex) {
+                    img.style.left = direction > 0 ? '-100%' : '100%';
+                } else if (direction > 0 && i < toIndex) {
+                    img.style.left = '-100%';
+                } else if (direction < 0 && i > toIndex) {
+                    img.style.left = '100%';
+                } else {
+                    img.style.left = direction > 0 ? '100%' : '-100%';
+                }
+            });
+            
+            // Update active dot
+            allDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === toIndex);
+            });
+            
+            // Reset transition lock
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 450);
+        }
         
-        dotsContainer.addEventListener('mouseleave', () => {
-            card.setAttribute('data-show-dots', 'false');
-        });
-    }
-
-    // Navigate to specific image
-    function goToImage(card, index) {
-        const sliderImages = card.querySelectorAll('.new-arrival-slider-image');
-        const dots = card.querySelectorAll('.new-arrival-image-dot');
-        
-        if (!sliderImages.length) return;
-        
-        sliderImages.forEach((img, i) => {
-            img.classList.toggle('active', i === index);
-        });
-        
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
-        });
-    }
-
-    // Add swipe support for mobile
-    function addSwipeSupport(card, totalImages) {
-        let startX = 0;
-        let currentIndex = 0;
-        let isSwiping = false;
-        
+        // Touch/Swipe support with live drag
         card.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isSwiping = true;
+            if (isTransitioning) return;
+            touchStartX = e.touches[0].clientX;
+            touchCurrentX = touchStartX;
+            isDragging = true;
+            
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            allImages.forEach(img => {
+                img.style.transition = 'none';
+            });
+        }, { passive: true });
+        
+        card.addEventListener('touchmove', (e) => {
+            if (!isDragging || isTransitioning) return;
+            touchCurrentX = e.touches[0].clientX;
+            const diff = touchCurrentX - touchStartX;
+            
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            const currentImg = allImages[currentIndex];
+            if (currentImg) {
+                currentImg.style.left = diff + 'px';
+            }
+            
+            // Show next/prev image
+            if (diff < -30 && currentIndex < images.length - 1) {
+                const nextImg = allImages[currentIndex + 1];
+                if (nextImg) {
+                    nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
+                }
+            } else if (diff > 30 && currentIndex > 0) {
+                const prevImg = allImages[currentIndex - 1];
+                if (prevImg) {
+                    prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
+                }
+            }
         }, { passive: true });
         
         card.addEventListener('touchend', (e) => {
-            if (!isSwiping) return;
-            isSwiping = false;
+            if (!isDragging) return;
+            isDragging = false;
             
-            const endX = e.changedTouches[0].clientX;
-            const diff = startX - endX;
+            const endX = touchCurrentX;
+            const diff = touchStartX - endX;
+            const threshold = card.offsetWidth * 0.2;
             
-            if (Math.abs(diff) > 50) {
-                if (diff > 0 && currentIndex < totalImages - 1) {
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            allImages.forEach(img => {
+                img.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            });
+            
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0 && currentIndex < images.length - 1) {
+                    slideToImage(card, currentIndex, currentIndex + 1);
                     currentIndex++;
                 } else if (diff < 0 && currentIndex > 0) {
+                    slideToImage(card, currentIndex, currentIndex - 1);
                     currentIndex--;
+                } else {
+                    // Snap back
+                    resetImagePositions(card, currentIndex);
                 }
-                goToImage(card, currentIndex);
+            } else {
+                // Snap back
+                resetImagePositions(card, currentIndex);
             }
         });
         
-        // Update currentIndex when dots are clicked
-        card.querySelectorAll('.new-arrival-image-dot').forEach(dot => {
-            dot.addEventListener('click', (e) => {
-                currentIndex = parseInt(dot.getAttribute('data-index'));
+        // Mouse drag support for desktop
+        let mouseDown = false;
+        let mouseStartX = 0;
+        let mouseCurrentX = 0;
+        
+        card.addEventListener('mousedown', (e) => {
+            if (isTransitioning) return;
+            mouseDown = true;
+            mouseStartX = e.clientX;
+            mouseCurrentX = mouseStartX;
+            
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            allImages.forEach(img => {
+                img.style.transition = 'none';
             });
+        });
+        
+        window.addEventListener('mousemove', (e) => {
+            if (!mouseDown || isTransitioning) return;
+            mouseCurrentX = e.clientX;
+            const diff = mouseCurrentX - mouseStartX;
+            
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            const currentImg = allImages[currentIndex];
+            if (currentImg) {
+                currentImg.style.left = diff + 'px';
+            }
+            
+            if (diff < -30 && currentIndex < images.length - 1) {
+                const nextImg = allImages[currentIndex + 1];
+                if (nextImg) {
+                    nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
+                }
+            } else if (diff > 30 && currentIndex > 0) {
+                const prevImg = allImages[currentIndex - 1];
+                if (prevImg) {
+                    prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
+                }
+            }
+        });
+        
+        window.addEventListener('mouseup', (e) => {
+            if (!mouseDown) return;
+            mouseDown = false;
+            
+            const endX = mouseCurrentX;
+            const diff = mouseStartX - endX;
+            const threshold = card.offsetWidth * 0.2;
+            
+            const allImages = card.querySelectorAll('.new-arrival-slider-image');
+            allImages.forEach(img => {
+                img.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            });
+            
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0 && currentIndex < images.length - 1) {
+                    slideToImage(card, currentIndex, currentIndex + 1);
+                    currentIndex++;
+                } else if (diff < 0 && currentIndex > 0) {
+                    slideToImage(card, currentIndex, currentIndex - 1);
+                    currentIndex--;
+                } else {
+                    resetImagePositions(card, currentIndex);
+                }
+            } else {
+                resetImagePositions(card, currentIndex);
+            }
+        });
+    }
+    
+    function resetImagePositions(card, currentIndex) {
+        const allImages = card.querySelectorAll('.new-arrival-slider-image');
+        allImages.forEach((img, i) => {
+            if (i === currentIndex) {
+                img.style.left = '0';
+            } else if (i < currentIndex) {
+                img.style.left = '-100%';
+            } else {
+                img.style.left = '100%';
+            }
         });
     }
 
@@ -386,7 +514,6 @@
             `;
         }).join('');
         
-        // Click on color dot navigates to product page
         container.querySelectorAll('.new-arrival-color-dot').forEach(dot => {
             dot.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -536,9 +663,6 @@
         return grid;
     }
 
-    // ============================================================
-    // LAZY LOADING
-    // ============================================================
     function initLazyLoading() {
         if (!('IntersectionObserver' in window)) return;
         
@@ -607,7 +731,6 @@
             } else {
                 section.classList.add('new-arrival-empty-section');
                 grid.appendChild(createEmptyState());
-                console.log('[NewArrivals] No products to display');
             }
 
             section.appendChild(grid);
@@ -648,17 +771,9 @@
                     background: #ffffff;
                 }
 
-                @media (max-width: 767px) {
-                    .new-arrivals-grid-section { padding: 20px 0; }
-                }
-
-                @media (min-width: 768px) and (max-width: 1023px) {
-                    .new-arrivals-grid-section { padding: 28px 16px; }
-                }
-
-                @media (min-width: 1024px) {
-                    .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; }
-                }
+                @media (max-width: 767px) { .new-arrivals-grid-section { padding: 20px 0; } }
+                @media (min-width: 768px) and (max-width: 1023px) { .new-arrivals-grid-section { padding: 28px 16px; } }
+                @media (min-width: 1024px) { .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; } }
 
                 .new-arrival-header {
                     display: flex;
@@ -668,13 +783,8 @@
                     padding: 0 8px;
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-header { margin-bottom: 20px; padding: 0 2px; }
-                }
-
-                @media (min-width: 1024px) {
-                    .new-arrival-header { margin-bottom: 24px; }
-                }
+                @media (min-width: 768px) { .new-arrival-header { margin-bottom: 20px; padding: 0 2px; } }
+                @media (min-width: 1024px) { .new-arrival-header { margin-bottom: 24px; } }
 
                 .new-arrival-title {
                     font-family: ${JABIYEN_FONTS.families.heading};
@@ -701,7 +811,6 @@
 
                 .new-arrival-view-all:hover { gap: 8px; }
 
-                /* Grid */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
@@ -709,20 +818,15 @@
                     width: 100%;
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrivals-grid { grid-template-columns: repeat(3, 1fr); }
-                }
+                @media (min-width: 768px) { .new-arrivals-grid { grid-template-columns: repeat(3, 1fr); } }
+                @media (min-width: 1024px) { .new-arrivals-grid { grid-template-columns: repeat(4, 1fr); } }
 
-                @media (min-width: 1024px) {
-                    .new-arrivals-grid { grid-template-columns: repeat(4, 1fr); }
-                }
-
-                /* Card */
                 .new-arrival-card {
                     position: relative;
                     background: #fff;
                     transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
                     cursor: pointer;
+                    overflow: hidden;
                 }
 
                 .new-arrival-card:active { transform: scale(0.98); transition: transform 0.1s ease; }
@@ -743,7 +847,6 @@
                     height: 100%;
                 }
 
-                /* Image Wrapper */
                 .new-arrival-card-image-wrapper {
                     position: relative;
                     aspect-ratio: 4 / 5;
@@ -755,68 +858,73 @@
                     width: 100%;
                 }
 
-                /* Image Slider Container */
                 .new-arrival-image-slider {
                     position: relative;
                     width: 100%;
                     height: 100%;
+                    overflow: hidden;
                 }
 
-                /* Slider Images */
                 .new-arrival-slider-image {
                     position: absolute;
                     top: 0;
-                    left: 0;
+                    left: 100%;
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    opacity: 0;
-                    transition: opacity 0.4s ease;
+                    transition: left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+                    opacity: 1;
                     display: block;
                     color: transparent;
+                    will-change: left;
                 }
 
-                .new-arrival-slider-image.active {
-                    opacity: 1;
-                    z-index: 1;
+                .new-arrival-slider-image:first-child {
+                    left: 0;
                 }
 
-                /* Image Navigation Dots */
+                /* Tiny black dots - premium look */
                 .new-arrival-image-dots {
                     position: absolute;
-                    bottom: 8px;
+                    bottom: 6px;
                     left: 0;
                     right: 0;
                     display: flex;
                     justify-content: center;
-                    gap: 5px;
+                    gap: 3px;
                     z-index: 4;
                     pointer-events: auto;
+                    padding: 2px 0;
                 }
 
                 .new-arrival-image-dot {
-                    width: 6px;
-                    height: 6px;
+                    width: 4px;
+                    height: 4px;
                     border-radius: 50%;
-                    background: rgba(255,255,255,0.5);
+                    background: rgba(0, 0, 0, 0.35);
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                    flex-shrink: 0;
                 }
 
                 .new-arrival-image-dot.active {
-                    background: #ffffff;
-                    transform: scale(1.4);
-                    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+                    background: #000000;
+                    width: 16px;
+                    border-radius: 2px;
                 }
 
                 .new-arrival-image-dot:hover {
-                    background: rgba(255,255,255,0.8);
-                    transform: scale(1.2);
+                    background: rgba(0, 0, 0, 0.7);
                 }
 
                 @media (min-width: 768px) {
-                    .new-arrival-image-dot { width: 7px; height: 7px; }
+                    .new-arrival-image-dot {
+                        width: 4px;
+                        height: 4px;
+                    }
+                    .new-arrival-image-dot.active {
+                        width: 18px;
+                    }
                 }
 
                 /* Badge */
@@ -838,13 +946,9 @@
                     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-badge { top: 6px; left: 6px; padding: 2px 8px; font-size: 9px; }
-                }
-
+                @media (min-width: 768px) { .new-arrival-badge { top: 6px; left: 6px; padding: 2px 8px; font-size: 9px; } }
                 .new-arrival-badge-sale { color: #d70015 !important; }
 
-                /* Sold Out */
                 .new-arrival-soldout-overlay {
                     position: absolute;
                     inset: 0;
@@ -868,20 +972,15 @@
                     border-radius: 1px;
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-soldout-overlay span { font-size: 10px; padding: 6px 18px; }
-                }
+                @media (min-width: 768px) { .new-arrival-soldout-overlay span { font-size: 10px; padding: 6px 18px; } }
 
-                /* Card Body */
                 .new-arrival-card-body {
                     padding: 4px 6px 6px;
                     display: flex;
                     flex-direction: column;
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-card-body { padding: 6px 8px 8px; }
-                }
+                @media (min-width: 768px) { .new-arrival-card-body { padding: 6px 8px 8px; } }
 
                 .new-arrival-card-title {
                     font-family: ${JABIYEN_FONTS.families.body};
@@ -897,11 +996,8 @@
                     text-align: center;
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-card-title { font-size: 15px; line-height: 1.4; }
-                }
+                @media (min-width: 768px) { .new-arrival-card-title { font-size: 15px; line-height: 1.4; } }
 
-                /* Color Dots Below Title */
                 .new-arrival-color-dots-below {
                     display: flex;
                     gap: 4px;
@@ -933,24 +1029,10 @@
                     box-shadow: 0 0 0 2px rgba(29,29,31,0.1);
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-color-dot { width: 14px; height: 14px; }
-                }
+                @media (min-width: 768px) { .new-arrival-color-dot { width: 14px; height: 14px; } }
 
-                /* Empty State */
-                .new-arrival-empty-section .new-arrivals-grid {
-                    display: flex;
-                    justify-content: center;
-                }
-
-                .new-arrival-empty {
-                    text-align: center;
-                    padding: 60px 20px;
-                    max-width: 400px;
-                }
-
+                .new-arrival-empty { text-align: center; padding: 60px 20px; max-width: 400px; margin: 0 auto; }
                 .new-arrival-empty svg { margin: 0 auto 16px; opacity: 0.4; }
-
                 .new-arrival-empty p {
                     font-family: ${JABIYEN_FONTS.families.body};
                     font-weight: ${JABIYEN_FONTS.weights.body.medium};
@@ -958,7 +1040,6 @@
                     color: #86868b;
                     margin: 0;
                 }
-
                 .new-arrival-empty-sub {
                     font-family: ${JABIYEN_FONTS.families.body};
                     font-weight: ${JABIYEN_FONTS.weights.body.regular};
@@ -967,9 +1048,7 @@
                     margin-top: 6px !important;
                 }
 
-                /* Error State */
                 .new-arrival-error { text-align: center; padding: 48px 20px; }
-
                 .new-arrival-error p {
                     font-family: ${JABIYEN_FONTS.families.body};
                     font-weight: ${JABIYEN_FONTS.weights.body.regular};
@@ -977,7 +1056,6 @@
                     color: #86868b;
                     margin-bottom: 16px;
                 }
-
                 .new-arrival-retry-btn {
                     padding: 10px 24px;
                     background: #1d1d1f;
@@ -990,19 +1068,15 @@
                     cursor: pointer;
                     transition: background 0.2s ease;
                 }
-
                 .new-arrival-retry-btn:hover { background: #007aff; }
 
-                /* Skeleton */
                 .new-arrival-skeleton-card { pointer-events: none; }
-
                 .skeleton-pulse {
                     background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
                     background-size: 800px 100%;
                     animation: skeletonShimmer 1.8s infinite linear;
                     border-radius: 0;
                 }
-
                 .skeleton-text { height: 13px; margin-bottom: 5px; }
 
                 @keyframes skeletonShimmer {
@@ -1026,14 +1100,11 @@
 
         window.addEventListener('jayenware:dataLoaded', (event) => {
             const detail = event.detail || {};
-            
             if (detail.products && Array.isArray(detail.products)) {
                 const newArrivals = detail.products.filter(
                     p => p.is_new_arrival === true || p.is_new_arrival === 1
                 );
-                if (newArrivals.length > 0) {
-                    renderNewArrivals(newArrivals);
-                }
+                if (newArrivals.length > 0) renderNewArrivals(newArrivals);
             }
         });
 
@@ -1041,9 +1112,7 @@
             const newArrivals = window.currentData.products.filter(
                 p => p.is_new_arrival === true || p.is_new_arrival === 1
             );
-            if (newArrivals.length > 0) {
-                setTimeout(() => renderNewArrivals(newArrivals), 50);
-            }
+            if (newArrivals.length > 0) setTimeout(() => renderNewArrivals(newArrivals), 50);
         }
 
         console.log('[NewArrivals] Module initialized');
