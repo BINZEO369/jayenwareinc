@@ -249,41 +249,41 @@ class HomeCategoryShowcase {
            class="showcase-category-card"
            style="
             position: relative;
-            aspect-ratio: 1/1;
-            overflow: hidden;
-            cursor: pointer;
             text-decoration: none;
-            background: #f5f5f7;
-            display: block;
-            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
            ">
             
-            ${imgSrc ? `<img src="${imgSrc}" 
-                 alt="${catName}" 
-                 loading="${index < 4 ? 'eager' : 'lazy'}"
-                 onerror="this.style.display='none'"
-                 style="
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                 ">` : ''}
-            
-            <div class="card-content" style="
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 2;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-end;
-                text-align: center;
+            <!-- Image Container (Slightly taller with 3/4 aspect ratio) -->
+            <div class="card-image-wrap" style="
+                width: 100%;
+                aspect-ratio: 3 / 4;
+                overflow: hidden;
+                background: #f5f5f7;
+                position: relative;
+                margin-bottom: 12px; /* Gap between image and title */
             ">
-                
+                ${imgSrc ? `<img src="${imgSrc}" 
+                     alt="${catName}" 
+                     loading="${index < 4 ? 'eager' : 'lazy'}"
+                     onerror="this.style.display='none'"
+                     style="
+                        position: absolute;
+                        inset: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                     ">` : ''}
+            </div>
+            
+            <!-- Category Title (Underneath image) -->
+            <div class="card-title-wrap" style="
+                width: 100%;
+                text-align: center;
+                padding-bottom: 16px; /* Extra gap at the bottom of title */
+            ">
                 <h3 style="
                     font-size: clamp(14px, 2vw, 18px);
                     line-height: 1.2;
@@ -293,7 +293,6 @@ class HomeCategoryShowcase {
                     font-weight: 500;
                     letter-spacing: -0.01em;
                 ">${catName}</h3>
-                
             </div>
         </a>`;
     }
@@ -304,24 +303,19 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* Grid Layout - Exactly like reference image: 2 columns, square images */
+            /* Grid Layout - 2 columns with a very thin gap */
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0; /* No gap between cards */
+                gap: 1px; /* Very thin gap between images */
                 max-width: 100%;
                 margin: 0;
+                background: #f0f0f0; /* Background to show thin gap lines */
             }
             
             .showcase-category-card {
-                border: none;
+                background: #ffffff;
                 transition: opacity 0.3s ease;
-            }
-            
-            /* Card Text Styling */
-            .showcase-category-card h3 {
-                background: transparent;
-                text-shadow: none;
             }
 
             /* Responsive adjustments */
@@ -334,7 +328,7 @@ class HomeCategoryShowcase {
                 }
             }
 
-            /* Hover effect - Subtle opacity only, no transformations (Prada style) */
+            /* Hover effect - Subtle opacity only */
             @media (hover: hover) {
                 .showcase-category-card:hover {
                     opacity: 0.85;
