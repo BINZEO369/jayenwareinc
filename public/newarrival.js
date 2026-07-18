@@ -1,6 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
-// ENHANCED: Smooth slide animation, black tiny dots, premium feel
+// ENHANCED: Smooth slide animation, black tiny dots, no active color
 // ============================================================
 
 (function() {
@@ -173,7 +173,7 @@
     }
 
     // ============================================================
-    // PRODUCT CARD WITH ENHANCED SLIDER
+    // PRODUCT CARD
     // ============================================================
     function createProductCard(product) {
         const isOutOfStock = product.is_out_of_stock === true || 
@@ -230,7 +230,6 @@
         return card;
     }
 
-    // Setup card with enhanced image slider
     function setupCardWithSlider(card, product, colors, slug) {
         const sliderContainer = card.querySelector('.new-arrival-image-slider');
         const imageDotsContainer = card.querySelector('.new-arrival-image-dots');
@@ -251,7 +250,6 @@
         }
     }
 
-    // Enhanced smooth slider with slide animation
     function setupEnhancedSlider(card, sliderContainer, dotsContainer, images) {
         sliderContainer.innerHTML = '';
         dotsContainer.innerHTML = '';
@@ -263,7 +261,6 @@
         let touchCurrentX = 0;
         let isDragging = false;
         
-        // Create image elements
         images.forEach((imgSrc, index) => {
             const img = document.createElement('img');
             img.src = imgSrc;
@@ -288,7 +285,6 @@
             img.onerror = function() { handleImageError(this); };
             sliderContainer.appendChild(img);
             
-            // Create tiny black dot
             const dot = document.createElement('span');
             dot.className = 'new-arrival-image-dot';
             dot.setAttribute('data-index', index);
@@ -303,18 +299,15 @@
             dotsContainer.appendChild(dot);
         });
         
-        // Set initial active dot
         const firstDot = dotsContainer.querySelector('[data-index="0"]');
         if (firstDot) firstDot.classList.add('active');
         
-        // Slide function with smooth animation
         function slideToImage(card, fromIndex, toIndex) {
             if (isTransitioning || fromIndex === toIndex) return;
             isTransitioning = true;
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
             const allDots = card.querySelectorAll('.new-arrival-image-dot');
-            
             const direction = toIndex > fromIndex ? 1 : -1;
             
             allImages.forEach((img, i) => {
@@ -331,18 +324,13 @@
                 }
             });
             
-            // Update active dot
             allDots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === toIndex);
             });
             
-            // Reset transition lock
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 450);
+            setTimeout(() => { isTransitioning = false; }, 450);
         }
         
-        // Touch/Swipe support with live drag
         card.addEventListener('touchstart', (e) => {
             if (isTransitioning) return;
             touchStartX = e.touches[0].clientX;
@@ -350,9 +338,7 @@
             isDragging = true;
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            allImages.forEach(img => {
-                img.style.transition = 'none';
-            });
+            allImages.forEach(img => { img.style.transition = 'none'; });
         }, { passive: true });
         
         card.addEventListener('touchmove', (e) => {
@@ -362,30 +348,22 @@
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
             const currentImg = allImages[currentIndex];
-            if (currentImg) {
-                currentImg.style.left = diff + 'px';
-            }
+            if (currentImg) currentImg.style.left = diff + 'px';
             
-            // Show next/prev image
             if (diff < -30 && currentIndex < images.length - 1) {
                 const nextImg = allImages[currentIndex + 1];
-                if (nextImg) {
-                    nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-                }
+                if (nextImg) nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
             } else if (diff > 30 && currentIndex > 0) {
                 const prevImg = allImages[currentIndex - 1];
-                if (prevImg) {
-                    prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-                }
+                if (prevImg) prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
             }
         }, { passive: true });
         
-        card.addEventListener('touchend', (e) => {
+        card.addEventListener('touchend', () => {
             if (!isDragging) return;
             isDragging = false;
             
-            const endX = touchCurrentX;
-            const diff = touchStartX - endX;
+            const diff = touchStartX - touchCurrentX;
             const threshold = card.offsetWidth * 0.2;
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
@@ -401,16 +379,13 @@
                     slideToImage(card, currentIndex, currentIndex - 1);
                     currentIndex--;
                 } else {
-                    // Snap back
                     resetImagePositions(card, currentIndex);
                 }
             } else {
-                // Snap back
                 resetImagePositions(card, currentIndex);
             }
         });
         
-        // Mouse drag support for desktop
         let mouseDown = false;
         let mouseStartX = 0;
         let mouseCurrentX = 0;
@@ -422,9 +397,7 @@
             mouseCurrentX = mouseStartX;
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
-            allImages.forEach(img => {
-                img.style.transition = 'none';
-            });
+            allImages.forEach(img => { img.style.transition = 'none'; });
         });
         
         window.addEventListener('mousemove', (e) => {
@@ -434,29 +407,22 @@
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
             const currentImg = allImages[currentIndex];
-            if (currentImg) {
-                currentImg.style.left = diff + 'px';
-            }
+            if (currentImg) currentImg.style.left = diff + 'px';
             
             if (diff < -30 && currentIndex < images.length - 1) {
                 const nextImg = allImages[currentIndex + 1];
-                if (nextImg) {
-                    nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-                }
+                if (nextImg) nextImg.style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
             } else if (diff > 30 && currentIndex > 0) {
                 const prevImg = allImages[currentIndex - 1];
-                if (prevImg) {
-                    prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-                }
+                if (prevImg) prevImg.style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
             }
         });
         
-        window.addEventListener('mouseup', (e) => {
+        window.addEventListener('mouseup', () => {
             if (!mouseDown) return;
             mouseDown = false;
             
-            const endX = mouseCurrentX;
-            const diff = mouseStartX - endX;
+            const diff = mouseStartX - mouseCurrentX;
             const threshold = card.offsetWidth * 0.2;
             
             const allImages = card.querySelectorAll('.new-arrival-slider-image');
@@ -483,29 +449,25 @@
     function resetImagePositions(card, currentIndex) {
         const allImages = card.querySelectorAll('.new-arrival-slider-image');
         allImages.forEach((img, i) => {
-            if (i === currentIndex) {
-                img.style.left = '0';
-            } else if (i < currentIndex) {
-                img.style.left = '-100%';
-            } else {
-                img.style.left = '100%';
-            }
+            if (i === currentIndex) img.style.left = '0';
+            else if (i < currentIndex) img.style.left = '-100%';
+            else img.style.left = '100%';
         });
     }
 
-    // Setup color dots below title
+    // Setup color dots below title - NO active state, NO hover effect
     function setupColorDotsBelow(container, colors, slug) {
         if (!colors || colors.length === 0) {
             container.style.display = 'none';
             return;
         }
         
-        container.innerHTML = colors.map((color, index) => {
+        container.innerHTML = colors.map(color => {
             const colorCode = color.color_code || '#ccc';
             const colorName = color.color_name || '';
             return `
                 <span 
-                    class="new-arrival-color-dot ${index === 0 ? 'active' : ''}"
+                    class="new-arrival-color-dot"
                     style="background-color: ${colorCode};"
                     data-color-name="${colorName}"
                     data-color-code="${colorCode}"
@@ -568,34 +530,21 @@
             const response = await fetch(url, {
                 ...options,
                 signal: controller.signal,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    ...options.headers
-                }
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...options.headers }
             });
-            
             clearTimeout(timeoutId);
-            
-            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-            
             if (data && data.data && Array.isArray(data.data)) return data.data;
             if (data && data.products && Array.isArray(data.products)) return data.products;
             if (Array.isArray(data)) return data;
-            
-            console.warn('[NewArrivals] Unexpected API response structure:', data);
             return [];
         } catch (error) {
             clearTimeout(timeoutId);
-            
             if (retries > 0 && error.name !== 'AbortError') {
-                console.warn(`[NewArrivals] Retrying fetch... (${retries} attempts left)`);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 return fetchWithRetry(url, options, retries - 1);
             }
-            
             throw error;
         }
     }
@@ -606,31 +555,16 @@
     async function fetchNewArrivals() {
         try {
             const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
-            
             if (Array.isArray(data) && data.length > 0) {
-                return data.filter(p => 
-                    p.is_new_arrival === true || 
-                    p.is_new_arrival === 1 || 
-                    p.is_new_arrival === 'true'
-                );
+                return data.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true');
             }
-            
             const allProducts = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.products}`);
             if (Array.isArray(allProducts) && allProducts.length > 0) {
                 return allProducts
-                    .filter(p => 
-                        p.is_new_arrival === true || 
-                        p.is_new_arrival === 1 || 
-                        p.is_new_arrival === 'true'
-                    )
-                    .sort((a, b) => {
-                        const dateA = new Date(b.created_at || b.date || 0);
-                        const dateB = new Date(a.created_at || a.date || 0);
-                        return dateA - dateB;
-                    })
+                    .filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true')
+                    .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
                     .slice(0, CONFIG.maxProducts);
             }
-            
             return [];
         } catch (error) {
             console.error('[NewArrivals] Failed to fetch products:', error);
@@ -665,27 +599,19 @@
 
     function initLazyLoading() {
         if (!('IntersectionObserver' in window)) return;
-        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
-                    if (img.tagName === 'IMG') {
-                        if (img.src && img.src !== window.location.href) {
-                            img.style.opacity = '1';
-                            observer.unobserve(img);
-                        }
+                    if (img.tagName === 'IMG' && img.src && img.src !== window.location.href) {
+                        img.style.opacity = '1';
+                        observer.unobserve(img);
                     }
                 }
             });
-        }, {
-            rootMargin: '200px 0px',
-            threshold: 0.01
-        });
+        }, { rootMargin: '200px 0px', threshold: 0.01 });
 
-        document.querySelectorAll('.new-arrival-card-image').forEach(img => {
-            observer.observe(img);
-        });
+        document.querySelectorAll('.new-arrival-card-image').forEach(img => observer.observe(img));
     }
 
     // ============================================================
@@ -695,39 +621,22 @@
         const container = document.getElementById(CONFIG.containerId);
         const skeleton = document.getElementById(CONFIG.skeletonId);
         
-        if (!container) {
-            console.warn('[NewArrivals] Container not found:', CONFIG.containerId);
-            return;
-        }
-
+        if (!container) return;
         if (skeleton) skeleton.style.display = 'block';
 
         try {
-            let arrivals;
-            if (Array.isArray(products) && products.length > 0) {
-                arrivals = products.filter(p => 
-                    p.is_new_arrival === true || 
-                    p.is_new_arrival === 1 || 
-                    p.is_new_arrival === 'true'
-                );
-            } else {
-                arrivals = await fetchNewArrivals();
-            }
+            let arrivals = Array.isArray(products) && products.length > 0 
+                ? products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1 || p.is_new_arrival === 'true')
+                : await fetchNewArrivals();
 
             container.innerHTML = '';
-
             const section = document.createElement('section');
             section.className = CONFIG.sectionClass;
             section.appendChild(createSectionHeader());
-
             const grid = createGridContainer();
 
             if (arrivals && arrivals.length > 0) {
-                const displayProducts = arrivals.slice(0, CONFIG.maxProducts);
-                displayProducts.forEach(product => {
-                    grid.appendChild(createProductCard(product));
-                });
-                console.log(`[NewArrivals] Rendered ${displayProducts.length} products`);
+                arrivals.slice(0, CONFIG.maxProducts).forEach(product => grid.appendChild(createProductCard(product)));
             } else {
                 section.classList.add('new-arrival-empty-section');
                 grid.appendChild(createEmptyState());
@@ -735,19 +644,10 @@
 
             section.appendChild(grid);
             container.appendChild(section);
-
             setTimeout(initLazyLoading, 100);
-
         } catch (error) {
             console.error('[NewArrivals] Render error:', error);
-            container.innerHTML = `
-                <div class="new-arrival-error">
-                    <p>Unable to load new arrivals</p>
-                    <button onclick="window.renderNewArrival && window.renderNewArrival()" class="new-arrival-retry-btn">
-                        Try Again
-                    </button>
-                </div>
-            `;
+            container.innerHTML = `<div class="new-arrival-error"><p>Unable to load new arrivals</p><button onclick="window.renderNewArrival()" class="new-arrival-retry-btn">Try Again</button></div>`;
         } finally {
             if (skeleton) skeleton.style.display = 'none';
         }
@@ -764,325 +664,77 @@
 
         const styles = `
             <style id="${styleId}">
-                .new-arrivals-grid-section {
-                    padding: 32px 0;
-                    max-width: 100%;
-                    margin: 0 auto;
-                    background: #ffffff;
-                }
-
+                .new-arrivals-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #ffffff; }
                 @media (max-width: 767px) { .new-arrivals-grid-section { padding: 20px 0; } }
                 @media (min-width: 768px) and (max-width: 1023px) { .new-arrivals-grid-section { padding: 28px 16px; } }
                 @media (min-width: 1024px) { .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; } }
 
-                .new-arrival-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin-bottom: 16px;
-                    padding: 0 8px;
-                }
-
+                .new-arrival-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 0 8px; }
                 @media (min-width: 768px) { .new-arrival-header { margin-bottom: 20px; padding: 0 2px; } }
                 @media (min-width: 1024px) { .new-arrival-header { margin-bottom: 24px; } }
 
-                .new-arrival-title {
-                    font-family: ${JABIYEN_FONTS.families.heading};
-                    font-weight: ${JABIYEN_FONTS.weights.heading.bold};
-                    font-size: 20px;
-                    color: #1d1d1f;
-                    letter-spacing: -0.3px;
-                }
-
+                .new-arrival-title { font-family: ${JABIYEN_FONTS.families.heading}; font-weight: ${JABIYEN_FONTS.weights.heading.bold}; font-size: 20px; color: #1d1d1f; letter-spacing: -0.3px; }
                 @media (min-width: 768px) { .new-arrival-title { font-size: 26px; } }
                 @media (min-width: 1024px) { .new-arrival-title { font-size: 30px; } }
 
-                .new-arrival-view-all {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
-                    font-size: 12px;
-                    color: #007aff;
-                    text-decoration: none;
-                    transition: gap 0.25s ease;
-                }
-
+                .new-arrival-view-all { display: inline-flex; align-items: center; gap: 5px; font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 12px; color: #007aff; text-decoration: none; transition: gap 0.25s ease; }
                 .new-arrival-view-all:hover { gap: 8px; }
 
-                .new-arrivals-grid {
-                    display: grid;
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 1px;
-                    width: 100%;
-                }
-
+                .new-arrivals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; width: 100%; }
                 @media (min-width: 768px) { .new-arrivals-grid { grid-template-columns: repeat(3, 1fr); } }
                 @media (min-width: 1024px) { .new-arrivals-grid { grid-template-columns: repeat(4, 1fr); } }
 
-                .new-arrival-card {
-                    position: relative;
-                    background: #fff;
-                    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-                    cursor: pointer;
-                    overflow: hidden;
-                }
+                .new-arrival-card { position: relative; background: #fff; transition: transform 0.3s; cursor: pointer; overflow: hidden; }
+                .new-arrival-card:active { transform: scale(0.98); }
+                @media (hover: hover) { .new-arrival-card:hover { transform: translateY(-2px); z-index: 2; box-shadow: 0 8px 25px rgba(0,0,0,0.12); } }
 
-                .new-arrival-card:active { transform: scale(0.98); transition: transform 0.1s ease; }
+                .new-arrival-card-link { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+                .new-arrival-card-image-wrapper { position: relative; aspect-ratio: 4/5; background: #f5f5f7; overflow: hidden; margin-bottom: 6px; width: 100%; }
+                .new-arrival-image-slider { position: relative; width: 100%; height: 100%; overflow: hidden; }
 
-                @media (hover: hover) {
-                    .new-arrival-card:hover {
-                        transform: translateY(-2px);
-                        z-index: 2;
-                        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-                    }
-                }
+                .new-arrival-slider-image { position: absolute; top: 0; left: 100%; width: 100%; height: 100%; object-fit: cover; transition: left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1); opacity: 1; display: block; color: transparent; will-change: left; }
+                .new-arrival-slider-image:first-child { left: 0; }
 
-                .new-arrival-card-link {
-                    text-decoration: none;
-                    color: inherit;
-                    display: flex;
-                    flex-direction: column;
-                    height: 100%;
-                }
+                .new-arrival-image-dots { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; gap: 3px; z-index: 4; pointer-events: auto; padding: 2px 0; }
+                .new-arrival-image-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(0,0,0,0.35); cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; }
+                .new-arrival-image-dot.active { background: #000; width: 16px; border-radius: 2px; }
+                .new-arrival-image-dot:hover { background: rgba(0,0,0,0.7); }
+                @media (min-width: 768px) { .new-arrival-image-dot.active { width: 18px; } }
 
-                .new-arrival-card-image-wrapper {
-                    position: relative;
-                    aspect-ratio: 4 / 5;
-                    background: #f5f5f7;
-                    overflow: hidden;
-                    margin-bottom: 6px;
-                    border-radius: 0;
-                    min-height: 0;
-                    width: 100%;
-                }
-
-                .new-arrival-image-slider {
-                    position: relative;
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                }
-
-                .new-arrival-slider-image {
-                    position: absolute;
-                    top: 0;
-                    left: 100%;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    transition: left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
-                    opacity: 1;
-                    display: block;
-                    color: transparent;
-                    will-change: left;
-                }
-
-                .new-arrival-slider-image:first-child {
-                    left: 0;
-                }
-
-                /* Tiny black dots - premium look */
-                .new-arrival-image-dots {
-                    position: absolute;
-                    bottom: 6px;
-                    left: 0;
-                    right: 0;
-                    display: flex;
-                    justify-content: center;
-                    gap: 3px;
-                    z-index: 4;
-                    pointer-events: auto;
-                    padding: 2px 0;
-                }
-
-                .new-arrival-image-dot {
-                    width: 4px;
-                    height: 4px;
-                    border-radius: 50%;
-                    background: rgba(0, 0, 0, 0.35);
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    flex-shrink: 0;
-                }
-
-                .new-arrival-image-dot.active {
-                    background: #000000;
-                    width: 16px;
-                    border-radius: 2px;
-                }
-
-                .new-arrival-image-dot:hover {
-                    background: rgba(0, 0, 0, 0.7);
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-image-dot {
-                        width: 4px;
-                        height: 4px;
-                    }
-                    .new-arrival-image-dot.active {
-                        width: 18px;
-                    }
-                }
-
-                /* Badge */
-                .new-arrival-badge {
-                    position: absolute;
-                    top: 4px;
-                    left: 4px;
-                    z-index: 5;
-                    padding: 2px 7px;
-                    font-family: ${JABIYEN_FONTS.families.subtitle};
-                    font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold};
-                    font-size: 8px;
-                    text-transform: uppercase;
-                    background: #ffffff;
-                    color: #1d1d1f;
-                    letter-spacing: 0.5px;
-                    border-radius: 1px;
-                    pointer-events: none;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-                }
-
+                .new-arrival-badge { position: absolute; top: 4px; left: 4px; z-index: 5; padding: 2px 7px; font-family: ${JABIYEN_FONTS.families.subtitle}; font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold}; font-size: 8px; text-transform: uppercase; background: #fff; color: #1d1d1f; letter-spacing: 0.5px; border-radius: 1px; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
                 @media (min-width: 768px) { .new-arrival-badge { top: 6px; left: 6px; padding: 2px 8px; font-size: 9px; } }
                 .new-arrival-badge-sale { color: #d70015 !important; }
 
-                .new-arrival-soldout-overlay {
-                    position: absolute;
-                    inset: 0;
-                    background: rgba(255, 255, 255, 0.7);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 6;
-                    pointer-events: none;
-                }
-
-                .new-arrival-soldout-overlay span {
-                    background: #1d1d1f;
-                    color: #ffffff;
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.bold};
-                    font-size: 9px;
-                    text-transform: uppercase;
-                    padding: 5px 14px;
-                    letter-spacing: 1px;
-                    border-radius: 1px;
-                }
-
+                .new-arrival-soldout-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; z-index: 6; pointer-events: none; }
+                .new-arrival-soldout-overlay span { background: #1d1d1f; color: #fff; font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.bold}; font-size: 9px; text-transform: uppercase; padding: 5px 14px; letter-spacing: 1px; border-radius: 1px; }
                 @media (min-width: 768px) { .new-arrival-soldout-overlay span { font-size: 10px; padding: 6px 18px; } }
 
-                .new-arrival-card-body {
-                    padding: 4px 6px 6px;
-                    display: flex;
-                    flex-direction: column;
-                }
-
+                .new-arrival-card-body { padding: 4px 6px 6px; display: flex; flex-direction: column; }
                 @media (min-width: 768px) { .new-arrival-card-body { padding: 6px 8px 8px; } }
 
-                .new-arrival-card-title {
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
-                    font-size: 13px;
-                    color: #1d1d1f;
-                    line-height: 1.35;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    margin: 0;
-                    text-align: center;
-                }
-
+                .new-arrival-card-title { font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 13px; color: #1d1d1f; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; text-align: center; }
                 @media (min-width: 768px) { .new-arrival-card-title { font-size: 15px; line-height: 1.4; } }
 
-                .new-arrival-color-dots-below {
-                    display: flex;
-                    gap: 4px;
-                    justify-content: center;
-                    margin-top: 6px;
-                    flex-wrap: wrap;
-                }
-
-                .new-arrival-color-dot {
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    border: 1.5px solid rgba(0,0,0,0.1);
-                    transition: all 0.3s ease;
-                    flex-shrink: 0;
-                    display: block;
-                    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
-                }
-
-                .new-arrival-color-dot:hover {
-                    transform: scale(1.3);
-                    border-color: rgba(0,0,0,0.3);
-                }
-
-                .new-arrival-color-dot.active {
-                    border-color: #1d1d1f !important;
-                    transform: scale(1.2);
-                    box-shadow: 0 0 0 2px rgba(29,29,31,0.1);
-                }
-
-                @media (min-width: 768px) { .new-arrival-color-dot { width: 14px; height: 14px; } }
+                /* Color dots - no active, no hover */
+                .new-arrival-color-dots-below { display: flex; gap: 5px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
+                .new-arrival-color-dot { width: 11px; height: 11px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; display: block; }
+                @media (min-width: 768px) { .new-arrival-color-dot { width: 13px; height: 13px; } }
 
                 .new-arrival-empty { text-align: center; padding: 60px 20px; max-width: 400px; margin: 0 auto; }
                 .new-arrival-empty svg { margin: 0 auto 16px; opacity: 0.4; }
-                .new-arrival-empty p {
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.medium};
-                    font-size: 15px;
-                    color: #86868b;
-                    margin: 0;
-                }
-                .new-arrival-empty-sub {
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.regular};
-                    font-size: 12px !important;
-                    color: #b0b0b5 !important;
-                    margin-top: 6px !important;
-                }
+                .new-arrival-empty p { font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.medium}; font-size: 15px; color: #86868b; margin: 0; }
+                .new-arrival-empty-sub { font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.regular}; font-size: 12px !important; color: #b0b0b5 !important; margin-top: 6px !important; }
 
                 .new-arrival-error { text-align: center; padding: 48px 20px; }
-                .new-arrival-error p {
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.regular};
-                    font-size: 14px;
-                    color: #86868b;
-                    margin-bottom: 16px;
-                }
-                .new-arrival-retry-btn {
-                    padding: 10px 24px;
-                    background: #1d1d1f;
-                    color: #ffffff;
-                    border: none;
-                    border-radius: 50px;
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
-                    font-size: 12px;
-                    cursor: pointer;
-                    transition: background 0.2s ease;
-                }
+                .new-arrival-error p { font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.regular}; font-size: 14px; color: #86868b; margin-bottom: 16px; }
+                .new-arrival-retry-btn { padding: 10px 24px; background: #1d1d1f; color: #fff; border: none; border-radius: 50px; font-family: ${JABIYEN_FONTS.families.body}; font-weight: ${JABIYEN_FONTS.weights.body.semibold}; font-size: 12px; cursor: pointer; transition: background 0.2s; }
                 .new-arrival-retry-btn:hover { background: #007aff; }
 
                 .new-arrival-skeleton-card { pointer-events: none; }
-                .skeleton-pulse {
-                    background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
-                    background-size: 800px 100%;
-                    animation: skeletonShimmer 1.8s infinite linear;
-                    border-radius: 0;
-                }
+                .skeleton-pulse { background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%); background-size: 800px 100%; animation: skeletonShimmer 1.8s infinite linear; border-radius: 0; }
                 .skeleton-text { height: 13px; margin-bottom: 5px; }
 
-                @keyframes skeletonShimmer {
-                    0% { background-position: -468px 0; }
-                    100% { background-position: 468px 0; }
-                }
+                @keyframes skeletonShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
             </style>
         `;
 
@@ -1095,27 +747,20 @@
     function init() {
         applyFontsVariables();
         injectStyles();
-        
         console.log('[NewArrivals] Module initializing...');
 
         window.addEventListener('jayenware:dataLoaded', (event) => {
             const detail = event.detail || {};
             if (detail.products && Array.isArray(detail.products)) {
-                const newArrivals = detail.products.filter(
-                    p => p.is_new_arrival === true || p.is_new_arrival === 1
-                );
+                const newArrivals = detail.products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
                 if (newArrivals.length > 0) renderNewArrivals(newArrivals);
             }
         });
 
         if (window.currentData?.products && Array.isArray(window.currentData.products)) {
-            const newArrivals = window.currentData.products.filter(
-                p => p.is_new_arrival === true || p.is_new_arrival === 1
-            );
+            const newArrivals = window.currentData.products.filter(p => p.is_new_arrival === true || p.is_new_arrival === 1);
             if (newArrivals.length > 0) setTimeout(() => renderNewArrivals(newArrivals), 50);
         }
-
-        console.log('[NewArrivals] Module initialized');
     }
 
     if (document.readyState === 'loading') {
