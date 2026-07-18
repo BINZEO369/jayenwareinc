@@ -2,7 +2,7 @@
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // INTEGRATED: JABIYEN Fonts configuration
 // FIXED: stock → is_out_of_stock, image loading, lazy load
-// UPDATED: Title only (no price/category), larger font, 2px gap
+// UPDATED: Title only, 1px gap, product/slug navigation
 // ============================================================
 
 (function() {
@@ -41,45 +41,15 @@
             '--tracking-wide': '0.5px',
             '--tracking-wider': '1px',
             '--tracking-widest': '1.5px'
-        },
-        styles: {
-            cardTitle: {
-                fontFamily: 'var(--font-body)',
-                fontWeight: 500,
-                fontSize: '13px',
-                letterSpacing: 'var(--tracking-normal)'
-            },
-            sectionTitle: {
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 'var(--text-3xl)',
-                letterSpacing: 'var(--tracking-tight)'
-            },
-            badge: {
-                fontFamily: 'var(--font-subtitle)',
-                fontWeight: 600,
-                fontSize: '0.625rem',
-                letterSpacing: 'var(--tracking-wide)',
-                textTransform: 'uppercase'
-            },
-            button: {
-                fontFamily: 'var(--font-body)',
-                fontWeight: 600,
-                fontSize: 'var(--text-xs)',
-                letterSpacing: 'var(--tracking-wider)',
-                textTransform: 'uppercase'
-            }
         }
     };
 
-    // Apply fonts CSS variables to :root
     function applyFontsVariables() {
         const root = document.documentElement;
         const vars = JABIYEN_FONTS.cssVariables;
         for (const [key, value] of Object.entries(vars)) {
             root.style.setProperty(key, value);
         }
-        console.log('✅ [NewArrivals] JABIYEN Fonts applied');
     }
 
     // ============================================================
@@ -108,13 +78,7 @@
         title: 'New Arrivals',
         viewAllLink: '/products?filter=new_arrival',
         maxProducts: 8,
-        columns: {
-            mobile: 2,
-            tablet: 3,
-            desktop: 4
-        },
-        cardAspectRatio: '4/5',
-        animationDuration: 400
+        cardAspectRatio: '4/5'
     };
 
     // ============================================================
@@ -129,6 +93,14 @@
             if (imagesArray[0] && imagesArray[0].trim() !== '') return imagesArray[0].trim();
         }
         return '/placeholder.png';
+    }
+
+    function getProductSlug(product) {
+        return (product.slug || product.title || 'product')
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/^-+|-+$/g, '');
     }
 
     function handleImageLoad(img) {
@@ -172,16 +144,9 @@
                              product.stock === 0 ||
                              product.stock === '0';
         
-        const slug = product.slug || 
-                     (product.title || 'product')
-                        .toLowerCase()
-                        .replace(/[^\w\s-]/g, '')
-                        .replace(/[\s_]+/g, '-')
-                        .replace(/^-+|-+$/g, '');
-
+        const slug = getProductSlug(product);
         const imageUrl = getImageUrl(product);
         
-        // Badge using JABIYEN_FONTS styles
         let badgeHTML = '';
         if (!isOutOfStock) {
             if (product.is_new_arrival === true || product.is_new_arrival === 1) {
@@ -194,10 +159,10 @@
         const card = document.createElement('div');
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
+        card.setAttribute('data-product-slug', slug);
 
-        // Title only card - using JABIYEN_FONTS body font
         card.innerHTML = `
-            <a href="/product/${slug}" class="new-arrival-card-link" onclick="event.preventDefault();if(window.navigate)window.navigate('product-details',{id:${product.id},slug:'${slug}'})">
+            <a href="/product/${slug}" class="new-arrival-card-link">
                 <div class="new-arrival-card-image-wrapper">
                     <img 
                         src="${imageUrl}" 
@@ -342,7 +307,7 @@
         header.className = 'new-arrival-header';
         header.innerHTML = `
             <h2 class="new-arrival-title">${CONFIG.title}</h2>
-            <a href="${CONFIG.viewAllLink}" class="new-arrival-view-all" onclick="event.preventDefault();window.navigate && window.navigate('products', {filter: 'new_arrival'})">
+            <a href="${CONFIG.viewAllLink}" class="new-arrival-view-all">
                 View All
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -456,7 +421,7 @@
     window.renderNewArrival = renderNewArrivals;
 
     // ============================================================
-    // INJECT STYLES WITH JABIYEN FONTS INTEGRATION
+    // INJECT STYLES
     // ============================================================
     function injectStyles() {
         const styleId = 'new-arrival-dynamic-styles';
@@ -464,8 +429,6 @@
 
         const styles = `
             <style id="${styleId}">
-                /* ==================== NEW ARRIVAL SECTION - EDGE TO EDGE ==================== */
-                
                 .new-arrivals-grid-section {
                     padding: 32px 0;
                     max-width: 100%;
@@ -492,7 +455,6 @@
                     }
                 }
 
-                /* Section Header - Using JABIYEN_FONTS heading */
                 .new-arrival-header {
                     display: flex;
                     align-items: center;
@@ -552,29 +514,28 @@
                     transform: translateX(2px);
                 }
 
-                /* Grid: 2px gap */
+                /* Grid: 1px gap */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
-                    gap: 2px;
+                    gap: 1px;
                     width: 100%;
                 }
 
                 @media (min-width: 768px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 2px;
+                        gap: 1px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(4, 1fr);
-                        gap: 2px;
+                        gap: 1px;
                     }
                 }
 
-                /* Product Card */
                 .new-arrival-card {
                     position: relative;
                     background: #fff;
@@ -603,7 +564,6 @@
                     height: 100%;
                 }
 
-                /* Card Image - Tall (4:5) */
                 .new-arrival-card-image-wrapper {
                     position: relative;
                     aspect-ratio: 4 / 5;
@@ -631,7 +591,6 @@
                     }
                 }
 
-                /* Badge - Using JABIYEN_FONTS subtitle */
                 .new-arrival-badge {
                     position: absolute;
                     top: 4px;
@@ -663,7 +622,6 @@
                     color: #d70015 !important;
                 }
 
-                /* Sold Out Overlay */
                 .new-arrival-soldout-overlay {
                     position: absolute;
                     inset: 0;
@@ -694,7 +652,6 @@
                     }
                 }
 
-                /* Card Body - Title Only */
                 .new-arrival-card-body {
                     padding: 4px 6px 6px;
                     display: flex;
@@ -707,7 +664,6 @@
                     }
                 }
 
-                /* Title - Using JABIYEN_FONTS body font */
                 .new-arrival-card-title {
                     font-family: ${JABIYEN_FONTS.families.body};
                     font-weight: ${JABIYEN_FONTS.weights.body.medium};
@@ -729,7 +685,6 @@
                     }
                 }
 
-                /* Empty State */
                 .new-arrival-empty-section .new-arrivals-grid {
                     display: flex;
                     justify-content: center;
@@ -762,7 +717,6 @@
                     margin-top: 6px !important;
                 }
 
-                /* Error State */
                 .new-arrival-error {
                     text-align: center;
                     padding: 48px 20px;
@@ -793,7 +747,6 @@
                     background: #007aff;
                 }
 
-                /* Skeleton */
                 .new-arrival-skeleton-card {
                     pointer-events: none;
                 }
@@ -824,18 +777,11 @@
     // INITIALIZATION
     // ============================================================
     function init() {
-        // Apply JABIYEN fonts CSS variables first
         applyFontsVariables();
-        
-        // Inject dynamic styles
         injectStyles();
         
         console.log('[NewArrivals] Module initializing with JABIYEN Fonts...');
-        console.log('  📝 Headings:', JABIYEN_FONTS.families.heading);
-        console.log('  📝 Subtitles:', JABIYEN_FONTS.families.subtitle);
-        console.log('  📝 Body:', JABIYEN_FONTS.families.body);
 
-        // Listen for data loaded event
         window.addEventListener('jayenware:dataLoaded', (event) => {
             const detail = event.detail || {};
             
@@ -844,19 +790,16 @@
                     p => p.is_new_arrival === true || p.is_new_arrival === 1
                 );
                 if (newArrivals.length > 0) {
-                    console.log(`[NewArrivals] Auto-rendering ${newArrivals.length} products from event`);
                     renderNewArrivals(newArrivals);
                 }
             }
         });
 
-        // Check if data already exists
         if (window.currentData?.products && Array.isArray(window.currentData.products)) {
             const newArrivals = window.currentData.products.filter(
                 p => p.is_new_arrival === true || p.is_new_arrival === 1
             );
             if (newArrivals.length > 0) {
-                console.log(`[NewArrivals] Auto-rendering ${newArrivals.length} products from window.currentData`);
                 setTimeout(() => renderNewArrivals(newArrivals), 50);
             }
         }
@@ -864,7 +807,6 @@
         console.log('[NewArrivals] Module initialized');
     }
 
-    // Auto-initialize
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
