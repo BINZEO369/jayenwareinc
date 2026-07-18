@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // FIXED: stock → is_out_of_stock, image loading, lazy load
-// UPDATED: Taller images, minimal gap, removed add button
+// UPDATED: Taller images, 1px gap, full edge-to-edge on mobile
 // ============================================================
 
 (function() {
@@ -365,48 +365,60 @@
 
         const styles = `
             <style id="${styleId}">
+                /* ==================== NEW ARRIVAL SECTION - EDGE TO EDGE ==================== */
+                
+                /* Container: full width, no padding on mobile */
                 .new-arrivals-grid-section {
                     padding: 32px 0;
-                    max-width: 1400px;
+                    max-width: 100%;
                     margin: 0 auto;
                     background: #ffffff;
                 }
 
+                /* Mobile: no horizontal padding at all */
                 @media (max-width: 767px) {
                     .new-arrivals-grid-section {
-                        padding: 20px 8px;
+                        padding: 20px 0;
                     }
                 }
 
                 @media (min-width: 768px) and (max-width: 1023px) {
                     .new-arrivals-grid-section {
-                        padding: 28px 20px;
+                        padding: 28px 16px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid-section {
                         padding: 40px 36px;
+                        max-width: 1400px;
                     }
                 }
 
+                /* Header: add horizontal padding on mobile */
                 .new-arrival-header {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    margin-bottom: 20px;
-                    padding: 0 4px;
+                    margin-bottom: 16px;
+                    padding: 0 8px;
                 }
 
                 @media (min-width: 768px) {
                     .new-arrival-header {
-                        margin-bottom: 24px;
+                        margin-bottom: 20px;
                         padding: 0 2px;
                     }
                 }
 
+                @media (min-width: 1024px) {
+                    .new-arrival-header {
+                        margin-bottom: 24px;
+                    }
+                }
+
                 .new-arrival-title {
-                    font-size: 22px;
+                    font-size: 20px;
                     font-weight: 700;
                     color: #1d1d1f;
                     letter-spacing: -0.3px;
@@ -443,41 +455,29 @@
                     transform: translateX(2px);
                 }
 
-                /* Grid - VERY TIGHT gap */
+                /* Grid: 1px gap everywhere, edge-to-edge on mobile */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
-                    gap: 4px;
+                    gap: 1px;
                     width: 100%;
-                }
-
-                @media (min-width: 640px) {
-                    .new-arrivals-grid {
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 6px;
-                    }
                 }
 
                 @media (min-width: 768px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 8px;
+                        gap: 1px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(4, 1fr);
-                        gap: 10px;
+                        gap: 1px;
                     }
                 }
 
-                @media (min-width: 1400px) {
-                    .new-arrivals-grid {
-                        gap: 12px;
-                    }
-                }
-
+                /* Product Card */
                 .new-arrival-card {
                     position: relative;
                     background: #fff;
@@ -494,7 +494,7 @@
                     .new-arrival-card:hover {
                         transform: translateY(-2px);
                         z-index: 2;
-                        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
                     }
                 }
 
@@ -506,6 +506,7 @@
                     height: 100%;
                 }
 
+                /* Card Image - Tall (4:5) */
                 .new-arrival-card-image-wrapper {
                     position: relative;
                     aspect-ratio: 4 / 5;
@@ -533,6 +534,7 @@
                     }
                 }
 
+                /* Badge */
                 .new-arrival-badge {
                     position: absolute;
                     top: 4px;
@@ -563,6 +565,7 @@
                     color: #d70015 !important;
                 }
 
+                /* Sold Out Overlay */
                 .new-arrival-soldout-overlay {
                     position: absolute;
                     inset: 0;
@@ -592,8 +595,9 @@
                     }
                 }
 
+                /* Card Body */
                 .new-arrival-card-body {
-                    padding: 0 3px;
+                    padding: 0 4px;
                     display: flex;
                     flex-direction: column;
                     gap: 1px;
@@ -601,7 +605,7 @@
 
                 @media (min-width: 768px) {
                     .new-arrival-card-body {
-                        padding: 0 4px;
+                        padding: 0 6px;
                         gap: 2px;
                     }
                 }
@@ -673,6 +677,7 @@
                     }
                 }
 
+                /* Empty State */
                 .new-arrival-empty-section .new-arrivals-grid {
                     display: flex;
                     justify-content: center;
@@ -680,7 +685,7 @@
 
                 .new-arrival-empty {
                     text-align: center;
-                    padding: 48px 20px;
+                    padding: 60px 20px;
                     max-width: 400px;
                 }
 
@@ -703,6 +708,7 @@
                     font-weight: 400 !important;
                 }
 
+                /* Error State */
                 .new-arrival-error {
                     text-align: center;
                     padding: 48px 20px;
@@ -730,6 +736,7 @@
                     background: #007aff;
                 }
 
+                /* Skeleton */
                 .new-arrival-skeleton-card {
                     pointer-events: none;
                 }
