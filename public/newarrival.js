@@ -1,613 +1,430 @@
-// newarrival.js - New Arrival Products for Homepage
-// ============================================
+// ============================================================
+// JAYENWARE – NEW ARRIVALS SECTION (2×2 Grid Layout)
+// Loaded from newarrival.js
+// ============================================================
 
-(function() {
-    'use strict';
-
-    // Configuration
-    const API_BASE_URL = '/api';
-    const NEW_ARRIVAL_CONTAINER_ID = 'new-arrival-products';
-    const PRODUCTS_PER_LOAD = 12;
-
-    // State
-    let currentPage = 1;
-    let isLoading = false;
-    let hasMore = true;
-
-    // ============================================
-    // DOM Ready
-    // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
-        initNewArrivalSection();
-    });
-
-    // ============================================
-    // Initialize New Arrival Section
-    // ============================================
-    function initNewArrivalSection() {
-        // Find or create container
-        let container = document.getElementById(NEW_ARRIVAL_CONTAINER_ID);
-        
-        if (!container) {
-            // Create section if not exists
-            const section = createSectionHTML();
-            const mainContent = document.querySelector('main') || document.body;
-            mainContent.insertAdjacentHTML('beforeend', section);
-            container = document.getElementById(NEW_ARRIVAL_CONTAINER_ID);
-        }
-
-        if (container) {
-            fetchNewArrivals();
-            setupInfiniteScroll();
-        }
+(function () {
+  const STYLES = `
+    #new-arrivals-section {
+      display: block;
+      padding: 48px 0;
+      background: #ffffff;
     }
 
-    // ============================================
-    // Create Section HTML
-    // ============================================
-    function createSectionHTML() {
-        return `
-            <section class="new-arrival-section">
-                <div class="container">
-                    <div class="section-header">
-                        <h2 class="section-title">New Arrivals</h2>
-                        <p class="section-subtitle">Discover our latest collection</p>
-                        <div class="section-divider"></div>
-                    </div>
-                    <div id="${NEW_ARRIVAL_CONTAINER_ID}" class="products-grid">
-                        <!-- Products will be loaded here -->
-                    </div>
-                    <div id="new-arrival-loader" class="loader" style="display: none;">
-                        <div class="spinner"></div>
-                    </div>
-                    <div id="new-arrival-no-more" class="no-more-products" style="display: none;">
-                        <p>You've seen all new arrivals</p>
-                    </div>
-                </div>
-            </section>
-        `;
+    #new-arrivals-section .na-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
     }
 
-    // ============================================
-    // Fetch New Arrivals from API
-    // ============================================
-    async function fetchNewArrivals() {
-        if (isLoading || !hasMore) return;
-
-        isLoading = true;
-        showLoader(true);
-
-        try {
-            // Fetch all products and filter new arrivals
-            const response = await fetch(`${API_BASE_URL}/products`);
-            
-            if (!response.ok) {
-                throw new Error('Failed to fetch products');
-            }
-
-            const products = await response.json();
-            
-            // Filter only new arrival products
-            const newArrivals = products.filter(product => product.is_new_arrival === true);
-            
-            // Sort by created_at (newest first)
-            newArrivals.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-            if (newArrivals.length === 0) {
-                hasMore = false;
-                showNoMoreMessage(true);
-                return;
-            }
-
-            // Display all new arrivals
-            displayProducts(newArrivals);
-            hasMore = false;
-            showNoMoreMessage(true);
-
-        } catch (error) {
-            console.error('Error fetching new arrivals:', error);
-            showErrorMessage();
-        } finally {
-            isLoading = false;
-            showLoader(false);
-        }
+    #new-arrivals-section .na-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
     }
 
-    // ============================================
-    // Display Products in Grid
-    // ============================================
-    function displayProducts(products) {
-        const container = document.getElementById(NEW_ARRIVAL_CONTAINER_ID);
-        if (!container) return;
-
-        const productsHTML = products.map(product => createProductCard(product)).join('');
-        container.innerHTML += productsHTML;
-
-        // Add click events
-        addProductClickEvents();
+    #new-arrivals-section .na-title {
+      font-size: 28px;
+      color: #1d1d1f;
+      font-family: var(--font-heading, 'Inter', sans-serif);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin: 0;
     }
 
-    // ============================================
-    // Create Product Card HTML
-    // ============================================
-    function createProductCard(product) {
-        const productSlug = product.slug || createSlug(product.title);
-        const productUrl = `/product/${productSlug}`;
-        const imageUrl = product.img || product.images?.[0] || '/images/placeholder.jpg';
-        const title = product.title || 'Untitled Product';
-        const price = parseFloat(product.price) || 0;
-        const oldPrice = product.old_price ? parseFloat(product.old_price) : null;
-        const category = product.category || product.categories?.name || '';
-        const subcategory = product.subcategory || product.subcategories?.name || '';
-
-        // Calculate discount percentage
-        let discountBadge = '';
-        if (oldPrice && oldPrice > price) {
-            const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
-            discountBadge = `<span class="discount-badge">-${discount}%</span>`;
-        }
-
-        // Badges
-        let badgesHTML = '';
-        if (product.is_new_arrival) {
-            badgesHTML += '<span class="badge badge-new">New</span>';
-        }
-        if (product.is_limited_edition) {
-            badgesHTML += '<span class="badge badge-limited">Limited</span>';
-        }
-        if (product.is_on_sale || (oldPrice && oldPrice > price)) {
-            badgesHTML += '<span class="badge badge-sale">Sale</span>';
-        }
-
-        return `
-            <div class="product-card" data-product-url="${productUrl}">
-                <div class="product-image-wrapper">
-                    <img 
-                        src="${imageUrl}" 
-                        alt="${title}" 
-                        class="product-image"
-                        loading="lazy"
-                        onerror="this.src='/images/placeholder.jpg'"
-                    >
-                    ${discountBadge}
-                    <div class="product-badges">${badgesHTML}</div>
-                    <div class="product-actions">
-                        <button class="action-btn quick-view-btn" data-product-url="${productUrl}" title="Quick View">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="product-info">
-                    ${category ? `<span class="product-category">${category}${subcategory ? ' / ' + subcategory : ''}</span>` : ''}
-                    <h3 class="product-title">
-                        <a href="${productUrl}">${truncateText(title, 50)}</a>
-                    </h3>
-                    <div class="product-price-wrapper">
-                        <span class="product-price">${formatPrice(price)}</span>
-                        ${oldPrice ? `<span class="product-old-price">${formatPrice(oldPrice)}</span>` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
+    #new-arrivals-section .na-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #007aff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s ease;
+      font-family: var(--font-body, 'Inter', sans-serif);
     }
 
-    // ============================================
-    // Add Click Events to Product Cards
-    // ============================================
-    function addProductClickEvents() {
-        const cards = document.querySelectorAll('.product-card');
-        cards.forEach(card => {
-            card.addEventListener('click', function(e) {
-                // Don't navigate if clicking on a button
-                if (e.target.closest('button')) return;
-                
-                const url = this.getAttribute('data-product-url');
-                if (url) {
-                    window.location.href = url;
-                }
-            });
-        });
-
-        // Quick view buttons
-        const quickViewBtns = document.querySelectorAll('.quick-view-btn');
-        quickViewBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const url = this.getAttribute('data-product-url');
-                if (url) {
-                    window.location.href = url;
-                }
-            });
-        });
+    #new-arrivals-section .na-link:hover {
+      gap: 8px;
     }
 
-    // ============================================
-    // Infinite Scroll Setup
-    // ============================================
-    function setupInfiniteScroll() {
-        let scrollTimeout;
-        
-        window.addEventListener('scroll', function() {
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            
-            scrollTimeout = setTimeout(function() {
-                const section = document.querySelector('.new-arrival-section');
-                if (!section) return;
-
-                const rect = section.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-
-                // Load more when section is near viewport bottom
-                if (rect.bottom <= windowHeight + 300 && hasMore && !isLoading) {
-                    fetchNewArrivals();
-                }
-            }, 200);
-        });
+    #new-arrivals-section .na-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
     }
 
-    // ============================================
-    // Utility Functions
-    // ============================================
-    function createSlug(text) {
-        if (!text) return '';
-        return text
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-+|-+$/g, '');
+    @media (min-width: 768px) {
+      #new-arrivals-section .na-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
     }
 
-    function truncateText(text, maxLength) {
-        if (!text) return '';
-        if (text.length <= maxLength) return text;
-        return text.substring(0, maxLength).trim() + '...';
+    @media (min-width: 1024px) {
+      #new-arrivals-section .na-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px;
+      }
     }
 
-    function formatPrice(price) {
-        return '৳' + parseFloat(price).toLocaleString('en-BD', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+    /* Product Card – New Arrival Grid */
+    #new-arrivals-section .na-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      position: relative;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    function showLoader(show) {
-        const loader = document.getElementById('new-arrival-loader');
-        if (loader) {
-            loader.style.display = show ? 'flex' : 'none';
-        }
+    #new-arrivals-section .na-card:active {
+      transform: scale(0.97);
+      transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    function showNoMoreMessage(show) {
-        const message = document.getElementById('new-arrival-no-more');
-        if (message) {
-            message.style.display = show ? 'block' : 'none';
-        }
+    @media (hover: hover) {
+      #new-arrivals-section .na-card:hover {
+        transform: translateY(-4px);
+      }
     }
 
-    function showErrorMessage() {
-        const container = document.getElementById(NEW_ARRIVAL_CONTAINER_ID);
-        if (container) {
-            container.innerHTML += `
-                <div class="error-message">
-                    <p>Sorry, couldn't load new arrivals. Please try again later.</p>
-                </div>
-            `;
-        }
+    #new-arrivals-section .na-card-img {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      background: #fafafa;
+      overflow: hidden;
+      margin-bottom: 14px;
+      border-radius: 0;
     }
 
-    // ============================================
-    // Inject CSS Styles
-    // ============================================
-    const styles = `
-        <style>
-            /* New Arrival Section */
-            .new-arrival-section {
-                padding: 60px 0;
-                background-color: #ffffff;
-            }
+    #new-arrivals-section .na-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
 
-            .new-arrival-section .container {
-                max-width: 1400px;
-                margin: 0 auto;
-                padding: 0 20px;
-            }
+    @media (hover: hover) {
+      #new-arrivals-section .na-card:hover .na-card-img img {
+        transform: scale(1.04);
+      }
+    }
 
-            /* Section Header */
-            .section-header {
-                text-align: center;
-                margin-bottom: 40px;
-            }
+    #new-arrivals-section .na-card-body {
+      padding: 0 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-            .section-title {
-                font-size: 2rem;
-                font-weight: 700;
-                color: #1a1a1a;
-                margin-bottom: 8px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
+    #new-arrivals-section .na-card-category {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      color: #86868b;
+      font-family: var(--font-accent, 'Inter', sans-serif);
+      letter-spacing: 0.5px;
+    }
 
-            .section-subtitle {
-                font-size: 1rem;
-                color: #666;
-                margin-bottom: 16px;
-            }
+    #new-arrivals-section .na-card-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      margin: 0;
+    }
 
-            .section-divider {
-                width: 60px;
-                height: 3px;
-                background: linear-gradient(to right, #e74c3c, #f39c12);
-                margin: 0 auto;
-                border-radius: 2px;
-            }
+    #new-arrivals-section .na-card-price-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-            /* Products Grid */
-            .products-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 24px;
-            }
+    #new-arrivals-section .na-card-price {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1d1d1f;
+      font-family: var(--font-body, 'Inter', sans-serif);
+    }
 
-            /* Product Card */
-            .product-card {
-                background: #ffffff;
-                border-radius: 8px;
-                overflow: hidden;
-                cursor: pointer;
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                border: 1px solid #e5e5e5;
-            }
+    #new-arrivals-section .na-card-old-price {
+      font-size: 13px;
+      color: #b0b0b5;
+      text-decoration: line-through;
+      font-weight: 400;
+      font-family: var(--font-body, 'Inter', sans-serif);
+    }
 
-            .product-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            }
+    /* Badges */
+    #new-arrivals-section .na-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+      padding: 4px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: #ffffff;
+      color: #1d1d1f;
+      pointer-events: none;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      letter-spacing: 0.5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
 
-            /* Product Image Wrapper */
-            .product-image-wrapper {
-                position: relative;
-                width: 100%;
-                padding-top: 120%;
-                overflow: hidden;
-                background-color: #f5f5f5;
-            }
+    #new-arrivals-section .na-badge-sale {
+      color: #d70015 !important;
+    }
 
-            .product-image {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 0.5s ease;
-            }
+    /* Quick Add Button */
+    #new-arrivals-section .na-add-btn {
+      position: absolute;
+      bottom: 70px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
+      color: #1d1d1f;
+      font-size: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      z-index: 3;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
 
-            .product-card:hover .product-image {
-                transform: scale(1.05);
-            }
+    @media (hover: hover) {
+      #new-arrivals-section .na-add-btn {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      #new-arrivals-section .na-card:hover .na-add-btn {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #new-arrivals-section .na-add-btn:hover {
+        background: #1d1d1f;
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+      }
+    }
 
-            /* Discount Badge */
-            .discount-badge {
-                position: absolute;
-                top: 12px;
-                left: 12px;
-                background-color: #e74c3c;
-                color: white;
-                padding: 4px 10px;
-                border-radius: 4px;
-                font-size: 0.8rem;
-                font-weight: 600;
-                z-index: 2;
-            }
+    #new-arrivals-section .na-add-btn:active {
+      transform: scale(0.88);
+      background: #1d1d1f;
+      color: #ffffff;
+      transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
 
-            /* Product Badges */
-            .product-badges {
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                z-index: 2;
-            }
+    /* Sold Out Overlay */
+    #new-arrivals-section .na-soldout-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none;
+    }
 
-            .badge {
-                padding: 3px 8px;
-                border-radius: 3px;
-                font-size: 0.7rem;
-                font-weight: 600;
-                text-transform: uppercase;
-            }
+    #new-arrivals-section .na-soldout-overlay span {
+      background: #1d1d1f;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      letter-spacing: 1px;
+    }
 
-            .badge-new {
-                background-color: #2ecc71;
-                color: white;
-            }
+    /* Empty State */
+    #new-arrivals-section .na-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px 0;
+      color: #86868b;
+      font-size: 14px;
+      font-family: var(--font-body, 'Inter', sans-serif);
+    }
 
-            .badge-sale {
-                background-color: #e74c3c;
-                color: white;
-            }
+    /* Responsive */
+    @media (max-width: 767px) {
+      #new-arrivals-section {
+        padding: 32px 0;
+      }
 
-            .badge-limited {
-                background-color: #f39c12;
-                color: white;
-            }
+      #new-arrivals-section .na-container {
+        padding: 0 20px;
+      }
 
-            /* Product Actions */
-            .product-actions {
-                position: absolute;
-                bottom: 12px;
-                right: 12px;
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                opacity: 0;
-                transform: translateX(10px);
-                transition: all 0.3s ease;
-                z-index: 2;
-            }
+      #new-arrivals-section .na-header {
+        margin-bottom: 24px;
+      }
 
-            .product-card:hover .product-actions {
-                opacity: 1;
-                transform: translateX(0);
-            }
+      #new-arrivals-section .na-title {
+        font-size: 22px;
+      }
 
-            .action-btn {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                border: none;
-                background-color: white;
-                color: #333;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                transition: all 0.2s ease;
-            }
+      #new-arrivals-section .na-grid {
+        gap: 16px;
+      }
 
-            .action-btn:hover {
-                background-color: #1a1a1a;
-                color: white;
-            }
+      #new-arrivals-section .na-card-body {
+        padding: 0 2px;
+      }
 
-            /* Product Info */
-            .product-info {
-                padding: 16px;
-            }
+      #new-arrivals-section .na-card-title {
+        font-size: 13px;
+      }
 
-            .product-category {
-                font-size: 0.75rem;
-                color: #888;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
+      #new-arrivals-section .na-add-btn {
+        width: 34px;
+        height: 34px;
+        bottom: 58px;
+        right: 8px;
+        opacity: 1;
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
 
-            .product-title {
-                margin: 6px 0;
-                font-size: 0.95rem;
-                font-weight: 500;
-                line-height: 1.4;
-            }
+      #new-arrivals-section .na-badge {
+        top: 8px;
+        left: 8px;
+        padding: 3px 8px;
+        font-size: 9px;
+      }
+    }
 
-            .product-title a {
-                color: #1a1a1a;
-                text-decoration: none;
-                transition: color 0.2s ease;
-            }
+    @media (min-width: 1400px) {
+      #new-arrivals-section .na-title {
+        font-size: 32px;
+      }
 
-            .product-title a:hover {
-                color: #e74c3c;
-            }
+      #new-arrivals-section .na-card-title {
+        font-size: 16px;
+      }
+    }
+  `;
 
-            /* Product Price */
-            .product-price-wrapper {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-top: 8px;
-            }
+  function injectStyles() {
+    if (document.getElementById('na-styles')) return;
+    const styleTag = document.createElement('style');
+    styleTag.id = 'na-styles';
+    styleTag.textContent = STYLES;
+    document.head.appendChild(styleTag);
+  }
 
-            .product-price {
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: #1a1a1a;
-            }
+  function getProductSlug(p) {
+    return (p.slug || p.title || 'product')
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
 
-            .product-old-price {
-                font-size: 0.85rem;
-                color: #999;
-                text-decoration: line-through;
-            }
+  function buildCard(product) {
+    const isOut = product.stock <= 0;
+    const slug = getProductSlug(product);
 
-            /* Loader */
-            .loader {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 40px 0;
-            }
+    let badgeHTML = '';
+    if (!isOut) {
+      if (product.is_on_sale) {
+        badgeHTML = '<span class="na-badge na-badge-sale">Sale</span>';
+      } else {
+        badgeHTML = '<span class="na-badge">New</span>';
+      }
+    }
 
-            .spinner {
-                width: 40px;
-                height: 40px;
-                border: 3px solid #e5e5e5;
-                border-top: 3px solid #e74c3c;
-                border-radius: 50%;
-                animation: spin 0.8s linear infinite;
-            }
+    const soldOutHTML = isOut
+      ? '<div class="na-soldout-overlay"><span>Sold Out</span></div>'
+      : '';
 
-            @keyframes spin {
-                to { transform: rotate(360deg); }
-            }
+    const addBtnHTML = !isOut
+      ? `<button class="na-add-btn" onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${product.id},null)" aria-label="Add to cart">
+           <i class="fa-solid fa-plus"></i>
+         </button>`
+      : '';
 
-            /* No More Products */
-            .no-more-products {
-                text-align: center;
-                padding: 40px 0;
-                color: #888;
-            }
+    return `
+      <a href="/product/${slug}" class="na-card">
+        <div class="na-card-img">
+          <img src="${product.img}" alt="${product.title}" loading="lazy" />
+          ${badgeHTML}
+          ${soldOutHTML}
+          ${addBtnHTML}
+        </div>
+        <div class="na-card-body">
+          <span class="na-card-category">${product.category}</span>
+          <h3 class="na-card-title">${product.title}</h3>
+          <div class="na-card-price-wrapper">
+            <span class="na-card-price">৳${product.price}</span>
+            ${product.old_price ? `<span class="na-card-old-price">৳${product.old_price}</span>` : ''}
+          </div>
+        </div>
+      </a>`;
+  }
 
-            /* Error Message */
-            .error-message {
-                text-align: center;
-                padding: 20px;
-                color: #e74c3c;
-                background-color: #fdf0ed;
-                border-radius: 8px;
-                margin: 20px 0;
-            }
+  window.renderNewArrival = function (products = []) {
+    injectStyles();
 
-            /* Responsive Design */
-            @media (max-width: 768px) {
-                .new-arrival-section {
-                    padding: 40px 0;
-                }
+    const section = document.getElementById('new-arrivals-section');
+    if (!section) {
+      console.warn('[NewArrival] #new-arrivals-section not found in DOM.');
+      return;
+    }
 
-                .section-title {
-                    font-size: 1.5rem;
-                }
+    // Hide skeleton
+    const skeleton = document.getElementById('new-arrivals-skeleton');
+    if (skeleton) {
+      skeleton.classList.add('skeleton-hidden');
+      skeleton.classList.remove('skeleton-visible');
+    }
 
-                .products-grid {
-                    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-                    gap: 16px;
-                }
-            }
+    if (!products || products.length === 0) {
+      section.innerHTML = `
+        <div class="na-container">
+          <div class="na-header">
+            <h2 class="na-title">New Arrivals</h2>
+            <a href="/products" class="na-link" onclick="event.preventDefault();navigate('products')">View All →</a>
+          </div>
+          <div class="na-grid">
+            <div class="na-empty">No new arrivals at the moment. Check back soon!</div>
+          </div>
+        </div>`;
+      section.classList.remove('skeleton-hidden');
+      return;
+    }
 
-            @media (max-width: 480px) {
-                .products-grid {
-                    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                    gap: 12px;
-                }
+    section.innerHTML = `
+      <div class="na-container">
+        <div class="na-header">
+          <h2 class="na-title">New Arrivals</h2>
+          <a href="/products" class="na-link" onclick="event.preventDefault();navigate('products')">View All →</a>
+        </div>
+        <div class="na-grid">
+          ${products.map(p => buildCard(p)).join('')}
+        </div>
+      </div>`;
 
-                .product-info {
-                    padding: 12px;
-                }
-
-                .product-title {
-                    font-size: 0.85rem;
-                }
-
-                .product-price {
-                    font-size: 1rem;
-                }
-
-                .new-arrival-section .container {
-                    padding: 0 12px;
-                }
-            }
-        </style>
-    `;
-
-    // Inject styles into head
-    document.head.insertAdjacentHTML('beforeend', styles);
-
+    section.classList.remove('skeleton-hidden');
+  };
 })();
