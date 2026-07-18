@@ -1,6 +1,7 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
 // Integrated with /api/home-showcase/complete API
+// Fonts powered by JABIYEN_FONTS configuration
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -92,6 +93,9 @@ class HomeCategoryShowcase {
 
         container.innerHTML = '';
         
+        // Ensure JABIYEN_FONTS CSS variables are injected first
+        this.injectFontVariables();
+        
         // 1. Build Header
         if (this.data.header) {
             const headerHTML = this.buildHeaderHTML();
@@ -111,11 +115,28 @@ class HomeCategoryShowcase {
         // 4. Render initial grid (Women by default)
         this.renderGrid('women');
 
-        // 5. Inject Styles
+        // 5. Inject Component Styles
         this.injectStyles();
 
         this.isLoaded = true;
         console.log('[CategoryShowcase] Rendered successfully');
+    }
+
+    /**
+     * Inject JABIYEN_FONTS CSS variables into :root if not already present
+     */
+    injectFontVariables() {
+        // Check if JABIYEN_FONTS exists globally
+        if (typeof window.JABIYEN_FONTS !== 'undefined') {
+            const root = document.documentElement;
+            const vars = window.JABIYEN_FONTS.cssVariables;
+            for (const [key, value] of Object.entries(vars)) {
+                // Only set if not already defined
+                if (!root.style.getPropertyValue(key)) {
+                    root.style.setProperty(key, value);
+                }
+            }
+        }
     }
 
     buildHeaderHTML() {
@@ -123,66 +144,18 @@ class HomeCategoryShowcase {
         if (!header) return '';
 
         return `
-        <div class="showcase-header" style="
-            text-align: center;
-            padding: 40px 20px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        ">
-            ${header.title ? `<h2 style="
-                font-family: var(--font-heading, 'Manrope', sans-serif);
-                font-weight: 500;
-                font-size: var(--text-base, 16px);
-                color: #1d1d1f;
-                margin: 0 0 6px 0;
-                letter-spacing: var(--tracking-tight, -0.5px);
-            ">${header.title}</h2>` : ''}
+        <div class="showcase-header">
+            ${header.title ? `<h2 class="showcase-header-title">${header.title}</h2>` : ''}
             
-            ${header.subtitle ? `<p style="
-                font-family: var(--font-body, 'Inter', sans-serif);
-                font-weight: 400;
-                font-size: var(--text-xs, 12px);
-                color: #86868b;
-                margin: 0;
-                line-height: 1.4;
-            ">${header.subtitle}</p>` : ''}
+            ${header.subtitle ? `<p class="showcase-header-subtitle">${header.subtitle}</p>` : ''}
         </div>`;
     }
 
     buildTabsHTML() {
         return `
-        <div class="showcase-tabs" style="
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 20px 0 30px;
-            border-bottom: 1px solid #e5e5e5;
-            margin: 0 20px 0;
-        ">
-            <button class="tab-btn" data-gender="women" style="
-                background: none;
-                border: none;
-                font-family: var(--font-body, 'Inter', sans-serif);
-                font-weight: 500;
-                font-size: var(--text-base, 16px);
-                color: #86868b;
-                cursor: pointer;
-                padding: 0 0 8px 0;
-                position: relative;
-                transition: color 0.3s ease;
-            ">Women</button>
-            <button class="tab-btn" data-gender="men" style="
-                background: none;
-                border: none;
-                font-family: var(--font-body, 'Inter', sans-serif);
-                font-weight: 500;
-                font-size: var(--text-base, 16px);
-                color: #86868b;
-                cursor: pointer;
-                padding: 0 0 8px 0;
-                position: relative;
-                transition: color 0.3s ease;
-            ">Men</button>
+        <div class="showcase-tabs">
+            <button class="tab-btn" data-gender="women">Women</button>
+            <button class="tab-btn" data-gender="men">Men</button>
         </div>`;
     }
 
@@ -229,7 +202,7 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; font-family: var(--font-body, sans-serif);">No categories found</div>`;
             return;
         }
 
@@ -247,57 +220,18 @@ class HomeCategoryShowcase {
         
         return `
         <a href="/category/${catSlug}" 
-           class="showcase-category-card"
-           style="
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            background: #ffffff;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-           ">
+           class="showcase-category-card">
             
-            <div class="card-image-wrapper" style="
-                position: relative;
-                width: 100%;
-                aspect-ratio: 3/4;
-                overflow: hidden;
-                background: #f5f5f7;
-            ">
+            <div class="card-image-wrapper">
                 ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
                      loading="${index < 4 ? 'eager' : 'lazy'}"
                      onerror="this.style.display='none'"
-                     style="
-                        position: absolute;
-                        inset: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                     ">` : ''}
+                     class="card-image">` : ''}
             </div>
             
-            <div class="card-content" style="
-                padding: 16px 0 24px 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                background: #ffffff;
-            ">
-                
-                <h3 style="
-                    font-family: var(--font-subtitle, 'Sora', sans-serif);
-                    font-weight: 500;
-                    font-size: var(--text-sm, 14px);
-                    line-height: 1.2;
-                    margin: 0;
-                    color: #1d1d1f;
-                    letter-spacing: var(--tracking-normal, 0);
-                ">${catName}</h3>
-                
+            <div class="card-content">
+                <h3 class="card-category-title">${catName}</h3>
             </div>
         </a>`;
     }
@@ -308,63 +242,164 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* Grid Container - White background with gap showing through */
+            /* ============================================
+               HEADER STYLES
+               ============================================ */
+            .showcase-header {
+                text-align: center;
+                padding: 40px 20px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            
+            .showcase-header-title {
+                font-family: var(--font-heading, 'Manrope', sans-serif);
+                font-weight: 600;
+                font-size: clamp(14px, 2vw, 16px);
+                color: #1d1d1f;
+                margin: 0 0 6px 0;
+                letter-spacing: var(--tracking-tight, -0.5px);
+            }
+            
+            .showcase-header-subtitle {
+                font-family: var(--font-body, 'Inter', sans-serif);
+                font-weight: 400;
+                font-size: clamp(10px, 1.2vw, 11px);
+                color: #86868b;
+                margin: 0;
+                line-height: 1.4;
+            }
+            
+            /* ============================================
+               TABS STYLES
+               ============================================ */
+            .showcase-tabs {
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                padding: 20px 0 30px;
+                border-bottom: 1px solid #e5e5e5;
+                margin: 0 20px 0;
+            }
+            
+            .tab-btn {
+                background: none;
+                border: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: #86868b;
+                cursor: pointer;
+                padding: 0 0 8px 0;
+                position: relative;
+                font-family: var(--font-body, 'Inter', sans-serif);
+                transition: color 0.3s ease;
+                letter-spacing: var(--tracking-normal, 0);
+            }
+            
+            /* ============================================
+               GRID CONTAINER
+               ============================================ */
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 1px; /* Very thin gap between images */
+                gap: 1px;
                 max-width: 100%;
                 margin: 0;
-                background: #ffffff; /* White background shows through the thin gap */
-                padding: 0; /* No padding on sides */
+                background: #ffffff;
+                padding: 0;
             }
             
-            /* Individual Card Styling */
+            /* ============================================
+               CARD STYLES
+               ============================================ */
             .showcase-category-card {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                text-decoration: none;
+                background: #ffffff;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
                 border: none;
                 transition: opacity 0.3s ease;
+            }
+            
+            .card-image-wrapper {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 3/4;
+                overflow: hidden;
+                background: #f5f5f7;
+            }
+            
+            .card-image {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            
+            .card-content {
+                padding: 16px 0 24px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
                 background: #ffffff;
             }
             
-            /* Card Text Styling */
-            .showcase-category-card h3 {
+            .card-category-title {
+                font-family: var(--font-heading, 'Manrope', sans-serif);
+                font-weight: 500;
+                font-size: clamp(15px, 2vw, 18px);
+                line-height: 1.2;
+                margin: 0;
+                color: #1d1d1f;
+                letter-spacing: var(--tracking-tight, -0.5px);
                 background: transparent;
                 text-shadow: none;
             }
             
-            /* Image wrapper - image stays within its boundaries */
-            .card-image-wrapper {
-                background: #f5f5f7;
-            }
-
-            /* Responsive adjustments */
+            /* ============================================
+               RESPONSIVE STYLES
+               ============================================ */
             @media (max-width: 767px) {
                 .showcase-tabs {
-                    gap: 20px !important;
+                    gap: 20px;
                 }
+                
                 .tab-btn {
-                    font-size: var(--text-sm, 14px) !important;
+                    font-size: 14px;
                 }
+                
                 #categoryshow-dynamic-grid {
-                    gap: 1px; /* Same thin gap on mobile */
+                    gap: 1px;
                 }
+                
                 .card-content {
-                    padding: 12px 0 20px 0 !important;
+                    padding: 12px 0 20px 0;
+                }
+                
+                .card-category-title {
+                    font-size: clamp(13px, 3vw, 16px);
                 }
             }
-
-            /* Hover effect - Subtle opacity only (Prada style) */
+            
+            /* ============================================
+               HOVER & ACTIVE STATES
+               ============================================ */
             @media (hover: hover) {
                 .showcase-category-card:hover {
                     opacity: 0.9;
                 }
-                .showcase-category-card:hover .card-image-wrapper img {
+                .showcase-category-card:hover .card-image {
                     transform: scale(1.02);
                     transition: transform 0.4s ease;
                 }
             }
             
-            /* Active/Tap effect */
             .showcase-category-card:active {
                 opacity: 0.8;
                 transition: opacity 0.1s ease;
@@ -391,6 +426,180 @@ class HomeCategoryShowcase {
             this.hide();
         }
     }
+}
+
+// ============================================================
+// JABIYEN FONTS CONFIGURATION
+// Centralized font management for the entire website
+// ============================================================
+
+const JABIYEN_FONTS = {
+    // Google Fonts Family Names (CSS value)
+    families: {
+        // Main heading font - Titles, hero text, section headers
+        heading: "'Manrope', sans-serif",
+        
+        // Subtitle font - Secondary headings
+        subtitle: "'Sora', sans-serif",
+        
+        // Body/Description font - Paragraphs, descriptions, buttons, prices
+        body: "'Inter', sans-serif"
+    },
+
+    // Font weights mapping for each font family
+    weights: {
+        heading: {
+            regular: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800
+        },
+        subtitle: {
+            regular: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800
+        },
+        body: {
+            light: 300,
+            regular: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800,
+            black: 900
+        }
+    },
+
+    // CSS Variables injected into :root
+    cssVariables: {
+        // Font families
+        '--font-heading': "'Manrope', sans-serif",
+        '--font-subtitle': "'Sora', sans-serif",
+        '--font-body': "'Inter', sans-serif",
+        '--font-accent': "'Inter', sans-serif",
+        
+        // Font size scale
+        '--text-xs': '0.75rem',     // 12px
+        '--text-sm': '0.875rem',    // 14px
+        '--text-base': '1rem',       // 16px
+        '--text-lg': '1.125rem',    // 18px
+        '--text-xl': '1.25rem',     // 20px
+        '--text-2xl': '1.5rem',     // 24px
+        '--text-3xl': '1.875rem',   // 30px
+        '--text-4xl': '2.25rem',    // 36px
+        '--text-5xl': '3rem',       // 48px
+        
+        // Letter spacing
+        '--tracking-tight': '-0.5px',
+        '--tracking-normal': '0',
+        '--tracking-wide': '0.5px',
+        '--tracking-wider': '1px',
+        '--tracking-widest': '1.5px'
+    },
+
+    // Tailwind CSS font configuration
+    tailwindConfig: {
+        fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+        }
+    },
+
+    // Google Fonts URL (auto-generated with all three fonts)
+    get googleFontsURL() {
+        const manrope = 'Manrope:wght@400;500;600;700;800';
+        const sora = 'Sora:wght@400;500;600;700;800';
+        const inter = 'Inter:wght@300;400;500;600;700;800;900';
+        return `https://fonts.googleapis.com/css2?family=${manrope}&family=${sora}&family=${inter}&display=swap`;
+    },
+
+    // CSS text styles for consistent typography
+    styles: {
+        heroTitle: {
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 800,
+            fontSize: 'var(--text-5xl)',
+            letterSpacing: 'var(--tracking-tight)'
+        },
+        sectionTitle: {
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 700,
+            fontSize: 'var(--text-3xl)',
+            letterSpacing: 'var(--tracking-tight)'
+        },
+        sectionSubtitle: {
+            fontFamily: 'var(--font-subtitle)',
+            fontWeight: 600,
+            fontSize: 'var(--text-xl)',
+            letterSpacing: 'var(--tracking-normal)'
+        },
+        cardTitle: {
+            fontFamily: 'var(--font-subtitle)',
+            fontWeight: 500,
+            fontSize: 'var(--text-sm)',
+            letterSpacing: 'var(--tracking-normal)'
+        },
+        description: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 400,
+            fontSize: 'var(--text-base)',
+            letterSpacing: 'var(--tracking-normal)',
+            lineHeight: '1.6'
+        },
+        smallText: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 500,
+            fontSize: 'var(--text-xs)',
+            letterSpacing: 'var(--tracking-wide)'
+        },
+        button: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 600,
+            fontSize: 'var(--text-xs)',
+            letterSpacing: 'var(--tracking-wider)',
+            textTransform: 'uppercase'
+        },
+        price: {
+            fontFamily: 'var(--font-body)',
+            fontWeight: 600,
+            fontSize: 'var(--text-sm)'
+        },
+        badge: {
+            fontFamily: 'var(--font-subtitle)',
+            fontWeight: 600,
+            fontSize: '0.625rem',
+            letterSpacing: 'var(--tracking-wide)',
+            textTransform: 'uppercase'
+        }
+    }
+};
+
+// Export for module usage
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { HomeCategoryShowcase, JABIYEN_FONTS, initCategoryShowcase };
+}
+
+// Auto-initialize when loaded in browser
+if (typeof window !== 'undefined') {
+    window.JABIYEN_FONTS = JABIYEN_FONTS;
+    
+    // Apply CSS variables to :root
+    document.addEventListener('DOMContentLoaded', () => {
+        const root = document.documentElement;
+        const vars = JABIYEN_FONTS.cssVariables;
+        for (const [key, value] of Object.entries(vars)) {
+            root.style.setProperty(key, value);
+        }
+        
+        console.log('✅ JABIYEN Fonts Loaded:');
+        console.log('  📝 Headings:', JABIYEN_FONTS.families.heading);
+        console.log('  📝 Subtitles:', JABIYEN_FONTS.families.subtitle);
+        console.log('  📝 Body/Description:', JABIYEN_FONTS.families.body);
+    });
 }
 
 // ============================================================
@@ -448,5 +657,5 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { HomeCategoryShowcase, initCategoryShowcase };
+    module.exports = { HomeCategoryShowcase, JABIYEN_FONTS, initCategoryShowcase };
 }
