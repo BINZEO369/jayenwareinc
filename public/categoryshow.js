@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
 // Integrated with /api/home-showcase/complete API
-// JABIYEN FONTS INTEGRATED - WITH SLIDE ANIMATIONS
+// JABIYEN FONTS INTEGRATED - WORLD-CLASS SMOOTH ANIMATIONS
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -25,6 +25,7 @@ class HomeCategoryShowcase {
         };
         
         this.isLoaded = false;
+        this.gridWrapper = null;
         this.gridElement = null;
         this.currentGender = 'women';
         this.isAnimating = false;
@@ -101,14 +102,17 @@ class HomeCategoryShowcase {
         const tabsHTML = this.buildTabsHTML();
         container.insertAdjacentHTML('beforeend', tabsHTML);
 
+        // Create wrapper for smooth overflow handling
+        this.gridWrapper = document.createElement('div');
+        this.gridWrapper.className = 'showcase-grid-wrapper';
+        container.appendChild(this.gridWrapper);
+
         this.gridElement = document.createElement('div');
         this.gridElement.className = this.config.gridClass;
         this.gridElement.id = 'categoryshow-dynamic-grid';
-        this.gridElement.style.position = 'relative';
-        this.gridElement.style.overflow = 'hidden';
-        container.appendChild(this.gridElement);
+        this.gridWrapper.appendChild(this.gridElement);
 
-        this.renderGrid(this.currentGender, false);
+        this.renderGrid(this.currentGender);
         this.injectStyles();
 
         this.isLoaded = true;
@@ -150,44 +154,19 @@ class HomeCategoryShowcase {
         <div class="showcase-tabs" style="
             display: flex;
             justify-content: center;
-            gap: 30px;
-            padding: 20px 0 30px;
-            border-bottom: 1px solid #e5e5e5;
+            gap: 40px;
+            padding: 10px 0 25px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
             margin: 0 20px 0;
         ">
-            <button class="tab-btn" data-gender="women" style="
-                background: none;
-                border: none;
-                font-size: 16px;
-                font-weight: 500;
-                color: #86868b;
-                cursor: pointer;
-                padding: 0 0 8px 0;
-                position: relative;
-                font-family: 'Inter', sans-serif;
-                transition: color 0.3s ease;
-            ">Women</button>
-            <button class="tab-btn" data-gender="men" style="
-                background: none;
-                border: none;
-                font-size: 16px;
-                font-weight: 500;
-                color: #86868b;
-                cursor: pointer;
-                padding: 0 0 8px 0;
-                position: relative;
-                font-family: 'Inter', sans-serif;
-                transition: color 0.3s ease;
-            ">Men</button>
+            <button class="tab-btn active" data-gender="women">Women</button>
+            <button class="tab-btn" data-gender="men">Men</button>
         </div>`;
     }
 
     setupTabs() {
         const tabs = document.querySelectorAll('.tab-btn');
         const self = this;
-
-        const initialTab = document.querySelector('.tab-btn[data-gender="women"]');
-        if (initialTab) self.setActiveTab(initialTab);
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
@@ -202,18 +181,12 @@ class HomeCategoryShowcase {
     }
 
     setActiveTab(activeTab) {
-        const tabs = document.querySelectorAll('.tab-btn');
-        tabs.forEach(t => {
-            t.style.color = '#86868b';
-            t.style.borderBottom = 'none';
-        });
-        
-        activeTab.style.color = '#1d1d1f';
-        activeTab.style.borderBottom = '2px solid #1d1d1f';
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        activeTab.classList.add('active');
     }
 
     renderGridWithAnimation(gender) {
-        if (!this.gridElement || this.isAnimating) return;
+        if (!this.gridElement || !this.gridWrapper || this.isAnimating) return;
         
         this.isAnimating = true;
         
@@ -229,69 +202,71 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
         
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; grid-column: 1 / -1;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:60px 20px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
             this.isAnimating = false;
             return;
         }
+
+        const newCardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
         
-        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
-        
-        const currentGrid = document.createElement('div');
-        currentGrid.style.cssText = `
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            transform: translateX(0);
-            background: #ffffff;
-        `;
-        currentGrid.innerHTML = this.gridElement.innerHTML;
-        
+        // Create new grid
         const newGrid = document.createElement('div');
-        newGrid.style.cssText = `
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            transform: translateX(${isMovingToMen ? '100%' : '-100%'});
-            background: #ffffff;
-        `;
-        newGrid.innerHTML = cardsHTML;
+        newGrid.className = 'showcase-grid-inner entering';
+        newGrid.innerHTML = newCardsHTML;
         
-        this.gridElement.style.position = 'relative';
-        this.gridElement.innerHTML = '';
-        this.gridElement.appendChild(currentGrid);
+        // Set initial position based on direction
+        if (isMovingToMen) {
+            newGrid.style.transform = 'translateX(60px)';
+        } else {
+            newGrid.style.transform = 'translateX(-60px)';
+        }
+        newGrid.style.opacity = '0';
+        
+        // Add exit animation to current grid
+        const currentGrid = this.gridElement.querySelector('.showcase-grid-inner');
+        if (currentGrid) {
+            currentGrid.classList.add('exiting');
+            if (isMovingToMen) {
+                currentGrid.style.transform = 'translateX(-60px)';
+            } else {
+                currentGrid.style.transform = 'translateX(60px)';
+            }
+            currentGrid.style.opacity = '0';
+        }
+        
+        // Append new grid
         this.gridElement.appendChild(newGrid);
         
+        // Trigger entrance animation
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                currentGrid.style.transform = `translateX(${isMovingToMen ? '-100%' : '100%'})`;
                 newGrid.style.transform = 'translateX(0)';
+                newGrid.style.opacity = '1';
                 
-                setTimeout(() => {
-                    this.gridElement.innerHTML = cardsHTML;
-                    this.gridElement.style.position = 'relative';
+                // Clean up after animation completes
+                const onTransitionEnd = () => {
+                    newGrid.removeEventListener('transitionend', onTransitionEnd);
+                    if (currentGrid) currentGrid.remove();
+                    newGrid.classList.remove('entering');
                     this.isAnimating = false;
-                }, 500);
+                };
+                
+                newGrid.addEventListener('transitionend', onTransitionEnd);
+                
+                // Fallback cleanup
+                setTimeout(() => {
+                    if (this.isAnimating) {
+                        if (currentGrid && currentGrid.parentNode) currentGrid.remove();
+                        newGrid.classList.remove('entering');
+                        this.isAnimating = false;
+                    }
+                }, 700);
             });
         });
     }
 
-    renderGrid(gender, animate = true) {
+    renderGrid(gender) {
         if (!this.gridElement) return;
-        
-        if (animate && this.currentGender !== gender) {
-            this.renderGridWithAnimation(gender);
-            return;
-        }
         
         let categories = [];
         if (gender === 'men') {
@@ -303,12 +278,12 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; grid-column: 1 / -1;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:60px 20px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
             return;
         }
 
         const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
-        this.gridElement.innerHTML = cardsHTML;
+        this.gridElement.innerHTML = `<div class="showcase-grid-inner">${cardsHTML}</div>`;
     }
 
     buildCardHTML(item, index) {
@@ -322,56 +297,20 @@ class HomeCategoryShowcase {
         return `
         <a href="/category/${catSlug}" 
            class="showcase-category-card"
-           style="
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            background: #ffffff;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-           ">
+           style="animation: cardFadeIn 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) ${index * 0.08}s both;">
             
-            <div class="card-image-wrapper" style="
-                position: relative;
-                width: 100%;
-                aspect-ratio: 3/4;
-                overflow: hidden;
-                background: #f5f5f7;
-            ">
+            <div class="card-image-wrapper">
                 ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
                      loading="${index < 4 ? 'eager' : 'lazy'}"
-                     onerror="this.style.display='none'"
-                     style="
-                        position: absolute;
-                        inset: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                     ">` : ''}
+                     onerror="this.parentElement.classList.add('no-image')"
+                     class="card-image">` : '<div class="image-placeholder"></div>'}
+                <div class="card-image-overlay"></div>
             </div>
             
-            <div class="card-content" style="
-                padding: 16px 0 24px 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                background: #ffffff;
-            ">
-                
-                <h3 style="
-                    font-size: clamp(15px, 2vw, 18px);
-                    line-height: 1.2;
-                    margin: 0;
-                    color: #1d1d1f;
-                    font-family: 'Sora', sans-serif;
-                    font-weight: 500;
-                    letter-spacing: -0.01em;
-                ">${catName}</h3>
-                
+            <div class="card-content">
+                <h3 class="card-title">${catName}</h3>
+                <span class="card-explore">Explore</span>
             </div>
         </a>`;
     }
@@ -382,83 +321,278 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* Grid Container - White background with gap showing through */
-            #categoryshow-dynamic-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1px;
-                max-width: 100%;
-                margin: 0;
-                background: #ffffff;
-                padding: 0;
+            /* ===== GRID WRAPPER ===== */
+            .showcase-grid-wrapper {
                 overflow: hidden;
                 position: relative;
+                background: #ffffff;
+                padding: 0;
+                margin: 0;
             }
             
-            /* Individual Card Styling */
-            .showcase-category-card {
-                border: none;
-                transition: opacity 0.3s ease;
+            /* ===== MAIN GRID CONTAINER ===== */
+            #categoryshow-dynamic-grid {
+                position: relative;
+                min-height: 200px;
                 background: #ffffff;
             }
             
-            /* Card Text Styling with JABIYEN Fonts */
-            .showcase-category-card h3 {
-                background: transparent;
-                text-shadow: none;
-                font-family: 'Sora', sans-serif !important;
+            /* ===== INNER GRID ===== */
+            .showcase-grid-inner {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2px;
+                width: 100%;
+                background: #f5f5f7;
+                transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+                will-change: transform, opacity;
             }
             
-            /* Tab buttons font consistency */
+            .showcase-grid-inner.entering {
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 2;
+            }
+            
+            .showcase-grid-inner.exiting {
+                position: relative;
+                z-index: 1;
+                transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            
+            /* ===== TAB BUTTONS ===== */
             .tab-btn {
-                font-family: 'Inter', sans-serif !important;
+                background: none;
+                border: none;
+                font-size: 15px;
+                font-weight: 400;
+                color: #86868b;
+                cursor: pointer;
+                padding: 8px 4px;
+                position: relative;
+                font-family: 'Inter', -apple-system, sans-serif;
+                letter-spacing: -0.01em;
+                transition: color 0.35s ease;
+                outline: none;
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
             }
             
-            /* Header font consistency */
-            .showcase-header h2 {
-                font-family: 'Manrope', sans-serif !important;
+            .tab-btn::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 0;
+                height: 1.5px;
+                background: #1d1d1f;
+                transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
             
-            .showcase-header p {
-                font-family: 'Inter', sans-serif !important;
+            .tab-btn.active {
+                color: #1d1d1f;
+                font-weight: 500;
             }
             
-            /* Image wrapper - image stays within its boundaries */
+            .tab-btn.active::after {
+                width: 100%;
+            }
+            
+            .tab-btn:hover:not(.active) {
+                color: #6e6e73;
+            }
+            
+            /* ===== CATEGORY CARD ===== */
+            .showcase-category-card {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                text-decoration: none;
+                background: #ffffff;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                overflow: hidden;
+                opacity: 0;
+            }
+            
+            @keyframes cardFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            /* ===== IMAGE WRAPPER ===== */
             .card-image-wrapper {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 3/4;
+                overflow: hidden;
                 background: #f5f5f7;
             }
-
-            /* Responsive adjustments */
+            
+            .card-image {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            
+            .card-image-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0);
+                transition: background 0.5s ease;
+                z-index: 1;
+            }
+            
+            .image-placeholder {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+            }
+            
+            .no-image .image-placeholder {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .no-image .image-placeholder::after {
+                content: '✕';
+                font-size: 24px;
+                color: #c7c7cc;
+                opacity: 0.5;
+            }
+            
+            /* ===== CARD CONTENT ===== */
+            .card-content {
+                padding: 20px 16px 28px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                background: #ffffff;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .card-title {
+                font-size: clamp(15px, 2vw, 17px);
+                line-height: 1.2;
+                margin: 0;
+                color: #1d1d1f;
+                font-family: 'Sora', -apple-system, sans-serif;
+                font-weight: 500;
+                letter-spacing: -0.01em;
+                transition: color 0.3s ease;
+            }
+            
+            .card-explore {
+                display: inline-block;
+                margin-top: 8px;
+                font-size: 11px;
+                font-family: 'Inter', -apple-system, sans-serif;
+                color: #86868b;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+                position: relative;
+                transition: color 0.3s ease;
+                opacity: 0;
+                transform: translateY(5px);
+                transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), color 0.3s ease;
+            }
+            
+            /* ===== HOVER EFFECTS ===== */
+            @media (hover: hover) {
+                .showcase-category-card:hover .card-image {
+                    transform: scale(1.03);
+                }
+                
+                .showcase-category-card:hover .card-image-overlay {
+                    background: rgba(0,0,0,0.03);
+                }
+                
+                .showcase-category-card:hover .card-title {
+                    color: #000000;
+                }
+                
+                .showcase-category-card:hover .card-explore {
+                    opacity: 1;
+                    transform: translateY(0);
+                    color: #6e6e73;
+                }
+            }
+            
+            /* ===== ACTIVE/TAP EFFECT ===== */
+            .showcase-category-card:active .card-image {
+                transform: scale(0.98);
+                transition: transform 0.2s ease;
+            }
+            
+            .showcase-category-card:active .card-image-overlay {
+                background: rgba(0,0,0,0.06);
+                transition: background 0.15s ease;
+            }
+            
+            /* ===== RESPONSIVE ===== */
             @media (max-width: 767px) {
                 .showcase-tabs {
-                    gap: 20px !important;
+                    gap: 30px !important;
+                    padding: 8px 0 20px !important;
                 }
+                
                 .tab-btn {
                     font-size: 14px !important;
                 }
-                #categoryshow-dynamic-grid {
+                
+                .showcase-grid-inner {
                     gap: 1px;
                 }
+                
                 .card-content {
-                    padding: 12px 0 20px 0 !important;
+                    padding: 16px 12px 22px !important;
                 }
-            }
-
-            /* Hover effect - Subtle opacity only (Prada style) */
-            @media (hover: hover) {
-                .showcase-category-card:hover {
-                    opacity: 0.9;
+                
+                .card-title {
+                    font-size: 14px !important;
                 }
-                .showcase-category-card:hover .card-image-wrapper img {
-                    transform: scale(1.02);
-                    transition: transform 0.4s ease;
+                
+                .card-explore {
+                    font-size: 10px !important;
+                    margin-top: 6px !important;
                 }
             }
             
-            /* Active/Tap effect */
-            .showcase-category-card:active {
-                opacity: 0.8;
-                transition: opacity 0.1s ease;
+            @media (max-width: 380px) {
+                .showcase-grid-inner {
+                    gap: 1px;
+                }
+                
+                .card-content {
+                    padding: 12px 8px 18px !important;
+                }
+                
+                .card-title {
+                    font-size: 13px !important;
+                }
+            }
+            
+            /* ===== HEADER ===== */
+            .showcase-header h2 {
+                font-family: 'Manrope', -apple-system, sans-serif !important;
+            }
+            
+            .showcase-header p {
+                font-family: 'Inter', -apple-system, sans-serif !important;
             }
         </style>`;
 
@@ -488,7 +622,7 @@ class HomeCategoryShowcase {
 // Initialize Function
 // ============================================================
 function initCategoryShowcase() {
-    console.log('[CategoryShowcase] Initializing with JABIYEN Fonts & Slide Animations...');
+    console.log('[CategoryShowcase] Initializing world-class animations...');
     
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
