@@ -1,6 +1,6 @@
 // ============================================================
-// JAYENWARE HOME CATEGORY SHOWCASE COMPONENT
-// Prada-style Minimalist Layout Implementation
+// JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
+// Integrated with /api/home-showcase/complete API
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -9,11 +9,11 @@ class HomeCategoryShowcase {
             apiEndpoint: '/api/home-showcase/complete',
             containerId: 'categoryshow-container',
             skeletonId: 'categoryshow-skeleton',
-            gridClass: 'showcase-grid',
+            gridClass: 'showcase-grid-prada',
             itemsPerRow: {
                 mobile: 2,
                 tablet: 2,
-                desktop: 4 // Changed to 4 for desktop to match clean layout
+                desktop: 2
             }
         };
         
@@ -25,6 +25,7 @@ class HomeCategoryShowcase {
         
         this.isLoaded = false;
         this.gridElement = null;
+        this.currentGender = 'women'; // Default to Women tab
         this.init();
     }
 
@@ -33,6 +34,7 @@ class HomeCategoryShowcase {
             await this.fetchData();
             if (this.hasData()) {
                 this.render();
+                this.setupTabs();
             } else {
                 this.hide();
             }
@@ -53,16 +55,10 @@ class HomeCategoryShowcase {
                 menCategories: data.menCategories || [],
                 womenCategories: data.womenCategories || []
             };
-            
-            console.log('[CategoryShowcase] Data loaded:', {
-                men: this.data.menCategories.length,
-                women: this.data.womenCategories.length,
-                header: !!this.data.header
-            });
         } catch (error) {
             console.error('[CategoryShowcase] Fetch error:', error);
             this.data = { header: null, menCategories: [], womenCategories: [] };
-            throw error; 
+            throw error;
         }
     }
 
@@ -74,27 +70,11 @@ class HomeCategoryShowcase {
         const container = document.getElementById(this.config.containerId);
         const skeleton = document.getElementById(this.config.skeletonId);
         
-        if (container) {
-            container.style.display = 'none';
-        }
+        if (container) container.style.display = 'none';
         if (skeleton) {
             skeleton.classList.add('skeleton-hidden');
             skeleton.classList.remove('skeleton-visible');
         }
-    }
-
-    createGridElement() {
-        const container = document.getElementById(this.config.containerId);
-        if (!container) return null;
-
-        container.innerHTML = '';
-        
-        const grid = document.createElement('div');
-        grid.className = this.config.gridClass;
-        grid.id = 'categoryshow-dynamic-grid';
-        container.appendChild(grid);
-        
-        return grid;
     }
 
     render() {
@@ -103,76 +83,157 @@ class HomeCategoryShowcase {
 
         if (!container) return;
 
+        // Show container, hide skeleton
         container.style.display = 'block';
         if (skeleton) {
             skeleton.classList.add('skeleton-hidden');
             skeleton.classList.remove('skeleton-visible');
         }
 
-        // Build header with Tabs
-        const headerHTML = this.buildHeaderHTML();
-        container.insertAdjacentHTML('afterbegin', headerHTML);
-
-        this.gridElement = this.createGridElement();
-        if (!this.gridElement) return;
-
-        const allCategories = [...this.data.menCategories, ...this.data.womenCategories];
-        allCategories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
-
-        if (allCategories.length === 0) {
-            this.hide();
-            return;
+        container.innerHTML = '';
+        
+        // 1. Build Header
+        if (this.data.header) {
+            const headerHTML = this.buildHeaderHTML();
+            container.insertAdjacentHTML('beforeend', headerHTML);
         }
 
-        const cardsHTML = allCategories.map((item, index) => this.buildCardHTML(item, index)).join('');
-        this.gridElement.innerHTML = cardsHTML;
+        // 2. Build Tabs (Men / Women)
+        const tabsHTML = this.buildTabsHTML();
+        container.insertAdjacentHTML('beforeend', tabsHTML);
 
+        // 3. Create Grid
+        this.gridElement = document.createElement('div');
+        this.gridElement.className = this.config.gridClass;
+        this.gridElement.id = 'categoryshow-dynamic-grid';
+        container.appendChild(this.gridElement);
+
+        // 4. Render initial grid (Women by default)
+        this.renderGrid('women');
+
+        // 5. Inject Styles
         this.injectStyles();
-        this.setupTabs();
-
-        // Default filter set to 'women' as seen in the screenshot
-        this.filterByGender('women');
 
         this.isLoaded = true;
+        console.log('[CategoryShowcase] Rendered successfully');
     }
 
     buildHeaderHTML() {
-        const header = this.data.header || {};
-        const title = header.title || '';
-        // Using a default text if subtitle is not provided from API, just like the image
-        const subtitle = header.subtitle || 'Essential volumes, natural materials and functional details define the new season, reinterpreting the codes of summer style.';
+        const header = this.data.header;
+        if (!header) return '';
 
         return `
         <div class="showcase-header" style="
             text-align: center;
-            padding: 30px 15px 10px;
+            padding: 40px 20px 20px;
             max-width: 800px;
             margin: 0 auto;
         ">
-            ${title ? `<h2 style="font-size: 24px; font-weight: 700; color: #000; margin: 0 0 15px 0;">${title}</h2>` : ''}
+            ${header.title ? `<h2 style="
+                font-size: clamp(20px, 3vw, 28px);
+                font-weight: 500;
+                color: #1d1d1f;
+                margin: 0 0 8px 0;
+                font-family: var(--font-heading, sans-serif);
+                letter-spacing: -0.02em;
+            ">${header.title}</h2>` : ''}
             
-            <p style="
-                font-size: 14px;
-                color: #222;
-                margin: 0 0 25px 0;
+            ${header.subtitle ? `<p style="
+                font-size: clamp(13px, 1.8vw, 15px);
+                color: #86868b;
+                margin: 0;
                 line-height: 1.5;
-                font-family: var(--font-body, 'Inter', sans-serif);
-            ">${subtitle}</p>
-            
-            <!-- Gender Tabs -->
-            <div class="gender-tabs" style="display: flex; justify-content: center; gap: 24px; margin-bottom: 20px;">
-                <button class="gender-tab active" data-target="women" style="
-                    background: none; border: none; border-bottom: 2px solid #000; 
-                    padding: 0 0 6px 0; font-size: 14px; font-weight: 600; 
-                    color: #000; cursor: pointer; transition: all 0.3s;
-                ">Women</button>
-                <button class="gender-tab" data-target="men" style="
-                    background: none; border: none; border-bottom: 2px solid transparent; 
-                    padding: 0 0 6px 0; font-size: 14px; font-weight: 400; 
-                    color: #555; cursor: pointer; transition: all 0.3s;
-                ">Men</button>
-            </div>
+                font-family: var(--font-body, sans-serif);
+            ">${header.subtitle}</p>` : ''}
         </div>`;
+    }
+
+    buildTabsHTML() {
+        return `
+        <div class="showcase-tabs" style="
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid #e5e5e5;
+            margin: 0 20px 0;
+        ">
+            <button class="tab-btn" data-gender="women" style="
+                background: none;
+                border: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: #86868b;
+                cursor: pointer;
+                padding: 0 0 8px 0;
+                position: relative;
+                font-family: var(--font-body, sans-serif);
+                transition: color 0.3s ease;
+            ">Women</button>
+            <button class="tab-btn" data-gender="men" style="
+                background: none;
+                border: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: #86868b;
+                cursor: pointer;
+                padding: 0 0 8px 0;
+                position: relative;
+                font-family: var(--font-body, sans-serif);
+                transition: color 0.3s ease;
+            ">Men</button>
+        </div>`;
+    }
+
+    setupTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const self = this;
+
+        // Set initial active state (Women)
+        const initialTab = document.querySelector('.tab-btn[data-gender="women"]');
+        if (initialTab) self.setActiveTab(initialTab);
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const gender = this.getAttribute('data-gender');
+                self.currentGender = gender;
+                self.renderGrid(gender);
+                self.setActiveTab(this);
+            });
+        });
+    }
+
+    setActiveTab(activeTab) {
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(t => {
+            t.style.color = '#86868b';
+            t.style.borderBottom = 'none';
+        });
+        
+        activeTab.style.color = '#1d1d1f';
+        activeTab.style.borderBottom = '2px solid #1d1d1f';
+    }
+
+    renderGrid(gender) {
+        if (!this.gridElement) return;
+        
+        let categories = [];
+        if (gender === 'men') {
+            categories = this.data.menCategories || [];
+        } else {
+            categories = this.data.womenCategories || [];
+        }
+
+        // Sort by sort_order
+        categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
+
+        if (categories.length === 0) {
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b;">No categories found</div>`;
+            return;
+        }
+
+        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
+        this.gridElement.innerHTML = cardsHTML;
     }
 
     buildCardHTML(item, index) {
@@ -182,109 +243,59 @@ class HomeCategoryShowcase {
         const catName = cat.name || 'Category';
         const catSlug = cat.slug || this.createSlug(catName);
         const imgSrc = cat.image_url || cat.image || '';
-        const gender = item.gender || '';
         
         return `
         <a href="/category/${catSlug}" 
-           class="showcase-category-card" 
-           data-gender="${gender.toLowerCase()}"
+           class="showcase-category-card"
            style="
-            display: flex;
-            flex-direction: column;
+            position: relative;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            cursor: pointer;
             text-decoration: none;
+            background: #f5f5f7;
+            display: block;
             -webkit-tap-highlight-color: transparent;
            ">
             
-            <div class="image-wrapper" style="
-                position: relative;
-                aspect-ratio: 4/5;
-                background: #f4f4f4; /* Light gray background to match the product backdrop */
-                overflow: hidden;
-            ">
-                ${imgSrc ? `<img src="${imgSrc}" 
-                     alt="${catName}" 
-                     loading="${index < 4 ? 'eager' : 'lazy'}"
-                     onerror="this.style.opacity='0'"
-                     style="
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover; /* Change to 'contain' if products are transparent PNGs */
-                        transition: transform 0.5s ease;
-                     ">` : ''}
-            </div>
+            ${imgSrc ? `<img src="${imgSrc}" 
+                 alt="${catName}" 
+                 loading="${index < 4 ? 'eager' : 'lazy'}"
+                 onerror="this.style.display='none'"
+                 style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                 ">` : ''}
             
             <div class="card-content" style="
-                padding: 16px 8px;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 2;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-end;
                 text-align: center;
             ">
+                
                 <h3 style="
-                    font-size: 13px; /* Small font size matching screenshot */
-                    font-weight: 700;
-                    color: #000;
+                    font-size: clamp(14px, 2vw, 18px);
+                    line-height: 1.2;
                     margin: 0;
-                    font-family: var(--font-heading, 'Inter', sans-serif);
-                    letter-spacing: 0.3px;
+                    color: #1d1d1f;
+                    font-family: var(--font-heading, sans-serif);
+                    font-weight: 500;
+                    letter-spacing: -0.01em;
                 ">${catName}</h3>
                 
-                ${cat.subtitle ? `<span style="
-                    display: block;
-                    font-size: 11px;
-                    color: #666;
-                    margin-top: 4px;
-                ">${cat.subtitle}</span>` : ''}
             </div>
         </a>`;
-    }
-
-    setupTabs() {
-        const tabs = document.querySelectorAll('.gender-tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                // Reset all tabs
-                tabs.forEach(t => {
-                    t.classList.remove('active');
-                    t.style.borderBottomColor = 'transparent';
-                    t.style.fontWeight = '400';
-                    t.style.color = '#555';
-                });
-
-                // Activate clicked tab
-                const target = e.currentTarget;
-                target.classList.add('active');
-                target.style.borderBottomColor = '#000';
-                target.style.fontWeight = '600';
-                target.style.color = '#000';
-
-                // Filter items
-                const gender = target.getAttribute('data-target');
-                this.filterByGender(gender);
-            });
-        });
-    }
-
-    filterByGender(gender) {
-        if (!this.isLoaded || !this.gridElement) return;
-        
-        const cards = this.gridElement.querySelectorAll('.showcase-category-card');
-        let visibleCount = 0;
-        
-        cards.forEach(card => {
-            const cardGender = card.getAttribute('data-gender');
-            if (cardGender === gender.toLowerCase()) {
-                card.style.display = 'flex';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        // Hide container if no items found for this tab
-        const container = document.getElementById(this.config.containerId);
-        if (visibleCount === 0) {
-            this.gridElement.style.display = 'none';
-        } else {
-            this.gridElement.style.display = 'grid'; // ensure it's grid, not just visible
-        }
     }
 
     injectStyles() {
@@ -293,28 +304,47 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
+            /* Grid Layout - Exactly like reference image: 2 columns, square images */
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2px; /* Thin white gap between images like screenshot */
+                gap: 0; /* No gap between cards */
                 max-width: 100%;
                 margin: 0;
-                background: #fff; /* Ensures gap looks white */
             }
             
-            @media (min-width: 768px) {
-                #categoryshow-dynamic-grid {
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 15px; /* Larger gap on desktop for cleaner look */
-                    padding: 0 20px;
+            .showcase-category-card {
+                border: none;
+                transition: opacity 0.3s ease;
+            }
+            
+            /* Card Text Styling */
+            .showcase-category-card h3 {
+                background: transparent;
+                text-shadow: none;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 767px) {
+                .showcase-tabs {
+                    gap: 20px !important;
+                }
+                .tab-btn {
+                    font-size: 14px !important;
                 }
             }
-            
-            /* Hover effects */
+
+            /* Hover effect - Subtle opacity only, no transformations (Prada style) */
             @media (hover: hover) {
-                #categoryshow-dynamic-grid .showcase-category-card:hover img {
-                    transform: scale(1.03);
+                .showcase-category-card:hover {
+                    opacity: 0.85;
                 }
+            }
+            
+            /* Active/Tap effect */
+            .showcase-category-card:active {
+                opacity: 0.7;
+                transition: opacity 0.1s ease;
             }
         </style>`;
 
@@ -344,6 +374,8 @@ class HomeCategoryShowcase {
 // Initialize Function
 // ============================================================
 function initCategoryShowcase() {
+    console.log('[CategoryShowcase] Initializing...');
+    
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
             window.currentData.products && 
@@ -381,6 +413,9 @@ function initCategoryShowcase() {
     }
 }
 
+// ============================================================
+// Start
+// ============================================================
 if (typeof window !== 'undefined') {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initCategoryShowcase);
