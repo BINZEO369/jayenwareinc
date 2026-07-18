@@ -1,6 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
-// INTEGRATED: JABIYEN Fonts, Color Dots, Image Slider on Hover
+// INTEGRATED: JABIYEN Fonts, Color Dots Below Title, Image Dot Slider
 // ============================================================
 
 (function() {
@@ -138,20 +138,15 @@
     window.handleNewArrivalImageError = handleImageError;
 
     // ============================================================
-    // FETCH PRODUCT COLORS (Same as product details page)
+    // FETCH PRODUCT COLORS
     // ============================================================
     async function fetchProductColors(slug) {
-        // Return from cache if available
-        if (productColorsCache[slug]) {
-            return productColorsCache[slug];
-        }
+        if (productColorsCache[slug]) return productColorsCache[slug];
 
         try {
             const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.productColors}?slug=${encodeURIComponent(slug)}`);
             if (!response.ok) return [];
             const data = await response.json();
-            
-            // Cache the result
             productColorsCache[slug] = data || [];
             return data || [];
         } catch (error) {
@@ -161,7 +156,31 @@
     }
 
     // ============================================================
-    // PRODUCT CARD WITH COLOR DOTS & IMAGE SLIDER
+    // GET ALL IMAGES FOR SLIDER (main image + color images)
+    // ============================================================
+    function getAllImagesForSlider(product, colors) {
+        const images = [];
+        
+        // Add main product image first
+        const mainImage = getImageUrl(product);
+        if (mainImage && mainImage !== '/placeholder.png') {
+            images.push(mainImage);
+        }
+        
+        // Add color-specific images
+        if (colors && colors.length > 0) {
+            colors.forEach(color => {
+                if (color.color_image && color.color_image.trim() !== '' && !images.includes(color.color_image)) {
+                    images.push(color.color_image);
+                }
+            });
+        }
+        
+        return images;
+    }
+
+    // ============================================================
+    // PRODUCT CARD WITH COLOR DOTS & SMOOTH IMAGE SLIDER
     // ============================================================
     function createProductCard(product) {
         const isOutOfStock = product.is_out_of_stock === true || 
@@ -186,36 +205,27 @@
         card.setAttribute('data-product-id', product.id);
         card.setAttribute('data-product-slug', slug);
 
-        // Image slider structure with placeholder for colors
         card.innerHTML = `
             <a href="/product/${slug}" class="new-arrival-card-link">
                 <div class="new-arrival-card-image-wrapper">
-                    <!-- Main image -->
-                    <img 
-                        src="${imageUrl}" 
-                        alt="${product.title || 'Product'}" 
-                        class="new-arrival-card-image new-arrival-main-image"
-                        data-default-src="${imageUrl}"
-                        loading="lazy"
-                        onload="window.handleNewArrivalImageLoad && window.handleNewArrivalImageLoad(this)"
-                        onerror="window.handleNewArrivalImageError && window.handleNewArrivalImageError(this)"
-                    >
-                    <!-- Hover/secondary image (hidden by default) -->
-                    <img 
-                        src="${imageUrl}" 
-                        alt="${product.title || 'Product'}" 
-                        class="new-arrival-card-image new-arrival-hover-image"
-                        loading="lazy"
-                        style="position:absolute;top:0;left:0;opacity:0;transition:opacity 0.5s ease;"
-                    >
+                    <!-- Main image container -->
+                    <div class="new-arrival-image-slider" data-slug="${slug}">
+                        <img 
+                            src="${imageUrl}" 
+                            alt="${product.title || 'Product'}" 
+                            class="new-arrival-card-image new-arrival-slider-image active"
+                            data-index="0"
+                            loading="lazy"
+                            onload="window.handleNewArrivalImageLoad && window.handleNewArrivalImageLoad(this)"
+                            onerror="window.handleNewArrivalImageError && window.handleNewArrivalImageError(this)"
+                        >
+                    </div>
                     ${badgeHTML}
                     ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
                     
-                    <!-- Color dots overlay on image -->
-                    <div class="new-arrival-color-dots-overlay">
-                        <div class="new-arrival-color-dots-container" data-slug="${slug}">
-                            <!-- Color dots will be injected here -->
-                        </div>
+                    <!-- Image navigation dots (hidden initially) -->
+                    <div class="new-arrival-image-dots" data-slug="${slug}" style="display:none;">
+                        <!-- Dots will be injected here -->
                     </div>
                 </div>
                 <div class="new-arrival-card-body">
@@ -228,102 +238,161 @@
             </a>
         `;
 
-        // Fetch colors and update the card
+        // Fetch colors and setup slider
         fetchProductColors(slug).then(colors => {
-            updateCardWithColors(card, colors, slug, imageUrl);
+            setupCardWithSlider(card, product, colors, slug);
         });
 
         return card;
     }
 
-    // Update card with color dots and hover images
-    function updateCardWithColors(card, colors, slug, defaultImage) {
-        if (!colors || colors.length === 0) return;
-
-        const colorDotsContainer = card.querySelector('.new-arrival-color-dots-container');
+    // Setup card with image slider and color dots
+    function setupCardWithSlider(card, product, colors, slug) {
+        const sliderContainer = card.querySelector('.new-arrival-image-slider');
+        const imageDotsContainer = card.querySelector('.new-arrival-image-dots');
         const colorDotsBelow = card.querySelector('.new-arrival-color-dots-below');
-        const hoverImage = card.querySelector('.new-arrival-hover-image');
+        
+        // Get all images for slider
+        const allImages = getAllImagesForSlider(product, colors);
+        
+        if (allImages.length <= 1) {
+            // Only one image, no slider needed
+            if (imageDotsContainer) imageDotsContainer.style.display = 'none';
+        } else {
+            // Setup slider with multiple images
+            setupImageSlider(card, sliderContainer, imageDotsContainer, allImages, slug);
+        }
+        
+        // Setup color dots below title
+        if (colors && colors.length > 0 && colorDotsBelow) {
+            setupColorDotsBelow(colorDotsBelow, colors, slug);
+        }
+    }
 
-        // Build color dots HTML
-        const dotsHTML = colors.map((color, index) => {
+    // Setup smooth image slider with dots
+    function setupImageSlider(card, sliderContainer, dotsContainer, images, slug) {
+        // Clear existing
+        sliderContainer.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        dotsContainer.style.display = 'flex';
+        
+        // Add all images to slider
+        images.forEach((imgSrc, index) => {
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = `Image ${index + 1}`;
+            img.className = `new-arrival-card-image new-arrival-slider-image ${index === 0 ? 'active' : ''}`;
+            img.setAttribute('data-index', index);
+            img.loading = 'lazy';
+            img.onload = function() { handleImageLoad(this); };
+            img.onerror = function() { handleImageError(this); };
+            sliderContainer.appendChild(img);
+            
+            // Add dot
+            const dot = document.createElement('span');
+            dot.className = `new-arrival-image-dot ${index === 0 ? 'active' : ''}`;
+            dot.setAttribute('data-index', index);
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                goToImage(card, index);
+            });
+            dotsContainer.appendChild(dot);
+        });
+        
+        // Add touch/swipe support
+        addSwipeSupport(card, images.length);
+        
+        // Add hover dot navigation
+        dotsContainer.addEventListener('mouseenter', () => {
+            card.setAttribute('data-show-dots', 'true');
+        });
+        
+        dotsContainer.addEventListener('mouseleave', () => {
+            card.setAttribute('data-show-dots', 'false');
+        });
+    }
+
+    // Navigate to specific image
+    function goToImage(card, index) {
+        const sliderImages = card.querySelectorAll('.new-arrival-slider-image');
+        const dots = card.querySelectorAll('.new-arrival-image-dot');
+        
+        if (!sliderImages.length) return;
+        
+        sliderImages.forEach((img, i) => {
+            img.classList.toggle('active', i === index);
+        });
+        
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+    }
+
+    // Add swipe support for mobile
+    function addSwipeSupport(card, totalImages) {
+        let startX = 0;
+        let currentIndex = 0;
+        let isSwiping = false;
+        
+        card.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isSwiping = true;
+        }, { passive: true });
+        
+        card.addEventListener('touchend', (e) => {
+            if (!isSwiping) return;
+            isSwiping = false;
+            
+            const endX = e.changedTouches[0].clientX;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && currentIndex < totalImages - 1) {
+                    currentIndex++;
+                } else if (diff < 0 && currentIndex > 0) {
+                    currentIndex--;
+                }
+                goToImage(card, currentIndex);
+            }
+        });
+        
+        // Update currentIndex when dots are clicked
+        card.querySelectorAll('.new-arrival-image-dot').forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                currentIndex = parseInt(dot.getAttribute('data-index'));
+            });
+        });
+    }
+
+    // Setup color dots below title
+    function setupColorDotsBelow(container, colors, slug) {
+        if (!colors || colors.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        container.innerHTML = colors.map((color, index) => {
             const colorCode = color.color_code || '#ccc';
             const colorName = color.color_name || '';
-            const colorImage = color.color_image || '';
             return `
                 <span 
                     class="new-arrival-color-dot ${index === 0 ? 'active' : ''}"
                     style="background-color: ${colorCode};"
-                    data-color-image="${colorImage}"
                     data-color-name="${colorName}"
                     data-color-code="${colorCode}"
                     title="${colorName}"
                 ></span>
             `;
         }).join('');
-
-        // Update both containers
-        if (colorDotsContainer) colorDotsContainer.innerHTML = dotsHTML;
-        if (colorDotsBelow) colorDotsBelow.innerHTML = dotsHTML;
-
-        // Add hover events to color dots
-        const allDots = card.querySelectorAll('.new-arrival-color-dot');
-        const mainImage = card.querySelector('.new-arrival-main-image');
         
-        allDots.forEach(dot => {
-            dot.addEventListener('mouseenter', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                
-                // Update active state
-                allDots.forEach(d => d.classList.remove('active'));
-                dot.classList.add('active');
-
-                // Change image if color has an image
-                const colorImage = dot.getAttribute('data-color-image');
-                if (colorImage && colorImage.trim() !== '') {
-                    if (hoverImage) {
-                        hoverImage.src = colorImage;
-                        hoverImage.style.opacity = '1';
-                    }
-                }
-            });
-
-            dot.addEventListener('mouseleave', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                
-                // Reset to default
-                if (hoverImage) {
-                    hoverImage.style.opacity = '0';
-                }
-                
-                // Reset active to first dot
-                allDots.forEach(d => d.classList.remove('active'));
-                if (allDots[0]) allDots[0].classList.add('active');
-            });
-
+        // Click on color dot navigates to product page
+        container.querySelectorAll('.new-arrival-color-dot').forEach(dot => {
             dot.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                // Navigate to product page on click
                 window.location.href = `/product/${slug}`;
             });
-        });
-
-        // Card hover - show secondary image if available
-        card.addEventListener('mouseenter', () => {
-            if (colors.length > 0 && colors[0].color_image) {
-                if (hoverImage && colors[0].color_image.trim() !== '') {
-                    hoverImage.src = colors[0].color_image;
-                    hoverImage.style.opacity = '1';
-                }
-            }
-        });
-
-        card.addEventListener('mouseleave', () => {
-            if (hoverImage) {
-                hoverImage.style.opacity = '0';
-            }
         });
     }
 
@@ -564,7 +633,7 @@
     window.renderNewArrival = renderNewArrivals;
 
     // ============================================================
-    // INJECT STYLES (With Color Dots & Image Slider)
+    // INJECT STYLES
     // ============================================================
     function injectStyles() {
         const styleId = 'new-arrival-dynamic-styles';
@@ -580,22 +649,15 @@
                 }
 
                 @media (max-width: 767px) {
-                    .new-arrivals-grid-section {
-                        padding: 20px 0;
-                    }
+                    .new-arrivals-grid-section { padding: 20px 0; }
                 }
 
                 @media (min-width: 768px) and (max-width: 1023px) {
-                    .new-arrivals-grid-section {
-                        padding: 28px 16px;
-                    }
+                    .new-arrivals-grid-section { padding: 28px 16px; }
                 }
 
                 @media (min-width: 1024px) {
-                    .new-arrivals-grid-section {
-                        padding: 40px 36px;
-                        max-width: 1400px;
-                    }
+                    .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; }
                 }
 
                 .new-arrival-header {
@@ -607,16 +669,11 @@
                 }
 
                 @media (min-width: 768px) {
-                    .new-arrival-header {
-                        margin-bottom: 20px;
-                        padding: 0 2px;
-                    }
+                    .new-arrival-header { margin-bottom: 20px; padding: 0 2px; }
                 }
 
                 @media (min-width: 1024px) {
-                    .new-arrival-header {
-                        margin-bottom: 24px;
-                    }
+                    .new-arrival-header { margin-bottom: 24px; }
                 }
 
                 .new-arrival-title {
@@ -627,13 +684,8 @@
                     letter-spacing: -0.3px;
                 }
 
-                @media (min-width: 768px) {
-                    .new-arrival-title { font-size: 26px; }
-                }
-
-                @media (min-width: 1024px) {
-                    .new-arrival-title { font-size: 30px; }
-                }
+                @media (min-width: 768px) { .new-arrival-title { font-size: 26px; } }
+                @media (min-width: 1024px) { .new-arrival-title { font-size: 30px; } }
 
                 .new-arrival-view-all {
                     display: inline-flex;
@@ -649,15 +701,7 @@
 
                 .new-arrival-view-all:hover { gap: 8px; }
 
-                .new-arrival-view-all svg {
-                    transition: transform 0.25s ease;
-                }
-
-                .new-arrival-view-all:hover svg {
-                    transform: translateX(2px);
-                }
-
-                /* Grid: 1px gap */
+                /* Grid */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
@@ -666,19 +710,14 @@
                 }
 
                 @media (min-width: 768px) {
-                    .new-arrivals-grid {
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 1px;
-                    }
+                    .new-arrivals-grid { grid-template-columns: repeat(3, 1fr); }
                 }
 
                 @media (min-width: 1024px) {
-                    .new-arrivals-grid {
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 1px;
-                    }
+                    .new-arrivals-grid { grid-template-columns: repeat(4, 1fr); }
                 }
 
+                /* Card */
                 .new-arrival-card {
                     position: relative;
                     background: #fff;
@@ -686,10 +725,7 @@
                     cursor: pointer;
                 }
 
-                .new-arrival-card:active {
-                    transform: scale(0.98);
-                    transition: transform 0.1s ease;
-                }
+                .new-arrival-card:active { transform: scale(0.98); transition: transform 0.1s ease; }
 
                 @media (hover: hover) {
                     .new-arrival-card:hover {
@@ -707,6 +743,7 @@
                     height: 100%;
                 }
 
+                /* Image Wrapper */
                 .new-arrival-card-image-wrapper {
                     position: relative;
                     aspect-ratio: 4 / 5;
@@ -718,18 +755,15 @@
                     width: 100%;
                 }
 
-                .new-arrival-card-image {
+                /* Image Slider Container */
+                .new-arrival-image-slider {
+                    position: relative;
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
-                    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-                    opacity: 1;
-                    display: block;
-                    color: transparent;
                 }
 
-                /* Hover image transition */
-                .new-arrival-hover-image {
+                /* Slider Images */
+                .new-arrival-slider-image {
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -738,40 +772,144 @@
                     object-fit: cover;
                     opacity: 0;
                     transition: opacity 0.4s ease;
-                    pointer-events: none;
+                    display: block;
+                    color: transparent;
                 }
 
-                @media (hover: hover) {
-                    .new-arrival-card:hover .new-arrival-card-image {
-                        transform: scale(1.05);
-                    }
+                .new-arrival-slider-image.active {
+                    opacity: 1;
+                    z-index: 1;
                 }
 
-                /* Color Dots Overlay on Image */
-                .new-arrival-color-dots-overlay {
+                /* Image Navigation Dots */
+                .new-arrival-image-dots {
                     position: absolute;
                     bottom: 8px;
                     left: 0;
                     right: 0;
                     display: flex;
                     justify-content: center;
-                    z-index: 3;
-                    pointer-events: none;
-                }
-
-                .new-arrival-color-dots-container {
-                    display: flex;
                     gap: 5px;
-                    background: rgba(255,255,255,0.8);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                    z-index: 4;
                     pointer-events: auto;
                 }
 
-                /* Individual Color Dot */
+                .new-arrival-image-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.5);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                }
+
+                .new-arrival-image-dot.active {
+                    background: #ffffff;
+                    transform: scale(1.4);
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+                }
+
+                .new-arrival-image-dot:hover {
+                    background: rgba(255,255,255,0.8);
+                    transform: scale(1.2);
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-image-dot { width: 7px; height: 7px; }
+                }
+
+                /* Badge */
+                .new-arrival-badge {
+                    position: absolute;
+                    top: 4px;
+                    left: 4px;
+                    z-index: 5;
+                    padding: 2px 7px;
+                    font-family: ${JABIYEN_FONTS.families.subtitle};
+                    font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold};
+                    font-size: 8px;
+                    text-transform: uppercase;
+                    background: #ffffff;
+                    color: #1d1d1f;
+                    letter-spacing: 0.5px;
+                    border-radius: 1px;
+                    pointer-events: none;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-badge { top: 6px; left: 6px; padding: 2px 8px; font-size: 9px; }
+                }
+
+                .new-arrival-badge-sale { color: #d70015 !important; }
+
+                /* Sold Out */
+                .new-arrival-soldout-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(255, 255, 255, 0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 6;
+                    pointer-events: none;
+                }
+
+                .new-arrival-soldout-overlay span {
+                    background: #1d1d1f;
+                    color: #ffffff;
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.bold};
+                    font-size: 9px;
+                    text-transform: uppercase;
+                    padding: 5px 14px;
+                    letter-spacing: 1px;
+                    border-radius: 1px;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-soldout-overlay span { font-size: 10px; padding: 6px 18px; }
+                }
+
+                /* Card Body */
+                .new-arrival-card-body {
+                    padding: 4px 6px 6px;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-card-body { padding: 6px 8px 8px; }
+                }
+
+                .new-arrival-card-title {
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
+                    font-size: 13px;
+                    color: #1d1d1f;
+                    line-height: 1.35;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    margin: 0;
+                    text-align: center;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-card-title { font-size: 15px; line-height: 1.4; }
+                }
+
+                /* Color Dots Below Title */
+                .new-arrival-color-dots-below {
+                    display: flex;
+                    gap: 4px;
+                    justify-content: center;
+                    margin-top: 6px;
+                    flex-wrap: wrap;
+                }
+
                 .new-arrival-color-dot {
                     width: 12px;
                     height: 12px;
@@ -795,122 +933,11 @@
                     box-shadow: 0 0 0 2px rgba(29,29,31,0.1);
                 }
 
-                /* Color Dots Below Title */
-                .new-arrival-color-dots-below {
-                    display: flex;
-                    gap: 4px;
-                    justify-content: center;
-                    margin-top: 6px;
-                    flex-wrap: wrap;
-                }
-
                 @media (min-width: 768px) {
-                    .new-arrival-color-dot {
-                        width: 14px;
-                        height: 14px;
-                    }
-                    
-                    .new-arrival-color-dots-container {
-                        gap: 6px;
-                        padding: 6px 12px;
-                    }
+                    .new-arrival-color-dot { width: 14px; height: 14px; }
                 }
 
-                /* Badge */
-                .new-arrival-badge {
-                    position: absolute;
-                    top: 4px;
-                    left: 4px;
-                    z-index: 4;
-                    padding: 2px 7px;
-                    font-family: ${JABIYEN_FONTS.families.subtitle};
-                    font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold};
-                    font-size: 8px;
-                    text-transform: uppercase;
-                    background: #ffffff;
-                    color: #1d1d1f;
-                    letter-spacing: 0.5px;
-                    border-radius: 1px;
-                    pointer-events: none;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-badge {
-                        top: 6px;
-                        left: 6px;
-                        padding: 2px 8px;
-                        font-size: 9px;
-                    }
-                }
-
-                .new-arrival-badge-sale {
-                    color: #d70015 !important;
-                }
-
-                .new-arrival-soldout-overlay {
-                    position: absolute;
-                    inset: 0;
-                    background: rgba(255, 255, 255, 0.7);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 5;
-                    pointer-events: none;
-                }
-
-                .new-arrival-soldout-overlay span {
-                    background: #1d1d1f;
-                    color: #ffffff;
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.bold};
-                    font-size: 9px;
-                    text-transform: uppercase;
-                    padding: 5px 14px;
-                    letter-spacing: 1px;
-                    border-radius: 1px;
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-soldout-overlay span {
-                        font-size: 10px;
-                        padding: 6px 18px;
-                    }
-                }
-
-                .new-arrival-card-body {
-                    padding: 4px 6px 6px;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-card-body {
-                        padding: 6px 8px 8px;
-                    }
-                }
-
-                .new-arrival-card-title {
-                    font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
-                    font-size: 13px;
-                    color: #1d1d1f;
-                    line-height: 1.35;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    margin: 0;
-                    text-align: center;
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-card-title {
-                        font-size: 15px;
-                        line-height: 1.4;
-                    }
-                }
-
+                /* Empty State */
                 .new-arrival-empty-section .new-arrivals-grid {
                     display: flex;
                     justify-content: center;
@@ -922,10 +949,7 @@
                     max-width: 400px;
                 }
 
-                .new-arrival-empty svg {
-                    margin: 0 auto 16px;
-                    opacity: 0.4;
-                }
+                .new-arrival-empty svg { margin: 0 auto 16px; opacity: 0.4; }
 
                 .new-arrival-empty p {
                     font-family: ${JABIYEN_FONTS.families.body};
@@ -943,10 +967,8 @@
                     margin-top: 6px !important;
                 }
 
-                .new-arrival-error {
-                    text-align: center;
-                    padding: 48px 20px;
-                }
+                /* Error State */
+                .new-arrival-error { text-align: center; padding: 48px 20px; }
 
                 .new-arrival-error p {
                     font-family: ${JABIYEN_FONTS.families.body};
@@ -969,13 +991,10 @@
                     transition: background 0.2s ease;
                 }
 
-                .new-arrival-retry-btn:hover {
-                    background: #007aff;
-                }
+                .new-arrival-retry-btn:hover { background: #007aff; }
 
-                .new-arrival-skeleton-card {
-                    pointer-events: none;
-                }
+                /* Skeleton */
+                .new-arrival-skeleton-card { pointer-events: none; }
 
                 .skeleton-pulse {
                     background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
@@ -984,10 +1003,7 @@
                     border-radius: 0;
                 }
 
-                .skeleton-text {
-                    height: 13px;
-                    margin-bottom: 5px;
-                }
+                .skeleton-text { height: 13px; margin-bottom: 5px; }
 
                 @keyframes skeletonShimmer {
                     0% { background-position: -468px 0; }
@@ -1006,7 +1022,7 @@
         applyFontsVariables();
         injectStyles();
         
-        console.log('[NewArrivals] Module initializing with JABIYEN Fonts & Color Slider...');
+        console.log('[NewArrivals] Module initializing...');
 
         window.addEventListener('jayenware:dataLoaded', (event) => {
             const detail = event.detail || {};
