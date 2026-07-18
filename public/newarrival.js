@@ -1,5 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
+// INTEGRATED: JABIYEN Fonts configuration
 // FIXED: stock → is_out_of_stock, image loading, lazy load
 // UPDATED: Title only (no price/category), larger font, 2px gap
 // ============================================================
@@ -7,7 +8,83 @@
 (function() {
     'use strict';
 
-    // API Endpoint Configuration
+    // ============================================================
+    // JABIYEN FONTS CONFIGURATION (Embedded)
+    // ============================================================
+    const JABIYEN_FONTS = {
+        families: {
+            heading: "'Manrope', sans-serif",
+            subtitle: "'Sora', sans-serif",
+            body: "'Inter', sans-serif"
+        },
+        weights: {
+            heading: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+            subtitle: { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
+            body: { light: 300, regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800, black: 900 }
+        },
+        cssVariables: {
+            '--font-heading': "'Manrope', sans-serif",
+            '--font-subtitle': "'Sora', sans-serif",
+            '--font-body': "'Inter', sans-serif",
+            '--font-accent': "'Inter', sans-serif",
+            '--text-xs': '0.75rem',
+            '--text-sm': '0.875rem',
+            '--text-base': '1rem',
+            '--text-lg': '1.125rem',
+            '--text-xl': '1.25rem',
+            '--text-2xl': '1.5rem',
+            '--text-3xl': '1.875rem',
+            '--text-4xl': '2.25rem',
+            '--text-5xl': '3rem',
+            '--tracking-tight': '-0.5px',
+            '--tracking-normal': '0',
+            '--tracking-wide': '0.5px',
+            '--tracking-wider': '1px',
+            '--tracking-widest': '1.5px'
+        },
+        styles: {
+            cardTitle: {
+                fontFamily: 'var(--font-body)',
+                fontWeight: 500,
+                fontSize: '13px',
+                letterSpacing: 'var(--tracking-normal)'
+            },
+            sectionTitle: {
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 700,
+                fontSize: 'var(--text-3xl)',
+                letterSpacing: 'var(--tracking-tight)'
+            },
+            badge: {
+                fontFamily: 'var(--font-subtitle)',
+                fontWeight: 600,
+                fontSize: '0.625rem',
+                letterSpacing: 'var(--tracking-wide)',
+                textTransform: 'uppercase'
+            },
+            button: {
+                fontFamily: 'var(--font-body)',
+                fontWeight: 600,
+                fontSize: 'var(--text-xs)',
+                letterSpacing: 'var(--tracking-wider)',
+                textTransform: 'uppercase'
+            }
+        }
+    };
+
+    // Apply fonts CSS variables to :root
+    function applyFontsVariables() {
+        const root = document.documentElement;
+        const vars = JABIYEN_FONTS.cssVariables;
+        for (const [key, value] of Object.entries(vars)) {
+            root.style.setProperty(key, value);
+        }
+        console.log('✅ [NewArrivals] JABIYEN Fonts applied');
+    }
+
+    // ============================================================
+    // API ENDPOINT CONFIGURATION
+    // ============================================================
     const API_CONFIG = {
         baseURL: window.location.origin,
         endpoints: {
@@ -20,7 +97,9 @@
         retryAttempts: 2
     };
 
-    // Section Configuration
+    // ============================================================
+    // SECTION CONFIGURATION
+    // ============================================================
     const CONFIG = {
         containerId: 'new-arrivals-container',
         skeletonId: 'new-arrivals-skeleton',
@@ -38,6 +117,9 @@
         animationDuration: 400
     };
 
+    // ============================================================
+    // HELPER FUNCTIONS
+    // ============================================================
     function getImageUrl(product) {
         if (product.img && product.img.trim() !== '') return product.img;
         if (product.image && product.image.trim() !== '') return product.image;
@@ -81,6 +163,9 @@
     window.handleNewArrivalImageLoad = handleImageLoad;
     window.handleNewArrivalImageError = handleImageError;
 
+    // ============================================================
+    // PRODUCT CARD
+    // ============================================================
     function createProductCard(product) {
         const isOutOfStock = product.is_out_of_stock === true || 
                              product.is_out_of_stock === 1 ||
@@ -96,6 +181,7 @@
 
         const imageUrl = getImageUrl(product);
         
+        // Badge using JABIYEN_FONTS styles
         let badgeHTML = '';
         if (!isOutOfStock) {
             if (product.is_new_arrival === true || product.is_new_arrival === 1) {
@@ -109,6 +195,7 @@
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
 
+        // Title only card - using JABIYEN_FONTS body font
         card.innerHTML = `
             <a href="/product/${slug}" class="new-arrival-card-link" onclick="event.preventDefault();if(window.navigate)window.navigate('product-details',{id:${product.id},slug:'${slug}'})">
                 <div class="new-arrival-card-image-wrapper">
@@ -132,6 +219,9 @@
         return card;
     }
 
+    // ============================================================
+    // EMPTY STATE
+    // ============================================================
     function createEmptyState() {
         const emptyDiv = document.createElement('div');
         emptyDiv.className = 'new-arrival-empty';
@@ -145,6 +235,9 @@
         return emptyDiv;
     }
 
+    // ============================================================
+    // SKELETON CARD
+    // ============================================================
     function createSkeletonCard() {
         const card = document.createElement('div');
         card.className = 'new-arrival-card new-arrival-skeleton-card';
@@ -160,6 +253,9 @@
         return card;
     }
 
+    // ============================================================
+    // API FETCH WITH RETRY
+    // ============================================================
     async function fetchWithRetry(url, options = {}, retries = API_CONFIG.retryAttempts) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
@@ -200,6 +296,9 @@
         }
     }
 
+    // ============================================================
+    // FETCH NEW ARRIVALS
+    // ============================================================
     async function fetchNewArrivals() {
         try {
             const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
@@ -235,6 +334,9 @@
         }
     }
 
+    // ============================================================
+    // SECTION HEADER
+    // ============================================================
     function createSectionHeader() {
         const header = document.createElement('div');
         header.className = 'new-arrival-header';
@@ -257,6 +359,9 @@
         return grid;
     }
 
+    // ============================================================
+    // LAZY LOADING
+    // ============================================================
     function initLazyLoading() {
         if (!('IntersectionObserver' in window)) return;
         
@@ -282,6 +387,9 @@
         });
     }
 
+    // ============================================================
+    // RENDER NEW ARRIVALS
+    // ============================================================
     async function renderNewArrivals(products) {
         const container = document.getElementById(CONFIG.containerId);
         const skeleton = document.getElementById(CONFIG.skeletonId);
@@ -347,6 +455,9 @@
 
     window.renderNewArrival = renderNewArrivals;
 
+    // ============================================================
+    // INJECT STYLES WITH JABIYEN FONTS INTEGRATION
+    // ============================================================
     function injectStyles() {
         const styleId = 'new-arrival-dynamic-styles';
         if (document.getElementById(styleId)) return;
@@ -381,6 +492,7 @@
                     }
                 }
 
+                /* Section Header - Using JABIYEN_FONTS heading */
                 .new-arrival-header {
                     display: flex;
                     align-items: center;
@@ -403,11 +515,11 @@
                 }
 
                 .new-arrival-title {
+                    font-family: ${JABIYEN_FONTS.families.heading};
+                    font-weight: ${JABIYEN_FONTS.weights.heading.bold};
                     font-size: 20px;
-                    font-weight: 700;
                     color: #1d1d1f;
                     letter-spacing: -0.3px;
-                    font-family: var(--font-heading, 'Manrope', sans-serif);
                 }
 
                 @media (min-width: 768px) {
@@ -422,12 +534,12 @@
                     display: inline-flex;
                     align-items: center;
                     gap: 5px;
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
                     font-size: 12px;
-                    font-weight: 600;
                     color: #007aff;
                     text-decoration: none;
                     transition: gap 0.25s ease;
-                    font-family: var(--font-body, 'Inter', sans-serif);
                 }
 
                 .new-arrival-view-all:hover { gap: 8px; }
@@ -519,15 +631,16 @@
                     }
                 }
 
-                /* Badge */
+                /* Badge - Using JABIYEN_FONTS subtitle */
                 .new-arrival-badge {
                     position: absolute;
                     top: 4px;
                     left: 4px;
                     z-index: 2;
                     padding: 2px 7px;
+                    font-family: ${JABIYEN_FONTS.families.subtitle};
+                    font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold};
                     font-size: 8px;
-                    font-weight: 700;
                     text-transform: uppercase;
                     background: #ffffff;
                     color: #1d1d1f;
@@ -565,8 +678,9 @@
                 .new-arrival-soldout-overlay span {
                     background: #1d1d1f;
                     color: #ffffff;
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.bold};
                     font-size: 9px;
-                    font-weight: 700;
                     text-transform: uppercase;
                     padding: 5px 14px;
                     letter-spacing: 1px;
@@ -593,17 +707,17 @@
                     }
                 }
 
-                /* Title - Larger font (+2 from 11px mobile, 13px desktop) */
+                /* Title - Using JABIYEN_FONTS body font */
                 .new-arrival-card-title {
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.medium};
                     font-size: 13px;
-                    font-weight: 500;
                     color: #1d1d1f;
                     line-height: 1.35;
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
                     overflow: hidden;
-                    font-family: var(--font-body, 'Inter', sans-serif);
                     margin: 0;
                     text-align: center;
                 }
@@ -633,17 +747,19 @@
                 }
 
                 .new-arrival-empty p {
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.medium};
                     font-size: 15px;
                     color: #86868b;
                     margin: 0;
-                    font-weight: 500;
                 }
 
                 .new-arrival-empty-sub {
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.regular};
                     font-size: 12px !important;
                     color: #b0b0b5 !important;
                     margin-top: 6px !important;
-                    font-weight: 400 !important;
                 }
 
                 /* Error State */
@@ -653,6 +769,8 @@
                 }
 
                 .new-arrival-error p {
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.regular};
                     font-size: 14px;
                     color: #86868b;
                     margin-bottom: 16px;
@@ -664,8 +782,9 @@
                     color: #ffffff;
                     border: none;
                     border-radius: 50px;
+                    font-family: ${JABIYEN_FONTS.families.body};
+                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
                     font-size: 12px;
-                    font-weight: 600;
                     cursor: pointer;
                     transition: background 0.2s ease;
                 }
@@ -701,11 +820,22 @@
         document.head.insertAdjacentHTML('beforeend', styles);
     }
 
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
     function init() {
+        // Apply JABIYEN fonts CSS variables first
+        applyFontsVariables();
+        
+        // Inject dynamic styles
         injectStyles();
         
-        console.log('[NewArrivals] Module initializing...');
+        console.log('[NewArrivals] Module initializing with JABIYEN Fonts...');
+        console.log('  📝 Headings:', JABIYEN_FONTS.families.heading);
+        console.log('  📝 Subtitles:', JABIYEN_FONTS.families.subtitle);
+        console.log('  📝 Body:', JABIYEN_FONTS.families.body);
 
+        // Listen for data loaded event
         window.addEventListener('jayenware:dataLoaded', (event) => {
             const detail = event.detail || {};
             
@@ -720,6 +850,7 @@
             }
         });
 
+        // Check if data already exists
         if (window.currentData?.products && Array.isArray(window.currentData.products)) {
             const newArrivals = window.currentData.products.filter(
                 p => p.is_new_arrival === true || p.is_new_arrival === 1
@@ -733,6 +864,7 @@
         console.log('[NewArrivals] Module initialized');
     }
 
+    // Auto-initialize
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
