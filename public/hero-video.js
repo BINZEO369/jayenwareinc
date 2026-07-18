@@ -1,7 +1,7 @@
 // ============================================================
 // hero-video.js - JAYENWARE Hero Video Section Component
 // Apple-Style Hero Video Section with Auto-Play Videos
-// Version: 1.0.1 - Full Screen Update
+// Version: 1.0.2 - Compact Design Update
 // ============================================================
 
 (function() {
@@ -60,54 +60,6 @@
             '--tracking-wide': '0.5px',
             '--tracking-wider': '1px',
             '--tracking-widest': '1.5px'
-        },
-
-        styles: {
-            heroTitle: {
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                fontSize: 'var(--text-5xl)',
-                letterSpacing: 'var(--tracking-tight)'
-            },
-            sectionTitle: {
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 'var(--text-3xl)',
-                letterSpacing: 'var(--tracking-tight)'
-            },
-            sectionSubtitle: {
-                fontFamily: 'var(--font-subtitle)',
-                fontWeight: 600,
-                fontSize: 'var(--text-xl)',
-                letterSpacing: 'var(--tracking-normal)'
-            },
-            description: {
-                fontFamily: 'var(--font-body)',
-                fontWeight: 400,
-                fontSize: 'var(--text-base)',
-                letterSpacing: 'var(--tracking-normal)',
-                lineHeight: '1.6'
-            },
-            smallText: {
-                fontFamily: 'var(--font-body)',
-                fontWeight: 500,
-                fontSize: 'var(--text-xs)',
-                letterSpacing: 'var(--tracking-wide)'
-            },
-            button: {
-                fontFamily: 'var(--font-body)',
-                fontWeight: 600,
-                fontSize: 'var(--text-xs)',
-                letterSpacing: 'var(--tracking-wider)',
-                textTransform: 'uppercase'
-            },
-            badge: {
-                fontFamily: 'var(--font-subtitle)',
-                fontWeight: 600,
-                fontSize: '0.625rem',
-                letterSpacing: 'var(--tracking-wide)',
-                textTransform: 'uppercase'
-            }
         }
     };
 
@@ -151,31 +103,37 @@
             .hero-video-wrapper {
                 position: relative;
                 width: 100%;
-                height: 100vh;
-                height: 100dvh;
-                min-height: 100vh;
-                min-height: 100dvh;
-                max-height: none;
+                height: 600px;
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
             }
-            @media (max-width: 768px) {
+            
+            /* Desktop: Fixed height */
+            @media (min-width: 1025px) {
                 .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 100vh;
-                    min-height: 100dvh;
-                    max-height: none;
+                    height: 650px;
                 }
             }
+            
+            /* Tablet */
+            @media (min-width: 769px) and (max-width: 1024px) {
+                .hero-video-wrapper {
+                    height: 550px;
+                }
+            }
+            
+            /* Mobile */
+            @media (max-width: 768px) {
+                .hero-video-wrapper {
+                    height: 500px;
+                }
+            }
+            
+            /* Small Mobile */
             @media (max-width: 480px) {
                 .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 100vh;
-                    min-height: 100dvh;
-                    max-height: none;
+                    height: 450px;
                 }
             }
             
@@ -210,27 +168,55 @@
                 z-index: 2;
                 text-align: center;
                 padding: 0 24px;
-                max-width: 800px;
+                max-width: 700px;
                 width: 100%;
-                margin-bottom: clamp(40px, 10vh, 80px);
+                margin-bottom: 60px;
+            }
+            
+            @media (max-width: 768px) {
+                .hero-video-content {
+                    margin-bottom: 50px;
+                    padding: 0 20px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .hero-video-content {
+                    margin-bottom: 40px;
+                    padding: 0 16px;
+                }
             }
             
             /* Video Text Animations - Enhanced Staggered Reveal */
             .hero-video-label {
                 display: inline-block;
                 font-family: var(--font-body);
-                font-size: clamp(7px, 0.9vw, 9px);
+                font-size: 11px;
                 font-weight: 600;
-                letter-spacing: 0.4em;
+                letter-spacing: 0.3em;
                 text-transform: uppercase;
                 color: rgba(255, 255, 255, 0.55);
-                margin-bottom: clamp(14px, 2.5vh, 22px);
+                margin-bottom: 16px;
                 opacity: 0;
                 transform: translateY(14px);
                 filter: blur(4px);
                 transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, 
                             transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, 
                             filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+            }
+            @media (max-width: 768px) {
+                .hero-video-label {
+                    font-size: 10px;
+                    letter-spacing: 0.25em;
+                    margin-bottom: 12px;
+                }
+            }
+            @media (max-width: 480px) {
+                .hero-video-label {
+                    font-size: 9px;
+                    letter-spacing: 0.2em;
+                    margin-bottom: 10px;
+                }
             }
             .hero-video-section.visible .hero-video-label {
                 opacity: 1;
@@ -240,11 +226,11 @@
             
             .hero-video-title {
                 font-family: var(--font-heading);
-                font-size: clamp(36px, 7vw, 90px);
-                font-weight: 900;
-                line-height: 1.05;
+                font-size: 48px;
+                font-weight: 800;
+                line-height: 1.1;
                 color: #ffffff;
-                margin: 0 0 clamp(14px, 2vh, 22px) 0;
+                margin: 0 0 16px 0;
                 letter-spacing: -0.02em;
                 opacity: 0;
                 transform: translateY(18px);
@@ -252,6 +238,23 @@
                 transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, 
                             transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, 
                             filter 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+            }
+            @media (max-width: 1024px) {
+                .hero-video-title {
+                    font-size: 40px;
+                }
+            }
+            @media (max-width: 768px) {
+                .hero-video-title {
+                    font-size: 32px;
+                    margin: 0 0 12px 0;
+                }
+            }
+            @media (max-width: 480px) {
+                .hero-video-title {
+                    font-size: 26px;
+                    margin: 0 0 10px 0;
+                }
             }
             .hero-video-section.visible .hero-video-title {
                 opacity: 1;
@@ -261,18 +264,32 @@
             
             .hero-video-desc {
                 font-family: var(--font-body);
-                font-size: clamp(10px, 0.9vw, 13px);
+                font-size: 14px;
                 font-weight: 400;
                 line-height: 1.5;
                 color: rgba(255, 255, 255, 0.7);
-                max-width: 500px;
-                margin: 0 auto clamp(22px, 3vh, 30px) auto;
+                max-width: 480px;
+                margin: 0 auto 24px auto;
                 opacity: 0;
                 transform: translateY(12px);
                 filter: blur(3px);
                 transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, 
                             transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, 
                             filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s;
+            }
+            @media (max-width: 768px) {
+                .hero-video-desc {
+                    font-size: 12px;
+                    max-width: 400px;
+                    margin: 0 auto 20px auto;
+                }
+            }
+            @media (max-width: 480px) {
+                .hero-video-desc {
+                    font-size: 11px;
+                    max-width: 320px;
+                    margin: 0 auto 18px auto;
+                }
             }
             .hero-video-section.visible .hero-video-desc {
                 opacity: 1;
@@ -283,16 +300,16 @@
             .hero-video-cta {
                 display: inline-flex;
                 align-items: center;
-                gap: 6px;
                 font-family: var(--font-body);
-                font-size: clamp(9px, 1vw, 11px);
+                font-size: 12px;
                 font-weight: 600;
-                letter-spacing: 0.2em;
+                letter-spacing: 0.15em;
                 text-transform: uppercase;
                 color: #ffffff;
                 text-decoration: none;
-                padding: 0;
+                padding: 0 0 4px 0;
                 border: none;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.6);
                 background: none;
                 cursor: pointer;
                 opacity: 0;
@@ -300,8 +317,22 @@
                 filter: blur(2px);
                 transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, 
                             transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, 
-                            filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, 
-                            gap 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+                            filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s,
+                            border-color 0.3s ease,
+                            color 0.3s ease;
+            }
+            @media (max-width: 768px) {
+                .hero-video-cta {
+                    font-size: 11px;
+                    padding: 0 0 3px 0;
+                    border-bottom-width: 1.5px;
+                }
+            }
+            @media (max-width: 480px) {
+                .hero-video-cta {
+                    font-size: 10px;
+                    letter-spacing: 0.12em;
+                }
             }
             .hero-video-section.visible .hero-video-cta {
                 opacity: 1;
@@ -309,36 +340,11 @@
                 filter: blur(0);
             }
             .hero-video-cta:hover {
-                gap: 10px;
-                color: rgba(255, 255, 255, 0.8);
+                color: rgba(255, 255, 255, 0.9);
+                border-bottom-color: #ffffff;
             }
-            
-            .hero-video-cta .cta-arrow {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 26px;
-                height: 14px;
-                position: relative;
-                transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-            }
-            
-            .hero-video-cta .cta-arrow::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                right: 0;
-                width: 6px;
-                height: 6px;
-                border-top: 1.5px solid #ffffff;
-                border-right: 1.5px solid #ffffff;
-                transform: translateY(-50%) rotate(45deg);
-                transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-            }
-            
-            .hero-video-cta:hover .cta-arrow::after {
-                right: -3px;
-                opacity: 0.75;
+            .hero-video-cta:active {
+                border-bottom-color: rgba(255, 255, 255, 0.4);
             }
 
             /* Enhanced Text Transition Classes */
@@ -356,14 +362,28 @@
                             filter 0.7s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
 
-            /* Elegant Sound Toggle Button */
-            .hero-video-sound-btn {
+            /* Control Buttons Container */
+            .hero-video-controls {
                 position: absolute;
-                bottom: clamp(20px, 4vh, 40px);
-                right: clamp(16px, 3vw, 32px);
+                bottom: 24px;
+                right: 24px;
                 z-index: 10;
-                width: 36px;
-                height: 36px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            @media (max-width: 640px) {
+                .hero-video-controls {
+                    bottom: 16px;
+                    right: 16px;
+                    gap: 8px;
+                }
+            }
+
+            /* Elegant Control Buttons (Sound & Play/Pause) */
+            .hero-video-ctrl-btn {
+                width: 34px;
+                height: 34px;
                 border-radius: 50%;
                 background: rgba(255, 255, 255, 0.12);
                 backdrop-filter: blur(16px);
@@ -375,34 +395,45 @@
                 cursor: pointer;
                 transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
                 color: rgba(255, 255, 255, 0.75);
-                font-size: 13px;
+                font-size: 12px;
                 outline: none;
                 opacity: 0;
                 transform: scale(0.8);
-                animation: soundBtnIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+                animation: ctrlBtnIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
             }
-            @keyframes soundBtnIn {
+            @media (max-width: 640px) {
+                .hero-video-ctrl-btn {
+                    width: 30px;
+                    height: 30px;
+                    font-size: 10px;
+                }
+            }
+            @keyframes ctrlBtnIn {
                 to {
                     opacity: 1;
                     transform: scale(1);
                 }
             }
-            .hero-video-sound-btn:hover {
+            .hero-video-ctrl-btn:hover {
                 background: rgba(255, 255, 255, 0.22);
                 border-color: rgba(255, 255, 255, 0.35);
                 color: #ffffff;
                 transform: scale(1.08);
                 box-shadow: 0 4px 20px rgba(0,0,0,0.25);
             }
-            .hero-video-sound-btn:active {
+            .hero-video-ctrl-btn:active {
                 transform: scale(0.92);
                 background: rgba(255, 255, 255, 0.18);
             }
-            .hero-video-sound-btn.muted {
+            .hero-video-ctrl-btn.muted {
                 color: rgba(255, 255, 255, 0.45);
                 background: rgba(255, 255, 255, 0.06);
             }
-            .hero-video-sound-btn .sound-icon {
+            .hero-video-ctrl-btn.paused-state {
+                color: rgba(255, 255, 255, 0.45);
+                background: rgba(255, 255, 255, 0.06);
+            }
+            .hero-video-ctrl-btn .ctrl-icon {
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
@@ -412,17 +443,23 @@
             /* Video Navigation Dots */
             .hero-video-nav {
                 position: absolute;
-                bottom: clamp(20px, 4vh, 40px);
+                bottom: 28px;
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 3;
                 display: flex;
-                gap: 10px;
+                gap: 8px;
                 align-items: center;
             }
+            @media (max-width: 640px) {
+                .hero-video-nav {
+                    bottom: 20px;
+                    gap: 6px;
+                }
+            }
             .hero-video-dot {
-                width: 8px;
-                height: 8px;
+                width: 7px;
+                height: 7px;
                 border-radius: 50%;
                 background: rgba(255,255,255,0.3);
                 cursor: pointer;
@@ -431,15 +468,26 @@
                 outline: none;
                 padding: 0;
             }
+            @media (max-width: 640px) {
+                .hero-video-dot {
+                    width: 6px;
+                    height: 6px;
+                }
+            }
             .hero-video-dot:hover {
                 background: rgba(255,255,255,0.6);
                 transform: scale(1.2);
             }
             .hero-video-dot.active {
                 background: #ffffff;
-                width: 28px;
-                border-radius: 5px;
+                width: 24px;
+                border-radius: 4px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+            @media (max-width: 640px) {
+                .hero-video-dot.active {
+                    width: 20px;
+                }
             }
 
             /* Video Progress Bar */
@@ -494,26 +542,6 @@
             .hero-video-poster.fade-out {
                 opacity: 0;
             }
-
-            @media (max-width: 640px) {
-                .hero-video-sound-btn {
-                    width: 32px;
-                    height: 32px;
-                    font-size: 11px;
-                    bottom: 15px;
-                    right: 12px;
-                }
-                .hero-video-nav {
-                    bottom: 15px;
-                }
-                .hero-video-dot {
-                    width: 6px;
-                    height: 6px;
-                }
-                .hero-video-dot.active {
-                    width: 22px;
-                }
-            }
         </style>
     `;
 
@@ -533,20 +561,31 @@
                         <h2 id="hero-video-title" class="hero-video-title"></h2>
                         <p id="hero-video-desc" class="hero-video-desc"></p>
                         <a id="hero-video-cta" class="hero-video-cta" href="#">
-                            <span id="hero-video-cta-text"></span> 
-                            <span class="cta-arrow"></span>
+                            <span id="hero-video-cta-text"></span>
                         </a>
                     </div>
-                    <button id="hero-video-sound-btn" class="hero-video-sound-btn muted" 
-                            onclick="window.JAYENWARE.heroVideo.toggleSound()" 
-                            aria-label="Toggle sound">
-                        <span class="sound-icon" id="sound-icon-muted">
-                            <i class="fa-solid fa-volume-xmark"></i>
-                        </span>
-                        <span class="sound-icon" id="sound-icon-unmuted" style="display:none;">
-                            <i class="fa-solid fa-volume-high"></i>
-                        </span>
-                    </button>
+                    <div class="hero-video-controls">
+                        <button id="hero-video-play-btn" class="hero-video-ctrl-btn" 
+                                onclick="window.JAYENWARE.heroVideo.togglePlay()" 
+                                aria-label="Play/Pause video">
+                            <span class="ctrl-icon" id="play-icon">
+                                <i class="fa-solid fa-pause"></i>
+                            </span>
+                            <span class="ctrl-icon" id="pause-icon" style="display:none;">
+                                <i class="fa-solid fa-play"></i>
+                            </span>
+                        </button>
+                        <button id="hero-video-sound-btn" class="hero-video-ctrl-btn muted" 
+                                onclick="window.JAYENWARE.heroVideo.toggleSound()" 
+                                aria-label="Toggle sound">
+                            <span class="ctrl-icon" id="sound-icon-muted">
+                                <i class="fa-solid fa-volume-xmark"></i>
+                            </span>
+                            <span class="ctrl-icon" id="sound-icon-unmuted" style="display:none;">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </span>
+                        </button>
+                    </div>
                     <div class="hero-video-progress" id="hero-video-progress"></div>
                     <div class="hero-video-nav" id="hero-video-nav"></div>
                 </div>
@@ -562,6 +601,7 @@
             this.videos = [];
             this.isTransitioning = false;
             this.isMuted = true;
+            this.isPaused = false;
             this.videoDuration = 8000;
             
             // Timers
@@ -606,7 +646,7 @@
             this.startAutoplay();
 
             this.isInitialized = true;
-            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Full Screen Mode');
+            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Compact Design Mode');
             console.log('[HeroVideo] Fonts configured:', {
                 heading: JABIYEN_FONTS.families.heading,
                 body: JABIYEN_FONTS.families.body
@@ -698,16 +738,19 @@
                         this.poster.classList.add('fade-out');
                     }
 
-                    const playPromise = this.player.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(() => {
-                            console.warn('[HeroVideo] Autoplay blocked');
-                        });
+                    if (!this.isPaused) {
+                        const playPromise = this.player.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(() => {
+                                console.warn('[HeroVideo] Autoplay blocked');
+                            });
+                        }
                     }
 
                     this.isTransitioning = false;
                     this.startProgressTracking();
                     this.animateTextIn();
+                    this.updatePlayButtonUI();
                 };
 
                 this.player.onerror = () => {
@@ -836,10 +879,54 @@
             }
         }
 
+        togglePlay() {
+            if (!this.player || !this.isVideoLoaded) return;
+            
+            if (this.isPaused) {
+                // Resume playback
+                const playPromise = this.player.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        this.isPaused = false;
+                        this.updatePlayButtonUI();
+                        this.startProgressTracking();
+                        this.startAutoplay();
+                        console.log('[HeroVideo] Video resumed');
+                    }).catch(() => {});
+                }
+            } else {
+                // Pause playback
+                this.player.pause();
+                this.isPaused = true;
+                this.updatePlayButtonUI();
+                this.clearAutoplayInterval();
+                this.clearProgressInterval();
+                console.log('[HeroVideo] Video paused');
+            }
+        }
+
+        updatePlayButtonUI() {
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            const btn = document.getElementById('hero-video-play-btn');
+            
+            if (!playIcon || !pauseIcon || !btn) return;
+            
+            if (this.isPaused) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'flex';
+                btn.classList.add('paused-state');
+            } else {
+                playIcon.style.display = 'flex';
+                pauseIcon.style.display = 'none';
+                btn.classList.remove('paused-state');
+            }
+        }
+
         startProgressTracking() {
             this.clearProgressInterval();
             
-            if (!this.progressBar) return;
+            if (!this.progressBar || this.isPaused) return;
 
             const duration = this.videoDuration;
             const interval = 50;
@@ -850,9 +937,7 @@
             this.progressBar.style.width = '0%';
 
             this.progressInterval = setInterval(() => {
-                if (this.isTransitioning) {
-                    currentStep = 0;
-                    this.progressBar.style.width = '0%';
+                if (this.isTransitioning || this.isPaused) {
                     return;
                 }
                 
@@ -877,10 +962,10 @@
         startAutoplay() {
             this.clearAutoplayInterval();
             
-            if (this.videos.length <= 1) return;
+            if (this.videos.length <= 1 || this.isPaused) return;
             
             this.autoplayInterval = setInterval(() => {
-                if (!this.isTransitioning && this.isVideoLoaded) {
+                if (!this.isTransitioning && this.isVideoLoaded && !this.isPaused) {
                     const nextIndex = (this.currentIndex + 1) % this.videos.length;
                     this.switchToVideo(nextIndex);
                 }
@@ -902,7 +987,9 @@
 
             setTimeout(() => {
                 this.loadVideo(index);
-                this.startAutoplay();
+                if (!this.isPaused) {
+                    this.startAutoplay();
+                }
             }, 300);
         }
 
@@ -949,18 +1036,22 @@
         }
 
         pause() {
-            if (this.player && this.isVideoLoaded) {
+            if (this.player && this.isVideoLoaded && !this.isPaused) {
                 this.player.pause();
+                this.isPaused = true;
+                this.updatePlayButtonUI();
                 this.clearAutoplayInterval();
                 this.clearProgressInterval();
             }
         }
 
         resume() {
-            if (this.player && this.isVideoLoaded && this.player.paused) {
+            if (this.player && this.isVideoLoaded && this.isPaused) {
                 const playPromise = this.player.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
+                        this.isPaused = false;
+                        this.updatePlayButtonUI();
                         this.startProgressTracking();
                         this.startAutoplay();
                     }).catch(() => {});
@@ -973,6 +1064,7 @@
             this.currentIndex = 0;
             this.isTransitioning = false;
             this.isVideoLoaded = false;
+            this.isPaused = false;
             this.init(newData, options);
         }
 
@@ -993,6 +1085,7 @@
             }
 
             this.isVideoLoaded = false;
+            this.isPaused = false;
         }
 
         destroy() {
@@ -1077,7 +1170,7 @@
         setTimeout(tryAutoInit, 150);
     }
 
-    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode with JABIYEN Fonts');
+    console.log('[HeroVideo] Component loaded and ready - Compact Design Mode with JABIYEN Fonts');
     console.log('[HeroVideo] Font Configuration:', {
         heading: JABIYEN_FONTS.families.heading,
         subtitle: JABIYEN_FONTS.families.subtitle,
