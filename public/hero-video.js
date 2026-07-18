@@ -1,7 +1,7 @@
 // ============================================================
 // hero-video.js - JAYENWARE Hero Video Section Component
 // Apple-Style Hero Video Section with Auto-Play Videos
-// Version: 1.0.1 - Full Screen Update
+// Version: 1.0.2 - Smooth Full Screen (No Jump Fix)
 // ============================================================
 
 (function() {
@@ -16,13 +16,18 @@
                 width: 100%;
                 background: #000;
                 overflow: hidden;
+                /* স্থির উচ্চতা - লাফানো বন্ধ */
+                height: 100vh;
+                height: -webkit-fill-available;
+                max-height: 100vh;
                 opacity: 0;
-                transform: translateY(20px);
-                transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                will-change: opacity;
             }
             .hero-video-section.visible {
                 opacity: 1;
-                transform: translateY(0);
             }
             .hero-video-section.hidden-section {
                 display: none;
@@ -31,32 +36,11 @@
             .hero-video-wrapper {
                 position: relative;
                 width: 100%;
-                height: 100vh;
-                height: 100dvh;
-                min-height: 100vh;
-                min-height: 100dvh;
-                max-height: none;
+                height: 100%;
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
-            }
-            @media (max-width: 768px) {
-                .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 100vh;
-                    min-height: 100dvh;
-                    max-height: none;
-                }
-            }
-            @media (max-width: 480px) {
-                .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 100vh;
-                    min-height: 100dvh;
-                    max-height: none;
-                }
+                overflow: hidden;
             }
             
             .hero-video-bg {
@@ -69,6 +53,9 @@
                 user-select: none;
                 filter: brightness(0.85);
                 transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+                will-change: opacity;
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
             }
             
             .hero-video-overlay {
@@ -93,9 +80,12 @@
                 max-width: 800px;
                 width: 100%;
                 margin-bottom: clamp(40px, 10vh, 80px);
+                will-change: opacity;
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
             }
             
-            /* Video Text Animations - Enhanced Staggered Reveal */
+            /* Video Text Animations - Opacity & Blur Only (No Transform) */
             .hero-video-label {
                 display: inline-block;
                 font-family: 'Inter', sans-serif;
@@ -106,15 +96,12 @@
                 color: rgba(255, 255, 255, 0.55);
                 margin-bottom: clamp(14px, 2.5vh, 22px);
                 opacity: 0;
-                transform: translateY(14px);
                 filter: blur(4px);
                 transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, 
-                            transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, 
                             filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
             }
             .hero-video-section.visible .hero-video-label {
                 opacity: 1;
-                transform: translateY(0);
                 filter: blur(0);
             }
             
@@ -127,15 +114,12 @@
                 margin: 0 0 clamp(14px, 2vh, 22px) 0;
                 letter-spacing: -0.02em;
                 opacity: 0;
-                transform: translateY(18px);
                 filter: blur(6px);
                 transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, 
-                            transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, 
                             filter 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
             }
             .hero-video-section.visible .hero-video-title {
                 opacity: 1;
-                transform: translateY(0);
                 filter: blur(0);
             }
             
@@ -148,15 +132,12 @@
                 max-width: 500px;
                 margin: 0 auto clamp(22px, 3vh, 30px) auto;
                 opacity: 0;
-                transform: translateY(12px);
                 filter: blur(3px);
                 transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, 
-                            transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, 
                             filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s;
             }
             .hero-video-section.visible .hero-video-desc {
                 opacity: 1;
-                transform: translateY(0);
                 filter: blur(0);
             }
             
@@ -176,16 +157,13 @@
                 background: none;
                 cursor: pointer;
                 opacity: 0;
-                transform: translateY(12px);
                 filter: blur(2px);
                 transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, 
-                            transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, 
                             filter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, 
                             gap 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
             .hero-video-section.visible .hero-video-cta {
                 opacity: 1;
-                transform: translateY(0);
                 filter: blur(0);
             }
             .hero-video-cta:hover {
@@ -221,18 +199,15 @@
                 opacity: 0.75;
             }
 
-            /* Enhanced Text Transition Classes */
+            /* Enhanced Text Transition Classes - Opacity & Blur Only */
             .video-text-exit {
                 opacity: 0 !important;
-                transform: translateY(-20px) !important;
                 filter: blur(8px) !important;
                 transition: opacity 0.4s cubic-bezier(0.55, 0, 1, 0.45), 
-                            transform 0.4s cubic-bezier(0.55, 0, 1, 0.45), 
                             filter 0.4s cubic-bezier(0.55, 0, 1, 0.45) !important;
             }
             .video-text-enter {
                 transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
-                            transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
                             filter 0.7s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
 
@@ -375,6 +350,13 @@
                 opacity: 0;
             }
 
+            /* iOS Safari Fix */
+            @supports (-webkit-touch-callout: none) {
+                .hero-video-section {
+                    height: -webkit-fill-available;
+                }
+            }
+
             @media (max-width: 640px) {
                 .hero-video-sound-btn {
                     width: 32px;
@@ -486,7 +468,7 @@
             this.startAutoplay();
 
             this.isInitialized = true;
-            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Full Screen Mode');
+            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Smooth Full Screen Mode');
         }
 
         cacheElements() {
@@ -572,6 +554,10 @@
                     
                     if (this.poster) {
                         this.poster.classList.add('fade-out');
+                        this.poster.addEventListener('transitionend', function handler() {
+                            this.style.display = 'none';
+                            this.removeEventListener('transitionend', handler);
+                        });
                     }
 
                     const playPromise = this.player.play();
@@ -644,7 +630,6 @@
                     el.classList.remove('video-text-exit');
                     el.style.transitionDelay = '0s';
                     el.style.opacity = '0';
-                    el.style.transform = 'translateY(20px)';
                     el.style.filter = 'blur(6px)';
                 });
                 if (callback) callback();
@@ -670,7 +655,6 @@
                 requestAnimationFrame(() => {
                     elements.forEach((el) => {
                         el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
                         el.style.filter = 'blur(0)';
                     });
                 });
@@ -952,5 +936,5 @@
         setTimeout(tryAutoInit, 150);
     }
 
-    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode');
+    console.log('[HeroVideo] Component loaded and ready - Smooth Full Screen Mode (No Jump)');
 })();
