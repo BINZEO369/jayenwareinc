@@ -7,6 +7,126 @@
 (function() {
     'use strict';
 
+    // ==================== JABIYEN FONTS CONFIGURATION ====================
+    const JABIYEN_FONTS = {
+        families: {
+            heading: "'Manrope', sans-serif",
+            subtitle: "'Sora', sans-serif",
+            body: "'Inter', sans-serif"
+        },
+
+        weights: {
+            heading: {
+                regular: 400,
+                medium: 500,
+                semibold: 600,
+                bold: 700,
+                extrabold: 800
+            },
+            subtitle: {
+                regular: 400,
+                medium: 500,
+                semibold: 600,
+                bold: 700,
+                extrabold: 800
+            },
+            body: {
+                light: 300,
+                regular: 400,
+                medium: 500,
+                semibold: 600,
+                bold: 700,
+                extrabold: 800,
+                black: 900
+            }
+        },
+
+        cssVariables: {
+            '--font-heading': "'Manrope', sans-serif",
+            '--font-subtitle': "'Sora', sans-serif",
+            '--font-body': "'Inter', sans-serif",
+            '--font-accent': "'Inter', sans-serif",
+            '--text-xs': '0.75rem',
+            '--text-sm': '0.875rem',
+            '--text-base': '1rem',
+            '--text-lg': '1.125rem',
+            '--text-xl': '1.25rem',
+            '--text-2xl': '1.5rem',
+            '--text-3xl': '1.875rem',
+            '--text-4xl': '2.25rem',
+            '--text-5xl': '3rem',
+            '--tracking-tight': '-0.5px',
+            '--tracking-normal': '0',
+            '--tracking-wide': '0.5px',
+            '--tracking-wider': '1px',
+            '--tracking-widest': '1.5px'
+        },
+
+        styles: {
+            heroTitle: {
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: 'var(--text-5xl)',
+                letterSpacing: 'var(--tracking-tight)'
+            },
+            sectionTitle: {
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 700,
+                fontSize: 'var(--text-3xl)',
+                letterSpacing: 'var(--tracking-tight)'
+            },
+            sectionSubtitle: {
+                fontFamily: 'var(--font-subtitle)',
+                fontWeight: 600,
+                fontSize: 'var(--text-xl)',
+                letterSpacing: 'var(--tracking-normal)'
+            },
+            description: {
+                fontFamily: 'var(--font-body)',
+                fontWeight: 400,
+                fontSize: 'var(--text-base)',
+                letterSpacing: 'var(--tracking-normal)',
+                lineHeight: '1.6'
+            },
+            smallText: {
+                fontFamily: 'var(--font-body)',
+                fontWeight: 500,
+                fontSize: 'var(--text-xs)',
+                letterSpacing: 'var(--tracking-wide)'
+            },
+            button: {
+                fontFamily: 'var(--font-body)',
+                fontWeight: 600,
+                fontSize: 'var(--text-xs)',
+                letterSpacing: 'var(--tracking-wider)',
+                textTransform: 'uppercase'
+            },
+            badge: {
+                fontFamily: 'var(--font-subtitle)',
+                fontWeight: 600,
+                fontSize: '0.625rem',
+                letterSpacing: 'var(--tracking-wide)',
+                textTransform: 'uppercase'
+            }
+        }
+    };
+
+    // Apply CSS variables to :root
+    function applyFontVariables() {
+        const root = document.documentElement;
+        const vars = JABIYEN_FONTS.cssVariables;
+        for (const [key, value] of Object.entries(vars)) {
+            root.style.setProperty(key, value);
+        }
+    }
+
+    // Apply font variables immediately if DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyFontVariables);
+    } else {
+        applyFontVariables();
+    }
+
     // ==================== CSS STYLES ====================
     const HERO_VIDEO_CSS = `
         <style id="hero-video-styles">
@@ -98,7 +218,7 @@
             /* Video Text Animations - Enhanced Staggered Reveal */
             .hero-video-label {
                 display: inline-block;
-                font-family: 'Inter', sans-serif;
+                font-family: var(--font-body);
                 font-size: clamp(7px, 0.9vw, 9px);
                 font-weight: 600;
                 letter-spacing: 0.4em;
@@ -119,7 +239,7 @@
             }
             
             .hero-video-title {
-                font-family: 'Playfair Display', serif;
+                font-family: var(--font-heading);
                 font-size: clamp(36px, 7vw, 90px);
                 font-weight: 900;
                 line-height: 1.05;
@@ -140,7 +260,7 @@
             }
             
             .hero-video-desc {
-                font-family: 'Inter', sans-serif;
+                font-family: var(--font-body);
                 font-size: clamp(10px, 0.9vw, 13px);
                 font-weight: 400;
                 line-height: 1.5;
@@ -164,7 +284,7 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
-                font-family: 'Inter', sans-serif;
+                font-family: var(--font-body);
                 font-size: clamp(9px, 1vw, 11px);
                 font-weight: 600;
                 letter-spacing: 0.2em;
@@ -487,6 +607,10 @@
 
             this.isInitialized = true;
             console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Full Screen Mode');
+            console.log('[HeroVideo] Fonts configured:', {
+                heading: JABIYEN_FONTS.families.heading,
+                body: JABIYEN_FONTS.families.body
+            });
         }
 
         cacheElements() {
@@ -885,6 +1009,7 @@
 
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroVideo = heroVideo;
+    window.JABIYEN_FONTS = JABIYEN_FONTS;
 
     // ==================== AUTO-INITIALIZATION ====================
     if (!document.getElementById('hero-video-styles')) {
@@ -952,6 +1077,10 @@
         setTimeout(tryAutoInit, 150);
     }
 
-    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode');
+    console.log('[HeroVideo] Component loaded and ready - Full Screen Mode with JABIYEN Fonts');
+    console.log('[HeroVideo] Font Configuration:', {
+        heading: JABIYEN_FONTS.families.heading,
+        subtitle: JABIYEN_FONTS.families.subtitle,
+        body: JABIYEN_FONTS.families.body
+    });
 })();
-
