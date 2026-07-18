@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
 // Integrated with /api/home-showcase/complete API
-// JABIYEN FONTS INTEGRATED - WORLD-CLASS SMOOTH ANIMATIONS
+// JABIYEN FONTS INTEGRATED - PREMIUM LUXURY ANIMATIONS
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -29,6 +29,7 @@ class HomeCategoryShowcase {
         this.gridElement = null;
         this.currentGender = 'women';
         this.isAnimating = false;
+        this.animationQueue = [];
         this.init();
     }
 
@@ -102,7 +103,6 @@ class HomeCategoryShowcase {
         const tabsHTML = this.buildTabsHTML();
         container.insertAdjacentHTML('beforeend', tabsHTML);
 
-        // Create wrapper for smooth overflow handling
         this.gridWrapper = document.createElement('div');
         this.gridWrapper.className = 'showcase-grid-wrapper';
         container.appendChild(this.gridWrapper);
@@ -202,52 +202,67 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
         
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:60px 20px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div class="empty-state">No categories found</div>`;
             this.isAnimating = false;
             return;
         }
 
-        const newCardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
+        const newCardsHTML = categories.map((item, index) => this.buildCardHTML(item, index, true)).join('');
         
-        // Create new grid
+        const currentGrid = this.gridElement.querySelector('.showcase-grid-inner');
+        
+        // Create new grid with staggered entrance
         const newGrid = document.createElement('div');
         newGrid.className = 'showcase-grid-inner entering';
         newGrid.innerHTML = newCardsHTML;
         
-        // Set initial position based on direction
-        if (isMovingToMen) {
-            newGrid.style.transform = 'translateX(60px)';
-        } else {
-            newGrid.style.transform = 'translateX(-60px)';
-        }
+        // Initial state based on direction
+        const startX = isMovingToMen ? 80 : -80;
+        newGrid.style.transform = `translateX(${startX}px)`;
         newGrid.style.opacity = '0';
+        newGrid.style.filter = 'blur(8px)';
         
-        // Add exit animation to current grid
-        const currentGrid = this.gridElement.querySelector('.showcase-grid-inner');
+        // Animate current grid out
         if (currentGrid) {
             currentGrid.classList.add('exiting');
-            if (isMovingToMen) {
-                currentGrid.style.transform = 'translateX(-60px)';
-            } else {
-                currentGrid.style.transform = 'translateX(60px)';
-            }
+            const exitX = isMovingToMen ? -80 : 80;
+            currentGrid.style.transform = `translateX(${exitX}px)`;
             currentGrid.style.opacity = '0';
+            currentGrid.style.filter = 'blur(8px)';
         }
         
         // Append new grid
         this.gridElement.appendChild(newGrid);
         
-        // Trigger entrance animation
+        // Use requestAnimationFrame for smooth animation trigger
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
+                // Animate new grid in
                 newGrid.style.transform = 'translateX(0)';
                 newGrid.style.opacity = '1';
+                newGrid.style.filter = 'blur(0)';
                 
-                // Clean up after animation completes
-                const onTransitionEnd = () => {
-                    newGrid.removeEventListener('transitionend', onTransitionEnd);
-                    if (currentGrid) currentGrid.remove();
+                // Trigger staggered card animations
+                const cards = newGrid.querySelectorAll('.showcase-category-card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${0.15 + index * 0.07}s`;
+                    card.style.animationPlayState = 'running';
+                });
+                
+                // Clean up after animation
+                const onTransitionEnd = (e) => {
+                    if (e.target === newGrid && e.propertyName === 'transform') {
+                        newGrid.removeEventListener('transitionend', onTransitionEnd);
+                        cleanup();
+                    }
+                };
+                
+                const cleanup = () => {
+                    if (currentGrid && currentGrid.parentNode) {
+                        currentGrid.remove();
+                    }
                     newGrid.classList.remove('entering');
+                    if (currentGrid) currentGrid.classList.remove('exiting');
                     this.isAnimating = false;
                 };
                 
@@ -256,11 +271,9 @@ class HomeCategoryShowcase {
                 // Fallback cleanup
                 setTimeout(() => {
                     if (this.isAnimating) {
-                        if (currentGrid && currentGrid.parentNode) currentGrid.remove();
-                        newGrid.classList.remove('entering');
-                        this.isAnimating = false;
+                        cleanup();
                     }
-                }, 700);
+                }, 900);
             });
         });
     }
@@ -278,15 +291,23 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:60px 20px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div class="empty-state">No categories found</div>`;
             return;
         }
 
-        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
+        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index, false)).join('');
         this.gridElement.innerHTML = `<div class="showcase-grid-inner">${cardsHTML}</div>`;
+        
+        // Animate cards on initial load
+        setTimeout(() => {
+            const cards = this.gridElement.querySelectorAll('.showcase-category-card');
+            cards.forEach((card, index) => {
+                card.style.animationPlayState = 'running';
+            });
+        }, 50);
     }
 
-    buildCardHTML(item, index) {
+    buildCardHTML(item, index, isAnimated = false) {
         const cat = item.categories;
         if (!cat) return '';
         
@@ -294,10 +315,12 @@ class HomeCategoryShowcase {
         const catSlug = cat.slug || this.createSlug(catName);
         const imgSrc = cat.image_url || cat.image || '';
         
+        const delay = isAnimated ? `style="animation-delay: ${0.15 + index * 0.07}s; animation-play-state: paused;"` : `style="animation-delay: ${0.1 + index * 0.06}s; animation-play-state: paused;"`;
+        
         return `
         <a href="/category/${catSlug}" 
            class="showcase-category-card"
-           style="animation: cardFadeIn 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) ${index * 0.08}s both;">
+           ${delay}>
             
             <div class="card-image-wrapper">
                 ${imgSrc ? `<img src="${imgSrc}" 
@@ -306,11 +329,12 @@ class HomeCategoryShowcase {
                      onerror="this.parentElement.classList.add('no-image')"
                      class="card-image">` : '<div class="image-placeholder"></div>'}
                 <div class="card-image-overlay"></div>
+                <div class="card-shimmer"></div>
             </div>
             
             <div class="card-content">
                 <h3 class="card-title">${catName}</h3>
-                <span class="card-explore">Explore</span>
+                <span class="card-explore">Explore Collection</span>
             </div>
         </a>`;
     }
@@ -341,11 +365,13 @@ class HomeCategoryShowcase {
             .showcase-grid-inner {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2px;
+                gap: 1px;
                 width: 100%;
-                background: #f5f5f7;
-                transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
-                will-change: transform, opacity;
+                background: #ebebed;
+                transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                            opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                            filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+                will-change: transform, opacity, filter;
             }
             
             .showcase-grid-inner.entering {
@@ -358,7 +384,9 @@ class HomeCategoryShowcase {
             .showcase-grid-inner.exiting {
                 position: relative;
                 z-index: 1;
-                transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+                transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                            opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                            filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             }
             
             /* ===== TAB BUTTONS ===== */
@@ -373,7 +401,7 @@ class HomeCategoryShowcase {
                 position: relative;
                 font-family: 'Inter', -apple-system, sans-serif;
                 letter-spacing: -0.01em;
-                transition: color 0.35s ease;
+                transition: color 0.4s ease;
                 outline: none;
                 -webkit-tap-highlight-color: transparent;
                 user-select: none;
@@ -383,11 +411,12 @@ class HomeCategoryShowcase {
                 content: '';
                 position: absolute;
                 bottom: -1px;
-                left: 0;
+                left: 50%;
                 width: 0;
                 height: 1.5px;
                 background: #1d1d1f;
-                transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+                transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                transform: translateX(-50%);
             }
             
             .tab-btn.active {
@@ -397,6 +426,7 @@ class HomeCategoryShowcase {
             
             .tab-btn.active::after {
                 width: 100%;
+                left: 50%;
             }
             
             .tab-btn:hover:not(.active) {
@@ -414,16 +444,17 @@ class HomeCategoryShowcase {
                 -webkit-tap-highlight-color: transparent;
                 overflow: hidden;
                 opacity: 0;
+                animation: cardReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
             
-            @keyframes cardFadeIn {
-                from {
+            @keyframes cardReveal {
+                0% {
                     opacity: 0;
-                    transform: translateY(20px);
+                    transform: translateY(40px) scale(0.95);
                 }
-                to {
+                100% {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: translateY(0) scale(1);
                 }
             }
             
@@ -442,39 +473,72 @@ class HomeCategoryShowcase {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+                transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                transform-origin: center center;
             }
             
             .card-image-overlay {
                 position: absolute;
                 inset: 0;
                 background: rgba(0,0,0,0);
-                transition: background 0.5s ease;
+                transition: background 0.6s ease;
                 z-index: 1;
+                pointer-events: none;
+            }
+            
+            /* Shimmer effect on load */
+            .card-shimmer {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    rgba(255,255,255,0.4) 50%,
+                    transparent 100%
+                );
+                transform: translateX(-100%);
+                z-index: 2;
+                pointer-events: none;
+            }
+            
+            .entering .card-shimmer {
+                animation: shimmer 1.5s ease-in-out forwards;
+            }
+            
+            @keyframes shimmer {
+                0% {
+                    transform: translateX(-100%);
+                }
+                100% {
+                    transform: translateX(200%);
+                }
             }
             
             .image-placeholder {
                 position: absolute;
                 inset: 0;
                 background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
-            }
-            
-            .no-image .image-placeholder {
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
             
-            .no-image .image-placeholder::after {
-                content: '✕';
-                font-size: 24px;
-                color: #c7c7cc;
-                opacity: 0.5;
+            .image-placeholder::after {
+                content: '';
+                width: 40px;
+                height: 40px;
+                border: 2px solid #c7c7cc;
+                border-radius: 50%;
+                opacity: 0.4;
+            }
+            
+            .no-image .image-placeholder {
+                background: linear-gradient(135deg, #fafafa 0%, #f0f0f5 100%);
             }
             
             /* ===== CARD CONTENT ===== */
             .card-content {
-                padding: 20px 16px 28px;
+                padding: 24px 16px 32px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -493,36 +557,49 @@ class HomeCategoryShowcase {
                 font-family: 'Sora', -apple-system, sans-serif;
                 font-weight: 500;
                 letter-spacing: -0.01em;
-                transition: color 0.3s ease;
+                transition: color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             }
             
             .card-explore {
                 display: inline-block;
-                margin-top: 8px;
+                margin-top: 10px;
                 font-size: 11px;
                 font-family: 'Inter', -apple-system, sans-serif;
                 color: #86868b;
-                letter-spacing: 0.02em;
+                letter-spacing: 0.04em;
                 text-transform: uppercase;
                 position: relative;
-                transition: color 0.3s ease;
                 opacity: 0;
-                transform: translateY(5px);
-                transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), color 0.3s ease;
+                transform: translateY(8px);
+                transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                            transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                            color 0.4s ease;
+            }
+            
+            .card-explore::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 1px;
+                background: currentColor;
+                transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             }
             
             /* ===== HOVER EFFECTS ===== */
             @media (hover: hover) {
                 .showcase-category-card:hover .card-image {
-                    transform: scale(1.03);
+                    transform: scale(1.04);
                 }
                 
                 .showcase-category-card:hover .card-image-overlay {
-                    background: rgba(0,0,0,0.03);
+                    background: rgba(0,0,0,0.02);
                 }
                 
                 .showcase-category-card:hover .card-title {
                     color: #000000;
+                    transform: translateY(-2px);
                 }
                 
                 .showcase-category-card:hover .card-explore {
@@ -530,17 +607,31 @@ class HomeCategoryShowcase {
                     transform: translateY(0);
                     color: #6e6e73;
                 }
+                
+                .showcase-category-card:hover .card-explore::after {
+                    width: 100%;
+                }
             }
             
             /* ===== ACTIVE/TAP EFFECT ===== */
             .showcase-category-card:active .card-image {
-                transform: scale(0.98);
-                transition: transform 0.2s ease;
+                transform: scale(0.97);
+                transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             }
             
             .showcase-category-card:active .card-image-overlay {
-                background: rgba(0,0,0,0.06);
-                transition: background 0.15s ease;
+                background: rgba(0,0,0,0.05);
+                transition: background 0.2s ease;
+            }
+            
+            /* ===== EMPTY STATE ===== */
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #86868b;
+                font-family: 'Inter', -apple-system, sans-serif;
+                font-size: 14px;
+                grid-column: 1 / -1;
             }
             
             /* ===== RESPONSIVE ===== */
@@ -559,7 +650,7 @@ class HomeCategoryShowcase {
                 }
                 
                 .card-content {
-                    padding: 16px 12px 22px !important;
+                    padding: 18px 12px 24px !important;
                 }
                 
                 .card-title {
@@ -568,7 +659,18 @@ class HomeCategoryShowcase {
                 
                 .card-explore {
                     font-size: 10px !important;
-                    margin-top: 6px !important;
+                    margin-top: 8px !important;
+                }
+                
+                @keyframes cardReveal {
+                    0% {
+                        opacity: 0;
+                        transform: translateY(30px) scale(0.96);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
                 }
             }
             
@@ -578,21 +680,39 @@ class HomeCategoryShowcase {
                 }
                 
                 .card-content {
-                    padding: 12px 8px 18px !important;
+                    padding: 14px 8px 20px !important;
                 }
                 
                 .card-title {
                     font-size: 13px !important;
                 }
+                
+                .card-explore {
+                    font-size: 9px !important;
+                    margin-top: 6px !important;
+                }
             }
             
-            /* ===== HEADER ===== */
+            /* ===== HEADER FONTS ===== */
             .showcase-header h2 {
                 font-family: 'Manrope', -apple-system, sans-serif !important;
             }
             
             .showcase-header p {
                 font-family: 'Inter', -apple-system, sans-serif !important;
+            }
+            
+            /* ===== REDUCED MOTION ===== */
+            @media (prefers-reduced-motion: reduce) {
+                .showcase-grid-inner,
+                .showcase-grid-inner.exiting,
+                .showcase-category-card,
+                .card-image,
+                .card-shimmer {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
             }
         </style>`;
 
@@ -622,7 +742,7 @@ class HomeCategoryShowcase {
 // Initialize Function
 // ============================================================
 function initCategoryShowcase() {
-    console.log('[CategoryShowcase] Initializing world-class animations...');
+    console.log('[CategoryShowcase] Initializing premium luxury animations...');
     
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
