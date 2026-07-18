@@ -2,7 +2,7 @@
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // INTEGRATED: JABIYEN Fonts configuration
 // FIXED: stock → is_out_of_stock, image loading, lazy load
-// UPDATED: Title only, 1px gap, product/slug navigation
+// UPDATED: Title only, 1px gap, product/slug navigation, bolder title
 // ============================================================
 
 (function() {
@@ -664,9 +664,10 @@
                     }
                 }
 
+                /* Title - Bolder (semibold 600 instead of medium 500) */
                 .new-arrival-card-title {
                     font-family: ${JABIYEN_FONTS.families.body};
-                    font-weight: ${JABIYEN_FONTS.weights.body.medium};
+                    font-weight: ${JABIYEN_FONTS.weights.body.semibold};
                     font-size: 13px;
                     color: #1d1d1f;
                     line-height: 1.35;
