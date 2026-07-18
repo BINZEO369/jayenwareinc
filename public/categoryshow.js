@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
 // Integrated with /api/home-showcase/complete API
-// JABIYEN FONTS INTEGRATED - SMOOTH SLIDE ANIMATION
+// JABIYEN FONTS INTEGRATED - WORLD-CLASS SMOOTH ANIMATIONS
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -10,7 +10,12 @@ class HomeCategoryShowcase {
             apiEndpoint: '/api/home-showcase/complete',
             containerId: 'categoryshow-container',
             skeletonId: 'categoryshow-skeleton',
-            gridClass: 'showcase-grid-prada'
+            gridClass: 'showcase-grid-prada',
+            itemsPerRow: {
+                mobile: 2,
+                tablet: 2,
+                desktop: 2
+            }
         };
         
         this.data = {
@@ -20,6 +25,7 @@ class HomeCategoryShowcase {
         };
         
         this.isLoaded = false;
+        this.gridWrapper = null;
         this.gridElement = null;
         this.currentGender = 'women';
         this.isAnimating = false;
@@ -96,10 +102,15 @@ class HomeCategoryShowcase {
         const tabsHTML = this.buildTabsHTML();
         container.insertAdjacentHTML('beforeend', tabsHTML);
 
+        // Create wrapper for smooth overflow handling
+        this.gridWrapper = document.createElement('div');
+        this.gridWrapper.className = 'showcase-grid-wrapper';
+        container.appendChild(this.gridWrapper);
+
         this.gridElement = document.createElement('div');
         this.gridElement.className = this.config.gridClass;
         this.gridElement.id = 'categoryshow-dynamic-grid';
-        container.appendChild(this.gridElement);
+        this.gridWrapper.appendChild(this.gridElement);
 
         this.renderGrid(this.currentGender);
         this.injectStyles();
@@ -143,9 +154,9 @@ class HomeCategoryShowcase {
         <div class="showcase-tabs" style="
             display: flex;
             justify-content: center;
-            gap: 30px;
-            padding: 20px 0 30px;
-            border-bottom: 1px solid #e5e5e5;
+            gap: 40px;
+            padding: 10px 0 25px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
             margin: 0 20px 0;
         ">
             <button class="tab-btn active" data-gender="women">Women</button>
@@ -162,32 +173,27 @@ class HomeCategoryShowcase {
                 const gender = this.getAttribute('data-gender');
                 if (self.isAnimating || self.currentGender === gender) return;
                 
-                const previousGender = self.currentGender;
                 self.currentGender = gender;
-                self.renderGridWithAnimation(gender, previousGender);
+                self.renderGridWithAnimation(gender);
                 self.setActiveTab(this);
             });
         });
     }
 
     setActiveTab(activeTab) {
-        document.querySelectorAll('.tab-btn').forEach(t => {
-            t.classList.remove('active');
-            t.style.color = '#86868b';
-            t.style.borderBottom = 'none';
-        });
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
         activeTab.classList.add('active');
-        activeTab.style.color = '#1d1d1f';
-        activeTab.style.borderBottom = '2px solid #1d1d1f';
     }
 
-    renderGridWithAnimation(newGender, oldGender) {
-        if (!this.gridElement || this.isAnimating) return;
+    renderGridWithAnimation(gender) {
+        if (!this.gridElement || !this.gridWrapper || this.isAnimating) return;
         
         this.isAnimating = true;
         
+        const isMovingToMen = gender === 'men';
+        
         let categories = [];
-        if (newGender === 'men') {
+        if (gender === 'men') {
             categories = this.data.menCategories || [];
         } else {
             categories = this.data.womenCategories || [];
@@ -196,109 +202,69 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
         
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:60px 20px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
             this.isAnimating = false;
             return;
         }
 
-        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index, false)).join('');
+        const newCardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
         
-        // Determine slide direction
-        // Men tab is on the right, Women tab is on the left
-        // Switching to Men: content slides in from RIGHT to LEFT
-        // Switching to Women: content slides in from LEFT to RIGHT
-        const slideInFromRight = newGender === 'men';
-        
-        // Get the grid container dimensions
-        const gridRect = this.gridElement.getBoundingClientRect();
-        const gridWidth = gridRect.width || this.gridElement.offsetWidth || 400;
-        
-        // Create new grid that will slide in
+        // Create new grid
         const newGrid = document.createElement('div');
-        newGrid.className = 'showcase-grid-inner';
-        newGrid.style.cssText = `
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #ffffff;
-            transform: translateX(${slideInFromRight ? '100%' : '-100%'});
-            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-        `;
-        newGrid.innerHTML = cardsHTML;
+        newGrid.className = 'showcase-grid-inner entering';
+        newGrid.innerHTML = newCardsHTML;
         
-        // Get the current grid that will slide out
+        // Setup directions for Smooth Slide
+        const slideDistance = '40px';
+        if (isMovingToMen) {
+            newGrid.style.transform = `translateX(${slideDistance})`;
+        } else {
+            newGrid.style.transform = `translateX(-${slideDistance})`;
+        }
+        newGrid.style.opacity = '0';
+        
         const currentGrid = this.gridElement.querySelector('.showcase-grid-inner');
         
-        // Ensure grid element has relative positioning and hides overflow
-        this.gridElement.style.position = 'relative';
-        this.gridElement.style.overflow = 'hidden';
-        
-        // If there's an existing grid, animate it out
-        if (currentGrid) {
-            currentGrid.style.position = 'absolute';
-            currentGrid.style.top = '0';
-            currentGrid.style.left = '0';
-            currentGrid.style.width = '100%';
-            currentGrid.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-            currentGrid.style.transform = 'translateX(0)';
-            
-            // Force reflow
-            currentGrid.offsetHeight;
-            
-            // Slide out current grid
-            currentGrid.style.transform = `translateX(${slideInFromRight ? '-100%' : '100%'})`;
-        }
-        
-        // Add new grid
+        // Append new grid
         this.gridElement.appendChild(newGrid);
         
-        // Force reflow on new grid
-        newGrid.offsetHeight;
+        // Trigger reflow to ensure styles are applied before animation starts
+        void newGrid.offsetWidth;
         
-        // Slide in new grid
+        // Start animation
+        if (currentGrid) {
+            currentGrid.classList.add('exiting');
+            if (isMovingToMen) {
+                currentGrid.style.transform = `translateX(-${slideDistance})`;
+            } else {
+                currentGrid.style.transform = `translateX(${slideDistance})`;
+            }
+            currentGrid.style.opacity = '0';
+        }
+        
         newGrid.style.transform = 'translateX(0)';
+        newGrid.style.opacity = '1';
         
-        // Clean up after animation
-        const onTransitionEnd = () => {
+        // Clean up after transition
+        const onTransitionEnd = (e) => {
+            if(e.propertyName !== 'transform' && e.propertyName !== 'opacity') return;
             newGrid.removeEventListener('transitionend', onTransitionEnd);
             
-            // Remove old grid
-            if (currentGrid && currentGrid.parentNode) {
-                currentGrid.remove();
-            }
-            
-            // Reset new grid styles
-            newGrid.style.position = 'relative';
-            newGrid.style.transform = '';
-            newGrid.style.transition = '';
-            
-            // Trigger card stagger animation
-            this.animateCardsIn(newGrid);
-            
+            if (currentGrid && currentGrid.parentNode) currentGrid.remove();
+            newGrid.classList.remove('entering');
             this.isAnimating = false;
         };
         
         newGrid.addEventListener('transitionend', onTransitionEnd);
         
-        // Fallback in case transitionend doesn't fire
+        // Fallback cleanup in case transitionend fails
         setTimeout(() => {
             if (this.isAnimating) {
-                onTransitionEnd();
+                if (currentGrid && currentGrid.parentNode) currentGrid.remove();
+                newGrid.classList.remove('entering');
+                this.isAnimating = false;
             }
-        }, 600);
-    }
-
-    animateCardsIn(gridElement) {
-        const cards = gridElement.querySelectorAll('.showcase-category-card');
-        cards.forEach((card, index) => {
-            card.style.animation = 'none';
-            card.offsetHeight; // Force reflow
-            card.style.animation = `cardFadeIn 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) ${index * 0.06}s both`;
-        });
+        }, 650);
     }
 
     renderGrid(gender) {
@@ -314,21 +280,15 @@ class HomeCategoryShowcase {
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:60px 20px; color:#86868b; grid-column: 1 / -1; font-family: 'Inter', sans-serif;">No categories found</div>`;
             return;
         }
 
-        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index, true)).join('');
-        this.gridElement.innerHTML = `<div class="showcase-grid-inner" style="
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            width: 100%;
-            background: #ffffff;
-        ">${cardsHTML}</div>`;
+        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
+        this.gridElement.innerHTML = `<div class="showcase-grid-inner">${cardsHTML}</div>`;
     }
 
-    buildCardHTML(item, index, isInitial) {
+    buildCardHTML(item, index) {
         const cat = item.categories;
         if (!cat) return '';
         
@@ -336,61 +296,21 @@ class HomeCategoryShowcase {
         const catSlug = cat.slug || this.createSlug(catName);
         const imgSrc = cat.image_url || cat.image || '';
         
+        // Removed individual stagger animation to prevent layout jumping/flickering
         return `
-        <a href="/category/${catSlug}" 
-           class="showcase-category-card"
-           style="
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            background: #ffffff;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            ${isInitial ? `animation: cardFadeIn 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) ${index * 0.06}s both;` : 'opacity: 1;'}
-           ">
-            
-            <div class="card-image-wrapper" style="
-                position: relative;
-                width: 100%;
-                aspect-ratio: 3/4;
-                overflow: hidden;
-                background: #f5f5f7;
-            ">
+        <a href="/category/${catSlug}" class="showcase-category-card">
+            <div class="card-image-wrapper">
                 ${imgSrc ? `<img src="${imgSrc}" 
                      alt="${catName}" 
                      loading="${index < 4 ? 'eager' : 'lazy'}"
-                     onerror="this.style.opacity='0'"
-                     style="
-                        position: absolute;
-                        inset: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        transition: opacity 0.3s ease;
-                     ">` : ''}
+                     onerror="this.parentElement.classList.add('no-image')"
+                     class="card-image">` : '<div class="image-placeholder"></div>'}
+                <div class="card-image-overlay"></div>
             </div>
             
-            <div class="card-content" style="
-                padding: 16px 0 24px 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                background: #ffffff;
-            ">
-                
-                <h3 style="
-                    font-size: clamp(15px, 2vw, 18px);
-                    line-height: 1.2;
-                    margin: 0;
-                    color: #1d1d1f;
-                    font-family: 'Sora', sans-serif;
-                    font-weight: 500;
-                    letter-spacing: -0.01em;
-                ">${catName}</h3>
-                
+            <div class="card-content">
+                <h3 class="card-title">${catName}</h3>
+                <span class="card-explore">Explore</span>
             </div>
         </a>`;
     }
@@ -401,103 +321,264 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* Grid Container */
-            #categoryshow-dynamic-grid {
-                max-width: 100%;
-                margin: 0;
+            /* ===== GRID WRAPPER ===== */
+            .showcase-grid-wrapper {
+                overflow: hidden;
+                position: relative;
                 background: #ffffff;
                 padding: 0;
+                margin: 0;
             }
             
-            /* Individual Card Styling */
-            .showcase-category-card {
-                border: none;
-                transition: opacity 0.3s ease;
+            /* ===== MAIN GRID CONTAINER ===== */
+            #categoryshow-dynamic-grid {
+                position: relative;
+                min-height: 200px;
                 background: #ffffff;
+                display: grid; /* Added to stack children seamlessly */
             }
             
-            /* Card Text Styling with JABIYEN Fonts */
-            .showcase-category-card h3 {
-                background: transparent;
-                text-shadow: none;
-                font-family: 'Sora', sans-serif !important;
+            /* ===== INNER GRID ===== */
+            .showcase-grid-inner {
+                grid-area: 1 / 1 / 2 / 2; /* Both entering and exiting grids share the same space */
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2px;
+                width: 100%;
+                background: #f5f5f7;
+                transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease-out;
+                will-change: transform, opacity;
             }
             
-            /* Tab buttons */
+            .showcase-grid-inner.entering {
+                z-index: 2;
+            }
+            
+            .showcase-grid-inner.exiting {
+                z-index: 1;
+                pointer-events: none;
+            }
+            
+            /* ===== TAB BUTTONS ===== */
             .tab-btn {
                 background: none;
                 border: none;
-                font-size: 16px;
-                font-weight: 500;
+                font-size: 15px;
+                font-weight: 400;
                 color: #86868b;
                 cursor: pointer;
-                padding: 0 0 8px 0;
+                padding: 8px 4px;
                 position: relative;
-                font-family: 'Inter', sans-serif;
-                transition: color 0.3s ease, border-bottom 0.3s ease;
+                font-family: 'Inter', -apple-system, sans-serif;
+                letter-spacing: -0.01em;
+                transition: color 0.35s ease;
                 outline: none;
                 -webkit-tap-highlight-color: transparent;
+                user-select: none;
+            }
+            
+            .tab-btn::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 0;
+                height: 1.5px;
+                background: #1d1d1f;
+                transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
             
             .tab-btn.active {
                 color: #1d1d1f;
-                border-bottom: 2px solid #1d1d1f;
+                font-weight: 500;
             }
             
-            /* Header font consistency */
-            .showcase-header h2 {
-                font-family: 'Manrope', sans-serif !important;
+            .tab-btn.active::after {
+                width: 100%;
             }
             
-            .showcase-header p {
-                font-family: 'Inter', sans-serif !important;
+            .tab-btn:hover:not(.active) {
+                color: #6e6e73;
             }
             
-            /* Image wrapper */
+            /* ===== CATEGORY CARD ===== */
+            .showcase-category-card {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                text-decoration: none;
+                background: #ffffff;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                overflow: hidden;
+            }
+            
+            /* ===== IMAGE WRAPPER ===== */
             .card-image-wrapper {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 3/4;
+                overflow: hidden;
                 background: #f5f5f7;
             }
             
-            /* Card entrance animation */
-            @keyframes cardFadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(15px);
+            .card-image {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            
+            .card-image-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0);
+                transition: background 0.5s ease;
+                z-index: 1;
+            }
+            
+            .image-placeholder {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+            }
+            
+            .no-image .image-placeholder {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .no-image .image-placeholder::after {
+                content: '✕';
+                font-size: 24px;
+                color: #c7c7cc;
+                opacity: 0.5;
+            }
+            
+            /* ===== CARD CONTENT ===== */
+            .card-content {
+                padding: 20px 16px 28px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                background: #ffffff;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .card-title {
+                font-size: clamp(15px, 2vw, 17px);
+                line-height: 1.2;
+                margin: 0;
+                color: #1d1d1f;
+                font-family: 'Sora', -apple-system, sans-serif;
+                font-weight: 500;
+                letter-spacing: -0.01em;
+                transition: color 0.3s ease;
+            }
+            
+            .card-explore {
+                display: inline-block;
+                margin-top: 8px;
+                font-size: 11px;
+                font-family: 'Inter', -apple-system, sans-serif;
+                color: #86868b;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+                position: relative;
+                transition: color 0.3s ease;
+                opacity: 0;
+                transform: translateY(5px);
+                transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), color 0.3s ease;
+            }
+            
+            /* ===== HOVER EFFECTS ===== */
+            @media (hover: hover) {
+                .showcase-category-card:hover .card-image {
+                    transform: scale(1.03);
                 }
-                to {
+                
+                .showcase-category-card:hover .card-image-overlay {
+                    background: rgba(0,0,0,0.03);
+                }
+                
+                .showcase-category-card:hover .card-title {
+                    color: #000000;
+                }
+                
+                .showcase-category-card:hover .card-explore {
                     opacity: 1;
                     transform: translateY(0);
-                }
-            }
-
-            /* Responsive adjustments */
-            @media (max-width: 767px) {
-                .showcase-tabs {
-                    gap: 20px !important;
-                }
-                .tab-btn {
-                    font-size: 14px !important;
-                }
-                .card-content {
-                    padding: 12px 0 20px 0 !important;
-                }
-            }
-
-            /* Hover effect - Subtle opacity only (Prada style) */
-            @media (hover: hover) {
-                .showcase-category-card:hover {
-                    opacity: 0.9;
-                }
-                .showcase-category-card:hover .card-image-wrapper img {
-                    transform: scale(1.02);
-                    transition: transform 0.4s ease;
+                    color: #6e6e73;
                 }
             }
             
-            /* Active/Tap effect */
-            .showcase-category-card:active {
-                opacity: 0.8;
-                transition: opacity 0.1s ease;
+            /* ===== ACTIVE/TAP EFFECT ===== */
+            .showcase-category-card:active .card-image {
+                transform: scale(0.98);
+                transition: transform 0.2s ease;
+            }
+            
+            .showcase-category-card:active .card-image-overlay {
+                background: rgba(0,0,0,0.06);
+                transition: background 0.15s ease;
+            }
+            
+            /* ===== RESPONSIVE ===== */
+            @media (max-width: 767px) {
+                .showcase-tabs {
+                    gap: 30px !important;
+                    padding: 8px 0 20px !important;
+                }
+                
+                .tab-btn {
+                    font-size: 14px !important;
+                }
+                
+                .showcase-grid-inner {
+                    gap: 1px;
+                }
+                
+                .card-content {
+                    padding: 16px 12px 22px !important;
+                }
+                
+                .card-title {
+                    font-size: 14px !important;
+                }
+                
+                .card-explore {
+                    font-size: 10px !important;
+                    margin-top: 6px !important;
+                }
+            }
+            
+            @media (max-width: 380px) {
+                .showcase-grid-inner {
+                    gap: 1px;
+                }
+                
+                .card-content {
+                    padding: 12px 8px 18px !important;
+                }
+                
+                .card-title {
+                    font-size: 13px !important;
+                }
+            }
+            
+            /* ===== HEADER ===== */
+            .showcase-header h2 {
+                font-family: 'Manrope', -apple-system, sans-serif !important;
+            }
+            
+            .showcase-header p {
+                font-family: 'Inter', -apple-system, sans-serif !important;
             }
         </style>`;
 
@@ -527,7 +608,7 @@ class HomeCategoryShowcase {
 // Initialize Function
 // ============================================================
 function initCategoryShowcase() {
-    console.log('[CategoryShowcase] Initializing with smooth slide animations...');
+    console.log('[CategoryShowcase] Initializing world-class animations...');
     
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
