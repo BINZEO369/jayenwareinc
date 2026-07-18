@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // FIXED: stock → is_out_of_stock, image loading, lazy load
-// UPDATED: Taller images, 1px gap, full edge-to-edge on mobile
+// UPDATED: Title only (no price/category), larger font, 2px gap
 // ============================================================
 
 (function() {
@@ -108,12 +108,6 @@
         const card = document.createElement('div');
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
-        
-        const price = product.price != null ? parseFloat(product.price) : 0;
-        const oldPrice = product.old_price != null ? parseFloat(product.old_price) : null;
-        const priceFormatted = price.toLocaleString('en-BD');
-        const oldPriceFormatted = oldPrice ? oldPrice.toLocaleString('en-BD') : null;
-        const category = product.category || product.categories?.name || 'New';
 
         card.innerHTML = `
             <a href="/product/${slug}" class="new-arrival-card-link" onclick="event.preventDefault();if(window.navigate)window.navigate('product-details',{id:${product.id},slug:'${slug}'})">
@@ -130,12 +124,7 @@
                     ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
                 </div>
                 <div class="new-arrival-card-body">
-                    <span class="new-arrival-card-category">${category}</span>
                     <h3 class="new-arrival-card-title">${product.title || 'Untitled'}</h3>
-                    <div class="new-arrival-card-price-row">
-                        <span class="new-arrival-card-price">৳${priceFormatted}</span>
-                        ${oldPrice && oldPrice > price ? `<span class="new-arrival-card-old-price">৳${oldPriceFormatted}</span>` : ''}
-                    </div>
                 </div>
             </a>
         `;
@@ -164,9 +153,8 @@
                 <div class="skeleton-pulse" style="width:100%;aspect-ratio:${CONFIG.cardAspectRatio};"></div>
             </div>
             <div class="new-arrival-card-body">
-                <div class="skeleton-pulse skeleton-text-sm" style="width:40%;"></div>
-                <div class="skeleton-pulse skeleton-text" style="width:80%;"></div>
-                <div class="skeleton-pulse skeleton-text" style="width:30%;"></div>
+                <div class="skeleton-pulse skeleton-text" style="width:85%;"></div>
+                <div class="skeleton-pulse skeleton-text" style="width:55%;"></div>
             </div>
         `;
         return card;
@@ -367,7 +355,6 @@
             <style id="${styleId}">
                 /* ==================== NEW ARRIVAL SECTION - EDGE TO EDGE ==================== */
                 
-                /* Container: full width, no padding on mobile */
                 .new-arrivals-grid-section {
                     padding: 32px 0;
                     max-width: 100%;
@@ -375,7 +362,6 @@
                     background: #ffffff;
                 }
 
-                /* Mobile: no horizontal padding at all */
                 @media (max-width: 767px) {
                     .new-arrivals-grid-section {
                         padding: 20px 0;
@@ -395,7 +381,6 @@
                     }
                 }
 
-                /* Header: add horizontal padding on mobile */
                 .new-arrival-header {
                     display: flex;
                     align-items: center;
@@ -455,25 +440,25 @@
                     transform: translateX(2px);
                 }
 
-                /* Grid: 1px gap everywhere, edge-to-edge on mobile */
+                /* Grid: 2px gap */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
-                    gap: 1px;
+                    gap: 2px;
                     width: 100%;
                 }
 
                 @media (min-width: 768px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 1px;
+                        gap: 2px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(4, 1fr);
-                        gap: 1px;
+                        gap: 2px;
                     }
                 }
 
@@ -595,85 +580,38 @@
                     }
                 }
 
-                /* Card Body */
+                /* Card Body - Title Only */
                 .new-arrival-card-body {
-                    padding: 0 4px;
+                    padding: 4px 6px 6px;
                     display: flex;
                     flex-direction: column;
-                    gap: 1px;
                 }
 
                 @media (min-width: 768px) {
                     .new-arrival-card-body {
-                        padding: 0 6px;
-                        gap: 2px;
+                        padding: 6px 8px 8px;
                     }
                 }
 
-                .new-arrival-card-category {
-                    font-size: 8px;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    color: #86868b;
-                    letter-spacing: 0.6px;
-                    font-family: var(--font-accent, 'Sora', sans-serif);
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-card-category {
-                        font-size: 10px;
-                    }
-                }
-
+                /* Title - Larger font (+2 from 11px mobile, 13px desktop) */
                 .new-arrival-card-title {
-                    font-size: 11px;
+                    font-size: 13px;
                     font-weight: 500;
                     color: #1d1d1f;
-                    line-height: 1.3;
+                    line-height: 1.35;
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                     font-family: var(--font-body, 'Inter', sans-serif);
                     margin: 0;
+                    text-align: center;
                 }
 
                 @media (min-width: 768px) {
                     .new-arrival-card-title {
-                        font-size: 13px;
-                    }
-                }
-
-                .new-arrival-card-price-row {
-                    display: flex;
-                    align-items: center;
-                    gap: 4px;
-                    margin-top: 1px;
-                }
-
-                .new-arrival-card-price {
-                    font-size: 11px;
-                    font-weight: 700;
-                    color: #1d1d1f;
-                    font-family: var(--font-body, 'Inter', sans-serif);
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-card-price {
-                        font-size: 13px;
-                    }
-                }
-
-                .new-arrival-card-old-price {
-                    font-size: 10px;
-                    color: #b0b0b5;
-                    text-decoration: line-through;
-                    font-weight: 400;
-                }
-
-                @media (min-width: 768px) {
-                    .new-arrival-card-old-price {
-                        font-size: 11px;
+                        font-size: 15px;
+                        line-height: 1.4;
                     }
                 }
 
@@ -749,13 +687,8 @@
                 }
 
                 .skeleton-text {
-                    height: 11px;
-                    margin-bottom: 4px;
-                }
-
-                .skeleton-text-sm {
-                    height: 7px;
-                    margin-bottom: 3px;
+                    height: 13px;
+                    margin-bottom: 5px;
                 }
 
                 @keyframes skeletonShimmer {
