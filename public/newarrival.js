@@ -69,51 +69,6 @@
 
     var productColorsCache = {};
 
-    var globalMouseMoveHandler = null;
-    var globalMouseUpHandler = null;
-    var activeDragData = null;
-
-    function ensureGlobalMouseHandlers() {
-        if (globalMouseMoveHandler && globalMouseUpHandler) return;
-
-        globalMouseMoveHandler = function(e) {
-            if (!activeDragData) return;
-            var d = activeDragData;
-            if (d.transitioning) return;
-            d.mcX = e.clientX;
-            var diff = d.mcX - d.msX;
-            var imgs = d.card.querySelectorAll('.new-arrival-slider-image');
-            var cur = imgs[d.idx];
-            if (cur) cur.style.left = diff + 'px';
-            if (diff < -30 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
-                imgs[d.idx + 1].style.left = (100 + (diff / d.card.offsetWidth * 100)) + '%';
-            } else if (diff > 30 && d.idx > 0 && imgs[d.idx - 1]) {
-                imgs[d.idx - 1].style.left = (-100 + (diff / d.card.offsetWidth * 100)) + '%';
-            }
-        };
-
-        globalMouseUpHandler = function() {
-            if (!activeDragData) return;
-            var d = activeDragData;
-            activeDragData = null;
-            d.md = false;
-            var diff = d.msX - d.mcX;
-            var th = d.card.offsetWidth * 0.2;
-            var imgs = d.card.querySelectorAll('.new-arrival-slider-image');
-            imgs.forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && d.idx < d.total - 1) d.slideTo(d.idx + 1);
-                else if (diff < 0 && d.idx > 0) d.slideTo(d.idx - 1);
-                else d.reset();
-            } else {
-                d.reset();
-            }
-        };
-
-        window.addEventListener('mousemove', globalMouseMoveHandler);
-        window.addEventListener('mouseup', globalMouseUpHandler);
-    }
-
     function getImageUrl(product) {
         if (product.img && product.img.trim() !== '') return product.img;
         if (product.image && product.image.trim() !== '') return product.image;
@@ -266,14 +221,9 @@
     }
 
     function setupSlider(card, slider, dotsContainer, images) {
-        ensureGlobalMouseHandlers();
-
         slider.innerHTML = '';
         dotsContainer.innerHTML = '';
         dotsContainer.style.display = 'flex';
-
-        var transitioning = false;
-        var tsX = 0, tcX = 0, dragging = false;
 
         var dragData = {
             card: card,
@@ -282,12 +232,10 @@
             transitioning: false,
             slideTo: null,
             reset: null,
-            md: false,
-            msX: 0,
-            mcX: 0,
-            tsX: 0,
-            tcX: 0,
-            dragging: false
+            startX: 0,
+            currentX: 0,
+            isDragging: false,
+            hasMoved: false
         };
 
         function slideTo(to) {
@@ -354,33 +302,37 @@
         card.addEventListener('touchstart', function(e) {
             var d = card._sliderDragData;
             if (!d || d.transitioning) return;
-            d.tsX = e.touches[0].clientX;
-            d.tcX = d.tsX;
-            d.dragging = true;
+            d.startX = e.touches[0].clientX;
+            d.currentX = d.startX;
+            d.isDragging = true;
+            d.hasMoved = false;
             card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'none'; });
         }, { passive: true });
 
         card.addEventListener('touchmove', function(e) {
             var d = card._sliderDragData;
-            if (!d || !d.dragging || d.transitioning) return;
-            d.tcX = e.touches[0].clientX;
-            var diff = d.tcX - d.tsX;
+            if (!d || !d.isDragging || d.transitioning) return;
+            d.currentX = e.touches[0].clientX;
+            var diff = d.currentX - d.startX;
+            if (Math.abs(diff) > 10) d.hasMoved = true;
+            if (!d.hasMoved) return;
             var imgs = card.querySelectorAll('.new-arrival-slider-image');
             var cur = imgs[d.idx];
             if (cur) cur.style.left = diff + 'px';
-            if (diff < -30 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
+            if (diff < -20 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
                 imgs[d.idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            } else if (diff > 30 && d.idx > 0 && imgs[d.idx - 1]) {
+            } else if (diff > 20 && d.idx > 0 && imgs[d.idx - 1]) {
                 imgs[d.idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
             }
         }, { passive: true });
 
         card.addEventListener('touchend', function() {
             var d = card._sliderDragData;
-            if (!d || !d.dragging) return;
-            d.dragging = false;
-            var diff = d.tsX - d.tcX;
-            var th = card.offsetWidth * 0.2;
+            if (!d || !d.isDragging) return;
+            d.isDragging = false;
+            if (!d.hasMoved) return;
+            var diff = d.startX - d.currentX;
+            var th = card.offsetWidth * 0.25;
             card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
             if (Math.abs(diff) > th) {
                 if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
@@ -394,15 +346,62 @@
         card.addEventListener('mousedown', function(e) {
             var d = card._sliderDragData;
             if (!d || d.transitioning) return;
-            if (activeDragData && activeDragData !== d) {
-                activeDragData.md = false;
-                activeDragData = null;
-            }
-            d.md = true;
-            d.msX = e.clientX;
-            d.mcX = d.msX;
-            activeDragData = d;
+            d.startX = e.clientX;
+            d.currentX = d.startX;
+            d.isDragging = true;
+            d.hasMoved = false;
             card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'none'; });
+        });
+
+        card.addEventListener('mousemove', function(e) {
+            var d = card._sliderDragData;
+            if (!d || !d.isDragging || d.transitioning) return;
+            d.currentX = e.clientX;
+            var diff = d.currentX - d.startX;
+            if (Math.abs(diff) > 10) d.hasMoved = true;
+            if (!d.hasMoved) return;
+            var imgs = card.querySelectorAll('.new-arrival-slider-image');
+            var cur = imgs[d.idx];
+            if (cur) cur.style.left = diff + 'px';
+            if (diff < -20 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
+                imgs[d.idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
+            } else if (diff > 20 && d.idx > 0 && imgs[d.idx - 1]) {
+                imgs[d.idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
+            }
+        });
+
+        card.addEventListener('mouseup', function() {
+            var d = card._sliderDragData;
+            if (!d || !d.isDragging) return;
+            d.isDragging = false;
+            if (!d.hasMoved) return;
+            var diff = d.startX - d.currentX;
+            var th = card.offsetWidth * 0.25;
+            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
+            if (Math.abs(diff) > th) {
+                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
+                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
+                else reset();
+            } else {
+                reset();
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            var d = card._sliderDragData;
+            if (!d || !d.isDragging) return;
+            d.isDragging = false;
+            if (!d.hasMoved) return;
+            var diff = d.startX - d.currentX;
+            var th = card.offsetWidth * 0.25;
+            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
+            if (Math.abs(diff) > th) {
+                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
+                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
+                else reset();
+            } else {
+                reset();
+            }
         });
     }
 
@@ -550,8 +549,6 @@
         if (!container) return;
         if (skeleton) skeleton.style.display = 'block';
 
-        activeDragData = null;
-
         try {
             var arrivals;
             if (Array.isArray(products) && products.length > 0) {
@@ -654,7 +651,6 @@
     function init() {
         applyFontsVariables();
         injectStyles();
-        ensureGlobalMouseHandlers();
         window.addEventListener('jayenware:dataLoaded', function(e) {
             var detail = e.detail || {};
             if (detail.products && Array.isArray(detail.products)) {
