@@ -125,24 +125,25 @@ class HomeCategoryShowcase {
         return `
         <div class="showcase-header" style="
             text-align: center;
-            padding: 40px 20px 20px;
+            padding: 30px 20px 15px;
             max-width: 800px;
             margin: 0 auto;
         ">
             ${header.title ? `<h2 style="
-                font-size: clamp(20px, 3vw, 28px);
+                font-size: clamp(14px, 2vw, 16px);
                 font-weight: 500;
                 color: #1d1d1f;
-                margin: 0 0 8px 0;
+                margin: 0 0 4px 0;
                 font-family: var(--font-heading, sans-serif);
-                letter-spacing: -0.02em;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
             ">${header.title}</h2>` : ''}
             
             ${header.subtitle ? `<p style="
-                font-size: clamp(13px, 1.8vw, 15px);
+                font-size: clamp(11px, 1.2vw, 12px);
                 color: #86868b;
                 margin: 0;
-                line-height: 1.5;
+                line-height: 1.4;
                 font-family: var(--font-body, sans-serif);
             ">${header.subtitle}</p>` : ''}
         </div>`;
@@ -154,18 +155,18 @@ class HomeCategoryShowcase {
             display: flex;
             justify-content: center;
             gap: 30px;
-            padding: 20px 0 30px;
+            padding: 15px 0 25px;
             border-bottom: 1px solid #e5e5e5;
             margin: 0 20px 0;
         ">
             <button class="tab-btn" data-gender="women" style="
                 background: none;
                 border: none;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 500;
                 color: #86868b;
                 cursor: pointer;
-                padding: 0 0 8px 0;
+                padding: 0 0 6px 0;
                 position: relative;
                 font-family: var(--font-body, sans-serif);
                 transition: color 0.3s ease;
@@ -173,11 +174,11 @@ class HomeCategoryShowcase {
             <button class="tab-btn" data-gender="men" style="
                 background: none;
                 border: none;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 500;
                 color: #86868b;
                 cursor: pointer;
-                padding: 0 0 8px 0;
+                padding: 0 0 6px 0;
                 position: relative;
                 font-family: var(--font-body, sans-serif);
                 transition: color 0.3s ease;
@@ -278,7 +279,7 @@ class HomeCategoryShowcase {
             </div>
             
             <div class="card-content" style="
-                padding: 16px 0 24px 0;
+                padding: 12px 0 24px 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -288,13 +289,13 @@ class HomeCategoryShowcase {
             ">
                 
                 <h3 style="
-                    font-size: clamp(15px, 2vw, 18px);
+                    font-size: clamp(13px, 1.5vw, 15px);
                     line-height: 1.2;
                     margin: 0;
                     color: #1d1d1f;
                     font-family: var(--font-heading, sans-serif);
                     font-weight: 500;
-                    letter-spacing: -0.01em;
+                    letter-spacing: 0.02em;
                 ">${catName}</h3>
                 
             </div>
@@ -307,15 +308,16 @@ class HomeCategoryShowcase {
 
         const styles = `
         <style id="showcase-grid-styles">
-            /* Grid Layout - 2 columns with ultra thin gaps */
+            /* Grid Layout - 2 columns with clear side gaps */
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2px; /* Thin gap on sides and between cards */
+                column-gap: 8px; /* Slightly larger, clear gap between images */
+                row-gap: 20px; /* Space between rows */
                 max-width: 100%;
                 margin: 0;
-                background: #f5f5f7; /* This color shows through the thin 2px gap */
-                padding: 0;
+                background: #ffffff; /* Ensures the titles show on a pure white page */
+                padding: 0 10px; /* Optional: outer padding */
             }
             
             .showcase-category-card {
@@ -336,13 +338,15 @@ class HomeCategoryShowcase {
                     gap: 20px !important;
                 }
                 .tab-btn {
-                    font-size: 14px !important;
+                    font-size: 13px !important;
                 }
                 #categoryshow-dynamic-grid {
-                    gap: 1px; /* Even thinner gap on mobile */
+                    column-gap: 6px; /* Optimized gap for mobile */
+                    row-gap: 15px;
+                    padding: 0 5px;
                 }
                 .card-content {
-                    padding: 12px 0 20px 0 !important;
+                    padding: 10px 0 16px 0 !important;
                 }
             }
 
