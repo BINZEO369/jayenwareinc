@@ -1,7 +1,7 @@
 // ============================================================
 // hero-video.js - JAYENWARE Hero Video Section Component
 // Apple-Style Hero Video Section with Auto-Play Videos
-// Version: 1.0.3 - Enhanced Full-Screen Heights
+// Version: 1.0.3 - Fixed Full-Screen Heights
 // ============================================================
 
 (function() {
@@ -72,7 +72,6 @@
         }
     }
 
-    // Apply font variables immediately if DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', applyFontVariables);
     } else {
@@ -82,7 +81,6 @@
     // ==================== CSS STYLES ====================
     const HERO_VIDEO_CSS = `
         <style id="hero-video-styles">
-            /* ==================== APPLE-STYLE HERO VIDEO SECTION ==================== */
             .hero-video-section {
                 position: relative;
                 width: 100%;
@@ -100,83 +98,48 @@
                 display: none;
             }
             
+            /* 
+               FIXED HEIGHTS FOR THREE DEVICE CATEGORIES:
+               - Desktop (1025px+): 900px → covers most laptop/desktop screens without scrolling
+               - Tablet (769px–1024px): 700px
+               - Mobile (up to 768px): 850px → iPhone 15/16/17 Pro full screen (approx 852px)
+               - Small Mobile (up to 480px): 750px → compact iPhones & Androids
+            */
+            
             .hero-video-wrapper {
                 position: relative;
                 width: 100%;
-                height: 100vh;
-                height: 100dvh;
+                height: 850px; /* Default: Mobile full screen */
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
             }
             
-            /* Desktop/Laptop: 1920x1080 standard screens - Full viewport height */
-            @media (min-width: 1441px) {
+            /* Desktop: Large full-screen block */
+            @media (min-width: 1025px) {
                 .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 900px;
-                    max-height: 1080px;
+                    height: 900px;
                 }
             }
             
-            /* Standard Desktop: 1366x768 to 1440x900 */
-            @media (min-width: 1025px) and (max-width: 1440px) {
-                .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 768px;
-                    max-height: 900px;
-                }
-            }
-            
-            /* Small Desktop/Large Tablet */
+            /* Tablet */
             @media (min-width: 769px) and (max-width: 1024px) {
                 .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 700px;
-                    max-height: 850px;
+                    height: 700px;
                 }
             }
             
-            /* Tablet Landscape */
-            @media (min-width: 641px) and (max-width: 768px) {
+            /* Mobile (iPhone 15/16/17 Pro scale) */
+            @media (max-width: 768px) {
                 .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 650px;
-                    max-height: 800px;
+                    height: 850px;
                 }
             }
             
-            /* Large Mobile: iPhone 17 Pro Max, Samsung S24 Ultra */
-            @media (min-width: 431px) and (max-width: 640px) {
+            /* Small Mobile */
+            @media (max-width: 480px) {
                 .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 850px;
-                    max-height: 950px;
-                }
-            }
-            
-            /* Medium Mobile: iPhone 17, iPhone 16, Google Pixel 9 */
-            @media (min-width: 391px) and (max-width: 430px) {
-                .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 844px;
-                    max-height: 932px;
-                }
-            }
-            
-            /* Small Mobile: iPhone SE, older devices */
-            @media (max-width: 390px) {
-                .hero-video-wrapper {
-                    height: 100vh;
-                    height: 100dvh;
-                    min-height: 667px;
-                    max-height: 844px;
+                    height: 750px;
                 }
             }
             
@@ -230,7 +193,6 @@
                 }
             }
             
-            /* Video Text Animations - Enhanced Staggered Reveal */
             .hero-video-label {
                 display: inline-block;
                 font-family: var(--font-body);
@@ -295,7 +257,7 @@
             }
             @media (max-width: 480px) {
                 .hero-video-title {
-                    font-size: 28px;
+                    font-size: 26px;
                     margin: 0 0 10px 0;
                 }
             }
@@ -390,7 +352,6 @@
                 border-bottom-color: rgba(255, 255, 255, 0.4);
             }
 
-            /* Enhanced Text Transition Classes */
             .video-text-exit {
                 opacity: 0 !important;
                 transform: translateY(-20px) !important;
@@ -405,7 +366,6 @@
                             filter 0.7s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
 
-            /* Control Buttons Container */
             .hero-video-controls {
                 position: absolute;
                 bottom: 24px;
@@ -423,7 +383,6 @@
                 }
             }
 
-            /* Elegant Control Buttons (Sound & Play/Pause) */
             .hero-video-ctrl-btn {
                 width: 34px;
                 height: 34px;
@@ -483,7 +442,6 @@
                 justify-content: center;
             }
 
-            /* Video Navigation Dots */
             .hero-video-nav {
                 position: absolute;
                 bottom: 28px;
@@ -533,7 +491,6 @@
                 }
             }
 
-            /* Video Progress Bar */
             .hero-video-progress {
                 position: absolute;
                 bottom: 0;
@@ -545,7 +502,6 @@
                 pointer-events: none;
             }
 
-            /* Video Loading State */
             .hero-video-loading {
                 position: absolute;
                 inset: 0;
@@ -572,7 +528,6 @@
                 to { transform: rotate(360deg); }
             }
 
-            /* Fallback Poster Image */
             .hero-video-poster {
                 position: absolute;
                 inset: 0;
@@ -639,7 +594,6 @@
     // ==================== COMPONENT LOGIC ====================
     class HeroVideoComponent {
         constructor() {
-            // State
             this.currentIndex = 0;
             this.videos = [];
             this.isTransitioning = false;
@@ -647,12 +601,10 @@
             this.isPaused = false;
             this.videoDuration = 8000;
             
-            // Timers
             this.progressInterval = null;
             this.autoplayInterval = null;
             this.loadingTimeout = null;
             
-            // DOM Elements
             this.section = null;
             this.player = null;
             this.poster = null;
@@ -660,7 +612,6 @@
             this.progressBar = null;
             this.navContainer = null;
             
-            // State flags
             this.isInitialized = false;
             this.isVideoLoaded = false;
         }
@@ -689,11 +640,7 @@
             this.startAutoplay();
 
             this.isInitialized = true;
-            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos - Enhanced Full-Screen Mode');
-            console.log('[HeroVideo] Fonts configured:', {
-                heading: JABIYEN_FONTS.families.heading,
-                body: JABIYEN_FONTS.families.body
-            });
+            console.log('[HeroVideo] Initialized with', this.videos.length, 'videos – Full-Screen Fixed Heights');
         }
 
         cacheElements() {
@@ -896,21 +843,16 @@
 
         toggleSound() {
             if (!this.player) return;
-            
             this.isMuted = !this.isMuted;
             this.player.muted = this.isMuted;
             this.updateSoundButtonUI();
-            
-            console.log('[HeroVideo] Sound', this.isMuted ? 'muted' : 'unmuted');
         }
 
         updateSoundButtonUI() {
             const mutedIcon = document.getElementById('sound-icon-muted');
             const unmutedIcon = document.getElementById('sound-icon-unmuted');
             const btn = document.getElementById('hero-video-sound-btn');
-            
             if (!mutedIcon || !unmutedIcon || !btn) return;
-            
             if (this.isMuted) {
                 mutedIcon.style.display = 'flex';
                 unmutedIcon.style.display = 'none';
@@ -924,9 +866,7 @@
 
         togglePlay() {
             if (!this.player || !this.isVideoLoaded) return;
-            
             if (this.isPaused) {
-                // Resume playback
                 const playPromise = this.player.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
@@ -934,17 +874,14 @@
                         this.updatePlayButtonUI();
                         this.startProgressTracking();
                         this.startAutoplay();
-                        console.log('[HeroVideo] Video resumed');
                     }).catch(() => {});
                 }
             } else {
-                // Pause playback
                 this.player.pause();
                 this.isPaused = true;
                 this.updatePlayButtonUI();
                 this.clearAutoplayInterval();
                 this.clearProgressInterval();
-                console.log('[HeroVideo] Video paused');
             }
         }
 
@@ -952,9 +889,7 @@
             const playIcon = document.getElementById('play-icon');
             const pauseIcon = document.getElementById('pause-icon');
             const btn = document.getElementById('hero-video-play-btn');
-            
             if (!playIcon || !pauseIcon || !btn) return;
-            
             if (this.isPaused) {
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'flex';
@@ -968,29 +903,19 @@
 
         startProgressTracking() {
             this.clearProgressInterval();
-            
             if (!this.progressBar || this.isPaused) return;
-
             const duration = this.videoDuration;
             const interval = 50;
             const totalSteps = duration / interval;
             let currentStep = 0;
-
             this.progressBar.style.transition = `width ${interval}ms linear`;
             this.progressBar.style.width = '0%';
-
             this.progressInterval = setInterval(() => {
-                if (this.isTransitioning || this.isPaused) {
-                    return;
-                }
-                
+                if (this.isTransitioning || this.isPaused) return;
                 currentStep++;
                 const percentage = (currentStep / totalSteps) * 100;
                 this.progressBar.style.width = `${Math.min(percentage, 100)}%`;
-                
-                if (currentStep >= totalSteps) {
-                    this.clearProgressInterval();
-                }
+                if (currentStep >= totalSteps) this.clearProgressInterval();
             }, interval);
         }
 
@@ -1004,9 +929,7 @@
 
         startAutoplay() {
             this.clearAutoplayInterval();
-            
             if (this.videos.length <= 1 || this.isPaused) return;
-            
             this.autoplayInterval = setInterval(() => {
                 if (!this.isTransitioning && this.isVideoLoaded && !this.isPaused) {
                     const nextIndex = (this.currentIndex + 1) % this.videos.length;
@@ -1016,35 +939,21 @@
         }
 
         switchToVideo(index) {
-            if (this.isTransitioning) return;
-            if (index < 0 || index >= this.videos.length) return;
-            if (index === this.currentIndex) return;
-
+            if (this.isTransitioning || index === this.currentIndex) return;
             if (this.progressBar) {
                 this.progressBar.style.transition = 'width 0.3s ease';
                 this.progressBar.style.width = '100%';
             }
-
             this.clearAutoplayInterval();
             this.clearProgressInterval();
-
             setTimeout(() => {
                 this.loadVideo(index);
-                if (!this.isPaused) {
-                    this.startAutoplay();
-                }
+                if (!this.isPaused) this.startAutoplay();
             }, 300);
         }
 
-        nextVideo() {
-            const nextIndex = (this.currentIndex + 1) % this.videos.length;
-            this.switchToVideo(nextIndex);
-        }
-
-        prevVideo() {
-            const prevIndex = (this.currentIndex - 1 + this.videos.length) % this.videos.length;
-            this.switchToVideo(prevIndex);
-        }
+        nextVideo() { this.switchToVideo((this.currentIndex + 1) % this.videos.length); }
+        prevVideo() { this.switchToVideo((this.currentIndex - 1 + this.videos.length) % this.videos.length); }
 
         updateDots() {
             document.querySelectorAll('.hero-video-dot').forEach((dot, i) => {
@@ -1052,30 +961,14 @@
             });
         }
 
-        showLoading() {
-            if (this.loadingOverlay) {
-                this.loadingOverlay.classList.remove('hidden');
-            }
-        }
-
-        hideLoading() {
-            if (this.loadingOverlay) {
-                this.loadingOverlay.classList.add('hidden');
-            }
-        }
+        showLoading() { if (this.loadingOverlay) this.loadingOverlay.classList.remove('hidden'); }
+        hideLoading() { if (this.loadingOverlay) this.loadingOverlay.classList.add('hidden'); }
 
         clearProgressInterval() {
-            if (this.progressInterval) {
-                clearInterval(this.progressInterval);
-                this.progressInterval = null;
-            }
+            if (this.progressInterval) { clearInterval(this.progressInterval); this.progressInterval = null; }
         }
-
         clearAutoplayInterval() {
-            if (this.autoplayInterval) {
-                clearInterval(this.autoplayInterval);
-                this.autoplayInterval = null;
-            }
+            if (this.autoplayInterval) { clearInterval(this.autoplayInterval); this.autoplayInterval = null; }
         }
 
         pause() {
@@ -1114,19 +1007,13 @@
         cleanup() {
             this.clearProgressInterval();
             this.clearAutoplayInterval();
-            
             if (this.player) {
                 this.player.pause();
                 this.player.src = '';
                 this.player.oncanplay = null;
                 this.player.onerror = null;
             }
-            
-            if (this.loadingTimeout) {
-                clearTimeout(this.loadingTimeout);
-                this.loadingTimeout = null;
-            }
-
+            if (this.loadingTimeout) { clearTimeout(this.loadingTimeout); this.loadingTimeout = null; }
             this.isVideoLoaded = false;
             this.isPaused = false;
         }
@@ -1136,13 +1023,11 @@
             this.hide();
             this.videos = [];
             this.isInitialized = false;
-            console.log('[HeroVideo] Destroyed');
         }
     }
 
     // ==================== GLOBAL API ====================
     const heroVideo = new HeroVideoComponent();
-
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroVideo = heroVideo;
     window.JABIYEN_FONTS = JABIYEN_FONTS;
@@ -1153,34 +1038,25 @@
     }
 
     function injectHTML() {
-        if (document.getElementById('hero-video-section')) {
-            return;
-        }
-
+        if (document.getElementById('hero-video-section')) return;
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = getHeroVideoHTML();
         const videoSection = tempDiv.firstElementChild;
-
         const homeSection = document.getElementById('home');
-        
         if (homeSection) {
             homeSection.insertBefore(videoSection, homeSection.firstChild);
-            console.log('[HeroVideo] ✅ Inserted as first child of #home');
         } else {
             const mainElement = document.querySelector('main');
             if (mainElement) {
                 mainElement.insertBefore(videoSection, mainElement.firstChild);
-                console.log('[HeroVideo] ⚠️ Inserted in <main> (fallback)');
             } else {
                 document.body.insertBefore(videoSection, document.body.firstChild);
-                console.log('[HeroVideo] ⚠️ Inserted in <body> (ultimate fallback)');
             }
         }
     }
 
     function tryAutoInit() {
         injectHTML();
-
         if (window.currentData && window.currentData.heroVideos && window.currentData.heroVideos.length > 0) {
             heroVideo.init(window.currentData.heroVideos);
         } else {
@@ -1196,7 +1072,6 @@
             if (data && data.length > 0) {
                 heroVideo.init(data);
             } else {
-                console.warn('[HeroVideo] No video data returned from API. Hiding section.');
                 heroVideo.hide();
             }
         } catch (error) {
@@ -1206,25 +1081,8 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(tryAutoInit, 150);
-        });
+        document.addEventListener('DOMContentLoaded', () => setTimeout(tryAutoInit, 150));
     } else {
         setTimeout(tryAutoInit, 150);
     }
-
-    console.log('[HeroVideo] Component loaded and ready - Enhanced Full-Screen Mode with JABIYEN Fonts');
-    console.log('[HeroVideo] Height Configuration:');
-    console.log('  🖥️  Desktop 1440p+: 100vh (min: 900px, max: 1080px)');
-    console.log('  💻 Desktop Standard: 100vh (min: 768px, max: 900px)');
-    console.log('  📱 Large Tablet: 100vh (min: 700px, max: 850px)');
-    console.log('  📲 Tablet: 100vh (min: 650px, max: 800px)');
-    console.log('  📱 Large Phone: 100vh (min: 850px, max: 950px)');
-    console.log('  📱 iPhone 17/16: 100vh (min: 844px, max: 932px)');
-    console.log('  📱 Small Phone: 100vh (min: 667px, max: 844px)');
-    console.log('[HeroVideo] Font Configuration:', {
-        heading: JABIYEN_FONTS.families.heading,
-        subtitle: JABIYEN_FONTS.families.subtitle,
-        body: JABIYEN_FONTS.families.body
-    });
 })();
