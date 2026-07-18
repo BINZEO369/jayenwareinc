@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE HOME CATEGORY SHOWCASE COMPONENT (PRADA STYLE)
 // Integrated with /api/home-showcase/complete API
-// JABIYEN FONTS INTEGRATED
+// JABIYEN FONTS INTEGRATED - WITH SLIDE ANIMATIONS
 // ============================================================
 
 class HomeCategoryShowcase {
@@ -26,7 +26,8 @@ class HomeCategoryShowcase {
         
         this.isLoaded = false;
         this.gridElement = null;
-        this.currentGender = 'women'; // Default to Women tab
+        this.currentGender = 'women';
+        this.isAnimating = false;
         this.init();
     }
 
@@ -84,7 +85,6 @@ class HomeCategoryShowcase {
 
         if (!container) return;
 
-        // Show container, hide skeleton
         container.style.display = 'block';
         if (skeleton) {
             skeleton.classList.add('skeleton-hidden');
@@ -93,26 +93,22 @@ class HomeCategoryShowcase {
 
         container.innerHTML = '';
         
-        // 1. Build Header
         if (this.data.header) {
             const headerHTML = this.buildHeaderHTML();
             container.insertAdjacentHTML('beforeend', headerHTML);
         }
 
-        // 2. Build Tabs (Men / Women)
         const tabsHTML = this.buildTabsHTML();
         container.insertAdjacentHTML('beforeend', tabsHTML);
 
-        // 3. Create Grid
         this.gridElement = document.createElement('div');
         this.gridElement.className = this.config.gridClass;
         this.gridElement.id = 'categoryshow-dynamic-grid';
+        this.gridElement.style.position = 'relative';
+        this.gridElement.style.overflow = 'hidden';
         container.appendChild(this.gridElement);
 
-        // 4. Render initial grid (Women by default)
-        this.renderGrid('women');
-
-        // 5. Inject Styles
+        this.renderGrid(this.currentGender, false);
         this.injectStyles();
 
         this.isLoaded = true;
@@ -190,15 +186,16 @@ class HomeCategoryShowcase {
         const tabs = document.querySelectorAll('.tab-btn');
         const self = this;
 
-        // Set initial active state (Women)
         const initialTab = document.querySelector('.tab-btn[data-gender="women"]');
         if (initialTab) self.setActiveTab(initialTab);
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 const gender = this.getAttribute('data-gender');
+                if (self.isAnimating || self.currentGender === gender) return;
+                
                 self.currentGender = gender;
-                self.renderGrid(gender);
+                self.renderGridWithAnimation(gender);
                 self.setActiveTab(this);
             });
         });
@@ -215,8 +212,86 @@ class HomeCategoryShowcase {
         activeTab.style.borderBottom = '2px solid #1d1d1f';
     }
 
-    renderGrid(gender) {
+    renderGridWithAnimation(gender) {
+        if (!this.gridElement || this.isAnimating) return;
+        
+        this.isAnimating = true;
+        
+        const isMovingToMen = gender === 'men';
+        
+        let categories = [];
+        if (gender === 'men') {
+            categories = this.data.menCategories || [];
+        } else {
+            categories = this.data.womenCategories || [];
+        }
+        
+        categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
+        
+        if (categories.length === 0) {
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; grid-column: 1 / -1;">No categories found</div>`;
+            this.isAnimating = false;
+            return;
+        }
+        
+        const cardsHTML = categories.map((item, index) => this.buildCardHTML(item, index)).join('');
+        
+        const currentGrid = document.createElement('div');
+        currentGrid.style.cssText = `
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(0);
+            background: #ffffff;
+        `;
+        currentGrid.innerHTML = this.gridElement.innerHTML;
+        
+        const newGrid = document.createElement('div');
+        newGrid.style.cssText = `
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(${isMovingToMen ? '100%' : '-100%'});
+            background: #ffffff;
+        `;
+        newGrid.innerHTML = cardsHTML;
+        
+        this.gridElement.style.position = 'relative';
+        this.gridElement.innerHTML = '';
+        this.gridElement.appendChild(currentGrid);
+        this.gridElement.appendChild(newGrid);
+        
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                currentGrid.style.transform = `translateX(${isMovingToMen ? '-100%' : '100%'})`;
+                newGrid.style.transform = 'translateX(0)';
+                
+                setTimeout(() => {
+                    this.gridElement.innerHTML = cardsHTML;
+                    this.gridElement.style.position = 'relative';
+                    this.isAnimating = false;
+                }, 500);
+            });
+        });
+    }
+
+    renderGrid(gender, animate = true) {
         if (!this.gridElement) return;
+        
+        if (animate && this.currentGender !== gender) {
+            this.renderGridWithAnimation(gender);
+            return;
+        }
         
         let categories = [];
         if (gender === 'men') {
@@ -225,11 +300,10 @@ class HomeCategoryShowcase {
             categories = this.data.womenCategories || [];
         }
 
-        // Sort by sort_order
         categories.sort((a, b) => (a.sort_order || 999) - (b.sort_order || 999));
 
         if (categories.length === 0) {
-            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b;">No categories found</div>`;
+            this.gridElement.innerHTML = `<div style="text-align:center; padding:40px; color:#86868b; grid-column: 1 / -1;">No categories found</div>`;
             return;
         }
 
@@ -312,11 +386,13 @@ class HomeCategoryShowcase {
             #categoryshow-dynamic-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 1px; /* Very thin gap between images */
+                gap: 1px;
                 max-width: 100%;
                 margin: 0;
-                background: #ffffff; /* White background shows through the thin gap */
-                padding: 0; /* No padding on sides */
+                background: #ffffff;
+                padding: 0;
+                overflow: hidden;
+                position: relative;
             }
             
             /* Individual Card Styling */
@@ -361,7 +437,7 @@ class HomeCategoryShowcase {
                     font-size: 14px !important;
                 }
                 #categoryshow-dynamic-grid {
-                    gap: 1px; /* Same thin gap on mobile */
+                    gap: 1px;
                 }
                 .card-content {
                     padding: 12px 0 20px 0 !important;
@@ -412,7 +488,7 @@ class HomeCategoryShowcase {
 // Initialize Function
 // ============================================================
 function initCategoryShowcase() {
-    console.log('[CategoryShowcase] Initializing with JABIYEN Fonts...');
+    console.log('[CategoryShowcase] Initializing with JABIYEN Fonts & Slide Animations...');
     
     const tryInit = () => {
         if (typeof window.currentData !== 'undefined' && 
@@ -465,6 +541,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { HomeCategoryShowcase, initCategoryShowcase };
 }
-
-
- 
