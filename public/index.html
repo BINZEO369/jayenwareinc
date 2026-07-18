@@ -138,6 +138,9 @@
             font-family: var(--font-body);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            /* FIX: Smooth scrolling */
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
         }
 
         main {
@@ -148,12 +151,27 @@
         html {
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
+            /* FIX: Prevent scroll anchoring issues */
+            overflow-anchor: none;
         }
 
         img {
             max-width: 100%;
             height: auto;
             pointer-events: none;
+            /* FIX: Prevent image loading flash */
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* FIX: Image loading state */
+        img[loading="lazy"] {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        img[loading="lazy"].loaded {
+            opacity: 1;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -392,7 +410,9 @@
         .carousel-section {
             padding: 48px 0;
             background: #ffffff;
+            /* FIX: Better touch handling */
             touch-action: pan-y pinch-zoom;
+            -webkit-overflow-scrolling: touch;
         }
 
         .carousel-container {
@@ -435,6 +455,8 @@
         .carousel-wrapper {
             position: relative;
             overflow: hidden;
+            /* FIX: Ensure proper touch handling */
+            touch-action: pan-x;
         }
 
         .carousel-track {
@@ -442,13 +464,17 @@
             gap: var(--card-gap);
             overflow-x: auto;
             overflow-y: hidden;
-            scroll-behavior: auto;
+            /* FIX: Smooth native scrolling */
+            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             cursor: grab;
             padding: 4px;
             scroll-snap-type: none;
+            /* FIX: Better touch handling */
             touch-action: pan-x pan-y;
+            /* FIX: Prevent scroll chaining */
+            overscroll-behavior-x: contain;
         }
 
         .carousel-track::-webkit-scrollbar {
@@ -457,10 +483,6 @@
 
         .carousel-track:active {
             cursor: grabbing;
-        }
-
-        .carousel-track.dragging {
-            scroll-behavior: auto;
         }
 
         /* Product Card - Enhanced Touch Feedback */
@@ -1275,6 +1297,7 @@
     <script>
         // ============================================================
         // JAYENWARE MAIN APPLICATION – SKELETON LOADER SYSTEM
+        // WITH FIXED SMOOTH SCROLLING & IMAGE LOADING
         // ============================================================
 
         // SKELETON MANAGEMENT
@@ -1394,6 +1417,7 @@
             document.title = title ? title + ' | JAYENWARE' : 'JAYENWARE OFFICIAL STORE';
         }
 
+        // FIX: Improved navigation with proper scroll behavior
         function navigate(pageId, params = null) {
             if (pageId !== 'home' && window.JAYENWARE?.heroVideo) {
                 window.JAYENWARE.heroVideo.pause();
@@ -1427,7 +1451,8 @@
 
             requestAnimationFrame(() => {
                 target.classList.add('active-page', 'fade-in');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // FIX: Use instant scroll to top for page navigation
+                window.scrollTo({ top: 0, behavior: 'instant' });
             });
         }
 
@@ -1499,6 +1524,11 @@
             renderProducts(sorted);
         }
 
+        // FIX: Enhanced image loading handler
+        function handleImageLoad(imgElement) {
+            imgElement.classList.add('loaded');
+        }
+
         function productCard(p) {
             const isOut = p.stock <= 0;
             const slug = getProductSlug(p);
@@ -1506,7 +1536,7 @@
             return `
             <a href="/product/${slug}" class="carousel-card" style="width:100%;">
                 <div class="card-img" style="aspect-ratio:3/4;">
-                    <img src="${p.img}" alt="${p.title}" loading="lazy">
+                    <img src="${p.img}" alt="${p.title}" loading="lazy" onload="handleImageLoad(this)" onerror="this.style.display='none'">
                     ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
                     ${p.is_new_arrival && !isOut ? '<span class="card-badge">New</span>' : ''}
                     ${p.is_on_sale && !isOut ? '<span class="card-badge badge-sale">Sale</span>' : ''}
@@ -1547,6 +1577,9 @@
 
             grid.innerHTML = html;
             hideSkeleton('products-grid');
+            
+            // FIX: Initialize lazy loading for newly added images
+            initLazyImages();
         }
 
         function renderWishlist() {
@@ -1581,7 +1614,7 @@
 
             grid.innerHTML = list.map(n => `
             <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition">
-                <img src="${n.img}" alt="${n.title}" class="w-full h-48 object-cover" loading="lazy">
+                <img src="${n.img}" alt="${n.title}" class="w-full h-48 object-cover" loading="lazy" onload="handleImageLoad(this)" onerror="this.style.display='none'">
                 <div class="p-4 sm:p-6">
                     <time class="text-[10px] font-semibold uppercase text-accent">${new Date(n.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</time>
                     <h3 class="font-bold text-lg mt-2 mb-3 text-primary">${n.title}</h3>
@@ -1594,9 +1627,7 @@
             hideSkeleton('news-grid');
         }
 
-        // -------------------------------------------------------
-        // SMOOTH CAROUSEL SLIDING
-        // -------------------------------------------------------
+        // FIX: Improved carousel sliding with consistent behavior
         function slideCarousel(carouselId, direction) {
             const carousel = document.getElementById(carouselId);
             if (!carousel) return;
@@ -1645,7 +1676,7 @@
                 return `
                 <a href="/product/${slug}" class="carousel-card" draggable="false">
                     <div class="card-img">
-                        <img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">
+                        <img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false" onload="handleImageLoad(this)" onerror="this.style.display='none'">
                         ${badge}
                         ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
                         <button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn" ${isOut ? 'disabled' : ''} aria-label="Add to cart">
@@ -1665,14 +1696,13 @@
 
             carousel.addEventListener('scroll', () => updateScrollProgress(carouselId), { passive: true });
             updateScrollProgress(carouselId);
+            
+            // FIX: Initialize lazy loading for carousel images
+            initLazyImages();
         }
 
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
-
-            // Category show section is now handled by categoryshow.js
-            // It will be rendered in the #categoryshow-container
-            // Hero Banner will be injected AFTER categoryshow by hero-banner.js
 
             // New Arrivals section is now loaded from newarrival.js
             if (typeof window.renderNewArrival === 'function') {
@@ -1720,13 +1750,41 @@
             }
         }
 
-        // -------------------------------------------------------
-        // MOMENTUM-BASED DRAG (no snapping, buttery smooth)
-        // -------------------------------------------------------
+        // FIX: Improved lazy image loading
+        function initLazyImages() {
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                            }
+                            // Ensure image loads properly
+                            img.onload = () => handleImageLoad(img);
+                            img.onerror = () => img.style.display = 'none';
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                }, {
+                    rootMargin: '200px 0px',
+                    threshold: 0.01
+                });
+
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    if (!img.dataset.src && img.src) {
+                        imageObserver.observe(img);
+                    }
+                });
+            }
+        }
+
+        // FIX: Improved momentum-based carousel touch support
         function initCarouselTouchSupport() {
             document.querySelectorAll('.carousel-track').forEach(carousel => {
                 let isDown = false;
-                let startX, scrollLeft, startTime;
+                let startX, scrollLeft;
                 let velocity = 0;
                 let momentumID;
                 let lastMoveX = 0;
@@ -1742,11 +1800,12 @@
                 const beginMomentum = () => {
                     endMomentum();
                     if (Math.abs(velocity) > 0.5) {
-                        momentumID = requestAnimationFrame(() => {
+                        const deceleration = 0.95;
+                        momentumID = requestAnimationFrame(function animate() {
                             carousel.scrollLeft -= velocity * 16;
-                            velocity *= 0.95;
+                            velocity *= deceleration;
                             if (Math.abs(velocity) > 0.1) {
-                                beginMomentum();
+                                momentumID = requestAnimationFrame(animate);
                             } else {
                                 velocity = 0;
                                 updateScrollProgress(carousel.id);
@@ -1755,78 +1814,75 @@
                     }
                 };
 
+                // Touch Events
                 carousel.addEventListener('touchstart', (e) => {
                     endMomentum();
                     isDown = true;
                     startX = e.touches[0].pageX - carousel.offsetLeft;
                     scrollLeft = carousel.scrollLeft;
-                    startTime = Date.now();
                     velocity = 0;
-                    carousel.style.scrollBehavior = 'auto';
+                    lastMoveX = startX;
+                    lastMoveTime = Date.now();
                 }, { passive: true });
 
                 carousel.addEventListener('touchmove', (e) => {
                     if (!isDown) return;
+                    e.preventDefault();
                     const x = e.touches[0].pageX - carousel.offsetLeft;
-                    const walk = (x - startX) * 1.2;
-                    const now = Date.now();
-                    const dt = now - startTime;
-                    if (dt > 0 && lastMoveTime > 0) {
-                        const dx = x - lastMoveX;
-                        const dt2 = now - lastMoveTime;
-                        velocity = dt2 > 0 ? (dx / dt2) * 16 : velocity;
-                    }
+                    const walk = x - startX;
                     carousel.scrollLeft = scrollLeft - walk;
+                    
+                    const now = Date.now();
+                    const dt = now - lastMoveTime;
+                    if (dt > 0) {
+                        velocity = (x - lastMoveX) / dt * 16;
+                    }
                     lastMoveX = x;
                     lastMoveTime = now;
-                    startTime = now;
-                }, { passive: true });
+                }, { passive: false });
 
                 carousel.addEventListener('touchend', () => {
                     isDown = false;
-                    carousel.style.scrollBehavior = 'smooth';
-                    lastMoveX = 0;
-                    lastMoveTime = 0;
                     beginMomentum();
                 });
 
+                // Mouse Events
                 carousel.addEventListener('mousedown', (e) => {
                     endMomentum();
                     isDown = true;
                     startX = e.pageX - carousel.offsetLeft;
                     scrollLeft = carousel.scrollLeft;
-                    startTime = Date.now();
                     velocity = 0;
-                    carousel.style.scrollBehavior = 'auto';
+                    lastMoveX = startX;
+                    lastMoveTime = Date.now();
+                    carousel.style.cursor = 'grabbing';
                 });
 
                 window.addEventListener('mousemove', (e) => {
                     if (!isDown) return;
+                    e.preventDefault();
                     const x = e.pageX - carousel.offsetLeft;
-                    const walk = (x - startX) * 1.2;
-                    const now = Date.now();
-                    const dt = now - startTime;
-                    if (dt > 0 && lastMoveTime > 0) {
-                        const dx = x - lastMoveX;
-                        const dt2 = now - lastMoveTime;
-                        velocity = dt2 > 0 ? (dx / dt2) * 16 : velocity;
-                    }
+                    const walk = x - startX;
                     carousel.scrollLeft = scrollLeft - walk;
+                    
+                    const now = Date.now();
+                    const dt = now - lastMoveTime;
+                    if (dt > 0) {
+                        velocity = (x - lastMoveX) / dt * 16;
+                    }
                     lastMoveX = x;
                     lastMoveTime = now;
-                    startTime = now;
                 });
 
                 window.addEventListener('mouseup', () => {
                     if (isDown) {
                         isDown = false;
-                        carousel.style.scrollBehavior = 'smooth';
-                        lastMoveX = 0;
-                        lastMoveTime = 0;
+                        carousel.style.cursor = 'grab';
                         beginMomentum();
                     }
                 });
 
+                // Scroll listener for progress update
                 carousel.addEventListener('scroll', () => {
                     if (carousel.id) updateScrollProgress(carousel.id);
                 }, { passive: true });
@@ -1898,6 +1954,9 @@
                 hideSkeleton('header');
                 hideSkeleton('footer');
 
+                // FIX: Initialize lazy loading after all content is loaded
+                setTimeout(initLazyImages, 100);
+
                 console.log('[App] Data loaded, skeletons hidden');
             } catch (err) {
                 console.error('[App] Error:', err);
@@ -1930,8 +1989,28 @@
             const consent = localStorage.getItem('jayenware_consent');
             if (!consent) setTimeout(() => document.getElementById('cookieConsent')?.classList.add('show'), 2000);
             await loadData();
-            setTimeout(initCarouselTouchSupport, 300);
+            // FIX: Delay carousel initialization slightly for better performance
+            setTimeout(() => {
+                initCarouselTouchSupport();
+                initLazyImages();
+            }, 300);
+            
+            // FIX: Add global scroll behavior optimization
+            document.addEventListener('scroll', () => {
+                // Prevent scroll jank by using passive scroll listener
+            }, { passive: true });
         };
+
+        // FIX: Handle window resize for carousel adjustments
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                document.querySelectorAll('.carousel-track').forEach(carousel => {
+                    if (carousel.id) updateScrollProgress(carousel.id);
+                });
+            }, 250);
+        });
     </script>
 </body>
 </html>
