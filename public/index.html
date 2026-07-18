@@ -71,6 +71,11 @@
     <script src="/hero-video.js"></script>
     <script src="/hero-secondary-banner.js"></script>
     <script src="/categoryshow.js"></script>
+    <script src="/newarrival.js"></script>
+    <script src="/trendingnow.js"></script>
+    <script src="/featuredproducts.js"></script>
+    <script src="/bestseller.js"></script>
+    <script src="/onsale.js"></script>
 
     <script type="application/ld+json">
         { "@context": "https://schema.org", "@type": "Website", "name": "Jayenware", "alternateName": "JAYENWARE SHOP", "url": "https://www.jayenware.shop", "logo": "https://www.jayenware.shop/logo.png", "description": "Premium lifestyle products and quality cotton T-shirts store by BINZEO. Shop authentic apparel with fast delivery across World.", "priceRange": "৳450 - ৳5000", "image": "https://www.jayenware.shop/logo.png", "address": { "@type": "PostalAddress", "addressLocality": "Dhaka", "addressRegion": "Dhaka Division", "addressCountry": "BD" }, "geo": { "@type": "GeoCoordinates", "latitude": "23.8103", "longitude": "90.4125" }, "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "url": "https://m.me/861762253694814", "availableLanguage": ["English", "Bengali"] }, "sameAs": ["https://www.facebook.com/jayenware", "https://www.instagram.com/jayenware", "https://www.twitter.com/jayenware"], "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "09:00", "closes": "21:00" }, "parentOrganization": { "@type": "Organization", "name": "BINZEO", "url": "https://binzeo.vercel.app" }
@@ -983,31 +988,9 @@
                 </div>
             </div>
 
-            <!-- Carousel: New Arrivals -->
-            <section id="new-arrivals-section" class="carousel-section skeleton-hidden">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <h2 class="section-title">New Arrivals</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
-                            View All →
-                        </a>
-                    </div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('new-arrivals-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <div id="new-arrivals-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('new-arrivals-carousel', 'next')" class="carousel-nav next" aria-label="Next">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="scroll-progress" id="new-arrivals-progress">
-                        <div class="scroll-progress-bar" id="new-arrivals-progress-bar"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Carousel Skeleton: New Arrivals -->
+            <!-- New Arrivals Container (Loaded from newarrival.js) -->
+            <div id="new-arrivals-container"></div>
+            <!-- New Arrivals Skeleton -->
             <div id="new-arrivals-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1023,32 +1006,10 @@
                 </div>
             </div>
 
-            <!-- Carousel: Trending Now -->
-            <section id="hot-products-section" class="carousel-section skeleton-hidden">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <h2 class="section-title">Trending Now</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
-                            View All →
-                        </a>
-                    </div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('hot-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <div id="hot-products-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('hot-products-carousel', 'next')" class="carousel-nav next" aria-label="Next">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="scroll-progress" id="hot-products-progress">
-                        <div class="scroll-progress-bar" id="hot-products-progress-bar"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Carousel Skeleton: Trending Now -->
-            <div id="hot-products-skeleton" class="carousel-section skeleton-visible">
+            <!-- Trending Now Container (Loaded from trendingnow.js) -->
+            <div id="trending-now-container"></div>
+            <!-- Trending Now Skeleton -->
+            <div id="trending-now-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
@@ -1063,31 +1024,9 @@
                 </div>
             </div>
 
-            <!-- Carousel: Featured Products -->
-            <section id="featured-products-section" class="carousel-section skeleton-hidden" style="background: #fafafa;">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <h2 class="section-title">Featured Products</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
-                            View All →
-                        </a>
-                    </div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('featured-products-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <div id="featured-products-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('featured-products-carousel', 'next')" class="carousel-nav next" aria-label="Next">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="scroll-progress" id="featured-products-progress">
-                        <div class="scroll-progress-bar" id="featured-products-progress-bar"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Carousel Skeleton: Featured -->
+            <!-- Featured Products Container (Loaded from featuredproducts.js) -->
+            <div id="featured-products-container"></div>
+            <!-- Featured Products Skeleton -->
             <div id="featured-products-skeleton" class="carousel-section skeleton-visible" style="background:#fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1103,32 +1042,10 @@
                 </div>
             </div>
 
-            <!-- Carousel: Best Sellers -->
-            <section id="best-selling-section" class="carousel-section skeleton-hidden">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <h2 class="section-title">Best Sellers</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
-                            View All →
-                        </a>
-                    </div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('best-selling-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <div id="best-selling-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('best-selling-carousel', 'next')" class="carousel-nav next" aria-label="Next">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="scroll-progress" id="best-selling-progress">
-                        <div class="scroll-progress-bar" id="best-selling-progress-bar"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Carousel Skeleton: Best Sellers -->
-            <div id="best-selling-skeleton" class="carousel-section skeleton-visible">
+            <!-- Best Sellers Container (Loaded from bestseller.js) -->
+            <div id="best-sellers-container"></div>
+            <!-- Best Sellers Skeleton -->
+            <div id="best-sellers-skeleton" class="carousel-section skeleton-visible">
                 <div class="carousel-container">
                     <div class="carousel-header">
                         <div class="skeleton skeleton-title" style="margin-bottom:0;"></div>
@@ -1143,31 +1060,9 @@
                 </div>
             </div>
 
-            <!-- Carousel: On Sale -->
-            <section id="on-sale-section" class="carousel-section skeleton-hidden" style="background: #fafafa;">
-                <div class="carousel-container">
-                    <div class="carousel-header">
-                        <h2 class="section-title">On Sale</h2>
-                        <a href="/products" onclick="event.preventDefault();navigate('products')" class="section-link">
-                            View All →
-                        </a>
-                    </div>
-                    <div class="carousel-wrapper">
-                        <button onclick="slideCarousel('on-sale-carousel', 'prev')" class="carousel-nav prev" aria-label="Previous">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <div id="on-sale-carousel" class="carousel-track no-scrollbar"></div>
-                        <button onclick="slideCarousel('on-sale-carousel', 'next')" class="carousel-nav next" aria-label="Next">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="scroll-progress" id="on-sale-progress">
-                        <div class="scroll-progress-bar" id="on-sale-progress-bar"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Carousel Skeleton: On Sale -->
+            <!-- On Sale Container (Loaded from onsale.js) -->
+            <div id="on-sale-container"></div>
+            <!-- On Sale Skeleton -->
             <div id="on-sale-skeleton" class="carousel-section skeleton-visible" style="background:#fafafa;">
                 <div class="carousel-container">
                     <div class="carousel-header">
@@ -1387,9 +1282,9 @@
             'hero-secondary': 'hero-secondary-skeleton',
             'categoryshow': 'categoryshow-skeleton',
             'new-arrivals': 'new-arrivals-skeleton',
-            'hot-products': 'hot-products-skeleton',
+            'trending-now': 'trending-now-skeleton',
             'featured-products': 'featured-products-skeleton',
-            'best-selling': 'best-selling-skeleton',
+            'best-sellers': 'best-sellers-skeleton',
             'on-sale': 'on-sale-skeleton',
             'limited-edition': 'limited-edition-skeleton',
             'footer': 'footer-skeleton'
@@ -1725,84 +1620,63 @@
             progressBar.style.width = `${Math.min(progress, 100)}%`;
         }
 
-        function renderCarouselProducts(carouselId, products) {
-            const carousel = document.getElementById(carouselId);
-            if (!carousel) return;
-
-            if (!products || !products.length) {
-                carousel.innerHTML =
-                    '<div class="flex items-center justify-center w-full py-16"><p class="text-sm text-accent">No products available</p></div>';
-                return;
-            }
-
-            carousel.innerHTML = products.map(p => {
-                const isOut = p.stock <= 0;
-                const slug = getProductSlug(p);
-                let badge = '';
-                if (!isOut) {
-                    if (p.is_new_arrival) badge = '<span class="card-badge">New</span>';
-                    else if (p.is_on_sale) badge = '<span class="card-badge badge-sale">Sale</span>';
-                    else if (p.is_limited_edition) badge = '<span class="card-badge">Limited</span>';
-                }
-
-                return `
-                <a href="/product/${slug}" class="carousel-card" draggable="false">
-                    <div class="card-img">
-                        <img src="${p.img}" alt="${p.title}" loading="lazy" draggable="false">
-                        ${badge}
-                        ${isOut ? '<div class="card-soldout-overlay"><span>Sold Out</span></div>' : ''}
-                        <button onclick="event.preventDefault();event.stopPropagation();if(typeof addToCart==='function')addToCart(${p.id},null)" class="card-add-btn" ${isOut ? 'disabled' : ''} aria-label="Add to cart">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <span class="card-category">${p.category}</span>
-                        <h3 class="card-title">${p.title}</h3>
-                        <div>
-                            <span class="card-price">৳${p.price}</span>
-                            ${p.old_price ? `<span class="card-old-price">৳${p.old_price}</span>` : ''}
-                        </div>
-                    </div>
-                </a>`;
-            }).join('');
-
-            carousel.addEventListener('scroll', () => updateScrollProgress(carouselId), { passive: true });
-            updateScrollProgress(carouselId);
-        }
-
         function renderHomepageSections() {
             if (!currentData.products || currentData.products.length === 0) return;
 
             // Category show section is now handled by categoryshow.js
             // It will be rendered in the #categoryshow-container
+            
+            // New Arrivals is now handled by newarrival.js
+            if (typeof window.renderNewArrival === 'function') {
+                window.renderNewArrival(currentData.products.filter(p => p.is_new_arrival === true));
+                hideSkeleton('new-arrivals');
+            } else {
+                hideSkeleton('new-arrivals');
+            }
 
-            const sections = [
-                { id: 'new-arrivals-section', carousel: 'new-arrivals-carousel',
-                products: currentData.products.filter(p => p.is_new_arrival === true), skeletonKey: 'new-arrivals' },
-                { id: 'hot-products-section', carousel: 'hot-products-carousel', products: currentData.products.filter(
-                        p => p.is_hot === true), skeletonKey: 'hot-products' },
-                { id: 'featured-products-section', carousel: 'featured-products-carousel',
-                    products: currentData.products.filter(p => p.is_featured === true), skeletonKey: 'featured-products' },
-                { id: 'best-selling-section', carousel: 'best-selling-carousel', products: currentData.products.filter(
-                        p => p.is_best === true), skeletonKey: 'best-selling' },
-                { id: 'on-sale-section', carousel: 'on-sale-carousel', products: currentData.products.filter(p =>
-                        p.is_on_sale === true), skeletonKey: 'on-sale' },
-                { id: 'limited-edition-section', carousel: 'limited-edition-carousel',
-                    products: currentData.products.filter(p => p.is_limited_edition === true), skeletonKey: 'limited-edition' }
-            ];
+            // Trending Now is now handled by trendingnow.js
+            if (typeof window.renderTrendingNow === 'function') {
+                window.renderTrendingNow(currentData.products.filter(p => p.is_hot === true));
+                hideSkeleton('trending-now');
+            } else {
+                hideSkeleton('trending-now');
+            }
 
-            sections.forEach((sec) => {
-                const el = document.getElementById(sec.id);
-                if (!el) return;
-                if (sec.products && sec.products.length > 0) {
-                    el.classList.remove('hidden', 'skeleton-hidden');
-                    renderCarouselProducts(sec.carousel, sec.products);
-                    hideSkeleton(sec.skeletonKey);
-                } else {
-                    el.classList.add('hidden');
-                    hideSkeleton(sec.skeletonKey);
-                }
-            });
+            // Featured Products is now handled by featuredproducts.js
+            if (typeof window.renderFeaturedProducts === 'function') {
+                window.renderFeaturedProducts(currentData.products.filter(p => p.is_featured === true));
+                hideSkeleton('featured-products');
+            } else {
+                hideSkeleton('featured-products');
+            }
+
+            // Best Sellers is now handled by bestseller.js
+            if (typeof window.renderBestSeller === 'function') {
+                window.renderBestSeller(currentData.products.filter(p => p.is_best === true));
+                hideSkeleton('best-sellers');
+            } else {
+                hideSkeleton('best-sellers');
+            }
+
+            // On Sale is now handled by onsale.js
+            if (typeof window.renderOnSale === 'function') {
+                window.renderOnSale(currentData.products.filter(p => p.is_on_sale === true));
+                hideSkeleton('on-sale');
+            } else {
+                hideSkeleton('on-sale');
+            }
+
+            // Limited Edition remains inline
+            const limitedProducts = currentData.products.filter(p => p.is_limited_edition === true);
+            const limitedSection = document.getElementById('limited-edition-section');
+            if (limitedSection && limitedProducts && limitedProducts.length > 0) {
+                limitedSection.classList.remove('hidden', 'skeleton-hidden');
+                renderCarouselProducts('limited-edition-carousel', limitedProducts);
+                hideSkeleton('limited-edition');
+            } else if (limitedSection) {
+                limitedSection.classList.add('hidden');
+                hideSkeleton('limited-edition');
+            }
         }
 
         // -------------------------------------------------------
