@@ -1,7 +1,7 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
 // FIXED: stock → is_out_of_stock, image loading, lazy load
-// UPDATED: Taller images, tighter gap, removed add button
+// UPDATED: Taller images, minimal gap, removed add button
 // ============================================================
 
 (function() {
@@ -38,27 +38,17 @@
         animationDuration: 400
     };
 
-    // FIX: Helper function for safe image URL
     function getImageUrl(product) {
-        if (product.img && product.img.trim() !== '') {
-            return product.img;
-        }
-        if (product.image && product.image.trim() !== '') {
-            return product.image;
-        }
-        if (product.image_url && product.image_url.trim() !== '') {
-            return product.image_url;
-        }
+        if (product.img && product.img.trim() !== '') return product.img;
+        if (product.image && product.image.trim() !== '') return product.image;
+        if (product.image_url && product.image_url.trim() !== '') return product.image_url;
         if (product.images && product.images.trim() !== '') {
             const imagesArray = product.images.split(',');
-            if (imagesArray[0] && imagesArray[0].trim() !== '') {
-                return imagesArray[0].trim();
-            }
+            if (imagesArray[0] && imagesArray[0].trim() !== '') return imagesArray[0].trim();
         }
         return '/placeholder.png';
     }
 
-    // FIX: Global image load handler
     function handleImageLoad(img) {
         if (img && img.classList) {
             img.classList.add('loaded');
@@ -66,7 +56,6 @@
         }
     }
 
-    // FIX: Global image error handler
     function handleImageError(img) {
         if (img && img.classList) {
             img.style.display = 'none';
@@ -89,13 +78,10 @@
         }
     }
 
-    // Expose handlers to window for inline onload/onerror
     window.handleNewArrivalImageLoad = handleImageLoad;
     window.handleNewArrivalImageError = handleImageError;
 
-    // Product Card Template
     function createProductCard(product) {
-        // FIX: Use is_out_of_stock instead of stock
         const isOutOfStock = product.is_out_of_stock === true || 
                              product.is_out_of_stock === 1 ||
                              product.stock === 0 ||
@@ -110,7 +96,6 @@
 
         const imageUrl = getImageUrl(product);
         
-        // FIX: Better badge logic
         let badgeHTML = '';
         if (!isOutOfStock) {
             if (product.is_new_arrival === true || product.is_new_arrival === 1) {
@@ -124,7 +109,6 @@
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
         
-        // FIX: Safe price formatting
         const price = product.price != null ? parseFloat(product.price) : 0;
         const oldPrice = product.old_price != null ? parseFloat(product.old_price) : null;
         const priceFormatted = price.toLocaleString('en-BD');
@@ -159,7 +143,6 @@
         return card;
     }
 
-    // Create Empty State
     function createEmptyState() {
         const emptyDiv = document.createElement('div');
         emptyDiv.className = 'new-arrival-empty';
@@ -173,7 +156,6 @@
         return emptyDiv;
     }
 
-    // Create Loading Skeleton
     function createSkeletonCard() {
         const card = document.createElement('div');
         card.className = 'new-arrival-card new-arrival-skeleton-card';
@@ -190,7 +172,6 @@
         return card;
     }
 
-    // Fetch API with retry logic
     async function fetchWithRetry(url, options = {}, retries = API_CONFIG.retryAttempts) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
@@ -208,21 +189,13 @@
             
             clearTimeout(timeoutId);
             
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             
             const data = await response.json();
             
-            if (data && data.data && Array.isArray(data.data)) {
-                return data.data;
-            }
-            if (data && data.products && Array.isArray(data.products)) {
-                return data.products;
-            }
-            if (Array.isArray(data)) {
-                return data;
-            }
+            if (data && data.data && Array.isArray(data.data)) return data.data;
+            if (data && data.products && Array.isArray(data.products)) return data.products;
+            if (Array.isArray(data)) return data;
             
             console.warn('[NewArrivals] Unexpected API response structure:', data);
             return [];
@@ -239,7 +212,6 @@
         }
     }
 
-    // Fetch New Arrivals from API
     async function fetchNewArrivals() {
         try {
             const data = await fetchWithRetry(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.newArrivals}`);
@@ -275,7 +247,6 @@
         }
     }
 
-    // Render Section Header
     function createSectionHeader() {
         const header = document.createElement('div');
         header.className = 'new-arrival-header';
@@ -292,14 +263,12 @@
         return header;
     }
 
-    // Create Grid Container
     function createGridContainer() {
         const grid = document.createElement('div');
         grid.className = CONFIG.gridClass;
         return grid;
     }
 
-    // FIX: Initialize lazy loading with IntersectionObserver
     function initLazyLoading() {
         if (!('IntersectionObserver' in window)) return;
         
@@ -325,7 +294,6 @@
         });
     }
 
-    // Render the complete section
     async function renderNewArrivals(products) {
         const container = document.getElementById(CONFIG.containerId);
         const skeleton = document.getElementById(CONFIG.skeletonId);
@@ -335,9 +303,7 @@
             return;
         }
 
-        if (skeleton) {
-            skeleton.style.display = 'block';
-        }
+        if (skeleton) skeleton.style.display = 'block';
 
         try {
             let arrivals;
@@ -355,7 +321,6 @@
 
             const section = document.createElement('section');
             section.className = CONFIG.sectionClass;
-
             section.appendChild(createSectionHeader());
 
             const grid = createGridContainer();
@@ -363,10 +328,8 @@
             if (arrivals && arrivals.length > 0) {
                 const displayProducts = arrivals.slice(0, CONFIG.maxProducts);
                 displayProducts.forEach(product => {
-                    const card = createProductCard(product);
-                    grid.appendChild(card);
+                    grid.appendChild(createProductCard(product));
                 });
-                
                 console.log(`[NewArrivals] Rendered ${displayProducts.length} products`);
             } else {
                 section.classList.add('new-arrival-empty-section');
@@ -390,26 +353,20 @@
                 </div>
             `;
         } finally {
-            if (skeleton) {
-                skeleton.style.display = 'none';
-            }
+            if (skeleton) skeleton.style.display = 'none';
         }
     }
 
-    // Expose to window for external calls
     window.renderNewArrival = renderNewArrivals;
 
-    // Inject Dynamic Styles
     function injectStyles() {
         const styleId = 'new-arrival-dynamic-styles';
-        
         if (document.getElementById(styleId)) return;
 
         const styles = `
             <style id="${styleId}">
-                /* ==================== NEW ARRIVAL SECTION ==================== */
                 .new-arrivals-grid-section {
-                    padding: 40px 0;
+                    padding: 32px 0;
                     max-width: 1400px;
                     margin: 0 auto;
                     background: #ffffff;
@@ -417,33 +374,39 @@
 
                 @media (max-width: 767px) {
                     .new-arrivals-grid-section {
-                        padding: 24px 12px;
+                        padding: 20px 8px;
                     }
                 }
 
                 @media (min-width: 768px) and (max-width: 1023px) {
                     .new-arrivals-grid-section {
-                        padding: 32px 24px;
+                        padding: 28px 20px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid-section {
-                        padding: 48px 40px;
+                        padding: 40px 36px;
                     }
                 }
 
-                /* Section Header */
                 .new-arrival-header {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    margin-bottom: 24px;
-                    padding: 0 2px;
+                    margin-bottom: 20px;
+                    padding: 0 4px;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-header {
+                        margin-bottom: 24px;
+                        padding: 0 2px;
+                    }
                 }
 
                 .new-arrival-title {
-                    font-size: 24px;
+                    font-size: 22px;
                     font-weight: 700;
                     color: #1d1d1f;
                     letter-spacing: -0.3px;
@@ -451,22 +414,18 @@
                 }
 
                 @media (min-width: 768px) {
-                    .new-arrival-title {
-                        font-size: 28px;
-                    }
+                    .new-arrival-title { font-size: 26px; }
                 }
 
                 @media (min-width: 1024px) {
-                    .new-arrival-title {
-                        font-size: 32px;
-                    }
+                    .new-arrival-title { font-size: 30px; }
                 }
 
                 .new-arrival-view-all {
                     display: inline-flex;
                     align-items: center;
-                    gap: 6px;
-                    font-size: 13px;
+                    gap: 5px;
+                    font-size: 12px;
                     font-weight: 600;
                     color: #007aff;
                     text-decoration: none;
@@ -474,9 +433,7 @@
                     font-family: var(--font-body, 'Inter', sans-serif);
                 }
 
-                .new-arrival-view-all:hover {
-                    gap: 10px;
-                }
+                .new-arrival-view-all:hover { gap: 8px; }
 
                 .new-arrival-view-all svg {
                     transition: transform 0.25s ease;
@@ -486,51 +443,58 @@
                     transform: translateX(2px);
                 }
 
-                /* Grid Layout - 2x2 on Mobile with tighter gap */
+                /* Grid - VERY TIGHT gap */
                 .new-arrivals-grid {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
-                    gap: 8px;
+                    gap: 4px;
                     width: 100%;
                 }
 
                 @media (min-width: 640px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(2, 1fr);
-                        gap: 10px;
+                        gap: 6px;
                     }
                 }
 
                 @media (min-width: 768px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 14px;
+                        gap: 8px;
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .new-arrivals-grid {
                         grid-template-columns: repeat(4, 1fr);
-                        gap: 16px;
+                        gap: 10px;
                     }
                 }
 
-                /* Product Card */
+                @media (min-width: 1400px) {
+                    .new-arrivals-grid {
+                        gap: 12px;
+                    }
+                }
+
                 .new-arrival-card {
                     position: relative;
-                    background: transparent;
+                    background: #fff;
                     transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
                     cursor: pointer;
                 }
 
                 .new-arrival-card:active {
-                    transform: scale(0.97);
+                    transform: scale(0.98);
                     transition: transform 0.1s ease;
                 }
 
                 @media (hover: hover) {
                     .new-arrival-card:hover {
-                        transform: translateY(-3px);
+                        transform: translateY(-2px);
+                        z-index: 2;
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
                     }
                 }
 
@@ -542,14 +506,13 @@
                     height: 100%;
                 }
 
-                /* Card Image - TALLER (4:5 ratio) */
                 .new-arrival-card-image-wrapper {
                     position: relative;
                     aspect-ratio: 4 / 5;
                     background: #f5f5f7;
                     overflow: hidden;
-                    margin-bottom: 8px;
-                    border-radius: 2px;
+                    margin-bottom: 6px;
+                    border-radius: 0;
                     min-height: 0;
                     width: 100%;
                 }
@@ -558,49 +521,52 @@
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease;
+                    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
                     opacity: 1;
                     display: block;
                     color: transparent;
                 }
 
-                .new-arrival-card-image.loaded {
-                    opacity: 1;
-                }
-
                 @media (hover: hover) {
                     .new-arrival-card:hover .new-arrival-card-image {
-                        transform: scale(1.04);
+                        transform: scale(1.05);
                     }
                 }
 
-                /* Badge */
                 .new-arrival-badge {
                     position: absolute;
-                    top: 6px;
-                    left: 6px;
+                    top: 4px;
+                    left: 4px;
                     z-index: 2;
-                    padding: 2px 8px;
-                    font-size: 9px;
+                    padding: 2px 7px;
+                    font-size: 8px;
                     font-weight: 700;
                     text-transform: uppercase;
                     background: #ffffff;
                     color: #1d1d1f;
                     letter-spacing: 0.5px;
-                    border-radius: 2px;
+                    border-radius: 1px;
                     pointer-events: none;
-                    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-badge {
+                        top: 6px;
+                        left: 6px;
+                        padding: 2px 8px;
+                        font-size: 9px;
+                    }
                 }
 
                 .new-arrival-badge-sale {
                     color: #d70015 !important;
                 }
 
-                /* Sold Out Overlay */
                 .new-arrival-soldout-overlay {
                     position: absolute;
                     inset: 0;
-                    background: rgba(255, 255, 255, 0.65);
+                    background: rgba(255, 255, 255, 0.7);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -611,28 +577,41 @@
                 .new-arrival-soldout-overlay span {
                     background: #1d1d1f;
                     color: #ffffff;
-                    font-size: 10px;
+                    font-size: 9px;
                     font-weight: 700;
                     text-transform: uppercase;
-                    padding: 6px 18px;
+                    padding: 5px 14px;
                     letter-spacing: 1px;
-                    border-radius: 2px;
+                    border-radius: 1px;
                 }
 
-                /* Card Body */
+                @media (min-width: 768px) {
+                    .new-arrival-soldout-overlay span {
+                        font-size: 10px;
+                        padding: 6px 18px;
+                    }
+                }
+
                 .new-arrival-card-body {
-                    padding: 0 2px;
+                    padding: 0 3px;
                     display: flex;
                     flex-direction: column;
-                    gap: 2px;
+                    gap: 1px;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-card-body {
+                        padding: 0 4px;
+                        gap: 2px;
+                    }
                 }
 
                 .new-arrival-card-category {
-                    font-size: 9px;
+                    font-size: 8px;
                     font-weight: 600;
                     text-transform: uppercase;
                     color: #86868b;
-                    letter-spacing: 0.8px;
+                    letter-spacing: 0.6px;
                     font-family: var(--font-accent, 'Sora', sans-serif);
                 }
 
@@ -643,7 +622,7 @@
                 }
 
                 .new-arrival-card-title {
-                    font-size: 12px;
+                    font-size: 11px;
                     font-weight: 500;
                     color: #1d1d1f;
                     line-height: 1.3;
@@ -664,12 +643,12 @@
                 .new-arrival-card-price-row {
                     display: flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
                     margin-top: 1px;
                 }
 
                 .new-arrival-card-price {
-                    font-size: 12px;
+                    font-size: 11px;
                     font-weight: 700;
                     color: #1d1d1f;
                     font-family: var(--font-body, 'Inter', sans-serif);
@@ -682,13 +661,18 @@
                 }
 
                 .new-arrival-card-old-price {
-                    font-size: 11px;
+                    font-size: 10px;
                     color: #b0b0b5;
                     text-decoration: line-through;
                     font-weight: 400;
                 }
 
-                /* Empty State */
+                @media (min-width: 768px) {
+                    .new-arrival-card-old-price {
+                        font-size: 11px;
+                    }
+                }
+
                 .new-arrival-empty-section .new-arrivals-grid {
                     display: flex;
                     justify-content: center;
@@ -719,7 +703,6 @@
                     font-weight: 400 !important;
                 }
 
-                /* Error State */
                 .new-arrival-error {
                     text-align: center;
                     padding: 48px 20px;
@@ -747,7 +730,6 @@
                     background: #007aff;
                 }
 
-                /* Skeleton Styles */
                 .new-arrival-skeleton-card {
                     pointer-events: none;
                 }
@@ -756,26 +738,22 @@
                     background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%);
                     background-size: 800px 100%;
                     animation: skeletonShimmer 1.8s infinite linear;
-                    border-radius: 2px;
+                    border-radius: 0;
                 }
 
                 .skeleton-text {
-                    height: 12px;
-                    margin-bottom: 5px;
-                }
-
-                .skeleton-text-sm {
-                    height: 8px;
+                    height: 11px;
                     margin-bottom: 4px;
                 }
 
+                .skeleton-text-sm {
+                    height: 7px;
+                    margin-bottom: 3px;
+                }
+
                 @keyframes skeletonShimmer {
-                    0% {
-                        background-position: -468px 0;
-                    }
-                    100% {
-                        background-position: 468px 0;
-                    }
+                    0% { background-position: -468px 0; }
+                    100% { background-position: 468px 0; }
                 }
             </style>
         `;
@@ -783,14 +761,12 @@
         document.head.insertAdjacentHTML('beforeend', styles);
     }
 
-    // Initialize
     function init() {
         injectStyles();
         
         console.log('[NewArrivals] Module initializing...');
 
         window.addEventListener('jayenware:dataLoaded', (event) => {
-            console.log('[NewArrivals] Data loaded event received');
             const detail = event.detail || {};
             
             if (detail.products && Array.isArray(detail.products)) {
@@ -817,7 +793,6 @@
         console.log('[NewArrivals] Module initialized');
     }
 
-    // Auto-initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
