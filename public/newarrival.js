@@ -1,8 +1,6 @@
 // ============================================================
 // JAYENWARE – NEW ARRIVALS SECTION (2x2 Grid Layout)
-// INTEGRATED: JABIYEN Fonts configuration
-// FIXED: stock → is_out_of_stock, image loading, lazy load
-// UPDATED: Title only, 1px gap, product/slug navigation, bolder title
+// INTEGRATED: JABIYEN Fonts, Color Dots, Image Slider on Hover
 // ============================================================
 
 (function() {
@@ -60,6 +58,7 @@
         endpoints: {
             newArrivals: '/api/products?filter=new_arrival&limit=8',
             products: '/api/products',
+            productColors: '/api/product-colors',
             addToCart: '/api/cart/add',
             wishlist: '/api/wishlist'
         },
@@ -80,6 +79,9 @@
         maxProducts: 8,
         cardAspectRatio: '4/5'
     };
+
+    // Cache for product colors
+    let productColorsCache = {};
 
     // ============================================================
     // HELPER FUNCTIONS
@@ -136,7 +138,30 @@
     window.handleNewArrivalImageError = handleImageError;
 
     // ============================================================
-    // PRODUCT CARD
+    // FETCH PRODUCT COLORS (Same as product details page)
+    // ============================================================
+    async function fetchProductColors(slug) {
+        // Return from cache if available
+        if (productColorsCache[slug]) {
+            return productColorsCache[slug];
+        }
+
+        try {
+            const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.productColors}?slug=${encodeURIComponent(slug)}`);
+            if (!response.ok) return [];
+            const data = await response.json();
+            
+            // Cache the result
+            productColorsCache[slug] = data || [];
+            return data || [];
+        } catch (error) {
+            console.warn('[NewArrivals] Failed to fetch colors for:', slug, error);
+            return [];
+        }
+    }
+
+    // ============================================================
+    // PRODUCT CARD WITH COLOR DOTS & IMAGE SLIDER
     // ============================================================
     function createProductCard(product) {
         const isOutOfStock = product.is_out_of_stock === true || 
@@ -161,27 +186,145 @@
         card.setAttribute('data-product-id', product.id);
         card.setAttribute('data-product-slug', slug);
 
+        // Image slider structure with placeholder for colors
         card.innerHTML = `
             <a href="/product/${slug}" class="new-arrival-card-link">
                 <div class="new-arrival-card-image-wrapper">
+                    <!-- Main image -->
                     <img 
                         src="${imageUrl}" 
                         alt="${product.title || 'Product'}" 
-                        class="new-arrival-card-image"
+                        class="new-arrival-card-image new-arrival-main-image"
+                        data-default-src="${imageUrl}"
                         loading="lazy"
                         onload="window.handleNewArrivalImageLoad && window.handleNewArrivalImageLoad(this)"
                         onerror="window.handleNewArrivalImageError && window.handleNewArrivalImageError(this)"
                     >
+                    <!-- Hover/secondary image (hidden by default) -->
+                    <img 
+                        src="${imageUrl}" 
+                        alt="${product.title || 'Product'}" 
+                        class="new-arrival-card-image new-arrival-hover-image"
+                        loading="lazy"
+                        style="position:absolute;top:0;left:0;opacity:0;transition:opacity 0.5s ease;"
+                    >
                     ${badgeHTML}
                     ${isOutOfStock ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : ''}
+                    
+                    <!-- Color dots overlay on image -->
+                    <div class="new-arrival-color-dots-overlay">
+                        <div class="new-arrival-color-dots-container" data-slug="${slug}">
+                            <!-- Color dots will be injected here -->
+                        </div>
+                    </div>
                 </div>
                 <div class="new-arrival-card-body">
                     <h3 class="new-arrival-card-title">${product.title || 'Untitled'}</h3>
+                    <!-- Color dots below title -->
+                    <div class="new-arrival-color-dots-below" data-slug="${slug}">
+                        <!-- Color dots will be injected here -->
+                    </div>
                 </div>
             </a>
         `;
 
+        // Fetch colors and update the card
+        fetchProductColors(slug).then(colors => {
+            updateCardWithColors(card, colors, slug, imageUrl);
+        });
+
         return card;
+    }
+
+    // Update card with color dots and hover images
+    function updateCardWithColors(card, colors, slug, defaultImage) {
+        if (!colors || colors.length === 0) return;
+
+        const colorDotsContainer = card.querySelector('.new-arrival-color-dots-container');
+        const colorDotsBelow = card.querySelector('.new-arrival-color-dots-below');
+        const hoverImage = card.querySelector('.new-arrival-hover-image');
+
+        // Build color dots HTML
+        const dotsHTML = colors.map((color, index) => {
+            const colorCode = color.color_code || '#ccc';
+            const colorName = color.color_name || '';
+            const colorImage = color.color_image || '';
+            return `
+                <span 
+                    class="new-arrival-color-dot ${index === 0 ? 'active' : ''}"
+                    style="background-color: ${colorCode};"
+                    data-color-image="${colorImage}"
+                    data-color-name="${colorName}"
+                    data-color-code="${colorCode}"
+                    title="${colorName}"
+                ></span>
+            `;
+        }).join('');
+
+        // Update both containers
+        if (colorDotsContainer) colorDotsContainer.innerHTML = dotsHTML;
+        if (colorDotsBelow) colorDotsBelow.innerHTML = dotsHTML;
+
+        // Add hover events to color dots
+        const allDots = card.querySelectorAll('.new-arrival-color-dot');
+        const mainImage = card.querySelector('.new-arrival-main-image');
+        
+        allDots.forEach(dot => {
+            dot.addEventListener('mouseenter', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                // Update active state
+                allDots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+
+                // Change image if color has an image
+                const colorImage = dot.getAttribute('data-color-image');
+                if (colorImage && colorImage.trim() !== '') {
+                    if (hoverImage) {
+                        hoverImage.src = colorImage;
+                        hoverImage.style.opacity = '1';
+                    }
+                }
+            });
+
+            dot.addEventListener('mouseleave', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                // Reset to default
+                if (hoverImage) {
+                    hoverImage.style.opacity = '0';
+                }
+                
+                // Reset active to first dot
+                allDots.forEach(d => d.classList.remove('active'));
+                if (allDots[0]) allDots[0].classList.add('active');
+            });
+
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                // Navigate to product page on click
+                window.location.href = `/product/${slug}`;
+            });
+        });
+
+        // Card hover - show secondary image if available
+        card.addEventListener('mouseenter', () => {
+            if (colors.length > 0 && colors[0].color_image) {
+                if (hoverImage && colors[0].color_image.trim() !== '') {
+                    hoverImage.src = colors[0].color_image;
+                    hoverImage.style.opacity = '1';
+                }
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            if (hoverImage) {
+                hoverImage.style.opacity = '0';
+            }
+        });
     }
 
     // ============================================================
@@ -421,7 +564,7 @@
     window.renderNewArrival = renderNewArrivals;
 
     // ============================================================
-    // INJECT STYLES
+    // INJECT STYLES (With Color Dots & Image Slider)
     // ============================================================
     function injectStyles() {
         const styleId = 'new-arrival-dynamic-styles';
@@ -585,17 +728,100 @@
                     color: transparent;
                 }
 
+                /* Hover image transition */
+                .new-arrival-hover-image {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    opacity: 0;
+                    transition: opacity 0.4s ease;
+                    pointer-events: none;
+                }
+
                 @media (hover: hover) {
                     .new-arrival-card:hover .new-arrival-card-image {
                         transform: scale(1.05);
                     }
                 }
 
+                /* Color Dots Overlay on Image */
+                .new-arrival-color-dots-overlay {
+                    position: absolute;
+                    bottom: 8px;
+                    left: 0;
+                    right: 0;
+                    display: flex;
+                    justify-content: center;
+                    z-index: 3;
+                    pointer-events: none;
+                }
+
+                .new-arrival-color-dots-container {
+                    display: flex;
+                    gap: 5px;
+                    background: rgba(255,255,255,0.8);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    padding: 5px 10px;
+                    border-radius: 20px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                    pointer-events: auto;
+                }
+
+                /* Individual Color Dot */
+                .new-arrival-color-dot {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: 1.5px solid rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;
+                    flex-shrink: 0;
+                    display: block;
+                    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+                }
+
+                .new-arrival-color-dot:hover {
+                    transform: scale(1.3);
+                    border-color: rgba(0,0,0,0.3);
+                }
+
+                .new-arrival-color-dot.active {
+                    border-color: #1d1d1f !important;
+                    transform: scale(1.2);
+                    box-shadow: 0 0 0 2px rgba(29,29,31,0.1);
+                }
+
+                /* Color Dots Below Title */
+                .new-arrival-color-dots-below {
+                    display: flex;
+                    gap: 4px;
+                    justify-content: center;
+                    margin-top: 6px;
+                    flex-wrap: wrap;
+                }
+
+                @media (min-width: 768px) {
+                    .new-arrival-color-dot {
+                        width: 14px;
+                        height: 14px;
+                    }
+                    
+                    .new-arrival-color-dots-container {
+                        gap: 6px;
+                        padding: 6px 12px;
+                    }
+                }
+
+                /* Badge */
                 .new-arrival-badge {
                     position: absolute;
                     top: 4px;
                     left: 4px;
-                    z-index: 2;
+                    z-index: 4;
                     padding: 2px 7px;
                     font-family: ${JABIYEN_FONTS.families.subtitle};
                     font-weight: ${JABIYEN_FONTS.weights.subtitle.semibold};
@@ -664,7 +890,6 @@
                     }
                 }
 
-                /* Title - Bolder (semibold 600 instead of medium 500) */
                 .new-arrival-card-title {
                     font-family: ${JABIYEN_FONTS.families.body};
                     font-weight: ${JABIYEN_FONTS.weights.body.semibold};
@@ -781,7 +1006,7 @@
         applyFontsVariables();
         injectStyles();
         
-        console.log('[NewArrivals] Module initializing with JABIYEN Fonts...');
+        console.log('[NewArrivals] Module initializing with JABIYEN Fonts & Color Slider...');
 
         window.addEventListener('jayenware:dataLoaded', (event) => {
             const detail = event.detail || {};
