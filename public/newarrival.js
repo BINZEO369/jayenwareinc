@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    const JABIYEN_FONTS = {
+    var JABIYEN_FONTS = {
         families: {
             heading: "'Manrope', sans-serif",
             subtitle: "'Sora', sans-serif",
@@ -38,7 +38,9 @@
         var root = document.documentElement;
         var vars = JABIYEN_FONTS.cssVariables;
         for (var key in vars) {
-            root.style.setProperty(key, vars[key]);
+            if (vars.hasOwnProperty(key)) {
+                root.style.setProperty(key, vars[key]);
+            }
         }
     }
 
@@ -66,6 +68,16 @@
     };
 
     var productColorsCache = {};
+
+    function escapeHTML(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
     function getImageUrl(product) {
         if (product.img && product.img.trim() !== '') return product.img;
@@ -134,21 +146,74 @@
             if (product.is_new_arrival === true || product.is_new_arrival === 1) badge = '<span class="new-arrival-badge">New</span>';
             else if (product.is_on_sale === true || product.is_on_sale === 1) badge = '<span class="new-arrival-badge new-arrival-badge-sale">Sale</span>';
         }
+
         var card = document.createElement('div');
         card.className = 'new-arrival-card';
         card.setAttribute('data-product-id', product.id);
         card.setAttribute('data-product-slug', slug);
-        card.innerHTML = '<a href="/product/' + slug + '" class="new-arrival-card-link">' +
-            '<div class="new-arrival-card-image-wrapper">' +
-            '<div class="new-arrival-image-slider" data-slug="' + slug + '">' +
-            '<img src="' + img + '" alt="' + (product.title || 'Product') + '" class="new-arrival-card-image new-arrival-slider-image active" data-index="0" loading="lazy" onload="window.handleNewArrivalImageLoad&&window.handleNewArrivalImageLoad(this)" onerror="window.handleNewArrivalImageError&&window.handleNewArrivalImageError(this)">' +
-            '</div>' + badge + (out ? '<div class="new-arrival-soldout-overlay"><span>Sold Out</span></div>' : '') +
-            '<div class="new-arrival-image-dots" data-slug="' + slug + '" style="display:none;"></div>' +
-            '</div>' +
-            '<div class="new-arrival-card-body">' +
-            '<h3 class="new-arrival-card-title">' + (product.title || 'Untitled') + '</h3>' +
-            '<div class="new-arrival-color-dots-below" data-slug="' + slug + '"></div>' +
-            '</div></a>';
+
+        var link = document.createElement('a');
+        link.href = '/product/' + encodeURIComponent(slug);
+        link.className = 'new-arrival-card-link';
+
+        var imageWrapper = document.createElement('div');
+        imageWrapper.className = 'new-arrival-card-image-wrapper';
+
+        var slider = document.createElement('div');
+        slider.className = 'new-arrival-image-slider';
+        slider.setAttribute('data-slug', slug);
+
+        var mainImg = document.createElement('img');
+        mainImg.src = img;
+        mainImg.alt = product.title || 'Product';
+        mainImg.className = 'new-arrival-card-image new-arrival-slider-image active';
+        mainImg.setAttribute('data-index', '0');
+        mainImg.loading = 'lazy';
+        mainImg.onload = function() { handleImageLoad(mainImg); };
+        mainImg.onerror = function() { handleImageError(mainImg); };
+        slider.appendChild(mainImg);
+
+        imageWrapper.appendChild(slider);
+
+        if (badge) {
+            var badgeSpan = document.createElement('span');
+            badgeSpan.innerHTML = badge;
+            imageWrapper.appendChild(badgeSpan.firstChild);
+        }
+
+        if (out) {
+            var soldOut = document.createElement('div');
+            soldOut.className = 'new-arrival-soldout-overlay';
+            var soldOutSpan = document.createElement('span');
+            soldOutSpan.textContent = 'Sold Out';
+            soldOut.appendChild(soldOutSpan);
+            imageWrapper.appendChild(soldOut);
+        }
+
+        var dotsContainer = document.createElement('div');
+        dotsContainer.className = 'new-arrival-image-dots';
+        dotsContainer.setAttribute('data-slug', slug);
+        dotsContainer.style.display = 'none';
+        imageWrapper.appendChild(dotsContainer);
+
+        link.appendChild(imageWrapper);
+
+        var cardBody = document.createElement('div');
+        cardBody.className = 'new-arrival-card-body';
+
+        var titleEl = document.createElement('h3');
+        titleEl.className = 'new-arrival-card-title';
+        titleEl.textContent = product.title || 'Untitled';
+        cardBody.appendChild(titleEl);
+
+        var colorDotsBelow = document.createElement('div');
+        colorDotsBelow.className = 'new-arrival-color-dots-below';
+        colorDotsBelow.setAttribute('data-slug', slug);
+        cardBody.appendChild(colorDotsBelow);
+
+        link.appendChild(cardBody);
+        card.appendChild(link);
+
         fetchProductColors(slug).then(function(colors) { setupCard(card, product, colors, slug); });
         return card;
     }
@@ -183,14 +248,17 @@
             img.onload = function() { handleImageLoad(this); };
             img.onerror = function() { handleImageError(this); };
             slider.appendChild(img);
+
             var dot = document.createElement('span');
             dot.className = 'new-arrival-image-dot';
             dot.setAttribute('data-index', i);
-            dot.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                if (!transitioning && i !== idx) { slideTo(i); idx = i; }
-            });
+            (function(index) {
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (!transitioning && index !== idx) { slideTo(index); idx = index; }
+                });
+            })(i);
             dotsContainer.appendChild(dot);
         });
 
@@ -291,29 +359,66 @@
 
     function setupColorDots(container, colors, slug) {
         if (!colors || !colors.length) { container.style.display = 'none'; return; }
-        container.innerHTML = colors.map(function(c) {
-            return '<span class="new-arrival-color-dot" style="background-color:' + (c.color_code || '#ccc') + ';" title="' + (c.color_name || '') + '"></span>';
-        }).join('');
-        container.querySelectorAll('.new-arrival-color-dot').forEach(function(d) {
-            d.addEventListener('click', function(e) {
+        container.innerHTML = '';
+        colors.forEach(function(c) {
+            var dot = document.createElement('span');
+            dot.className = 'new-arrival-color-dot';
+            dot.style.backgroundColor = c.color_code || '#ccc';
+            if (c.color_name) dot.title = c.color_name;
+            dot.addEventListener('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
-                window.location.href = '/product/' + slug;
+                window.location.href = '/product/' + encodeURIComponent(slug);
             });
+            container.appendChild(dot);
         });
     }
 
     function createEmptyState() {
         var d = document.createElement('div');
         d.className = 'new-arrival-empty';
-        d.innerHTML = '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><p>No new arrivals at the moment</p><p class="new-arrival-empty-sub">Check back soon for fresh styles</p>';
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '64');
+        svg.setAttribute('height', '64');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', '#ccc');
+        svg.setAttribute('stroke-width', '1.5');
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4');
+        svg.appendChild(path);
+        d.appendChild(svg);
+        var p1 = document.createElement('p');
+        p1.textContent = 'No new arrivals at the moment';
+        d.appendChild(p1);
+        var p2 = document.createElement('p');
+        p2.className = 'new-arrival-empty-sub';
+        p2.textContent = 'Check back soon for fresh styles';
+        d.appendChild(p2);
         return d;
     }
 
     function createSkeletonCard() {
         var d = document.createElement('div');
         d.className = 'new-arrival-card new-arrival-skeleton-card';
-        d.innerHTML = '<div class="new-arrival-card-image-wrapper"><div class="skeleton-pulse" style="width:100%;aspect-ratio:' + CONFIG.cardAspectRatio + ';"></div></div><div class="new-arrival-card-body"><div class="skeleton-pulse skeleton-text" style="width:85%;"></div><div class="skeleton-pulse skeleton-text" style="width:55%;"></div></div>';
+        var wrapper = document.createElement('div');
+        wrapper.className = 'new-arrival-card-image-wrapper';
+        var pulse = document.createElement('div');
+        pulse.className = 'skeleton-pulse';
+        pulse.style.cssText = 'width:100%;aspect-ratio:' + CONFIG.cardAspectRatio + ';';
+        wrapper.appendChild(pulse);
+        d.appendChild(wrapper);
+        var body = document.createElement('div');
+        body.className = 'new-arrival-card-body';
+        var line1 = document.createElement('div');
+        line1.className = 'skeleton-pulse skeleton-text';
+        line1.style.width = '85%';
+        body.appendChild(line1);
+        var line2 = document.createElement('div');
+        line2.className = 'skeleton-pulse skeleton-text';
+        line2.style.width = '55%';
+        body.appendChild(line2);
+        d.appendChild(body);
         return d;
     }
 
@@ -361,7 +466,10 @@
     function createSectionHeader() {
         var h = document.createElement('div');
         h.className = 'new-arrival-header';
-        h.innerHTML = '<h2 class="new-arrival-title">' + CONFIG.title + '</h2>';
+        var title = document.createElement('h2');
+        title.className = 'new-arrival-title';
+        title.textContent = CONFIG.title;
+        h.appendChild(title);
         return h;
     }
 
@@ -414,7 +522,18 @@
             container.appendChild(sec);
             setTimeout(initLazyLoading, 100);
         } catch (e) {
-            container.innerHTML = '<div class="new-arrival-error"><p>Unable to load new arrivals</p><button onclick="window.renderNewArrival()" class="new-arrival-retry-btn">Try Again</button></div>';
+            container.innerHTML = '';
+            var errDiv = document.createElement('div');
+            errDiv.className = 'new-arrival-error';
+            var errP = document.createElement('p');
+            errP.textContent = 'Unable to load new arrivals';
+            errDiv.appendChild(errP);
+            var retryBtn = document.createElement('button');
+            retryBtn.className = 'new-arrival-retry-btn';
+            retryBtn.textContent = 'Try Again';
+            retryBtn.onclick = function() { window.renderNewArrival(); };
+            errDiv.appendChild(retryBtn);
+            container.appendChild(errDiv);
         } finally {
             if (skeleton) skeleton.style.display = 'none';
         }
@@ -425,8 +544,9 @@
     function injectStyles() {
         var id = 'new-arrival-dynamic-styles';
         if (document.getElementById(id)) return;
-        var styles = '<style id="' + id + '">' +
-            '.new-arrivals-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #fff; }' +
+        var style = document.createElement('style');
+        style.id = id;
+        style.textContent = '.new-arrivals-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #fff; }' +
             '@media (max-width: 767px) { .new-arrivals-grid-section { padding: 20px 0; } }' +
             '@media (min-width: 768px) and (max-width: 1023px) { .new-arrivals-grid-section { padding: 28px 16px; } }' +
             '@media (min-width: 1024px) { .new-arrivals-grid-section { padding: 40px 36px; max-width: 1400px; } }' +
@@ -475,9 +595,8 @@
             '.new-arrival-skeleton-card { pointer-events: none; }' +
             '.skeleton-pulse { background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%); background-size: 800px 100%; animation: skeletonShimmer 1.8s infinite linear; border-radius: 0; }' +
             '.skeleton-text { height: 13px; margin-bottom: 5px; }' +
-            '@keyframes skeletonShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }' +
-            '</style>';
-        document.head.insertAdjacentHTML('beforeend', styles);
+            '@keyframes skeletonShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }';
+        document.head.appendChild(style);
     }
 
     function init() {
