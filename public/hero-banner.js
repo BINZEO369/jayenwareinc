@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 1.0.3 (Banner positioned AFTER Category Showcase)
+// Version: 2.0.0 (Updated with JABIYEN_FONTS integration)
 // ============================================================
 
 (function() {
@@ -70,9 +70,11 @@
                 padding: 0 16px;
             }
             
+            /* ---------- JABIYEN_FONTS Integration ---------- */
             .hero-subtitle {
                 display: inline-block;
-                font-family: 'Inter', sans-serif;
+                /* ✅ JABIYEN_FONTS: --font-accent (Inter) */
+                font-family: var(--font-accent, 'Inter', sans-serif);
                 font-size: clamp(7px, 1vw, 9px);
                 font-weight: 500;
                 letter-spacing: 0.45em;
@@ -85,13 +87,14 @@
             }
             
             .hero-title {
-                font-family: 'Playfair Display', serif;
+                /* ✅ JABIYEN_FONTS: --font-heading (Manrope) */
+                font-family: var(--font-heading, 'Manrope', sans-serif);
                 font-size: clamp(22px, 4.5vw, 60px);
-                font-weight: 900;
+                font-weight: 800;
                 line-height: 1.1;
                 color: #ffffff;
                 margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
-                letter-spacing: -0.01em;
+                letter-spacing: var(--tracking-tight, -0.5px);
                 opacity: 0;
                 transform: translateY(12px);
                 animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
@@ -106,10 +109,11 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 4px;
-                font-family: 'Inter', sans-serif;
+                /* ✅ JABIYEN_FONTS: --font-body (Inter) */
+                font-family: var(--font-body, 'Inter', sans-serif);
                 font-size: clamp(8px, 1vw, 10px);
-                font-weight: 500;
-                letter-spacing: 0.25em;
+                font-weight: 600;
+                letter-spacing: var(--tracking-wider, 1px);
                 text-transform: uppercase;
                 color: #ffffff;
                 text-decoration: none;
@@ -262,6 +266,54 @@
         `;
     }
 
+    // ==================== JABIYEN_FONTS INTEGRATION ====================
+    /**
+     * Ensure JABIYEN_FONTS CSS variables are applied before rendering
+     * This checks if fonts.js has already injected the variables, and if not,
+     * injects them manually as a fallback.
+     */
+    function ensureFontVariables() {
+        const root = document.documentElement;
+        const requiredVars = [
+            '--font-heading',
+            '--font-subtitle',
+            '--font-body',
+            '--font-accent',
+            '--tracking-tight',
+            '--tracking-normal',
+            '--tracking-wide',
+            '--tracking-wider'
+        ];
+
+        let needsInjection = false;
+        requiredVars.forEach(varName => {
+            if (!getComputedStyle(root).getPropertyValue(varName).trim()) {
+                needsInjection = true;
+            }
+        });
+
+        if (needsInjection) {
+            console.log('[HeroBanner] 🔧 Injecting JABIYEN_FONTS CSS variables as fallback...');
+            const fallbackVars = {
+                '--font-heading': "'Manrope', sans-serif",
+                '--font-subtitle': "'Sora', sans-serif",
+                '--font-body': "'Inter', sans-serif",
+                '--font-accent': "'Inter', sans-serif",
+                '--tracking-tight': '-0.5px',
+                '--tracking-normal': '0',
+                '--tracking-wide': '0.5px',
+                '--tracking-wider': '1px'
+            };
+
+            for (const [key, value] of Object.entries(fallbackVars)) {
+                root.style.setProperty(key, value);
+            }
+            console.log('[HeroBanner] ✅ Font variables injected');
+        } else {
+            console.log('[HeroBanner] ✅ JABIYEN_FONTS variables already present');
+        }
+    }
+
     // ==================== COMPONENT LOGIC ====================
     class HeroBannerComponent {
         constructor() {
@@ -287,6 +339,9 @@
 
             this.heroData = data;
             
+            // Ensure JABIYEN_FONTS variables are available
+            ensureFontVariables();
+            
             // Find container
             this.container = document.getElementById('hero-container');
             console.log('[HeroBanner] 📦 Container found:', !!this.container);
@@ -310,6 +365,8 @@
             this.isInitialized = true;
             
             console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides');
+            console.log('[HeroBanner] 🔤 Fonts: Heading=%cManrope (--font-heading)%c, Body=%cInter (--font-body)%c',
+                'color: #4ECDC4;', '', 'color: #FF6B6B;', '');
         }
 
         /**
@@ -738,5 +795,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v1.0.3 - Banner after Category Showcase)');
+    console.log('[HeroBanner] 📄 Component script loaded (v2.0.0 - JABIYEN_FONTS Integrated)');
 })();
