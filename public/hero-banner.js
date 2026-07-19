@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 2.1.0 (Fixed Heights + JABIYEN_FONTS Integration)
+// Version: 3.0.0 (Line Indicators + Smooth Scroll Fix + Typography Update)
 // ============================================================
 
 (function() {
@@ -22,6 +22,13 @@
                 
                 /* FIXED HEIGHTS */
                 height: 900px; /* Default Desktop */
+                
+                /* Prevent scroll-jank / intersection observer issues */
+                will-change: transform;
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
             }
             
             /* Tablet */
@@ -95,12 +102,12 @@
                 display: inline-block;
                 /* ✅ JABIYEN_FONTS: --font-accent (Inter) */
                 font-family: var(--font-accent, 'Inter', sans-serif);
-                font-size: clamp(7px, 1vw, 9px);
-                font-weight: 500;
-                letter-spacing: 0.45em;
+                font-size: clamp(6px, 0.85vw, 8px);
+                font-weight: 400;
+                letter-spacing: 0.35em;
                 text-transform: uppercase;
-                color: rgba(255, 255, 255, 0.6);
-                margin-bottom: clamp(12px, 2vh, 20px);
+                color: rgba(255, 255, 255, 0.55);
+                margin-bottom: clamp(10px, 1.8vh, 18px);
                 opacity: 0;
                 transform: translateY(8px);
                 animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
@@ -109,12 +116,12 @@
             .hero-title {
                 /* ✅ JABIYEN_FONTS: --font-heading (Manrope) */
                 font-family: var(--font-heading, 'Manrope', sans-serif);
-                font-size: clamp(22px, 4.5vw, 60px);
-                font-weight: 800;
-                line-height: 1.1;
+                font-size: clamp(18px, 3.5vw, 48px);
+                font-weight: 700;
+                line-height: 1.15;
                 color: #ffffff;
-                margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
-                letter-spacing: var(--tracking-tight, -0.5px);
+                margin: 0 0 clamp(14px, 2vh, 22px) 0;
+                letter-spacing: var(--tracking-tight, -0.3px);
                 opacity: 0;
                 transform: translateY(12px);
                 animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
@@ -128,51 +135,42 @@
             .hero-cta {
                 display: inline-flex;
                 align-items: center;
-                gap: 4px;
+                gap: 0;
                 /* ✅ JABIYEN_FONTS: --font-body (Inter) */
                 font-family: var(--font-body, 'Inter', sans-serif);
-                font-size: clamp(8px, 1vw, 10px);
-                font-weight: 600;
-                letter-spacing: var(--tracking-wider, 1px);
+                font-size: clamp(7px, 0.85vw, 9px);
+                font-weight: 500;
+                letter-spacing: 0.2em;
                 text-transform: uppercase;
-                color: #ffffff;
+                color: rgba(255, 255, 255, 0.8);
                 text-decoration: none;
                 transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-                padding: 0;
+                padding: 0 0 4px 0;
                 border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
                 background: none;
+                cursor: pointer;
+                position: relative;
             }
             .hero-cta:hover {
-                gap: 8px;
-                color: rgba(255, 255, 255, 0.85);
+                color: #ffffff;
+                border-bottom-color: rgba(255, 255, 255, 0.8);
+                padding: 0 20px 4px 0;
             }
             
-            .hero-cta .cta-arrow {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 28px;
-                height: 14px;
-                position: relative;
-                transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-            }
-            
-            .hero-cta .cta-arrow::after {
+            /* Underline expand effect on hover */
+            .hero-cta::after {
                 content: '';
                 position: absolute;
-                top: 50%;
-                right: 0;
-                width: 6px;
-                height: 6px;
-                border-top: 1px solid #ffffff;
-                border-right: 1px solid #ffffff;
-                transform: translateY(-50%) rotate(45deg);
-                transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+                bottom: -1px;
+                left: 0;
+                width: 0%;
+                height: 1px;
+                background: #ffffff;
+                transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
-            
-            .hero-cta:hover .cta-arrow::after {
-                right: -2px;
-                opacity: 0.8;
+            .hero-cta:hover::after {
+                width: 100%;
             }
             
             @keyframes heroFadeInUp {
@@ -182,37 +180,53 @@
                 }
             }
 
-            /* Hero Navigation Dots */
-            .hero-nav-dots {
+            /* ==================== LINE INDICATORS (বিশ্ব বিখ্যাত ওয়েবসাইট স্টাইল) ==================== */
+            .hero-nav-indicators {
                 position: absolute;
                 bottom: clamp(30px, 5vh, 50px);
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 3;
                 display: flex;
-                gap: 10px;
+                gap: 6px;
                 align-items: center;
             }
-            .hero-nav-dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
+            .hero-nav-indicator {
+                width: 40px;
+                height: 2px;
+                background: rgba(255, 255, 255, 0.25);
                 cursor: pointer;
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 border: none;
                 outline: none;
                 padding: 0;
+                position: relative;
+                border-radius: 1px;
             }
-            .hero-nav-dot:hover {
-                background: rgba(255, 255, 255, 0.6);
-                transform: scale(1.3);
+            .hero-nav-indicator:hover {
+                background: rgba(255, 255, 255, 0.5);
             }
-            .hero-nav-dot.active {
+            .hero-nav-indicator.active {
                 background: #ffffff;
-                width: 28px;
-                border-radius: 5px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                width: 60px;
+                box-shadow: 0 1px 6px rgba(255, 255, 255, 0.3);
+            }
+            
+            /* Progress bar inside active indicator */
+            .hero-nav-indicator.active::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.6);
+                border-radius: 1px;
+                animation: heroIndicatorProgress 7s linear forwards;
+            }
+            
+            @keyframes heroIndicatorProgress {
+                from { width: 0%; }
+                to { width: 100%; }
             }
 
             /* Hero Navigation Arrows */
@@ -224,15 +238,15 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.08);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.15);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 color: #ffffff;
                 font-size: 14px;
                 opacity: 0;
@@ -241,9 +255,9 @@
                 opacity: 1;
             }
             .hero-arrow:hover {
-                background: rgba(255, 255, 255, 0.2);
-                border-color: rgba(255, 255, 255, 0.4);
-                transform: translateY(-50%) scale(1.1);
+                background: rgba(255, 255, 255, 0.18);
+                border-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-50%) scale(1.08);
             }
             .hero-arrow:active {
                 transform: translateY(-50%) scale(0.95);
@@ -259,7 +273,14 @@
                 }
                 .hero-arrow.prev { left: 10px; }
                 .hero-arrow.next { right: 10px; }
-                .hero-nav-dots { bottom: 25px; }
+                .hero-nav-indicators { bottom: 25px; gap: 4px; }
+                .hero-nav-indicator {
+                    width: 30px;
+                    height: 2px;
+                }
+                .hero-nav-indicator.active {
+                    width: 45px;
+                }
             }
         </style>
     `;
@@ -281,17 +302,12 @@
                 <button id="hero-next-btn" class="hero-arrow next" aria-label="Next slide">
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
-                <div id="hero-nav-dots" class="hero-nav-dots"></div>
+                <div id="hero-nav-indicators" class="hero-nav-indicators"></div>
             </div>
         `;
     }
 
     // ==================== JABIYEN_FONTS INTEGRATION ====================
-    /**
-     * Ensure JABIYEN_FONTS CSS variables are applied before rendering
-     * This checks if fonts.js has already injected the variables, and if not,
-     * injects them manually as a fallback.
-     */
     function ensureFontVariables() {
         const root = document.documentElement;
         const requiredVars = [
@@ -319,7 +335,7 @@
                 '--font-subtitle': "'Sora', sans-serif",
                 '--font-body': "'Inter', sans-serif",
                 '--font-accent': "'Inter', sans-serif",
-                '--tracking-tight': '-0.5px',
+                '--tracking-tight': '-0.3px',
                 '--tracking-normal': '0',
                 '--tracking-wide': '0.5px',
                 '--tracking-wider': '1px'
@@ -339,16 +355,14 @@
         constructor() {
             this.currentSlide = 0;
             this.slideInterval = null;
+            this.progressAnimation = null;
             this.heroData = [];
             this.isTransitioning = false;
             this.container = null;
             this.isInitialized = false;
+            this.intersectionObserver = null;
         }
 
-        /**
-         * Initialize the hero banner component
-         * @param {Array} data - Array of hero slide objects [{img, title, subtitle, cta_text, cta_link}]
-         */
         init(data) {
             console.log('[HeroBanner] 🚀 Init called with', data?.length, 'slides');
             
@@ -359,10 +373,8 @@
 
             this.heroData = data;
             
-            // Ensure JABIYEN_FONTS variables are available
             ensureFontVariables();
             
-            // Find container
             this.container = document.getElementById('hero-container');
             console.log('[HeroBanner] 📦 Container found:', !!this.container);
             
@@ -371,7 +383,6 @@
                 return;
             }
 
-            // Inject inner HTML if needed
             if (!document.getElementById('hero-banner-slides')) {
                 console.log('[HeroBanner] 🔧 Injecting inner HTML template...');
                 this.container.outerHTML = getHeroHTML();
@@ -381,17 +392,45 @@
 
             this.render();
             this.bindEvents();
+            this.setupIntersectionObserver();
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Fixed Heights');
-            console.log('[HeroBanner] 🔤 Fonts: Heading=%cManrope (--font-heading)%c, Body=%cInter (--font-body)%c',
-                'color: #4ECDC4;', '', 'color: #FF6B6B;', '');
+            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Line Indicators + Smooth Scroll');
         }
 
         /**
-         * Render all slides
+         * Setup Intersection Observer to handle scroll-jank
+         * যখন ইউজার scroll করে ব্যানার সেকশনে পৌঁছায় তখন যাতে আটকে না যায়
          */
+        setupIntersectionObserver() {
+            if (!this.container) return;
+            
+            // Cleanup previous observer
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+            }
+
+            this.intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Banner is in viewport - ensure smooth rendering
+                        this.container.style.willChange = 'transform';
+                        this.container.style.transform = 'translateZ(0)';
+                    } else {
+                        // Banner is out of viewport - release resources
+                        this.container.style.willChange = 'auto';
+                        this.container.style.transform = 'none';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '50px 0px'
+            });
+
+            this.intersectionObserver.observe(this.container);
+        }
+
         render() {
             const slidesContainer = document.getElementById('hero-banner-slides');
             if (!slidesContainer || !this.heroData.length) return;
@@ -407,32 +446,29 @@
                 </div>
             `).join('');
 
-            this.renderDots();
+            this.renderIndicators();
             this.updateContent(0);
         }
 
         /**
-         * Render navigation dots
+         * Render line indicators (dots-এর পরিবর্তে লম্বা দাগ)
          */
-        renderDots() {
-            const dotsContainer = document.getElementById('hero-nav-dots');
-            if (!dotsContainer || this.heroData.length <= 1) {
-                if (dotsContainer) dotsContainer.style.display = 'none';
+        renderIndicators() {
+            const indicatorsContainer = document.getElementById('hero-nav-indicators');
+            if (!indicatorsContainer || this.heroData.length <= 1) {
+                if (indicatorsContainer) indicatorsContainer.style.display = 'none';
                 return;
             }
 
-            dotsContainer.style.display = 'flex';
-            dotsContainer.innerHTML = this.heroData.map((_, index) => `
-                <button class="hero-nav-dot ${index === 0 ? 'active' : ''}" 
-                        data-dot-index="${index}"
+            indicatorsContainer.style.display = 'flex';
+            indicatorsContainer.innerHTML = this.heroData.map((_, index) => `
+                <button class="hero-nav-indicator ${index === 0 ? 'active' : ''}" 
+                        data-indicator-index="${index}"
                         aria-label="Go to slide ${index + 1}">
                 </button>
             `).join('');
         }
 
-        /**
-         * Update active slide content (title, subtitle, CTA)
-         */
         updateContent(index) {
             const slide = this.heroData[index];
             if (!slide) return;
@@ -445,29 +481,26 @@
             [titleEl, subtitleEl, ctaContainer].forEach(el => {
                 if (el) {
                     el.style.animation = 'none';
-                    el.offsetHeight; // Force reflow
+                    el.offsetHeight;
                     el.style.animation = '';
                 }
             });
 
-            // Update title
             if (titleEl) {
                 titleEl.textContent = slide.title || '';
                 titleEl.style.display = slide.title ? 'block' : 'none';
             }
 
-            // Update subtitle
             if (subtitleEl) {
                 subtitleEl.textContent = slide.subtitle || '';
                 subtitleEl.style.display = slide.subtitle ? 'inline-block' : 'none';
             }
 
-            // Update CTA
             if (ctaContainer) {
                 if (slide.cta_text && slide.cta_link) {
                     ctaContainer.innerHTML = `
                         <a href="${slide.cta_link}" class="hero-cta">
-                            ${slide.cta_text} <span class="cta-arrow"></span>
+                            ${slide.cta_text}
                         </a>
                     `;
                     ctaContainer.style.display = 'block';
@@ -479,8 +512,18 @@
         }
 
         /**
-         * Switch to a specific slide
+         * Restart progress bar animation on active indicator
          */
+        restartProgressAnimation() {
+            const activeIndicator = document.querySelector('.hero-nav-indicator.active');
+            if (!activeIndicator) return;
+
+            // Remove and re-add the animation by resetting the pseudo-element
+            activeIndicator.classList.remove('active');
+            void activeIndicator.offsetWidth; // Force reflow
+            activeIndicator.classList.add('active');
+        }
+
         goToSlide(index) {
             if (this.isTransitioning) return;
             if (index < 0 || index >= this.heroData.length) return;
@@ -489,60 +532,46 @@
             this.isTransitioning = true;
 
             const slides = document.querySelectorAll('.hero-slide-wrapper');
-            const dots = document.querySelectorAll('.hero-nav-dot');
+            const indicators = document.querySelectorAll('.hero-nav-indicator');
 
-            // Fade out all slides
             slides.forEach(slide => slide.classList.add('fade-out'));
             
-            // Fade in target slide
             if (slides[index]) {
                 slides[index].classList.remove('fade-out');
             }
 
-            // Update active dot
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            indicators.forEach((ind, i) => ind.classList.toggle('active', i === index));
 
-            // Update content with animation
             this.updateContent(index);
             this.currentSlide = index;
 
-            // Reset transition lock after animation completes
+            // Restart progress bar
+            this.restartProgressAnimation();
+
             setTimeout(() => {
                 this.isTransitioning = false;
             }, 800);
         }
 
-        /**
-         * Go to next slide
-         */
         nextSlide() {
             const next = (this.currentSlide + 1) % this.heroData.length;
             this.goToSlide(next);
         }
 
-        /**
-         * Go to previous slide
-         */
         prevSlide() {
             const prev = (this.currentSlide - 1 + this.heroData.length) % this.heroData.length;
             this.goToSlide(prev);
         }
 
-        /**
-         * Start auto-sliding
-         */
         startAutoSlide() {
             this.stopAutoSlide();
             if (this.heroData.length > 1) {
                 this.slideInterval = setInterval(() => {
                     this.nextSlide();
-                }, 7000); // 7 seconds per slide
+                }, 7000);
             }
         }
 
-        /**
-         * Stop auto-sliding
-         */
         stopAutoSlide() {
             if (this.slideInterval) {
                 clearInterval(this.slideInterval);
@@ -550,25 +579,21 @@
             }
         }
 
-        /**
-         * Pause auto-slide temporarily (e.g., on hover)
-         */
         pauseAutoSlide() {
             this.stopAutoSlide();
+            // Pause progress bar
+            const activeIndicator = document.querySelector('.hero-nav-indicator.active');
+            if (activeIndicator) {
+                activeIndicator.style.animationPlayState = 'paused';
+            }
         }
 
-        /**
-         * Resume auto-slide after pause
-         */
         resumeAutoSlide() {
             this.startAutoSlide();
+            this.restartProgressAnimation();
         }
 
-        /**
-         * Bind all event listeners
-         */
         bindEvents() {
-            // Arrow buttons
             const prevBtn = document.getElementById('hero-prev-btn');
             const nextBtn = document.getElementById('hero-next-btn');
             
@@ -577,6 +602,8 @@
                     e.preventDefault();
                     e.stopPropagation();
                     this.prevSlide();
+                    this.pauseAutoSlide();
+                    setTimeout(() => this.resumeAutoSlide(), 5000);
                 });
             }
             
@@ -585,17 +612,19 @@
                     e.preventDefault();
                     e.stopPropagation();
                     this.nextSlide();
+                    this.pauseAutoSlide();
+                    setTimeout(() => this.resumeAutoSlide(), 5000);
                 });
             }
 
-            // Navigation dots - event delegation
-            const dotsContainer = document.getElementById('hero-nav-dots');
-            if (dotsContainer) {
-                dotsContainer.addEventListener('click', (e) => {
-                    const dot = e.target.closest('.hero-nav-dot');
-                    if (!dot) return;
+            // Line indicators - event delegation
+            const indicatorsContainer = document.getElementById('hero-nav-indicators');
+            if (indicatorsContainer) {
+                indicatorsContainer.addEventListener('click', (e) => {
+                    const indicator = e.target.closest('.hero-nav-indicator');
+                    if (!indicator) return;
                     
-                    const index = parseInt(dot.getAttribute('data-dot-index'));
+                    const index = parseInt(indicator.getAttribute('data-indicator-index'));
                     if (!isNaN(index)) {
                         this.goToSlide(index);
                         this.pauseAutoSlide();
@@ -608,12 +637,19 @@
             if (this.container) {
                 this.container.addEventListener('mouseenter', () => this.pauseAutoSlide());
                 this.container.addEventListener('mouseleave', () => this.resumeAutoSlide());
+                
+                // Touch events - pause on touch
+                this.container.addEventListener('touchstart', () => this.pauseAutoSlide(), { passive: true });
+                this.container.addEventListener('touchend', () => {
+                    setTimeout(() => this.resumeAutoSlide(), 3000);
+                }, { passive: true });
             }
 
-            // Touch swipe support
             this.bindTouchEvents();
+            this.bindKeyboardEvents();
+        }
 
-            // Keyboard navigation
+        bindKeyboardEvents() {
             document.addEventListener('keydown', (e) => {
                 if (!this.container || !this.container.offsetParent) return;
                 
@@ -631,9 +667,6 @@
             });
         }
 
-        /**
-         * Bind touch/swipe events for mobile
-         */
         bindTouchEvents() {
             if (!this.container) return;
 
@@ -661,9 +694,6 @@
             }, { passive: true });
         }
 
-        /**
-         * Refresh the banner with new data
-         */
         refresh(newData) {
             this.stopAutoSlide();
             this.currentSlide = 0;
@@ -671,43 +701,30 @@
             this.init(newData);
         }
 
-        /**
-         * Destroy the component (cleanup)
-         */
         destroy() {
             this.stopAutoSlide();
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+                this.intersectionObserver = null;
+            }
             this.isInitialized = false;
             console.log('[HeroBanner] 💀 Destroyed');
         }
     }
 
     // ==================== GLOBAL API ====================
-    // Create singleton instance
     const heroBanner = new HeroBannerComponent();
 
-    /**
-     * Initialize Hero Banner - Called from external scripts
-     * @param {Array} heroData - Array of hero slide objects
-     * 
-     * Usage: window.JAYENWARE.heroBanner.init(heroArray);
-     */
     window.JAYENWARE = window.JAYENWARE || {};
     window.JAYENWARE.heroBanner = heroBanner;
 
     // ==================== AUTO-INITIALIZATION ====================
-    // Inject styles
     if (!document.getElementById('hero-banner-styles')) {
         document.head.insertAdjacentHTML('beforeend', HERO_CSS);
         console.log('[HeroBanner] 🎨 Styles injected');
     }
 
-    /**
-     * Inject HTML into DOM at the correct position
-     * Position: AFTER #categoryshow-container (ক্যাটাগরি সেকশনের পরে ব্যানার)
-     * হিরো ভিডিও সেকশনের কোনো পরিবর্তন নেই
-     */
     function injectHTML() {
-        // Check if already exists
         let container = document.getElementById('hero-container');
         if (container) {
             console.log('[HeroBanner] 📦 Container already exists in DOM');
@@ -720,28 +737,21 @@
         tempDiv.innerHTML = getHeroHTML();
         const bannerElement = tempDiv.firstElementChild;
 
-        // IMPORTANT: We do NOT touch hero-video-section at all
-        // ভিডিও সেকশনকে সম্পূর্ণ অপরিবর্তিত রাখা হয়েছে
-        
         const homeSection = document.getElementById('home');
         const categoryShowContainer = document.getElementById('categoryshow-container');
 
         if (homeSection) {
             if (categoryShowContainer && categoryShowContainer.nextSibling) {
-                // ✅ PRIMARY: Insert AFTER category show section
                 categoryShowContainer.parentNode.insertBefore(bannerElement, categoryShowContainer.nextSibling);
                 console.log('[HeroBanner] ✅ Inserted AFTER categoryshow-container');
             } else if (categoryShowContainer) {
-                // If category show is the last element, append after it
                 homeSection.appendChild(bannerElement);
                 console.log('[HeroBanner] ✅ Appended after categoryshow-container');
             } else {
-                // Fallback: insert at beginning of home (if category show not found)
                 homeSection.insertBefore(bannerElement, homeSection.firstChild);
                 console.log('[HeroBanner] ⚠️ Inserted at beginning of #home (categoryshow not found)');
             }
         } else {
-            // Ultimate fallback
             const firstCarousel = document.querySelector('.carousel-section');
             if (firstCarousel) {
                 firstCarousel.parentNode.insertBefore(bannerElement, firstCarousel);
@@ -753,14 +763,9 @@
         }
     }
 
-    /**
-     * Try to initialize with available data
-     */
     function tryInit() {
-        // First ensure HTML is injected
         injectHTML();
         
-        // Check for data in window.currentData
         const data = (window.currentData && window.currentData.hero) || null;
         
         if (data && data.length > 0) {
@@ -771,9 +776,6 @@
         }
     }
 
-    /**
-     * Fetch hero data directly from API
-     */
     async function fetchHeroData() {
         try {
             console.log('[HeroBanner] 🌐 Fetching from /api/hero...');
@@ -790,7 +792,6 @@
         }
     }
 
-    // Listen for data loaded event from main app
     window.addEventListener('jayenware:dataLoaded', (e) => {
         console.log('[HeroBanner] 📡 Received jayenware:dataLoaded event');
         if (e.detail && e.detail.hero && e.detail.hero.length > 0) {
@@ -798,7 +799,6 @@
         }
     });
 
-    // Bootstrap - start the initialization process
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(tryInit, 50);
@@ -807,7 +807,6 @@
         setTimeout(tryInit, 50);
     }
 
-    // Retry mechanism - if data doesn't arrive via event, fetch directly after 3 seconds
     setTimeout(() => {
         if (!heroBanner.isInitialized) {
             console.log('[HeroBanner] 🔄 Retry - fetching directly...');
@@ -815,5 +814,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v2.1.0 - Fixed Heights + JABIYEN_FONTS Integrated)');
+    console.log('[HeroBanner] 📄 Component script loaded (v3.0.0 - Line Indicators + Smooth Scroll + Updated Typography)');
 })();
