@@ -1,7 +1,7 @@
 // ============================================================
 // hero-secondary-banner.js - JAYENWARE Secondary Banner Component
 // Hero Secondary Banner with Auto-Sliding Images
-// Version: 2.0.1 (Subtitle Below Title + Line Indicators + Smooth Scroll Fix)
+// Version: 2.0.2 (Fixed Image Loading Issue + All Previous Features)
 // ============================================================
 
 (function() {
@@ -56,19 +56,25 @@
                 position: absolute;
                 inset: 0;
                 transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+                /* ✅ Ensure all slides are visible initially for loading */
+                opacity: 1;
             }
             .hero-secondary-slide-wrapper.fade-out {
                 opacity: 0;
+                pointer-events: none;
             }
             .hero-secondary-slide-img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
                 animation: heroSecondaryZoom 20s ease-in-out infinite alternate;
+                /* ✅ Force hardware acceleration for smoother loading */
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
             }
             @keyframes heroSecondaryZoom {
-                from { transform: scale(1); }
-                to { transform: scale(1.05); }
+                from { transform: scale(1) translateZ(0); }
+                to { transform: scale(1.05) translateZ(0); }
             }
             
             .hero-secondary-overlay {
@@ -370,6 +376,7 @@
             this.container = null;
             this.isInitialized = false;
             this.intersectionObserver = null;
+            this.loadedImages = new Set(); // ✅ Track loaded images
         }
 
         init(data) {
@@ -400,12 +407,47 @@
             }
 
             this.render();
+            this.preloadAllImages(); // ✅ Preload all images
             this.bindEvents();
             this.setupIntersectionObserver();
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroSecondaryBanner] ✅ Initialized with', this.heroSecondaryData.length, 'slides - Line Indicators + Smooth Scroll');
+            console.log('[HeroSecondaryBanner] ✅ Initialized with', this.heroSecondaryData.length, 'slides - Image Loading Fixed');
+        }
+
+        /**
+         * ✅ PRELOAD ALL IMAGES to prevent black screens
+         */
+        preloadAllImages() {
+            console.log('[HeroSecondaryBanner] 🖼️ Preloading all images...');
+            
+            this.heroSecondaryData.forEach((slide, index) => {
+                const img = new Image();
+                
+                img.onload = () => {
+                    this.loadedImages.add(index);
+                    console.log(`[HeroSecondaryBanner] ✅ Image ${index + 1}/${this.heroSecondaryData.length} loaded: ${slide.img}`);
+                    
+                    // Update the actual slide image source if it was a placeholder
+                    const slideImg = document.querySelector(`.hero-secondary-slide-wrapper[data-slide-index="${index}"] .hero-secondary-slide-img`);
+                    if (slideImg && slideImg.src !== slide.img) {
+                        slideImg.src = slide.img;
+                    }
+                };
+                
+                img.onerror = () => {
+                    console.error(`[HeroSecondaryBanner] ❌ Failed to load image ${index + 1}: ${slide.img}`);
+                    // Keep the slide visible even if image fails
+                    const slideWrapper = document.querySelector(`.hero-secondary-slide-wrapper[data-slide-index="${index}"]`);
+                    if (slideWrapper) {
+                        slideWrapper.style.backgroundColor = '#1a1a1a';
+                    }
+                };
+                
+                // Start loading
+                img.src = slide.img;
+            });
         }
 
         /**
@@ -440,19 +482,41 @@
             const slidesContainer = document.getElementById('hero-secondary-banner-slides');
             if (!slidesContainer || !this.heroSecondaryData.length) return;
 
+            // ✅ Render all slides with eager loading for first 2, lazy for rest
             slidesContainer.innerHTML = this.heroSecondaryData.map((slide, index) => `
                 <div class="hero-secondary-slide-wrapper ${index !== 0 ? 'fade-out' : ''}" 
-                     data-slide-index="${index}">
+                     data-slide-index="${index}"
+                     style="opacity: ${index === 0 ? 1 : 0};">
                     <img src="${slide.img}" 
                          alt="${slide.title || 'JAYENWARE Secondary Hero'}" 
                          class="hero-secondary-slide-img" 
-                         loading="${index === 0 ? 'eager' : 'lazy'}"
-                         onerror="this.style.display='none'">
+                         loading="${index < 2 ? 'eager' : 'lazy'}"
+                         decoding="async"
+                         onload="console.log('[HeroSecondaryBanner] 🖼️ Slide ${index + 1} image loaded successfully')"
+                         onerror="this.parentElement.style.backgroundColor='#1a1a1a'; console.error('[HeroSecondaryBanner] ❌ Slide ${index + 1} image failed to load')">
                 </div>
             `).join('');
 
             this.renderIndicators();
             this.updateContent(0);
+            
+            // ✅ Force visibility check after render
+            setTimeout(() => this.verifySlidesVisibility(), 100);
+        }
+
+        /**
+         * ✅ Verify all slides are properly visible
+         */
+        verifySlidesVisibility() {
+            const slides = document.querySelectorAll('.hero-secondary-slide-wrapper');
+            slides.forEach((slide, index) => {
+                const img = slide.querySelector('.hero-secondary-slide-img');
+                if (img && img.complete && img.naturalWidth > 0) {
+                    console.log(`[HeroSecondaryBanner] ✅ Slide ${index + 1} verified: ${img.naturalWidth}x${img.naturalHeight}`);
+                } else if (img && !img.complete) {
+                    console.log(`[HeroSecondaryBanner] ⏳ Slide ${index + 1} still loading...`);
+                }
+            });
         }
 
         /**
@@ -537,11 +601,18 @@
             const slides = document.querySelectorAll('.hero-secondary-slide-wrapper');
             const indicators = document.querySelectorAll('.hero-secondary-nav-indicator');
 
-            slides.forEach(slide => slide.classList.add('fade-out'));
-            
-            if (slides[index]) {
-                slides[index].classList.remove('fade-out');
-            }
+            // ✅ Fade management with proper opacity
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    // Target slide - make visible
+                    slide.style.opacity = '1';
+                    slide.classList.remove('fade-out');
+                } else {
+                    // Other slides - hide
+                    slide.style.opacity = '0';
+                    slide.classList.add('fade-out');
+                }
+            });
 
             indicators.forEach((ind, i) => ind.classList.toggle('active', i === index));
 
@@ -696,6 +767,7 @@
             this.stopAutoSlide();
             this.currentSlide = 0;
             this.isTransitioning = false;
+            this.loadedImages.clear();
             this.init(newData);
         }
 
@@ -705,6 +777,7 @@
                 this.intersectionObserver.disconnect();
                 this.intersectionObserver = null;
             }
+            this.loadedImages.clear();
             this.isInitialized = false;
             console.log('[HeroSecondaryBanner] 💀 Destroyed');
         }
@@ -803,5 +876,5 @@
         }
     }, 3000);
 
-    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v2.0.1 - Subtitle Below Title + Line Indicators + Smooth Scroll)');
+    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v2.0.2 - Fixed Image Loading)');
 })();
