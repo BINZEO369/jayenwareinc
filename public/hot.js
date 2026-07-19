@@ -1,7 +1,7 @@
 // ============================================
 // HOT / TRENDING NOW SECTION
 // Complete Client-Side Component
-// Fixed: container ID, skeleton ID, function name match index.html
+// UPDATED: Same design, same colors, same image slider as New Arrivals
 // ============================================
 
 (function() {
@@ -67,7 +67,7 @@
     };
 
     // ============================================
-    // SECTION CONFIGURATION - MATCHES index.html IDs
+    // SECTION CONFIGURATION
     // ============================================
     var CONFIG = {
         containerId: 'trending-now-container',
@@ -79,63 +79,11 @@
         cardAspectRatio: '4/5'
     };
 
-    // ============================================
-    // COLOR CACHE
-    // ============================================
     var productColorsCache = {};
-
-    // ============================================
-    // DRAG / SWIPE GLOBALS
-    // ============================================
-    var globalMouseMoveHandler = null;
-    var globalMouseUpHandler = null;
-    var activeDragData = null;
-
-    function ensureGlobalMouseHandlers() {
-        if (globalMouseMoveHandler && globalMouseUpHandler) return;
-
-        globalMouseMoveHandler = function(e) {
-            if (!activeDragData) return;
-            var d = activeDragData;
-            if (d.transitioning) return;
-            d.mcX = e.clientX;
-            var diff = d.mcX - d.msX;
-            var imgs = d.card.querySelectorAll('.trending-now-slider-image');
-            var cur = imgs[d.idx];
-            if (cur) cur.style.left = diff + 'px';
-            if (diff < -30 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
-                imgs[d.idx + 1].style.left = (100 + (diff / d.card.offsetWidth * 100)) + '%';
-            } else if (diff > 30 && d.idx > 0 && imgs[d.idx - 1]) {
-                imgs[d.idx - 1].style.left = (-100 + (diff / d.card.offsetWidth * 100)) + '%';
-            }
-        };
-
-        globalMouseUpHandler = function() {
-            if (!activeDragData) return;
-            var d = activeDragData;
-            activeDragData = null;
-            d.md = false;
-            var diff = d.msX - d.mcX;
-            var th = d.card.offsetWidth * 0.2;
-            var imgs = d.card.querySelectorAll('.trending-now-slider-image');
-            imgs.forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && d.idx < d.total - 1) d.slideTo(d.idx + 1);
-                else if (diff < 0 && d.idx > 0) d.slideTo(d.idx - 1);
-                else d.reset();
-            } else {
-                d.reset();
-            }
-        };
-
-        window.addEventListener('mousemove', globalMouseMoveHandler);
-        window.addEventListener('mouseup', globalMouseUpHandler);
-    }
 
     // ============================================
     // HELPER FUNCTIONS
     // ============================================
-
     function getImageUrl(product) {
         if (product.img && product.img.trim() !== '') return product.img;
         if (product.image && product.image.trim() !== '') return product.image;
@@ -148,11 +96,7 @@
     }
 
     function getProductSlug(product) {
-        return (product.slug || product.title || 'product')
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[\s_]+/g, '-')
-            .replace(/^-+|-+$/g, '');
+        return (product.slug || product.title || 'product').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
     }
 
     function handleImageLoad(img) {
@@ -181,9 +125,7 @@
             var data = await res.json();
             productColorsCache[slug] = data || [];
             return data || [];
-        } catch (e) {
-            return [];
-        }
+        } catch (e) { return []; }
     }
 
     function getAllImagesForSlider(product, colors) {
@@ -201,14 +143,10 @@
     }
 
     // ============================================
-    // CARD CREATION
+    // PRODUCT CARD
     // ============================================
-
     function createProductCard(product) {
-        var out = product.is_out_of_stock === true || 
-                  product.is_out_of_stock === 1 || 
-                  product.stock === 0 || 
-                  product.stock === '0';
+        var out = product.is_out_of_stock === true || product.is_out_of_stock === 1 || product.stock === 0 || product.stock === '0';
         var slug = getProductSlug(product);
         var img = getImageUrl(product);
 
@@ -221,11 +159,9 @@
         link.href = '/product/' + encodeURIComponent(slug);
         link.className = 'trending-now-card-link';
 
-        // Image wrapper
         var imageWrapper = document.createElement('div');
         imageWrapper.className = 'trending-now-card-image-wrapper';
 
-        // Image slider
         var slider = document.createElement('div');
         slider.className = 'trending-now-image-slider';
         slider.setAttribute('data-slug', slug);
@@ -242,25 +178,18 @@
 
         imageWrapper.appendChild(slider);
 
-        // Badge (Trending)
         if (!out) {
             var badgeText = '';
-            if (product.is_hot === true || product.is_hot === 1 || 
-                product.is_trending === true || product.is_trending === 1) {
-                badgeText = 'Trending';
-            } else if (product.is_on_sale === true || product.is_on_sale === 1) {
-                badgeText = 'Sale';
-            }
+            if (product.is_hot === true || product.is_hot === 1 || product.is_trending === true || product.is_trending === 1) badgeText = 'Trending';
+            else if (product.is_on_sale === true || product.is_on_sale === 1) badgeText = 'Sale';
             if (badgeText) {
                 var badgeSpan = document.createElement('span');
-                badgeSpan.className = 'trending-now-badge' + 
-                    (badgeText === 'Sale' ? ' trending-now-badge-sale' : '');
+                badgeSpan.className = 'trending-now-badge' + (badgeText === 'Sale' ? ' trending-now-badge-sale' : '');
                 badgeSpan.textContent = badgeText;
                 imageWrapper.appendChild(badgeSpan);
             }
         }
 
-        // Sold out overlay
         if (out) {
             var soldOut = document.createElement('div');
             soldOut.className = 'trending-now-soldout-overlay';
@@ -270,7 +199,6 @@
             imageWrapper.appendChild(soldOut);
         }
 
-        // Image dots
         var dotsContainer = document.createElement('div');
         dotsContainer.className = 'trending-now-image-dots';
         dotsContainer.setAttribute('data-slug', slug);
@@ -279,7 +207,6 @@
 
         link.appendChild(imageWrapper);
 
-        // Card body
         var cardBody = document.createElement('div');
         cardBody.className = 'trending-now-card-body';
 
@@ -288,7 +215,6 @@
         titleEl.textContent = product.title || 'Untitled';
         cardBody.appendChild(titleEl);
 
-        // Color dots below title
         var colorDotsBelow = document.createElement('div');
         colorDotsBelow.className = 'trending-now-color-dots-below';
         colorDotsBelow.setAttribute('data-slug', slug);
@@ -297,11 +223,7 @@
         link.appendChild(cardBody);
         card.appendChild(link);
 
-        // Fetch colors and setup
-        fetchProductColors(slug).then(function(colors) {
-            setupCard(card, product, colors, slug);
-        });
-
+        fetchProductColors(slug).then(function(colors) { setupCard(card, product, colors, slug); });
         return card;
     }
 
@@ -310,73 +232,77 @@
         var dots = card.querySelector('.trending-now-image-dots');
         var colorDots = card.querySelector('.trending-now-color-dots-below');
         var all = getAllImagesForSlider(product, colors);
-
-        if (all.length > 1) {
-            setupSlider(card, slider, dots, all);
-        } else if (dots) {
-            dots.style.display = 'none';
-        }
-
-        if (colors && colors.length && colorDots) {
-            setupColorDots(colorDots, colors, slug);
-        } else if (colorDots) {
-            colorDots.style.display = 'none';
-        }
+        if (all.length > 1) setupSlider(card, slider, dots, all);
+        else if (dots) dots.style.display = 'none';
+        if (colors && colors.length && colorDots) setupColorDots(colorDots, colors, slug);
+        else if (colorDots) colorDots.style.display = 'none';
     }
 
     function setupSlider(card, slider, dotsContainer, images) {
-        ensureGlobalMouseHandlers();
-
         slider.innerHTML = '';
         dotsContainer.innerHTML = '';
         dotsContainer.style.display = 'flex';
 
-        var dragData = {
-            card: card,
-            idx: 0,
-            total: images.length,
-            transitioning: false,
-            slideTo: null,
-            reset: null,
-            md: false,
-            msX: 0,
-            mcX: 0,
-            tsX: 0,
-            tcX: 0,
-            dragging: false
-        };
+        var currentIndex = 0;
+        var totalImages = images.length;
+        var isAnimating = false;
 
-        function slideTo(to) {
-            if (dragData.transitioning || to === dragData.idx) return;
-            dragData.transitioning = true;
+        function updateSlide(index, direction) {
+            if (isAnimating || index === currentIndex) return;
+            if (index < 0 || index >= totalImages) return;
+            isAnimating = true;
+
             var imgs = card.querySelectorAll('.trending-now-slider-image');
             var dts = card.querySelectorAll('.trending-now-image-dot');
-            var dir = to > dragData.idx ? 1 : -1;
+            var dir = direction || (index > currentIndex ? 1 : -1);
+            var oldIndex = currentIndex;
+            currentIndex = index;
+
             imgs.forEach(function(im, i) {
-                if (i === to) im.style.left = '0';
-                else if (i === dragData.idx) im.style.left = dir > 0 ? '-100%' : '100%';
-                else if (dir > 0 && i < to) im.style.left = '-100%';
-                else if (dir < 0 && i > to) im.style.left = '100%';
-                else im.style.left = dir > 0 ? '100%' : '-100%';
+                im.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
+                if (i === index) {
+                    im.style.left = '0';
+                    im.style.zIndex = '2';
+                } else if (i === oldIndex) {
+                    im.style.left = dir > 0 ? '-100%' : '100%';
+                    im.style.zIndex = '1';
+                } else if (dir > 0 && i < index) {
+                    im.style.left = '-100%';
+                    im.style.zIndex = '1';
+                } else if (dir < 0 && i > index) {
+                    im.style.left = '100%';
+                    im.style.zIndex = '1';
+                } else {
+                    im.style.left = dir > 0 ? '100%' : '-100%';
+                    im.style.zIndex = '0';
+                }
             });
-            dts.forEach(function(d, i) { d.classList.toggle('active', i === to); });
-            dragData.idx = to;
-            setTimeout(function() { dragData.transitioning = false; }, 450);
+
+            dts.forEach(function(d, i) {
+                d.classList.toggle('active', i === index);
+            });
+
+            setTimeout(function() {
+                isAnimating = false;
+            }, 500);
         }
 
-        function reset() {
+        function resetToCurrent() {
             var imgs = card.querySelectorAll('.trending-now-slider-image');
             imgs.forEach(function(im, i) {
-                if (i === dragData.idx) im.style.left = '0';
-                else if (i < dragData.idx) im.style.left = '-100%';
-                else im.style.left = '100%';
+                im.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
+                if (i === currentIndex) {
+                    im.style.left = '0';
+                    im.style.zIndex = '2';
+                } else if (i < currentIndex) {
+                    im.style.left = '-100%';
+                    im.style.zIndex = '1';
+                } else {
+                    im.style.left = '100%';
+                    im.style.zIndex = '0';
+                }
             });
         }
-
-        dragData.slideTo = slideTo;
-        dragData.reset = reset;
-
-        card._sliderDragData = dragData;
 
         images.forEach(function(src, i) {
             var img = document.createElement('img');
@@ -385,11 +311,10 @@
             img.className = 'trending-now-card-image trending-now-slider-image';
             img.setAttribute('data-index', i);
             img.loading = 'lazy';
-            img.style.cssText = 'position:absolute;top:0;left:' + 
-                (i === 0 ? '0' : '100%') + 
-                ';width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;';
+            img.style.cssText = 'position:absolute;top:0;left:' + (i === 0 ? '0' : '100%') + ';width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;z-index:' + (i === 0 ? '2' : '0') + ';';
             img.onload = function() { handleImageLoad(this); };
             img.onerror = function() { handleImageError(this); };
+            img.draggable = false;
             slider.appendChild(img);
 
             var dot = document.createElement('span');
@@ -399,8 +324,8 @@
                 dot.addEventListener('click', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    if (dragData.transitioning || index === dragData.idx) return;
-                    slideTo(index);
+                    if (isAnimating || index === currentIndex) return;
+                    updateSlide(index);
                 });
             })(i);
             dotsContainer.appendChild(dot);
@@ -409,74 +334,164 @@
         var firstDot = dotsContainer.querySelector('[data-index="0"]');
         if (firstDot) firstDot.classList.add('active');
 
-        // Touch events
+        var startX = 0;
+        var startY = 0;
+        var currentX = 0;
+        var currentY = 0;
+        var isDragging = false;
+        var isHorizontalSwipe = null;
+
         card.addEventListener('touchstart', function(e) {
-            var d = card._sliderDragData;
-            if (!d || d.transitioning) return;
-            d.tsX = e.touches[0].clientX;
-            d.tcX = d.tsX;
-            d.dragging = true;
-            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { 
-                im.style.transition = 'none'; 
-            });
+            if (isAnimating) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            currentX = startX;
+            currentY = startY;
+            isDragging = true;
+            isHorizontalSwipe = null;
+            var imgs = card.querySelectorAll('.trending-now-slider-image');
+            imgs.forEach(function(im) { im.style.transition = 'none'; });
         }, { passive: true });
 
         card.addEventListener('touchmove', function(e) {
-            var d = card._sliderDragData;
-            if (!d || !d.dragging || d.transitioning) return;
-            d.tcX = e.touches[0].clientX;
-            var diff = d.tcX - d.tsX;
-            var imgs = card.querySelectorAll('.trending-now-slider-image');
-            var cur = imgs[d.idx];
-            if (cur) cur.style.left = diff + 'px';
-            if (diff < -30 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
-                imgs[d.idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            } else if (diff > 30 && d.idx > 0 && imgs[d.idx - 1]) {
-                imgs[d.idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-            }
-        }, { passive: true });
+            if (!isDragging || isAnimating) return;
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+            var diffX = currentX - startX;
+            var diffY = currentY - startY;
 
-        card.addEventListener('touchend', function() {
-            var d = card._sliderDragData;
-            if (!d || !d.dragging) return;
-            d.dragging = false;
-            var diff = d.tsX - d.tcX;
-            var th = card.offsetWidth * 0.2;
-            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { 
-                im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; 
-            });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
-                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
-                else reset();
+            if (isHorizontalSwipe === null && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)) {
+                isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+            }
+
+            if (isHorizontalSwipe === false) return;
+
+            if (isHorizontalSwipe === true) {
+                e.preventDefault();
+                var imgs = card.querySelectorAll('.trending-now-slider-image');
+                var cur = imgs[currentIndex];
+                if (cur) {
+                    cur.style.left = diffX + 'px';
+                    cur.style.zIndex = '3';
+                }
+                if (diffX < -10 && currentIndex < totalImages - 1 && imgs[currentIndex + 1]) {
+                    imgs[currentIndex + 1].style.left = (100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex + 1].style.zIndex = '2';
+                } else if (diffX > 10 && currentIndex > 0 && imgs[currentIndex - 1]) {
+                    imgs[currentIndex - 1].style.left = (-100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex - 1].style.zIndex = '2';
+                }
+            }
+        }, { passive: false });
+
+        card.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (isHorizontalSwipe === false) {
+                resetToCurrent();
+                return;
+            }
+
+            if (isHorizontalSwipe === null) {
+                resetToCurrent();
+                return;
+            }
+
+            var diffX = startX - currentX;
+            var threshold = card.offsetWidth * 0.2;
+
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0 && currentIndex < totalImages - 1) {
+                    updateSlide(currentIndex + 1, 1);
+                } else if (diffX < 0 && currentIndex > 0) {
+                    updateSlide(currentIndex - 1, -1);
+                } else {
+                    resetToCurrent();
+                }
             } else {
-                reset();
+                resetToCurrent();
             }
         });
 
-        // Mouse events
         card.addEventListener('mousedown', function(e) {
-            var d = card._sliderDragData;
-            if (!d || d.transitioning) return;
-            if (activeDragData && activeDragData !== d) {
-                activeDragData.md = false;
-                activeDragData = null;
+            if (isAnimating) return;
+            startX = e.clientX;
+            startY = e.clientY;
+            currentX = startX;
+            currentY = startY;
+            isDragging = true;
+            isHorizontalSwipe = null;
+            var imgs = card.querySelectorAll('.trending-now-slider-image');
+            imgs.forEach(function(im) { im.style.transition = 'none'; });
+            e.preventDefault();
+        });
+
+        card.addEventListener('mousemove', function(e) {
+            if (!isDragging || isAnimating) return;
+            currentX = e.clientX;
+            currentY = e.clientY;
+            var diffX = currentX - startX;
+            var diffY = currentY - startY;
+
+            if (isHorizontalSwipe === null && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)) {
+                isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
             }
-            d.md = true;
-            d.msX = e.clientX;
-            d.mcX = d.msX;
-            activeDragData = d;
-            card.querySelectorAll('.trending-now-slider-image').forEach(function(im) { 
-                im.style.transition = 'none'; 
-            });
+
+            if (isHorizontalSwipe === false) return;
+
+            if (isHorizontalSwipe === true) {
+                e.preventDefault();
+                var imgs = card.querySelectorAll('.trending-now-slider-image');
+                var cur = imgs[currentIndex];
+                if (cur) {
+                    cur.style.left = diffX + 'px';
+                    cur.style.zIndex = '3';
+                }
+                if (diffX < -10 && currentIndex < totalImages - 1 && imgs[currentIndex + 1]) {
+                    imgs[currentIndex + 1].style.left = (100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex + 1].style.zIndex = '2';
+                } else if (diffX > 10 && currentIndex > 0 && imgs[currentIndex - 1]) {
+                    imgs[currentIndex - 1].style.left = (-100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex - 1].style.zIndex = '2';
+                }
+            }
+        });
+
+        card.addEventListener('mouseup', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (isHorizontalSwipe === false || isHorizontalSwipe === null) {
+                resetToCurrent();
+                return;
+            }
+
+            var diffX = startX - currentX;
+            var threshold = card.offsetWidth * 0.2;
+
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0 && currentIndex < totalImages - 1) {
+                    updateSlide(currentIndex + 1, 1);
+                } else if (diffX < 0 && currentIndex > 0) {
+                    updateSlide(currentIndex - 1, -1);
+                } else {
+                    resetToCurrent();
+                }
+            } else {
+                resetToCurrent();
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            if (!isDragging) return;
+            isDragging = false;
+            resetToCurrent();
         });
     }
 
     function setupColorDots(container, colors, slug) {
-        if (!colors || !colors.length) {
-            container.style.display = 'none';
-            return;
-        }
+        if (!colors || !colors.length) { container.style.display = 'none'; return; }
         container.innerHTML = '';
         colors.forEach(function(c) {
             var dot = document.createElement('span');
@@ -495,12 +510,9 @@
     // ============================================
     // EMPTY STATE
     // ============================================
-
     function createEmptyState() {
         var d = document.createElement('div');
         d.className = 'trending-now-empty';
-        
-        // Trending icon SVG
         var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('width', '64');
         svg.setAttribute('height', '64');
@@ -512,34 +524,55 @@
         path.setAttribute('d', 'M13 2L3 14h9l-1 8 10-12h-9l1-8z');
         svg.appendChild(path);
         d.appendChild(svg);
-        
         var p1 = document.createElement('p');
         p1.textContent = 'No trending products right now';
         d.appendChild(p1);
-        
         var p2 = document.createElement('p');
         p2.className = 'trending-now-empty-sub';
         p2.textContent = 'Hot picks coming soon — stay tuned';
         d.appendChild(p2);
-        
+        return d;
+    }
+
+    // ============================================
+    // SKELETON CARD
+    // ============================================
+    function createSkeletonCard() {
+        var d = document.createElement('div');
+        d.className = 'trending-now-card trending-now-skeleton-card';
+        var wrapper = document.createElement('div');
+        wrapper.className = 'trending-now-card-image-wrapper';
+        var pulse = document.createElement('div');
+        pulse.className = 'skeleton-pulse';
+        pulse.style.cssText = 'width:100%;aspect-ratio:' + CONFIG.cardAspectRatio + ';';
+        wrapper.appendChild(pulse);
+        d.appendChild(wrapper);
+        var body = document.createElement('div');
+        body.className = 'trending-now-card-body';
+        var line1 = document.createElement('div');
+        line1.className = 'skeleton-pulse skeleton-text';
+        line1.style.width = '85%';
+        body.appendChild(line1);
+        var line2 = document.createElement('div');
+        line2.className = 'skeleton-pulse skeleton-text';
+        line2.style.width = '55%';
+        body.appendChild(line2);
+        d.appendChild(body);
         return d;
     }
 
     // ============================================
     // DATA FETCHING
     // ============================================
-
-    async function fetchWithRetry(url, retries) {
+    async function fetchWithRetry(url, opts, retries) {
+        opts = opts || {};
         retries = retries || API_CONFIG.retryAttempts;
         var ctrl = new AbortController();
         var tid = setTimeout(function() { ctrl.abort(); }, API_CONFIG.timeout);
         try {
             var res = await fetch(url, {
                 signal: ctrl.signal,
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'Accept': 'application/json' 
-                }
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
             });
             clearTimeout(tid);
             if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -552,7 +585,7 @@
             clearTimeout(tid);
             if (retries > 0 && e.name !== 'AbortError') {
                 await new Promise(function(r) { setTimeout(r, 1000); });
-                return fetchWithRetry(url, retries - 1);
+                return fetchWithRetry(url, opts, retries - 1);
             }
             throw e;
         }
@@ -561,46 +594,33 @@
     async function fetchTrendingProducts() {
         try {
             var allProducts = await fetchWithRetry(API_CONFIG.baseURL + API_CONFIG.endpoints.products);
-            
             if (allProducts.length) {
                 var trending = allProducts.filter(function(p) {
-                    return p.is_hot === true || 
-                           p.is_hot === 1 || 
-                           p.is_hot === 'true' ||
-                           p.is_trending === true || 
-                           p.is_trending === 1 || 
-                           p.is_trending === 'true';
+                    return p.is_hot === true || p.is_hot === 1 || p.is_hot === 'true' ||
+                           p.is_trending === true || p.is_trending === 1 || p.is_trending === 'true';
                 });
-                
                 trending.sort(function(a, b) {
                     var aHot = (a.is_hot === true || a.is_hot === 1) ? 1 : 0;
                     var bHot = (b.is_hot === true || b.is_hot === 1) ? 1 : 0;
                     if (aHot !== bHot) return bHot - aHot;
                     return new Date(b.created_at || 0) - new Date(a.created_at || 0);
                 });
-                
                 return trending.slice(0, CONFIG.maxProducts);
             }
             return [];
-        } catch (e) {
-            console.error('Failed to fetch trending products:', e);
-            return [];
-        }
+        } catch (e) { return []; }
     }
 
     // ============================================
     // SECTION RENDERING
     // ============================================
-
     function createSectionHeader() {
         var h = document.createElement('div');
         h.className = 'trending-now-header';
-        
         var title = document.createElement('h2');
         title.className = 'trending-now-title';
         title.textContent = CONFIG.title;
         h.appendChild(title);
-        
         return h;
     }
 
@@ -623,48 +643,32 @@
                 }
             });
         }, { rootMargin: '200px 0px', threshold: 0.01 });
-        document.querySelectorAll('.trending-now-card-image').forEach(function(img) { 
-            obs.observe(img); 
-        });
+        document.querySelectorAll('.trending-now-card-image').forEach(function(img) { obs.observe(img); });
     }
 
-    // ✅ MAIN FUNCTION - named renderTrendingNow to match index.html
     async function renderTrendingNow(products) {
         var container = document.getElementById(CONFIG.containerId);
         var skeleton = document.getElementById(CONFIG.skeletonId);
-        
-        if (!container) {
-            console.warn('[TrendingNow] Container #' + CONFIG.containerId + ' not found');
-            return;
-        }
-        
+        if (!container) return;
         if (skeleton) skeleton.style.display = 'block';
-
-        activeDragData = null;
 
         try {
             var trendingProducts;
             if (Array.isArray(products) && products.length > 0) {
                 trendingProducts = products.filter(function(p) {
-                    return p.is_hot === true || 
-                           p.is_hot === 1 || 
-                           p.is_hot === 'true' ||
-                           p.is_trending === true || 
-                           p.is_trending === 1 || 
-                           p.is_trending === 'true';
+                    return p.is_hot === true || p.is_hot === 1 || p.is_hot === 'true' ||
+                           p.is_trending === true || p.is_trending === 1 || p.is_trending === 'true';
                 });
             } else {
                 trendingProducts = await fetchTrendingProducts();
             }
 
             container.innerHTML = '';
-            
             var sec = document.createElement('section');
             sec.className = CONFIG.sectionClass;
             sec.appendChild(createSectionHeader());
-            
             var grid = createGridContainer();
-            
+
             if (trendingProducts && trendingProducts.length) {
                 trendingProducts.slice(0, CONFIG.maxProducts).forEach(function(p) {
                     grid.appendChild(createProductCard(p));
@@ -673,49 +677,39 @@
                 sec.classList.add('trending-now-empty-section');
                 grid.appendChild(createEmptyState());
             }
-            
+
             sec.appendChild(grid);
             container.appendChild(sec);
-            
             setTimeout(initLazyLoading, 100);
         } catch (e) {
-            console.error('Failed to render trending section:', e);
             container.innerHTML = '';
-            
             var errDiv = document.createElement('div');
             errDiv.className = 'trending-now-error';
-            
             var errP = document.createElement('p');
             errP.textContent = 'Unable to load trending products';
             errDiv.appendChild(errP);
-            
             var retryBtn = document.createElement('button');
             retryBtn.className = 'trending-now-retry-btn';
             retryBtn.textContent = 'Try Again';
             retryBtn.onclick = function() { window.renderTrendingNow(); };
             errDiv.appendChild(retryBtn);
-            
             container.appendChild(errDiv);
         } finally {
             if (skeleton) skeleton.style.display = 'none';
         }
     }
 
-    // ✅ Expose as renderTrendingNow (matches index.html call)
     window.renderTrendingNow = renderTrendingNow;
 
     // ============================================
-    // STYLES INJECTION
+    // STYLES INJECTION - Same design as New Arrivals
     // ============================================
-
     function injectStyles() {
         var id = 'trending-now-dynamic-styles';
         if (document.getElementById(id)) return;
-        
         var style = document.createElement('style');
         style.id = id;
-        style.textContent = 
-            '.trending-now-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #fff; }' +
+        style.textContent = '.trending-now-grid-section { padding: 32px 0; max-width: 100%; margin: 0 auto; background: #fff; }' +
             '@media (max-width: 767px) { .trending-now-grid-section { padding: 20px 0; } }' +
             '@media (min-width: 768px) and (max-width: 1023px) { .trending-now-grid-section { padding: 28px 16px; } }' +
             '@media (min-width: 1024px) { .trending-now-grid-section { padding: 40px 36px; max-width: 1400px; } }' +
@@ -740,9 +734,9 @@
             '.trending-now-image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.55); cursor: pointer; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.15); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }' +
             '.trending-now-image-dot.active { background: #ffffff; width: 8px; height: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }' +
             '.trending-now-image-dot:hover { background: rgba(255,255,255,0.85); transform: scale(1.2); }' +
-            '.trending-now-badge { position: absolute; top: 4px; left: 4px; z-index: 5; padding: 2px 7px; font-family: ' + JABIYEN_FONTS.families.subtitle + '; font-weight: ' + JABIYEN_FONTS.weights.subtitle.semibold + '; font-size: 8px; text-transform: uppercase; background: #007aff; color: #fff; letter-spacing: 0.5px; border-radius: 1px; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }' +
+            '.trending-now-badge { position: absolute; top: 4px; left: 4px; z-index: 5; padding: 2px 7px; font-family: ' + JABIYEN_FONTS.families.subtitle + '; font-weight: ' + JABIYEN_FONTS.weights.subtitle.semibold + '; font-size: 8px; text-transform: uppercase; background: #fff; color: #1d1d1f; letter-spacing: 0.5px; border-radius: 1px; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }' +
             '@media (min-width: 768px) { .trending-now-badge { top: 6px; left: 6px; padding: 2px 8px; font-size: 9px; } }' +
-            '.trending-now-badge-sale { background: #d70015 !important; }' +
+            '.trending-now-badge-sale { color: #d70015 !important; }' +
             '.trending-now-soldout-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; z-index: 6; pointer-events: none; }' +
             '.trending-now-soldout-overlay span { background: #1d1d1f; color: #fff; font-family: ' + JABIYEN_FONTS.families.body + '; font-weight: ' + JABIYEN_FONTS.weights.body.bold + '; font-size: 9px; text-transform: uppercase; padding: 5px 14px; letter-spacing: 1px; border-radius: 1px; }' +
             '@media (min-width: 768px) { .trending-now-soldout-overlay span { font-size: 10px; padding: 6px 18px; } }' +
@@ -759,58 +753,39 @@
             '.trending-now-empty-sub { font-family: ' + JABIYEN_FONTS.families.body + '; font-weight: ' + JABIYEN_FONTS.weights.body.regular + '; font-size: 12px !important; color: #b0b0b5 !important; margin-top: 6px !important; }' +
             '.trending-now-error { text-align: center; padding: 48px 20px; }' +
             '.trending-now-error p { font-family: ' + JABIYEN_FONTS.families.body + '; font-weight: ' + JABIYEN_FONTS.weights.body.regular + '; font-size: 14px; color: #86868b; margin-bottom: 16px; }' +
-            '.trending-now-retry-btn { padding: 10px 24px; background: #007aff; color: #fff; border: none; border-radius: 50px; font-family: ' + JABIYEN_FONTS.families.body + '; font-weight: ' + JABIYEN_FONTS.weights.body.semibold + '; font-size: 12px; cursor: pointer; transition: background 0.2s; }' +
-            '.trending-now-retry-btn:hover { background: #0056cc; }' +
+            '.trending-now-retry-btn { padding: 10px 24px; background: #1d1d1f; color: #fff; border: none; border-radius: 50px; font-family: ' + JABIYEN_FONTS.families.body + '; font-weight: ' + JABIYEN_FONTS.weights.body.semibold + '; font-size: 12px; cursor: pointer; transition: background 0.2s; }' +
+            '.trending-now-retry-btn:hover { background: #007aff; }' +
             '.trending-now-skeleton-card { pointer-events: none; }' +
             '.skeleton-pulse { background: linear-gradient(90deg, #e5e5ea 0%, #f0f0f5 40%, #e5e5ea 80%); background-size: 800px 100%; animation: skeletonShimmer 1.8s infinite linear; border-radius: 0; }' +
             '.skeleton-text { height: 13px; margin-bottom: 5px; }' +
             '@keyframes skeletonShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }';
-        
         document.head.appendChild(style);
     }
 
     // ============================================
     // INITIALIZATION
     // ============================================
-
     function init() {
         applyFontsVariables();
         injectStyles();
-        ensureGlobalMouseHandlers();
-        
         window.addEventListener('jayenware:dataLoaded', function(e) {
             var detail = e.detail || {};
             if (detail.products && Array.isArray(detail.products)) {
                 var trending = detail.products.filter(function(p) {
-                    return p.is_hot === true || 
-                           p.is_hot === 1 || 
-                           p.is_trending === true || 
-                           p.is_trending === 1;
+                    return p.is_hot === true || p.is_hot === 1 || p.is_trending === true || p.is_trending === 1;
                 });
                 if (trending.length) renderTrendingNow(trending);
             }
         });
-        
         if (window.currentData && window.currentData.products && Array.isArray(window.currentData.products)) {
             var trending = window.currentData.products.filter(function(p) {
-                return p.is_hot === true || 
-                       p.is_hot === 1 || 
-                       p.is_trending === true || 
-                       p.is_trending === 1;
+                return p.is_hot === true || p.is_hot === 1 || p.is_trending === true || p.is_trending === 1;
             });
-            if (trending.length) {
-                setTimeout(function() { renderTrendingNow(trending); }, 50);
-            }
+            if (trending.length) setTimeout(function() { renderTrendingNow(trending); }, 50);
         }
     }
 
-    // ============================================
-    // START
-    // ============================================
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
 
 })();
