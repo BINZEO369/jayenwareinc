@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 2.0.0 (Updated with JABIYEN_FONTS integration)
+// Version: 2.1.0 (Fixed Heights + JABIYEN_FONTS Integration)
 // ============================================================
 
 (function() {
@@ -14,17 +14,37 @@
             .hero-container {
                 position: relative;
                 width: 100%;
-                height: 100vh;
-                min-height: 500px;
                 overflow: hidden;
                 background: #000;
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                
+                /* FIXED HEIGHTS */
+                height: 900px; /* Default Desktop */
             }
-            @media (max-width: 640px) {
-                .hero-container { height: 80vh; min-height: 450px; }
+            
+            /* Tablet */
+            @media (min-width: 769px) and (max-width: 1024px) {
+                .hero-container {
+                    height: 700px;
+                }
             }
+            
+            /* Mobile (iPhone 15/16/17 Pro scale) */
+            @media (max-width: 768px) {
+                .hero-container {
+                    height: 850px;
+                }
+            }
+            
+            /* Small Mobile */
+            @media (max-width: 480px) {
+                .hero-container {
+                    height: 750px;
+                }
+            }
+            
             .hero-slide-wrapper {
                 position: absolute;
                 inset: 0;
@@ -364,7 +384,7 @@
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides');
+            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Fixed Heights');
             console.log('[HeroBanner] 🔤 Fonts: Heading=%cManrope (--font-heading)%c, Body=%cInter (--font-body)%c',
                 'color: #4ECDC4;', '', 'color: #FF6B6B;', '');
         }
@@ -795,5 +815,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v2.0.0 - JABIYEN_FONTS Integrated)');
+    console.log('[HeroBanner] 📄 Component script loaded (v2.1.0 - Fixed Heights + JABIYEN_FONTS Integrated)');
 })();
