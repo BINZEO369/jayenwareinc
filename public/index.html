@@ -323,96 +323,99 @@
     .scroll-progress-bar { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.1s ease; }
 
     /* Limited Edition Dark Theme Overrides */
-    #limited-edition-container .carousel-section,
-    section.limited-edition-wrapper {
+    #limited-edition-section {
       background: #000000 !important;
     }
 
-    #limited-edition-container .section-title,
-    section.limited-edition-wrapper .section-title {
+    #limited-edition-section .section-title {
       color: #ffffff !important;
     }
 
-    #limited-edition-container .carousel-card .card-title,
-    section.limited-edition-wrapper .carousel-card .card-title {
+    #limited-edition-section .section-link {
+      color: #007aff !important;
+    }
+
+    #limited-edition-section .carousel-card .card-title {
       color: #ffffff !important;
     }
 
-    #limited-edition-container .carousel-card .card-price,
-    section.limited-edition-wrapper .carousel-card .card-price {
+    #limited-edition-section .carousel-card .card-price {
       color: #ffffff !important;
     }
 
-    #limited-edition-container .carousel-card .card-old-price,
-    section.limited-edition-wrapper .carousel-card .card-old-price {
+    #limited-edition-section .carousel-card .card-old-price {
       color: #a1a1a6 !important;
     }
 
-    #limited-edition-container .carousel-card .card-category,
-    section.limited-edition-wrapper .carousel-card .card-category {
+    #limited-edition-section .carousel-card .card-category {
       color: #a1a1a6 !important;
     }
 
-    #limited-edition-container .carousel-card .card-badge,
-    section.limited-edition-wrapper .carousel-card .card-badge {
+    #limited-edition-section .carousel-card .card-badge {
       background: #2d2d2f !important;
       color: #ffffff !important;
     }
 
-    #limited-edition-container .carousel-card .card-badge.badge-sale,
-    section.limited-edition-wrapper .carousel-card .card-badge.badge-sale {
+    #limited-edition-section .carousel-card .card-badge.badge-sale {
       color: #ff6b6b !important;
     }
 
-    #limited-edition-container .carousel-card .card-soldout-overlay span,
-    section.limited-edition-wrapper .carousel-card .card-soldout-overlay span {
-      background: #ffffff !important;
-      color: #1d1d1f !important;
+    #limited-edition-section .carousel-card .card-img {
+      background: #1c1c1e !important;
     }
 
-    #limited-edition-container .carousel-card .card-img,
-    section.limited-edition-wrapper .carousel-card .card-img {
-      background: #2d2d2f !important;
-    }
-
-    #limited-edition-container .carousel-card .card-add-btn,
-    section.limited-edition-wrapper .carousel-card .card-add-btn {
+    #limited-edition-section .carousel-card .card-add-btn {
       background: rgba(255, 255, 255, 0.9) !important;
       color: #1d1d1f !important;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
     }
 
     @media (hover: hover) {
-      #limited-edition-container .carousel-card .card-add-btn:hover,
-      section.limited-edition-wrapper .carousel-card .card-add-btn:hover {
+      #limited-edition-section .carousel-card .card-add-btn:hover {
         background: #ffffff !important;
         color: #1d1d1f !important;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
       }
     }
 
-    #limited-edition-container .carousel-card .card-add-btn:active,
-    section.limited-edition-wrapper .carousel-card .card-add-btn:active {
+    #limited-edition-section .carousel-card .card-add-btn:active {
       background: #ffffff !important;
       color: #1d1d1f !important;
     }
 
-    #limited-edition-container .scroll-progress,
-    section.limited-edition-wrapper .scroll-progress {
+    #limited-edition-section .carousel-card .card-soldout-overlay {
+      background: rgba(0,0,0,0.6) !important;
+    }
+
+    #limited-edition-section .carousel-card .card-soldout-overlay span {
+      background: #ffffff !important;
+      color: #1d1d1f !important;
+    }
+
+    #limited-edition-section .carousel-nav {
+      background: rgba(255,255,255,0.15) !important;
+      color: #fff !important;
+      border: none !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2) !important;
+    }
+
+    @media (hover: hover) {
+      #limited-edition-section .carousel-nav:hover {
+        background: rgba(255,255,255,0.25) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+      }
+    }
+
+    #limited-edition-section .carousel-nav:active {
+      background: rgba(255,255,255,0.3) !important;
+    }
+
+    #limited-edition-section .scroll-progress {
       background: rgba(255, 255, 255, 0.2) !important;
     }
 
-    #limited-edition-container .scroll-progress-bar,
-    section.limited-edition-wrapper .scroll-progress-bar {
+    #limited-edition-section .scroll-progress-bar {
       background: #ffffff !important;
-    }
-
-    #limited-edition-container .carousel-nav,
-    section.limited-edition-wrapper .carousel-nav {
-      background: rgba(255, 255, 255, 0.15) !important;
-      color: #fff !important;
-      border: none !important;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important;
     }
 
     @media (max-width: 767px) {
@@ -462,7 +465,7 @@
     <section id="home" class="page-section active-page fade-in">
       <div id="categoryshow-container"></div>
       <div id="new-arrivals-container"></div>
-      <div id="hero-secondary-banner-container"></div>
+      <div id="hero-secondary-container"></div>
       <div id="trending-now-container"></div>
       <div id="featured-products-container"></div>
       <div id="best-sellers-container"></div>
