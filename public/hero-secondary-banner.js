@@ -1,7 +1,7 @@
 // ============================================================
 // hero-secondary-banner.js - JAYENWARE Secondary Banner Component
 // Hero Secondary Banner with Auto-Sliding Images
-// Version: 1.0.1 - Fixed Heights for All Devices
+// Version: 2.0.0 (Line Indicators + Smooth Scroll Fix + Typography Update)
 // ============================================================
 
 (function() {
@@ -22,6 +22,13 @@
                 
                 /* FIXED HEIGHTS */
                 height: 900px; /* Default Desktop */
+                
+                /* Prevent scroll-jank / intersection observer issues */
+                will-change: transform;
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
             }
             
             /* Tablet */
@@ -90,28 +97,31 @@
                 padding: 0 16px;
             }
             
+            /* ---------- JABIYEN_FONTS Integration ---------- */
             .hero-secondary-subtitle {
                 display: inline-block;
-                font-family: var(--font-body, 'Inter', sans-serif);
-                font-size: clamp(7px, 1vw, 9px);
-                font-weight: 500;
-                letter-spacing: 0.45em;
+                /* ✅ JABIYEN_FONTS: --font-accent (Inter) */
+                font-family: var(--font-accent, 'Inter', sans-serif);
+                font-size: clamp(6px, 0.85vw, 8px);
+                font-weight: 400;
+                letter-spacing: 0.35em;
                 text-transform: uppercase;
-                color: rgba(255, 255, 255, 0.6);
-                margin-bottom: clamp(12px, 2vh, 20px);
+                color: rgba(255, 255, 255, 0.55);
+                margin-bottom: clamp(10px, 1.8vh, 18px);
                 opacity: 0;
                 transform: translateY(8px);
                 animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
             }
             
             .hero-secondary-title {
-                font-family: var(--font-heading, 'Playfair Display', serif);
-                font-size: clamp(22px, 4.5vw, 60px);
-                font-weight: 900;
-                line-height: 1.1;
+                /* ✅ JABIYEN_FONTS: --font-heading (Manrope) */
+                font-family: var(--font-heading, 'Manrope', sans-serif);
+                font-size: clamp(18px, 3.5vw, 48px);
+                font-weight: 700;
+                line-height: 1.15;
                 color: #ffffff;
-                margin: 0 0 clamp(16px, 2.5vh, 28px) 0;
-                letter-spacing: -0.01em;
+                margin: 0 0 clamp(14px, 2vh, 22px) 0;
+                letter-spacing: var(--tracking-tight, -0.3px);
                 opacity: 0;
                 transform: translateY(12px);
                 animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
@@ -125,50 +135,42 @@
             .hero-secondary-cta {
                 display: inline-flex;
                 align-items: center;
-                gap: 4px;
+                gap: 0;
+                /* ✅ JABIYEN_FONTS: --font-body (Inter) */
                 font-family: var(--font-body, 'Inter', sans-serif);
-                font-size: clamp(8px, 1vw, 10px);
+                font-size: clamp(7px, 0.85vw, 9px);
                 font-weight: 500;
-                letter-spacing: 0.25em;
+                letter-spacing: 0.2em;
                 text-transform: uppercase;
-                color: #ffffff;
+                color: rgba(255, 255, 255, 0.8);
                 text-decoration: none;
                 transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-                padding: 0;
+                padding: 0 0 4px 0;
                 border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
                 background: none;
+                cursor: pointer;
+                position: relative;
             }
             .hero-secondary-cta:hover {
-                gap: 8px;
-                color: rgba(255, 255, 255, 0.85);
+                color: #ffffff;
+                border-bottom-color: rgba(255, 255, 255, 0.8);
+                padding: 0 20px 4px 0;
             }
             
-            .hero-secondary-cta .cta-arrow {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 28px;
-                height: 14px;
-                position: relative;
-                transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-            }
-            
-            .hero-secondary-cta .cta-arrow::after {
+            /* Underline expand effect on hover */
+            .hero-secondary-cta::after {
                 content: '';
                 position: absolute;
-                top: 50%;
-                right: 0;
-                width: 6px;
-                height: 6px;
-                border-top: 1px solid #ffffff;
-                border-right: 1px solid #ffffff;
-                transform: translateY(-50%) rotate(45deg);
-                transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+                bottom: -1px;
+                left: 0;
+                width: 0%;
+                height: 1px;
+                background: #ffffff;
+                transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
             }
-            
-            .hero-secondary-cta:hover .cta-arrow::after {
-                right: -2px;
-                opacity: 0.8;
+            .hero-secondary-cta:hover::after {
+                width: 100%;
             }
             
             @keyframes heroSecondaryFadeInUp {
@@ -178,37 +180,53 @@
                 }
             }
 
-            /* Hero Secondary Navigation Dots */
-            .hero-secondary-nav-dots {
+            /* ==================== LINE INDICATORS (বিশ্ব বিখ্যাত ওয়েবসাইট স্টাইল) ==================== */
+            .hero-secondary-nav-indicators {
                 position: absolute;
                 bottom: clamp(30px, 5vh, 50px);
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 3;
                 display: flex;
-                gap: 10px;
+                gap: 6px;
                 align-items: center;
             }
-            .hero-secondary-nav-dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
+            .hero-secondary-nav-indicator {
+                width: 40px;
+                height: 2px;
+                background: rgba(255, 255, 255, 0.25);
                 cursor: pointer;
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 border: none;
                 outline: none;
                 padding: 0;
+                position: relative;
+                border-radius: 1px;
             }
-            .hero-secondary-nav-dot:hover {
-                background: rgba(255, 255, 255, 0.6);
-                transform: scale(1.3);
+            .hero-secondary-nav-indicator:hover {
+                background: rgba(255, 255, 255, 0.5);
             }
-            .hero-secondary-nav-dot.active {
+            .hero-secondary-nav-indicator.active {
                 background: #ffffff;
-                width: 28px;
-                border-radius: 5px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                width: 60px;
+                box-shadow: 0 1px 6px rgba(255, 255, 255, 0.3);
+            }
+            
+            /* Progress bar inside active indicator */
+            .hero-secondary-nav-indicator.active::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.6);
+                border-radius: 1px;
+                animation: heroSecondaryIndicatorProgress 7s linear forwards;
+            }
+            
+            @keyframes heroSecondaryIndicatorProgress {
+                from { width: 0%; }
+                to { width: 100%; }
             }
 
             /* Hero Secondary Navigation Arrows */
@@ -220,15 +238,15 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.08);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.15);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 color: #ffffff;
                 font-size: 14px;
                 opacity: 0;
@@ -237,9 +255,9 @@
                 opacity: 1;
             }
             .hero-secondary-arrow:hover {
-                background: rgba(255, 255, 255, 0.2);
-                border-color: rgba(255, 255, 255, 0.4);
-                transform: translateY(-50%) scale(1.1);
+                background: rgba(255, 255, 255, 0.18);
+                border-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-50%) scale(1.08);
             }
             .hero-secondary-arrow:active {
                 transform: translateY(-50%) scale(0.95);
@@ -255,7 +273,14 @@
                 }
                 .hero-secondary-arrow.prev { left: 10px; }
                 .hero-secondary-arrow.next { right: 10px; }
-                .hero-secondary-nav-dots { bottom: 25px; }
+                .hero-secondary-nav-indicators { bottom: 25px; gap: 4px; }
+                .hero-secondary-nav-indicator {
+                    width: 30px;
+                    height: 2px;
+                }
+                .hero-secondary-nav-indicator.active {
+                    width: 45px;
+                }
             }
         </style>
     `;
@@ -277,9 +302,52 @@
                 <button id="hero-secondary-next-btn" class="hero-secondary-arrow next" aria-label="Next slide">
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
-                <div id="hero-secondary-nav-dots" class="hero-secondary-nav-dots"></div>
+                <div id="hero-secondary-nav-indicators" class="hero-secondary-nav-indicators"></div>
             </div>
         `;
+    }
+
+    // ==================== JABIYEN_FONTS INTEGRATION ====================
+    function ensureFontVariables() {
+        const root = document.documentElement;
+        const requiredVars = [
+            '--font-heading',
+            '--font-subtitle',
+            '--font-body',
+            '--font-accent',
+            '--tracking-tight',
+            '--tracking-normal',
+            '--tracking-wide',
+            '--tracking-wider'
+        ];
+
+        let needsInjection = false;
+        requiredVars.forEach(varName => {
+            if (!getComputedStyle(root).getPropertyValue(varName).trim()) {
+                needsInjection = true;
+            }
+        });
+
+        if (needsInjection) {
+            console.log('[HeroSecondaryBanner] 🔧 Injecting JABIYEN_FONTS CSS variables as fallback...');
+            const fallbackVars = {
+                '--font-heading': "'Manrope', sans-serif",
+                '--font-subtitle': "'Sora', sans-serif",
+                '--font-body': "'Inter', sans-serif",
+                '--font-accent': "'Inter', sans-serif",
+                '--tracking-tight': '-0.3px',
+                '--tracking-normal': '0',
+                '--tracking-wide': '0.5px',
+                '--tracking-wider': '1px'
+            };
+
+            for (const [key, value] of Object.entries(fallbackVars)) {
+                root.style.setProperty(key, value);
+            }
+            console.log('[HeroSecondaryBanner] ✅ Font variables injected');
+        } else {
+            console.log('[HeroSecondaryBanner] ✅ JABIYEN_FONTS variables already present');
+        }
     }
 
     // ==================== COMPONENT LOGIC ====================
@@ -291,6 +359,7 @@
             this.isTransitioning = false;
             this.container = null;
             this.isInitialized = false;
+            this.intersectionObserver = null;
         }
 
         init(data) {
@@ -302,6 +371,8 @@
             }
 
             this.heroSecondaryData = data;
+            
+            ensureFontVariables();
             
             this.container = document.getElementById('hero-secondary-container');
             console.log('[HeroSecondaryBanner] 📦 Container found:', !!this.container);
@@ -320,10 +391,39 @@
 
             this.render();
             this.bindEvents();
+            this.setupIntersectionObserver();
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroSecondaryBanner] ✅ Initialized with', this.heroSecondaryData.length, 'slides - Fixed Heights');
+            console.log('[HeroSecondaryBanner] ✅ Initialized with', this.heroSecondaryData.length, 'slides - Line Indicators + Smooth Scroll');
+        }
+
+        /**
+         * Setup Intersection Observer to handle scroll-jank
+         */
+        setupIntersectionObserver() {
+            if (!this.container) return;
+            
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+            }
+
+            this.intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        this.container.style.willChange = 'transform';
+                        this.container.style.transform = 'translateZ(0)';
+                    } else {
+                        this.container.style.willChange = 'auto';
+                        this.container.style.transform = 'none';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '50px 0px'
+            });
+
+            this.intersectionObserver.observe(this.container);
         }
 
         render() {
@@ -341,21 +441,24 @@
                 </div>
             `).join('');
 
-            this.renderDots();
+            this.renderIndicators();
             this.updateContent(0);
         }
 
-        renderDots() {
-            const dotsContainer = document.getElementById('hero-secondary-nav-dots');
-            if (!dotsContainer || this.heroSecondaryData.length <= 1) {
-                if (dotsContainer) dotsContainer.style.display = 'none';
+        /**
+         * Render line indicators (dots-এর পরিবর্তে লম্বা দাগ)
+         */
+        renderIndicators() {
+            const indicatorsContainer = document.getElementById('hero-secondary-nav-indicators');
+            if (!indicatorsContainer || this.heroSecondaryData.length <= 1) {
+                if (indicatorsContainer) indicatorsContainer.style.display = 'none';
                 return;
             }
 
-            dotsContainer.style.display = 'flex';
-            dotsContainer.innerHTML = this.heroSecondaryData.map((_, index) => `
-                <button class="hero-secondary-nav-dot ${index === 0 ? 'active' : ''}" 
-                        data-dot-index="${index}"
+            indicatorsContainer.style.display = 'flex';
+            indicatorsContainer.innerHTML = this.heroSecondaryData.map((_, index) => `
+                <button class="hero-secondary-nav-indicator ${index === 0 ? 'active' : ''}" 
+                        data-indicator-index="${index}"
                         aria-label="Go to slide ${index + 1}">
                 </button>
             `).join('');
@@ -391,7 +494,7 @@
                 if (slide.cta_text && slide.cta_link) {
                     ctaContainer.innerHTML = `
                         <a href="${slide.cta_link}" class="hero-secondary-cta">
-                            ${slide.cta_text} <span class="cta-arrow"></span>
+                            ${slide.cta_text}
                         </a>
                     `;
                     ctaContainer.style.display = 'block';
@@ -402,6 +505,18 @@
             }
         }
 
+        /**
+         * Restart progress bar animation on active indicator
+         */
+        restartProgressAnimation() {
+            const activeIndicator = document.querySelector('.hero-secondary-nav-indicator.active');
+            if (!activeIndicator) return;
+
+            activeIndicator.classList.remove('active');
+            void activeIndicator.offsetWidth;
+            activeIndicator.classList.add('active');
+        }
+
         goToSlide(index) {
             if (this.isTransitioning) return;
             if (index < 0 || index >= this.heroSecondaryData.length) return;
@@ -410,7 +525,7 @@
             this.isTransitioning = true;
 
             const slides = document.querySelectorAll('.hero-secondary-slide-wrapper');
-            const dots = document.querySelectorAll('.hero-secondary-nav-dot');
+            const indicators = document.querySelectorAll('.hero-secondary-nav-indicator');
 
             slides.forEach(slide => slide.classList.add('fade-out'));
             
@@ -418,10 +533,12 @@
                 slides[index].classList.remove('fade-out');
             }
 
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            indicators.forEach((ind, i) => ind.classList.toggle('active', i === index));
 
             this.updateContent(index);
             this.currentSlide = index;
+
+            this.restartProgressAnimation();
 
             setTimeout(() => {
                 this.isTransitioning = false;
@@ -456,10 +573,15 @@
 
         pauseAutoSlide() {
             this.stopAutoSlide();
+            const activeIndicator = document.querySelector('.hero-secondary-nav-indicator.active');
+            if (activeIndicator) {
+                activeIndicator.style.animationPlayState = 'paused';
+            }
         }
 
         resumeAutoSlide() {
             this.startAutoSlide();
+            this.restartProgressAnimation();
         }
 
         bindEvents() {
@@ -471,6 +593,8 @@
                     e.preventDefault();
                     e.stopPropagation();
                     this.prevSlide();
+                    this.pauseAutoSlide();
+                    setTimeout(() => this.resumeAutoSlide(), 5000);
                 });
             }
             
@@ -479,16 +603,18 @@
                     e.preventDefault();
                     e.stopPropagation();
                     this.nextSlide();
+                    this.pauseAutoSlide();
+                    setTimeout(() => this.resumeAutoSlide(), 5000);
                 });
             }
 
-            const dotsContainer = document.getElementById('hero-secondary-nav-dots');
-            if (dotsContainer) {
-                dotsContainer.addEventListener('click', (e) => {
-                    const dot = e.target.closest('.hero-secondary-nav-dot');
-                    if (!dot) return;
+            const indicatorsContainer = document.getElementById('hero-secondary-nav-indicators');
+            if (indicatorsContainer) {
+                indicatorsContainer.addEventListener('click', (e) => {
+                    const indicator = e.target.closest('.hero-secondary-nav-indicator');
+                    if (!indicator) return;
                     
-                    const index = parseInt(dot.getAttribute('data-dot-index'));
+                    const index = parseInt(indicator.getAttribute('data-indicator-index'));
                     if (!isNaN(index)) {
                         this.goToSlide(index);
                         this.pauseAutoSlide();
@@ -500,10 +626,18 @@
             if (this.container) {
                 this.container.addEventListener('mouseenter', () => this.pauseAutoSlide());
                 this.container.addEventListener('mouseleave', () => this.resumeAutoSlide());
+                
+                this.container.addEventListener('touchstart', () => this.pauseAutoSlide(), { passive: true });
+                this.container.addEventListener('touchend', () => {
+                    setTimeout(() => this.resumeAutoSlide(), 3000);
+                }, { passive: true });
             }
 
             this.bindTouchEvents();
+            this.bindKeyboardEvents();
+        }
 
+        bindKeyboardEvents() {
             document.addEventListener('keydown', (e) => {
                 if (!this.container || !this.container.offsetParent) return;
                 
@@ -557,6 +691,10 @@
 
         destroy() {
             this.stopAutoSlide();
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+                this.intersectionObserver = null;
+            }
             this.isInitialized = false;
             console.log('[HeroSecondaryBanner] 💀 Destroyed');
         }
@@ -655,5 +793,5 @@
         }
     }, 3000);
 
-    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v1.0.1 - Fixed Heights for All Devices)');
+    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v2.0.0 - Line Indicators + Smooth Scroll + Updated Typography)');
 })();
