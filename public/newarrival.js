@@ -225,50 +225,66 @@
         dotsContainer.innerHTML = '';
         dotsContainer.style.display = 'flex';
 
-        var dragData = {
-            card: card,
-            idx: 0,
-            total: images.length,
-            transitioning: false,
-            slideTo: null,
-            reset: null,
-            startX: 0,
-            currentX: 0,
-            isDragging: false,
-            hasMoved: false
-        };
+        var currentIndex = 0;
+        var totalImages = images.length;
+        var isAnimating = false;
 
-        function slideTo(to) {
-            if (dragData.transitioning || to === dragData.idx) return;
-            dragData.transitioning = true;
+        function updateSlide(index, direction) {
+            if (isAnimating || index === currentIndex) return;
+            if (index < 0 || index >= totalImages) return;
+            isAnimating = true;
+
             var imgs = card.querySelectorAll('.new-arrival-slider-image');
             var dts = card.querySelectorAll('.new-arrival-image-dot');
-            var dir = to > dragData.idx ? 1 : -1;
+            var dir = direction || (index > currentIndex ? 1 : -1);
+            var oldIndex = currentIndex;
+            currentIndex = index;
+
             imgs.forEach(function(im, i) {
-                if (i === to) im.style.left = '0';
-                else if (i === dragData.idx) im.style.left = dir > 0 ? '-100%' : '100%';
-                else if (dir > 0 && i < to) im.style.left = '-100%';
-                else if (dir < 0 && i > to) im.style.left = '100%';
-                else im.style.left = dir > 0 ? '100%' : '-100%';
+                im.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
+                if (i === index) {
+                    im.style.left = '0';
+                    im.style.zIndex = '2';
+                } else if (i === oldIndex) {
+                    im.style.left = dir > 0 ? '-100%' : '100%';
+                    im.style.zIndex = '1';
+                } else if (dir > 0 && i < index) {
+                    im.style.left = '-100%';
+                    im.style.zIndex = '1';
+                } else if (dir < 0 && i > index) {
+                    im.style.left = '100%';
+                    im.style.zIndex = '1';
+                } else {
+                    im.style.left = dir > 0 ? '100%' : '-100%';
+                    im.style.zIndex = '0';
+                }
             });
-            dts.forEach(function(d, i) { d.classList.toggle('active', i === to); });
-            dragData.idx = to;
-            setTimeout(function() { dragData.transitioning = false; }, 450);
+
+            dts.forEach(function(d, i) {
+                d.classList.toggle('active', i === index);
+            });
+
+            setTimeout(function() {
+                isAnimating = false;
+            }, 500);
         }
 
-        function reset() {
+        function resetToCurrent() {
             var imgs = card.querySelectorAll('.new-arrival-slider-image');
             imgs.forEach(function(im, i) {
-                if (i === dragData.idx) im.style.left = '0';
-                else if (i < dragData.idx) im.style.left = '-100%';
-                else im.style.left = '100%';
+                im.style.transition = 'left 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)';
+                if (i === currentIndex) {
+                    im.style.left = '0';
+                    im.style.zIndex = '2';
+                } else if (i < currentIndex) {
+                    im.style.left = '-100%';
+                    im.style.zIndex = '1';
+                } else {
+                    im.style.left = '100%';
+                    im.style.zIndex = '0';
+                }
             });
         }
-
-        dragData.slideTo = slideTo;
-        dragData.reset = reset;
-
-        card._sliderDragData = dragData;
 
         images.forEach(function(src, i) {
             var img = document.createElement('img');
@@ -277,9 +293,10 @@
             img.className = 'new-arrival-card-image new-arrival-slider-image';
             img.setAttribute('data-index', i);
             img.loading = 'lazy';
-            img.style.cssText = 'position:absolute;top:0;left:' + (i === 0 ? '0' : '100%') + ';width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;';
+            img.style.cssText = 'position:absolute;top:0;left:' + (i === 0 ? '0' : '100%') + ';width:100%;height:100%;object-fit:cover;transition:left 0.45s cubic-bezier(0.25,0.1,0.25,1);opacity:1;display:block;color:transparent;will-change:left;z-index:' + (i === 0 ? '2' : '0') + ';';
             img.onload = function() { handleImageLoad(this); };
             img.onerror = function() { handleImageError(this); };
+            img.draggable = false;
             slider.appendChild(img);
 
             var dot = document.createElement('span');
@@ -289,8 +306,8 @@
                 dot.addEventListener('click', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    if (dragData.transitioning || index === dragData.idx) return;
-                    slideTo(index);
+                    if (isAnimating || index === currentIndex) return;
+                    updateSlide(index);
                 });
             })(i);
             dotsContainer.appendChild(dot);
@@ -299,109 +316,159 @@
         var firstDot = dotsContainer.querySelector('[data-index="0"]');
         if (firstDot) firstDot.classList.add('active');
 
+        var startX = 0;
+        var startY = 0;
+        var currentX = 0;
+        var currentY = 0;
+        var isDragging = false;
+        var isHorizontalSwipe = null;
+
         card.addEventListener('touchstart', function(e) {
-            var d = card._sliderDragData;
-            if (!d || d.transitioning) return;
-            d.startX = e.touches[0].clientX;
-            d.currentX = d.startX;
-            d.isDragging = true;
-            d.hasMoved = false;
-            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'none'; });
+            if (isAnimating) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            currentX = startX;
+            currentY = startY;
+            isDragging = true;
+            isHorizontalSwipe = null;
+            var imgs = card.querySelectorAll('.new-arrival-slider-image');
+            imgs.forEach(function(im) { im.style.transition = 'none'; });
         }, { passive: true });
 
         card.addEventListener('touchmove', function(e) {
-            var d = card._sliderDragData;
-            if (!d || !d.isDragging || d.transitioning) return;
-            d.currentX = e.touches[0].clientX;
-            var diff = d.currentX - d.startX;
-            if (Math.abs(diff) > 10) d.hasMoved = true;
-            if (!d.hasMoved) return;
-            var imgs = card.querySelectorAll('.new-arrival-slider-image');
-            var cur = imgs[d.idx];
-            if (cur) cur.style.left = diff + 'px';
-            if (diff < -20 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
-                imgs[d.idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            } else if (diff > 20 && d.idx > 0 && imgs[d.idx - 1]) {
-                imgs[d.idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
-            }
-        }, { passive: true });
+            if (!isDragging || isAnimating) return;
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+            var diffX = currentX - startX;
+            var diffY = currentY - startY;
 
-        card.addEventListener('touchend', function() {
-            var d = card._sliderDragData;
-            if (!d || !d.isDragging) return;
-            d.isDragging = false;
-            if (!d.hasMoved) return;
-            var diff = d.startX - d.currentX;
-            var th = card.offsetWidth * 0.25;
-            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
-                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
-                else reset();
+            if (isHorizontalSwipe === null && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)) {
+                isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+            }
+
+            if (isHorizontalSwipe === false) return;
+
+            if (isHorizontalSwipe === true) {
+                e.preventDefault();
+                var imgs = card.querySelectorAll('.new-arrival-slider-image');
+                var cur = imgs[currentIndex];
+                if (cur) {
+                    cur.style.left = diffX + 'px';
+                    cur.style.zIndex = '3';
+                }
+                if (diffX < -10 && currentIndex < totalImages - 1 && imgs[currentIndex + 1]) {
+                    imgs[currentIndex + 1].style.left = (100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex + 1].style.zIndex = '2';
+                } else if (diffX > 10 && currentIndex > 0 && imgs[currentIndex - 1]) {
+                    imgs[currentIndex - 1].style.left = (-100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex - 1].style.zIndex = '2';
+                }
+            }
+        }, { passive: false });
+
+        card.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (isHorizontalSwipe === false) {
+                resetToCurrent();
+                return;
+            }
+
+            if (isHorizontalSwipe === null) {
+                resetToCurrent();
+                return;
+            }
+
+            var diffX = startX - currentX;
+            var threshold = card.offsetWidth * 0.2;
+
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0 && currentIndex < totalImages - 1) {
+                    updateSlide(currentIndex + 1, 1);
+                } else if (diffX < 0 && currentIndex > 0) {
+                    updateSlide(currentIndex - 1, -1);
+                } else {
+                    resetToCurrent();
+                }
             } else {
-                reset();
+                resetToCurrent();
             }
         });
 
         card.addEventListener('mousedown', function(e) {
-            var d = card._sliderDragData;
-            if (!d || d.transitioning) return;
-            d.startX = e.clientX;
-            d.currentX = d.startX;
-            d.isDragging = true;
-            d.hasMoved = false;
-            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'none'; });
+            if (isAnimating) return;
+            startX = e.clientX;
+            startY = e.clientY;
+            currentX = startX;
+            currentY = startY;
+            isDragging = true;
+            isHorizontalSwipe = null;
+            var imgs = card.querySelectorAll('.new-arrival-slider-image');
+            imgs.forEach(function(im) { im.style.transition = 'none'; });
+            e.preventDefault();
         });
 
         card.addEventListener('mousemove', function(e) {
-            var d = card._sliderDragData;
-            if (!d || !d.isDragging || d.transitioning) return;
-            d.currentX = e.clientX;
-            var diff = d.currentX - d.startX;
-            if (Math.abs(diff) > 10) d.hasMoved = true;
-            if (!d.hasMoved) return;
-            var imgs = card.querySelectorAll('.new-arrival-slider-image');
-            var cur = imgs[d.idx];
-            if (cur) cur.style.left = diff + 'px';
-            if (diff < -20 && d.idx < d.total - 1 && imgs[d.idx + 1]) {
-                imgs[d.idx + 1].style.left = (100 + (diff / card.offsetWidth * 100)) + '%';
-            } else if (diff > 20 && d.idx > 0 && imgs[d.idx - 1]) {
-                imgs[d.idx - 1].style.left = (-100 + (diff / card.offsetWidth * 100)) + '%';
+            if (!isDragging || isAnimating) return;
+            currentX = e.clientX;
+            currentY = e.clientY;
+            var diffX = currentX - startX;
+            var diffY = currentY - startY;
+
+            if (isHorizontalSwipe === null && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)) {
+                isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+            }
+
+            if (isHorizontalSwipe === false) return;
+
+            if (isHorizontalSwipe === true) {
+                e.preventDefault();
+                var imgs = card.querySelectorAll('.new-arrival-slider-image');
+                var cur = imgs[currentIndex];
+                if (cur) {
+                    cur.style.left = diffX + 'px';
+                    cur.style.zIndex = '3';
+                }
+                if (diffX < -10 && currentIndex < totalImages - 1 && imgs[currentIndex + 1]) {
+                    imgs[currentIndex + 1].style.left = (100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex + 1].style.zIndex = '2';
+                } else if (diffX > 10 && currentIndex > 0 && imgs[currentIndex - 1]) {
+                    imgs[currentIndex - 1].style.left = (-100 + (diffX / card.offsetWidth * 100)) + '%';
+                    imgs[currentIndex - 1].style.zIndex = '2';
+                }
             }
         });
 
-        card.addEventListener('mouseup', function() {
-            var d = card._sliderDragData;
-            if (!d || !d.isDragging) return;
-            d.isDragging = false;
-            if (!d.hasMoved) return;
-            var diff = d.startX - d.currentX;
-            var th = card.offsetWidth * 0.25;
-            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
-                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
-                else reset();
+        card.addEventListener('mouseup', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (isHorizontalSwipe === false || isHorizontalSwipe === null) {
+                resetToCurrent();
+                return;
+            }
+
+            var diffX = startX - currentX;
+            var threshold = card.offsetWidth * 0.2;
+
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0 && currentIndex < totalImages - 1) {
+                    updateSlide(currentIndex + 1, 1);
+                } else if (diffX < 0 && currentIndex > 0) {
+                    updateSlide(currentIndex - 1, -1);
+                } else {
+                    resetToCurrent();
+                }
             } else {
-                reset();
+                resetToCurrent();
             }
         });
 
         card.addEventListener('mouseleave', function() {
-            var d = card._sliderDragData;
-            if (!d || !d.isDragging) return;
-            d.isDragging = false;
-            if (!d.hasMoved) return;
-            var diff = d.startX - d.currentX;
-            var th = card.offsetWidth * 0.25;
-            card.querySelectorAll('.new-arrival-slider-image').forEach(function(im) { im.style.transition = 'left 0.45s cubic-bezier(0.25,0.1,0.25,1)'; });
-            if (Math.abs(diff) > th) {
-                if (diff > 0 && d.idx < d.total - 1) slideTo(d.idx + 1);
-                else if (diff < 0 && d.idx > 0) slideTo(d.idx - 1);
-                else reset();
-            } else {
-                reset();
-            }
+            if (!isDragging) return;
+            isDragging = false;
+            resetToCurrent();
         });
     }
 
