@@ -1,7 +1,7 @@
 // ============================================================
 // hero-secondary-banner.js - JAYENWARE Secondary Banner Component
 // Hero Secondary Banner with Auto-Sliding Images
-// Version: 2.0.0 (Line Indicators + Smooth Scroll Fix + Typography Update)
+// Version: 2.0.1 (Subtitle Below Title + Line Indicators + Smooth Scroll Fix)
 // ============================================================
 
 (function() {
@@ -95,9 +95,14 @@
                 width: 88%;
                 max-width: 680px;
                 padding: 0 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             
             /* ---------- JABIYEN_FONTS Integration ---------- */
+            
+            /* ✅ SUBTITLE NOW BELOW TITLE */
             .hero-secondary-subtitle {
                 display: inline-block;
                 /* ✅ JABIYEN_FONTS: --font-accent (Inter) */
@@ -107,10 +112,12 @@
                 letter-spacing: 0.35em;
                 text-transform: uppercase;
                 color: rgba(255, 255, 255, 0.55);
-                margin-bottom: clamp(10px, 1.8vh, 18px);
+                margin-top: clamp(10px, 1.8vh, 18px);
+                margin-bottom: 0;
                 opacity: 0;
                 transform: translateY(8px);
-                animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
+                animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+                order: 2;
             }
             
             .hero-secondary-title {
@@ -120,17 +127,20 @@
                 font-weight: 700;
                 line-height: 1.15;
                 color: #ffffff;
-                margin: 0 0 clamp(14px, 2vh, 22px) 0;
+                margin: 0 0 0 0;
                 letter-spacing: var(--tracking-tight, -0.3px);
                 opacity: 0;
                 transform: translateY(12px);
-                animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+                animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
+                order: 1;
             }
             
             .hero-secondary-cta-wrap {
                 opacity: 0;
                 transform: translateY(8px);
-                animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
+                animation: heroSecondaryFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.45s forwards;
+                margin-top: clamp(14px, 2.2vh, 24px);
+                order: 3;
             }
             .hero-secondary-cta {
                 display: inline-flex;
@@ -292,8 +302,8 @@
                 <div id="hero-secondary-banner-slides"></div>
                 <div class="hero-secondary-overlay"></div>
                 <div class="hero-secondary-content">
-                    <p id="hero-secondary-subtitle" class="hero-secondary-subtitle"></p>
                     <h1 id="hero-secondary-title" class="hero-secondary-title"></h1>
+                    <p id="hero-secondary-subtitle" class="hero-secondary-subtitle"></p>
                     <div id="hero-secondary-cta-container" class="hero-secondary-cta-wrap"></div>
                 </div>
                 <button id="hero-secondary-prev-btn" class="hero-secondary-arrow prev" aria-label="Previous slide">
@@ -793,5 +803,5 @@
         }
     }, 3000);
 
-    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v2.0.0 - Line Indicators + Smooth Scroll + Updated Typography)');
+    console.log('[HeroSecondaryBanner] 📄 Component script loaded (v2.0.1 - Subtitle Below Title + Line Indicators + Smooth Scroll)');
 })();
