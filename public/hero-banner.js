@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 3.1.0 (Secondary Banner Design Synced + Image Preloading + World-Class Spacing)
+// Version: 3.1.1 (Subtitle Below Title + Tight Spacing + Image Loading Fix)
 // ============================================================
 
 (function() {
@@ -52,15 +52,18 @@
                 }
             }
             
+            /* ✅ ALL SLIDES VISIBLE by default for proper image loading */
             .hero-slide-wrapper {
                 position: absolute;
                 inset: 0;
                 transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
                 opacity: 1;
+                visibility: visible;
             }
             .hero-slide-wrapper.fade-out {
                 opacity: 0;
                 pointer-events: none;
+                visibility: visible; /* ✅ Keep visible for image loading */
             }
             .hero-slide-img {
                 width: 100%;
@@ -69,6 +72,12 @@
                 animation: heroZoom 20s ease-in-out infinite alternate;
                 transform: translateZ(0);
                 -webkit-transform: translateZ(0);
+                display: block;
+                background: #0a0a0a; /* ✅ Fallback bg while loading */
+            }
+            /* ✅ Remove animation from hidden slides to save resources */
+            .hero-slide-wrapper.fade-out .hero-slide-img {
+                animation: none;
             }
             @keyframes heroZoom {
                 from { transform: scale(1) translateZ(0); }
@@ -107,7 +116,7 @@
             
             /* ---------- JABIYEN_FONTS Integration ---------- */
             /* ✅ TIGHTER SPACING - World-Class Luxury Design */
-            /* ✅ SUBTITLE NOW BELOW TITLE */
+            /* ✅ SUBTITLE BELOW TITLE */
             .hero-subtitle {
                 display: inline-block;
                 font-family: var(--font-accent, 'Inter', sans-serif);
@@ -116,6 +125,7 @@
                 letter-spacing: 0.35em;
                 text-transform: uppercase;
                 color: rgba(255, 255, 255, 0.5);
+                /* ✅ TIGHT spacing below title */
                 margin-top: clamp(6px, 1vh, 10px);
                 margin-bottom: 0;
                 line-height: 1;
@@ -143,6 +153,7 @@
                 opacity: 0;
                 transform: translateY(6px);
                 animation: heroFadeInUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s forwards;
+                /* ✅ TIGHT spacing below subtitle */
                 margin-top: clamp(8px, 1.5vh, 16px);
                 order: 3;
             }
@@ -316,6 +327,7 @@
     `;
 
     // ==================== HTML TEMPLATE ====================
+    // ✅ SUBTITLE BELOW TITLE in HTML
     function getHeroHTML() {
         return `
             <div id="hero-container" class="hero-container">
@@ -391,6 +403,7 @@
             this.isInitialized = false;
             this.intersectionObserver = null;
             this.loadedImages = new Set();
+            this.totalImagesToLoad = 0;
         }
 
         init(data) {
@@ -402,6 +415,7 @@
             }
 
             this.heroData = data;
+            this.totalImagesToLoad = data.length;
             
             ensureFontVariables();
             
@@ -421,39 +435,51 @@
             }
 
             this.render();
-            this.preloadAllImages();
             this.bindEvents();
             this.setupIntersectionObserver();
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Design Synced with Secondary Banner');
+            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Subtitle Below + Image Loading Fixed');
         }
 
+        /**
+         * ✅ PRELOAD ALL IMAGES immediately after render
+         * This ensures even the 2nd, 3rd images load properly
+         */
         preloadAllImages() {
-            console.log('[HeroBanner] 🖼️ Preloading all images...');
+            console.log('[HeroBanner] 🖼️ Starting image preload for', this.heroData.length, 'slides...');
             
             this.heroData.forEach((slide, index) => {
+                // ✅ Create new Image object to force browser to load
                 const img = new Image();
                 
                 img.onload = () => {
                     this.loadedImages.add(index);
-                    console.log(`[HeroBanner] ✅ Image ${index + 1}/${this.heroData.length} loaded: ${slide.img}`);
+                    console.log(`[HeroBanner] ✅ Image ${index + 1}/${this.heroData.length} preloaded successfully`);
                     
+                    // ✅ Update the actual DOM image source if needed
                     const slideImg = document.querySelector(`.hero-slide-wrapper[data-slide-index="${index}"] .hero-slide-img`);
-                    if (slideImg && slideImg.src !== slide.img) {
-                        slideImg.src = slide.img;
+                    if (slideImg) {
+                        // Force re-assign src to trigger proper rendering
+                        if (slideImg.src !== slide.img) {
+                            slideImg.src = slide.img;
+                        }
+                        // ✅ Remove background fallback
+                        slideImg.style.background = 'none';
                     }
                 };
                 
                 img.onerror = () => {
-                    console.error(`[HeroBanner] ❌ Failed to load image ${index + 1}: ${slide.img}`);
+                    console.error(`[HeroBanner] ❌ Failed to preload image ${index + 1}: ${slide.img}`);
+                    // ✅ Set dark background as fallback
                     const slideWrapper = document.querySelector(`.hero-slide-wrapper[data-slide-index="${index}"]`);
                     if (slideWrapper) {
                         slideWrapper.style.backgroundColor = '#1a1a1a';
                     }
                 };
                 
+                // ✅ Start loading immediately
                 img.src = slide.img;
             });
         }
@@ -487,36 +513,64 @@
             const slidesContainer = document.getElementById('hero-banner-slides');
             if (!slidesContainer || !this.heroData.length) return;
 
+            // ✅ Render ALL slides visible first, then hide non-active via CSS
             slidesContainer.innerHTML = this.heroData.map((slide, index) => `
                 <div class="hero-slide-wrapper ${index !== 0 ? 'fade-out' : ''}" 
                      data-slide-index="${index}"
-                     style="opacity: ${index === 0 ? 1 : 0};">
+                     style="opacity: ${index === 0 ? 1 : 0}; visibility: visible;">
                     <img src="${slide.img}" 
                          alt="${slide.title || 'JAYENWARE Hero'}" 
                          class="hero-slide-img" 
-                         loading="${index < 2 ? 'eager' : 'lazy'}"
+                         loading="eager"
                          decoding="async"
-                         onload="console.log('[HeroBanner] 🖼️ Slide ${index + 1} image loaded successfully')"
-                         onerror="this.parentElement.style.backgroundColor='#1a1a1a'; console.error('[HeroBanner] ❌ Slide ${index + 1} image failed to load')">
+                         style="background: #0a0a0a;"
+                         onload="this.style.background='none'; console.log('[HeroBanner] 🖼️ Slide ${index + 1} loaded in DOM')"
+                         onerror="this.parentElement.style.backgroundColor='#1a1a1a'; console.error('[HeroBanner] ❌ Slide ${index + 1} failed')">
                 </div>
             `).join('');
 
             this.renderIndicators();
             this.updateContent(0);
             
-            setTimeout(() => this.verifySlidesVisibility(), 100);
+            // ✅ Start preloading immediately after DOM render
+            this.preloadAllImages();
+            
+            // ✅ Double-check visibility after a short delay
+            setTimeout(() => this.verifyAllSlidesLoaded(), 500);
         }
 
-        verifySlidesVisibility() {
+        /**
+         * ✅ Verify all slides have properly loaded images
+         */
+        verifyAllSlidesLoaded() {
             const slides = document.querySelectorAll('.hero-slide-wrapper');
+            let loadedCount = 0;
+            
             slides.forEach((slide, index) => {
                 const img = slide.querySelector('.hero-slide-img');
-                if (img && img.complete && img.naturalWidth > 0) {
-                    console.log(`[HeroBanner] ✅ Slide ${index + 1} verified: ${img.naturalWidth}x${img.naturalHeight}`);
-                } else if (img && !img.complete) {
-                    console.log(`[HeroBanner] ⏳ Slide ${index + 1} still loading...`);
+                if (img) {
+                    if (img.complete && img.naturalWidth > 0) {
+                        loadedCount++;
+                        img.style.background = 'none';
+                    } else if (!img.complete) {
+                        console.log(`[HeroBanner] ⏳ Slide ${index + 1} still loading, retrying...`);
+                        // ✅ Force reload if stuck
+                        const currentSrc = img.src;
+                        img.src = '';
+                        img.src = currentSrc;
+                    } else if (img.complete && img.naturalWidth === 0) {
+                        console.warn(`[HeroBanner] ⚠️ Slide ${index + 1} loaded but broken, applying fallback`);
+                        slide.style.backgroundColor = '#1a1a1a';
+                    }
                 }
             });
+            
+            console.log(`[HeroBanner] 📊 Loaded: ${loadedCount}/${slides.length} slides`);
+            
+            // ✅ If not all loaded, retry after another delay
+            if (loadedCount < slides.length) {
+                setTimeout(() => this.verifyAllSlidesLoaded(), 1000);
+            }
         }
 
         renderIndicators() {
@@ -595,6 +649,22 @@
             const slides = document.querySelectorAll('.hero-slide-wrapper');
             const indicators = document.querySelectorAll('.hero-nav-indicator');
 
+            // ✅ Ensure target slide image is loaded before showing
+            const targetImg = slides[index]?.querySelector('.hero-slide-img');
+            if (targetImg && !targetImg.complete) {
+                console.log(`[HeroBanner] ⏳ Slide ${index + 1} image not ready, waiting...`);
+                targetImg.addEventListener('load', () => {
+                    this.showSlide(slides, indicators, index);
+                }, { once: true });
+                // Show anyway after timeout
+                setTimeout(() => this.showSlide(slides, indicators, index), 300);
+                return;
+            }
+
+            this.showSlide(slides, indicators, index);
+        }
+
+        showSlide(slides, indicators, index) {
             slides.forEach((slide, i) => {
                 if (i === index) {
                     slide.style.opacity = '1';
@@ -612,9 +682,7 @@
 
             this.restartProgressAnimation();
 
-            setTimeout(() => {
-                this.isTransitioning = false;
-            }, 800);
+            this.isTransitioning = false;
         }
 
         nextSlide() {
@@ -759,6 +827,7 @@
             this.currentSlide = 0;
             this.isTransitioning = false;
             this.loadedImages.clear();
+            this.totalImagesToLoad = 0;
             this.init(newData);
         }
 
@@ -876,5 +945,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v3.1.0 - Design Synced with Secondary Banner)');
+    console.log('[HeroBanner] 📄 Component script loaded (v3.1.1 - Subtitle Below + Image Loading Fixed)');
 })();
