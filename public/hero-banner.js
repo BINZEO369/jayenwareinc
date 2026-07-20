@@ -1,7 +1,7 @@
 // ============================================================
 // hero-banner.js - JAYENWARE Hero Banner Component
 // Rolex-Style Hero Banner with Auto-Sliding Images
-// Version: 3.0.0 (Line Indicators + Smooth Scroll Fix + Typography Update)
+// Version: 3.1.0 (Secondary Banner Design Synced + Image Preloading + World-Class Spacing)
 // ============================================================
 
 (function() {
@@ -56,19 +56,23 @@
                 position: absolute;
                 inset: 0;
                 transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+                opacity: 1;
             }
             .hero-slide-wrapper.fade-out {
                 opacity: 0;
+                pointer-events: none;
             }
             .hero-slide-img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
                 animation: heroZoom 20s ease-in-out infinite alternate;
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
             }
             @keyframes heroZoom {
-                from { transform: scale(1); }
-                to { transform: scale(1.05); }
+                from { transform: scale(1) translateZ(0); }
+                to { transform: scale(1.05) translateZ(0); }
             }
             
             .hero-overlay {
@@ -77,17 +81,18 @@
                 background: linear-gradient(
                     to bottom,
                     rgba(0,0,0,0.0) 0%,
-                    rgba(0,0,0,0.02) 40%,
-                    rgba(0,0,0,0.15) 65%,
-                    rgba(0,0,0,0.5) 85%,
-                    rgba(0,0,0,0.7) 100%
+                    rgba(0,0,0,0.02) 30%,
+                    rgba(0,0,0,0.15) 55%,
+                    rgba(0,0,0,0.4) 75%,
+                    rgba(0,0,0,0.7) 90%,
+                    rgba(0,0,0,0.85) 100%
                 );
                 z-index: 1;
             }
             
             .hero-content {
                 position: absolute;
-                bottom: clamp(50px, 12vh, 110px);
+                bottom: clamp(30px, 8vh, 70px);
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 2;
@@ -95,67 +100,76 @@
                 width: 88%;
                 max-width: 680px;
                 padding: 0 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             
             /* ---------- JABIYEN_FONTS Integration ---------- */
+            /* ✅ TIGHTER SPACING - World-Class Luxury Design */
+            /* ✅ SUBTITLE NOW BELOW TITLE */
             .hero-subtitle {
                 display: inline-block;
-                /* ✅ JABIYEN_FONTS: --font-accent (Inter) */
                 font-family: var(--font-accent, 'Inter', sans-serif);
                 font-size: clamp(6px, 0.85vw, 8px);
                 font-weight: 400;
                 letter-spacing: 0.35em;
                 text-transform: uppercase;
-                color: rgba(255, 255, 255, 0.55);
-                margin-bottom: clamp(10px, 1.8vh, 18px);
+                color: rgba(255, 255, 255, 0.5);
+                margin-top: clamp(6px, 1vh, 10px);
+                margin-bottom: 0;
+                line-height: 1;
                 opacity: 0;
-                transform: translateY(8px);
-                animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
+                transform: translateY(6px);
+                animation: heroFadeInUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.25s forwards;
+                order: 2;
             }
             
             .hero-title {
-                /* ✅ JABIYEN_FONTS: --font-heading (Manrope) */
                 font-family: var(--font-heading, 'Manrope', sans-serif);
                 font-size: clamp(18px, 3.5vw, 48px);
                 font-weight: 700;
-                line-height: 1.15;
+                line-height: 1.1;
                 color: #ffffff;
-                margin: 0 0 clamp(14px, 2vh, 22px) 0;
+                margin: 0;
                 letter-spacing: var(--tracking-tight, -0.3px);
                 opacity: 0;
-                transform: translateY(12px);
-                animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+                transform: translateY(10px);
+                animation: heroFadeInUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s forwards;
+                order: 1;
             }
             
             .hero-cta-wrap {
                 opacity: 0;
-                transform: translateY(8px);
-                animation: heroFadeInUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
+                transform: translateY(6px);
+                animation: heroFadeInUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s forwards;
+                margin-top: clamp(8px, 1.5vh, 16px);
+                order: 3;
             }
             .hero-cta {
                 display: inline-flex;
                 align-items: center;
                 gap: 0;
-                /* ✅ JABIYEN_FONTS: --font-body (Inter) */
                 font-family: var(--font-body, 'Inter', sans-serif);
                 font-size: clamp(7px, 0.85vw, 9px);
                 font-weight: 500;
                 letter-spacing: 0.2em;
                 text-transform: uppercase;
-                color: rgba(255, 255, 255, 0.8);
+                color: rgba(255, 255, 255, 0.75);
                 text-decoration: none;
                 transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-                padding: 0 0 4px 0;
+                padding: 0 0 3px 0;
                 border: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.25);
                 background: none;
                 cursor: pointer;
                 position: relative;
+                line-height: 1.2;
             }
             .hero-cta:hover {
                 color: #ffffff;
                 border-bottom-color: rgba(255, 255, 255, 0.8);
-                padding: 0 20px 4px 0;
+                padding: 0 16px 3px 0;
             }
             
             /* Underline expand effect on hover */
@@ -180,21 +194,21 @@
                 }
             }
 
-            /* ==================== LINE INDICATORS (বিশ্ব বিখ্যাত ওয়েবসাইট স্টাইল) ==================== */
+            /* ==================== LINE INDICATORS ==================== */
             .hero-nav-indicators {
                 position: absolute;
-                bottom: clamp(30px, 5vh, 50px);
+                bottom: clamp(18px, 3vh, 30px);
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 3;
                 display: flex;
-                gap: 6px;
+                gap: 5px;
                 align-items: center;
             }
             .hero-nav-indicator {
-                width: 40px;
-                height: 2px;
-                background: rgba(255, 255, 255, 0.25);
+                width: 35px;
+                height: 1.5px;
+                background: rgba(255, 255, 255, 0.2);
                 cursor: pointer;
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 border: none;
@@ -204,12 +218,12 @@
                 border-radius: 1px;
             }
             .hero-nav-indicator:hover {
-                background: rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.45);
             }
             .hero-nav-indicator.active {
                 background: #ffffff;
-                width: 60px;
-                box-shadow: 0 1px 6px rgba(255, 255, 255, 0.3);
+                width: 50px;
+                box-shadow: 0 1px 4px rgba(255, 255, 255, 0.25);
             }
             
             /* Progress bar inside active indicator */
@@ -219,7 +233,7 @@
                 top: 0;
                 left: 0;
                 height: 100%;
-                background: rgba(255, 255, 255, 0.6);
+                background: rgba(255, 255, 255, 0.5);
                 border-radius: 1px;
                 animation: heroIndicatorProgress 7s linear forwards;
             }
@@ -238,10 +252,10 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.08);
+                background: rgba(255, 255, 255, 0.06);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.12);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -255,8 +269,8 @@
                 opacity: 1;
             }
             .hero-arrow:hover {
-                background: rgba(255, 255, 255, 0.18);
-                border-color: rgba(255, 255, 255, 0.35);
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.3);
                 transform: translateY(-50%) scale(1.08);
             }
             .hero-arrow:active {
@@ -266,6 +280,9 @@
             .hero-arrow.next { right: 20px; }
 
             @media (max-width: 640px) {
+                .hero-content {
+                    bottom: clamp(25px, 7vh, 55px);
+                }
                 .hero-arrow {
                     width: 36px;
                     height: 36px;
@@ -273,14 +290,27 @@
                 }
                 .hero-arrow.prev { left: 10px; }
                 .hero-arrow.next { right: 10px; }
-                .hero-nav-indicators { bottom: 25px; gap: 4px; }
+                .hero-nav-indicators { bottom: 15px; gap: 4px; }
                 .hero-nav-indicator {
-                    width: 30px;
-                    height: 2px;
+                    width: 28px;
+                    height: 1.5px;
                 }
                 .hero-nav-indicator.active {
-                    width: 45px;
+                    width: 38px;
                 }
+                .hero-subtitle {
+                    margin-top: clamp(4px, 0.8vh, 8px);
+                }
+                .hero-cta-wrap {
+                    margin-top: clamp(6px, 1.2vh, 12px);
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .hero-content {
+                    bottom: clamp(20px, 6vh, 45px);
+                }
+                .hero-nav-indicators { bottom: 12px; }
             }
         </style>
     `;
@@ -292,8 +322,8 @@
                 <div id="hero-banner-slides"></div>
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <p id="hero-subtitle" class="hero-subtitle"></p>
                     <h1 id="hero-title" class="hero-title"></h1>
+                    <p id="hero-subtitle" class="hero-subtitle"></p>
                     <div id="hero-cta-container" class="hero-cta-wrap"></div>
                 </div>
                 <button id="hero-prev-btn" class="hero-arrow prev" aria-label="Previous slide">
@@ -355,12 +385,12 @@
         constructor() {
             this.currentSlide = 0;
             this.slideInterval = null;
-            this.progressAnimation = null;
             this.heroData = [];
             this.isTransitioning = false;
             this.container = null;
             this.isInitialized = false;
             this.intersectionObserver = null;
+            this.loadedImages = new Set();
         }
 
         init(data) {
@@ -391,22 +421,46 @@
             }
 
             this.render();
+            this.preloadAllImages();
             this.bindEvents();
             this.setupIntersectionObserver();
             this.startAutoSlide();
             this.isInitialized = true;
             
-            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Line Indicators + Smooth Scroll');
+            console.log('[HeroBanner] ✅ Initialized with', this.heroData.length, 'slides - Design Synced with Secondary Banner');
         }
 
-        /**
-         * Setup Intersection Observer to handle scroll-jank
-         * যখন ইউজার scroll করে ব্যানার সেকশনে পৌঁছায় তখন যাতে আটকে না যায়
-         */
+        preloadAllImages() {
+            console.log('[HeroBanner] 🖼️ Preloading all images...');
+            
+            this.heroData.forEach((slide, index) => {
+                const img = new Image();
+                
+                img.onload = () => {
+                    this.loadedImages.add(index);
+                    console.log(`[HeroBanner] ✅ Image ${index + 1}/${this.heroData.length} loaded: ${slide.img}`);
+                    
+                    const slideImg = document.querySelector(`.hero-slide-wrapper[data-slide-index="${index}"] .hero-slide-img`);
+                    if (slideImg && slideImg.src !== slide.img) {
+                        slideImg.src = slide.img;
+                    }
+                };
+                
+                img.onerror = () => {
+                    console.error(`[HeroBanner] ❌ Failed to load image ${index + 1}: ${slide.img}`);
+                    const slideWrapper = document.querySelector(`.hero-slide-wrapper[data-slide-index="${index}"]`);
+                    if (slideWrapper) {
+                        slideWrapper.style.backgroundColor = '#1a1a1a';
+                    }
+                };
+                
+                img.src = slide.img;
+            });
+        }
+
         setupIntersectionObserver() {
             if (!this.container) return;
             
-            // Cleanup previous observer
             if (this.intersectionObserver) {
                 this.intersectionObserver.disconnect();
             }
@@ -414,11 +468,9 @@
             this.intersectionObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Banner is in viewport - ensure smooth rendering
                         this.container.style.willChange = 'transform';
                         this.container.style.transform = 'translateZ(0)';
                     } else {
-                        // Banner is out of viewport - release resources
                         this.container.style.willChange = 'auto';
                         this.container.style.transform = 'none';
                     }
@@ -437,22 +489,36 @@
 
             slidesContainer.innerHTML = this.heroData.map((slide, index) => `
                 <div class="hero-slide-wrapper ${index !== 0 ? 'fade-out' : ''}" 
-                     data-slide-index="${index}">
+                     data-slide-index="${index}"
+                     style="opacity: ${index === 0 ? 1 : 0};">
                     <img src="${slide.img}" 
                          alt="${slide.title || 'JAYENWARE Hero'}" 
                          class="hero-slide-img" 
-                         loading="${index === 0 ? 'eager' : 'lazy'}"
-                         onerror="this.style.display='none'">
+                         loading="${index < 2 ? 'eager' : 'lazy'}"
+                         decoding="async"
+                         onload="console.log('[HeroBanner] 🖼️ Slide ${index + 1} image loaded successfully')"
+                         onerror="this.parentElement.style.backgroundColor='#1a1a1a'; console.error('[HeroBanner] ❌ Slide ${index + 1} image failed to load')">
                 </div>
             `).join('');
 
             this.renderIndicators();
             this.updateContent(0);
+            
+            setTimeout(() => this.verifySlidesVisibility(), 100);
         }
 
-        /**
-         * Render line indicators (dots-এর পরিবর্তে লম্বা দাগ)
-         */
+        verifySlidesVisibility() {
+            const slides = document.querySelectorAll('.hero-slide-wrapper');
+            slides.forEach((slide, index) => {
+                const img = slide.querySelector('.hero-slide-img');
+                if (img && img.complete && img.naturalWidth > 0) {
+                    console.log(`[HeroBanner] ✅ Slide ${index + 1} verified: ${img.naturalWidth}x${img.naturalHeight}`);
+                } else if (img && !img.complete) {
+                    console.log(`[HeroBanner] ⏳ Slide ${index + 1} still loading...`);
+                }
+            });
+        }
+
         renderIndicators() {
             const indicatorsContainer = document.getElementById('hero-nav-indicators');
             if (!indicatorsContainer || this.heroData.length <= 1) {
@@ -477,7 +543,6 @@
             const subtitleEl = document.getElementById('hero-subtitle');
             const ctaContainer = document.getElementById('hero-cta-container');
 
-            // Reset animations
             [titleEl, subtitleEl, ctaContainer].forEach(el => {
                 if (el) {
                     el.style.animation = 'none';
@@ -511,16 +576,12 @@
             }
         }
 
-        /**
-         * Restart progress bar animation on active indicator
-         */
         restartProgressAnimation() {
             const activeIndicator = document.querySelector('.hero-nav-indicator.active');
             if (!activeIndicator) return;
 
-            // Remove and re-add the animation by resetting the pseudo-element
             activeIndicator.classList.remove('active');
-            void activeIndicator.offsetWidth; // Force reflow
+            void activeIndicator.offsetWidth;
             activeIndicator.classList.add('active');
         }
 
@@ -534,18 +595,21 @@
             const slides = document.querySelectorAll('.hero-slide-wrapper');
             const indicators = document.querySelectorAll('.hero-nav-indicator');
 
-            slides.forEach(slide => slide.classList.add('fade-out'));
-            
-            if (slides[index]) {
-                slides[index].classList.remove('fade-out');
-            }
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.style.opacity = '1';
+                    slide.classList.remove('fade-out');
+                } else {
+                    slide.style.opacity = '0';
+                    slide.classList.add('fade-out');
+                }
+            });
 
             indicators.forEach((ind, i) => ind.classList.toggle('active', i === index));
 
             this.updateContent(index);
             this.currentSlide = index;
 
-            // Restart progress bar
             this.restartProgressAnimation();
 
             setTimeout(() => {
@@ -581,7 +645,6 @@
 
         pauseAutoSlide() {
             this.stopAutoSlide();
-            // Pause progress bar
             const activeIndicator = document.querySelector('.hero-nav-indicator.active');
             if (activeIndicator) {
                 activeIndicator.style.animationPlayState = 'paused';
@@ -617,7 +680,6 @@
                 });
             }
 
-            // Line indicators - event delegation
             const indicatorsContainer = document.getElementById('hero-nav-indicators');
             if (indicatorsContainer) {
                 indicatorsContainer.addEventListener('click', (e) => {
@@ -633,12 +695,10 @@
                 });
             }
 
-            // Pause on hover
             if (this.container) {
                 this.container.addEventListener('mouseenter', () => this.pauseAutoSlide());
                 this.container.addEventListener('mouseleave', () => this.resumeAutoSlide());
                 
-                // Touch events - pause on touch
                 this.container.addEventListener('touchstart', () => this.pauseAutoSlide(), { passive: true });
                 this.container.addEventListener('touchend', () => {
                     setTimeout(() => this.resumeAutoSlide(), 3000);
@@ -698,6 +758,7 @@
             this.stopAutoSlide();
             this.currentSlide = 0;
             this.isTransitioning = false;
+            this.loadedImages.clear();
             this.init(newData);
         }
 
@@ -707,6 +768,7 @@
                 this.intersectionObserver.disconnect();
                 this.intersectionObserver = null;
             }
+            this.loadedImages.clear();
             this.isInitialized = false;
             console.log('[HeroBanner] 💀 Destroyed');
         }
@@ -814,5 +876,5 @@
         }
     }, 3000);
 
-    console.log('[HeroBanner] 📄 Component script loaded (v3.0.0 - Line Indicators + Smooth Scroll + Updated Typography)');
+    console.log('[HeroBanner] 📄 Component script loaded (v3.1.0 - Design Synced with Secondary Banner)');
 })();
